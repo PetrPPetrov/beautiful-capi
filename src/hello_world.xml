@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hello_world:api xmlns:hello_world="http://gkmsoft.ru/beautifulcapi">
+  <namespace name="HelloWorld">
+    <interface name="Printer" lifecycle="simple">
+      <method name="Show"/>
+    </interface>
+    <method name="CreatePrinter" return="capi:Printer"/>
+  </namespace>
+</hello_world:api>

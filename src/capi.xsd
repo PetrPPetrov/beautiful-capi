@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://gkmsoft.ru/beautifulcapi" xmlns="http://gkmsoft.ru/beautifulcapi">
+  <xs:element name='api' type='TBeautifulCapiRoot'/>
+  <xs:complexType name='TBeautifulCapiRoot'>
+    <xs:sequence>
+      <xs:element name='namespace' minOccurs='1' maxOccurs='unbounded' type='TNamespace'/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name='TNamespace'>
+    <xs:sequence>
+      <xs:element name='namespace' minOccurs='0' maxOccurs='unbounded' type='TNamespace'/>
+      <xs:element name='interface' minOccurs='0' maxOccurs='unbounded' type='TInterface'/>
+      <xs:element name='method' minOccurs='0' maxOccurs='unbounded' type='TMethod'/>
+    </xs:sequence>
+    <xs:attribute name='name' type='xs:string' use='required'/>
+  </xs:complexType>
+  <xs:complexType name='TInterface'>
+    <xs:sequence>
+      <xs:element name='method' minOccurs='0' maxOccurs='unbounded' type='TMethod'/>
+    </xs:sequence>
+    <xs:attribute name='name' type='xs:string' use='required'/>
+    <xs:attribute name='lifecycle' type='TLifecycle' use='optional' default='reference_counted'/>
+  </xs:complexType>
+  <xs:complexType name='TMethod'>
+    <xs:sequence>
+      <xs:element name='argument' minOccurs='0' maxOccurs='unbounded' type='TArgument'/>
+    </xs:sequence>
+    <xs:attribute name='name' type='xs:string' use='required'/>
+    <xs:attribute name='return' type='xs:string' use='optional' default=''/>
+  </xs:complexType>
+  <xs:complexType name='TArgument'>
+    <xs:attribute name='name' type='xs:string' use='required'/>
+    <xs:attribute name='type' type='xs:string' use='required'/>
+  </xs:complexType>
+  <xs:simpleType name='TLifecycle'>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="simple"/>
+      <xs:enumeration value="reference_counted"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>
