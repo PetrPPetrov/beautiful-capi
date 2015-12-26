@@ -33,17 +33,93 @@ class SchemaGenerator(object):
         self.output_file.put_python_header()
         self.output_file.put_gnu_gpl_copyright_header(False)
         self.output_file.put_autogeneration_warning()
-        for complex_type in self.input_xsd.getElementsByTagName("xs:complexType"):
+        self.output_file.put_line('from enum import Enum\n\n')
+        for simple_type in self.input_xsd.getElementsByTagName('xs:simpleType'):
+            self.__build_enum(simple_type)
+        for complex_type in self.input_xsd.getElementsByTagName('xs:complexType'):
             self.__build_structure(complex_type)
+        self.output_file.put_line('def load(dom_node):')
+
+    def __build_enum(self, enumerator):
+        self.output_file.put_line('class {0}(Enum):'.format(enumerator.getAttribute('name')))
+        enum_counter = 0
+        with FileGenerator.Indent(self.output_file):
+            for enumeration in enumerator.getElementsByTagName('xs:enumeration'):
+                self.output_file.put_line('{0} = {1}'.format(
+                    enumeration.getAttribute('value'),
+                    enum_counter))
+                enum_counter += 1
+        self.output_file.put_line('')
+        with FileGenerator.Indent(self.output_file):
+            self.output_file.put_line('@staticmethod')
+            self.output_file.put_line('def load(value):')
+            with FileGenerator.Indent(self.output_file):
+                for enumeration in enumerator.getElementsByTagName('xs:enumeration'):
+                    self.output_file.put_line('if value == "{0}":'.format(enumeration.getAttribute('value')))
+                    with FileGenerator.Indent(self.output_file):
+                        self.output_file.put_line('return {0}.{1}'.format(
+                            enumerator.getAttribute('name'),
+                            enumeration.getAttribute('value')))
+                    self.output_file.put_line('raise ValueError')
+        self.output_file.put_line('')
+        self.output_file.put_line('')
 
     def __build_structure(self, complex_type):
         self.output_file.put_line('class {0}(object):'.format(complex_type.getAttribute('name')))
         with FileGenerator.Indent(self.output_file):
             self.__build_structure_impl(complex_type)
+        self.output_file.put_line('')
 
     def __build_structure_impl(self, complex_type):
         self.output_file.put_line('def __init__(self):')
-        pass
+        with FileGenerator.Indent(self.output_file):
+            self.__build_constructor(complex_type)
+        self.output_file.put_line('')
+        self.output_file.put_line('def load(self, dom_node):')
+        with FileGenerator.Indent(self.output_file):
+            self.__build_load(complex_type)
+        self.output_file.put_line('')
+
+    @staticmethod
+    def __get_attribute_default_value(attribute):
+        if attribute.getAttribute('type') == 'xs:string':
+            if attribute.hasAttribute('default'):
+                return '"' + attribute.getAttribute('default') + '"'
+            return '""'
+        if attribute.hasAttribute('default'):
+            return attribute.getAttribute('type') + '.' + attribute.getAttribute('default')
+
+    def __build_constructor(self, complex_type):
+        for attribute in complex_type.getElementsByTagName('xs:attribute'):
+            self.output_file.put_line('self.m_{0} = {1}'.format(
+                attribute.getAttribute('name'),
+                self.__get_attribute_default_value(attribute)
+            ))
+        for element in complex_type.getElementsByTagName('xs:element'):
+            self.output_file.put_line('self.m_{0}s = []'.format(element.getAttribute('name')))
+
+    def __build_load(self, complex_type):
+        for element in complex_type.getElementsByTagName('xs:element'):
+            self.__build_load_element(element)
+        for attribute in complex_type.getElementsByTagName('xs:attribute'):
+            self.__build_load_attribute(attribute)
+
+    def __build_load_element(self, element):
+        self.output_file.put_line('elements = dom_node.getElementsByTagName("{0}")'.format(
+                element.getAttribute('name')))
+        self.output_file.put_line('for element in elements:')
+        with FileGenerator.Indent(self.output_file):
+            self.output_file.put_line('new_element = {0}()'.format(element.getAttribute('type')))
+            self.output_file.put_line('new_element.load(element)')
+            self.output_file.put_line('self.m_{0}s.append(new_element)'.format(element.getAttribute('name')))
+
+    def __build_load_attribute(self, attribute):
+        self.output_file.put_line('if dom_node.hasAttribute("{0}"):'.format(attribute.getAttribute('name')))
+        with FileGenerator.Indent(self.output_file):
+            self.output_file.put_line('cur_attr = dom_node.getAttribute("{0}")'.format(
+                attribute.getAttribute('name')))
+            self.output_file.put_line('self.m_{0} = cur_attr'.format(
+                attribute.getAttribute('name')))
 
 
 def main():
@@ -58,10 +134,10 @@ def main():
         description='This program converts XSD schemas to Python 3 data structures and parser scripts.')
 
     parser.add_argument(
-        '-i', '--input', nargs=None, default='capi.xsd',
+        '-i', '--input', nargs=None, default='capi.xsd', metavar='INPUT',
         help='specifies input API description file')
     parser.add_argument(
-        '-o', '--output', nargs=None, default='Parser.py',
+        '-o', '--output', nargs=None, default='Parser.py', metavar='OUTPUT',
         help='specifies generated output Python 3 file')
 
     args = parser.parse_args()
