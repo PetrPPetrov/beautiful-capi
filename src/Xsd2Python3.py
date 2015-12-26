@@ -45,7 +45,7 @@ class SchemaGenerator(object):
                     if element.nodeName == 'xs:element':
                         self.output_file.put_line('for root_element in dom_node.childNodes:')
                         #[root for root in dom_node.childNodes if root.nodeName == "{0}"]:'.format(element.getAttribute('name')))
-
+                        # Another dummy
                         with FileGenerator.Indent(self.output_file):
                             self.output_file.put_line('root_params = {0}()'.format(element.getAttribute('type')))
                             self.output_file.put_line('root_params.load(root_element)')
