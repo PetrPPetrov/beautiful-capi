@@ -32,7 +32,7 @@ class SchemaGenerator(object):
     def build_python_scripts(self):
         self.output_file.put_python_header()
         self.output_file.put_gnu_gpl_copyright_header(False)
-        self.output_file.put_autogeneration_warning()
+        self.output_file.put_automatic_generation_warning()
         self.output_file.put_line('from enum import Enum\n\n')
         for simple_type in self.input_xsd.getElementsByTagName('xs:simpleType'):
             self.__build_enum(simple_type)
