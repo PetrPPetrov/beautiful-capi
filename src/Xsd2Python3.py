@@ -43,9 +43,9 @@ class SchemaGenerator(object):
             for root_element in self.input_xsd.childNodes:
                 for element in root_element.childNodes:
                     if element.nodeName == 'xs:element':
-                        self.output_file.put_line('for root_element in dom_node.childNodes:')
-                        #[root for root in dom_node.childNodes if root.nodeName == "{0}"]:'.format(element.getAttribute('name')))
-                        # Another dummy 3rd
+                        self.output_file.put_line(
+                            'for root_element in [root for root in dom_node.childNodes if root.localName == "{0}"]:'
+                                .format(element.getAttribute('name')))
                         with FileGenerator.Indent(self.output_file):
                             self.output_file.put_line('root_params = {0}()'.format(element.getAttribute('type')))
                             self.output_file.put_line('root_params.load(root_element)')
