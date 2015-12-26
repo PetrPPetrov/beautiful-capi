@@ -42,15 +42,13 @@ class SchemaGenerator(object):
         with FileGenerator.Indent(self.output_file):
             for root_element in self.input_xsd.childNodes:
                 for element in root_element.childNodes:
-                    if element.nodeName=='xs:element':
-                        self.output_file.put_line('elements = dom_node.getElementsByTagName("{0}")'.format(
-                                element.getAttribute('name')))
-                        self.output_file.put_line('for element in elements:')
+                    if element.nodeName == 'xs:element':
+                        self.output_file.put_line('for root_element in dom_node.childNodes:')
+                        #[root for root in dom_node.childNodes if root.nodeName == "{0}"]:'.format(element.getAttribute('name')))
                         with FileGenerator.Indent(self.output_file):
-                            self.output_file.put_line('new_element = {0}()'.format(element.getAttribute('type')))
-                            self.output_file.put_line('new_element.load(element)')
-                            self.output_file.put_line('return new_element')
-
+                            self.output_file.put_line('root_params = {0}()'.format(element.getAttribute('type')))
+                            self.output_file.put_line('root_params.load(root_element)')
+                            self.output_file.put_line('return root_params')
 
     def __build_enum(self, enumerator):
         self.output_file.put_line('class {0}(Enum):'.format(enumerator.getAttribute('name')))
@@ -72,7 +70,7 @@ class SchemaGenerator(object):
                         self.output_file.put_line('return {0}.{1}'.format(
                             enumerator.getAttribute('name'),
                             enumeration.getAttribute('value')))
-                    self.output_file.put_line('raise ValueError')
+                self.output_file.put_line('raise ValueError')
         self.output_file.put_line('')
         self.output_file.put_line('')
 
@@ -117,9 +115,9 @@ class SchemaGenerator(object):
             self.__build_load_attribute(attribute)
 
     def __build_load_element(self, element):
-        self.output_file.put_line('elements = [node in dom_node.childNodes if node.nodeName == "{0}"]'.format(
+        self.output_file.put_line(
+            'for element in [node for node in dom_node.childNodes if node.nodeName == "{0}"]:'.format(
             element.getAttribute('name')))
-        self.output_file.put_line('for element in elements:')
         with FileGenerator.Indent(self.output_file):
             self.output_file.put_line('new_element = {0}()'.format(element.getAttribute('type')))
             self.output_file.put_line('new_element.load(element)')
@@ -130,9 +128,13 @@ class SchemaGenerator(object):
         with FileGenerator.Indent(self.output_file):
             self.output_file.put_line('cur_attr = dom_node.getAttribute("{0}")'.format(
                 attribute.getAttribute('name')))
-            self.output_file.put_line('self.m_{0} = cur_attr'.format(
-                attribute.getAttribute('name')))
-
+            if attribute.getAttribute('type') == 'xs:string':
+                self.output_file.put_line('self.m_{0} = cur_attr'.format(
+                    attribute.getAttribute('name')))
+            else:
+                self.output_file.put_line('self.m_{0} = {1}.load(cur_attr)'.format(
+                    attribute.getAttribute('name'),
+                    attribute.getAttribute('type')))
 
 def main():
     print(
