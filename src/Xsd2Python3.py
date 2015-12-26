@@ -39,6 +39,18 @@ class SchemaGenerator(object):
         for complex_type in self.input_xsd.getElementsByTagName('xs:complexType'):
             self.__build_structure(complex_type)
         self.output_file.put_line('def load(dom_node):')
+        with FileGenerator.Indent(self.output_file):
+            for root_element in self.input_xsd.childNodes:
+                for element in root_element.childNodes:
+                    if element.nodeName=='xs:element':
+                        self.output_file.put_line('elements = dom_node.getElementsByTagName("{0}")'.format(
+                                element.getAttribute('name')))
+                        self.output_file.put_line('for element in elements:')
+                        with FileGenerator.Indent(self.output_file):
+                            self.output_file.put_line('new_element = {0}()'.format(element.getAttribute('type')))
+                            self.output_file.put_line('new_element.load(element)')
+                            self.output_file.put_line('return new_element')
+
 
     def __build_enum(self, enumerator):
         self.output_file.put_line('class {0}(Enum):'.format(enumerator.getAttribute('name')))
@@ -105,8 +117,8 @@ class SchemaGenerator(object):
             self.__build_load_attribute(attribute)
 
     def __build_load_element(self, element):
-        self.output_file.put_line('elements = dom_node.getElementsByTagName("{0}")'.format(
-                element.getAttribute('name')))
+        self.output_file.put_line('elements = [node in dom_node.childNodes if node.nodeName == "{0}"]'.format(
+            element.getAttribute('name')))
         self.output_file.put_line('for element in elements:')
         with FileGenerator.Indent(self.output_file):
             self.output_file.put_line('new_element = {0}()'.format(element.getAttribute('type')))

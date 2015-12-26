@@ -20,14 +20,17 @@
 #
 
 import argparse
+import Parser
 from xml.dom.minidom import parse
 
 
 class CapiGenerator(object):
     def __init__(self, input_filename, output_folder):
         self.input_xml = parse(input_filename)
+        self.params = None
 
     def generate(self):
+        self.params = Parser.load(self.input_xml)
         pass
 
 
