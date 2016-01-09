@@ -34,28 +34,54 @@ class CapiGenerator(object):
         self.output_folder = output_folder
         self.api_description = None
         self.params_description = None
+        self.output_header = None
 
     def generate(self):
         self.params_description = ParamsParser.load(self.input_params)
         self.api_description = Parser.load(self.input_xml)
+        if not os.path.exists(self.output_folder):
+            os.makedirs(self.output_folder)
+        if self.params_description.m_generate_single_file:
+            output_file = os.path.join(self.output_folder,self.params_description.m_single_header_name)
+            self.output_header = FileGenerator.FileGenerator(output_file)
         for namespace in self.api_description.m_namespaces:
-            self.__process_namespace(self.output_folder, namespace)
+            self.__process_namespace(self.output_folder, namespace, '')
 
-    def __process_namespace(self, base_path, namespace):
-        output_folder = os.path.join(base_path, namespace.m_name)
-        if not os.path.exists(output_folder):
-            os.makedirs(output_folder)
+    def __process_namespace(self, base_path, namespace, namespace_prefix):
+        output_folder = base_path
+        if self.params_description.m_folder_per_namespace and not self.params_description.m_generate_single_file:
+            output_folder = os.path.join(base_path, namespace.m_name)
+            if not os.path.exists(output_folder):
+                os.makedirs(output_folder)
+
         for nested_namespace in namespace.m_namespaces:
-            self.__process_namespace(output_folder, nested_namespace)
+            self.__process_namespace(output_folder, nested_namespace, namespace_prefix+namespace.m_name)
+
+        if not self.params_description.m_generate_single_file:
+            if not self.params_description.m_file_per_interface or self.params_description.m_generate_namespace_header:
+                output_file = namespace.m_name + '.h'
+                if not self.params_description.m_folder_per_namespace:
+                    output_file = namespace_prefix + namespace.m_name + '.h'
+                namespace_folder = output_folder
+                if self.params_description.m_namespace_header_at_parent_folder:
+                    namespace_folder = base_path
+                self.output_header = FileGenerator.FileGenerator(os.path.join(namespace_folder, output_file))
+                if self.params_description.m_generate_namespace_header:
+                    self.__process_namespace_header(namespace)
+
         for interface in namespace.m_interfaces:
             self.__process_interface(output_folder, interface)
-        #namespace_header = os.path.join(base_path, namespace.m_name + '.h')
+
+    def __process_namespace_header(self, namespace):
+        pass
 
     def __process_interface(self, base_path, interface):
-        output_file = os.path.join(base_path, interface.m_name + '.h')
-        output_header = FileGenerator.FileGenerator(output_file)
-        output_header.put_line(self.params_description.m_copyright_header)
-        output_header.put_line(self.params_description.m_automatic_generated_warning)
+        if self.params_description.m_file_per_interface and not self.params_description.m_generate_single_file:
+            output_file = os.path.join(base_path, interface.m_name + '.h')
+            self.output_header = FileGenerator.FileGenerator(output_file)
+
+        self.output_header.put_copyright_header(self.params_description.m_copyright_header)
+        self.output_header.put_automatic_generation_warning(self.params_description.m_automatic_generated_warning)
 
 
 def main():

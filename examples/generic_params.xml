@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<params:params xmlns:params="http://gkmsoft.ru/beautifulcapi-params">
+<params:params xmlns:params="http://gkmsoft.ru/beautifulcapi-params"
+               file_per_interface="true"
+               folder_per_namespace="true"
+               generate_single_file="false"
+               generate_namespace_header="true"
+               namespace_header_at_parent_folder="true">
   <copyright_header>/*
  * &lt;Your project name and short 1-line description here&gt;
  * Copyright (C) &lt;Year&gt; &lt;Author&gt;

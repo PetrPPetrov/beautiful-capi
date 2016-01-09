@@ -38,6 +38,7 @@ class TBeautifulCapiParams(object):
         self.m_generate_namespace_header = True
         self.m_namespace_header_at_parent_folder = True
         self.m_generate_single_file = False
+        self.m_single_header_name = "Output.h"
         self.m_copyright_header = ""
         self.m_automatic_generated_warning = ""
     
@@ -63,6 +64,9 @@ class TBeautifulCapiParams(object):
         if dom_node.hasAttribute("generate_single_file"):
             cur_attr = dom_node.getAttribute("generate_single_file")
             self.m_generate_single_file = string_to_bool(cur_attr)
+        if dom_node.hasAttribute("single_header_name"):
+            cur_attr = dom_node.getAttribute("single_header_name")
+            self.m_single_header_name = cur_attr
     
 
 def load(dom_node):
