@@ -20,6 +20,7 @@
 #
 
 import os
+import posixpath
 import argparse
 from xml.dom.minidom import parse
 import FileGenerator
@@ -35,6 +36,7 @@ class CapiGenerator(object):
         self.api_description = None
         self.params_description = None
         self.output_header = None
+        self.cur_namespace_path = []
 
     def generate(self):
         self.params_description = ParamsParser.load(self.input_params)
@@ -47,7 +49,12 @@ class CapiGenerator(object):
         for namespace in self.api_description.m_namespaces:
             self.__process_namespace(self.output_folder, namespace, '')
 
+    def get_namespace_id(self):
+        return '_'.join(self.cur_namespace_path)
+
     def __process_namespace(self, base_path, namespace, namespace_prefix):
+        self.cur_namespace_path.append(namespace.m_name)
+
         output_folder = base_path
         if self.params_description.m_folder_per_namespace and not self.params_description.m_generate_single_file:
             output_folder = os.path.join(base_path, namespace.m_name)
@@ -67,13 +74,28 @@ class CapiGenerator(object):
                     namespace_folder = base_path
                 self.output_header = FileGenerator.FileGenerator(os.path.join(namespace_folder, output_file))
                 if self.params_description.m_generate_namespace_header:
-                    self.__process_namespace_header(namespace)
+                    self.__process_namespace_header(namespace, output_folder)
 
         for interface in namespace.m_interfaces:
             self.__process_interface(output_folder, interface)
 
-    def __process_namespace_header(self, namespace):
-        pass
+        self.cur_namespace_path.pop()
+
+    def __process_namespace_header(self, namespace, base_path_for_files):
+        self.output_header.put_copyright_header(self.params_description.m_copyright_header)
+        self.output_header.put_automatic_generation_warning(self.params_description.m_automatic_generated_warning)
+
+        watchdog_string = '{0}_INCLUDED'.format(self.get_namespace_id().upper())
+        self.output_header.put_line('#ifndef {0}'.format(watchdog_string))
+        self.output_header.put_line('#define {0}'.format(watchdog_string))
+        self.output_header.put_line('')
+        if self.params_description.m_file_per_interface and not self.params_description.m_generate_single_file:
+            for interface in namespace.m_interfaces:
+                cur_interface_file = posixpath.join('/'.join(self.cur_namespace_path), interface.m_name + '.h')
+                self.output_header.put_line('#include "{0}"'.format(cur_interface_file))
+
+        self.output_header.put_line('')
+        self.output_header.put_line('#endif // {0}'.format(watchdog_string))
 
     def __process_interface(self, base_path, interface):
         if self.params_description.m_file_per_interface and not self.params_description.m_generate_single_file:
@@ -82,6 +104,24 @@ class CapiGenerator(object):
 
         self.output_header.put_copyright_header(self.params_description.m_copyright_header)
         self.output_header.put_automatic_generation_warning(self.params_description.m_automatic_generated_warning)
+
+        watchdog_string = '{0}_{1}_INCLUDED'.format(self.get_namespace_id().upper(),interface.m_name.upper())
+        self.output_header.put_line('#ifndef {0}'.format(watchdog_string))
+        self.output_header.put_line('#define {0}'.format(watchdog_string))
+        self.output_header.put_line('')
+
+        for cur_namespace in self.cur_namespace_path:
+            self.output_header.put_line('namespace {0} {{ '.format(cur_namespace), '')
+        self.output_header.put_line('')
+
+        self.output_header.put_line('')
+
+        for cur_namespace in self.cur_namespace_path:
+            self.output_header.put_line('}','')
+        self.output_header.put_line('')
+
+        self.output_header.put_line('')
+        self.output_header.put_line('#endif // {0}'.format(watchdog_string))
 
 
 def main():
