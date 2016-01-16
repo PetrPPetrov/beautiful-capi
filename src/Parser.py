@@ -83,10 +83,18 @@ class TNamespace(object):
 class TInterface(object):
     def __init__(self):
         self.m_name = ""
+        self.m_base = ""
+        self.m_implementation_class_name = ""
+        self.m_implementation_class_header = ""
         self.m_lifecycle = TLifecycle.reference_counted
+        self.m_constructors = []
         self.m_methods = []
     
     def load(self, dom_node):
+        for element in [node for node in dom_node.childNodes if node.nodeName == "constructor"]:
+            new_element = TMethod()
+            new_element.load(element)
+            self.m_constructors.append(new_element)
         for element in [node for node in dom_node.childNodes if node.nodeName == "method"]:
             new_element = TMethod()
             new_element.load(element)
@@ -94,6 +102,15 @@ class TInterface(object):
         if dom_node.hasAttribute("name"):
             cur_attr = dom_node.getAttribute("name")
             self.m_name = cur_attr
+        if dom_node.hasAttribute("base"):
+            cur_attr = dom_node.getAttribute("base")
+            self.m_base = cur_attr
+        if dom_node.hasAttribute("implementation_class_name"):
+            cur_attr = dom_node.getAttribute("implementation_class_name")
+            self.m_implementation_class_name = cur_attr
+        if dom_node.hasAttribute("implementation_class_header"):
+            cur_attr = dom_node.getAttribute("implementation_class_header")
+            self.m_implementation_class_header = cur_attr
         if dom_node.hasAttribute("lifecycle"):
             cur_attr = dom_node.getAttribute("lifecycle")
             self.m_lifecycle = TLifecycle.load(cur_attr)

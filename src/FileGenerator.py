@@ -93,6 +93,7 @@ class FileGenerator(object):
                 self.put_line('')
                 self.put_line('')
 
+
 class Indent(object):
     def __init__(self, file_generator):
         self.file_generator = file_generator

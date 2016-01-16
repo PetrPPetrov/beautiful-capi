@@ -16,11 +16,20 @@
   </xs:complexType>
   <xs:complexType name="TInterface">
     <xs:sequence>
+      <xs:element name="constructor" minOccurs="0" maxOccurs="unbounded" type="TConstructor"/>
       <xs:element name="method" minOccurs="0" maxOccurs="unbounded" type="TMethod"/>
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required"/>
     <xs:attribute name="base" type="xs:string" use="optional" default=""/>
+    <xs:attribute name="implementation_class_name" type="xs:string" use="required"/>
+    <xs:attribute name="implementation_class_header" type="xs:string" use="required"/>
     <xs:attribute name="lifecycle" type="TLifecycle" use="optional" default="reference_counted"/>
+  </xs:complexType>
+  <xs:complexType name="TConstructor">
+    <xs:sequence>
+      <xs:element name="argument" minOccurs="0" maxOccurs="unbounded" type="TArgument"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" use="required"/>
   </xs:complexType>
   <xs:complexType name="TMethod">
     <xs:sequence>

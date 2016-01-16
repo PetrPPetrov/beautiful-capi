@@ -2,6 +2,7 @@
 <hello_world:api xmlns:hello_world="http://gkmsoft.ru/beautifulcapi">
   <namespace name="HelloWorld">
     <interface name="Printer" lifecycle="simple">
+      <constructor name="Default"
       <method name="Show"/>
     </interface>
     <method name="CreatePrinter" return="capi:Printer"/>

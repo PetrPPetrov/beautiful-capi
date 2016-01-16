@@ -38,6 +38,10 @@ class CapiGenerator(object):
         self.output_header = None
         self.cur_namespace_path = []
 
+    @staticmethod
+    def __get_arguments_list(arguments):
+        return ', '.join(['{0} {1}'.format(argument.m_type, argument.m_name) for argument in arguments])
+
     def generate(self):
         self.params_description = ParamsParser.load(self.input_params)
         self.api_description = Parser.load(self.input_xml)
@@ -49,7 +53,7 @@ class CapiGenerator(object):
         for namespace in self.api_description.m_namespaces:
             self.__process_namespace(self.output_folder, namespace, '')
 
-    def get_namespace_id(self):
+    def __get_namespace_id(self):
         return '_'.join(self.cur_namespace_path)
 
     def __process_namespace(self, base_path, namespace, namespace_prefix):
@@ -85,7 +89,7 @@ class CapiGenerator(object):
         self.output_header.put_copyright_header(self.params_description.m_copyright_header)
         self.output_header.put_automatic_generation_warning(self.params_description.m_automatic_generated_warning)
 
-        watchdog_string = '{0}_INCLUDED'.format(self.get_namespace_id().upper())
+        watchdog_string = '{0}_INCLUDED'.format(self.__get_namespace_id().upper())
         self.output_header.put_line('#ifndef {0}'.format(watchdog_string))
         self.output_header.put_line('#define {0}'.format(watchdog_string))
         self.output_header.put_line('')
@@ -105,7 +109,7 @@ class CapiGenerator(object):
         self.output_header.put_copyright_header(self.params_description.m_copyright_header)
         self.output_header.put_automatic_generation_warning(self.params_description.m_automatic_generated_warning)
 
-        watchdog_string = '{0}_{1}_INCLUDED'.format(self.get_namespace_id().upper(),interface.m_name.upper())
+        watchdog_string = '{0}_{1}_INCLUDED'.format(self.__get_namespace_id().upper(), interface.m_name.upper())
         self.output_header.put_line('#ifndef {0}'.format(watchdog_string))
         self.output_header.put_line('#define {0}'.format(watchdog_string))
         self.output_header.put_line('')
@@ -113,15 +117,46 @@ class CapiGenerator(object):
         for cur_namespace in self.cur_namespace_path:
             self.output_header.put_line('namespace {0} {{ '.format(cur_namespace), '')
         self.output_header.put_line('')
-
         self.output_header.put_line('')
 
+        self.output_header.put_line('class {0}'.format(interface.m_name))
+        self.output_header.put_line('{')
+        with FileGenerator.Indent(self.output_header):
+            self.output_header.put_line('void* m_pointer;')
+        self.output_header.put_line('public:')
+        with FileGenerator.Indent(self.output_header):
+            for constructor in interface.m_constructors:
+                self.output_header.put_line('{0}(){{}}'.format(interface.m_name))
+            for method in interface.m_methods:
+                self.output_header.put_line('{0}({1}){{}}'.format(
+                    method.m_name,
+                    CapiGenerator.__get_arguments_list(method.m_arguments)))
+        self.output_header.put_line('};')
+
+        self.output_header.put_line('')
         for cur_namespace in self.cur_namespace_path:
-            self.output_header.put_line('}','')
+            self.output_header.put_line('}', '')
         self.output_header.put_line('')
 
         self.output_header.put_line('')
         self.output_header.put_line('#endif // {0}'.format(watchdog_string))
+
+    def __is_interface_type(self, type_name):
+        path_to_interface = type_name.split('::')
+        return self.__is_interface_type_impl(path_to_interface, self.api_description.m_namespaces)
+
+    def __is_interface_type_impl(self, path_to_interface, interfaces_or_namespaces):
+        for interface_or_namespace in interfaces_or_namespaces:
+            if interface_or_namespace.m_name == path_to_interface[0]:
+                if len(path_to_interface) == 1:
+                    return True
+                elif len(path_to_interface) == 2:
+                    return self.__is_interface_type_impl(path_to_interface[1:],interface_or_namespace.m_interfaces)
+                else:
+                    return self.__is_interface_type_impl(path_to_interface[1:],interface_or_namespace.m_namespaces)
+        return False
+
+
 
 
 def main():
