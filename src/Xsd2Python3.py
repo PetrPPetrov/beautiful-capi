@@ -91,18 +91,25 @@ class SchemaGenerator(object):
         self.output_file.put_line('')
 
     def __build_structure(self, complex_type):
-        self.output_file.put_line('class {0}(object):'.format(complex_type.getAttribute('name')))
+        base_class = 'object'
+        for cur_base_class in complex_type.getElementsByTagName('xs:extension'):
+            base_class = cur_base_class.getAttribute('base')
+        self.output_file.put_line('class {0}({1}):'.format(complex_type.getAttribute('name'), base_class))
         with FileGenerator.Indent(self.output_file):
-            self.__build_structure_impl(complex_type)
+            self.__build_structure_impl(complex_type, base_class)
         self.output_file.put_line('')
 
-    def __build_structure_impl(self, complex_type):
+    def __build_structure_impl(self, complex_type, base_class):
         self.output_file.put_line('def __init__(self):')
         with FileGenerator.Indent(self.output_file):
+            if base_class != 'object':
+                self.output_file.put_line('super({0}, self).__init__()'.format(complex_type.getAttribute('name')))
             self.__build_constructor(complex_type)
         self.output_file.put_line('')
         self.output_file.put_line('def load(self, dom_node):')
         with FileGenerator.Indent(self.output_file):
+            if base_class != 'object':
+                self.output_file.put_line('super({0}, self).load(dom_node)'.format(complex_type.getAttribute('name')))
             self.__build_load(complex_type)
         self.output_file.put_line('')
 

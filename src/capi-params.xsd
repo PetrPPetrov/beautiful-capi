@@ -12,5 +12,6 @@
     <xs:attribute name="namespace_header_at_parent_folder" type="xs:boolean" use="optional" default="true"/>
     <xs:attribute name="generate_single_file" type="xs:boolean" use="optional" default="false"/>
     <xs:attribute name="single_header_name" type="xs:string" use="optional" default="Output.h"/>
+    <xs:attribute name="dynamically_load_functions" type="xs:boolean" use="optional" default="false"/>
   </xs:complexType>
 </xs:schema>

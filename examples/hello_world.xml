@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <hello_world:api xmlns:hello_world="http://gkmsoft.ru/beautifulcapi">
   <namespace name="HelloWorld">
-    <interface name="Printer" lifecycle="simple">
-      <constructor name="Default"
+    <interface name="Printer" lifecycle="simple" implementation_class_name="HelloWorld::PrinterImpl" implementation_class_header="PrinterImpl.h">
+      <constructor name="Default"/>
       <method name="Show"/>
     </interface>
     <method name="CreatePrinter" return="capi:Printer"/>

@@ -92,7 +92,7 @@ class TInterface(object):
     
     def load(self, dom_node):
         for element in [node for node in dom_node.childNodes if node.nodeName == "constructor"]:
-            new_element = TMethod()
+            new_element = TConstructor()
             new_element.load(element)
             self.m_constructors.append(new_element)
         for element in [node for node in dom_node.childNodes if node.nodeName == "method"]:
@@ -116,10 +116,9 @@ class TInterface(object):
             self.m_lifecycle = TLifecycle.load(cur_attr)
     
 
-class TMethod(object):
+class TConstructor(object):
     def __init__(self):
         self.m_name = ""
-        self.m_return = ""
         self.m_arguments = []
     
     def load(self, dom_node):
@@ -130,6 +129,15 @@ class TMethod(object):
         if dom_node.hasAttribute("name"):
             cur_attr = dom_node.getAttribute("name")
             self.m_name = cur_attr
+    
+
+class TMethod(TConstructor):
+    def __init__(self):
+        super(TMethod, self).__init__()
+        self.m_return = ""
+    
+    def load(self, dom_node):
+        super(TMethod, self).load(dom_node)
         if dom_node.hasAttribute("return"):
             cur_attr = dom_node.getAttribute("return")
             self.m_return = cur_attr
