@@ -32,13 +32,16 @@ def string_to_bool(string_value):
 
 
 class TLifecycle(Enum):
-    simple = 0
-    reference_counted = 1
+    copy_semantic = 0
+    move_semantic = 1
+    reference_counted = 2
 
     @staticmethod
     def load(value):
-        if value == "simple":
-            return TLifecycle.simple
+        if value == "copy_semantic":
+            return TLifecycle.copy_semantic
+        if value == "move_semantic":
+            return TLifecycle.move_semantic
         if value == "reference_counted":
             return TLifecycle.reference_counted
         raise ValueError
@@ -87,6 +90,7 @@ class TInterface(object):
         self.m_implementation_class_name = ""
         self.m_implementation_class_header = ""
         self.m_lifecycle = TLifecycle.reference_counted
+        self.m_requires_cast_to_base = True
         self.m_constructors = []
         self.m_methods = []
     
@@ -114,6 +118,9 @@ class TInterface(object):
         if dom_node.hasAttribute("lifecycle"):
             cur_attr = dom_node.getAttribute("lifecycle")
             self.m_lifecycle = TLifecycle.load(cur_attr)
+        if dom_node.hasAttribute("requires_cast_to_base"):
+            cur_attr = dom_node.getAttribute("requires_cast_to_base")
+            self.m_requires_cast_to_base = string_to_bool(cur_attr)
     
 
 class TConstructor(object):

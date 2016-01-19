@@ -24,6 +24,7 @@
     <xs:attribute name="implementation_class_name" type="xs:string" use="required"/>
     <xs:attribute name="implementation_class_header" type="xs:string" use="required"/>
     <xs:attribute name="lifecycle" type="TLifecycle" use="optional" default="reference_counted"/>
+    <xs:attribute name="requires_cast_to_base" type="xs:boolean" use="optional" default="true"/>
   </xs:complexType>
   <xs:complexType name="TConstructor">
     <xs:sequence>
@@ -44,7 +45,8 @@
   </xs:complexType>
   <xs:simpleType name="TLifecycle">
     <xs:restriction base="xs:string">
-      <xs:enumeration value="simple"/>
+      <xs:enumeration value="copy_semantic"/>
+      <xs:enumeration value="move_semantic"/>
       <xs:enumeration value="reference_counted"/>
     </xs:restriction>
   </xs:simpleType>

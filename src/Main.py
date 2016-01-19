@@ -28,6 +28,45 @@ import Parser
 import ParamsParser
 
 
+class CopySemantic(object):
+    def __init__(self):
+        pass
+
+    def add_ref(self, output_file, base_name):
+        pass
+
+
+class MoveSemantic(object):
+    def __init__(self):
+        pass
+
+    def add_ref(self, output_file, base_name):
+        pass
+
+
+class RefCountedSemantic(object):
+    def __init(self):
+        pass
+
+    def add_ref(self, output_file, base_name):
+        output_file.put_line('if (m_raw_pointer)')
+        with FileGenerator.Indent(output_file):
+            output_file.put_line('{0}_addref(m_raw_pointer);'.format(base_name))
+
+
+str_to_lifecycle = {
+    Parser.TLifecycle.copy_semantic: CopySemantic,
+    Parser.TLifecycle.move_semantic: MoveSemantic,
+    Parser.TLifecycle.reference_counted: RefCountedSemantic
+}
+
+
+def create_lifecycle_object(value):
+    if value in str_to_lifecycle:
+        return str_to_lifecycle[value]()
+    raise ValueError
+
+
 class CapiGenerator(object):
     def __init__(self, input_filename, input_params_filename, output_folder):
         self.input_xml = parse(input_filename)
@@ -151,19 +190,28 @@ class CapiGenerator(object):
         self.output_header.put_line('{')
         self.output_header.put_line('protected:')
         with FileGenerator.Indent(self.output_header):
-            self.output_header.put_line('void* m_pointer;')
+            self.output_header.put_line('void* m_raw_pointer;')
+            base_class = 'm_raw_pointer'
+            if interface.m_base:
+                base_class = interface.m_base
+            self.output_header.put_line('{0}(void* raw_pointer) : {1}(raw_pointer)'.format(interface.m_name, base_class))
+            self.output_header.put_line('{')
+            with FileGenerator.Indent(self.output_header):
+                lifecycle = create_lifecycle_object(interface.m_lifecycle)
+                lifecycle.add_ref(self.output_header, self.__get_namespace_id().lower())
+            self.output_header.put_line('}')
         self.output_header.put_line('public:')
         with FileGenerator.Indent(self.output_header):
             for constructor in interface.m_constructors:
-                self.__generate_method(constructor, CapiGenerator.__generate_constructor_body)
+                self.__generate_method(constructor, interface.m_name, CapiGenerator.__generate_constructor_body)
             for method in interface.m_methods:
-                self.__generate_method(method, CapiGenerator.__generate_method_body)
+                self.__generate_method(method, method.m_name, CapiGenerator.__generate_method_body)
         self.output_header.put_line('};')
 
-    def __generate_method(self, method, generate_body_method):
+    def __generate_method(self, method, method_name, generate_body_method):
         self.cur_namespace_path.append(method.m_name)
         self.output_header.put_line('{0}({1})'.format(
-            method.m_name,
+            method_name,
             CapiGenerator.__get_arguments_list_for_declaration(method.m_arguments)))
         self.output_header.put_line('{')
         with FileGenerator.Indent(self.output_header):
