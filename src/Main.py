@@ -23,48 +23,11 @@ import os
 import posixpath
 import argparse
 from xml.dom.minidom import parse
+from LifecycleTraits import create_lifecycle_traits
+from InheritanceTraits import create_inheritance_traits
 import FileGenerator
 import Parser
 import ParamsParser
-
-
-class CopySemantic(object):
-    def __init__(self):
-        pass
-
-    def add_ref(self, output_file, base_name):
-        pass
-
-
-class MoveSemantic(object):
-    def __init__(self):
-        pass
-
-    def add_ref(self, output_file, base_name):
-        pass
-
-
-class RefCountedSemantic(object):
-    def __init(self):
-        pass
-
-    def add_ref(self, output_file, base_name):
-        output_file.put_line('if (m_raw_pointer)')
-        with FileGenerator.Indent(output_file):
-            output_file.put_line('{0}_addref(m_raw_pointer);'.format(base_name))
-
-
-str_to_lifecycle = {
-    Parser.TLifecycle.copy_semantic: CopySemantic,
-    Parser.TLifecycle.move_semantic: MoveSemantic,
-    Parser.TLifecycle.reference_counted: RefCountedSemantic
-}
-
-
-def create_lifecycle_object(value):
-    if value in str_to_lifecycle:
-        return str_to_lifecycle[value]()
-    raise ValueError
 
 
 class CapiGenerator(object):
@@ -76,6 +39,8 @@ class CapiGenerator(object):
         self.params_description = None
         self.output_header = None
         self.cur_namespace_path = []
+        self.lifecycle_traits = None
+        self.inheritance_traits = None
 
     @staticmethod
     def __get_arguments_list_for_declaration(arguments):
@@ -106,7 +71,7 @@ class CapiGenerator(object):
         for namespace in self.api_description.m_namespaces:
             self.__process_namespace(self.output_folder, namespace, '')
 
-    def __get_namespace_id(self):
+    def get_namespace_id(self):
         return '_'.join(self.cur_namespace_path)
 
     def __process_namespace(self, base_path, namespace, namespace_prefix):
@@ -142,7 +107,7 @@ class CapiGenerator(object):
         self.output_header.put_copyright_header(self.params_description.m_copyright_header)
         self.output_header.put_automatic_generation_warning(self.params_description.m_automatic_generated_warning)
 
-        watchdog_string = '{0}_INCLUDED'.format(self.__get_namespace_id().upper())
+        watchdog_string = '{0}_INCLUDED'.format(self.get_namespace_id().upper())
         self.output_header.put_line('#ifndef {0}'.format(watchdog_string))
         self.output_header.put_line('#define {0}'.format(watchdog_string))
         self.output_header.put_line('')
@@ -156,6 +121,8 @@ class CapiGenerator(object):
 
     def __process_interface(self, base_path, interface):
         self.cur_namespace_path.append(interface.m_name)
+        self.lifecycle_traits = create_lifecycle_traits(interface, self)
+        self.inheritance_traits = create_inheritance_traits(interface, self)
 
         if self.params_description.m_file_per_interface and not self.params_description.m_generate_single_file:
             output_file = os.path.join(base_path, interface.m_name + '.h')
@@ -164,7 +131,7 @@ class CapiGenerator(object):
         self.output_header.put_copyright_header(self.params_description.m_copyright_header)
         self.output_header.put_automatic_generation_warning(self.params_description.m_automatic_generated_warning)
 
-        watchdog_string = '{0}_INCLUDED'.format(self.__get_namespace_id().upper())
+        watchdog_string = '{0}_INCLUDED'.format(self.get_namespace_id().upper())
         self.output_header.put_line('#ifndef {0}'.format(watchdog_string))
         self.output_header.put_line('#define {0}'.format(watchdog_string))
         self.output_header.put_line('')
@@ -183,6 +150,8 @@ class CapiGenerator(object):
 
         self.output_header.put_line('')
         self.output_header.put_line('#endif // {0}'.format(watchdog_string))
+        del self.inheritance_traits
+        del self.lifecycle_traits
         self.cur_namespace_path.pop()
 
     def __generate_class(self, interface):
@@ -190,20 +159,13 @@ class CapiGenerator(object):
         self.output_header.put_line('{')
         self.output_header.put_line('protected:')
         with FileGenerator.Indent(self.output_header):
-            self.output_header.put_line('void* m_raw_pointer;')
-            base_class = 'm_raw_pointer'
-            if interface.m_base:
-                base_class = interface.m_base
-            self.output_header.put_line('{0}(void* raw_pointer) : {1}(raw_pointer)'.format(interface.m_name, base_class))
-            self.output_header.put_line('{')
-            with FileGenerator.Indent(self.output_header):
-                lifecycle = create_lifecycle_object(interface.m_lifecycle)
-                lifecycle.add_ref(self.output_header, self.__get_namespace_id().lower())
-            self.output_header.put_line('}')
+            self.inheritance_traits.generate_pointer_declaration()
+            self.inheritance_traits.generate_protected_constructor()
         self.output_header.put_line('public:')
         with FileGenerator.Indent(self.output_header):
             for constructor in interface.m_constructors:
                 self.__generate_method(constructor, interface.m_name, CapiGenerator.__generate_constructor_body)
+            self.lifecycle_traits.generate_destructor()
             for method in interface.m_methods:
                 self.__generate_method(method, method.m_name, CapiGenerator.__generate_method_body)
         self.output_header.put_line('};')
@@ -222,7 +184,7 @@ class CapiGenerator(object):
     def __generate_constructor_body(self, method):
         if not self.params_description.m_dynamically_load_functions:
             self.output_header.put_line('m_pointer = {c_function}({arguments});'.format(
-                c_function=self.__get_namespace_id().lower(),
+                c_function=self.get_namespace_id().lower(),
                 arguments=CapiGenerator.__get_arguments_list_for_constructor_call(method.m_arguments)
             ))
         else:
@@ -233,7 +195,7 @@ class CapiGenerator(object):
             return_instruction = 'return ' if method.m_return else ''
             self.output_header.put_line('{return_instruction}{c_function}({this_argument}{arguments});'.format(
                 return_instruction=return_instruction,
-                c_function=self.__get_namespace_id().lower(),
+                c_function=self.get_namespace_id().lower(),
                 this_argument='m_pointer',
                 arguments=CapiGenerator.__get_arguments_list_for_c_call(method.m_arguments)
             ))
