@@ -51,20 +51,21 @@ class RefCountedSemantic(object):
         self.capi_generator = capi_generator
 
     def generate_destructor(self):
-        self.capi_generator.output_header.put_line('~{0}()'.format(self.interface.m_name))
-        self.capi_generator.output_header.put_line('{')
-        with FileGenerator.Indent(self.capi_generator.output_header):
-            self.capi_generator.output_header.put_line('if ({0})'.format(
-                self.capi_generator.inheritance_traits.get_pointer()
-            ))
+        if not self.interface.m_base:
+            self.capi_generator.output_header.put_line('~{0}()'.format(self.interface.m_name))
             self.capi_generator.output_header.put_line('{')
             with FileGenerator.Indent(self.capi_generator.output_header):
-                self.capi_generator.output_header.put_line('{0}({1});'.format(
-                    self.capi_generator.get_namespace_id().lower() + '_release',
-                    self.capi_generator.inheritance_traits.get_pointer()
+                self.capi_generator.output_header.put_line('if ({0})'.format(
+                    self.capi_generator.inheritance_traits.get_object()
                 ))
+                self.capi_generator.output_header.put_line('{')
+                with FileGenerator.Indent(self.capi_generator.output_header):
+                    self.capi_generator.output_header.put_line('{0}({1});'.format(
+                        self.capi_generator.get_namespace_id().lower() + '_release',
+                        self.capi_generator.inheritance_traits.get_object()
+                    ))
+                self.capi_generator.output_header.put_line('}')
             self.capi_generator.output_header.put_line('}')
-        self.capi_generator.output_header.put_line('}')
 
 
 str_to_lifecycle = {

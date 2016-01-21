@@ -19,50 +19,90 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+import Helpers
+import FileGenerator
 
-class RequiresCastToBase(object):
+
+class InheritanceBase(object):
     def __init__(self, interface, capi_generator):
         self.interface = interface
         self.capi_generator = capi_generator
+
+    def put_line(self, line, eol='\n'):
+        self.capi_generator.output_header.put_line(line, eol)
+
+    def indent(self):
+        return FileGenerator.Indent(self.capi_generator.output_header)
+
+
+class RequiresCastToBase(InheritanceBase):
+    def __init__(self, interface, capi_generator):
+        super().__init__(interface, capi_generator)
 
     def generate_pointer_declaration(self):
-        self.capi_generator.output_header.put_line('void* m_raw_pointer;')
+        self.capi_generator.output_header.put_line('void* mObject;')
 
-    def generate_protected_constructor(self):
-        self.capi_generator.output_header.put_line('{0}(void* raw_pointer) : m_raw_pointer(raw_pointer)'.format(
-            self.interface.m_name), '')
-        if self.interface.m_base:
-            self.capi_generator.output_header.put_line(', {base_class}({cast_to_base}(raw_pointer))'.format(
-                base_class=self.interface.m_base,
-                cast_to_base=self.capi_generator.get_namespace_id().lower() + '_cast_to_base'
-            ))
-        else:
-            self.capi_generator.output_header.put_line('')
-        self.capi_generator.output_header.put_line('{')
-        self.capi_generator.output_header.put_line('}')
+    def generate_set_object(self):
+        self.put_line('SetObject(void* raw_pointer)')
+        self.put_line('{')
+        with self.indent():
+            self.put_line('mObject = raw_pointer;')
+            if self.interface.m_base:
+                self.put_line('{base_class}::SetObject({cast_to_base}(mObject));'.format(
+                    base_class=self.interface.m_base,
+                    cast_to_base=self.capi_generator.get_namespace_id().lower() + '_cast_to_base'))
+        self.put_line('}')
 
-    def get_pointer(self):
-        return 'm_raw_pointer'
+    def generate_constructor(self, constructor):
+        self.capi_generator.cur_namespace_path.append(constructor.m_name)
+        self.put_line('{class_name}({arguments_list})'.format(
+            class_name=self.interface.m_name,
+            arguments_list=Helpers.get_arguments_list_for_declaration(constructor.m_arguments)))
+        self.put_line('{')
+        with self.indent():
+            self.put_line('SetObject({constructor_c_function}({arguments_list}));'.format(
+                constructor_c_function=self.capi_generator.get_namespace_id().lower(),
+                arguments_list=Helpers.get_arguments_list_for_constructor_call(constructor.m_arguments)))
+        self.put_line('}')
+        self.capi_generator.cur_namespace_path.pop()
+
+    def get_object(self):
+        return 'mObject'
 
 
-class SimpleCase(object):
+class SimpleCase(InheritanceBase):
     def __init__(self, interface, capi_generator):
-        self.interface = interface
-        self.capi_generator = capi_generator
-        self.m_base = interface.m_base if interface.m_base else 'm_raw_pointer'
+        super().__init__(interface, capi_generator)
 
     def generate_pointer_declaration(self):
         if not self.interface.m_base:
-            self.capi_generator.output_header.put_line('void* m_raw_pointer;')
+            self.capi_generator.output_header.put_line('void* mObject;')
 
-    def generate_protected_constructor(self):
-        self.capi_generator.output_header.put_line('{0}(void* raw_pointer) : {1}(raw_pointer)'.format(
-            self.interface.m_name, self.m_base))
-        self.capi_generator.output_header.put_line('{')
-        self.capi_generator.output_header.put_line('}')
+    def generate_set_object(self):
+        self.put_line('SetObject(void* raw_pointer)')
+        self.put_line('{')
+        with self.indent():
+            if self.interface.m_base:
+                self.put_line('{base_class}::SetObject(raw_pointer);')
+            else:
+                self.put_line('mObject = raw_pointer;')
+        self.put_line('}')
 
-    def get_pointer(self):
-        return 'm_raw_pointer'
+    def generate_constructor(self, constructor):
+        self.capi_generator.cur_namespace_path.append(constructor.m_name)
+        self.put_line('{class_name}({arguments_list})'.format(
+            class_name=self.interface.m_name,
+            arguments_list=Helpers.get_arguments_list_for_declaration(constructor.m_arguments)))
+        self.put_line('{')
+        with self.indent():
+            self.put_line('SetObject({constructor_c_function}({arguments_list}));'.format(
+                constructor_c_function=self.capi_generator.get_namespace_id().lower(),
+                arguments_list=Helpers.get_arguments_list_for_constructor_call(constructor.m_arguments)))
+        self.put_line('}')
+        self.capi_generator.cur_namespace_path.pop()
+
+    def get_object(self):
+        return 'mObject'
 
 
 def create_inheritance_traits(interface, capi_generator):
