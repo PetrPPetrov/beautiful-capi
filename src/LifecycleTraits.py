@@ -19,53 +19,92 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import FileGenerator
 import Parser
+from Constants import Constants
+from TraitsBase import TraitsBase
 
 
-class CopySemantic(object):
+class LifecycleTraitsBase(TraitsBase):
     def __init__(self, interface, capi_generator):
-        self.interface = interface
-        self.capi_generator = capi_generator
+        super().__init__(interface, capi_generator)
+
+    def generate_delete_destructor(self):
+        self.put_line('~{class_name}()'.format(class_name=self.interface.m_name))
+        self.put_line('{')
+        with self.indent():
+            self.put_line('if ({object_var})'.format(object_var=Constants.object_var))
+            self.put_line('{')
+            with self.indent():
+                self.put_line('{delete_c_function}({object_var});'.format(
+                    delete_c_function=self.capi_generator.get_namespace_id().lower() + Constants.delete_suffix,
+                    object_var=Constants.object_var))
+                self.put_line('SetObject(0);')
+            self.put_line('}')
+        self.put_line('}')
+
+
+class CopySemantic(LifecycleTraitsBase):
+    def __init__(self, interface, capi_generator):
+        super().__init__(interface, capi_generator)
 
     def generate_destructor(self):
-        self.capi_generator.output_header.put_line('~{0}()'.format(self.interface.m_name))
-        self.capi_generator.output_header.put_line('{')
-        self.capi_generator.output_header.put_line('}')
+        self.generate_delete_destructor()
+
+    def generate_copy_constructor(self):
+        self.put_line('{class_name}(const {class_name}& other)'.format(class_name=self.interface.m_name))
+        self.put_line('{')
+        with self.indent():
+            self.put_line('SetObject({copy_c_function}(other.{object_var}));'.format(
+                copy_c_function=self.capi_generator.get_namespace_id().lower() + Constants.copy_suffix,
+                object_var=Constants.object_var))
+        self.put_line('}')
 
 
-class MoveSemantic(object):
+class MoveSemantic(LifecycleTraitsBase):
     def __init__(self, interface, capi_generator):
-        self.interface = interface
-        self.capi_generator = capi_generator
+        super().__init__(interface, capi_generator)
 
     def generate_destructor(self):
-        self.capi_generator.output_header.put_line('~{0}()'.format(self.interface.m_name))
-        self.capi_generator.output_header.put_line('{')
-        self.capi_generator.output_header.put_line('}')
+        self.generate_delete_destructor()
+
+    def generate_copy_constructor(self):
+        self.put_line('{class_name}({class_name}& other)'.format(class_name=self.interface.m_name))
+        self.put_line('{')
+        with self.indent():
+            self.put_line('SetObject(other.{object_var});'.format(object_var=Constants.object_var))
+            self.put_line('other.SetObject(0);')
+        self.put_line('}')
 
 
-class RefCountedSemantic(object):
+class RefCountedSemantic(LifecycleTraitsBase):
     def __init__(self, interface, capi_generator):
-        self.interface = interface
-        self.capi_generator = capi_generator
+        super().__init__(interface, capi_generator)
 
     def generate_destructor(self):
         if not self.interface.m_base:
-            self.capi_generator.output_header.put_line('~{0}()'.format(self.interface.m_name))
-            self.capi_generator.output_header.put_line('{')
-            with FileGenerator.Indent(self.capi_generator.output_header):
-                self.capi_generator.output_header.put_line('if ({0})'.format(
-                    self.capi_generator.inheritance_traits.get_object()
-                ))
-                self.capi_generator.output_header.put_line('{')
-                with FileGenerator.Indent(self.capi_generator.output_header):
-                    self.capi_generator.output_header.put_line('{0}({1});'.format(
-                        self.capi_generator.get_namespace_id().lower() + '_release',
-                        self.capi_generator.inheritance_traits.get_object()
+            self.put_line('~{class_name}()'.format(class_name=self.interface.m_name))
+            self.put_line('{')
+            with self.indent():
+                self.put_line('if ({object_var})'.format(
+                    object_var=Constants.object_var))
+                self.put_line('{')
+                with self.indent():
+                    self.put_line('{release_c_function}({object_var});'.format(
+                        release_c_function=self.capi_generator.get_namespace_id().lower() + Constants.release_suffix,
+                        object_var=Constants.object_var
                     ))
-                self.capi_generator.output_header.put_line('}')
-            self.capi_generator.output_header.put_line('}')
+                self.put_line('}')
+            self.put_line('}')
+
+    def generate_copy_constructor(self):
+        self.put_line('{class_name}(const {class_name}& other)'.format(class_name=self.interface.m_name))
+        self.put_line('{')
+        with self.indent():
+            self.put_line('SetObject(other.{object_var});'.format(object_var=Constants.object_var))
+            self.put_line('{addref_c_function}({object_var});'.format(
+                addref_c_function=self.capi_generator.get_namespace_id().lower() + Constants.addref_suffix,
+                object_var=Constants.object_var))
+        self.put_line('}')
 
 
 str_to_lifecycle = {

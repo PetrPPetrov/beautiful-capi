@@ -24,6 +24,7 @@ import posixpath
 import argparse
 from xml.dom.minidom import parse
 import Helpers
+from Constants import Constants
 from LifecycleTraits import create_lifecycle_traits
 from InheritanceTraits import create_inheritance_traits
 import FileGenerator
@@ -146,6 +147,7 @@ class CapiGenerator(object):
             self.inheritance_traits.generate_set_object()
         self.output_header.put_line('public:')
         with FileGenerator.Indent(self.output_header):
+            self.lifecycle_traits.generate_copy_constructor()
             for constructor in interface.m_constructors:
                 self.inheritance_traits.generate_constructor(constructor)
             self.lifecycle_traits.generate_destructor()
@@ -170,7 +172,7 @@ class CapiGenerator(object):
             self.output_header.put_line('{return_instruction}{c_function}({this_argument}{arguments});'.format(
                 return_instruction=return_instruction,
                 c_function=self.get_namespace_id().lower(),
-                this_argument=self.inheritance_traits.get_object(),
+                this_argument=Constants.object_var,
                 arguments=Helpers.get_arguments_list_for_c_call(method.m_arguments)))
         else:
             raise NotImplementedError
@@ -189,8 +191,6 @@ class CapiGenerator(object):
                 else:
                     return self.__is_interface_type_impl(path_to_interface[1:],interface_or_namespace.m_namespaces)
         return False
-
-
 
 
 def main():

@@ -20,38 +20,13 @@
 #
 
 import Helpers
-import FileGenerator
+from Constants import Constants
+from TraitsBase import TraitsBase
 
 
-class InheritanceBase(object):
-    def __init__(self, interface, capi_generator):
-        self.interface = interface
-        self.capi_generator = capi_generator
-
-    def put_line(self, line, eol='\n'):
-        self.capi_generator.output_header.put_line(line, eol)
-
-    def indent(self):
-        return FileGenerator.Indent(self.capi_generator.output_header)
-
-
-class RequiresCastToBase(InheritanceBase):
+class InheritanceTraitsBase(TraitsBase):
     def __init__(self, interface, capi_generator):
         super().__init__(interface, capi_generator)
-
-    def generate_pointer_declaration(self):
-        self.capi_generator.output_header.put_line('void* mObject;')
-
-    def generate_set_object(self):
-        self.put_line('SetObject(void* raw_pointer)')
-        self.put_line('{')
-        with self.indent():
-            self.put_line('mObject = raw_pointer;')
-            if self.interface.m_base:
-                self.put_line('{base_class}::SetObject({cast_to_base}(mObject));'.format(
-                    base_class=self.interface.m_base,
-                    cast_to_base=self.capi_generator.get_namespace_id().lower() + '_cast_to_base'))
-        self.put_line('}')
 
     def generate_constructor(self, constructor):
         self.capi_generator.cur_namespace_path.append(constructor.m_name)
@@ -66,17 +41,34 @@ class RequiresCastToBase(InheritanceBase):
         self.put_line('}')
         self.capi_generator.cur_namespace_path.pop()
 
-    def get_object(self):
-        return 'mObject'
+
+class RequiresCastToBase(InheritanceTraitsBase):
+    def __init__(self, interface, capi_generator):
+        super().__init__(interface, capi_generator)
+
+    def generate_pointer_declaration(self):
+        self.capi_generator.output_header.put_line('void* {object_var};'.format(object_var=Constants.object_var))
+
+    def generate_set_object(self):
+        self.put_line('SetObject(void* object_pointer)')
+        self.put_line('{')
+        with self.indent():
+            self.put_line('{object_var} = object_pointer;'.format(object_var=Constants.object_var))
+            if self.interface.m_base:
+                self.put_line('{base_class}::SetObject({cast_to_base}({object_var}));'.format(
+                    base_class=self.interface.m_base,
+                    cast_to_base=self.capi_generator.get_namespace_id().lower() + Constants.cast_to_base_suffix,
+                    object_var=Constants.object_var))
+        self.put_line('}')
 
 
-class SimpleCase(InheritanceBase):
+class SimpleCase(InheritanceTraitsBase):
     def __init__(self, interface, capi_generator):
         super().__init__(interface, capi_generator)
 
     def generate_pointer_declaration(self):
         if not self.interface.m_base:
-            self.capi_generator.output_header.put_line('void* mObject;')
+            self.capi_generator.output_header.put_line('void* {object_var};'.format(object_var=Constants.object_var))
 
     def generate_set_object(self):
         self.put_line('SetObject(void* raw_pointer)')
@@ -85,24 +77,8 @@ class SimpleCase(InheritanceBase):
             if self.interface.m_base:
                 self.put_line('{base_class}::SetObject(raw_pointer);')
             else:
-                self.put_line('mObject = raw_pointer;')
+                self.put_line('{object_var} = raw_pointer;'.format(object_var=Constants.object_var))
         self.put_line('}')
-
-    def generate_constructor(self, constructor):
-        self.capi_generator.cur_namespace_path.append(constructor.m_name)
-        self.put_line('{class_name}({arguments_list})'.format(
-            class_name=self.interface.m_name,
-            arguments_list=Helpers.get_arguments_list_for_declaration(constructor.m_arguments)))
-        self.put_line('{')
-        with self.indent():
-            self.put_line('SetObject({constructor_c_function}({arguments_list}));'.format(
-                constructor_c_function=self.capi_generator.get_namespace_id().lower(),
-                arguments_list=Helpers.get_arguments_list_for_constructor_call(constructor.m_arguments)))
-        self.put_line('}')
-        self.capi_generator.cur_namespace_path.pop()
-
-    def get_object(self):
-        return 'mObject'
 
 
 def create_inheritance_traits(interface, capi_generator):
