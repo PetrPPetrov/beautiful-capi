@@ -109,7 +109,7 @@ class SchemaGenerator(object):
         self.output_file.put_line('def load(self, dom_node):')
         with FileGenerator.Indent(self.output_file):
             if base_class != 'object':
-                self.output_file.put_line('super({0}, self).load(dom_node)'.format(complex_type.getAttribute('name')))
+                self.output_file.put_line('super().load(dom_node)')
             self.__build_load(complex_type)
         self.output_file.put_line('')
 

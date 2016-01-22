@@ -140,11 +140,11 @@ class TConstructor(object):
 
 class TMethod(TConstructor):
     def __init__(self):
-        super(TMethod, self).__init__()
+        super().__init__()
         self.m_return = ""
     
     def load(self, dom_node):
-        super(TMethod, self).load(dom_node)
+        super().load(dom_node)
         if dom_node.hasAttribute("return"):
             cur_attr = dom_node.getAttribute("return")
             self.m_return = cur_attr

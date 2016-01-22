@@ -27,6 +27,7 @@ import Helpers
 from Constants import Constants
 from LifecycleTraits import create_lifecycle_traits
 from InheritanceTraits import create_inheritance_traits
+from CfunctionTraits import create_loader_traits
 import FileGenerator
 import Parser
 import ParamsParser
@@ -43,10 +44,12 @@ class CapiGenerator(object):
         self.cur_namespace_path = []
         self.lifecycle_traits = None
         self.inheritance_traits = None
+        self.loader_traits = None
 
     def generate(self):
         self.params_description = ParamsParser.load(self.input_params)
         self.api_description = Parser.load(self.input_xml)
+        self.loader_traits = create_loader_traits(self.params_description.m_dynamically_load_functions, self)
         if not os.path.exists(self.output_folder):
             os.makedirs(self.output_folder)
         if self.params_description.m_generate_single_file:
@@ -54,6 +57,7 @@ class CapiGenerator(object):
             self.output_header = FileGenerator.FileGenerator(output_file)
         for namespace in self.api_description.m_namespaces:
             self.__process_namespace(self.output_folder, namespace, '')
+        del self.loader_traits
 
     def get_namespace_id(self):
         return '_'.join(self.cur_namespace_path)
