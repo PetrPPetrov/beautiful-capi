@@ -67,7 +67,7 @@ class SchemaGenerator(object):
                             self.output_file.put_line('return root_params')
 
     def __build_enum(self, enumerator):
-        self.output_file.put_line('class {0}(Enum):'.format(enumerator.getAttribute('name')))
+        self.output_file.put_line('class {enum_name}(Enum):'.format(enum_name=enumerator.getAttribute('name')))
         enum_counter = 0
         with FileGenerator.Indent(self.output_file):
             for enumeration in enumerator.getElementsByTagName('xs:enumeration'):

@@ -24,6 +24,11 @@ def get_arguments_list_for_declaration(arguments):
     return ', '.join(['{0} {1}'.format(argument.m_type, argument.m_name) for argument in arguments])
 
 
+def get_arguments_list_for_wrap_declaration(arguments):
+    result = get_arguments_list_for_declaration(arguments)
+    return 'void* object_pointer' + ', {0}'.format(result) if result else ''
+
+
 def get_arguments_list_for_constructor_call(arguments):
     return ', '.join(['{0}'.format(argument.m_name) for argument in arguments])
 

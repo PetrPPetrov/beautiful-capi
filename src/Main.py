@@ -34,13 +34,15 @@ import ParamsParser
 
 
 class CapiGenerator(object):
-    def __init__(self, input_filename, input_params_filename, output_folder):
+    def __init__(self, input_filename, input_params_filename, output_folder, output_wrap_file_name):
         self.input_xml = parse(input_filename)
         self.input_params = parse(input_params_filename)
         self.output_folder = output_folder
         self.api_description = None
         self.params_description = None
         self.output_header = None
+        self.output_source = None
+        self.output_wrap_file_name = output_wrap_file_name
         self.cur_namespace_path = []
         self.lifecycle_traits = None
         self.inheritance_traits = None
@@ -55,6 +57,8 @@ class CapiGenerator(object):
         if self.params_description.m_generate_single_file:
             output_file = os.path.join(self.output_folder,self.params_description.m_single_header_name)
             self.output_header = FileGenerator.FileGenerator(output_file)
+        self.output_source = FileGenerator.FileGenerator(self.output_wrap_file_name)
+        self.__process_source_begin()
         for namespace in self.api_description.m_namespaces:
             self.__process_namespace(self.output_folder, namespace, '')
         del self.loader_traits
@@ -161,13 +165,16 @@ class CapiGenerator(object):
 
     def __generate_method(self, method):
         self.cur_namespace_path.append(method.m_name)
-        self.output_header.put_line('{0}({1})'.format(
-            method.m_name,
-            Helpers.get_arguments_list_for_declaration(method.m_arguments)))
+        self.output_header.put_line('{method_name}({arguments})'.format(
+            method_name=method.m_name,
+            arguments=Helpers.get_arguments_list_for_declaration(method.m_arguments)))
         self.output_header.put_line('{')
         with FileGenerator.Indent(self.output_header):
             self.__generate_method_body(method)
         self.output_header.put_line('}')
+        self.output_source.put_line('{c_function}({arguments});'.format(
+            c_function=self.get_namespace_id().lower(),
+            arguments=Helpers.get_arguments_list_for_wrap_declaration(method.m_arguments)))
         self.cur_namespace_path.pop()
 
     def __generate_method_body(self, method):
@@ -180,6 +187,10 @@ class CapiGenerator(object):
                 arguments=Helpers.get_arguments_list_for_c_call(method.m_arguments)))
         else:
             raise NotImplementedError
+
+    def __process_source_begin(self):
+        self.output_source.put_copyright_header(self.params_description.m_copyright_header)
+        self.output_source.put_automatic_generation_warning(self.params_description.m_automatic_generated_warning)
 
     def __is_interface_type(self, type_name):
         path_to_interface = type_name.split('::')
@@ -217,10 +228,13 @@ def main():
     parser.add_argument(
         '-o', '--output-folder', nargs=None, default='./output', metavar='OUTPUT_FOLDER',
         help='specifies output folder for generated files')
+    parser.add_argument(
+        '-w', '--output-wrap-file-name', nargs=None, default='./capi-wrappers.cpp', metavar='OUTPUT_WRAP',
+        help='specifies output file name for wrapper C-functions')
 
     args = parser.parse_args()
 
-    schema_generator = CapiGenerator(args.input, args.params, args.output_folder)
+    schema_generator = CapiGenerator(args.input, args.params, args.output_folder, args.output_wrap_file_name)
     schema_generator.generate()
 
 main()
