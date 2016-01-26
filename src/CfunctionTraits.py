@@ -32,10 +32,33 @@ class ImplLib(CfunctionTraitsBase):
     def __init__(self, capi_generator):
         super().__init__(capi_generator)
 
+    def __put_define_apple_or_linux(self):
+        self.put_line('#define {0} extern "C"'.format(self.capi_generator.cur_api_define))
+
+    def generate_c_functions_declarations(self):
+        self.capi_generator.cur_api_define = '{0}_API'.format(self.capi_generator.get_namespace_id().upper())
+        self.put_line('#ifdef _WIN32')
+        with self.indent():
+            self.put_line('#define {0} extern "C" __declspec(dllimport)'.format(self.capi_generator.cur_api_define))
+        self.put_line('#elif __APPLE__')
+        with self.indent():
+            self.__put_define_apple_or_linux()
+        self.put_line('#elif __unix__ || __linux__')
+        with self.indent():
+            self.__put_define_apple_or_linux()
+        self.put_line('#else')
+        with self.indent():
+            self.put_line('#error "Unknown platform"')
+        self.put_line('#endif')
+        self.capi_generator.api_defines_generated = True
+
 
 class DynamicLoad(CfunctionTraitsBase):
     def __init__(self, capi_generator):
         super().__init__(capi_generator)
+
+    def generate_c_functions_declarations(self):
+        pass
 
 
 def create_loader_traits(dynamically_load_functions, capi_generator):

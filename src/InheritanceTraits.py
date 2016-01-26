@@ -39,7 +39,7 @@ class InheritanceTraitsBase(TraitsBase):
                 constructor_c_function=self.capi_generator.get_namespace_id().lower(),
                 arguments_list=Helpers.get_arguments_list_for_constructor_call(constructor.m_arguments)))
         self.put_line('}')
-        self.put_source_line('{constructor_c_function}({arguments_list});'.format(
+        self.put_source_line('void* {constructor_c_function}({arguments_list});'.format(
             constructor_c_function=self.capi_generator.get_namespace_id().lower(),
             arguments_list=Helpers.get_arguments_list_for_declaration(constructor.m_arguments)))
         self.capi_generator.cur_namespace_path.pop()

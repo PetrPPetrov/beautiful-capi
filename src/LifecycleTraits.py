@@ -41,7 +41,7 @@ class LifecycleTraitsBase(TraitsBase):
                 self.put_line('SetObject(0);')
             self.put_line('}')
         self.put_line('}')
-        self.put_source_line('{delete_c_function}(void* object_pointer);'.format(
+        self.put_source_line('void {delete_c_function}(void* object_pointer);'.format(
             delete_c_function=self.capi_generator.get_namespace_id().lower() + Constants.delete_suffix))
 
 
@@ -60,7 +60,7 @@ class CopySemantic(LifecycleTraitsBase):
                 copy_c_function=self.capi_generator.get_namespace_id().lower() + Constants.copy_suffix,
                 object_var=Constants.object_var))
         self.put_line('}')
-        self.put_source_line('{copy_c_function}(void* object_pointer});'.format(
+        self.put_source_line('void* {copy_c_function}(void* object_pointer});'.format(
             copy_c_function=self.capi_generator.get_namespace_id().lower() + Constants.copy_suffix))
 
 
@@ -98,7 +98,7 @@ class RefCountedSemantic(LifecycleTraitsBase):
                         object_var=Constants.object_var))
                 self.put_line('}')
             self.put_line('}')
-            self.put_source_line('{release_c_function}(void* object_pointer);'.format(
+            self.put_source_line('int {release_c_function}(void* object_pointer);'.format(
                 release_c_function=self.capi_generator.get_namespace_id().lower() + Constants.release_suffix))
 
     def generate_copy_constructor(self):
@@ -110,7 +110,7 @@ class RefCountedSemantic(LifecycleTraitsBase):
                 addref_c_function=self.capi_generator.get_namespace_id().lower() + Constants.addref_suffix,
                 object_var=Constants.object_var))
         self.put_line('}')
-        self.put_source_line('{addref_c_function}(void* object_pointer);'.format(
+        self.put_source_line('int {addref_c_function}(void* object_pointer);'.format(
             addref_c_function=self.capi_generator.get_namespace_id().lower() + Constants.addref_suffix))
 
 

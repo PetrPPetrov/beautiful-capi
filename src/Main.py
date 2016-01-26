@@ -47,6 +47,8 @@ class CapiGenerator(object):
         self.lifecycle_traits = None
         self.inheritance_traits = None
         self.loader_traits = None
+        self.api_defines_generated = False
+        self.cur_api_define = None
 
     def generate(self):
         self.params_description = ParamsParser.load(self.input_params)
@@ -66,6 +68,13 @@ class CapiGenerator(object):
     def get_namespace_id(self):
         return '_'.join(self.cur_namespace_path)
 
+    def get_flat_type(self, type_name):
+        if not type_name:
+            return 'void'
+        if self.__is_interface_type(type_name):
+            return 'void*'
+        return type_name
+
     def __process_namespace(self, base_path, namespace, namespace_prefix):
         self.cur_namespace_path.append(namespace.m_name)
 
@@ -78,6 +87,7 @@ class CapiGenerator(object):
         for nested_namespace in namespace.m_namespaces:
             self.__process_namespace(output_folder, nested_namespace, namespace_prefix+namespace.m_name)
 
+        self.api_defines_generated = False
         if not self.params_description.m_generate_single_file:
             if not self.params_description.m_file_per_interface or self.params_description.m_generate_namespace_header:
                 output_file = namespace.m_name + '.h'
@@ -89,6 +99,8 @@ class CapiGenerator(object):
                 self.output_header = FileGenerator.FileGenerator(os.path.join(namespace_folder, output_file))
                 if self.params_description.m_generate_namespace_header:
                     self.__process_namespace_header(namespace, output_folder)
+        if len(self.cur_namespace_path) == 1 and not self.api_defines_generated:
+            self.loader_traits.generate_c_functions_declarations()
 
         for interface in namespace.m_interfaces:
             self.__process_interface(output_folder, interface)
@@ -103,6 +115,10 @@ class CapiGenerator(object):
         self.output_header.put_line('#ifndef {0}'.format(watchdog_string))
         self.output_header.put_line('#define {0}'.format(watchdog_string))
         self.output_header.put_line('')
+        if len(self.cur_namespace_path) == 1 and not self.api_defines_generated:
+            self.loader_traits.generate_c_functions_declarations()
+        self.output_header.put_line('')
+
         if self.params_description.m_file_per_interface and not self.params_description.m_generate_single_file:
             for interface in namespace.m_interfaces:
                 cur_interface_file = posixpath.join('/'.join(self.cur_namespace_path), interface.m_name + '.h')
@@ -172,7 +188,9 @@ class CapiGenerator(object):
         with FileGenerator.Indent(self.output_header):
             self.__generate_method_body(method)
         self.output_header.put_line('}')
-        self.output_source.put_line('{c_function}({arguments});'.format(
+        return_type = self.get_flat_type(method.m_return)
+        self.output_source.put_line('{return_type} {c_function}({arguments});'.format(
+            return_type=self.get_flat_type(method.m_return),
             c_function=self.get_namespace_id().lower(),
             arguments=Helpers.get_arguments_list_for_wrap_declaration(method.m_arguments)))
         self.cur_namespace_path.pop()
@@ -229,7 +247,7 @@ def main():
         '-o', '--output-folder', nargs=None, default='./output', metavar='OUTPUT_FOLDER',
         help='specifies output folder for generated files')
     parser.add_argument(
-        '-w', '--output-wrap-file-name', nargs=None, default='./capi-wrappers.cpp', metavar='OUTPUT_WRAP',
+        '-w', '--output-wrap-file-name', nargs=None, default='./capi_wrappers.cpp', metavar='OUTPUT_WRAP',
         help='specifies output file name for wrapper C-functions')
 
     args = parser.parse_args()

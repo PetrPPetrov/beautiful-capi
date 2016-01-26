@@ -26,7 +26,7 @@ def get_arguments_list_for_declaration(arguments):
 
 def get_arguments_list_for_wrap_declaration(arguments):
     result = get_arguments_list_for_declaration(arguments)
-    return 'void* object_pointer' + ', {0}'.format(result) if result else ''
+    return 'void* object_pointer' + (', {0}'.format(result) if result else '')
 
 
 def get_arguments_list_for_constructor_call(arguments):
