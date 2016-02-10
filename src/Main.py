@@ -220,10 +220,20 @@ class CapiGenerator(object):
                 if len(path_to_interface) == 1:
                     return True
                 elif len(path_to_interface) == 2:
-                    return self.__is_interface_type_impl(path_to_interface[1:],interface_or_namespace.m_interfaces)
+                    return self.__is_interface_type_impl(path_to_interface[1:], interface_or_namespace.m_interfaces)
                 else:
-                    return self.__is_interface_type_impl(path_to_interface[1:],interface_or_namespace.m_namespaces)
+                    return self.__is_interface_type_impl(path_to_interface[1:], interface_or_namespace.m_namespaces)
         return False
+
+    def __recreate_header(self, new_file):
+        if self.output_header:
+            self.output_header.write()
+        self.output_header = new_file
+
+    def __recreate_source(self, new_file):
+        if self.output_source:
+            self.output_source.write()
+        self.output_source = new_file
 
 
 def main():
