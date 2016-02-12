@@ -48,7 +48,7 @@ class CapiGenerator(object):
         self.inheritance_traits = None
         self.loader_traits = None
         self.api_defines_generated = False
-        self.cur_api_define = None
+        self.generated_files = []
 
     def generate(self):
         self.params_description = ParamsParser.load(self.input_params)
@@ -57,9 +57,9 @@ class CapiGenerator(object):
         if not os.path.exists(self.output_folder):
             os.makedirs(self.output_folder)
         if self.params_description.m_generate_single_file:
-            output_file = os.path.join(self.output_folder,self.params_description.m_single_header_name)
-            self.output_header = FileGenerator.FileGenerator(output_file)
-        self.output_source = FileGenerator.FileGenerator(self.output_wrap_file_name)
+            output_file = os.path.join(self.output_folder, self.params_description.m_single_header_name)
+            self.__set_output_header(FileGenerator.FileGenerator(output_file))
+        self.__set_output_source(FileGenerator.FileGenerator(self.output_wrap_file_name))
         self.__process_source_begin()
         for namespace in self.api_description.m_namespaces:
             self.__process_namespace(self.output_folder, namespace, '')
@@ -96,7 +96,7 @@ class CapiGenerator(object):
                 namespace_folder = output_folder
                 if self.params_description.m_namespace_header_at_parent_folder:
                     namespace_folder = base_path
-                self.output_header = FileGenerator.FileGenerator(os.path.join(namespace_folder, output_file))
+                self.__set_output_header(FileGenerator.FileGenerator(os.path.join(namespace_folder, output_file)))
                 if self.params_description.m_generate_namespace_header:
                     self.__process_namespace_header(namespace, output_folder)
         if len(self.cur_namespace_path) == 1 and not self.api_defines_generated:
@@ -134,7 +134,7 @@ class CapiGenerator(object):
 
         if self.params_description.m_file_per_interface and not self.params_description.m_generate_single_file:
             output_file = os.path.join(base_path, interface.m_name + '.h')
-            self.output_header = FileGenerator.FileGenerator(output_file)
+            self.__set_output_header(FileGenerator.FileGenerator(output_file))
 
         self.output_header.put_copyright_header(self.params_description.m_copyright_header)
         self.output_header.put_automatic_generation_warning(self.params_description.m_automatic_generated_warning)
@@ -142,6 +142,9 @@ class CapiGenerator(object):
         watchdog_string = '{0}_INCLUDED'.format(self.get_namespace_id().upper())
         self.output_header.put_line('#ifndef {0}'.format(watchdog_string))
         self.output_header.put_line('#define {0}'.format(watchdog_string))
+        self.output_header.put_line('')
+
+        self.output_header.put_line('#ifdef __cplusplus')
         self.output_header.put_line('')
 
         for cur_namespace in self.cur_namespace_path:
@@ -157,7 +160,10 @@ class CapiGenerator(object):
         self.output_header.put_line('')
 
         self.output_header.put_line('')
-        self.output_header.put_line('#endif // {0}'.format(watchdog_string))
+        self.output_header.put_line('#endif /* __cplusplus */ ')
+
+        self.output_header.put_line('')
+        self.output_header.put_line('#endif /* {0} */'.format(watchdog_string))
         del self.inheritance_traits
         del self.lifecycle_traits
         self.cur_namespace_path.pop()
@@ -189,10 +195,12 @@ class CapiGenerator(object):
             self.__generate_method_body(method)
         self.output_header.put_line('}')
         return_type = self.get_flat_type(method.m_return)
-        self.output_source.put_line('{return_type} {c_function}({arguments});'.format(
+        c_function_declaration = '{return_type} {c_function}({arguments});'.format(
             return_type=self.get_flat_type(method.m_return),
             c_function=self.get_namespace_id().lower(),
-            arguments=Helpers.get_arguments_list_for_wrap_declaration(method.m_arguments)))
+            arguments=Helpers.get_arguments_list_for_wrap_declaration(method.m_arguments))
+        self.output_source.put_line(c_function_declaration)
+        self.loader_traits.add_c_function_declaration(c_function_declaration)
         self.cur_namespace_path.pop()
 
     def __generate_method_body(self, method):
@@ -225,15 +233,13 @@ class CapiGenerator(object):
                     return self.__is_interface_type_impl(path_to_interface[1:], interface_or_namespace.m_namespaces)
         return False
 
-    def __recreate_header(self, new_file):
-        if self.output_header:
-            self.output_header.write()
-        self.output_header = new_file
+    def __set_output_header(self, header):
+        self.generated_files.append(header)
+        self.output_header = header
 
-    def __recreate_source(self, new_file):
-        if self.output_source:
-            self.output_source.write()
-        self.output_source = new_file
+    def __set_output_source(self, source):
+        self.generated_files.append(source)
+        self.output_source = source
 
 
 def main():

@@ -21,6 +21,7 @@
 
 from Constants import Constants
 from TraitsBase import TraitsBase
+import FileGenerator
 
 
 class CfunctionTraitsBase(TraitsBase):
@@ -31,15 +32,27 @@ class CfunctionTraitsBase(TraitsBase):
 class ImplLib(CfunctionTraitsBase):
     def __init__(self, capi_generator):
         super().__init__(capi_generator)
+        self.cur_api_define = None
+        self.cur_api_declarations = None
+        self.cur_capi_prefix = None
 
     def __put_define_apple_or_linux(self):
-        self.put_line('#define {0} extern "C"'.format(self.capi_generator.cur_api_define))
+        self.put_line('#define {0} {1}'.format(self.cur_api_define, self.cur_capi_prefix))
 
     def generate_c_functions_declarations(self):
-        self.capi_generator.cur_api_define = '{0}_API'.format(self.capi_generator.get_namespace_id().upper())
+        self.cur_capi_prefix = '{0}_CAPI_PREFIX'.format(self.capi_generator.get_namespace_id().upper())
+        self.put_line('#ifdef __cplusplus')
+        with self.indent():
+            self.put_line('#define {0} extern "C"'.format(self.cur_capi_prefix))
+        self.put_line('#else')
+        with self.indent():
+            self.put_line('#define {0}'.format(self.cur_capi_prefix))
+        self.put_line('#endif')
+        self.put_line('')
+        self.cur_api_define = '{0}_API'.format(self.capi_generator.get_namespace_id().upper())
         self.put_line('#ifdef _WIN32')
         with self.indent():
-            self.put_line('#define {0} extern "C" __declspec(dllimport)'.format(self.capi_generator.cur_api_define))
+            self.put_line('#define {0} {1} __declspec(dllimport)'.format(self.cur_api_define, self.cur_capi_prefix))
         self.put_line('#elif __APPLE__')
         with self.indent():
             self.__put_define_apple_or_linux()
@@ -50,7 +63,13 @@ class ImplLib(CfunctionTraitsBase):
         with self.indent():
             self.put_line('#error "Unknown platform"')
         self.put_line('#endif')
+        self.put_line('')
         self.capi_generator.api_defines_generated = True
+        self.cur_api_declarations = FileGenerator.FileGenerator(None)
+        self.put_file(self.cur_api_declarations)
+
+    def add_c_function_declaration(self, declaration):
+        self.cur_api_declarations.put_line('{0} {1}'.format(self.cur_api_define, declaration))
 
 
 class DynamicLoad(CfunctionTraitsBase):

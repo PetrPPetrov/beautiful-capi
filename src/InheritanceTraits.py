@@ -39,9 +39,11 @@ class InheritanceTraitsBase(TraitsBase):
                 constructor_c_function=self.capi_generator.get_namespace_id().lower(),
                 arguments_list=Helpers.get_arguments_list_for_constructor_call(constructor.m_arguments)))
         self.put_line('}')
-        self.put_source_line('void* {constructor_c_function}({arguments_list});'.format(
+        c_function_declaration = 'void* {constructor_c_function}({arguments_list});'.format(
             constructor_c_function=self.capi_generator.get_namespace_id().lower(),
-            arguments_list=Helpers.get_arguments_list_for_declaration(constructor.m_arguments)))
+            arguments_list=Helpers.get_arguments_list_for_declaration(constructor.m_arguments))
+        self.put_source_line(c_function_declaration)
+        self.capi_generator.loader_traits.add_c_function_declaration(c_function_declaration)
         self.capi_generator.cur_namespace_path.pop()
 
 
@@ -62,8 +64,10 @@ class RequiresCastToBase(InheritanceTraitsBase):
                     base_class=self.interface.m_base,
                     cast_to_base=self.capi_generator.get_namespace_id().lower() + Constants.cast_to_base_suffix,
                     object_var=Constants.object_var))
-                self.put_source_line('{cast_to_base}(void* object_pointer);'.format(
-                    cast_to_base=self.capi_generator.get_namespace_id().lower() + Constants.cast_to_base_suffix))
+                c_function_declaration = '{cast_to_base}(void* object_pointer);'.format(
+                    cast_to_base=self.capi_generator.get_namespace_id().lower() + Constants.cast_to_base_suffix)
+                self.put_source_line(c_function_declaration)
+                self.capi_generator.loader_traits.add_c_function_declaration(c_function_declaration)
         self.put_line('}')
 
 

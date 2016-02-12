@@ -30,8 +30,14 @@ class TraitsBase(object):
     def put_line(self, line, eol='\n'):
         self.capi_generator.output_header.put_line(line, eol)
 
+    def put_file(self, another_file):
+        self.capi_generator.output_header.put_file(another_file)
+
     def put_source_line(self, line, eol='\n'):
         self.capi_generator.output_source.put_line(line, eol)
+
+    def put_source_file(self, another_file):
+        self.capi_generator.output_source.put_file(another_file)
 
     def indent(self):
         return FileGenerator.Indent(self.capi_generator.output_header)
