@@ -125,7 +125,7 @@ class CapiGenerator(object):
                 self.output_header.put_line('#include "{0}"'.format(cur_interface_file))
 
         self.output_header.put_line('')
-        self.output_header.put_line('#endif // {0}'.format(watchdog_string))
+        self.output_header.put_line('#endif /* {0} */'.format(watchdog_string))
 
     def __process_interface(self, base_path, interface):
         self.cur_namespace_path.append(interface.m_name)
@@ -182,10 +182,10 @@ class CapiGenerator(object):
                 self.inheritance_traits.generate_constructor(constructor)
             self.lifecycle_traits.generate_destructor()
             for method in interface.m_methods:
-                self.__generate_method(method)
+                self.__generate_method(method, interface)
         self.output_header.put_line('};')
 
-    def __generate_method(self, method):
+    def __generate_method(self, method, interface):
         self.cur_namespace_path.append(method.m_name)
         self.output_header.put_line('{method_name}({arguments})'.format(
             method_name=method.m_name,
@@ -195,24 +195,29 @@ class CapiGenerator(object):
             self.__generate_method_body(method)
         self.output_header.put_line('}')
         return_type = self.get_flat_type(method.m_return)
-        c_function_declaration = '{return_type} {c_function}({arguments});'.format(
-            return_type=self.get_flat_type(method.m_return),
+        c_function_declaration = '{return_type} {c_function}({arguments})'.format(
+            return_type=return_type,
             c_function=self.get_namespace_id().lower(),
-            arguments=Helpers.get_arguments_list_for_wrap_declaration(method.m_arguments))
-        self.output_source.put_line(c_function_declaration)
+            arguments=Helpers.get_arguments_list_for_wrap_declaration(method.m_arguments)
+        )
         self.loader_traits.add_c_function_declaration(c_function_declaration)
+        self.output_source.put_line('{')
+        with FileGenerator.Indent(self.output_source):
+            self.output_source.put_line('{0}* self = static_cast<{0}*>(object_pointer);'.format(
+                interface.m_implementation_class_name
+            ))
+        self.output_source.put_line('}')
+        self.output_source.put_line('')
         self.cur_namespace_path.pop()
 
     def __generate_method_body(self, method):
-        if not self.params_description.m_dynamically_load_functions:
-            return_instruction = 'return ' if method.m_return else ''
-            self.output_header.put_line('{return_instruction}{c_function}({this_argument}{arguments});'.format(
-                return_instruction=return_instruction,
-                c_function=self.get_namespace_id().lower(),
-                this_argument=Constants.object_var,
-                arguments=Helpers.get_arguments_list_for_c_call(method.m_arguments)))
-        else:
-            raise NotImplementedError
+        return_instruction = 'return ' if method.m_return else ''
+        self.output_header.put_line('{return_instruction}{c_function}({this_argument}{arguments});'.format(
+            return_instruction=return_instruction,
+            c_function=self.get_namespace_id().lower(),
+            this_argument=Constants.object_var,
+            arguments=Helpers.get_arguments_list_for_c_call(method.m_arguments)
+        ))
 
     def __process_source_begin(self):
         self.output_source.put_copyright_header(self.params_description.m_copyright_header)
@@ -233,6 +238,15 @@ class CapiGenerator(object):
                     return self.__is_interface_type_impl(path_to_interface[1:], interface_or_namespace.m_namespaces)
         return False
 
+    def get_unwrapped_argument(self, argument):
+        if self.__is_interface_type(argument.m_type):
+            return 'static_cast<{0}*>({1})'.format(argument.m_type, argument.m_name)
+        else:
+            return argument.m_name
+
+    def get_unwrapped_arguments(self, arguments):
+        return [self.get_unwrapped_argument(argument) for argument in arguments]
+
     def __set_output_header(self, header):
         self.generated_files.append(header)
         self.output_header = header
@@ -244,13 +258,13 @@ class CapiGenerator(object):
 
 def main():
     print(
-        'Beautifull Capi  Copyright (C) 2015  Petr Petrovich Petrov\n'
+        'Beautiful Capi  Copyright (C) 2015  Petr Petrovich Petrov\n'
         'This program comes with ABSOLUTELY NO WARRANTY;\n'
         'This is free software, and you are welcome to redistribute it\n'
         'under certain conditions.\n')
 
     parser = argparse.ArgumentParser(
-        prog='Beautifull Capi',
+        prog='Beautiful Capi',
         description='This program generates C and C++ wrappers for your C++ classes.')
 
     parser.add_argument(

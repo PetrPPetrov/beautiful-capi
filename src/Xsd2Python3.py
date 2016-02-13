@@ -60,7 +60,8 @@ class SchemaGenerator(object):
                     if element.nodeName == 'xs:element':
                         self.output_file.put_line(
                             'for root_element in [root for root in dom_node.childNodes if root.localName == "{0}"]:'
-                            .format(element.getAttribute('name')))
+                            .format(element.getAttribute('name'))
+                        )
                         with FileGenerator.Indent(self.output_file):
                             self.output_file.put_line('root_params = {0}()'.format(element.getAttribute('type')))
                             self.output_file.put_line('root_params.load(root_element)')
@@ -73,7 +74,8 @@ class SchemaGenerator(object):
             for enumeration in enumerator.getElementsByTagName('xs:enumeration'):
                 self.output_file.put_line('{0} = {1}'.format(
                     enumeration.getAttribute('value'),
-                    enum_counter))
+                    enum_counter)
+                )
                 enum_counter += 1
         self.output_file.put_line('')
         with FileGenerator.Indent(self.output_file):
@@ -85,7 +87,8 @@ class SchemaGenerator(object):
                     with FileGenerator.Indent(self.output_file):
                         self.output_file.put_line('return {0}.{1}'.format(
                             enumerator.getAttribute('name'),
-                            enumeration.getAttribute('value')))
+                            enumeration.getAttribute('value')
+                        ))
                 self.output_file.put_line('raise ValueError')
         self.output_file.put_line('')
         self.output_file.put_line('')
@@ -166,17 +169,21 @@ class SchemaGenerator(object):
         self.output_file.put_line('if dom_node.hasAttribute("{0}"):'.format(attribute.getAttribute('name')))
         with FileGenerator.Indent(self.output_file):
             self.output_file.put_line('cur_attr = dom_node.getAttribute("{0}")'.format(
-                attribute.getAttribute('name')))
+                attribute.getAttribute('name')
+            ))
             if attribute.getAttribute('type') == 'xs:string':
                 self.output_file.put_line('self.m_{0} = cur_attr'.format(
-                    attribute.getAttribute('name')))
+                    attribute.getAttribute('name')
+                ))
             elif attribute.getAttribute('type') == 'xs:boolean':
                 self.output_file.put_line('self.m_{0} = string_to_bool(cur_attr)'.format(
-                    attribute.getAttribute('name')))
+                    attribute.getAttribute('name')
+                ))
             else:
                 self.output_file.put_line('self.m_{0} = {1}.load(cur_attr)'.format(
                     attribute.getAttribute('name'),
-                    attribute.getAttribute('type')))
+                    attribute.getAttribute('type')
+                ))
 
 def main():
     print(

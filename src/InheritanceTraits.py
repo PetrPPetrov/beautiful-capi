@@ -32,18 +32,28 @@ class InheritanceTraitsBase(TraitsBase):
         self.capi_generator.cur_namespace_path.append(constructor.m_name)
         self.put_line('{class_name}({arguments_list})'.format(
             class_name=self.interface.m_name,
-            arguments_list=Helpers.get_arguments_list_for_declaration(constructor.m_arguments)))
+            arguments_list=Helpers.get_arguments_list_for_declaration(constructor.m_arguments)
+        ))
         self.put_line('{')
         with self.indent():
             self.put_line('SetObject({constructor_c_function}({arguments_list}));'.format(
                 constructor_c_function=self.capi_generator.get_namespace_id().lower(),
-                arguments_list=Helpers.get_arguments_list_for_constructor_call(constructor.m_arguments)))
+                arguments_list=Helpers.get_arguments_list_for_constructor_call(constructor.m_arguments)
+            ))
         self.put_line('}')
-        c_function_declaration = 'void* {constructor_c_function}({arguments_list});'.format(
+        c_function_declaration = 'void* {constructor_c_function}({arguments_list})'.format(
             constructor_c_function=self.capi_generator.get_namespace_id().lower(),
-            arguments_list=Helpers.get_arguments_list_for_declaration(constructor.m_arguments))
-        self.put_source_line(c_function_declaration)
+            arguments_list=Helpers.get_arguments_list_for_declaration(constructor.m_arguments)
+        )
         self.capi_generator.loader_traits.add_c_function_declaration(c_function_declaration)
+        self.put_source_line('{')
+        with self.indent_source():
+            self.put_source_line('return new {0}({1});'.format(
+                self.interface.m_implementation_class_name,
+                ', '.join(self.capi_generator.get_unwrapped_arguments(constructor.m_arguments))
+            ))
+        self.put_source_line('}')
+        self.put_source_line('')
         self.capi_generator.cur_namespace_path.pop()
 
 
@@ -63,11 +73,18 @@ class RequiresCastToBase(InheritanceTraitsBase):
                 self.put_line('{base_class}::SetObject({cast_to_base}({object_var}));'.format(
                     base_class=self.interface.m_base,
                     cast_to_base=self.capi_generator.get_namespace_id().lower() + Constants.cast_to_base_suffix,
-                    object_var=Constants.object_var))
-                c_function_declaration = '{cast_to_base}(void* object_pointer);'.format(
+                    object_var=Constants.object_var
+                ))
+                c_function_declaration = '{cast_to_base}(void* object_pointer)'.format(
                     cast_to_base=self.capi_generator.get_namespace_id().lower() + Constants.cast_to_base_suffix)
-                self.put_source_line(c_function_declaration)
                 self.capi_generator.loader_traits.add_c_function_declaration(c_function_declaration)
+                self.put_source_line('{')
+                with self.indent_source():
+                    self.put_source_line('return static_cast<{0}*>(static_cast<{1}*>(object_pointer))'.format(
+                        self.interface.m_base, self.interface.m_implementation_class_name
+                    ))
+                self.put_source_line('}')
+                self.put_source_line('')
         self.put_line('}')
 
 
