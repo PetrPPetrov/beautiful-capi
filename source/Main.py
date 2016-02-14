@@ -169,6 +169,7 @@ class CapiGenerator(object):
         self.cur_namespace_path.pop()
 
     def __generate_class(self, interface):
+        self.loader_traits.add_impl_header(interface)
         self.output_header.put_line('class {0}'.format(interface.m_name))
         self.output_header.put_line('{')
         self.output_header.put_line('protected:')
@@ -186,13 +187,19 @@ class CapiGenerator(object):
         self.output_header.put_line('};')
 
     def __generate_method(self, method, interface):
+        return_instruction = 'return ' if method.m_return else ''
         self.cur_namespace_path.append(method.m_name)
         self.output_header.put_line('{method_name}({arguments})'.format(
             method_name=method.m_name,
             arguments=Helpers.get_arguments_list_for_declaration(method.m_arguments)))
         self.output_header.put_line('{')
         with FileGenerator.Indent(self.output_header):
-            self.__generate_method_body(method)
+            self.output_header.put_line('{return_instruction}{c_function}({this_argument}{arguments});'.format(
+                return_instruction=return_instruction,
+                c_function=self.get_namespace_id().lower(),
+                this_argument=Constants.object_var,
+                arguments=Helpers.get_arguments_list_for_c_call(method.m_arguments)
+            ))
         self.output_header.put_line('}')
         return_type = self.get_flat_type(method.m_return)
         c_function_declaration = '{return_type} {c_function}({arguments})'.format(
@@ -206,18 +213,14 @@ class CapiGenerator(object):
             self.output_source.put_line('{0}* self = static_cast<{0}*>(object_pointer);'.format(
                 interface.m_implementation_class_name
             ))
+            self.output_source.put_line('{0}self->{1}({2});'.format(
+                return_instruction,
+                method.m_name,
+                ', '.join(self.get_unwrapped_arguments(method.m_arguments))
+            ))
         self.output_source.put_line('}')
         self.output_source.put_line('')
         self.cur_namespace_path.pop()
-
-    def __generate_method_body(self, method):
-        return_instruction = 'return ' if method.m_return else ''
-        self.output_header.put_line('{return_instruction}{c_function}({this_argument}{arguments});'.format(
-            return_instruction=return_instruction,
-            c_function=self.get_namespace_id().lower(),
-            this_argument=Constants.object_var,
-            arguments=Helpers.get_arguments_list_for_c_call(method.m_arguments)
-        ))
 
     def __process_source_begin(self):
         self.output_source.put_copyright_header(self.params_description.m_copyright_header)

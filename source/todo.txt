@@ -1,4 +1,3 @@
-1) replace {0} and {1} in Main.py and Xsd2Python3.py
 2) start using loader traits in Main.py
 3) implement ImpLib traits
 4) implement Dynamic traits for Windows

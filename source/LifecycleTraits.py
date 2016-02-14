@@ -108,15 +108,10 @@ class RefCountedSemantic(LifecycleTraitsBase):
             self.put_line('~{class_name}()'.format(class_name=self.interface.m_name))
             self.put_line('{')
             with self.indent():
-                self.put_line('if ({object_var})'.format(
-                    object_var=Constants.object_var))
-                self.put_line('{')
-                with self.indent():
-                    self.put_line('{release_c_function}({object_var});'.format(
-                        release_c_function=self.capi_generator.get_namespace_id().lower() + Constants.release_suffix,
-                        object_var=Constants.object_var
-                    ))
-                self.put_line('}')
+                self.put_line('{release_c_function}({object_var});'.format(
+                    release_c_function=self.capi_generator.get_namespace_id().lower() + Constants.release_suffix,
+                    object_var=Constants.object_var
+                ))
             self.put_line('}')
             c_function_declaration = 'void {release_c_function}(void* object_pointer)'.format(
                 release_c_function=self.capi_generator.get_namespace_id().lower() + Constants.release_suffix

@@ -152,12 +152,15 @@ class SchemaGenerator(object):
 
     def __build_load_element(self, element):
         self.output_file.put_line(
-            'for element in [node for node in dom_node.childNodes if node.nodeName == "{0}"]:'.format(
-                element.getAttribute('name')))
+                'for element in [node for node in dom_node.childNodes if node.nodeName == "{0}"]:'.format(
+                    element.getAttribute('name')
+                )
+            )
         with FileGenerator.Indent(self.output_file):
             if element.getAttribute('type') == 'xs:string':
                 self.output_file.put_line(
-                    'for text in [text for text in element.childNodes if text.nodeType == text.TEXT_NODE]:')
+                    'for text in [text for text in element.childNodes if text.nodeType == text.TEXT_NODE]:'
+                )
                 with FileGenerator.Indent(self.output_file):
                     self.output_file.put_line('self.m_{0} += text.nodeValue'.format(element.getAttribute('name')))
             else:
@@ -184,6 +187,7 @@ class SchemaGenerator(object):
                     attribute.getAttribute('name'),
                     attribute.getAttribute('type')
                 ))
+
 
 def main():
     print(

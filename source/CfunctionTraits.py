@@ -34,6 +34,12 @@ class ImplLib(CfunctionTraitsBase):
         self.cur_api_define = None
         self.cur_api_declarations = None
         self.cur_capi_prefix = None
+        self.impl_headers = None
+
+    def __create__impl_headers(self):
+        self.impl_headers = FileGenerator.FileGenerator(None)
+        self.put_source_file(self.impl_headers)
+        self.put_source_line('')
 
     def __put_define_apple_or_linux(self, put_function):
         put_function('#define {0} {1}'.format(self.cur_api_define, self.cur_capi_prefix))
@@ -56,6 +62,7 @@ class ImplLib(CfunctionTraitsBase):
         put_function('')
 
     def generate_c_functions_declarations(self):
+        self.__create__impl_headers()
         self.cur_api_define = '{0}_API'.format(self.capi_generator.get_namespace_id().upper())
         self.cur_capi_prefix = 'extern "C"'
         self.__put_api_define(self.put_source_line, self.indent_source, 'dllexport')
@@ -78,6 +85,9 @@ class ImplLib(CfunctionTraitsBase):
     def add_c_function_declaration(self, declaration):
         self.cur_api_declarations.put_line('{0} {1};'.format(self.cur_api_define, declaration))
         self.put_source_line('{0} {1}'.format(self.cur_api_define, declaration))
+
+    def add_impl_header(self, interface):
+        self.impl_headers.put_line('#include "{0}"'.format(interface.m_implementation_class_header))
 
 
 class DynamicLoad(CfunctionTraitsBase):
