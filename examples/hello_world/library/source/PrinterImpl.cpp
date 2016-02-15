@@ -20,12 +20,9 @@
  */
 
 #include <iostream>
-#include "HelloWorld.h"
+#include "PrinterImpl.h"
 
-int main()
+void HelloWorld::PrinterImpl::Show() const
 {
-    HelloWorld::Printer printer;
-    printer.Show();
-
-    return EXIT_SUCCESS;
+    std::cout << "Hello Beautiful World!" << std::endl;
 }

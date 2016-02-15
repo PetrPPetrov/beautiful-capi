@@ -32,15 +32,10 @@ class LifecycleTraitsBase(TraitsBase):
         self.put_line('~{class_name}()'.format(class_name=self.interface.m_name))
         self.put_line('{')
         with self.indent():
-            self.put_line('if ({object_var})'.format(object_var=Constants.object_var))
-            self.put_line('{')
-            with self.indent():
-                self.put_line('{delete_c_function}({object_var});'.format(
+                 self.put_line('{delete_c_function}({object_var});'.format(
                     delete_c_function=self.capi_generator.get_namespace_id().lower() + Constants.delete_suffix,
                     object_var=Constants.object_var
                 ))
-                self.put_line('SetObject(0);')
-            self.put_line('}')
         self.put_line('}')
         c_function_declaration = 'void {delete_c_function}(void* object_pointer)'.format(
             delete_c_function=self.capi_generator.get_namespace_id().lower() + Constants.delete_suffix
@@ -71,7 +66,7 @@ class CopySemantic(LifecycleTraitsBase):
                 object_var=Constants.object_var
             ))
         self.put_line('}')
-        c_function_declaration = 'void* {copy_c_function}(void* object_pointer})'.format(
+        c_function_declaration = 'void* {copy_c_function}(void* object_pointer)'.format(
             copy_c_function=self.capi_generator.get_namespace_id().lower() + Constants.copy_suffix)
         self.capi_generator.loader_traits.add_c_function_declaration(c_function_declaration)
         self.put_source_line('{')

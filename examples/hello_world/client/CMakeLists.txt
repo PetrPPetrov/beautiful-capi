@@ -18,9 +18,17 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-project(hello_world_example)
+project(hello_world_client)
 
 cmake_minimum_required(VERSION 2.8)
 
-add_subdirectory(library)
-add_subdirectory(client)
+include_directories(${hello_world_client_SOURCE_DIR}/../library/include)
+
+add_executable(hello_world_client
+  ${hello_world_client_SOURCE_DIR}/Main.cpp
+)
+
+if(TARGET hello_world)
+  add_dependencies(hello_world_client hello_world)
+endif()
+target_link_libraries(hello_world_client hello_world)

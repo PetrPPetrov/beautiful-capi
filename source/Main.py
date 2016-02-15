@@ -147,7 +147,7 @@ class CapiGenerator(object):
         self.output_header.put_line('#ifdef __cplusplus')
         self.output_header.put_line('')
 
-        for cur_namespace in self.cur_namespace_path:
+        for cur_namespace in self.cur_namespace_path[:-1]:
             self.output_header.put_line('namespace {0} {{ '.format(cur_namespace), '')
         self.output_header.put_line('')
         self.output_header.put_line('')
@@ -155,7 +155,7 @@ class CapiGenerator(object):
         self.__generate_class(interface)
 
         self.output_header.put_line('')
-        for cur_namespace in self.cur_namespace_path:
+        for cur_namespace in self.cur_namespace_path[:-1]:
             self.output_header.put_line('}', '')
         self.output_header.put_line('')
 
@@ -188,8 +188,10 @@ class CapiGenerator(object):
 
     def __generate_method(self, method, interface):
         return_instruction = 'return ' if method.m_return else ''
+        return_type = self.get_flat_type(method.m_return)
         self.cur_namespace_path.append(method.m_name)
-        self.output_header.put_line('{method_name}({arguments})'.format(
+        self.output_header.put_line('{return_type} {method_name}({arguments})'.format(
+            return_type=return_type,
             method_name=method.m_name,
             arguments=Helpers.get_arguments_list_for_declaration(method.m_arguments)))
         self.output_header.put_line('{')
@@ -201,7 +203,6 @@ class CapiGenerator(object):
                 arguments=Helpers.get_arguments_list_for_c_call(method.m_arguments)
             ))
         self.output_header.put_line('}')
-        return_type = self.get_flat_type(method.m_return)
         c_function_declaration = '{return_type} {c_function}({arguments})'.format(
             return_type=return_type,
             c_function=self.get_namespace_id().lower(),

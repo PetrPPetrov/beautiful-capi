@@ -1,3 +1,7 @@
 /source/__pycache__/
 *.py[cod]
 /.idea/
+build/
+/examples/hello_world/library/include/
+AutoGen*
+

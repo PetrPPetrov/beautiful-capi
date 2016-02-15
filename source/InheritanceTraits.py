@@ -65,7 +65,7 @@ class RequiresCastToBase(InheritanceTraitsBase):
         self.capi_generator.output_header.put_line('void* {object_var};'.format(object_var=Constants.object_var))
 
     def generate_set_object(self):
-        self.put_line('SetObject(void* object_pointer)')
+        self.put_line('void SetObject(void* object_pointer)')
         self.put_line('{')
         with self.indent():
             self.put_line('{object_var} = object_pointer;'.format(object_var=Constants.object_var))
@@ -97,7 +97,7 @@ class SimpleCase(InheritanceTraitsBase):
             self.capi_generator.output_header.put_line('void* {object_var};'.format(object_var=Constants.object_var))
 
     def generate_set_object(self):
-        self.put_line('SetObject(void* raw_pointer)')
+        self.put_line('void SetObject(void* raw_pointer)')
         self.put_line('{')
         with self.indent():
             if self.interface.m_base:

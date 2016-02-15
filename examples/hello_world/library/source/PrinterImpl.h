@@ -19,13 +19,16 @@
  *
  */
 
-#include <iostream>
-#include "HelloWorld.h"
+#ifndef BEAUTIFUL_CAPI_HELLO_WORLD_PRINTER_H
+#define BEAUTIFUL_CAPI_HELLO_WORLD_PRINTER_H
 
-int main()
+namespace HelloWorld
 {
-    HelloWorld::Printer printer;
-    printer.Show();
-
-    return EXIT_SUCCESS;
+    class PrinterImpl
+    {
+    public:
+        void Show() const;
+    };
 }
+
+#endif /* BEAUTIFUL_CAPI_HELLO_WORLD_PRINTER_H */
