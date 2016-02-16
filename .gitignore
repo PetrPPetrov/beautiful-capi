@@ -3,5 +3,6 @@
 /.idea/
 build/
 /examples/hello_world/library/include/
+/examples/ref_counted/library/include/
 AutoGen*
 

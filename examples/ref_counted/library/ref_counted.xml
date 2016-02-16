@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ref_counted:api xmlns:ref_counted="http://gkmsoft.ru/beautifulcapi">
+  <namespace name="Example">
+    <interface name="Printer" lifecycle="reference_counted" implementation_class_name="Example::PrinterImpl" implementation_class_header="PrinterImpl.h">
+      <constructor name="New"/>
+      <method name="Show">
+        <argument type="const char*" name="text"/>
+      </method>
+    </interface>
+  </namespace>
+</ref_counted:api>
