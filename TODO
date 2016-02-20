@@ -1,13 +1,12 @@
-1) implement indenter which generates {} scope
-2) start using loader traits in Main.py
-3) implement ImpLib traits
-4) implement Dynamic traits for Windows
-5) implement Dynamic traits for Unix
-6) write more examples and tests
-7) review folder creation and file processing python code
-8) develop automated testing system
-9) test various cases
-10) write documentation - manual and FAQ
-11) develop generating input for Swig
-12) update documentation
-13) update testing system and tests
+1) implement Dynamic traits for Windows
+2) implement Dynamic traits for Unix
+3) write more examples and tests: hello_world, ref_counted, copy_semantic, move_semantic, virtual_interface, data_structures, weak_ptr, dynamic_cast, dynamic_load
+4) review folder creation and file processing python code
+5) exception support
+6) dynamic_cast support
+7) develop automated testing system
+8) test various cases: single_file, namespace_at_folder, implib_dynamic_load, no_namespace_header, all params (the same test, only xml are different)
+9) write documentation - manual and FAQ
+10) develop generating input for Swig
+11) update documentation
+12) update testing system and tests
