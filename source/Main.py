@@ -194,23 +194,20 @@ class CapiGenerator(object):
             return_type=return_type,
             method_name=method.m_name,
             arguments=Helpers.get_arguments_list_for_declaration(method.m_arguments)))
-        self.output_header.put_line('{')
-        with FileGenerator.Indent(self.output_header):
+        with FileGenerator.IndentScope(self.output_header):
             self.output_header.put_line('{return_instruction}{c_function}({this_argument}{arguments});'.format(
                 return_instruction=return_instruction,
                 c_function=self.get_namespace_id().lower(),
                 this_argument=Constants.object_var,
                 arguments=Helpers.get_arguments_list_for_c_call(method.m_arguments)
             ))
-        self.output_header.put_line('}')
         c_function_declaration = '{return_type} {c_function}({arguments})'.format(
             return_type=return_type,
             c_function=self.get_namespace_id().lower(),
             arguments=Helpers.get_arguments_list_for_wrap_declaration(method.m_arguments)
         )
         self.loader_traits.add_c_function_declaration(c_function_declaration)
-        self.output_source.put_line('{')
-        with FileGenerator.Indent(self.output_source):
+        with FileGenerator.IndentScope(self.output_source):
             self.output_source.put_line('{0}* self = static_cast<{0}*>(object_pointer);'.format(
                 interface.m_implementation_class_name
             ))
@@ -219,7 +216,6 @@ class CapiGenerator(object):
                 method.m_name,
                 ', '.join(self.get_unwrapped_arguments(method.m_arguments))
             ))
-        self.output_source.put_line('}')
         self.output_source.put_line('')
         self.cur_namespace_path.pop()
 

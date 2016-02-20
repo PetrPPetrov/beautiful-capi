@@ -42,5 +42,11 @@ class TraitsBase(object):
     def indent(self):
         return FileGenerator.Indent(self.capi_generator.output_header)
 
+    def indent_scope(self):
+        return FileGenerator.IndentScope(self.capi_generator.output_header)
+
     def indent_source(self):
         return FileGenerator.Indent(self.capi_generator.output_source)
+
+    def indent_scope_source(self):
+        return FileGenerator.IndentScope(self.capi_generator.output_source)

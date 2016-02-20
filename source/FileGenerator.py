@@ -126,3 +126,16 @@ class Indent(object):
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.file_generator.decrease_indent()
+
+
+class IndentScope(Indent):
+    def __init__(self, file_generator):
+        super().__init__(file_generator)
+
+    def __enter__(self):
+        self.file_generator.put_line('{')
+        super().__enter__()
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        super().__exit__(exc_type, exc_val, exc_tb)
+        self.file_generator.put_line('}')

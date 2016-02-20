@@ -34,25 +34,21 @@ class InheritanceTraitsBase(TraitsBase):
             class_name=self.interface.m_name,
             arguments_list=Helpers.get_arguments_list_for_declaration(constructor.m_arguments)
         ))
-        self.put_line('{')
-        with self.indent():
+        with self.indent_scope():
             self.put_line('SetObject({constructor_c_function}({arguments_list}));'.format(
                 constructor_c_function=self.capi_generator.get_namespace_id().lower(),
                 arguments_list=Helpers.get_arguments_list_for_constructor_call(constructor.m_arguments)
             ))
-        self.put_line('}')
         c_function_declaration = 'void* {constructor_c_function}({arguments_list})'.format(
             constructor_c_function=self.capi_generator.get_namespace_id().lower(),
             arguments_list=Helpers.get_arguments_list_for_declaration(constructor.m_arguments)
         )
         self.capi_generator.loader_traits.add_c_function_declaration(c_function_declaration)
-        self.put_source_line('{')
-        with self.indent_source():
+        with self.indent_scope_source():
             self.put_source_line('return new {0}({1});'.format(
                 self.interface.m_implementation_class_name,
                 ', '.join(self.capi_generator.get_unwrapped_arguments(constructor.m_arguments))
             ))
-        self.put_source_line('}')
         self.put_source_line('')
         self.capi_generator.cur_namespace_path.pop()
 
@@ -66,8 +62,7 @@ class RequiresCastToBase(InheritanceTraitsBase):
 
     def generate_set_object(self):
         self.put_line('void SetObject(void* object_pointer)')
-        self.put_line('{')
-        with self.indent():
+        with self.indent_scope():
             self.put_line('{object_var} = object_pointer;'.format(object_var=Constants.object_var))
             if self.interface.m_base:
                 self.put_line('{base_class}::SetObject({cast_to_base}({object_var}));'.format(
@@ -78,14 +73,11 @@ class RequiresCastToBase(InheritanceTraitsBase):
                 c_function_declaration = '{cast_to_base}(void* object_pointer)'.format(
                     cast_to_base=self.capi_generator.get_namespace_id().lower() + Constants.cast_to_base_suffix)
                 self.capi_generator.loader_traits.add_c_function_declaration(c_function_declaration)
-                self.put_source_line('{')
-                with self.indent_source():
+                with self.indent_scope_source():
                     self.put_source_line('return static_cast<{0}*>(static_cast<{1}*>(object_pointer))'.format(
                         self.interface.m_base, self.interface.m_implementation_class_name
                     ))
-                self.put_source_line('}')
                 self.put_source_line('')
-        self.put_line('}')
 
 
 class SimpleCase(InheritanceTraitsBase):
@@ -98,13 +90,11 @@ class SimpleCase(InheritanceTraitsBase):
 
     def generate_set_object(self):
         self.put_line('void SetObject(void* raw_pointer)')
-        self.put_line('{')
-        with self.indent():
+        with self.indent_scope():
             if self.interface.m_base:
                 self.put_line('{base_class}::SetObject(raw_pointer);')
             else:
                 self.put_line('{object_var} = raw_pointer;'.format(object_var=Constants.object_var))
-        self.put_line('}')
 
 
 def create_inheritance_traits(interface, capi_generator):

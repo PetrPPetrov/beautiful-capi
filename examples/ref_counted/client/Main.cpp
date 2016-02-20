@@ -34,7 +34,6 @@ Example::Printer create_printer()
     return new_printer;
 }
 
-
 int main()
 {
     Example::Printer printer = create_printer();
