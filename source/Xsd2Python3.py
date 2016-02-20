@@ -35,7 +35,7 @@ class SchemaGenerator(object):
 
     def build_python_scripts(self):
         self.output_file.put_python_header()
-        self.output_file.put_python_gnu_gpl_copyright_header(False)
+        self.output_file.put_python_gnu_gpl_copyright_header()
         self.output_file.put_python_automatic_generation_warning()
         self.output_file.put_line('from enum import Enum\n\n')
         self.__build_string_to_bool()
@@ -117,6 +117,10 @@ class SchemaGenerator(object):
         self.output_file.put_line('')
 
     @staticmethod
+    def __get_array_name(name):
+        return 'm_{0}{1}'.format(name, 'es' if name[-1] == 's' else 's')
+
+    @staticmethod
     def __get_attribute_default_value(attribute):
         if attribute.getAttribute('type') == 'xs:string':
             if attribute.hasAttribute('default'):
@@ -136,7 +140,9 @@ class SchemaGenerator(object):
             if element.getAttribute('type') == 'xs:string':
                 self.__build_init_field(element)
             else:
-                self.output_file.put_line('self.m_{0}s = []'.format(element.getAttribute('name')))
+                self.output_file.put_line('self.{0} = []'.format(
+                    SchemaGenerator.__get_array_name(element.getAttribute('name'))
+                ))
 
     def __build_init_field(self, field):
         self.output_file.put_line('self.m_{0} = {1}'.format(
@@ -166,7 +172,9 @@ class SchemaGenerator(object):
             else:
                 self.output_file.put_line('new_element = {0}()'.format(element.getAttribute('type')))
                 self.output_file.put_line('new_element.load(element)')
-                self.output_file.put_line('self.m_{0}s.append(new_element)'.format(element.getAttribute('name')))
+                self.output_file.put_line('self.{0}.append(new_element)'.format(
+                    SchemaGenerator.__get_array_name(element.getAttribute('name'))
+                ))
 
     def __build_load_attribute(self, attribute):
         self.output_file.put_line('if dom_node.hasAttribute("{0}"):'.format(attribute.getAttribute('name')))

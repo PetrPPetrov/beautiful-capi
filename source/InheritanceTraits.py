@@ -25,13 +25,13 @@ from TraitsBase import TraitsBase
 
 
 class InheritanceTraitsBase(TraitsBase):
-    def __init__(self, interface, capi_generator):
-        super().__init__(interface, capi_generator)
+    def __init__(self, cur_class, capi_generator):
+        super().__init__(cur_class, capi_generator)
 
     def generate_constructor(self, constructor):
         self.capi_generator.cur_namespace_path.append(constructor.m_name)
         self.put_line('{class_name}({arguments_list})'.format(
-            class_name=self.interface.m_name,
+            class_name=self.cur_class.m_name,
             arguments_list=Helpers.get_arguments_list_for_declaration(constructor.m_arguments)
         ))
         with self.indent_scope():
@@ -46,7 +46,7 @@ class InheritanceTraitsBase(TraitsBase):
         self.capi_generator.loader_traits.add_c_function_declaration(c_function_declaration)
         with self.indent_scope_source():
             self.put_source_line('return new {0}({1});'.format(
-                self.interface.m_implementation_class_name,
+                self.cur_class.m_implementation_class_name,
                 ', '.join(self.capi_generator.get_unwrapped_arguments(constructor.m_arguments))
             ))
         self.put_source_line('')
@@ -54,8 +54,8 @@ class InheritanceTraitsBase(TraitsBase):
 
 
 class RequiresCastToBase(InheritanceTraitsBase):
-    def __init__(self, interface, capi_generator):
-        super().__init__(interface, capi_generator)
+    def __init__(self, cur_class, capi_generator):
+        super().__init__(cur_class, capi_generator)
 
     def generate_pointer_declaration(self):
         self.capi_generator.output_header.put_line('void* {object_var};'.format(object_var=Constants.object_var))
@@ -64,9 +64,9 @@ class RequiresCastToBase(InheritanceTraitsBase):
         self.put_line('void SetObject(void* object_pointer)')
         with self.indent_scope():
             self.put_line('{object_var} = object_pointer;'.format(object_var=Constants.object_var))
-            if self.interface.m_base:
+            if self.cur_class.m_base:
                 self.put_line('{base_class}::SetObject({cast_to_base}({object_var}));'.format(
-                    base_class=self.interface.m_base,
+                    base_class=self.cur_class.m_base,
                     cast_to_base=self.capi_generator.get_namespace_id().lower() + Constants.cast_to_base_suffix,
                     object_var=Constants.object_var
                 ))
@@ -75,30 +75,30 @@ class RequiresCastToBase(InheritanceTraitsBase):
                 self.capi_generator.loader_traits.add_c_function_declaration(c_function_declaration)
                 with self.indent_scope_source():
                     self.put_source_line('return static_cast<{0}*>(static_cast<{1}*>(object_pointer))'.format(
-                        self.interface.m_base, self.interface.m_implementation_class_name
+                        self.cur_class.m_base, self.cur_class.m_implementation_class_name
                     ))
                 self.put_source_line('')
 
 
 class SimpleCase(InheritanceTraitsBase):
-    def __init__(self, interface, capi_generator):
-        super().__init__(interface, capi_generator)
+    def __init__(self, cur_class, capi_generator):
+        super().__init__(cur_class, capi_generator)
 
     def generate_pointer_declaration(self):
-        if not self.interface.m_base:
+        if not self.cur_class.m_base:
             self.capi_generator.output_header.put_line('void* {object_var};'.format(object_var=Constants.object_var))
 
     def generate_set_object(self):
         self.put_line('void SetObject(void* raw_pointer)')
         with self.indent_scope():
-            if self.interface.m_base:
+            if self.cur_class.m_base:
                 self.put_line('{base_class}::SetObject(raw_pointer);')
             else:
                 self.put_line('{object_var} = raw_pointer;'.format(object_var=Constants.object_var))
 
 
-def create_inheritance_traits(interface, capi_generator):
-    if interface.m_requires_cast_to_base:
-        return RequiresCastToBase(interface, capi_generator)
+def create_inheritance_traits(cur_class, capi_generator):
+    if cur_class.m_requires_cast_to_base:
+        return RequiresCastToBase(cur_class, capi_generator)
     else:
-        return SimpleCase(interface, capi_generator)
+        return SimpleCase(cur_class, capi_generator)

@@ -71,7 +71,7 @@ class CapiGenerator(object):
     def get_flat_type(self, type_name):
         if not type_name:
             return 'void'
-        if self.__is_interface_type(type_name):
+        if self.__is_class_type(type_name):
             return 'void*'
         return type_name
 
@@ -89,7 +89,7 @@ class CapiGenerator(object):
 
         self.api_defines_generated = False
         if not self.params_description.m_generate_single_file:
-            if not self.params_description.m_file_per_interface or self.params_description.m_generate_namespace_header:
+            if not self.params_description.m_file_per_class or self.params_description.m_generate_namespace_header:
                 output_file = namespace.m_name + '.h'
                 if not self.params_description.m_folder_per_namespace:
                     output_file = namespace_prefix + namespace.m_name + '.h'
@@ -98,16 +98,16 @@ class CapiGenerator(object):
                     namespace_folder = base_path
                 self.__set_output_header(FileGenerator.FileGenerator(os.path.join(namespace_folder, output_file)))
                 if self.params_description.m_generate_namespace_header:
-                    self.__process_namespace_header(namespace, output_folder)
+                    self.__process_namespace_header(namespace)
         if len(self.cur_namespace_path) == 1 and not self.api_defines_generated:
             self.loader_traits.generate_c_functions_declarations()
 
-        for interface in namespace.m_interfaces:
-            self.__process_interface(output_folder, interface)
+        for cur_class in namespace.m_classes:
+            self.__process_class(output_folder, cur_class)
 
         self.cur_namespace_path.pop()
 
-    def __process_namespace_header(self, namespace, base_path_for_files):
+    def __process_namespace_header(self, namespace):
         self.output_header.put_copyright_header(self.params_description.m_copyright_header)
         self.output_header.put_automatic_generation_warning(self.params_description.m_automatic_generated_warning)
 
@@ -119,21 +119,21 @@ class CapiGenerator(object):
             self.loader_traits.generate_c_functions_declarations()
         self.output_header.put_line('')
 
-        if self.params_description.m_file_per_interface and not self.params_description.m_generate_single_file:
-            for interface in namespace.m_interfaces:
-                cur_interface_file = posixpath.join('/'.join(self.cur_namespace_path), interface.m_name + '.h')
-                self.output_header.put_line('#include "{0}"'.format(cur_interface_file))
+        if self.params_description.m_file_per_class and not self.params_description.m_generate_single_file:
+            for cur_class in namespace.m_classes:
+                cur_class_file = posixpath.join('/'.join(self.cur_namespace_path), cur_class.m_name + '.h')
+                self.output_header.put_line('#include "{0}"'.format(cur_class_file))
 
         self.output_header.put_line('')
         self.output_header.put_line('#endif /* {0} */'.format(watchdog_string))
 
-    def __process_interface(self, base_path, interface):
-        self.cur_namespace_path.append(interface.m_name)
-        self.lifecycle_traits = create_lifecycle_traits(interface, self)
-        self.inheritance_traits = create_inheritance_traits(interface, self)
+    def __process_class(self, base_path, cur_class):
+        self.cur_namespace_path.append(cur_class.m_name)
+        self.lifecycle_traits = create_lifecycle_traits(cur_class, self)
+        self.inheritance_traits = create_inheritance_traits(cur_class, self)
 
-        if self.params_description.m_file_per_interface and not self.params_description.m_generate_single_file:
-            output_file = os.path.join(base_path, interface.m_name + '.h')
+        if self.params_description.m_file_per_class and not self.params_description.m_generate_single_file:
+            output_file = os.path.join(base_path, cur_class.m_name + '.h')
             self.__set_output_header(FileGenerator.FileGenerator(output_file))
 
         self.output_header.put_copyright_header(self.params_description.m_copyright_header)
@@ -152,7 +152,7 @@ class CapiGenerator(object):
         self.output_header.put_line('')
         self.output_header.put_line('')
 
-        self.__generate_class(interface)
+        self.__generate_class(cur_class)
 
         self.output_header.put_line('')
         for cur_namespace in self.cur_namespace_path[:-1]:
@@ -168,9 +168,9 @@ class CapiGenerator(object):
         del self.lifecycle_traits
         self.cur_namespace_path.pop()
 
-    def __generate_class(self, interface):
-        self.loader_traits.add_impl_header(interface)
-        self.output_header.put_line('class {0}'.format(interface.m_name))
+    def __generate_class(self, cur_class):
+        self.loader_traits.add_impl_header(cur_class)
+        self.output_header.put_line('class {0}'.format(cur_class.m_name))
         self.output_header.put_line('{')
         self.output_header.put_line('protected:')
         with FileGenerator.Indent(self.output_header):
@@ -179,14 +179,14 @@ class CapiGenerator(object):
         self.output_header.put_line('public:')
         with FileGenerator.Indent(self.output_header):
             self.lifecycle_traits.generate_copy_constructor()
-            for constructor in interface.m_constructors:
+            for constructor in cur_class.m_constructors:
                 self.inheritance_traits.generate_constructor(constructor)
             self.lifecycle_traits.generate_destructor()
-            for method in interface.m_methods:
-                self.__generate_method(method, interface)
+            for method in cur_class.m_methods:
+                self.__generate_method(method, cur_class)
         self.output_header.put_line('};')
 
-    def __generate_method(self, method, interface):
+    def __generate_method(self, method, cur_class):
         return_instruction = 'return ' if method.m_return else ''
         return_type = self.get_flat_type(method.m_return)
         self.cur_namespace_path.append(method.m_name)
@@ -209,7 +209,7 @@ class CapiGenerator(object):
         self.loader_traits.add_c_function_declaration(c_function_declaration)
         with FileGenerator.IndentScope(self.output_source):
             self.output_source.put_line('{0}* self = static_cast<{0}*>(object_pointer);'.format(
-                interface.m_implementation_class_name
+                cur_class.m_implementation_class_name
             ))
             self.output_source.put_line('{0}self->{1}({2});'.format(
                 return_instruction,
@@ -223,23 +223,23 @@ class CapiGenerator(object):
         self.output_source.put_copyright_header(self.params_description.m_copyright_header)
         self.output_source.put_automatic_generation_warning(self.params_description.m_automatic_generated_warning)
 
-    def __is_interface_type(self, type_name):
-        path_to_interface = type_name.split('::')
-        return self.__is_interface_type_impl(path_to_interface, self.api_description.m_namespaces)
+    def __is_class_type(self, type_name):
+        path_to_class = type_name.split('::')
+        return self.__is_class_type_impl(path_to_class, self.api_description.m_namespaces)
 
-    def __is_interface_type_impl(self, path_to_interface, interfaces_or_namespaces):
-        for interface_or_namespace in interfaces_or_namespaces:
-            if interface_or_namespace.m_name == path_to_interface[0]:
-                if len(path_to_interface) == 1:
+    def __is_class_type_impl(self, path_to_class, classes_or_namespaces):
+        for class_or_namespace in classes_or_namespaces:
+            if class_or_namespace.m_name == path_to_class[0]:
+                if len(path_to_class) == 1:
                     return True
-                elif len(path_to_interface) == 2:
-                    return self.__is_interface_type_impl(path_to_interface[1:], interface_or_namespace.m_interfaces)
+                elif len(path_to_class) == 2:
+                    return self.__is_class_type_impl(path_to_class[1:], class_or_namespace.m_classes)
                 else:
-                    return self.__is_interface_type_impl(path_to_interface[1:], interface_or_namespace.m_namespaces)
+                    return self.__is_class_type_impl(path_to_class[1:], class_or_namespace.m_namespaces)
         return False
 
     def get_unwrapped_argument(self, argument):
-        if self.__is_interface_type(argument.m_type):
+        if self.__is_class_type(argument.m_type):
             return 'static_cast<{0}*>({1})'.format(argument.m_type, argument.m_name)
         else:
             return argument.m_name

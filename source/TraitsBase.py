@@ -23,8 +23,8 @@ import FileGenerator
 
 
 class TraitsBase(object):
-    def __init__(self, interface, capi_generator):
-        self.interface = interface
+    def __init__(self, cur_class, capi_generator):
+        self.cur_class = cur_class
         self.capi_generator = capi_generator
 
     def put_line(self, line, eol='\n'):

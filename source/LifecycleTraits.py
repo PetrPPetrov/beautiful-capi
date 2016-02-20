@@ -25,11 +25,11 @@ from TraitsBase import TraitsBase
 
 
 class LifecycleTraitsBase(TraitsBase):
-    def __init__(self, interface, capi_generator):
-        super().__init__(interface, capi_generator)
+    def __init__(self, cur_class, capi_generator):
+        super().__init__(cur_class, capi_generator)
 
     def generate_delete_destructor(self):
-        self.put_line('~{class_name}()'.format(class_name=self.interface.m_name))
+        self.put_line('~{class_name}()'.format(class_name=self.cur_class.m_name))
         with self.indent_scope():
             self.put_line('{delete_c_function}({object_var});'.format(
                 delete_c_function=self.capi_generator.get_namespace_id().lower() + Constants.delete_suffix,
@@ -41,20 +41,20 @@ class LifecycleTraitsBase(TraitsBase):
         self.capi_generator.loader_traits.add_c_function_declaration(c_function_declaration)
         with self.indent_scope_source():
             self.put_source_line('delete static_cast<{0}*>(object_pointer);'.format(
-                self.interface.m_implementation_class_name
+                self.cur_class.m_implementation_class_name
             ))
         self.put_source_line('')
 
 
 class CopySemantic(LifecycleTraitsBase):
-    def __init__(self, interface, capi_generator):
-        super().__init__(interface, capi_generator)
+    def __init__(self, cur_class, capi_generator):
+        super().__init__(cur_class, capi_generator)
 
     def generate_destructor(self):
         self.generate_delete_destructor()
 
     def generate_copy_constructor(self):
-        self.put_line('{class_name}(const {class_name}& other)'.format(class_name=self.interface.m_name))
+        self.put_line('{class_name}(const {class_name}& other)'.format(class_name=self.cur_class.m_name))
         with self.indent_scope():
             self.put_line('SetObject({copy_c_function}(other.{object_var}));'.format(
                 copy_c_function=self.capi_generator.get_namespace_id().lower() + Constants.copy_suffix,
@@ -65,32 +65,32 @@ class CopySemantic(LifecycleTraitsBase):
         self.capi_generator.loader_traits.add_c_function_declaration(c_function_declaration)
         with self.indent_scope_source():
             self.put_source_line('return new {0}(*static_cast<{0}*>(object_pointer));'.format(
-                self.interface.m_implementation_class_name
+                self.cur_class.m_implementation_class_name
             ))
         self.put_source_line('')
 
 
 class MoveSemantic(LifecycleTraitsBase):
-    def __init__(self, interface, capi_generator):
-        super().__init__(interface, capi_generator)
+    def __init__(self, cur_class, capi_generator):
+        super().__init__(cur_class, capi_generator)
 
     def generate_destructor(self):
         self.generate_delete_destructor()
 
     def generate_copy_constructor(self):
-        self.put_line('{class_name}({class_name}& other)'.format(class_name=self.interface.m_name))
+        self.put_line('{class_name}({class_name}& other)'.format(class_name=self.cur_class.m_name))
         with self.indent_scope():
             self.put_line('SetObject(other.{object_var});'.format(object_var=Constants.object_var))
             self.put_line('other.SetObject(0);')
 
 
 class RefCountedSemantic(LifecycleTraitsBase):
-    def __init__(self, interface, capi_generator):
-        super().__init__(interface, capi_generator)
+    def __init__(self, cur_class, capi_generator):
+        super().__init__(cur_class, capi_generator)
 
     def generate_destructor(self):
-        if not self.interface.m_base:
-            self.put_line('~{class_name}()'.format(class_name=self.interface.m_name))
+        if not self.cur_class.m_base:
+            self.put_line('~{class_name}()'.format(class_name=self.cur_class.m_name))
             with self.indent_scope():
                 self.put_line('{release_c_function}({object_var});'.format(
                     release_c_function=self.capi_generator.get_namespace_id().lower() + Constants.release_suffix,
@@ -102,12 +102,12 @@ class RefCountedSemantic(LifecycleTraitsBase):
             self.capi_generator.loader_traits.add_c_function_declaration(c_function_declaration)
             with self.indent_scope_source():
                 self.put_source_line('intrusive_ptr_release(static_cast<{0}*>(object_pointer));'.format(
-                    self.interface.m_implementation_class_name
+                    self.cur_class.m_implementation_class_name
                 ))
             self.put_source_line('')
 
     def generate_copy_constructor(self):
-        self.put_line('{class_name}(const {class_name}& other)'.format(class_name=self.interface.m_name))
+        self.put_line('{class_name}(const {class_name}& other)'.format(class_name=self.cur_class.m_name))
         with self.indent_scope():
             self.put_line('SetObject(other.{object_var});'.format(object_var=Constants.object_var))
             self.put_line('{addref_c_function}({object_var});'.format(
@@ -120,7 +120,7 @@ class RefCountedSemantic(LifecycleTraitsBase):
         self.capi_generator.loader_traits.add_c_function_declaration(c_function_declaration)
         with self.indent_scope_source():
             self.put_source_line('intrusive_ptr_add_ref(static_cast<{0}*>(object_pointer));'.format(
-                self.interface.m_implementation_class_name
+                self.cur_class.m_implementation_class_name
             ))
         self.put_source_line('')
 
@@ -132,7 +132,7 @@ str_to_lifecycle = {
 }
 
 
-def create_lifecycle_traits(interface, capi_generator):
-    if interface.m_lifecycle in str_to_lifecycle:
-        return str_to_lifecycle[interface.m_lifecycle](interface, capi_generator)
+def create_lifecycle_traits(cur_class, capi_generator):
+    if cur_class.m_lifecycle in str_to_lifecycle:
+        return str_to_lifecycle[cur_class.m_lifecycle](cur_class, capi_generator)
     raise ValueError
