@@ -18,10 +18,24 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-project(examples)
+project(copy_semantic)
 
 cmake_minimum_required(VERSION 2.8)
 
-add_subdirectory(hello_world)
-add_subdirectory(ref_counted)
-add_subdirectory(copy_semantic)
+find_package(PythonInterp)
+
+add_custom_command(
+  OUTPUT ${copy_semantic_SOURCE_DIR}/source/AutoGenWrap.cpp
+  COMMAND ${PYTHON_EXECUTABLE} ${copy_semantic_SOURCE_DIR}/../../../source/Main.py -i ${copy_semantic_SOURCE_DIR}/copy_semantic.xml -p ${copy_semantic_SOURCE_DIR}/copy_semantic_params.xml -o ${copy_semantic_SOURCE_DIR}/include  -w ${copy_semantic_SOURCE_DIR}/source/AutoGenWrap.cpp
+  MAIN_DEPENDENCY ${copy_semantic_SOURCE_DIR}/copy_semantic.xml
+  DEPENDS ${copy_semantic_SOURCE_DIR}/copy_semantic_params.xml
+  WORKING_DIRECTORY ${copy_semantic_SOURCE_DIR}
+)
+
+include_directories(${copy_semantic_SOURCE_DIR}/source/)
+
+add_library(copy_semantic SHARED
+  ${copy_semantic_SOURCE_DIR}/source/AutoGenWrap.cpp
+  ${copy_semantic_SOURCE_DIR}/source/PrinterImpl.h
+  ${copy_semantic_SOURCE_DIR}/source/PrinterImpl.cpp
+)

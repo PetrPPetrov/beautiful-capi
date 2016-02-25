@@ -18,10 +18,17 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-project(examples)
+project(copy_semantic_client)
 
 cmake_minimum_required(VERSION 2.8)
 
-add_subdirectory(hello_world)
-add_subdirectory(ref_counted)
-add_subdirectory(copy_semantic)
+include_directories(${copy_semantic_client_SOURCE_DIR}/../library/include)
+
+add_executable(copy_semantic_client
+  ${ref_counted_client_SOURCE_DIR}/Main.cpp
+)
+
+if(TARGET copy_semantic)
+  add_dependencies(copy_semantic_client copy_semantic)
+endif()
+target_link_libraries(copy_semantic_client copy_semantic)

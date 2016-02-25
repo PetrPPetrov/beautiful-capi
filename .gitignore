@@ -4,5 +4,6 @@
 build/
 /examples/hello_world/library/include/
 /examples/ref_counted/library/include/
+/examples/copy_semantic/library/include/
 AutoGen*
 
