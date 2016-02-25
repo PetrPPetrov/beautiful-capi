@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<virtual_interface:api xmlns:virtual_interface="http://gkmsoft.ru/beautifulcapi">
+  <namespace name="Example">
+    <class name="IShape" lifecycle="move_semantic" implementation_class_name="Example::IShape" implementation_class_header="IShape.h">
+      <method name="Show"/>
+    </class>
+    <factory_function name="CreateTriangle" return="Example::IShape" implementation_name="Example::CreateTriangle"/>    
+    <factory_function name="CreateRectangle" return="Example::IShape"/>
+    <factory_function name="CreateCircle" return="Example::IShape"/>
+    <factory_function name="CreateEllipse" return="Example::IShape"/>
+  </namespace>
+</virtual_interface:api>

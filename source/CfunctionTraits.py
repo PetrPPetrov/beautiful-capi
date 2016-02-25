@@ -86,8 +86,9 @@ class ImplLib(CfunctionTraitsBase):
         self.cur_api_declarations.put_line('{0} {1};'.format(self.cur_api_define, declaration))
         self.put_source_line('{0} {1}'.format(self.cur_api_define, declaration))
 
-    def add_impl_header(self, cur_class):
-        self.impl_headers.put_line('#include "{0}"'.format(cur_class.m_implementation_class_header))
+    def add_impl_header(self, implementation_header):
+        if implementation_header:
+            self.impl_headers.put_line('#include "{0}"'.format(implementation_header))
 
 
 class DynamicLoad(CfunctionTraitsBase):

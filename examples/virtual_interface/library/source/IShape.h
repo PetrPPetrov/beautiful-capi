@@ -19,22 +19,18 @@
  *
  */
 
-#ifndef BEAUTIFUL_CAPI_MOVE_SEMANTIC_PRINTER_H
-#define BEAUTIFUL_CAPI_MOVE_SEMANTIC_PRINTER_H
+#ifndef BEAUTIFUL_CAPI_ISHAPE_H
+#define BEAUTIFUL_CAPI_ISHAPE_H
 
 #include <string>
 
 namespace Example
 {
-    class PrinterImpl
+    struct IShape
     {
-        std::string mPreviousText;
-    public:
-        PrinterImpl();
-        PrinterImpl(const Example::PrinterImpl& other);
-        ~PrinterImpl();
-        void Show(const char* text);
+        virtual ~IShape() = 0; // virtual destructor is required here
+        virtual void Show() = 0;
     };
 }
 
-#endif /* BEAUTIFUL_CAPI_MOVE_SEMANTIC_PRINTER_H */
+#endif /* BEAUTIFUL_CAPI_ISHAPE_H */

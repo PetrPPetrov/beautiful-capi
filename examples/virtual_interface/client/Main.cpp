@@ -19,22 +19,26 @@
  *
  */
 
-#ifndef BEAUTIFUL_CAPI_MOVE_SEMANTIC_PRINTER_H
-#define BEAUTIFUL_CAPI_MOVE_SEMANTIC_PRINTER_H
+#include <iostream>
+#include "Example.h"
 
-#include <string>
-
-namespace Example
+void f1(Example::Printer p)
 {
-    class PrinterImpl
-    {
-        std::string mPreviousText;
-    public:
-        PrinterImpl();
-        PrinterImpl(const Example::PrinterImpl& other);
-        ~PrinterImpl();
-        void Show(const char* text);
-    };
+    p.Show("from f1()");
 }
 
-#endif /* BEAUTIFUL_CAPI_MOVE_SEMANTIC_PRINTER_H */
+Example::Printer create_printer()
+{
+    Example::Printer new_printer;
+    new_printer.Show("from create_printer()");
+    return new_printer;
+}
+
+int main()
+{
+    Example::Printer printer = create_printer();
+    printer.Show("from main()");
+    f1(printer);
+
+    return EXIT_SUCCESS;
+}

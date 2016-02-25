@@ -45,6 +45,11 @@ class LifecycleTraitsBase(TraitsBase):
             ))
         self.put_source_line('')
 
+    def generate_void_constructor(self):
+        self.put_line('explicit {class_name}(void *object_pointer)'.format(class_name=self.cur_class.m_name))
+        with self.indent_scope():
+            self.put_line('SetObject(object_pointer);')
+
 
 class CopySemantic(LifecycleTraitsBase):
     def __init__(self, cur_class, capi_generator):

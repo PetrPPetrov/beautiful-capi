@@ -18,13 +18,17 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-project(examples)
+project(virtual_interface_client)
 
 cmake_minimum_required(VERSION 2.8)
 
-add_subdirectory(hello_world)
-add_subdirectory(ref_counted)
-add_subdirectory(copy_semantic)
-add_subdirectory(move_semantic)
-add_subdirectory(virtual_interface)
+include_directories(${virtual_interface_client_SOURCE_DIR}/../library/include)
 
+add_executable(virtual_interface_client
+  ${virtual_interface_client_SOURCE_DIR}/Main.cpp
+)
+
+if(TARGET virtual_interface)
+  add_dependencies(virtual_interface_client virtual_interface)
+endif()
+target_link_libraries(virtual_interface_client virtual_interface)

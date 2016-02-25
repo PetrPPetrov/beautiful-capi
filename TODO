@@ -1,5 +1,7 @@
 1) implement Dynamic traits for Windows
 1a) const support for methods
+1b) rename ref_counted example to reference_counted
+1c) avoid duplicated include files (implementation_header)
 2) implement Dynamic traits for Unix
 3) write more examples and tests: hello_world, ref_counted, copy_semantic, move_semantic, virtual_interface, data_structures, weak_ptr, dynamic_cast, dynamic_load
 4) review folder creation and file processing python code
@@ -11,3 +13,4 @@
 10) develop generating input for Swig
 11) update documentation
 12) update testing system and tests
+13) inline optimization

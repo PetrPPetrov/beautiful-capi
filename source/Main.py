@@ -75,6 +75,11 @@ class CapiGenerator(object):
             return 'void*'
         return type_name
 
+    def get_cpp_type(self, type_name):
+        if not type_name:
+            return 'void'
+        return type_name
+
     def __process_namespace(self, base_path, namespace, namespace_prefix):
         self.cur_namespace_path.append(namespace.m_name)
 
@@ -117,12 +122,33 @@ class CapiGenerator(object):
         self.output_header.put_line('')
         if len(self.cur_namespace_path) == 1 and not self.api_defines_generated:
             self.loader_traits.generate_c_functions_declarations()
+        self.loader_traits.add_impl_header(namespace.m_implementation_header)
+
         self.output_header.put_line('')
 
         if self.params_description.m_file_per_class and not self.params_description.m_generate_single_file:
             for cur_class in namespace.m_classes:
                 cur_class_file = posixpath.join('/'.join(self.cur_namespace_path), cur_class.m_name + '.h')
                 self.output_header.put_line('#include "{0}"'.format(cur_class_file))
+
+        if namespace.m_factory_functions or namespace.m_functions:
+            self.output_header.put_line('')
+            self.output_header.put_line('#ifdef __cplusplus')
+            self.output_header.put_line('')
+            for cur_namespace in self.cur_namespace_path:
+                self.output_header.put_line('namespace {0} {{ '.format(cur_namespace), '')
+            self.output_header.put_line('')
+            self.output_header.put_line('')
+            for function in namespace.m_functions:
+                self.__process_function(function)
+            for factory_function in namespace.m_factory_functions:
+                self.__process_factory_function(factory_function)
+            self.output_header.put_line('')
+            for cur_namespace in self.cur_namespace_path:
+                self.output_header.put_line('}', '')
+            self.output_header.put_line('')
+            self.output_header.put_line('')
+            self.output_header.put_line('#endif /* __cplusplus */')
 
         self.output_header.put_line('')
         self.output_header.put_line('#endif /* {0} */'.format(watchdog_string))
@@ -154,7 +180,6 @@ class CapiGenerator(object):
 
         self.__generate_class(cur_class)
 
-        self.output_header.put_line('')
         for cur_namespace in self.cur_namespace_path[:-1]:
             self.output_header.put_line('}', '')
         self.output_header.put_line('')
@@ -169,7 +194,7 @@ class CapiGenerator(object):
         self.cur_namespace_path.pop()
 
     def __generate_class(self, cur_class):
-        self.loader_traits.add_impl_header(cur_class)
+        self.loader_traits.add_impl_header(cur_class.m_implementation_class_header)
         self.output_header.put_line('class {0}'.format(cur_class.m_name))
         self.output_header.put_line('{')
         self.output_header.put_line('protected:')
@@ -179,6 +204,7 @@ class CapiGenerator(object):
         self.output_header.put_line('public:')
         with FileGenerator.Indent(self.output_header):
             self.lifecycle_traits.generate_copy_constructor()
+            self.lifecycle_traits.generate_void_constructor()
             for constructor in cur_class.m_constructors:
                 self.inheritance_traits.generate_constructor(constructor)
             self.lifecycle_traits.generate_destructor()
@@ -218,6 +244,47 @@ class CapiGenerator(object):
             ))
         self.output_source.put_line('')
         self.cur_namespace_path.pop()
+
+    def __process_function(self, function):
+        return_type = self.get_flat_type(function.m_return)
+        self.output_header.put_line('{return_type} {c_function}({arguments})'.format(
+            return_type=return_type,
+            c_function=self.get_namespace_id().lower() + '_' + function.m_name.lower(),
+            arguments=Helpers.get_arguments_list_for_c_call(function.m_arguments)
+        ))
+
+    def __process_factory_function(self, factory_function):
+        if not self.__is_class_type(factory_function.m_return):
+            print('Factory {0} does not return class type'.format(factory_function.m_name))
+            raise ValueError
+
+        return_type = self.get_flat_type(factory_function.m_return)
+        c_function_name = self.get_namespace_id().lower() + Helpers.pascal_to_stl(factory_function.m_name)
+        c_function_declaration = '{return_type} {c_function}({arguments})'.format(
+            return_type=return_type,
+            c_function=c_function_name,
+            arguments=Helpers.get_arguments_list_for_declaration(factory_function.m_arguments)
+        )
+        self.loader_traits.add_c_function_declaration(c_function_declaration)
+        with FileGenerator.IndentScope(self.output_source):
+            self.output_source.put_line('return {function_name}({arguments});'.format(
+                function_name=factory_function.m_name
+                if not factory_function.m_implementation_name else factory_function.m_implementation_name,
+                arguments=', '.join(self.get_unwrapped_arguments(factory_function.m_arguments))
+            ))
+        self.output_source.put_line('')
+        self.output_header.put_line('inline {return_type} {function_name}({arguments})'.format(
+            return_type=self.get_cpp_type(factory_function.m_return),
+            function_name=factory_function.m_name,
+            arguments=Helpers.get_arguments_list_for_c_call(factory_function.m_arguments)
+        ))
+        with FileGenerator.IndentScope(self.output_header):
+            self.output_header.put_line('return {return_type}({c_function}({arguments}));'.format(
+                return_type=self.get_cpp_type(factory_function.m_return),
+                c_function=c_function_name,
+                arguments=Helpers.get_arguments_list_for_c_call(factory_function.m_arguments)
+            ))
+        self.output_header.put_line('')
 
     def __process_source_begin(self):
         self.output_source.put_copyright_header(self.params_description.m_copyright_header)

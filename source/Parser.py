@@ -63,9 +63,11 @@ class TBeautifulCapiRoot(object):
 class TNamespace(object):
     def __init__(self):
         self.m_name = ""
+        self.m_implementation_header = ""
         self.m_namespaces = []
         self.m_classes = []
-        self.m_methods = []
+        self.m_functions = []
+        self.m_factory_functions = []
     
     def load(self, dom_node):
         for element in [node for node in dom_node.childNodes if node.nodeName == "namespace"]:
@@ -76,13 +78,20 @@ class TNamespace(object):
             new_element = TClass()
             new_element.load(element)
             self.m_classes.append(new_element)
-        for element in [node for node in dom_node.childNodes if node.nodeName == "method"]:
+        for element in [node for node in dom_node.childNodes if node.nodeName == "function"]:
             new_element = TMethod()
             new_element.load(element)
-            self.m_methods.append(new_element)
+            self.m_functions.append(new_element)
+        for element in [node for node in dom_node.childNodes if node.nodeName == "factory_function"]:
+            new_element = TFactory()
+            new_element.load(element)
+            self.m_factory_functions.append(new_element)
         if dom_node.hasAttribute("name"):
             cur_attr = dom_node.getAttribute("name")
             self.m_name = cur_attr
+        if dom_node.hasAttribute("implementation_header"):
+            cur_attr = dom_node.getAttribute("implementation_header")
+            self.m_implementation_header = cur_attr
     
 
 class TClass(object):
@@ -147,6 +156,22 @@ class TMethod(TConstructor):
     
     def load(self, dom_node):
         super().load(dom_node)
+        if dom_node.hasAttribute("return"):
+            cur_attr = dom_node.getAttribute("return")
+            self.m_return = cur_attr
+    
+
+class TFactory(TConstructor):
+    def __init__(self):
+        super().__init__()
+        self.m_implementation_name = ""
+        self.m_return = ""
+    
+    def load(self, dom_node):
+        super().load(dom_node)
+        if dom_node.hasAttribute("implementation_name"):
+            cur_attr = dom_node.getAttribute("implementation_name")
+            self.m_implementation_name = cur_attr
         if dom_node.hasAttribute("return"):
             cur_attr = dom_node.getAttribute("return")
             self.m_return = cur_attr

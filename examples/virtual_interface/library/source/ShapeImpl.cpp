@@ -19,22 +19,28 @@
  *
  */
 
-#ifndef BEAUTIFUL_CAPI_MOVE_SEMANTIC_PRINTER_H
-#define BEAUTIFUL_CAPI_MOVE_SEMANTIC_PRINTER_H
+#include <iostream>
+#include "PrinterImpl.h"
 
-#include <string>
-
-namespace Example
+// Newly created objects implies to have value 1 of reference counter
+Example::PrinterImpl::PrinterImpl()
 {
-    class PrinterImpl
-    {
-        std::string mPreviousText;
-    public:
-        PrinterImpl();
-        PrinterImpl(const Example::PrinterImpl& other);
-        ~PrinterImpl();
-        void Show(const char* text);
-    };
+    std::cout << "Printer ctor" << std::endl;
 }
 
-#endif /* BEAUTIFUL_CAPI_MOVE_SEMANTIC_PRINTER_H */
+Example::PrinterImpl::PrinterImpl(const Example::PrinterImpl& other)
+    : mPreviousText(other.mPreviousText)
+{
+    std::cout << "Printer copy ctor" << std::endl;
+}
+
+Example::PrinterImpl::~PrinterImpl()
+{
+    std::cout << "Printer dtor" << std::endl;
+}
+
+void Example::PrinterImpl::Show(const char* text)
+{
+    std::cout << "print text: " << text << std::endl;
+    mPreviousText = std::string(text);
+}
