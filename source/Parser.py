@@ -166,6 +166,7 @@ class TFactory(TConstructor):
         super().__init__()
         self.m_implementation_name = ""
         self.m_return = ""
+        self.m_implementation_header = ""
     
     def load(self, dom_node):
         super().load(dom_node)
@@ -175,6 +176,9 @@ class TFactory(TConstructor):
         if dom_node.hasAttribute("return"):
             cur_attr = dom_node.getAttribute("return")
             self.m_return = cur_attr
+        if dom_node.hasAttribute("implementation_header"):
+            cur_attr = dom_node.getAttribute("implementation_header")
+            self.m_implementation_header = cur_attr
     
 
 class TArgument(object):

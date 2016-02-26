@@ -46,6 +46,7 @@
       <xs:extension base="TConstructor">
         <xs:attribute name="implementation_name" type="xs:string" use="optional" default=""/>
         <xs:attribute name="return" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="implementation_header" type="xs:string" use="optional" default=""/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>

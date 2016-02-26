@@ -19,18 +19,35 @@
  *
  */
 
-#ifndef BEAUTIFUL_CAPI_ISHAPE_H
-#define BEAUTIFUL_CAPI_ISHAPE_H
-
-#include <string>
+#include <iostream>
+#include "RectangleFactory.h"
 
 namespace Example
 {
-    struct IShape
+    namespace Details
     {
-        virtual ~IShape() {} // virtual destructor is required here
-        virtual void Show() = 0;
-    };
+        class Rectangle : public Example::IShape
+        {
+        public:
+            Rectangle()
+            {
+                std::cout << "Rectangle ctor" << std::endl;
+            }
+
+            virtual ~Rectangle()
+            {
+                std::cout << "Rectangle dtor" << std::endl;
+            }
+
+            virtual void Show()
+            {
+                std::cout << "Rectangle::Show()" << std::endl;
+            }
+        };
+    }
 }
 
-#endif /* BEAUTIFUL_CAPI_ISHAPE_H */
+Example::IShape* Example::Details::CreateRectangle()
+{
+    return new Example::Details::Rectangle();
+}

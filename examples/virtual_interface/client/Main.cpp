@@ -22,23 +22,20 @@
 #include <iostream>
 #include "Example.h"
 
-void f1(Example::Printer p)
+void show(Example::IShape shape)
 {
-    p.Show("from f1()");
-}
-
-Example::Printer create_printer()
-{
-    Example::Printer new_printer;
-    new_printer.Show("from create_printer()");
-    return new_printer;
+    shape.Show();
 }
 
 int main()
 {
-    Example::Printer printer = create_printer();
-    printer.Show("from main()");
-    f1(printer);
+    Example::IShape triangle = Example::CreateTriangle();
+    Example::IShape shape0 = Example::CreateCircle();
+    Example::IShape shape1 = Example::CreateRectangle();
+
+    show(triangle);
+    show(shape0);
+    show(shape1);
 
     return EXIT_SUCCESS;
 }

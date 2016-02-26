@@ -37,5 +37,10 @@ include_directories(${virtual_interface_SOURCE_DIR}/source/)
 add_library(virtual_interface SHARED
   ${virtual_interface_SOURCE_DIR}/source/AutoGenWrap.cpp
   ${virtual_interface_SOURCE_DIR}/source/IShape.h
-  ${virtual_interface_SOURCE_DIR}/source/ShapeImpl.cpp
+  ${virtual_interface_SOURCE_DIR}/source/TriangleFactory.h
+  ${virtual_interface_SOURCE_DIR}/source/TriangleFactory.cpp
+  ${virtual_interface_SOURCE_DIR}/source/RectangleFactory.h
+  ${virtual_interface_SOURCE_DIR}/source/RectangleFactory.cpp
+  ${virtual_interface_SOURCE_DIR}/source/CircleFactory.h
+  ${virtual_interface_SOURCE_DIR}/source/CircleFactory.cpp
 )

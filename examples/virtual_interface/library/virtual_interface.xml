@@ -7,6 +7,5 @@
     <factory_function name="CreateTriangle" return="Example::IShape" implementation_name="Example::Details::CreateTriangle" implementation_header="TriangleFactory.h"/>    
     <factory_function name="CreateRectangle" return="Example::IShape" implementation_name="Example::Details::CreateRectangle" implementation_header="RectangleFactory.h"/>
     <factory_function name="CreateCircle" return="Example::IShape" implementation_name="Example::Details::CreateCircle" implementation_header="CircleFactory.h"/>
-    <factory_function name="CreateEllipse" return="Example::IShape" implementation_name="Example::Details::CreateEllipse" implementation_header="EllipseFactory.h"/>
   </namespace>
 </virtual_interface:api>

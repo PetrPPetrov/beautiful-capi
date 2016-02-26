@@ -258,6 +258,8 @@ class CapiGenerator(object):
             print('Factory {0} does not return class type'.format(factory_function.m_name))
             raise ValueError
 
+        self.loader_traits.add_impl_header(factory_function.m_implementation_header)
+
         return_type = self.get_flat_type(factory_function.m_return)
         c_function_name = self.get_namespace_id().lower() + Helpers.pascal_to_stl(factory_function.m_name)
         c_function_declaration = '{return_type} {c_function}({arguments})'.format(

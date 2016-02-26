@@ -20,27 +20,34 @@
  */
 
 #include <iostream>
-#include "PrinterImpl.h"
+#include "TriangleFactory.h"
 
-// Newly created objects implies to have value 1 of reference counter
-Example::PrinterImpl::PrinterImpl()
+namespace Example
 {
-    std::cout << "Printer ctor" << std::endl;
+    namespace Details
+    {
+        class Triangle : public Example::IShape
+        {
+        public:
+            Triangle()
+            {
+                std::cout << "Triangle ctor" << std::endl;
+            }
+
+            virtual ~Triangle()
+            {
+                std::cout << "Triangle dtor" << std::endl;
+            }
+
+            virtual void Show()
+            {
+                std::cout << "Triangle::Show()" << std::endl;
+            }
+        };
+    }
 }
 
-Example::PrinterImpl::PrinterImpl(const Example::PrinterImpl& other)
-    : mPreviousText(other.mPreviousText)
+Example::IShape* Example::Details::CreateTriangle()
 {
-    std::cout << "Printer copy ctor" << std::endl;
-}
-
-Example::PrinterImpl::~PrinterImpl()
-{
-    std::cout << "Printer dtor" << std::endl;
-}
-
-void Example::PrinterImpl::Show(const char* text)
-{
-    std::cout << "print text: " << text << std::endl;
-    mPreviousText = std::string(text);
+    return new Example::Details::Triangle();
 }

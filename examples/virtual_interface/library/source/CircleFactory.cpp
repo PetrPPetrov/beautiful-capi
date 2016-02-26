@@ -19,18 +19,36 @@
  *
  */
 
-#ifndef BEAUTIFUL_CAPI_ISHAPE_H
-#define BEAUTIFUL_CAPI_ISHAPE_H
-
-#include <string>
+#include <iostream>
+#include "CircleFactory.h"
 
 namespace Example
 {
-    struct IShape
+    namespace Details
     {
-        virtual ~IShape() {} // virtual destructor is required here
-        virtual void Show() = 0;
-    };
+        class Circle : public Example::IShape
+        {
+        public:
+            Circle()
+            {
+                std::cout << "Circle ctor" << std::endl;
+            }
+
+            virtual ~Circle()
+            {
+                std::cout << "Circle dtor" << std::endl;
+            }
+
+            virtual void Show()
+            {
+                std::cout << "Circle::Show()" << std::endl;
+            }
+        };
+    }
 }
 
-#endif /* BEAUTIFUL_CAPI_ISHAPE_H */
+
+Example::IShape* Example::Details::CreateCircle()
+{
+    return new Example::Details::Circle();
+}

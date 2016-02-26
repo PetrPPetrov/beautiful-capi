@@ -19,18 +19,17 @@
  *
  */
 
-#ifndef BEAUTIFUL_CAPI_ISHAPE_H
-#define BEAUTIFUL_CAPI_ISHAPE_H
+#ifndef BEAUTIFUL_CAPI_TRIANGLE_FACTORY_H
+#define BEAUTIFUL_CAPI_TRIANGLE_FACTORY_H
 
-#include <string>
+#include "IShape.h"
 
 namespace Example
 {
-    struct IShape
+    namespace Details
     {
-        virtual ~IShape() {} // virtual destructor is required here
-        virtual void Show() = 0;
-    };
+        IShape* CreateTriangle();
+    }
 }
 
-#endif /* BEAUTIFUL_CAPI_ISHAPE_H */
+#endif /* BEAUTIFUL_CAPI_TRIANGLE_FACTORY_H */
