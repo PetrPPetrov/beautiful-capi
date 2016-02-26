@@ -19,3 +19,4 @@
 15) flat type maps
 16) doxygen documentation generation
 17) multiple inheritance?
+18) C++ modes: C++ 98, C++2003, C++2011, for wrappers and for internals
