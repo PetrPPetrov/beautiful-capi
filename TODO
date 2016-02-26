@@ -1,11 +1,12 @@
 1) implement Dynamic traits for Windows
 1a) const support for methods
-1b) rename ref_counted example to reference_counted
+1b) rename ref_counted example to reference_counted, => intrusive_ptr ?
 1c) avoid duplicated include files (implementation_header)
 2) implement Dynamic traits for Unix
-3) write more examples and tests: hello_world, ref_counted, copy_semantic, move_semantic, virtual_interface, data_structures, weak_ptr, dynamic_cast, dynamic_load
+2a) implement combined (dynamic & implib) mode
+3) write more examples and tests: hello_world, ref_counted, copy_semantic, move_semantic, virtual_interface, data_structures, shared_ptr, weak_ptr, dynamic_cast, dynamic_load
 4) review folder creation and file processing python code
-5) exception support
+5) exception support, exception policies: don't handle exceptions, ellipse handling & std::exception (primitive), exceptions from list
 6) dynamic_cast support
 7) develop automated testing system
 8) test various cases: single_file, namespace_at_folder, implib_dynamic_load, no_namespace_header, all params (the same test, only xml are different)
@@ -15,3 +16,5 @@
 12) update testing system and tests
 13) inline optimization
 14) add Python 2.7 support
+15) flat type maps
+16) doxygen documentation generation
