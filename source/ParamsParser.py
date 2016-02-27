@@ -37,7 +37,6 @@ class TBeautifulCapiParams(object):
     def __init__(self):
         self.m_folder_per_namespace = True
         self.m_file_per_class = True
-        self.m_generate_namespace_header = True
         self.m_namespace_header_at_parent_folder = True
         self.m_generate_single_file = False
         self.m_single_header_name = "Output.h"
@@ -58,9 +57,6 @@ class TBeautifulCapiParams(object):
         if dom_node.hasAttribute("file_per_class"):
             cur_attr = dom_node.getAttribute("file_per_class")
             self.m_file_per_class = string_to_bool(cur_attr)
-        if dom_node.hasAttribute("generate_namespace_header"):
-            cur_attr = dom_node.getAttribute("generate_namespace_header")
-            self.m_generate_namespace_header = string_to_bool(cur_attr)
         if dom_node.hasAttribute("namespace_header_at_parent_folder"):
             cur_attr = dom_node.getAttribute("namespace_header_at_parent_folder")
             self.m_namespace_header_at_parent_folder = string_to_bool(cur_attr)

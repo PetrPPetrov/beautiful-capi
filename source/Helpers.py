@@ -43,5 +43,11 @@ def get_c_function_name(full_qualified_method_name):
     return '_'.join(parsed_name)
 
 
+def get_cpp_type(type_name):
+    if not type_name:
+        return 'void'
+    return type_name
+
+
 def pascal_to_stl(pascal_name):
     return ''.join(['_' + symbol.lower() if symbol.isupper() else symbol for symbol in pascal_name])

@@ -8,7 +8,6 @@
     </xs:sequence>
     <xs:attribute name="folder_per_namespace" type="xs:boolean" use="optional" default="true"/>
     <xs:attribute name="file_per_class" type="xs:boolean" use="optional" default="true"/>
-    <xs:attribute name="generate_namespace_header" type="xs:boolean" use="optional" default="true"/>
     <xs:attribute name="namespace_header_at_parent_folder" type="xs:boolean" use="optional" default="true"/>
     <xs:attribute name="generate_single_file" type="xs:boolean" use="optional" default="false"/>
     <xs:attribute name="single_header_name" type="xs:string" use="optional" default="Output.h"/>
