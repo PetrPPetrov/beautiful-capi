@@ -25,7 +25,7 @@ cmake_minimum_required(VERSION 2.8)
 include_directories(${copy_semantic_client_SOURCE_DIR}/../library/include)
 
 add_executable(copy_semantic_client
-  ${ref_counted_client_SOURCE_DIR}/Main.cpp
+  ${copy_semantic_client_SOURCE_DIR}/Main.cpp
 )
 
 if(TARGET copy_semantic)

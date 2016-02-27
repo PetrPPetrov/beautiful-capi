@@ -23,7 +23,7 @@ project(examples)
 cmake_minimum_required(VERSION 2.8)
 
 add_subdirectory(hello_world)
-add_subdirectory(ref_counted)
+add_subdirectory(reference_counted)
 add_subdirectory(copy_semantic)
 add_subdirectory(move_semantic)
 add_subdirectory(virtual_interface)

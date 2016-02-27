@@ -18,24 +18,24 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-project(ref_counted)
+project(reference_counted)
 
 cmake_minimum_required(VERSION 2.8)
 
 find_package(PythonInterp)
 
 add_custom_command(
-  OUTPUT ${ref_counted_SOURCE_DIR}/source/AutoGenWrap.cpp
-  COMMAND ${PYTHON_EXECUTABLE} ${ref_counted_SOURCE_DIR}/../../../source/Main.py -i ${ref_counted_SOURCE_DIR}/ref_counted.xml -p ${ref_counted_SOURCE_DIR}/ref_counted_params.xml -o ${ref_counted_SOURCE_DIR}/include  -w ${ref_counted_SOURCE_DIR}/source/AutoGenWrap.cpp
-  MAIN_DEPENDENCY ${ref_counted_SOURCE_DIR}/ref_counted.xml
-  DEPENDS ${ref_counted_SOURCE_DIR}/ref_counted_params.xml
-  WORKING_DIRECTORY ${ref_counted_SOURCE_DIR}
+  OUTPUT ${reference_counted_SOURCE_DIR}/source/AutoGenWrap.cpp
+  COMMAND ${PYTHON_EXECUTABLE} ${reference_counted_SOURCE_DIR}/../../../source/Main.py -i ${reference_counted_SOURCE_DIR}/reference_counted.xml -p ${reference_counted_SOURCE_DIR}/reference_counted_params.xml -o ${reference_counted_SOURCE_DIR}/include -w ${reference_counted_SOURCE_DIR}/source/AutoGenWrap.cpp
+  MAIN_DEPENDENCY ${reference_counted_SOURCE_DIR}/reference_counted.xml
+  DEPENDS ${reference_counted_SOURCE_DIR}/reference_counted_params.xml
+  WORKING_DIRECTORY ${reference_counted_SOURCE_DIR}
 )
 
-include_directories(${ref_counted_SOURCE_DIR}/source/)
+include_directories(${reference_counted_SOURCE_DIR}/source/)
 
-add_library(ref_counted SHARED
-  ${ref_counted_SOURCE_DIR}/source/AutoGenWrap.cpp
-  ${ref_counted_SOURCE_DIR}/source/PrinterImpl.h
-  ${ref_counted_SOURCE_DIR}/source/PrinterImpl.cpp
+add_library(reference_counted SHARED
+  ${reference_counted_SOURCE_DIR}/source/AutoGenWrap.cpp
+  ${reference_counted_SOURCE_DIR}/source/PrinterImpl.h
+  ${reference_counted_SOURCE_DIR}/source/PrinterImpl.cpp
 )

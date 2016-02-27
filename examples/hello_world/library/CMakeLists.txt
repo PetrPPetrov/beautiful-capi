@@ -26,7 +26,7 @@ find_package(PythonInterp)
 
 add_custom_command(
   OUTPUT ${hello_world_SOURCE_DIR}/source/AutoGenWrap.cpp
-  COMMAND ${PYTHON_EXECUTABLE} ${hello_world_SOURCE_DIR}/../../../source/Main.py -i ${hello_world_SOURCE_DIR}/hello_world.xml -p ${hello_world_SOURCE_DIR}/hello_world_params.xml -o ${hello_world_SOURCE_DIR}/include  -w ${hello_world_SOURCE_DIR}/source/AutoGenWrap.cpp
+  COMMAND ${PYTHON_EXECUTABLE} ${hello_world_SOURCE_DIR}/../../../source/Main.py -i ${hello_world_SOURCE_DIR}/hello_world.xml -p ${hello_world_SOURCE_DIR}/hello_world_params.xml -o ${hello_world_SOURCE_DIR}/include -w ${hello_world_SOURCE_DIR}/source/AutoGenWrap.cpp
   MAIN_DEPENDENCY ${hello_world_SOURCE_DIR}/hello_world.xml
   DEPENDS ${hello_world_SOURCE_DIR}/hello_world_params.xml
   WORKING_DIRECTORY ${hello_world_SOURCE_DIR}

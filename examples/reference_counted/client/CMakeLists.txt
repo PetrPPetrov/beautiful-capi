@@ -18,17 +18,17 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-project(ref_counted_client)
+project(reference_counted_client)
 
 cmake_minimum_required(VERSION 2.8)
 
-include_directories(${ref_counted_client_SOURCE_DIR}/../library/include)
+include_directories(${reference_counted_client_SOURCE_DIR}/../library/include)
 
-add_executable(ref_counted_client
-  ${ref_counted_client_SOURCE_DIR}/Main.cpp
+add_executable(reference_counted_client
+  ${reference_counted_client_SOURCE_DIR}/Main.cpp
 )
 
-if(TARGET ref_counted)
-  add_dependencies(ref_counted_client ref_counted)
+if(TARGET reference_counted)
+  add_dependencies(reference_counted_client reference_counted)
 endif()
-target_link_libraries(ref_counted_client ref_counted)
+target_link_libraries(reference_counted_client reference_counted)

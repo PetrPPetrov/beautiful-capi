@@ -18,7 +18,7 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-project(ref_counted_example)
+project(reference_counted_example)
 
 cmake_minimum_required(VERSION 2.8)
 

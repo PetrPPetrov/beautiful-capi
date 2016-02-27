@@ -26,7 +26,7 @@ find_package(PythonInterp)
 
 add_custom_command(
   OUTPUT ${virtual_interface_SOURCE_DIR}/source/AutoGenWrap.cpp
-  COMMAND ${PYTHON_EXECUTABLE} ${virtual_interface_SOURCE_DIR}/../../../source/Main.py -i ${virtual_interface_SOURCE_DIR}/virtual_interface.xml -p ${virtual_interface_SOURCE_DIR}/virtual_interface_params.xml -o ${virtual_interface_SOURCE_DIR}/include  -w ${virtual_interface_SOURCE_DIR}/source/AutoGenWrap.cpp
+  COMMAND ${PYTHON_EXECUTABLE} ${virtual_interface_SOURCE_DIR}/../../../source/Main.py -i ${virtual_interface_SOURCE_DIR}/virtual_interface.xml -p ${virtual_interface_SOURCE_DIR}/virtual_interface_params.xml -o ${virtual_interface_SOURCE_DIR}/include -w ${virtual_interface_SOURCE_DIR}/source/AutoGenWrap.cpp
   MAIN_DEPENDENCY ${virtual_interface_SOURCE_DIR}/virtual_interface.xml
   DEPENDS ${virtual_interface_SOURCE_DIR}/virtual_interface_params.xml
   WORKING_DIRECTORY ${virtual_interface_SOURCE_DIR}

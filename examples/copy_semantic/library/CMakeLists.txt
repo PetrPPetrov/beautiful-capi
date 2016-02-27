@@ -26,7 +26,7 @@ find_package(PythonInterp)
 
 add_custom_command(
   OUTPUT ${copy_semantic_SOURCE_DIR}/source/AutoGenWrap.cpp
-  COMMAND ${PYTHON_EXECUTABLE} ${copy_semantic_SOURCE_DIR}/../../../source/Main.py -i ${copy_semantic_SOURCE_DIR}/copy_semantic.xml -p ${copy_semantic_SOURCE_DIR}/copy_semantic_params.xml -o ${copy_semantic_SOURCE_DIR}/include  -w ${copy_semantic_SOURCE_DIR}/source/AutoGenWrap.cpp
+  COMMAND ${PYTHON_EXECUTABLE} ${copy_semantic_SOURCE_DIR}/../../../source/Main.py -i ${copy_semantic_SOURCE_DIR}/copy_semantic.xml -p ${copy_semantic_SOURCE_DIR}/copy_semantic_params.xml -o ${copy_semantic_SOURCE_DIR}/include -w ${copy_semantic_SOURCE_DIR}/source/AutoGenWrap.cpp
   MAIN_DEPENDENCY ${copy_semantic_SOURCE_DIR}/copy_semantic.xml
   DEPENDS ${copy_semantic_SOURCE_DIR}/copy_semantic_params.xml
   WORKING_DIRECTORY ${copy_semantic_SOURCE_DIR}

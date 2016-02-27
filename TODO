@@ -1,6 +1,5 @@
 1) implement Dynamic traits for Windows
 1a) const support for methods
-1b) rename ref_counted example to reference_counted, => intrusive_ptr ?
 1c) avoid duplicated include files (implementation_header)
 2) implement Dynamic traits for Unix
 2a) implement combined (dynamic & implib) mode
