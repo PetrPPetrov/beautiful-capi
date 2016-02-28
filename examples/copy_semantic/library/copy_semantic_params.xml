@@ -3,7 +3,6 @@
                file_per_class="true"
                folder_per_namespace="true"
                generate_single_file="false"
-               generate_namespace_header="true"
                namespace_header_at_parent_folder="true"
                dynamically_load_functions="false">
   <copyright_header>/*

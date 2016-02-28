@@ -45,11 +45,10 @@ class CapiGenerator(object):
         self.output_header = None
         self.output_source = None
         self.cur_namespace_path = []
-        self.lifecycle_traits = None
-        self.inheritance_traits = None
         self.loader_traits = None
         self.file_traits = None
-        self.api_defines_generated = False
+        self.lifecycle_traits = None
+        self.inheritance_traits = None
 
     def generate(self):
         self.params_description = ParamsParser.load(self.input_params)
@@ -102,10 +101,13 @@ class CapiGenerator(object):
 
         self.output_header.put_line('')
 
-        if self.params_description.m_file_per_class and not self.params_description.m_generate_single_file:
-            for cur_class in namespace.m_classes:
-                cur_class_file = posixpath.join('/'.join(self.cur_namespace_path), cur_class.m_name + '.h')
-                self.output_header.put_line('#include "{0}"'.format(cur_class_file))
+        for cur_namespace in namespace.m_namespaces:
+            self.cur_namespace_path.append(cur_namespace)
+            self.file_traits.include_namespace_header(self.cur_namespace_path)
+            self.cur_namespace_path.pop()
+
+        for cur_class in namespace.m_classes:
+            self.file_traits.include_class_header(self.cur_namespace_path, cur_class)
 
         if namespace.m_factory_functions or namespace.m_functions:
             self.output_header.put_line('')
@@ -129,14 +131,11 @@ class CapiGenerator(object):
         self.output_header.put_line('')
         self.output_header.put_line('#endif /* {0} */'.format(watchdog_string))
 
-    def __process_class(self, base_path, cur_class):
+    def __process_class(self, cur_class):
+        self.output_header = self.file_traits.get_file_for_class(self.cur_namespace_path, cur_class)
         self.cur_namespace_path.append(cur_class.m_name)
         self.lifecycle_traits = create_lifecycle_traits(cur_class, self)
         self.inheritance_traits = create_inheritance_traits(cur_class, self)
-
-        if self.params_description.m_file_per_class and not self.params_description.m_generate_single_file:
-            output_file = os.path.join(base_path, cur_class.m_name + '.h')
-            self.__set_output_header(FileGenerator.FileGenerator(output_file))
 
         self.output_header.put_copyright_header(self.params_description.m_copyright_header)
         self.output_header.put_automatic_generation_warning(self.params_description.m_automatic_generated_warning)
@@ -252,13 +251,13 @@ class CapiGenerator(object):
             ))
         self.output_source.put_line('')
         self.output_header.put_line('inline {return_type} {function_name}({arguments})'.format(
-            return_type=self.get_cpp_type(factory_function.m_return),
+            return_type=Helpers.get_cpp_type(factory_function.m_return),
             function_name=factory_function.m_name,
             arguments=Helpers.get_arguments_list_for_c_call(factory_function.m_arguments)
         ))
         with FileGenerator.IndentScope(self.output_header):
             self.output_header.put_line('return {return_type}({c_function}({arguments}));'.format(
-                return_type=self.get_cpp_type(factory_function.m_return),
+                return_type=Helpers.get_cpp_type(factory_function.m_return),
                 c_function=c_function_name,
                 arguments=Helpers.get_arguments_list_for_c_call(factory_function.m_arguments)
             ))
@@ -291,14 +290,6 @@ class CapiGenerator(object):
 
     def get_unwrapped_arguments(self, arguments):
         return [self.get_unwrapped_argument(argument) for argument in arguments]
-
-    def __set_output_header(self, header):
-        self.generated_files.append(header)
-        self.output_header = header
-
-    def __set_output_source(self, source):
-        self.generated_files.append(source)
-        self.output_source = source
 
 
 def main():

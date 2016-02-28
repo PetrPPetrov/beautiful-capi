@@ -44,13 +44,29 @@ class SingleFile(FileTraitsBase):
     def get_file_for_class(self, namespace_path, cur_class):
         return self.output_file
 
+    def include_namespace_header(self, output_file, namespace_path):
+        pass
+
+    def include_class_header(self, output_file, namespace_path, cur_class):
+        pass
+
 
 class PosixJoin(object):
     def join(self, path_a, path_b):
-         return posixpath.join('/'.join(path_a, path_b))
+        # return posixpath.join('/'.join([path_a, path_b]))
+        return posixpath.join(path_a, path_b)
 
-    def join_to_base(self):
+    def join_to_base(self, path):
+        result = ''
+        for cur_path in path:
+            result = posixpath.join(result, cur_path)
+        return result
+
+    def get_base_path(self):
         return ''
+
+    def create_if_required(self, path):
+        pass
 
 
 class OsJoin(object):
@@ -58,10 +74,21 @@ class OsJoin(object):
         self.base_path = base_path
 
     def join(self, path_a, path_b):
-         return os.path.join('/'.join(path_a, path_b))
+        return os.path.join(path_a, path_b)
+
+    def join_to_base(self, path):
+        result = self.base_path
+        for cur_path in path:
+            result = os.path.join(result, cur_path)
+        return result
 
     def get_base_path(self):
         return self.base_path
+
+    def create_if_required(self, path):
+        if not os.path.exists(path):
+            os.makedirs(path)
+
 
 class MultipleFiles(FileTraitsBase):
     def __init__(self, capi_generator):
@@ -69,43 +96,34 @@ class MultipleFiles(FileTraitsBase):
         self.base_path = self.capi_generator.output_folder
         self.file2generator = {}
 
-    @staticmethod
-    def __posix_join(path_a, path_b):
-         return posixpath.join('/'.join(path_a, path_b))
-
-    @staticmethod
-    def __os_join(path_a, path_b):
-        return os.path.join(path_a, path_b)
-
-    def __get_file_name_base_for_namespace_common(self, namespace_path, join_functor):
+    def __get_file_name_base_for_namespace_common(self, namespace_path, join_traits):
         if self.capi_generator.params_description.m_folder_per_namespace:
-            result_folder = join_functor.join(self.base_path, namespace_path)
+            result_folder = join_traits.join_to_base(namespace_path)
         else:
-            result_folder = self.base_path
-        if not os.path.exists(result_folder):
-            os.makedirs(result_folder)
+            result_folder = join_traits.get_base_path()
+        join_traits.create_if_required(result_folder)
         return result_folder
 
-    def __get_file_name_base_for_namespace(self, namespace_path, join_function):
+    def __get_file_name_base_for_namespace(self, namespace_path, join_traits):
         if self.capi_generator.params_description.m_namespace_header_at_parent_folder:
-            return self.__get_file_name_base_for_namespace_common(namespace_path[:-1], join_function)
+            return self.__get_file_name_base_for_namespace_common(namespace_path[:-1], join_traits)
         else:
-            return self.__get_file_name_base_for_namespace_common(namespace_path, join_function)
+            return self.__get_file_name_base_for_namespace_common(namespace_path, join_traits)
 
-    def __get_file_name_for_namespace(self, namespace_path, join_function):
-        return join_function(
-            self.__get_file_name_base_for_namespace(namespace_path, join_function),
+    def __get_file_name_for_namespace(self, namespace_path, join_traits):
+        return join_traits.join(
+            self.__get_file_name_base_for_namespace(namespace_path, join_traits),
             namespace_path[-1] + '.h'
         )
 
-    def __get_file_name_for_class(self, namespace_path, cur_class, join_function):
+    def __get_file_name_for_class(self, namespace_path, cur_class, join_traits):
         if self.capi_generator.params_description.m_file_per_class:
-            return join_function(
-                self.__get_file_name_base_for_namespace_common(namespace_path, join_function),
+            return join_traits.join(
+                self.__get_file_name_base_for_namespace_common(namespace_path, join_traits),
                 cur_class.m_name + '.h'
             )
         else:
-            return self.__get_file_name_for_namespace(namespace_path, join_function)
+            return self.__get_file_name_for_namespace(namespace_path, join_traits)
 
     def __get_cached_generator(self, file_name):
         if file_name in self.file2generator:
@@ -116,16 +134,21 @@ class MultipleFiles(FileTraitsBase):
             return output_file
 
     def get_file_for_namespace(self, namespace_path):
-        output_file_name = self.__get_file_name_for_namespace(namespace_path)
+        output_file_name = self.__get_file_name_for_namespace(namespace_path, OsJoin(self.base_path))
         return self.__get_cached_generator(output_file_name)
 
     def get_file_for_class(self, namespace_path, cur_class):
-        output_file_name = self.__get_file_name_for_class(namespace_path, cur_class)
+        output_file_name = self.__get_file_name_for_class(namespace_path, cur_class, OsJoin(self.base_path))
         return self.__get_cached_generator(output_file_name)
+
+    def include_namespace_header(self, namespace_path):
+        include_file = self.__get_file_name_for_namespace(namespace_path, PosixJoin())
+        self.put_line('#include "{0}"'.format(include_file))
 
     def include_class_header(self, namespace_path, cur_class):
         if self.capi_generator.params_description.m_file_per_class:
-
+            include_file = self.__get_file_name_for_class(namespace_path, cur_class, PosixJoin())
+            self.put_line('#include "{0}"'.format(include_file))
 
 
 def create_file_traits(capi_generator):

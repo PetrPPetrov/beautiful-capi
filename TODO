@@ -4,7 +4,6 @@
 2) implement Dynamic traits for Unix
 2a) implement combined (dynamic & implib) mode
 3) write more examples and tests: hello_world, ref_counted, copy_semantic, move_semantic, virtual_interface, data_structures, shared_ptr, weak_ptr, dynamic_cast, dynamic_load
-4) review folder creation and file processing python code
 5) exception support, exception policies: don't handle exceptions, ellipse handling & std::exception (primitive), exceptions from list
 6) dynamic_cast support
 7) develop automated testing system
@@ -19,3 +18,4 @@
 16) doxygen documentation generation
 17) multiple inheritance?
 18) C++ modes: C++ 98, C++2003, C++2011, for wrappers and for internals
+19) allow cross-referencing in wrappers (when type A uses type B and type B uses type A)
