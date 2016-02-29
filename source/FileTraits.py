@@ -156,3 +156,15 @@ def create_file_traits(capi_generator):
         return SingleFile(capi_generator)
     else:
         return MultipleFiles(capi_generator)
+
+
+class CreateFileTraits(object):
+    def __init__(self, capi_generator):
+        self.capi_generator = capi_generator
+
+    def __enter__(self):
+        self.capi_generator.file_traits = create_file_traits(self.capi_generator)
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        del self.capi_generator.file_traits
+        self.capi_generator.file_traits = None

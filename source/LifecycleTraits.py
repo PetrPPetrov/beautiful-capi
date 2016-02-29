@@ -141,3 +141,16 @@ def create_lifecycle_traits(cur_class, capi_generator):
     if cur_class.m_lifecycle in str_to_lifecycle:
         return str_to_lifecycle[cur_class.m_lifecycle](cur_class, capi_generator)
     raise ValueError
+
+
+class CreateLifecycleTraits(object):
+    def __init__(self, cur_class, capi_generator):
+        self.cur_class = cur_class
+        self.capi_generator = capi_generator
+
+    def __enter__(self):
+        self.capi_generator.lifecycle_traits = create_lifecycle_traits(self.cur_class, self.capi_generator)
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        del self.capi_generator.lifecycle_traits
+        self.capi_generator.lifecycle_traits = None

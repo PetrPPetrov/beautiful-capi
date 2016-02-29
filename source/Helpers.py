@@ -51,3 +51,15 @@ def get_cpp_type(type_name):
 
 def pascal_to_stl(pascal_name):
     return ''.join(['_' + symbol.lower() if symbol.isupper() else symbol for symbol in pascal_name])
+
+
+class NamespaceScope(object):
+    def __init__(self, cur_namespace_path, cur_namespace):
+        self.cur_namespace_path = cur_namespace_path
+        self.cur_namespace = cur_namespace
+
+    def __enter__(self):
+        self.cur_namespace_path.append(self.cur_namespace)
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.cur_namespace_path.pop()

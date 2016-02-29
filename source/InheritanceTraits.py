@@ -102,3 +102,16 @@ def create_inheritance_traits(cur_class, capi_generator):
         return RequiresCastToBase(cur_class, capi_generator)
     else:
         return SimpleCase(cur_class, capi_generator)
+
+
+class CreateInheritanceTraits(object):
+    def __init__(self, cur_class, capi_generator):
+        self.cur_class = cur_class
+        self.capi_generator = capi_generator
+
+    def __enter__(self):
+        self.capi_generator.inheritance_traits = create_inheritance_traits(self.cur_class, self.capi_generator)
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        del self.capi_generator.inheritance_traits
+        self.capi_generator.inheritance_traits = None

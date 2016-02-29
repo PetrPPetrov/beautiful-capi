@@ -104,3 +104,15 @@ def create_loader_traits(capi_generator):
         return DynamicLoad(capi_generator)
     else:
         return ImplLib(capi_generator)
+
+
+class CreateLoaderTraits(object):
+    def __init__(self, capi_generator):
+        self.capi_generator = capi_generator
+
+    def __enter__(self):
+        self.capi_generator.loader_traits = create_loader_traits(self.capi_generator)
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        del self.capi_generator.loader_traits
+        self.capi_generator.loader_traits = None
