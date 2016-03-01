@@ -18,13 +18,24 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-project(examples)
+project(single_file)
 
 cmake_minimum_required(VERSION 2.8)
 
-add_subdirectory(hello_world)
-add_subdirectory(reference_counted)
-add_subdirectory(copy_semantic)
-add_subdirectory(move_semantic)
-add_subdirectory(virtual_interface)
-add_subdirectory(single_file)
+find_package(PythonInterp)
+
+add_custom_command(
+  OUTPUT ${single_file_SOURCE_DIR}/source/AutoGenWrap.cpp
+  COMMAND ${PYTHON_EXECUTABLE} ${single_file_SOURCE_DIR}/../../../source/Main.py -i ${single_file_SOURCE_DIR}/single_file.xml -p ${single_file_SOURCE_DIR}/single_file_params.xml -o ${single_file_SOURCE_DIR}/include -w ${single_file_SOURCE_DIR}/source/AutoGenWrap.cpp
+  MAIN_DEPENDENCY ${single_file_SOURCE_DIR}/single_file.xml
+  DEPENDS ${single_file_SOURCE_DIR}/single_file_params.xml
+  WORKING_DIRECTORY ${single_file_SOURCE_DIR}
+)
+
+include_directories(${single_file_SOURCE_DIR}/source/)
+
+add_library(single_file SHARED
+  ${single_file_SOURCE_DIR}/source/AutoGenWrap.cpp
+  ${single_file_SOURCE_DIR}/source/PrinterImpl.h
+  ${single_file_SOURCE_DIR}/source/PrinterImpl.cpp
+)

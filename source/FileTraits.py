@@ -34,6 +34,8 @@ class FileTraitsBase(TraitsBase):
 class SingleFile(FileTraitsBase):
     def __init__(self, capi_generator):
         super().__init__(capi_generator)
+        if not os.path.exists(self.capi_generator.output_folder):
+            os.makedirs(self.capi_generator.output_folder)
         self.file_name = os.path.join(self.capi_generator.output_folder,
                                       self.capi_generator.params_description.m_single_header_name)
         self.output_file = FileGenerator.FileGenerator(self.file_name)
@@ -44,10 +46,10 @@ class SingleFile(FileTraitsBase):
     def get_file_for_class(self, namespace_path, cur_class):
         return self.output_file
 
-    def include_namespace_header(self, output_file, namespace_path):
+    def include_namespace_header(self, namespace_path):
         pass
 
-    def include_class_header(self, output_file, namespace_path, cur_class):
+    def include_class_header(self, namespace_path, cur_class):
         pass
 
 

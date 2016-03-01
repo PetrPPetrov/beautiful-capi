@@ -18,13 +18,17 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-project(examples)
+project(single_file_client)
 
 cmake_minimum_required(VERSION 2.8)
 
-add_subdirectory(hello_world)
-add_subdirectory(reference_counted)
-add_subdirectory(copy_semantic)
-add_subdirectory(move_semantic)
-add_subdirectory(virtual_interface)
-add_subdirectory(single_file)
+include_directories(${single_file_client_SOURCE_DIR}/../library/include)
+
+add_executable(single_file_client
+  ${single_file_client_SOURCE_DIR}/Main.cpp
+)
+
+if(TARGET single_file)
+  add_dependencies(single_file_client single_file)
+endif()
+target_link_libraries(single_file_client single_file)

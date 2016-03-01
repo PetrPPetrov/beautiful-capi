@@ -7,5 +7,6 @@ build/
 /examples/copy_semantic/library/include/
 /examples/move_semantic/library/include/
 /examples/virtual_interface/library/include/
+/examples/single_file/library/include/
 AutoGen*
 

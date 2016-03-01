@@ -18,13 +18,9 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-project(examples)
+project(single_file_example)
 
 cmake_minimum_required(VERSION 2.8)
 
-add_subdirectory(hello_world)
-add_subdirectory(reference_counted)
-add_subdirectory(copy_semantic)
-add_subdirectory(move_semantic)
-add_subdirectory(virtual_interface)
-add_subdirectory(single_file)
+add_subdirectory(library)
+add_subdirectory(client)

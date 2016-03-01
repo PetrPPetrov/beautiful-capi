@@ -123,6 +123,7 @@ class CapiGenerator(object):
 
         self.output_header.put_line('')
         self.output_header.put_line('#endif /* {0} */'.format(watchdog_string))
+        self.output_header.put_line('')
 
     def __process_class(self, cur_class):
         self.output_header = self.file_traits.get_file_for_class(self.cur_namespace_path, cur_class)
@@ -158,6 +159,7 @@ class CapiGenerator(object):
 
                     self.output_header.put_line('')
                     self.output_header.put_line('#endif /* {0} */'.format(watchdog_string))
+                    self.output_header.put_line('')
 
     def __generate_class(self, cur_class):
         self.loader_traits.add_impl_header(cur_class.m_implementation_class_header)
