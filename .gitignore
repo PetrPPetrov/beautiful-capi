@@ -1,4 +1,5 @@
 /source/__pycache__/
+/source/.idea/
 *.py[cod]
 /.idea/
 build/
