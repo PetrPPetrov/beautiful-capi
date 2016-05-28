@@ -20,26 +20,30 @@
  */
 
 #include <iostream>
-#include "PrinterImpl.h"
+#include "SphereImpl.h"
 
-Example::PrinterImpl::PrinterImpl()
+Example::Geometry::SphereImpl::SphereImpl()
 {
-    std::cout << "Printer ctor" << std::endl;
+    std::cout << "Sphere ctor" << std::endl;
 }
 
-Example::PrinterImpl::PrinterImpl(const Example::PrinterImpl& other)
-    : mPreviousText(other.mPreviousText)
+Example::Geometry::SphereImpl::SphereImpl(const Example::Geometry::SphereImpl& other)
+    : mRadius(other.mRadius)
 {
-    std::cout << "Printer copy ctor" << std::endl;
+    std::cout << "Sphere copy ctor" << std::endl;
 }
 
-Example::PrinterImpl::~PrinterImpl()
+Example::Geometry::SphereImpl::~SphereImpl()
 {
-    std::cout << "Printer dtor" << std::endl;
+    std::cout << "Sphere dtor" << std::endl;
 }
 
-void Example::PrinterImpl::Show(const char* text)
+double Example::Geometry::SphereImpl::GetRadius() const
 {
-    std::cout << "print text: " << text << std::endl;
-    mPreviousText = std::string(text);
+    return mRadius;
+}
+
+void Example::Geometry::SphereImpl::SetRadius(double value)
+{
+    mRadius = value;
 }

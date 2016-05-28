@@ -19,27 +19,29 @@
  *
  */
 
-#include <iostream>
-#include "PrinterImpl.h"
+#ifndef BEAUTIFUL_CAPI_BODY_H
+#define BEAUTIFUL_CAPI_BODY_H
 
-Example::PrinterImpl::PrinterImpl()
+#include <string>
+
+namespace Example
 {
-    std::cout << "Printer ctor" << std::endl;
+    namespace Geometry
+    {
+        namespace Brep
+        {
+            class BodyImpl
+            {
+                std::string mName;
+            public:
+                BodyImpl();
+                BodyImpl(const Example::Geometry::Brep::BodyImpl& other);
+                ~BodyImpl();
+                const char* GetName() const;
+                void SetName(const char* value);
+            };
+        }
+    }
 }
 
-Example::PrinterImpl::PrinterImpl(const Example::PrinterImpl& other)
-    : mPreviousText(other.mPreviousText)
-{
-    std::cout << "Printer copy ctor" << std::endl;
-}
-
-Example::PrinterImpl::~PrinterImpl()
-{
-    std::cout << "Printer dtor" << std::endl;
-}
-
-void Example::PrinterImpl::Show(const char* text)
-{
-    std::cout << "print text: " << text << std::endl;
-    mPreviousText = std::string(text);
-}
+#endif /* BEAUTIFUL_CAPI_BODY_H */

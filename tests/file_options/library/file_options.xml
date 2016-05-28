@@ -7,5 +7,41 @@
         <argument type="const char*" name="text"/>
       </method>
     </class>
+    <namespace name="Geometry">
+      <class name="Sphere" lifecycle="copy_semantic" implementation_class_name="Example::Geometry::SphereImpl" implementation_class_header="SphereImpl.h">
+        <constructor name="New"/>
+        <method name="GetRadius" return="double"/>
+        <method name="SetRadius">
+          <argument type="double" name="value"/>
+        </method>
+      </class>
+      <namespace name="Brep">
+        <class name="Body" lifecycle="copy_semantic" implementation_class_name="Example::Geometry::Brep::BodyImpl" implementation_class_header="BodyImpl.h">
+          <constructor name="New"/>
+          <method name="GetName" return="const char*"/>
+          <method name="SetName">
+            <argument type="const char*" name="value"/>
+          </method>
+        </class>
+      </namespace>
+    </namespace>
+    <namespace name="Scene">
+      <class name="Node" lifecycle="copy_semantic" implementation_class_name="Example::Scene::NodeImpl" implementation_class_header="NodeImpl.h">
+        <constructor name="New"/>
+        <method name="GetName" return="const char*"/>
+        <method name="SetName">
+          <argument type="const char*" name="value"/>
+        </method>
+      </class>
+    </namespace>
+  </namespace>
+  <namespace name="Sample">
+    <class name="Data" lifecycle="copy_semantic" implementation_class_name="Sample::DataImpl" implementation_class_header="DataImpl.h">
+      <constructor name="New"/>
+      <method name="GetData" return="int"/>
+      <method name="SetData">
+        <argument type="int" name="value"/>
+      </method>
+    </class>
   </namespace>
 </copy_semantic:api>

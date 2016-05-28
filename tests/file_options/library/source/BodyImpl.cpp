@@ -20,26 +20,30 @@
  */
 
 #include <iostream>
-#include "PrinterImpl.h"
+#include "BodyImpl.h"
 
-Example::PrinterImpl::PrinterImpl()
+Example::Geometry::Brep::BodyImpl::BodyImpl()
 {
-    std::cout << "Printer ctor" << std::endl;
+    std::cout << "Body ctor" << std::endl;
 }
 
-Example::PrinterImpl::PrinterImpl(const Example::PrinterImpl& other)
-    : mPreviousText(other.mPreviousText)
+Example::Geometry::Brep::BodyImpl::BodyImpl(const Example::Geometry::Brep::BodyImpl& other)
+    : mName(other.mName)
 {
-    std::cout << "Printer copy ctor" << std::endl;
+    std::cout << "Body copy ctor" << std::endl;
 }
 
-Example::PrinterImpl::~PrinterImpl()
+Example::Geometry::Brep::BodyImpl::~BodyImpl()
 {
-    std::cout << "Printer dtor" << std::endl;
+    std::cout << "Body dtor" << std::endl;
 }
 
-void Example::PrinterImpl::Show(const char* text)
+const char* Example::Geometry::Brep::BodyImpl::GetName() const
 {
-    std::cout << "print text: " << text << std::endl;
-    mPreviousText = std::string(text);
+    return mName.c_str();
+}
+
+void Example::Geometry::Brep::BodyImpl::SetName(const char* value)
+{
+    mName = value;
 }

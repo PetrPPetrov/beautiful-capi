@@ -71,11 +71,11 @@ class CapiGenerator(object):
         return type_name
 
     def __process_namespace(self, namespace):
-        with Helpers.NamespaceScope(self.cur_namespace_path, namespace.m_name):
+        with Helpers.NamespaceScope(self.cur_namespace_path, namespace):
+            self.__process_namespace_header(namespace)
+
             for nested_namespace in namespace.m_namespaces:
                 self.__process_namespace(nested_namespace)
-
-            self.__process_namespace_header(namespace)
 
             for cur_class in namespace.m_classes:
                 self.__process_class(cur_class)
@@ -127,7 +127,7 @@ class CapiGenerator(object):
 
     def __process_class(self, cur_class):
         self.output_header = self.file_traits.get_file_for_class(self.cur_namespace_path, cur_class)
-        with Helpers.NamespaceScope(self.cur_namespace_path, cur_class.m_name):
+        with Helpers.NamespaceScope(self.cur_namespace_path, cur_class):
             with CreateLifecycleTraits(cur_class, self):
                 with CreateInheritanceTraits(cur_class, self):
                     self.output_header.put_copyright_header(self.params_description.m_copyright_header)
@@ -183,7 +183,7 @@ class CapiGenerator(object):
     def __generate_method(self, method, cur_class):
         return_instruction = 'return ' if method.m_return else ''
         return_type = self.get_flat_type(method.m_return)
-        with Helpers.NamespaceScope(self.cur_namespace_path, method.m_name):
+        with Helpers.NamespaceScope(self.cur_namespace_path, method):
             self.output_header.put_line('{return_type} {method_name}({arguments})'.format(
                 return_type=return_type,
                 method_name=method.m_name,

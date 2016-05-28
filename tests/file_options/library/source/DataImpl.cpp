@@ -20,26 +20,30 @@
  */
 
 #include <iostream>
-#include "PrinterImpl.h"
+#include "DataImpl.h"
 
-Example::PrinterImpl::PrinterImpl()
+Sample::DataImpl::DataImpl()
 {
-    std::cout << "Printer ctor" << std::endl;
+    std::cout << "Data ctor" << std::endl;
 }
 
-Example::PrinterImpl::PrinterImpl(const Example::PrinterImpl& other)
-    : mPreviousText(other.mPreviousText)
+Sample::DataImpl::DataImpl(const Sample::DataImpl& other)
+    : mData(other.mData)
 {
-    std::cout << "Printer copy ctor" << std::endl;
+    std::cout << "Data copy ctor" << std::endl;
 }
 
-Example::PrinterImpl::~PrinterImpl()
+Sample::DataImpl::~DataImpl()
 {
-    std::cout << "Printer dtor" << std::endl;
+    std::cout << "Data dtor" << std::endl;
 }
 
-void Example::PrinterImpl::Show(const char* text)
+int Sample::DataImpl::GetData() const
 {
-    std::cout << "print text: " << text << std::endl;
-    mPreviousText = std::string(text);
+    return mData;
+}
+
+void Sample::DataImpl::SetData(int value)
+{
+    mData = value;
 }

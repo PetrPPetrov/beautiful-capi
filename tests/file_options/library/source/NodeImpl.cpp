@@ -20,26 +20,30 @@
  */
 
 #include <iostream>
-#include "PrinterImpl.h"
+#include "NodeImpl.h"
 
-Example::PrinterImpl::PrinterImpl()
+Example::Scene::NodeImpl::NodeImpl()
 {
-    std::cout << "Printer ctor" << std::endl;
+    std::cout << "Node ctor" << std::endl;
 }
 
-Example::PrinterImpl::PrinterImpl(const Example::PrinterImpl& other)
-    : mPreviousText(other.mPreviousText)
+Example::Scene::NodeImpl::NodeImpl(const Example::Scene::NodeImpl& other)
+    : mName(other.mName)
 {
-    std::cout << "Printer copy ctor" << std::endl;
+    std::cout << "Node copy ctor" << std::endl;
 }
 
-Example::PrinterImpl::~PrinterImpl()
+Example::Scene::NodeImpl::~NodeImpl()
 {
-    std::cout << "Printer dtor" << std::endl;
+    std::cout << "Node dtor" << std::endl;
 }
 
-void Example::PrinterImpl::Show(const char* text)
+const char* Example::Scene::NodeImpl::GetName() const
 {
-    std::cout << "print text: " << text << std::endl;
-    mPreviousText = std::string(text);
+    return mName.c_str();
+}
+
+void Example::Scene::NodeImpl::SetName(const char* value)
+{
+    mName = value;
 }

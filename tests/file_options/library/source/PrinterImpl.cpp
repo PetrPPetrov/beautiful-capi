@@ -22,7 +22,6 @@
 #include <iostream>
 #include "PrinterImpl.h"
 
-// Newly created objects implies to have value 1 of reference counter
 Example::PrinterImpl::PrinterImpl()
 {
     std::cout << "Printer ctor" << std::endl;

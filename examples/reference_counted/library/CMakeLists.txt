@@ -22,7 +22,7 @@ project(reference_counted)
 
 cmake_minimum_required(VERSION 2.8)
 
-find_package(PythonInterp)
+find_package(PythonInterp 3.4 REQUIRED)
 
 add_custom_command(
   OUTPUT ${reference_counted_SOURCE_DIR}/source/AutoGenWrap.cpp

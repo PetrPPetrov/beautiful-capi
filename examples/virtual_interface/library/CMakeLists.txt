@@ -22,7 +22,7 @@ project(virtual_interface)
 
 cmake_minimum_required(VERSION 2.8)
 
-find_package(PythonInterp)
+find_package(PythonInterp 3.4 REQUIRED)
 
 add_custom_command(
   OUTPUT ${virtual_interface_SOURCE_DIR}/source/AutoGenWrap.cpp

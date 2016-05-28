@@ -19,8 +19,8 @@
  *
  */
 
-#ifndef BEAUTIFUL_CAPI_COPY_SEMANTIC_PRINTER_H
-#define BEAUTIFUL_CAPI_COPY_SEMANTIC_PRINTER_H
+#ifndef BEAUTIFUL_CAPI_PRINTER_H
+#define BEAUTIFUL_CAPI_PRINTER_H
 
 #include <string>
 
@@ -37,4 +37,4 @@ namespace Example
     };
 }
 
-#endif /* BEAUTIFUL_CAPI_COPY_SEMANTIC_PRINTER_H */
+#endif /* BEAUTIFUL_CAPI_PRINTER_H */

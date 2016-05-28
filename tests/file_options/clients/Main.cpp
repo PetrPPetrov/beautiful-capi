@@ -20,7 +20,26 @@
  */
 
 #include <iostream>
+#if test00
 #include "Example.h"
+#elif test01
+#include "Example/Example.h"
+#elif test02
+#include "Example.h"
+#elif test03
+#include "Example.h"
+#elif test04
+#include "Example.h"
+#elif test05
+#include "Example/Example.h"
+#elif test06
+#include "Example.h"
+#elif test07
+#include "Example.h"
+#elif test08
+#include "ExampleOneHeader.h"
+#endif
+
 
 void f1(Example::Printer p)
 {

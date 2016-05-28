@@ -59,7 +59,7 @@ class NamespaceScope(object):
         self.cur_namespace = cur_namespace
 
     def __enter__(self):
-        self.cur_namespace_path.append(self.cur_namespace)
+        self.cur_namespace_path.append(self.cur_namespace.m_name)
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.cur_namespace_path.pop()

@@ -19,27 +19,21 @@
  *
  */
 
-#include <iostream>
-#include "PrinterImpl.h"
+#ifndef BEAUTIFUL_CAPI_DATA_H
+#define BEAUTIFUL_CAPI_DATA_H
 
-Example::PrinterImpl::PrinterImpl()
+namespace Sample
 {
-    std::cout << "Printer ctor" << std::endl;
+    class DataImpl
+    {
+        int mData;
+    public:
+        DataImpl();
+        DataImpl(const Sample::DataImpl& other);
+        ~DataImpl();
+        int GetData() const;
+        void SetData(int value);
+    };
 }
 
-Example::PrinterImpl::PrinterImpl(const Example::PrinterImpl& other)
-    : mPreviousText(other.mPreviousText)
-{
-    std::cout << "Printer copy ctor" << std::endl;
-}
-
-Example::PrinterImpl::~PrinterImpl()
-{
-    std::cout << "Printer dtor" << std::endl;
-}
-
-void Example::PrinterImpl::Show(const char* text)
-{
-    std::cout << "print text: " << text << std::endl;
-    mPreviousText = std::string(text);
-}
+#endif /* BEAUTIFUL_CAPI_DATA_H */

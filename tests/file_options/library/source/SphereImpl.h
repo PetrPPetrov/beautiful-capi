@@ -19,27 +19,24 @@
  *
  */
 
-#include <iostream>
-#include "PrinterImpl.h"
+#ifndef BEAUTIFUL_CAPI_SPHERE_H
+#define BEAUTIFUL_CAPI_SPHERE_H
 
-Example::PrinterImpl::PrinterImpl()
+namespace Example
 {
-    std::cout << "Printer ctor" << std::endl;
+    namespace Geometry
+    {
+        class SphereImpl
+        {
+            double mRadius;
+        public:
+            SphereImpl();
+            SphereImpl(const Example::Geometry::SphereImpl& other);
+            ~SphereImpl();
+            double GetRadius() const;
+            void SetRadius(double value);
+        };
+    }
 }
 
-Example::PrinterImpl::PrinterImpl(const Example::PrinterImpl& other)
-    : mPreviousText(other.mPreviousText)
-{
-    std::cout << "Printer copy ctor" << std::endl;
-}
-
-Example::PrinterImpl::~PrinterImpl()
-{
-    std::cout << "Printer dtor" << std::endl;
-}
-
-void Example::PrinterImpl::Show(const char* text)
-{
-    std::cout << "print text: " << text << std::endl;
-    mPreviousText = std::string(text);
-}
+#endif /* BEAUTIFUL_CAPI_SPHERE_H */
