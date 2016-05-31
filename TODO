@@ -71,5 +71,35 @@ int main() {
 	return 0;
 }
 23a) The above solution doesn't work for return types
+
+template<typename InterfaceWrapper>
+struct holder_base
+{
+    explicit holder_base(void* raw_object_pointer) : m_raw_object_pointer(raw_object_pointer)
+    {
+    }
+    
+    InterfaceWrapper* operator->()
+    {
+        return new(this) InterfaceWrapper;
+    }
+private:
+    void* m_raw_object_pointer;
+};
+
+namespace HelloWorld
+{
+    class Printer
+    {
+        static inline holder_base<Printer> Default()
+        {
+            return holder_base<Printer>(helloworld_printer_default());
+        }
+    };
+    
+    namespace Printer
+    {
+        
+
 24) Object return type problem (addref or not)
 
