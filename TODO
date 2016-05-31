@@ -22,7 +22,9 @@
 19) callbacks support
 20) allow including only some particular header, i.e. #include "Example/Geometry/Brep/Bode.h" without including "Example.h".
 Introduce some files like ExampleApi.h.
-21) allow cross-referencing in wrappers (when type A uses type B and type B uses type A).
+21) access to implementation classes by -> operator instead of .
+22) <function> doesn't work
+23) allow cross-referencing in wrappers (when type A uses type B and type B uses type A).
 Prototype for that:
 #include <iostream>
 using namespace std;
@@ -68,3 +70,6 @@ int main() {
 	// your code goes here
 	return 0;
 }
+23a) The above solution doesn't work for return types
+24) Object return type problem (addref or not)
+
