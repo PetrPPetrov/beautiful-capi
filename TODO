@@ -21,9 +21,10 @@
 18) C++ modes: C++ 98, C++2003, C++2011, for wrappers and for internals
 19) callbacks support
 20) allow including only some particular header, i.e. #include "Example/Geometry/Brep/Bode.h" without including "Example.h".
-Introduce some files like ExampleApi.h.
+Introduce some files like ExampleCapi.h.
+20a)
+Introduce some files like ExampleFwdRef.h.
 21) access to implementation classes by -> operator instead of .
-22) <function> doesn't work
 23) allow cross-referencing in wrappers (when type A uses type B and type B uses type A).
 Prototype for that:
 #include <iostream>
@@ -103,3 +104,7 @@ namespace HelloWorld
 
 24) Object return type problem (addref or not)
 
+Plan:
+1) circular_reference example
+2) return_circular_reference example (or modify existing circular_reference example)
+3) ...?
