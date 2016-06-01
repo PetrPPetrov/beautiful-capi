@@ -19,35 +19,38 @@
  *
  */
 
-#include <iostream>
-#include "CircleFactory.h"
+#ifndef BEAUTIFUL_CAPI_DOCUMENT_H
+#define BEAUTIFUL_CAPI_DOCUMENT_H
+
+#include "PageImpl.h"
 
 namespace Example
 {
-    namespace Details
+    class DocumentImpl
     {
-        class Circle : public Example::IShape
-        {
-        public:
-            Circle()
-            {
-                std::cout << "Circle ctor" << std::endl;
-            }
+        int mRefCount;
+        PageImpl* mPage; // better to use a smart-pointer here, but for this example (for simpilicity) we use raw pointer and manually call AddRef()\Release()
+    public:
+        DocumentImpl();
+        ~DocumentImpl();
 
-            virtual ~Circle()
-            {
-                std::cout << "Circle dtor" << std::endl;
-            }
+        void AddRef();
+        void Release();
 
-            virtual void Show()
-            {
-                std::cout << "Circle::Show()" << std::endl;
-            }
-        };
+        void Show() const;
+        PageImpl* GetPage() const;
+        void SetPage(PageImpl* page);
+    };
+
+    inline void intrusive_ptr_add_ref(DocumentImpl* page)
+    {
+        page->AddRef();
+    }
+
+    inline void intrusive_ptr_release(DocumentImpl* page)
+    {
+        page->Release();
     }
 }
 
-Example::IShape* Example::Details::CreateCircle()
-{
-    return new Example::Details::Circle();
-}
+#endif /* BEAUTIFUL_CAPI_DOCUMENT_H */

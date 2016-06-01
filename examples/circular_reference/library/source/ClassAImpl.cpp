@@ -20,34 +20,9 @@
  */
 
 #include <iostream>
-#include "CircleFactory.h"
+#include "ClassAImpl.h"
 
-namespace Example
+void HelloWorld::PrinterImpl::Show() const
 {
-    namespace Details
-    {
-        class Circle : public Example::IShape
-        {
-        public:
-            Circle()
-            {
-                std::cout << "Circle ctor" << std::endl;
-            }
-
-            virtual ~Circle()
-            {
-                std::cout << "Circle dtor" << std::endl;
-            }
-
-            virtual void Show()
-            {
-                std::cout << "Circle::Show()" << std::endl;
-            }
-        };
-    }
-}
-
-Example::IShape* Example::Details::CreateCircle()
-{
-    return new Example::Details::Circle();
+    std::cout << "Hello Beautiful World!" << std::endl;
 }

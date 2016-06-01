@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<object_parameter:api xmlns:object_parameter="http://gkmsoft.ru/beautifulcapi">
+  <namespace name="Example">
+    <class name="Page" lifecycle="reference_counted" implementation_class_name="Example::PageImpl" implementation_class_header="PageImpl.h">
+      <constructor name="Default"/>
+      <method name="GetWidth" return="size_t"/>
+      <method name="GetHeight" return="size_t"/>
+      <method name="SetWidth">
+        <argument type="size_t" name="value"/>
+      </method>
+      <method name="SetHeight">
+        <argument type="size_t" name="value"/>
+      </method>
+    </class>
+    <class name="Document" lifecycle="reference_counted" implementation_class_name="Example::DocumentImpl" implementation_class_header="DocumentImpl.h">
+      <constructor name="Default"/>
+      <method name="Show"/>
+      <method name="GetPage" return="Example::Page"/>
+      <method name="SetPage">
+        <argument type="Example::Page" name="value"/>
+      </method>
+    </class>
+  </namespace>
+</object_parameter:api>

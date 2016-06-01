@@ -18,18 +18,17 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-project(examples)
+project(object_parameter_client)
 
 cmake_minimum_required(VERSION 2.8)
 
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
-set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
+include_directories(${object_parameter_client_SOURCE_DIR}/../library/include)
 
-add_subdirectory(hello_world)
-add_subdirectory(reference_counted)
-add_subdirectory(copy_semantic)
-add_subdirectory(move_semantic)
-add_subdirectory(virtual_interface)
-add_subdirectory(single_file)
-add_subdirectory(object_parameter)
-#add_subdirectory(circular_reference)
+add_executable(object_parameter_client
+  ${object_parameter_client_SOURCE_DIR}/Main.cpp
+)
+
+if(TARGET object_parameter)
+  add_dependencies(object_parameter_client object_parameter)
+endif()
+target_link_libraries(object_parameter_client object_parameter)

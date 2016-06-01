@@ -20,34 +20,12 @@
  */
 
 #include <iostream>
-#include "CircleFactory.h"
+#include "HelloWorld.h"
 
-namespace Example
+int main()
 {
-    namespace Details
-    {
-        class Circle : public Example::IShape
-        {
-        public:
-            Circle()
-            {
-                std::cout << "Circle ctor" << std::endl;
-            }
+    HelloWorld::Printer printer;
+    printer.Show();
 
-            virtual ~Circle()
-            {
-                std::cout << "Circle dtor" << std::endl;
-            }
-
-            virtual void Show()
-            {
-                std::cout << "Circle::Show()" << std::endl;
-            }
-        };
-    }
-}
-
-Example::IShape* Example::Details::CreateCircle()
-{
-    return new Example::Details::Circle();
+    return EXIT_SUCCESS;
 }

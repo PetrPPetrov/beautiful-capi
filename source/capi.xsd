@@ -10,8 +10,7 @@
     <xs:sequence>
       <xs:element name="namespace" minOccurs="0" maxOccurs="unbounded" type="TNamespace"/>
       <xs:element name="class" minOccurs="0" maxOccurs="unbounded" type="TClass"/>
-      <xs:element name="function" minOccurs="0" maxOccurs="unbounded" type="TMethod"/>
-      <xs:element name="factory_function" minOccurs="0" maxOccurs="unbounded" type="TFactory"/>
+      <xs:element name="function" minOccurs="0" maxOccurs="unbounded" type="TFunction"/>
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required"/>
     <xs:attribute name="implementation_header" type="xs:string" use="optional" default=""/>    
@@ -41,11 +40,10 @@
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  <xs:complexType name="TFactory">
+  <xs:complexType name="TFunction">
     <xs:complexContent>
-      <xs:extension base="TConstructor">
+      <xs:extension base="TMethod">
         <xs:attribute name="implementation_name" type="xs:string" use="optional" default=""/>
-        <xs:attribute name="return" type="xs:string" use="optional" default=""/>
         <xs:attribute name="implementation_header" type="xs:string" use="optional" default=""/>
       </xs:extension>
     </xs:complexContent>

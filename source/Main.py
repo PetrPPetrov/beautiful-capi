@@ -63,13 +63,6 @@ class CapiGenerator(object):
     def get_namespace_id(self):
         return '_'.join(self.cur_namespace_path)
 
-    def get_flat_type(self, type_name):
-        if not type_name:
-            return 'void'
-        if self.__is_class_type(type_name):
-            return 'void*'
-        return type_name
-
     def __process_namespace(self, namespace):
         with Helpers.NamespaceScope(self.cur_namespace_path, namespace):
             self.__process_namespace_header(namespace)
@@ -112,8 +105,6 @@ class CapiGenerator(object):
             self.output_header.put_line('')
             for function in namespace.m_functions:
                 self.__process_function(function)
-            for factory_function in namespace.m_factory_functions:
-                self.__process_factory_function(factory_function)
             self.output_header.put_line('')
             for cur_namespace in self.cur_namespace_path:
                 self.output_header.put_line('}', '')
@@ -181,24 +172,24 @@ class CapiGenerator(object):
         self.output_header.put_line('};')
 
     def __generate_method(self, method, cur_class):
-        return_instruction = 'return ' if method.m_return else ''
-        return_type = self.get_flat_type(method.m_return)
         with Helpers.NamespaceScope(self.cur_namespace_path, method):
             self.output_header.put_line('{return_type} {method_name}({arguments})'.format(
-                return_type=return_type,
+                return_type=self.get_wrapped_return_type(method.m_return),
                 method_name=method.m_name,
-                arguments=Helpers.get_arguments_list_for_declaration(method.m_arguments)))
+                arguments=', '.join(self.get_wrapped_argument_pairs(method.m_arguments))))
             with FileGenerator.IndentScope(self.output_header):
-                self.output_header.put_line('{return_instruction}{c_function}({this_argument}{arguments});'.format(
-                    return_instruction=return_instruction,
-                    c_function=self.get_namespace_id().lower(),
-                    this_argument=Constants.object_var,
-                    arguments=Helpers.get_arguments_list_for_c_call(method.m_arguments)
+                self.__put_raw_pointer_structure_if_required(self.output_header, method.m_arguments)
+                self.output_header.put_line(self.get_wrapped_return_instruction(
+                    method.m_return,
+                    '{c_function}({arguments})'.format(
+                        c_function=self.get_namespace_id().lower(),
+                        arguments=', '.join(self.get_c_from_wrapped_arguments(method.m_arguments))
+                    )
                 ))
             c_function_declaration = '{return_type} {c_function}({arguments})'.format(
-                return_type=return_type,
+                return_type=self.get_c_type(method.m_return),
                 c_function=self.get_namespace_id().lower(),
-                arguments=Helpers.get_arguments_list_for_wrap_declaration(method.m_arguments)
+                arguments=', '.join(self.get_c_argument_pairs(method.m_arguments))
             )
             self.loader_traits.add_c_function_declaration(c_function_declaration)
             with FileGenerator.IndentScope(self.output_source):
@@ -206,54 +197,43 @@ class CapiGenerator(object):
                     cur_class.m_implementation_class_name
                 ))
                 self.output_source.put_line('{0}self->{1}({2});'.format(
-                    return_instruction,
+                    self.get_c_return_instruction(method.m_return),
                     method.m_name,
-                    ', '.join(self.get_unwrapped_arguments(method.m_arguments))
+                    ', '.join(self.get_c_to_original_arguments(method.m_arguments))
                 ))
             self.output_source.put_line('')
 
     def __process_function(self, function):
-        return_type = self.get_flat_type(function.m_return)
-        self.output_header.put_line('{return_type} {c_function}({arguments})'.format(
-            return_type=return_type,
-            c_function=self.get_namespace_id().lower() + '_' + function.m_name.lower(),
-            arguments=Helpers.get_arguments_list_for_c_call(function.m_arguments)
-        ))
-
-    def __process_factory_function(self, factory_function):
-        if not self.__is_class_type(factory_function.m_return):
-            print('Factory {0} does not return class type'.format(factory_function.m_name))
-            raise ValueError
-
-        self.loader_traits.add_impl_header(factory_function.m_implementation_header)
-
-        return_type = self.get_flat_type(factory_function.m_return)
-        c_function_name = self.get_namespace_id().lower() + Helpers.pascal_to_stl(factory_function.m_name)
+        self.loader_traits.add_impl_header(function.m_implementation_header)
+        self.output_header.put_line('inline {return_type} {function_name}({arguments})'.format(
+            return_type=self.get_wrapped_return_type(function.m_return),
+            function_name=function.m_name,
+            arguments=', '.join(self.get_wrapped_argument_pairs(function.m_arguments))))
+        c_function_name = self.get_namespace_id().lower() + Helpers.pascal_to_stl(function.m_name)
+        with FileGenerator.IndentScope(self.output_header):
+            self.__put_raw_pointer_structure_if_required(self.output_header, function.m_arguments)
+            self.output_header.put_line(self.get_wrapped_return_instruction(
+                function.m_return,
+                '{c_function}({arguments})'.format(
+                    c_function=c_function_name,
+                    arguments=', '.join(self.get_c_from_wrapped_arguments_for_function(function.m_arguments))
+                )
+            ))
+        self.output_header.put_line('')
         c_function_declaration = '{return_type} {c_function}({arguments})'.format(
-            return_type=return_type,
+            return_type=self.get_c_type(function.m_return),
             c_function=c_function_name,
-            arguments=Helpers.get_arguments_list_for_declaration(factory_function.m_arguments)
+            arguments=', '.join(self.get_c_argument_pairs_for_function(function.m_arguments))
         )
         self.loader_traits.add_c_function_declaration(c_function_declaration)
         with FileGenerator.IndentScope(self.output_source):
-            self.output_source.put_line('return {function_name}({arguments});'.format(
-                function_name=factory_function.m_name
-                if not factory_function.m_implementation_name else factory_function.m_implementation_name,
-                arguments=', '.join(self.get_unwrapped_arguments(factory_function.m_arguments))
-            ))
+            self.output_source.put_line('{return_instruction}{function_name}({arguments});'.format(
+                return_instruction=self.get_c_return_instruction(function.m_return),
+                function_name=function.m_name
+                if not function.m_implementation_name else function.m_implementation_name,
+                arguments=', '.join(self.get_c_to_original_arguments(function.m_arguments))
+             ))
         self.output_source.put_line('')
-        self.output_header.put_line('inline {return_type} {function_name}({arguments})'.format(
-            return_type=Helpers.get_cpp_type(factory_function.m_return),
-            function_name=factory_function.m_name,
-            arguments=Helpers.get_arguments_list_for_c_call(factory_function.m_arguments)
-        ))
-        with FileGenerator.IndentScope(self.output_header):
-            self.output_header.put_line('return {return_type}({c_function}({arguments}));'.format(
-                return_type=Helpers.get_cpp_type(factory_function.m_return),
-                c_function=c_function_name,
-                arguments=Helpers.get_arguments_list_for_c_call(factory_function.m_arguments)
-            ))
-        self.output_header.put_line('')
 
     def __process_source_begin(self):
         self.output_source.put_copyright_header(self.params_description.m_copyright_header)
@@ -263,25 +243,117 @@ class CapiGenerator(object):
         path_to_class = type_name.split('::')
         return self.__is_class_type_impl(path_to_class, self.api_description.m_namespaces)
 
-    def __is_class_type_impl(self, path_to_class, classes_or_namespaces):
+    def __get_class_type(self, type_name):
+        path_to_class = type_name.split('::')
+        return self.__get_class_type_impl(path_to_class, self.api_description.m_namespaces)
+
+    def __get_class_type_impl(self, path_to_class, classes_or_namespaces):
         for class_or_namespace in classes_or_namespaces:
             if class_or_namespace.m_name == path_to_class[0]:
                 if len(path_to_class) == 1:
-                    return True
+                    return class_or_namespace
                 elif len(path_to_class) == 2:
-                    return self.__is_class_type_impl(path_to_class[1:], class_or_namespace.m_classes)
+                    return self.__get_class_type_impl(path_to_class[1:], class_or_namespace.m_classes)
                 else:
-                    return self.__is_class_type_impl(path_to_class[1:], class_or_namespace.m_namespaces)
+                    return self.__get_class_type_impl(path_to_class[1:], class_or_namespace.m_namespaces)
+        return None
+
+    def __is_class_type_impl(self, path_to_class, classes_or_namespaces):
+        if self.__get_class_type_impl(path_to_class, classes_or_namespaces):
+            return True
+        else:
+            return False
+
+    def get_flat_type(self, type_name):
+        if not type_name:
+            return 'void'
+        if self.__is_class_type(type_name):
+            return 'void*'
+        return type_name
+
+    def get_cpp_type(self, type_name):
+        if not type_name:
+            return 'void'
+        return type_name
+
+    # Wrapped types
+    def get_wrapped_return_instruction(self, type_name, rest_expression):
+        if type_name:
+            if self.__is_class_type(type_name):
+                return 'return {0}({1});'.format(type_name, rest_expression)
+            else:
+                return 'return {0};'.format(rest_expression)
+        else:
+            return '{0};'.format(rest_expression)
+
+    def get_wrapped_return_type(self, type_name):
+        return self.get_cpp_type(type_name)
+
+    def get_wrapped_type(self, type_name):
+        if self.__is_class_type(type_name):
+            return 'const {0}&'.format(type_name)
+        else:
+            return self.get_cpp_type(type_name)
+
+    def get_wrapped_argument_pair(self, argument):
+        return '{0} {1}'.format(self.get_wrapped_type(argument.m_type), argument.m_name)
+
+    def get_wrapped_argument_pairs(self, arguments):
+        return [self.get_wrapped_argument_pair(argument) for argument in arguments]
+
+    # C types from wrapped types
+    def __is_raw_pointer_structure_required(self, arguments):
+        for argument in arguments:
+            if self.__is_class_type(argument.m_type):
+                return True
         return False
 
-    def get_unwrapped_argument(self, argument):
-        if self.__is_class_type(argument.m_type):
-            return 'static_cast<{0}*>({1})'.format(argument.m_type, argument.m_name)
+    def __put_raw_pointer_structure_if_required(self, output_file, arguments):
+        if self.__is_raw_pointer_structure_required(arguments):
+            output_file.put_line('struct raw_pointer_holder { void* raw_pointer; };')
+
+    def get_c_from_wrapped_argument(self, argument):
+        class_object = self.__get_class_type(argument.m_type)
+        if class_object:
+            return 'reinterpret_cast<const raw_pointer_holder*>(&{0})->raw_pointer'.format(argument.m_name)
         else:
             return argument.m_name
 
-    def get_unwrapped_arguments(self, arguments):
-        return [self.get_unwrapped_argument(argument) for argument in arguments]
+    def get_c_from_wrapped_arguments(self, arguments):
+        return [Constants.object_var] + self.get_c_from_wrapped_arguments_for_function(arguments)
+
+    def get_c_from_wrapped_arguments_for_function(self, arguments):
+        return [self.get_c_from_wrapped_argument(argument) for argument in arguments]
+
+    # C types
+    def get_c_return_instruction(self, type_name):
+        if type_name:
+            return 'return '
+        else:
+            return ''
+
+    def get_c_type(self, type_name):
+        return self.get_flat_type(type_name)
+
+    def get_c_argument_pair(self, argument):
+        return '{0} {1}'.format(self.get_c_type(argument.m_type), argument.m_name)
+
+    def get_c_argument_pairs(self, arguments):
+        return ['void* object_pointer'] + self.get_c_argument_pairs_for_function(arguments)
+
+    def get_c_argument_pairs_for_function(self, arguments):
+        return [self.get_c_argument_pair(argument) for argument in arguments]
+
+    # C to original types
+    def get_c_to_original_argument(self, argument):
+        class_object = self.__get_class_type(argument.m_type)
+        if class_object:
+            return 'static_cast<{0}*>({1})'.format(class_object.m_implementation_class_name, argument.m_name)
+        else:
+            return argument.m_name
+
+    def get_c_to_original_arguments(self, arguments):
+        return [self.get_c_to_original_argument(argument) for argument in arguments]
 
 
 def main():

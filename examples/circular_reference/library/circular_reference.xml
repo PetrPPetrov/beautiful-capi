@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<circular_reference:api xmlns:circular_reference="http://gkmsoft.ru/beautifulcapi">
+  <namespace name="Circular">
+    <class name="ClassA" lifecycle="copy_semantic" implementation_class_name="Circular::ClassAImpl" implementation_class_header="ClassAImpl.h">
+      <constructor name="Default"/>
+      <method name="AddB">
+        <argument type="Circular::ClassB" name="value"/>
+      </method>
+    </class>
+    <class name="ClassB" lifecycle="copy_semantic" implementation_class_name="Circular::ClassBImpl" implementation_class_header="ClassBImpl.h">
+      <constructor name="Default"/>
+      <method name="AddA">
+        <argument type="Circular::ClassA" name="value"/>
+      </method>
+    </class>
+  </namespace>
+</circular_reference:api>

@@ -32,22 +32,24 @@ class InheritanceTraitsBase(TraitsBase):
         self.capi_generator.cur_namespace_path.append(constructor.m_name)
         self.put_line('{class_name}({arguments_list})'.format(
             class_name=self.cur_class.m_name,
-            arguments_list=Helpers.get_arguments_list_for_declaration(constructor.m_arguments)
+            arguments_list=', '.join(self.capi_generator.get_wrapped_argument_pairs(constructor.m_arguments))
         ))
         with self.indent_scope():
             self.put_line('SetObject({constructor_c_function}({arguments_list}));'.format(
                 constructor_c_function=self.capi_generator.get_namespace_id().lower(),
-                arguments_list=Helpers.get_arguments_list_for_constructor_call(constructor.m_arguments)
+                arguments_list=', '.join(
+                    self.capi_generator.get_c_from_wrapped_arguments_for_function(constructor.m_arguments)
+                )
             ))
         c_function_declaration = 'void* {constructor_c_function}({arguments_list})'.format(
             constructor_c_function=self.capi_generator.get_namespace_id().lower(),
-            arguments_list=Helpers.get_arguments_list_for_declaration(constructor.m_arguments)
+            arguments_list=', '.join(self.capi_generator.get_wrapped_argument_pairs(constructor.m_arguments))
         )
         self.capi_generator.loader_traits.add_c_function_declaration(c_function_declaration)
         with self.indent_scope_source():
             self.put_source_line('return new {0}({1});'.format(
                 self.cur_class.m_implementation_class_name,
-                ', '.join(self.capi_generator.get_unwrapped_arguments(constructor.m_arguments))
+                ', '.join(self.capi_generator.get_c_to_original_arguments(constructor.m_arguments))
             ))
         self.put_source_line('')
         self.capi_generator.cur_namespace_path.pop()

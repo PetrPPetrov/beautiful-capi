@@ -20,34 +20,22 @@
  */
 
 #include <iostream>
-#include "CircleFactory.h"
+#include "Example/Example.h"
 
-namespace Example
+int main()
 {
-    namespace Details
+    Example::Document main_document;
+    main_document.Show();
+
+    Example::Page new_page;
+    main_document.SetPage(new_page);
+    main_document.Show();
+
     {
-        class Circle : public Example::IShape
-        {
-        public:
-            Circle()
-            {
-                std::cout << "Circle ctor" << std::endl;
-            }
-
-            virtual ~Circle()
-            {
-                std::cout << "Circle dtor" << std::endl;
-            }
-
-            virtual void Show()
-            {
-                std::cout << "Circle::Show()" << std::endl;
-            }
-        };
+        Example::Page existing_page = main_document.GetPage();
+        existing_page.SetWidth(777);
+        main_document.Show();
     }
-}
 
-Example::IShape* Example::Details::CreateCircle()
-{
-    return new Example::Details::Circle();
+    return EXIT_SUCCESS;
 }

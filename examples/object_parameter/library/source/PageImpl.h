@@ -19,35 +19,40 @@
  *
  */
 
-#include <iostream>
-#include "CircleFactory.h"
+#ifndef BEAUTIFUL_CAPI_PAGE_H
+#define BEAUTIFUL_CAPI_PAGE_H
+
+#include <stddef.h>
 
 namespace Example
 {
-    namespace Details
+    class PageImpl
     {
-        class Circle : public Example::IShape
-        {
-        public:
-            Circle()
-            {
-                std::cout << "Circle ctor" << std::endl;
-            }
+        int mRefCount;
+        size_t mWidth;
+        size_t mHeight;
+    public:
+        PageImpl();
+        ~PageImpl();
 
-            virtual ~Circle()
-            {
-                std::cout << "Circle dtor" << std::endl;
-            }
+        void AddRef();
+        void Release();
 
-            virtual void Show()
-            {
-                std::cout << "Circle::Show()" << std::endl;
-            }
-        };
+        size_t GetWidth() const;
+        size_t GetHeight() const;
+        void SetWidth(size_t value);
+        void SetHeight(size_t value);
+    };
+
+    inline void intrusive_ptr_add_ref(PageImpl* page)
+    {
+        page->AddRef();
+    }
+
+    inline void intrusive_ptr_release(PageImpl* page)
+    {
+        page->Release();
     }
 }
 
-Example::IShape* Example::Details::CreateCircle()
-{
-    return new Example::Details::Circle();
-}
+#endif /* BEAUTIFUL_CAPI_PAGE_H */

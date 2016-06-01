@@ -20,35 +20,6 @@
 #
 
 
-def get_arguments_list_for_declaration(arguments):
-    return ', '.join(['{0} {1}'.format(argument.m_type, argument.m_name) for argument in arguments])
-
-
-def get_arguments_list_for_wrap_declaration(arguments):
-    result = get_arguments_list_for_declaration(arguments)
-    return 'void* object_pointer' + (', {0}'.format(result) if result else '')
-
-
-def get_arguments_list_for_constructor_call(arguments):
-    return ', '.join(['{0}'.format(argument.m_name) for argument in arguments])
-
-
-def get_arguments_list_for_c_call(arguments):
-    result = get_arguments_list_for_constructor_call(arguments)
-    return ', {0}'.format(result) if result else ''
-
-
-def get_c_function_name(full_qualified_method_name):
-    parsed_name = full_qualified_method_name.split('::')
-    return '_'.join(parsed_name)
-
-
-def get_cpp_type(type_name):
-    if not type_name:
-        return 'void'
-    return type_name
-
-
 def pascal_to_stl(pascal_name):
     return ''.join(['_' + symbol.lower() if symbol.isupper() else symbol for symbol in pascal_name])
 

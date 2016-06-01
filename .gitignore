@@ -9,6 +9,7 @@ build/
 /examples/move_semantic/library/include/
 /examples/virtual_interface/library/include/
 /examples/single_file/library/include/
+/examples/object_parameter/library/include/
 /tests/file_options/library/include/
 AutoGen*
 

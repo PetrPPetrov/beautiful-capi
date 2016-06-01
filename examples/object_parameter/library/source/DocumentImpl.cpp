@@ -20,20 +20,21 @@
  */
 
 #include <iostream>
-#include "PrinterImpl.h"
+#include "DocumentImpl.h"
 
 // Newly created objects implies to have value 1 of reference counter
-Example::PrinterImpl::PrinterImpl() : mRefCount(1)
+Example::DocumentImpl::DocumentImpl() : mRefCount(1), mPage(0)
 {
-    std::cout << "Printer ctor" << std::endl;
+    std::cout << "Document ctor" << std::endl;
 }
 
-Example::PrinterImpl::~PrinterImpl()
+Example::DocumentImpl::~DocumentImpl()
 {
-    std::cout << "Printer dtor" << std::endl;
+    std::cout << "Document dtor" << std::endl;
+    mPage->Release();
 }
 
-void Example::PrinterImpl::AddRef()
+void Example::DocumentImpl::AddRef()
 {
     if (this)
     {
@@ -41,7 +42,7 @@ void Example::PrinterImpl::AddRef()
     }
 }
 
-void Example::PrinterImpl::Release()
+void Example::DocumentImpl::Release()
 {
     if (this)
     {
@@ -53,7 +54,29 @@ void Example::PrinterImpl::Release()
     }
 }
 
-void Example::PrinterImpl::Show(const char* text) const
+void Example::DocumentImpl::Show() const
 {
-    std::cout << "print text: " << text << std::endl;
+    std::cout << "Document show()" << std::endl;
+    if (mPage)
+    {
+        std::cout << "Document has " << mPage->GetWidth() << " x " << mPage->GetHeight() << " page" << std::endl;
+    }
+    else
+    {
+        std::cout << "Document is empty" << std::endl;
+    }
+}
+
+Example::PageImpl* Example::DocumentImpl::GetPage() const
+{
+    PageImpl* result = mPage;
+    result->AddRef();
+    return result;
+}
+
+void Example::DocumentImpl::SetPage(PageImpl* page)
+{
+    page->AddRef();
+    mPage->Release();
+    mPage = page;
 }

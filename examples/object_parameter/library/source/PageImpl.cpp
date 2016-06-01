@@ -20,34 +20,56 @@
  */
 
 #include <iostream>
-#include "CircleFactory.h"
+#include "PageImpl.h"
 
-namespace Example
+// Newly created objects implies to have value 1 of reference counter
+Example::PageImpl::PageImpl() : mRefCount(1), mWidth(200), mHeight(100)
 {
-    namespace Details
+    std::cout << "Page ctor" << std::endl;
+}
+
+Example::PageImpl::~PageImpl()
+{
+    std::cout << "Page dtor" << std::endl;
+}
+
+void Example::PageImpl::AddRef()
+{
+    if (this)
     {
-        class Circle : public Example::IShape
-        {
-        public:
-            Circle()
-            {
-                std::cout << "Circle ctor" << std::endl;
-            }
-
-            virtual ~Circle()
-            {
-                std::cout << "Circle dtor" << std::endl;
-            }
-
-            virtual void Show()
-            {
-                std::cout << "Circle::Show()" << std::endl;
-            }
-        };
+        ++mRefCount;
     }
 }
 
-Example::IShape* Example::Details::CreateCircle()
+void Example::PageImpl::Release()
 {
-    return new Example::Details::Circle();
+    if (this)
+    {
+        --mRefCount;
+        if (mRefCount <= 0)
+        {
+            delete this;
+
+        }
+    }
+}
+
+size_t Example::PageImpl::GetWidth() const
+{
+    return mWidth;
+}
+
+size_t Example::PageImpl::GetHeight() const
+{
+    return mHeight;
+}
+
+void Example::PageImpl::SetWidth(size_t value)
+{
+    mWidth = value;
+}
+
+void Example::PageImpl::SetHeight(size_t value)
+{
+    mHeight = value;
 }

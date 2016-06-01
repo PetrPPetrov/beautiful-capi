@@ -79,7 +79,7 @@ class TNamespace(object):
             new_element.load(element)
             self.m_classes.append(new_element)
         for element in [node for node in dom_node.childNodes if node.nodeName == "function"]:
-            new_element = TMethod()
+            new_element = TFactory()
             new_element.load(element)
             self.m_functions.append(new_element)
         for element in [node for node in dom_node.childNodes if node.nodeName == "factory_function"]:

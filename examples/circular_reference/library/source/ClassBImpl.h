@@ -19,35 +19,16 @@
  *
  */
 
-#include <iostream>
-#include "CircleFactory.h"
+#ifndef BEAUTIFUL_CAPI_HELLO_WORLD_PRINTER_H
+#define BEAUTIFUL_CAPI_HELLO_WORLD_PRINTER_H
 
-namespace Example
+namespace HelloWorld
 {
-    namespace Details
+    class PrinterImpl
     {
-        class Circle : public Example::IShape
-        {
-        public:
-            Circle()
-            {
-                std::cout << "Circle ctor" << std::endl;
-            }
-
-            virtual ~Circle()
-            {
-                std::cout << "Circle dtor" << std::endl;
-            }
-
-            virtual void Show()
-            {
-                std::cout << "Circle::Show()" << std::endl;
-            }
-        };
-    }
+    public:
+        void Show() const;
+    };
 }
 
-Example::IShape* Example::Details::CreateCircle()
-{
-    return new Example::Details::Circle();
-}
+#endif /* BEAUTIFUL_CAPI_HELLO_WORLD_PRINTER_H */
