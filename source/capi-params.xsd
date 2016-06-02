@@ -12,5 +12,7 @@
     <xs:attribute name="generate_single_file" type="xs:boolean" use="optional" default="false"/>
     <xs:attribute name="single_header_name" type="xs:string" use="optional" default="Output.h"/>
     <xs:attribute name="dynamically_load_functions" type="xs:boolean" use="optional" default="false"/>
+    <xs:attribute name="capi_suffix" type="xs:string" use="optional" default="Capi"/>
+    <xs:attribute name="fwd_suffix" type="xs:string" use="optional" default="Fwd"/>
   </xs:complexType>
 </xs:schema>

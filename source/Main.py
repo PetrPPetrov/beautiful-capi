@@ -23,12 +23,15 @@ import os
 import posixpath
 import argparse
 from xml.dom.minidom import parse
+from Helpers import NamespaceScope
 import Helpers
 from Constants import Constants
 from LifecycleTraits import CreateLifecycleTraits
 from InheritanceTraits import CreateInheritanceTraits
 from CfunctionTraits import CreateLoaderTraits
 from FileTraits import CreateFileTraits
+from FileGenerator import WatchdogScope
+from FileGenerator import IfDefScope
 import FileGenerator
 import Parser
 import ParamsParser
@@ -64,7 +67,7 @@ class CapiGenerator(object):
         return '_'.join(self.cur_namespace_path)
 
     def __process_namespace(self, namespace):
-        with Helpers.NamespaceScope(self.cur_namespace_path, namespace):
+        with NamespaceScope(self.cur_namespace_path, namespace):
             self.__process_namespace_header(namespace)
 
             for nested_namespace in namespace.m_namespaces:
@@ -78,47 +81,55 @@ class CapiGenerator(object):
         self.output_header.put_copyright_header(self.params_description.m_copyright_header)
         self.output_header.put_automatic_generation_warning(self.params_description.m_automatic_generated_warning)
 
-        watchdog_string = '{0}_INCLUDED'.format(self.get_namespace_id().upper())
-        self.output_header.put_line('#ifndef {0}'.format(watchdog_string))
-        self.output_header.put_line('#define {0}'.format(watchdog_string))
-        self.output_header.put_line('')
+        with WatchdogScope(self.output_header, '{0}_INCLUDED'.format(self.get_namespace_id().upper())):
+            self.__process_capi()
+            self.__process_fwd()
+            self.loader_traits.add_impl_header(namespace.m_implementation_header)
+
+            for cur_namespace in namespace.m_namespaces:
+                with NamespaceScope(self.cur_namespace_path, cur_namespace):
+                    self.file_traits.include_namespace_header(self.cur_namespace_path)
+
+            for cur_class in namespace.m_classes:
+                self.file_traits.include_class_header(self.cur_namespace_path, cur_class)
+
+            if namespace.m_factory_functions or namespace.m_functions:
+                self.output_header.put_line('')
+                with IfDefScope(self.output_header, '__cplusplus'):
+                    for cur_namespace in self.cur_namespace_path:
+                        self.output_header.put_line('namespace {0} {{ '.format(cur_namespace), '')
+                    self.output_header.put_line('')
+                    self.output_header.put_line('')
+                    for function in namespace.m_functions:
+                        self.__process_function(function)
+                    self.output_header.put_line('')
+                    for cur_namespace in self.cur_namespace_path:
+                        self.output_header.put_line('}', '')
+                    self.output_header.put_line('')
+
+    def __process_capi(self):
         if len(self.cur_namespace_path) == 1:
-            self.loader_traits.generate_c_functions_declarations()
-        self.loader_traits.add_impl_header(namespace.m_implementation_header)
+            self.output_header = self.file_traits.get_file_for_capi(self.cur_namespace_path)
+            self.output_header.put_copyright_header(self.params_description.m_copyright_header)
+            self.output_header.put_automatic_generation_warning(self.params_description.m_automatic_generated_warning)
+            with WatchdogScope(self.output_header, '{0}_CAPI_INCLUDED'.format(self.get_namespace_id().upper())):
+                self.loader_traits.generate_c_functions_declarations()
+        self.output_header = self.file_traits.get_file_for_namespace(self.cur_namespace_path)
+        self.file_traits.include_capi_header(self.cur_namespace_path)
 
-        self.output_header.put_line('')
-
-        for cur_namespace in namespace.m_namespaces:
-            with Helpers.NamespaceScope(self.cur_namespace_path, cur_namespace):
-                self.file_traits.include_namespace_header(self.cur_namespace_path)
-
-        for cur_class in namespace.m_classes:
-            self.file_traits.include_class_header(self.cur_namespace_path, cur_class)
-
-        if namespace.m_factory_functions or namespace.m_functions:
-            self.output_header.put_line('')
-            self.output_header.put_line('#ifdef __cplusplus')
-            self.output_header.put_line('')
-            for cur_namespace in self.cur_namespace_path:
-                self.output_header.put_line('namespace {0} {{ '.format(cur_namespace), '')
-            self.output_header.put_line('')
-            self.output_header.put_line('')
-            for function in namespace.m_functions:
-                self.__process_function(function)
-            self.output_header.put_line('')
-            for cur_namespace in self.cur_namespace_path:
-                self.output_header.put_line('}', '')
-            self.output_header.put_line('')
-            self.output_header.put_line('')
-            self.output_header.put_line('#endif /* __cplusplus */')
-
-        self.output_header.put_line('')
-        self.output_header.put_line('#endif /* {0} */'.format(watchdog_string))
-        self.output_header.put_line('')
+    def __process_fwd(self):
+        if len(self.cur_namespace_path) == 1:
+            self.output_header = self.file_traits.get_file_for_fwd(self.cur_namespace_path)
+            self.output_header.put_copyright_header(self.params_description.m_copyright_header)
+            self.output_header.put_automatic_generation_warning(self.params_description.m_automatic_generated_warning)
+            with WatchdogScope(self.output_header, '{0}_FWD_INCLUDED'.format(self.get_namespace_id().upper())):
+                self.output_header.put_line('/* TODO: */')
+        self.output_header = self.file_traits.get_file_for_namespace(self.cur_namespace_path)
+        self.file_traits.include_fwd_header(self.cur_namespace_path)
 
     def __process_class(self, cur_class):
         self.output_header = self.file_traits.get_file_for_class(self.cur_namespace_path, cur_class)
-        with Helpers.NamespaceScope(self.cur_namespace_path, cur_class):
+        with NamespaceScope(self.cur_namespace_path, cur_class):
             with CreateLifecycleTraits(cur_class, self):
                 with CreateInheritanceTraits(cur_class, self):
                     self.output_header.put_copyright_header(self.params_description.m_copyright_header)
@@ -126,31 +137,18 @@ class CapiGenerator(object):
                         self.params_description.m_automatic_generated_warning
                     )
 
-                    watchdog_string = '{0}_INCLUDED'.format(self.get_namespace_id().upper())
-                    self.output_header.put_line('#ifndef {0}'.format(watchdog_string))
-                    self.output_header.put_line('#define {0}'.format(watchdog_string))
-                    self.output_header.put_line('')
+                    with WatchdogScope(self.output_header, '{0}_INCLUDED'.format(self.get_namespace_id().upper())):
+                        with IfDefScope(self.output_header, '__cplusplus'):
+                            for cur_namespace in self.cur_namespace_path[:-1]:
+                                self.output_header.put_line('namespace {0} {{ '.format(cur_namespace), '')
+                            self.output_header.put_line('')
+                            self.output_header.put_line('')
 
-                    self.output_header.put_line('#ifdef __cplusplus')
-                    self.output_header.put_line('')
+                            self.__generate_class(cur_class)
 
-                    for cur_namespace in self.cur_namespace_path[:-1]:
-                        self.output_header.put_line('namespace {0} {{ '.format(cur_namespace), '')
-                    self.output_header.put_line('')
-                    self.output_header.put_line('')
-
-                    self.__generate_class(cur_class)
-
-                    for cur_namespace in self.cur_namespace_path[:-1]:
-                        self.output_header.put_line('}', '')
-                    self.output_header.put_line('')
-
-                    self.output_header.put_line('')
-                    self.output_header.put_line('#endif /* __cplusplus */ ')
-
-                    self.output_header.put_line('')
-                    self.output_header.put_line('#endif /* {0} */'.format(watchdog_string))
-                    self.output_header.put_line('')
+                            for cur_namespace in self.cur_namespace_path[:-1]:
+                                self.output_header.put_line('}', '')
+                            self.output_header.put_line('')
 
     def __generate_class(self, cur_class):
         self.loader_traits.add_impl_header(cur_class.m_implementation_class_header)
@@ -172,7 +170,7 @@ class CapiGenerator(object):
         self.output_header.put_line('};')
 
     def __generate_method(self, method, cur_class):
-        with Helpers.NamespaceScope(self.cur_namespace_path, method):
+        with NamespaceScope(self.cur_namespace_path, method):
             self.output_header.put_line('{return_type} {method_name}({arguments})'.format(
                 return_type=self.get_wrapped_return_type(method.m_return),
                 method_name=method.m_name,

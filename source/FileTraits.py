@@ -43,10 +43,22 @@ class SingleFile(FileTraitsBase):
     def get_file_for_namespace(self, namespace_path):
         return self.output_file
 
+    def get_file_for_capi(self, namespace_path):
+        return self.output_file
+
+    def get_file_for_fwd(self, namespace_path):
+        return self.output_file
+
     def get_file_for_class(self, namespace_path, cur_class):
         return self.output_file
 
     def include_namespace_header(self, namespace_path):
+        pass
+
+    def include_capi_header(self, namespace_path):
+        pass
+
+    def include_fwd_header(self, namespace_path):
         pass
 
     def include_class_header(self, namespace_path, cur_class):
@@ -118,6 +130,18 @@ class MultipleFiles(FileTraitsBase):
             namespace_path[-1] + '.h'
         )
 
+    def __get_file_name_for_capi(self, namespace_path, join_traits):
+        return join_traits.join(
+            self.__get_file_name_base_for_namespace(namespace_path[0:1], join_traits),
+            namespace_path[0] + self.capi_generator.params_description.m_capi_suffix + '.h'
+        )
+
+    def __get_file_name_for_fwd(self, namespace_path, join_traits):
+        return join_traits.join(
+            self.__get_file_name_base_for_namespace(namespace_path[0:1], join_traits),
+            namespace_path[0] + self.capi_generator.params_description.m_fwd_suffix + '.h'
+        )
+
     def __get_file_name_for_class(self, namespace_path, cur_class, join_traits):
         if self.capi_generator.params_description.m_file_per_class:
             return join_traits.join(
@@ -139,12 +163,28 @@ class MultipleFiles(FileTraitsBase):
         output_file_name = self.__get_file_name_for_namespace(namespace_path, OsJoin(self.base_path))
         return self.__get_cached_generator(output_file_name)
 
+    def get_file_for_capi(self, namespace_path):
+        output_file_name = self.__get_file_name_for_capi(namespace_path, OsJoin(self.base_path))
+        return self.__get_cached_generator(output_file_name)
+
+    def get_file_for_fwd(self, namespace_path):
+        output_file_name = self.__get_file_name_for_fwd(namespace_path, OsJoin(self.base_path))
+        return self.__get_cached_generator(output_file_name)
+
     def get_file_for_class(self, namespace_path, cur_class):
         output_file_name = self.__get_file_name_for_class(namespace_path, cur_class, OsJoin(self.base_path))
         return self.__get_cached_generator(output_file_name)
 
     def include_namespace_header(self, namespace_path):
         include_file = self.__get_file_name_for_namespace(namespace_path, PosixJoin())
+        self.put_line('#include "{0}"'.format(include_file))
+
+    def include_capi_header(self, namespace_path):
+        include_file = self.__get_file_name_for_capi(namespace_path, PosixJoin())
+        self.put_line('#include "{0}"'.format(include_file))
+
+    def include_fwd_header(self, namespace_path):
+        include_file = self.__get_file_name_for_fwd(namespace_path, PosixJoin())
         self.put_line('#include "{0}"'.format(include_file))
 
     def include_class_header(self, namespace_path, cur_class):

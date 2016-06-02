@@ -103,6 +103,7 @@ namespace HelloWorld
         
 
 24) Object return type problem (addref or not)
+25) add clean pre-step: before any generation of include or AutoGenWrap file clean previous any existing files
 
 Plan:
 1) circular_reference example

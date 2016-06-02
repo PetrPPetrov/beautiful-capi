@@ -41,6 +41,8 @@ class TBeautifulCapiParams(object):
         self.m_generate_single_file = False
         self.m_single_header_name = "Output.h"
         self.m_dynamically_load_functions = False
+        self.m_capi_suffix = "Capi"
+        self.m_fwd_suffix = "Fwd"
         self.m_copyright_header = ""
         self.m_automatic_generated_warning = ""
     
@@ -69,6 +71,12 @@ class TBeautifulCapiParams(object):
         if dom_node.hasAttribute("dynamically_load_functions"):
             cur_attr = dom_node.getAttribute("dynamically_load_functions")
             self.m_dynamically_load_functions = string_to_bool(cur_attr)
+        if dom_node.hasAttribute("capi_suffix"):
+            cur_attr = dom_node.getAttribute("capi_suffix")
+            self.m_capi_suffix = cur_attr
+        if dom_node.hasAttribute("fwd_suffix"):
+            cur_attr = dom_node.getAttribute("fwd_suffix")
+            self.m_fwd_suffix = cur_attr
     
 
 def load(dom_node):

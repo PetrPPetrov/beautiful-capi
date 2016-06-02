@@ -139,3 +139,33 @@ class IndentScope(Indent):
     def __exit__(self, exc_type, exc_val, exc_tb):
         super().__exit__(exc_type, exc_val, exc_tb)
         self.file_generator.put_line('}')
+
+
+class WatchdogScope(object):
+    def __init__(self, file_generator, watchdog_string):
+        self.file_generator = file_generator
+        self.watchdog_string = watchdog_string
+
+    def __enter__(self):
+        self.file_generator.put_line('#ifndef {0}'.format(self.watchdog_string))
+        self.file_generator.put_line('#define {0}'.format(self.watchdog_string))
+        self.file_generator.put_line('')
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.file_generator.put_line('')
+        self.file_generator.put_line('#endif /* {0} */'.format(self.watchdog_string))
+        self.file_generator.put_line('')
+
+
+class IfDefScope(object):
+    def __init__(self, file_generator, condition_string):
+        self.file_generator = file_generator
+        self.condition_string = condition_string
+
+    def __enter__(self):
+        self.file_generator.put_line('#ifdef {0}'.format(self.condition_string))
+        self.file_generator.put_line('')
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.file_generator.put_line('')
+        self.file_generator.put_line('#endif /* {0} */'.format(self.condition_string))
