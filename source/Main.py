@@ -83,7 +83,7 @@ class CapiGenerator(object):
 
         with WatchdogScope(self.output_header, '{0}_INCLUDED'.format(self.get_namespace_id().upper())):
             self.__process_capi()
-            self.__process_fwd()
+            self.__process_fwd(namespace)
             self.loader_traits.add_impl_header(namespace.m_implementation_header)
 
             for cur_namespace in namespace.m_namespaces:
@@ -117,15 +117,58 @@ class CapiGenerator(object):
         self.output_header = self.file_traits.get_file_for_namespace(self.cur_namespace_path)
         self.file_traits.include_capi_header(self.cur_namespace_path)
 
-    def __process_fwd(self):
+    def __process_fwd(self, namespace):
         if len(self.cur_namespace_path) == 1:
             self.output_header = self.file_traits.get_file_for_fwd(self.cur_namespace_path)
             self.output_header.put_copyright_header(self.params_description.m_copyright_header)
             self.output_header.put_automatic_generation_warning(self.params_description.m_automatic_generated_warning)
             with WatchdogScope(self.output_header, '{0}_FWD_INCLUDED'.format(self.get_namespace_id().upper())):
-                self.output_header.put_line('/* TODO: */')
+                self.output_header.put_line('')
+                with IfDefScope(self.output_header, '__cplusplus'):
+                    self.output_header.put_line('#include <memory>')
+                    self.output_header.put_line('')
+                    self.__generate_forwards(namespace, True)
         self.output_header = self.file_traits.get_file_for_namespace(self.cur_namespace_path)
         self.file_traits.include_fwd_header(self.cur_namespace_path)
+
+    def __generate_forwards(self, namespace, top_level_namespace):
+        self.output_header.put_line('namespace {0}'.format(namespace.m_name))
+        with FileGenerator.IndentScope(self.output_header):
+            for cur_class in namespace.m_classes:
+                self.output_header.put_line('class {0};'.format(cur_class.m_name))
+            for nested_namespace in namespace.m_namespaces:
+                with NamespaceScope(self.cur_namespace_path, nested_namespace):
+                    self.__generate_forwards(nested_namespace, False)
+            if top_level_namespace:
+                self.__generate_forward_holder()
+
+    def __generate_forward_holder(self):
+        self.output_header.put_line('')
+        self.output_header.put_line('namespace beautiful_capi')
+        with FileGenerator.IndentScope(self.output_header):
+            self.output_header.put_line('template<typename WrappedObjType>')
+            self.output_header.put_line('class forward_pointer_holder')
+            with FileGenerator.IndentScope(self.output_header, '};'):
+                self.output_header.put_line('void* m_pointer;')
+                self.output_header.put_line('bool m_object_was_created;')
+                with FileGenerator.Unindent(self.output_header):
+                    self.output_header.put_line('public:')
+                self.output_header.put_line('explicit forward_pointer_holder(void* pointer)')
+                self.output_header.put_line(' : m_object_was_created(false), m_pointer(pointer)')
+                with FileGenerator.IndentScope(self.output_header):
+                    pass
+                self.output_header.put_line('~forward_pointer_holder()')
+                with FileGenerator.IndentScope(self.output_header):
+                    self.output_header.put_line('if (m_object_was_created)')
+                    with FileGenerator.IndentScope(self.output_header):
+                        self.output_header.put_line('reinterpret_cast<WrappedObjType*>(this)->~WrappedObjType();')
+                self.output_header.put_line('operator WrappedObjType()')
+                with FileGenerator.IndentScope(self.output_header):
+                    self.output_header.put_line('return WrappedObjType(m_pointer);')
+                self.output_header.put_line('WrappedObjType* operator->()')
+                with FileGenerator.IndentScope(self.output_header):
+                    self.output_header.put_line('m_object_was_created = true;')
+                    self.output_header.put_line('return new(this) WrappedObjType(m_pointer);')
 
     def __process_class(self, cur_class):
         self.output_header = self.file_traits.get_file_for_class(self.cur_namespace_path, cur_class)
@@ -136,8 +179,11 @@ class CapiGenerator(object):
                     self.output_header.put_automatic_generation_warning(
                         self.params_description.m_automatic_generated_warning
                     )
-
                     with WatchdogScope(self.output_header, '{0}_INCLUDED'.format(self.get_namespace_id().upper())):
+                        self.file_traits.include_capi_header(self.cur_namespace_path)
+                        self.file_traits.include_fwd_header(self.cur_namespace_path)
+                        self.__include_additional_capi_and_fwd(cur_class)
+                        self.output_header.put_line('')
                         with IfDefScope(self.output_header, '__cplusplus'):
                             for cur_namespace in self.cur_namespace_path[:-1]:
                                 self.output_header.put_line('namespace {0} {{ '.format(cur_namespace), '')
@@ -145,21 +191,46 @@ class CapiGenerator(object):
                             self.output_header.put_line('')
 
                             self.__generate_class(cur_class)
+                            self.output_header.put_line('')
 
                             for cur_namespace in self.cur_namespace_path[:-1]:
                                 self.output_header.put_line('}', '')
                             self.output_header.put_line('')
 
+    def __include_additional_capi_and_fwd(self, cur_class):
+        additional_namespaces = {}
+        for constructor in cur_class.m_constructors:
+            self.__include_additional_capi_and_fwd_function(constructor, additional_namespaces)
+        for method in cur_class.m_methods:
+            self.__include_additional_capi_and_fwd_method(method, additional_namespaces)
+        for additional_namespace in additional_namespaces.keys():
+            if additional_namespace != self.cur_namespace_path[0]:
+                self.file_traits.include_capi_header([additional_namespace])
+                self.file_traits.include_fwd_header([additional_namespace])
+
+    def __include_additional_capi_and_fwd_check_type(self, type_name, additional_namespaces):
+        if self.__is_class_type(type_name):
+            additional_namespaces.update({type_name.split('::')[0]: True})
+
+    def __include_additional_capi_and_fwd_function(self, function, additional_namespaces):
+        for argument in function.m_arguments:
+            self.__include_additional_capi_and_fwd_check_type(argument.m_type, additional_namespaces)
+
+    def __include_additional_capi_and_fwd_method(self, method, additional_namespaces):
+        self.__include_additional_capi_and_fwd_function(method, additional_namespaces)
+        if self.__is_class_type(method.m_return):
+            self.__include_additional_capi_and_fwd_check_type(method.m_return, additional_namespaces)
+
     def __generate_class(self, cur_class):
         self.loader_traits.add_impl_header(cur_class.m_implementation_class_header)
         self.output_header.put_line('class {0}'.format(cur_class.m_name))
-        self.output_header.put_line('{')
-        self.output_header.put_line('protected:')
-        with FileGenerator.Indent(self.output_header):
+        with FileGenerator.IndentScope(self.output_header, '};'):
+            with FileGenerator.Unindent(self.output_header):
+                self.output_header.put_line('protected:')
             self.inheritance_traits.generate_pointer_declaration()
             self.inheritance_traits.generate_set_object()
-        self.output_header.put_line('public:')
-        with FileGenerator.Indent(self.output_header):
+            with FileGenerator.Unindent(self.output_header):
+                self.output_header.put_line('public:')
             self.lifecycle_traits.generate_copy_constructor()
             self.lifecycle_traits.generate_void_constructor()
             for constructor in cur_class.m_constructors:
@@ -167,7 +238,6 @@ class CapiGenerator(object):
             self.lifecycle_traits.generate_destructor()
             for method in cur_class.m_methods:
                 self.__generate_method(method, cur_class)
-        self.output_header.put_line('};')
 
     def __generate_method(self, method, cur_class):
         with NamespaceScope(self.cur_namespace_path, method):

@@ -128,9 +128,21 @@ class Indent(object):
         self.file_generator.decrease_indent()
 
 
-class IndentScope(Indent):
+class Unindent(object):
     def __init__(self, file_generator):
+        self.file_generator = file_generator
+
+    def __enter__(self):
+        self.file_generator.decrease_indent()
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.file_generator.increase_indent()
+
+
+class IndentScope(Indent):
+    def __init__(self, file_generator, ending='}'):
         super().__init__(file_generator)
+        self.ending = ending
 
     def __enter__(self):
         self.file_generator.put_line('{')
@@ -138,7 +150,7 @@ class IndentScope(Indent):
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         super().__exit__(exc_type, exc_val, exc_tb)
-        self.file_generator.put_line('}')
+        self.file_generator.put_line(self.ending)
 
 
 class WatchdogScope(object):
