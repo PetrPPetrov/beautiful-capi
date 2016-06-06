@@ -19,16 +19,23 @@
  *
  */
 
-#ifndef BEAUTIFUL_CAPI_CLASSA__H
-#define BEAUTIFUL_CAPI_CLASSA__H
+#ifndef BEAUTIFUL_CAPI_CLASSA_H
+#define BEAUTIFUL_CAPI_CLASSA_H
 
 namespace Circular
 {
+    class ClassBImpl;
+
     class ClassAImpl
     {
+        ClassBImpl* mBInstance;
     public:
-        void AddB() const;
+        ClassAImpl();
+        ClassAImpl(const ClassAImpl& other);
+        ~ClassAImpl();
+        void SetB(ClassBImpl* class_b);
+        ClassBImpl* GetB() const;
     };
 }
 
-#endif /* BEAUTIFUL_CAPI_CLASSA__H */
+#endif /* BEAUTIFUL_CAPI_CLASSA_H */

@@ -19,16 +19,23 @@
  *
  */
 
-#ifndef BEAUTIFUL_CAPI_HELLO_WORLD_PRINTER_H
-#define BEAUTIFUL_CAPI_HELLO_WORLD_PRINTER_H
+#ifndef BEAUTIFUL_CAPI_CLASSB_H
+#define BEAUTIFUL_CAPI_CLASSB_H
 
-namespace HelloWorld
+namespace Circular
 {
-    class PrinterImpl
+    class ClassAImpl;
+
+    class ClassBImpl
     {
+        ClassAImpl* mAInstance;
     public:
-        void Show() const;
+        ClassBImpl();
+        ClassBImpl(const ClassBImpl& other);
+        ~ClassBImpl();
+        void SetA(ClassAImpl* class_a);
+        ClassAImpl* GetA() const;
     };
 }
 
-#endif /* BEAUTIFUL_CAPI_HELLO_WORLD_PRINTER_H */
+#endif /* BEAUTIFUL_CAPI_CLASSB_H */

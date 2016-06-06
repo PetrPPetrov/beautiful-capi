@@ -10,6 +10,6 @@ build/
 /examples/virtual_interface/library/include/
 /examples/single_file/library/include/
 /examples/object_parameter/library/include/
+/examples/circular_reference/library/include/
 /tests/file_options/library/include/
 AutoGen*
-

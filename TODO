@@ -104,6 +104,11 @@ namespace HelloWorld
 
 24) Object return type problem (addref or not)
 25) add clean pre-step: before any generation of include or AutoGenWrap file clean previous any existing files
+26) add "copy" custom function, external helper function or "class member method"
+27) add constructor from forward_pointer_holder for move_semantic
+28) add "FwdPtr" constant
+28a) add "FwdPtr" suffix option
+29) add raw_pointer semantic
 
 Plan:
 1) circular_reference example

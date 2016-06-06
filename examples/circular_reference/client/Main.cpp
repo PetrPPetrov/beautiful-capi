@@ -20,12 +20,12 @@
  */
 
 #include <iostream>
-#include "HelloWorld.h"
+#include "Circular/ClassA.h"
+#include "Circular/ClassB.h"
 
 int main()
 {
-    HelloWorld::Printer printer;
-    printer.Show();
-
+    Circular::ClassA a_object();
+    Circular::ClassB b_object();
     return EXIT_SUCCESS;
 }

@@ -21,8 +21,29 @@
 
 #include <iostream>
 #include "ClassAImpl.h"
+#include "ClassBImpl.h"
 
-void HelloWorld::PrinterImpl::Show() const
+Circular::ClassAImpl::ClassAImpl() : mBInstance(0)
 {
-    std::cout << "Hello Beautiful World!" << std::endl;
+    std::cout << "ClassA ctor" << std::endl;
+}
+
+Circular::ClassAImpl::ClassAImpl(const ClassAImpl& other) : mBInstance(other.mBInstance)
+{
+    std::cout << "ClassA copy ctor" << std::endl;
+}
+
+Circular::ClassAImpl::~ClassAImpl()
+{
+    std::cout << "ClassA dtor" << std::endl;
+}
+
+void Circular::ClassAImpl::SetB(ClassBImpl* class_b)
+{
+    mBInstance = class_b;
+}
+
+Circular::ClassBImpl* Circular::ClassAImpl::GetB() const
+{
+    return mBInstance;
 }
