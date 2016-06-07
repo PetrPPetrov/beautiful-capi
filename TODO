@@ -34,3 +34,4 @@
 *) return values of class type should be normal wrapper if it is possible, or it should be forward_pointer_holder if it is circular reference
 *) wrappers destructors should check if pointer null
 *) add IsNull() and IsNotNull() methods to wrappers classes
+*) impleted operator->() which returns this for wrapper classes, change all example to -> access operator
