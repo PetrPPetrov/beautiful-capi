@@ -170,6 +170,9 @@ class CapiGenerator(object):
                 with FileGenerator.IndentScope(self.output_header):
                     self.output_header.put_line('m_object_was_created = true;')
                     self.output_header.put_line('return new(this) WrappedObjType(m_pointer);')
+                self.output_header.put_line('void* get_raw_pointer() const')
+                with FileGenerator.IndentScope(self.output_header):
+                    self.output_header.put_line('return m_pointer;')
         self.output_header.put_line('')
 
     def __process_class(self, cur_class):

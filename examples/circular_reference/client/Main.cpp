@@ -25,7 +25,13 @@
 
 int main()
 {
-    Circular::ClassA a_object();
-    Circular::ClassB b_object();
+    Circular::ClassA a_object;
+    Circular::ClassB b_object;
+    Circular::ClassA a_object1;
+    Circular::ClassB b_object1;
+    a_object.SetB(b_object);
+    b_object1.SetA(a_object1);
+    //TODO:
+    //a_object.GetB()->SetA(a_object1);
     return EXIT_SUCCESS;
 }

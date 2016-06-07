@@ -1,116 +1,36 @@
-1) implement Dynamic traits for Windows
-1a) const support for methods
-1b) const support for objects (constatant instances of wrapper classes)
-1c) avoid duplicated include files (implementation_header)
-2) implement Dynamic traits for Unix
-2a) implement combined (dynamic & implib) mode
-3) write more examples and tests: hello_world, reference_counted, copy_semantic, move_semantic, virtual_interface, data_structures, shared_ptr, weak_ptr, dynamic_cast, dynamic_load, exceptions_basic, exceptions_list, single_load
-5) exception support, exception policies: don't handle exceptions, ellipse handling & std::exception (primitive), exceptions from list
-6) dynamic_cast support
-7) develop automated testing system
-8) test various cases: single_file, namespace_at_folder, implib_dynamic_load, no_namespace_header, all params (the same test, only parameters xml are different)
-9) write documentation - manual and FAQ
-10) develop generating input for Swig
-11) update documentation
-12) update testing system and tests
-13) inline optimization
-14) add Python 2.7 support
-15) flat type maps
-16) doxygen documentation generation
-17) multiple inheritance?
-18) C++ modes: C++ 98, C++2003, C++2011, for wrappers and for internals
-19) callbacks support
-20) allow including only some particular header, i.e. #include "Example/Geometry/Brep/Bode.h" without including "Example.h".
-Introduce some files like ExampleCapi.h.
-20a)
-Introduce some files like ExampleFwdRef.h.
-21) access to implementation classes by -> operator instead of .
-23) allow cross-referencing in wrappers (when type A uses type B and type B uses type A).
-Prototype for that:
-#include <iostream>
-using namespace std;
-
-void a_set_b(void* a, void* b)
-{
-}
-
-void b_set_a(void* b, void* a)
-{
-}
-
-struct A;
-struct B;
-
-struct A
-{
-    void* p;
-    void SetB(const B& b)
-    {
-        struct raw
-        {
-            void* p;
-        };
-        a_set_b(p, ((raw*)&b)->p);
-    }
-};
-
-struct B
-{
-    void *p;
-    void SetA(const A& a)
-    {
-        struct raw
-        {
-            void* p;
-        };
-        b_set_a(p, ((raw*)&a)->p);
-    }
-};
-
-int main() {
-	// your code goes here
-	return 0;
-}
-23a) The above solution doesn't work for return types
-
-template<typename InterfaceWrapper>
-struct holder_base
-{
-    explicit holder_base(void* raw_object_pointer) : m_raw_object_pointer(raw_object_pointer)
-    {
-    }
-    
-    InterfaceWrapper* operator->()
-    {
-        return new(this) InterfaceWrapper;
-    }
-private:
-    void* m_raw_object_pointer;
-};
-
-namespace HelloWorld
-{
-    class Printer
-    {
-        static inline holder_base<Printer> Default()
-        {
-            return holder_base<Printer>(helloworld_printer_default());
-        }
-    };
-    
-    namespace Printer
-    {
-        
-
-24) Object return type problem (addref or not)
-25) add clean pre-step: before any generation of include or AutoGenWrap file clean previous any existing files
-26) add "copy" custom function, external helper function or "class member method"
-27) add constructor from forward_pointer_holder for move_semantic
-28) add "FwdPtr" constant
-28a) add "FwdPtr" suffix option
-29) add raw_pointer semantic
-
-Plan:
-1) circular_reference example
-2) return_circular_reference example (or modify existing circular_reference example)
-3) ...?
+*) implement Dynamic traits for Windows
+*) const support for methods
+*) const support for objects (constatant instances of wrapper classes)
+*) avoid duplicated include files (implementation_header)
+*) implement Dynamic traits for Unix
+*) implement combined (dynamic & implib) mode
+*) write more examples and tests: hello_world, reference_counted, copy_semantic, move_semantic, virtual_interface, data_structures, shared_ptr, weak_ptr, dynamic_cast, dynamic_load, exceptions_basic, exceptions_list, single_load
+*) exception support, exception policies: don't handle exceptions, ellipse handling & std::exception (primitive), exceptions from list
+*) dynamic_cast support
+*) develop automated testing system
+*) test various cases: single_file, namespace_at_folder, implib_dynamic_load, no_namespace_header, all params (the same test, only parameters xml are different)
+*) write documentation - manual and FAQ
+*) develop generating input for Swig
+*) update documentation
+*) update testing system and tests
+*) inline optimization
+*) add Python 2.7 support
+*) flat type maps
+*) doxygen documentation generation
+*) multiple inheritance?
+*) C++ modes: C++ 98, C++2003, C++2011, for wrappers and for internals
+*) callbacks support
+*) allow including only some particular header, i.e. #include "Example/Geometry/Brep/Bode.h" without including "Example.h". Introduce some files like ExampleCapi.h.
+*) Introduce some files like ExampleFwdRef.h.
+*) access to implementation classes by -> operator instead of .
+*) Object return type problem (addref or not)
+*) add clean pre-step: before any generation of include or AutoGenWrap file clean previous any existing files
+*) add "copy" custom function, external helper function or "class member method"
+*) add constructor from forward_pointer_holder for move_semantic
+*) add "FwdPtr" constant
+*) add "FwdPtr" suffix option
+*) add raw_pointer semantic
+*) add automatic inclusion of dependent files (i.e. if ClassA uses ClassB then ClassA.h should include ClassB.h) (?)
+*) return values of class type should be normal wrapper if it is possible, or it should be forward_pointer_holder if it is circular reference
+*) wrappers destructors should check if pointer null
+*) add IsNull() and IsNotNull() methods to wrappers classes
