@@ -134,16 +134,17 @@ class CapiGenerator(object):
     def __generate_forwards(self, namespace, top_level_namespace):
         self.output_header.put_line('namespace {0}'.format(namespace.m_name))
         with FileGenerator.IndentScope(self.output_header):
+            if top_level_namespace:
+                self.__generate_forward_holder()
             for cur_class in namespace.m_classes:
                 self.output_header.put_line('class {0};'.format(cur_class.m_name))
+                self.output_header.put_line(
+                    'typedef beautiful_capi::forward_pointer_holder<{0}> {0}FwdPtr;'.format(cur_class.m_name))
             for nested_namespace in namespace.m_namespaces:
                 with NamespaceScope(self.cur_namespace_path, nested_namespace):
                     self.__generate_forwards(nested_namespace, False)
-            if top_level_namespace:
-                self.__generate_forward_holder()
 
     def __generate_forward_holder(self):
-        self.output_header.put_line('')
         self.output_header.put_line('namespace beautiful_capi')
         with FileGenerator.IndentScope(self.output_header):
             self.output_header.put_line('template<typename WrappedObjType>')
@@ -169,6 +170,10 @@ class CapiGenerator(object):
                 with FileGenerator.IndentScope(self.output_header):
                     self.output_header.put_line('m_object_was_created = true;')
                     self.output_header.put_line('return new(this) WrappedObjType(m_pointer);')
+                self.output_header.put_line('void* get_raw_pointer() const')
+                with FileGenerator.IndentScope(self.output_header):
+                    self.output_header.put_line('return m_pointer;')
+        self.output_header.put_line('')
 
     def __process_class(self, cur_class):
         self.output_header = self.file_traits.get_file_for_class(self.cur_namespace_path, cur_class)
@@ -348,13 +353,15 @@ class CapiGenerator(object):
     def get_wrapped_return_instruction(self, type_name, rest_expression):
         if type_name:
             if self.__is_class_type(type_name):
-                return 'return {0}({1});'.format(type_name, rest_expression)
+                return 'return {0}FwdPtr({1});'.format(type_name, rest_expression)
             else:
                 return 'return {0};'.format(rest_expression)
         else:
             return '{0};'.format(rest_expression)
 
     def get_wrapped_return_type(self, type_name):
+        if self.__is_class_type(type_name):
+            return type_name + 'FwdPtr'
         return self.get_cpp_type(type_name)
 
     def get_wrapped_type(self, type_name):

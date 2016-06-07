@@ -30,8 +30,8 @@ void show(Example::IShape shape)
 int main()
 {
     Example::IShape triangle = Example::CreateTriangle();
-    Example::IShape shape0 = Example::CreateCircle();
-    Example::IShape shape1 = Example::CreateRectangle();
+    Example::IShape shape0(Example::CreateCircle());
+    Example::IShape shape1(Example::CreateRectangle());
 
     show(triangle);
     show(shape0);

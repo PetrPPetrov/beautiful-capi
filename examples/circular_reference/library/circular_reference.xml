@@ -3,15 +3,17 @@
   <namespace name="Circular">
     <class name="ClassA" lifecycle="copy_semantic" implementation_class_name="Circular::ClassAImpl" implementation_class_header="ClassAImpl.h">
       <constructor name="Default"/>
-      <method name="AddB">
+      <method name="SetB">
         <argument type="Circular::ClassB" name="value"/>
       </method>
+      <method name="GetB" return="Circular::ClassB"/>
     </class>
     <class name="ClassB" lifecycle="copy_semantic" implementation_class_name="Circular::ClassBImpl" implementation_class_header="ClassBImpl.h">
       <constructor name="Default"/>
-      <method name="AddA">
+      <method name="SetA">
         <argument type="Circular::ClassA" name="value"/>
       </method>
+      <method name="GetA" return="Circular::ClassA"/>
     </class>
   </namespace>
 </circular_reference:api>

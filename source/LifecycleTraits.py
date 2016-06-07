@@ -87,6 +87,9 @@ class MoveSemantic(LifecycleTraitsBase):
         with self.indent_scope():
             self.put_line('SetObject(other.{object_var});'.format(object_var=Constants.object_var))
             self.put_line('other.SetObject(0);')
+        self.put_line('{class_name}(const {class_name}FwdPtr& forward_pointer)'.format(class_name=self.cur_class.m_name))
+        with self.indent_scope():
+            self.put_line('SetObject(forward_pointer.get_raw_pointer());')
 
 
 class RefCountedSemantic(LifecycleTraitsBase):
