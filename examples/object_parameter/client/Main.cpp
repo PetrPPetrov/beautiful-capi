@@ -24,15 +24,15 @@
 
 int main()
 {
-    Example::Document main_document;
+    Example::DocumentPtr main_document;
     main_document->Show();
 
-    Example::Page new_page;
+    Example::PagePtr new_page;
     main_document->SetPage(new_page);
     main_document->Show();
 
     {
-        Example::Page existing_page = main_document.GetPage();
+        Example::PagePtr existing_page = main_document.GetPage();
         existing_page->SetWidth(777);
         main_document->Show();
     }

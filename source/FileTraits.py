@@ -133,13 +133,13 @@ class MultipleFiles(FileTraitsBase):
     def __get_file_name_for_capi(self, namespace_path, join_traits):
         return join_traits.join(
             self.__get_file_name_base_for_namespace(namespace_path[0:1], join_traits),
-            namespace_path[0] + self.capi_generator.params_description.m_capi_suffix + '.h'
+            namespace_path[0] + self.capi_generator.params_description.m_capi_header_suffix + '.h'
         )
 
     def __get_file_name_for_fwd(self, namespace_path, join_traits):
         return join_traits.join(
             self.__get_file_name_base_for_namespace(namespace_path[0:1], join_traits),
-            namespace_path[0] + self.capi_generator.params_description.m_fwd_suffix + '.h'
+            namespace_path[0] + self.capi_generator.params_description.m_fwd_header_suffix + '.h'
         )
 
     def __get_file_name_for_class(self, namespace_path, cur_class, join_traits):

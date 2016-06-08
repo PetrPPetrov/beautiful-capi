@@ -31,7 +31,7 @@ class InheritanceTraitsBase(TraitsBase):
     def generate_constructor(self, constructor):
         self.capi_generator.cur_namespace_path.append(constructor.m_name)
         self.put_line('{class_name}({arguments_list})'.format(
-            class_name=self.cur_class.m_name,
+            class_name=self.cur_class.m_name + self.capi_generator.params_description.m_wrapper_class_suffix,
             arguments_list=', '.join(self.capi_generator.get_wrapped_argument_pairs(constructor.m_arguments))
         ))
         with self.indent_scope():

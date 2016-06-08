@@ -22,16 +22,16 @@
 #include <iostream>
 #include "Example.h"
 
-void show(Example::IShape shape)
+void show(Example::IShapePtr shape)
 {
     shape->Show();
 }
 
 int main()
 {
-    Example::IShape triangle = Example::CreateTriangle();
-    Example::IShape shape0(Example::CreateCircle());
-    Example::IShape shape1(Example::CreateRectangle());
+    Example::IShapePtr triangle = Example::CreateTriangle();
+    Example::IShapePtr shape0(Example::CreateCircle());
+    Example::IShapePtr shape1(Example::CreateRectangle());
 
     show(triangle);
     show(shape0);

@@ -29,7 +29,8 @@ class LifecycleTraitsBase(TraitsBase):
         super().__init__(cur_class, capi_generator)
 
     def generate_delete_destructor(self):
-        self.put_line('~{class_name}()'.format(class_name=self.cur_class.m_name))
+        self.put_line('~{class_name}()'.format(
+            class_name=self.cur_class.m_name + self.capi_generator.params_description.m_wrapper_class_suffix))
         with self.indent_scope():
             self.put_line('{delete_c_function}({object_var});'.format(
                 delete_c_function=self.capi_generator.get_namespace_id().lower() + Constants.delete_suffix,
@@ -46,13 +47,16 @@ class LifecycleTraitsBase(TraitsBase):
         self.put_source_line('')
 
     def generate_void_constructor(self):
-        self.put_line('explicit {class_name}(void *object_pointer)'.format(class_name=self.cur_class.m_name))
+        self.put_line('explicit {class_name}(void *object_pointer)'.format(
+            class_name=self.cur_class.m_name + self.capi_generator.params_description.m_wrapper_class_suffix))
         with self.indent_scope():
             self.put_line('SetObject(object_pointer);')
-        self.put_line('{class_name}* operator->()'.format(class_name=self.cur_class.m_name))
+        self.put_line('{class_name}* operator->()'.format(
+            class_name=self.cur_class.m_name + self.capi_generator.params_description.m_wrapper_class_suffix))
         with self.indent_scope():
             self.put_line('return this;')
-        self.put_line('const {class_name}* operator->() const'.format(class_name=self.cur_class.m_name))
+        self.put_line('const {class_name}* operator->() const'.format(
+            class_name=self.cur_class.m_name + self.capi_generator.params_description.m_wrapper_class_suffix))
         with self.indent_scope():
             self.put_line('return this;')
 
@@ -65,7 +69,8 @@ class CopySemantic(LifecycleTraitsBase):
         self.generate_delete_destructor()
 
     def generate_copy_constructor(self):
-        self.put_line('{class_name}(const {class_name}& other)'.format(class_name=self.cur_class.m_name))
+        self.put_line('{class_name}(const {class_name}& other)'.format(
+            class_name=self.cur_class.m_name + self.capi_generator.params_description.m_wrapper_class_suffix))
         with self.indent_scope():
             self.put_line('SetObject({copy_c_function}(other.{object_var}));'.format(
                 copy_c_function=self.capi_generator.get_namespace_id().lower() + Constants.copy_suffix,
@@ -89,11 +94,14 @@ class MoveSemantic(LifecycleTraitsBase):
         self.generate_delete_destructor()
 
     def generate_copy_constructor(self):
-        self.put_line('{class_name}({class_name}& other)'.format(class_name=self.cur_class.m_name))
+        self.put_line('{class_name}({class_name}& other)'.format(
+            class_name=self.cur_class.m_name + self.capi_generator.params_description.m_wrapper_class_suffix))
         with self.indent_scope():
             self.put_line('SetObject(other.{object_var});'.format(object_var=Constants.object_var))
             self.put_line('other.SetObject(0);')
-        self.put_line('{class_name}(const {class_name}FwdPtr& forward_pointer)'.format(class_name=self.cur_class.m_name))
+        self.put_line('{class_name}(const {fwd_class}& forward_pointer)'.format(
+            class_name=self.cur_class.m_name + self.capi_generator.params_description.m_wrapper_class_suffix,
+            fwd_class=self.cur_class.m_name + self.capi_generator.params_description.m_forward_typedef_suffix))
         with self.indent_scope():
             self.put_line('SetObject(forward_pointer.get_raw_pointer());')
 
@@ -104,7 +112,8 @@ class RefCountedSemantic(LifecycleTraitsBase):
 
     def generate_destructor(self):
         if not self.cur_class.m_base:
-            self.put_line('~{class_name}()'.format(class_name=self.cur_class.m_name))
+            self.put_line('~{class_name}()'.format(
+                class_name=self.cur_class.m_name + self.capi_generator.params_description.m_wrapper_class_suffix))
             with self.indent_scope():
                 self.put_line('{release_c_function}({object_var});'.format(
                     release_c_function=self.capi_generator.get_namespace_id().lower() + Constants.release_suffix,
@@ -121,7 +130,8 @@ class RefCountedSemantic(LifecycleTraitsBase):
             self.put_source_line('')
 
     def generate_copy_constructor(self):
-        self.put_line('{class_name}(const {class_name}& other)'.format(class_name=self.cur_class.m_name))
+        self.put_line('{class_name}(const {class_name}& other)'.format(
+            class_name=self.cur_class.m_name + self.capi_generator.params_description.m_wrapper_class_suffix))
         with self.indent_scope():
             self.put_line('SetObject(other.{object_var});'.format(object_var=Constants.object_var))
             self.put_line('{addref_c_function}({object_var});'.format(

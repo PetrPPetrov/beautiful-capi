@@ -24,7 +24,7 @@
 
 int main()
 {
-    HelloWorld::Printer printer;
+    HelloWorld::PrinterPtr printer;
     printer->Show();
 
     return EXIT_SUCCESS;

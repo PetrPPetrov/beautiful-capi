@@ -1,14 +1,12 @@
-*) add IsNull() and IsNotNull() methods to wrappers classes
+*) add IsNull() or is_null() and IsNotNull() or is_not_null() methods to wrappers classes, add options for these methods names
+*) add class suffix renaming tests or examples
 *) wrappers destructors should check if pointer null
 *) return values of class type should be normal wrapper if it is possible, or it should be forward_pointer_holder if it is circular reference
+*) add automatic inclusion of dependent files (i.e. if ClassA uses ClassB then ClassA.h should include ClassB.h) (?)
 *) object return type problem (addref or not) => add special flag for that
 *) access to implementation classes by -> operator instead of .
 *) add "copy" custom function, external helper function or "class member method"
-*) add "Ptr" suffix and constant for each generated wrapper class
-*) add "FwdPtr" constant
-*) add "FwdPtr" suffix option
 *) add raw_pointer semantic
-*) add automatic inclusion of dependent files (i.e. if ClassA uses ClassB then ClassA.h should include ClassB.h) (?)
 *) add clean pre-step: before any generation of include or AutoGenWrap file clean previous any existing files
 *) dynamic_cast support
 *) exception support, exception policies: don't handle exceptions, ellipse handling & std::exception (primitive), exceptions from list

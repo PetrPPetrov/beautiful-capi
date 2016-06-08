@@ -137,9 +137,12 @@ class CapiGenerator(object):
             if top_level_namespace:
                 self.__generate_forward_holder()
             for cur_class in namespace.m_classes:
-                self.output_header.put_line('class {0};'.format(cur_class.m_name))
+                self.output_header.put_line('class {0};'.format(
+                    cur_class.m_name + self.params_description.m_wrapper_class_suffix))
                 self.output_header.put_line(
-                    'typedef beautiful_capi::forward_pointer_holder<{0}> {0}FwdPtr;'.format(cur_class.m_name))
+                    'typedef beautiful_capi::forward_pointer_holder<{0}> {1};'.format(
+                        cur_class.m_name + self.params_description.m_wrapper_class_suffix,
+                        cur_class.m_name + self.params_description.m_forward_typedef_suffix))
             for nested_namespace in namespace.m_namespaces:
                 with NamespaceScope(self.cur_namespace_path, nested_namespace):
                     self.__generate_forwards(nested_namespace, False)
@@ -228,7 +231,8 @@ class CapiGenerator(object):
 
     def __generate_class(self, cur_class):
         self.loader_traits.add_impl_header(cur_class.m_implementation_class_header)
-        self.output_header.put_line('class {0}'.format(cur_class.m_name))
+        self.output_header.put_line('class {0}'.format(
+            cur_class.m_name + self.params_description.m_wrapper_class_suffix))
         with FileGenerator.IndentScope(self.output_header, '};'):
             with FileGenerator.Unindent(self.output_header):
                 self.output_header.put_line('protected:')
@@ -353,7 +357,10 @@ class CapiGenerator(object):
     def get_wrapped_return_instruction(self, type_name, rest_expression):
         if type_name:
             if self.__is_class_type(type_name):
-                return 'return {0}FwdPtr({1});'.format(type_name, rest_expression)
+                return 'return {result_type}{fwd_suffix}({rest_expr});'.format(
+                    result_type=type_name,
+                    fwd_suffix=self.params_description.m_forward_typedef_suffix,
+                    rest_expr=rest_expression)
             else:
                 return 'return {0};'.format(rest_expression)
         else:
@@ -361,12 +368,12 @@ class CapiGenerator(object):
 
     def get_wrapped_return_type(self, type_name):
         if self.__is_class_type(type_name):
-            return type_name + 'FwdPtr'
+            return type_name + self.params_description.m_forward_typedef_suffix
         return self.get_cpp_type(type_name)
 
     def get_wrapped_type(self, type_name):
         if self.__is_class_type(type_name):
-            return 'const {0}&'.format(type_name)
+            return 'const {0}&'.format(type_name + self.params_description.m_wrapper_class_suffix)
         else:
             return self.get_cpp_type(type_name)
 

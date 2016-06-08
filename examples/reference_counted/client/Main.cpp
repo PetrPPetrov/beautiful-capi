@@ -22,21 +22,21 @@
 #include <iostream>
 #include "Example.h"
 
-void f1(Example::Printer p)
+void f1(Example::PrinterPtr p)
 {
     p->Show("from f1()");
 }
 
-Example::Printer create_printer()
+Example::PrinterPtr create_printer()
 {
-    Example::Printer new_printer;
+    Example::PrinterPtr new_printer;
     new_printer->Show("from create_printer()");
     return new_printer;
 }
 
 int main()
 {
-    Example::Printer printer = create_printer();
+    Example::PrinterPtr printer = create_printer();
     printer->Show("from main()");
     f1(printer);
 
