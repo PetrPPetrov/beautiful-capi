@@ -21,43 +21,43 @@
 
 #include <iostream>
 #if test00
-#include "Example.h"
+#include "Example/Geometry/Brep/Body.h"
 #elif test01
-#include "Example/Example.h"
+#include "Example/Geometry/Brep/Body.h"
 #elif test02
-#include "Example.h"
+#include "Body.h"
 #elif test03
-#include "Example.h"
+#include "Body.h"
 #elif test04
-#include "Example.h"
+#include "Example/Geometry/Brep.h"
 #elif test05
-#include "Example/Example.h"
+#include "Example/Geometry/Brep/Brep.h"
 #elif test06
-#include "Example.h"
+#include "Brep.h"
 #elif test07
-#include "Example.h"
+#include "Brep.h"
 #elif test08
 #include "ExampleOneHeader.h"
 #endif
 
 
-void f1(Example::Printer p)
+void f1(Example::Geometry::Brep::Body p)
 {
-    p.Show("from f1()");
+    std::cout << "Name: " << p.GetName() << std::endl;
 }
 
-Example::Printer create_printer()
+Example::Geometry::Brep::Body create_body()
 {
-    Example::Printer new_printer;
-    new_printer.Show("from create_printer()");
-    return new_printer;
+    Example::Geometry::Brep::Body new_body;
+    new_body.SetName("new body");
+    return new_body;
 }
 
 int main()
 {
-    Example::Printer printer = create_printer();
-    printer.Show("from main()");
-    f1(printer);
+    Example::Geometry::Brep::Body body = create_body();
+    body.SetName("new name");
+    f1(body);
 
     return EXIT_SUCCESS;
 }
