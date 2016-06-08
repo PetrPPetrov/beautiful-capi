@@ -49,6 +49,12 @@ class LifecycleTraitsBase(TraitsBase):
         self.put_line('explicit {class_name}(void *object_pointer)'.format(class_name=self.cur_class.m_name))
         with self.indent_scope():
             self.put_line('SetObject(object_pointer);')
+        self.put_line('{class_name}* operator->()'.format(class_name=self.cur_class.m_name))
+        with self.indent_scope():
+            self.put_line('return this;')
+        self.put_line('const {class_name}* operator->() const'.format(class_name=self.cur_class.m_name))
+        with self.indent_scope():
+            self.put_line('return this;')
 
 
 class CopySemantic(LifecycleTraitsBase):

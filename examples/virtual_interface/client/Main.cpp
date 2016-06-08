@@ -24,7 +24,7 @@
 
 void show(Example::IShape shape)
 {
-    shape.Show();
+    shape->Show();
 }
 
 int main()

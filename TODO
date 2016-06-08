@@ -1,10 +1,10 @@
-*) impleted operator->() which returns this for wrapper classes, change all example to -> access operator
 *) add IsNull() and IsNotNull() methods to wrappers classes
 *) wrappers destructors should check if pointer null
 *) return values of class type should be normal wrapper if it is possible, or it should be forward_pointer_holder if it is circular reference
 *) object return type problem (addref or not) => add special flag for that
 *) access to implementation classes by -> operator instead of .
 *) add "copy" custom function, external helper function or "class member method"
+*) add "Ptr" suffix and constant for each generated wrapper class
 *) add "FwdPtr" constant
 *) add "FwdPtr" suffix option
 *) add raw_pointer semantic

@@ -25,7 +25,7 @@
 int main()
 {
     HelloWorld::Printer printer;
-    printer.Show();
+    printer->Show();
 
     return EXIT_SUCCESS;
 }

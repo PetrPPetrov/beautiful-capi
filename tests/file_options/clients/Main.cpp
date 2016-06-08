@@ -43,20 +43,20 @@
 
 void f1(Example::Geometry::Brep::Body p)
 {
-    std::cout << "Name: " << p.GetName() << std::endl;
+    std::cout << "Name: " << p->GetName() << std::endl;
 }
 
 Example::Geometry::Brep::Body create_body()
 {
     Example::Geometry::Brep::Body new_body;
-    new_body.SetName("new body");
+    new_body->SetName("new body");
     return new_body;
 }
 
 int main()
 {
     Example::Geometry::Brep::Body body = create_body();
-    body.SetName("new name");
+    body->SetName("new name");
     f1(body);
 
     return EXIT_SUCCESS;

@@ -24,20 +24,20 @@
 
 void f1(Example::Printer p)
 {
-    p.Show("from f1()");
+    p->Show("from f1()");
 }
 
 Example::Printer create_printer()
 {
     Example::Printer new_printer;
-    new_printer.Show("from create_printer()");
+    new_printer->Show("from create_printer()");
     return new_printer;
 }
 
 int main()
 {
     Example::Printer printer = create_printer();
-    printer.Show("from main()");
+    printer->Show("from main()");
     f1(printer);
 
     return EXIT_SUCCESS;
