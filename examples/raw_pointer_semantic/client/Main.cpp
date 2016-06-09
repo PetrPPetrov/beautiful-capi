@@ -39,6 +39,7 @@ int main()
     Example::PrinterPtr printer = create_printer();
     printer->Show("from main()");
     f1(printer);
+    printer->Delete(); // Manually delete this object, because it is non-owning raw pointer
 
     return EXIT_SUCCESS;
 }

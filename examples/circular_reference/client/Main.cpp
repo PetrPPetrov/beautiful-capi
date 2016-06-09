@@ -31,7 +31,8 @@ int main()
     Circular::ClassBPtr b_object1;
     a_object->SetB(b_object);
     b_object1->SetA(a_object1);
-    //TODO:
-    //a_object->GetB()->SetA(a_object1);
+    a_object->GetB()->SetA(a_object1);
+    Circular::ClassAPtr tmp_object = b_object1->GetA();
+    tmp_object->SetB(b_object);
     return EXIT_SUCCESS;
 }

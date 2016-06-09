@@ -55,7 +55,7 @@
   <xs:simpleType name="TLifecycle">
     <xs:restriction base="xs:string">
       <xs:enumeration value="copy_semantic"/>
-      <xs:enumeration value="move_semantic"/>
+      <xs:enumeration value="raw_pointer_semantic"/>
       <xs:enumeration value="reference_counted"/>
     </xs:restriction>
   </xs:simpleType>

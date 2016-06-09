@@ -17,6 +17,7 @@
     <xs:attribute name="wrapper_class_suffix" type="xs:string" use="optional" default="Ptr"/>
     <xs:attribute name="forward_typedef_suffix" type="xs:string" use="optional" default="FwdPtr"/>
     <xs:attribute name="is_null_method" type="xs:string" use="optional" default="IsNull"/>
-    <xs:attribute name="is_not_null_method" type="xs:string" use="optional" default="IsNotNull"/>    
+    <xs:attribute name="is_not_null_method" type="xs:string" use="optional" default="IsNotNull"/>
+    <xs:attribute name="delete_method" type="xs:string" use="optional" default="Delete"/>
   </xs:complexType>
 </xs:schema>

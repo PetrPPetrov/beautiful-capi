@@ -93,7 +93,7 @@ class CapiGenerator(object):
             for cur_class in namespace.m_classes:
                 self.file_traits.include_class_header(self.cur_namespace_path, cur_class)
 
-            if namespace.m_factory_functions or namespace.m_functions:
+            if namespace.m_functions:
                 self.output_header.put_line('')
                 with IfDefScope(self.output_header, '__cplusplus'):
                     for cur_namespace in self.cur_namespace_path:
@@ -168,11 +168,11 @@ class CapiGenerator(object):
                         self.output_header.put_line('reinterpret_cast<WrappedObjType*>(this)->~WrappedObjType();')
                 self.output_header.put_line('operator WrappedObjType()')
                 with FileGenerator.IndentScope(self.output_header):
-                    self.output_header.put_line('return WrappedObjType(m_pointer);')
+                    self.output_header.put_line('return WrappedObjType(m_pointer, true);')
                 self.output_header.put_line('WrappedObjType* operator->()')
                 with FileGenerator.IndentScope(self.output_header):
                     self.output_header.put_line('m_object_was_created = true;')
-                    self.output_header.put_line('return new(this) WrappedObjType(m_pointer);')
+                    self.output_header.put_line('return new(this) WrappedObjType(m_pointer, true);')
                 self.output_header.put_line('void* get_raw_pointer() const')
                 with FileGenerator.IndentScope(self.output_header):
                     self.output_header.put_line('return m_pointer;')
@@ -245,6 +245,7 @@ class CapiGenerator(object):
             for constructor in cur_class.m_constructors:
                 self.inheritance_traits.generate_constructor(constructor)
             self.lifecycle_traits.generate_destructor()
+            self.lifecycle_traits.generate_delete_method()
             for method in cur_class.m_methods:
                 self.__generate_method(method, cur_class)
 

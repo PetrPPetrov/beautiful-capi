@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<raw_pointer_semantic:api xmlns:raw_pointer_semantic="http://gkmsoft.ru/beautifulcapi">
+  <namespace name="Example">
+    <class name="Printer" lifecycle="raw_pointer_semantic" implementation_class_name="Example::PrinterImpl" implementation_class_header="PrinterImpl.h">
+      <constructor name="New"/>
+      <method name="Show">
+        <argument type="const char*" name="text"/>
+      </method>
+    </class>
+  </namespace>
+</raw_pointer_semantic:api>

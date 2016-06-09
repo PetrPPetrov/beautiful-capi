@@ -35,15 +35,15 @@ def string_to_bool(string_value):
 
 class TLifecycle(Enum):
     copy_semantic = 0
-    move_semantic = 1
+    raw_pointer_semantic = 1
     reference_counted = 2
 
     @staticmethod
     def load(value):
         if value == "copy_semantic":
             return TLifecycle.copy_semantic
-        if value == "move_semantic":
-            return TLifecycle.move_semantic
+        if value == "raw_pointer_semantic":
+            return TLifecycle.raw_pointer_semantic
         if value == "reference_counted":
             return TLifecycle.reference_counted
         raise ValueError
@@ -67,7 +67,6 @@ class TNamespace(object):
         self.m_namespaces = []
         self.m_classes = []
         self.m_functions = []
-        self.m_factory_functions = []
     
     def load(self, dom_node):
         for element in [node for node in dom_node.childNodes if node.nodeName == "namespace"]:
@@ -79,13 +78,9 @@ class TNamespace(object):
             new_element.load(element)
             self.m_classes.append(new_element)
         for element in [node for node in dom_node.childNodes if node.nodeName == "function"]:
-            new_element = TFactory()
+            new_element = TFunction()
             new_element.load(element)
             self.m_functions.append(new_element)
-        for element in [node for node in dom_node.childNodes if node.nodeName == "factory_function"]:
-            new_element = TFactory()
-            new_element.load(element)
-            self.m_factory_functions.append(new_element)
         if dom_node.hasAttribute("name"):
             cur_attr = dom_node.getAttribute("name")
             self.m_name = cur_attr
@@ -161,11 +156,10 @@ class TMethod(TConstructor):
             self.m_return = cur_attr
     
 
-class TFactory(TConstructor):
+class TFunction(TMethod):
     def __init__(self):
         super().__init__()
         self.m_implementation_name = ""
-        self.m_return = ""
         self.m_implementation_header = ""
     
     def load(self, dom_node):
@@ -173,9 +167,6 @@ class TFactory(TConstructor):
         if dom_node.hasAttribute("implementation_name"):
             cur_attr = dom_node.getAttribute("implementation_name")
             self.m_implementation_name = cur_attr
-        if dom_node.hasAttribute("return"):
-            cur_attr = dom_node.getAttribute("return")
-            self.m_return = cur_attr
         if dom_node.hasAttribute("implementation_header"):
             cur_attr = dom_node.getAttribute("implementation_header")
             self.m_implementation_header = cur_attr

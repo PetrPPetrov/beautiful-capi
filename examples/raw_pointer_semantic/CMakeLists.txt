@@ -18,17 +18,9 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-project(move_semantic_client)
+project(raw_pointer_semantic_example)
 
 cmake_minimum_required(VERSION 2.8)
 
-include_directories(${move_semantic_client_SOURCE_DIR}/../library/include)
-
-add_executable(move_semantic_client
-  ${move_semantic_client_SOURCE_DIR}/Main.cpp
-)
-
-if(TARGET move_semantic)
-  add_dependencies(move_semantic_client move_semantic)
-endif()
-target_link_libraries(move_semantic_client move_semantic)
+add_subdirectory(library)
+add_subdirectory(client)

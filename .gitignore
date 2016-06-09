@@ -6,7 +6,7 @@ build/
 /examples/hello_world/library/include/
 /examples/reference_counted/library/include/
 /examples/copy_semantic/library/include/
-/examples/move_semantic/library/include/
+/examples/raw_pointer_semantic/library/include/
 /examples/virtual_interface/library/include/
 /examples/single_file/library/include/
 /examples/object_parameter/library/include/

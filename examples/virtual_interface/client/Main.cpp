@@ -37,5 +37,10 @@ int main()
     show(shape0);
     show(shape1);
 
+    // Manually delete these objects, because they are non-owning raw pointers
+    triangle->Delete();
+    shape0->Delete();
+    shape1->Delete();
+
     return EXIT_SUCCESS;
 }
