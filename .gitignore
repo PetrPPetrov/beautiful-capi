@@ -11,5 +11,7 @@ build/
 /examples/single_file/library/include/
 /examples/object_parameter/library/include/
 /examples/circular_reference/library/include/
+/examples/custom_suffix/library/include/
 /tests/file_options/library/include/
 AutoGen*
+auto_gen*

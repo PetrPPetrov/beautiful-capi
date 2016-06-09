@@ -18,19 +18,17 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-project(examples)
+project(custom_suffix_client)
 
 cmake_minimum_required(VERSION 2.8)
 
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
-set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
+include_directories(${custom_suffix_client_SOURCE_DIR}/../library/include)
 
-add_subdirectory(hello_world)
-add_subdirectory(reference_counted)
-add_subdirectory(copy_semantic)
-add_subdirectory(move_semantic)
-add_subdirectory(virtual_interface)
-add_subdirectory(single_file)
-add_subdirectory(object_parameter)
-add_subdirectory(circular_reference)
-add_subdirectory(custom_suffix)
+add_executable(custom_suffix_client
+  ${custom_suffix_client_SOURCE_DIR}/Main.cpp
+)
+
+if(TARGET custom_suffix)
+  add_dependencies(custom_suffix_client custom_suffix)
+endif()
+target_link_libraries(custom_suffix_client custom_suffix)
