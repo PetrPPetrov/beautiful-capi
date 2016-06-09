@@ -11,6 +11,7 @@
 *) dynamic_cast support
 *) exception support, exception policies: don't handle exceptions, ellipse handling & std::exception (primitive), exceptions from list
 *) callbacks support
+*) template support
 *) flat type maps
 ===
 *) implement Dynamic traits for Windows
