@@ -38,6 +38,10 @@
 #include "Brep.h"
 #elif test08
 #include "ExampleOneHeader.h"
+#elif test09
+#include "Example/Example_forwards.h"
+#include "Example/Example_c_api.h"
+#include "Example/Geometry/Brep/Body.h"
 #endif
 
 
