@@ -45,6 +45,8 @@ class TBeautifulCapiParams(object):
         self.m_fwd_header_suffix = "Fwd"
         self.m_wrapper_class_suffix = "Ptr"
         self.m_forward_typedef_suffix = "FwdPtr"
+        self.m_is_null_method = "IsNull"
+        self.m_is_not_null_method = "IsNotNull"
         self.m_copyright_header = ""
         self.m_automatic_generated_warning = ""
     
@@ -85,6 +87,12 @@ class TBeautifulCapiParams(object):
         if dom_node.hasAttribute("forward_typedef_suffix"):
             cur_attr = dom_node.getAttribute("forward_typedef_suffix")
             self.m_forward_typedef_suffix = cur_attr
+        if dom_node.hasAttribute("is_null_method"):
+            cur_attr = dom_node.getAttribute("is_null_method")
+            self.m_is_null_method = cur_attr
+        if dom_node.hasAttribute("is_not_null_method"):
+            cur_attr = dom_node.getAttribute("is_not_null_method")
+            self.m_is_not_null_method = cur_attr
     
 
 def load(dom_node):

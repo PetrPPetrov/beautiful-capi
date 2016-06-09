@@ -51,6 +51,15 @@ class LifecycleTraitsBase(TraitsBase):
             class_name=self.cur_class.m_name + self.capi_generator.params_description.m_wrapper_class_suffix))
         with self.indent_scope():
             self.put_line('SetObject(object_pointer);')
+        self.put_line('bool {0}() const'.format(self.capi_generator.params_description.m_is_null_method))
+        with self.indent_scope():
+            self.put_line('return !{0};'.format(Constants.object_var))
+        self.put_line('bool {0}() const'.format(self.capi_generator.params_description.m_is_not_null_method))
+        with self.indent_scope():
+            self.put_line('return {0} != 0;'.format(Constants.object_var))
+        self.put_line('bool operator!() const')
+        with self.indent_scope():
+            self.put_line('return !{0};'.format(Constants.object_var))
         self.put_line('{class_name}* operator->()'.format(
             class_name=self.cur_class.m_name + self.capi_generator.params_description.m_wrapper_class_suffix))
         with self.indent_scope():

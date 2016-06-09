@@ -1,4 +1,3 @@
-*) add IsNull() or is_null() and IsNotNull() or is_not_null() methods to wrappers classes, add options for these methods names
 *) add class suffix renaming tests or examples
 *) wrappers destructors should check if pointer null
 *) return values of class type should be normal wrapper if it is possible, or it should be forward_pointer_holder if it is circular reference
