@@ -28,14 +28,20 @@ class LifecycleTraitsBase(TraitsBase):
     def __init__(self, cur_class, capi_generator):
         super().__init__(cur_class, capi_generator)
 
-    def generate_delete_destructor(self):
-        self.put_line('~{class_name}()'.format(
-            class_name=self.cur_class.m_name + self.capi_generator.params_description.m_wrapper_class_suffix))
+    def generate_delete_destructor_body(self):
+        self.put_line('if ({object_var})'.format(object_var=Constants.object_var))
         with self.indent_scope():
             self.put_line('{delete_c_function}({object_var});'.format(
                 delete_c_function=self.capi_generator.get_namespace_id().lower() + Constants.delete_suffix,
                 object_var=Constants.object_var
             ))
+            self.put_line('{object_var} = 0;'.format(object_var=Constants.object_var))
+
+    def generate_delete_destructor(self):
+        self.put_line('~{class_name}()'.format(
+            class_name=self.cur_class.m_name + self.capi_generator.params_description.m_wrapper_class_suffix))
+        with self.indent_scope():
+            self.generate_delete_destructor_body()
         c_function_declaration = 'void {delete_c_function}(void* object_pointer)'.format(
             delete_c_function=self.capi_generator.get_namespace_id().lower() + Constants.delete_suffix
         )
@@ -124,11 +130,7 @@ class RawPointerSemantic(LifecycleTraitsBase):
     def generate_delete_method(self):
         self.put_line('void {0}()'.format(self.capi_generator.params_description.m_delete_method))
         with self.indent_scope():
-            self.put_line('{delete_c_function}({object_var});'.format(
-                delete_c_function=self.capi_generator.get_namespace_id().lower() + Constants.delete_suffix,
-                object_var=Constants.object_var
-            ))
-            self.put_line('{object_var} = 0;'.format(object_var=Constants.object_var))
+            self.generate_delete_destructor_body()
         c_function_declaration = 'void {delete_c_function}(void* object_pointer)'.format(
             delete_c_function=self.capi_generator.get_namespace_id().lower() + Constants.delete_suffix
         )
