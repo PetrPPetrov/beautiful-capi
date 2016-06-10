@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 #
 # Beautiful Capi generates beautiful C API wrappers for your C++ classes
 # Copyright (C) 2015 Petr Petrovich Petrov
@@ -19,25 +18,17 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+project(boost_shared_ptr_client)
 
-def pascal_to_stl(pascal_name):
-    return ''.join(['_' + symbol.lower() if symbol.isupper() else symbol for symbol in pascal_name])
+cmake_minimum_required(VERSION 2.8)
 
+include_directories(${boost_shared_ptr_client_SOURCE_DIR}/../library/include)
 
-def get_self(cur_class):
-    if cur_class.m_pointer_access:
-        return '(*self)'
-    else:
-        return 'self'
+add_executable(boost_shared_ptr_client
+  ${boost_shared_ptr_client_SOURCE_DIR}/Main.cpp
+)
 
-
-class NamespaceScope(object):
-    def __init__(self, cur_namespace_path, cur_namespace):
-        self.cur_namespace_path = cur_namespace_path
-        self.cur_namespace = cur_namespace
-
-    def __enter__(self):
-        self.cur_namespace_path.append(self.cur_namespace.m_name)
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.cur_namespace_path.pop()
+if(TARGET boost_shared_ptr)
+  add_dependencies(boost_shared_ptr_client boost_shared_ptr)
+endif()
+target_link_libraries(boost_shared_ptr_client boost_shared_ptr)

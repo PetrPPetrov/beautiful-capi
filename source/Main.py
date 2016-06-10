@@ -275,8 +275,9 @@ class CapiGenerator(object):
                 self.output_source.put_line('{0}* self = static_cast<{0}*>(object_pointer);'.format(
                     cur_class.m_implementation_class_name
                 ))
-                self.output_source.put_line('{0}self->{1}({2});'.format(
+                self.output_source.put_line('{0}{1}->{2}({3});'.format(
                     self.get_c_return_instruction(method.m_return),
+                    Helpers.get_self(cur_class),
                     method.m_name,
                     ', '.join(self.get_c_to_original_arguments(method.m_arguments))
                 ))

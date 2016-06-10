@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<boost_shared_ptr:api xmlns:boost_shared_ptr="http://gkmsoft.ru/beautifulcapi">
+  <namespace name="Example">
+    <class name="PrinterSharedPtr" lifecycle="copy_semantic" pointer_access="true" implementation_class_name="Example::PrinterSharedPtr" implementation_class_header="PrinterImpl.h">
+      <constructor name="Default"/>
+      <method name="Show">
+        <argument type="const char*" name="text"/>
+      </method>
+    </class>
+  </namespace>
+</boost_shared_ptr:api>

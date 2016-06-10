@@ -1,5 +1,5 @@
-*) object return type problem (addref or not) => add special flag for that
 *) access to implementation classes by -> operator instead of .  Add example which wraps boost::shared_ptr smart pointer
+*) object return type problem (addref or not) => add special flag for that
 *) add "copy" custom function, external helper function or "class member method"
 *) add clean pre-step: before any generation of include or AutoGenWrap file clean previous any existing files
 *) dynamic_cast support

@@ -97,6 +97,7 @@ class TClass(object):
         self.m_implementation_class_header = ""
         self.m_lifecycle = TLifecycle.reference_counted
         self.m_requires_cast_to_base = True
+        self.m_pointer_access = False
         self.m_constructors = []
         self.m_methods = []
     
@@ -127,6 +128,9 @@ class TClass(object):
         if dom_node.hasAttribute("requires_cast_to_base"):
             cur_attr = dom_node.getAttribute("requires_cast_to_base")
             self.m_requires_cast_to_base = string_to_bool(cur_attr)
+        if dom_node.hasAttribute("pointer_access"):
+            cur_attr = dom_node.getAttribute("pointer_access")
+            self.m_pointer_access = string_to_bool(cur_attr)
     
 
 class TConstructor(object):
