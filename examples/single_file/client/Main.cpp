@@ -20,6 +20,7 @@
  */
 
 #include <iostream>
+#include <cstdlib>
 #include "ExampleAll.h"
 
 int main()

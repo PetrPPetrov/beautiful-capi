@@ -20,6 +20,7 @@
  */
 
 #include <iostream>
+#include <cstdlib>
 #include "Example.h"
 
 void show(Example::IShapePtr shape)

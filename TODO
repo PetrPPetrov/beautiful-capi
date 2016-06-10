@@ -1,6 +1,4 @@
-*) different wrapper class suffixes for raw_pointer_semantic, reference_counted and copy_semantic
-*) return values of class type should be normal wrapper if it is possible, or it should be forward_pointer_holder if it is circular reference
-*) add automatic inclusion of dependent files (i.e. if ClassA uses ClassB then ClassA.h should include ClassB.h) (?)
+*) different wrapper class suffixes for raw_pointer_semantic, reference_counted and copy_semantic (?)
 *) object return type problem (addref or not) => add special flag for that
 *) access to implementation classes by -> operator instead of .  Add example which wraps boost::shared_ptr smart pointer
 *) add "copy" custom function, external helper function or "class member method"
@@ -31,3 +29,5 @@
 *) inline optimization
 *) C++ modes: C++ 98, C++2003, C++2011, for wrappers and for internals
 *) add Python 2.7 support
+*) return values of class type should be normal wrapper if it is possible, or it should be forward_pointer_holder if it is circular reference (?)
+*) add automatic inclusion of dependent files (i.e. if ClassA uses ClassB then ClassA.h should include ClassB.h) (?)

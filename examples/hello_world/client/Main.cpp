@@ -20,6 +20,7 @@
  */
 
 #include <iostream>
+#include <cstdlib>
 #include "HelloWorld.h"
 
 int main()

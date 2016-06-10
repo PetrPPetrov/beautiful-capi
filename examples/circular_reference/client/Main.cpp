@@ -20,6 +20,7 @@
  */
 
 #include <iostream>
+#include <cstdlib>
 #include "Circular/ClassA.h"
 #include "Circular/ClassB.h"
 

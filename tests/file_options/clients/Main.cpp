@@ -20,6 +20,7 @@
  */
 
 #include <iostream>
+#include <cstdlib>
 #if test00
 #include "Example/Geometry/Brep/Body.h"
 #elif test01
