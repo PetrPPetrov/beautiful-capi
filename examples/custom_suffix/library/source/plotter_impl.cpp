@@ -20,19 +20,40 @@
  */
 
 #include <iostream>
-#include "printer_impl.h"
+#include "plotter_impl.h"
 
-hello_world::printer_impl::printer_impl()
+ // Newly created objects implies to have value 1 of reference counter
+hello_world::plotter_impl::plotter_impl() : reference_count(1)
 {
-    std::cout << "Printer ctor" << std::endl;
+    std::cout << "Plotter ctor" << std::endl;
 }
 
-hello_world::printer_impl::~printer_impl()
+hello_world::plotter_impl::~plotter_impl()
 {
-    std::cout << "Printer dtor" << std::endl;
+    std::cout << "Plotter dtor" << std::endl;
 }
 
-void hello_world::printer_impl::show() const
+void hello_world::plotter_impl::add_ref()
 {
-    std::cout << "Hello Beautiful World!" << std::endl;
+    if (this)
+    {
+        ++reference_count;
+    }
+}
+
+void hello_world::plotter_impl::release()
+{
+    if (this)
+    {
+        --reference_count;
+        if (reference_count <= 0)
+        {
+            delete this;
+        }
+    }
+}
+
+void hello_world::plotter_impl::draw() const
+{
+    std::cout << "plotter::draw()" << std::endl;
 }

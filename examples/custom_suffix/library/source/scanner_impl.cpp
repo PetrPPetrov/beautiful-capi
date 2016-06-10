@@ -20,19 +20,19 @@
  */
 
 #include <iostream>
-#include "printer_impl.h"
+#include "scanner_impl.h"
 
-hello_world::printer_impl::printer_impl()
+hello_world::scanner_impl::scanner_impl()
 {
-    std::cout << "Printer ctor" << std::endl;
+    std::cout << "Scanner ctor" << std::endl;
 }
 
-hello_world::printer_impl::~printer_impl()
+hello_world::scanner_impl::~scanner_impl()
 {
-    std::cout << "Printer dtor" << std::endl;
+    std::cout << "Scanner dtor" << std::endl;
 }
 
-void hello_world::printer_impl::show() const
+void hello_world::scanner_impl::scan()
 {
-    std::cout << "Hello Beautiful World!" << std::endl;
+    std::cout << "scanning is done." << std::endl;
 }

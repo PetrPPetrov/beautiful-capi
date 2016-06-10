@@ -23,16 +23,16 @@
 #include <cstdlib>
 #include "Example.h"
 
-void show(Example::IShapePtr shape)
+void show(Example::IShapeRawPtr shape)
 {
     shape->Show();
 }
 
 int main()
 {
-    Example::IShapePtr triangle = Example::CreateTriangle();
-    Example::IShapePtr shape0(Example::CreateCircle());
-    Example::IShapePtr shape1(Example::CreateRectangle());
+    Example::IShapeRawPtr triangle = Example::CreateTriangle();
+    Example::IShapeRawPtr shape0(Example::CreateCircle());
+    Example::IShapeRawPtr shape1(Example::CreateRectangle());
 
     show(triangle);
     show(shape0);

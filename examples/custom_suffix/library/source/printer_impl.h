@@ -19,16 +19,18 @@
  *
  */
 
-#ifndef BEAUTIFUL_CAPI_HELLO_WORLD_PRINTER_H
-#define BEAUTIFUL_CAPI_HELLO_WORLD_PRINTER_H
+#ifndef BEAUTIFUL_CAPI_PRINTER_H
+#define BEAUTIFUL_CAPI_PRINTER_H
 
 namespace hello_world
 {
     class printer_impl
     {
     public:
+        printer_impl();
+        ~printer_impl();
         void show() const;
     };
 }
 
-#endif /* BEAUTIFUL_CAPI_HELLO_WORLD_PRINTER_H */
+#endif /* BEAUTIFUL_CAPI_PRINTER_H */

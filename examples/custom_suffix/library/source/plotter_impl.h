@@ -19,20 +19,32 @@
  *
  */
 
-#include <iostream>
-#include "printer_impl.h"
+#ifndef BEAUTIFUL_CAPI_PLOTTER_H
+#define BEAUTIFUL_CAPI_PLOTTER_H
 
-hello_world::printer_impl::printer_impl()
+namespace hello_world
 {
-    std::cout << "Printer ctor" << std::endl;
+    class plotter_impl
+    {
+        int reference_count;
+    public:
+        plotter_impl();
+        ~plotter_impl();
+        void add_ref();
+        void release();
+    public:
+        void draw() const;
+    };
+
+    inline void intrusive_ptr_add_ref(plotter_impl* plotter)
+    {
+        plotter->add_ref();
+    }
+
+    inline void intrusive_ptr_release(plotter_impl* plotter)
+    {
+        plotter->release();
+    }
 }
 
-hello_world::printer_impl::~printer_impl()
-{
-    std::cout << "Printer dtor" << std::endl;
-}
-
-void hello_world::printer_impl::show() const
-{
-    std::cout << "Hello Beautiful World!" << std::endl;
-}
+#endif /* BEAUTIFUL_CAPI_PLOTTER_H */

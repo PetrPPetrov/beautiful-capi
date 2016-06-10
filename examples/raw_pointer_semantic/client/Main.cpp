@@ -23,21 +23,21 @@
 #include <cstdlib>
 #include "Example.h"
 
-void f1(Example::PrinterPtr p)
+void f1(Example::PrinterRawPtr p)
 {
     p->Show("from f1()");
 }
 
-Example::PrinterPtr create_printer()
+Example::PrinterRawPtr create_printer()
 {
-    Example::PrinterPtr new_printer;
+    Example::PrinterRawPtr new_printer;
     new_printer->Show("from create_printer()");
     return new_printer;
 }
 
 int main()
 {
-    Example::PrinterPtr printer = create_printer();
+    Example::PrinterRawPtr printer = create_printer();
     printer->Show("from main()");
     f1(printer);
     printer->Delete(); // Manually delete this object, because it is non-owning raw pointer

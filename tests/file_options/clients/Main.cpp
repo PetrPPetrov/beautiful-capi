@@ -46,23 +46,26 @@
 #endif
 
 
-void f1(Example::Geometry::Brep::BodyPtr body)
+void f1(Example::Geometry::Brep::Body body)
 {
-    std::cout << "Name: " << body->GetName() << std::endl;
+    std::cout << "Name: " << body.GetName() << std::endl;
+    body.SetName("modified name in object copy");
+    std::cout << "Name: " << body.GetName() << std::endl;
 }
 
-Example::Geometry::Brep::BodyPtr create_body()
+Example::Geometry::Brep::Body create_body()
 {
-    Example::Geometry::Brep::BodyPtr new_body;
-    new_body->SetName("new body");
+    Example::Geometry::Brep::Body new_body;
+    new_body.SetName("new body");
     return new_body;
 }
 
 int main()
 {
-    Example::Geometry::Brep::BodyPtr body = create_body();
-    body->SetName("new name");
+    Example::Geometry::Brep::Body body = create_body();
+    body.SetName("new name");
     f1(body);
+    std::cout << "Name: " << body.GetName() << std::endl;
 
     return EXIT_SUCCESS;
 }

@@ -19,20 +19,18 @@
  *
  */
 
-#include <iostream>
-#include "printer_impl.h"
+#ifndef BEAUTIFUL_CAPI_SCANNER_H
+#define BEAUTIFUL_CAPI_SCANNER_H
 
-hello_world::printer_impl::printer_impl()
+namespace hello_world
 {
-    std::cout << "Printer ctor" << std::endl;
+    class scanner_impl
+    {
+    public:
+        scanner_impl();
+        ~scanner_impl();
+        void scan();
+    };
 }
 
-hello_world::printer_impl::~printer_impl()
-{
-    std::cout << "Printer dtor" << std::endl;
-}
-
-void hello_world::printer_impl::show() const
-{
-    std::cout << "Hello Beautiful World!" << std::endl;
-}
+#endif /* BEAUTIFUL_CAPI_SCANNER_H */

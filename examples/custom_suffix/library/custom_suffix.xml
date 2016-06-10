@@ -5,5 +5,13 @@
       <constructor name="default"/>
       <method name="show"/>
     </class>
+    <class name="scanner" lifecycle="raw_pointer_semantic" implementation_class_name="hello_world::scanner_impl" implementation_class_header="scanner_impl.h">
+      <constructor name="default"/>
+      <method name="scan"/>
+    </class>
+    <class name="plotter" lifecycle="reference_counted" implementation_class_name="hello_world::plotter_impl" implementation_class_header="plotter_impl.h">
+      <constructor name="default"/>
+      <method name="draw"/>
+    </class>
   </namespace>
 </custom_suffix:api>

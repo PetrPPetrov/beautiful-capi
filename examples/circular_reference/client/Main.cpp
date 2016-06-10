@@ -26,14 +26,17 @@
 
 int main()
 {
-    Circular::ClassAPtr a_object;
-    Circular::ClassBPtr b_object;
-    Circular::ClassAPtr a_object1;
-    Circular::ClassBPtr b_object1;
-    a_object->SetB(b_object);
-    b_object1->SetA(a_object1);
-    a_object->GetB()->SetA(a_object1);
-    Circular::ClassAPtr tmp_object = b_object1->GetA();
-    tmp_object->SetB(b_object);
+    Circular::ClassA a_object;
+    Circular::ClassB b_object;
+    Circular::ClassA a_object1;
+    Circular::ClassB b_object1;
+
+    a_object.SetB(b_object);
+    b_object1.SetA(a_object1);
+
+    Circular::ClassA tmp_object = b_object1.GetA();
+    tmp_object.SetB(b_object);
+
+    a_object.GetB()->SetA(a_object1); // We need to use "->" operator here, as GetB() returns forward_pointer_holder<Circular::ClassB>
     return EXIT_SUCCESS;
 }

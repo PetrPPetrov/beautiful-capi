@@ -6,8 +6,12 @@
                namespace_header_at_parent_folder="false"
                dynamically_load_functions="false"
                capi_header_suffix="_capi" fwd_header_suffix="_fwd_ptr"
-               wrapper_class_suffix="_ptr" forward_typedef_suffix="_fwd_ptr"
-               is_null_method="is_null" is_not_null_method="is_not_null">
+               wrapper_class_suffix_copy_semantic=""
+               wrapper_class_suffix_reference_counted="_ptr"
+               wrapper_class_suffix_raw_pointer="_raw_ptr"
+               forward_typedef_suffix="_fwd_ptr"
+               is_null_method="is_null" is_not_null_method="is_not_null"
+               delete_method="deallocate">
   <copyright_header>/*
  * Beautiful Capi generates beautiful C API wrappers for your C++ classes
  * Copyright (C) 2015 Petr Petrovich Petrov

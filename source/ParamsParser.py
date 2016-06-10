@@ -43,7 +43,9 @@ class TBeautifulCapiParams(object):
         self.m_dynamically_load_functions = False
         self.m_capi_header_suffix = "Capi"
         self.m_fwd_header_suffix = "Fwd"
-        self.m_wrapper_class_suffix = "Ptr"
+        self.m_wrapper_class_suffix_copy_semantic = ""
+        self.m_wrapper_class_suffix_reference_counted = "Ptr"
+        self.m_wrapper_class_suffix_raw_pointer = "RawPtr"
         self.m_forward_typedef_suffix = "FwdPtr"
         self.m_is_null_method = "IsNull"
         self.m_is_not_null_method = "IsNotNull"
@@ -82,9 +84,15 @@ class TBeautifulCapiParams(object):
         if dom_node.hasAttribute("fwd_header_suffix"):
             cur_attr = dom_node.getAttribute("fwd_header_suffix")
             self.m_fwd_header_suffix = cur_attr
-        if dom_node.hasAttribute("wrapper_class_suffix"):
-            cur_attr = dom_node.getAttribute("wrapper_class_suffix")
-            self.m_wrapper_class_suffix = cur_attr
+        if dom_node.hasAttribute("wrapper_class_suffix_copy_semantic"):
+            cur_attr = dom_node.getAttribute("wrapper_class_suffix_copy_semantic")
+            self.m_wrapper_class_suffix_copy_semantic = cur_attr
+        if dom_node.hasAttribute("wrapper_class_suffix_reference_counted"):
+            cur_attr = dom_node.getAttribute("wrapper_class_suffix_reference_counted")
+            self.m_wrapper_class_suffix_reference_counted = cur_attr
+        if dom_node.hasAttribute("wrapper_class_suffix_raw_pointer"):
+            cur_attr = dom_node.getAttribute("wrapper_class_suffix_raw_pointer")
+            self.m_wrapper_class_suffix_raw_pointer = cur_attr
         if dom_node.hasAttribute("forward_typedef_suffix"):
             cur_attr = dom_node.getAttribute("forward_typedef_suffix")
             self.m_forward_typedef_suffix = cur_attr

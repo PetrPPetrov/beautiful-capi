@@ -1,8 +1,6 @@
-*) different wrapper class suffixes for raw_pointer_semantic, reference_counted and copy_semantic (?)
 *) object return type problem (addref or not) => add special flag for that
 *) access to implementation classes by -> operator instead of .  Add example which wraps boost::shared_ptr smart pointer
 *) add "copy" custom function, external helper function or "class member method"
-*) add raw_pointer semantic
 *) add clean pre-step: before any generation of include or AutoGenWrap file clean previous any existing files
 *) dynamic_cast support
 *) exception support, exception policies: don't handle exceptions, ellipse handling & std::exception (primitive), exceptions from list

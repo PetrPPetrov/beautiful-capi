@@ -21,24 +21,31 @@
 
 #include <iostream>
 #include <cstdlib>
-#include "hello_world/printer.h"
+#include "hello_world/hello_world.h"
 
 int main()
 {
-    hello_world::printer_ptr printer;
-    if (!printer)
+    hello_world::printer printer; // It has copy semantic (value semantic)
+    printer.show();
+
+    hello_world::scanner_raw_ptr scanner; // It has non-owning pointer (raw pointer) semantic
+    if (!scanner)
     {
-        std::cout << "Error, printer is null!" << std::endl;
+        std::cout << "Error, scanner is null!" << std::endl;
         return EXIT_FAILURE;
     }
-    if (printer->is_null())
+    scanner->scan();
+    scanner->deallocate(); // We need to manually deallocate object from non-owning pointer
+
+    hello_world::plotter_ptr plotter; // It has reference counted smart pointer semantic
+    if (plotter->is_null())
     {
-        std::cout << "Error, printer is null!" << std::endl;
+        std::cout << "Error, plotter is null!" << std::endl;
         return EXIT_FAILURE;
     }
-    if (printer->is_not_null())
+    if (plotter->is_not_null())
     {
-        printer->show();
+        plotter->draw();
     }
 
     return EXIT_SUCCESS;

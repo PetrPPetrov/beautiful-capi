@@ -38,4 +38,8 @@ add_library(custom_suffix SHARED
   ${custom_suffix_SOURCE_DIR}/source/auto_gen_wrap.cpp
   ${custom_suffix_SOURCE_DIR}/source/printer_impl.h
   ${custom_suffix_SOURCE_DIR}/source/printer_impl.cpp
+  ${custom_suffix_SOURCE_DIR}/source/scanner_impl.h
+  ${custom_suffix_SOURCE_DIR}/source/scanner_impl.cpp
+  ${custom_suffix_SOURCE_DIR}/source/plotter_impl.h
+  ${custom_suffix_SOURCE_DIR}/source/plotter_impl.cpp
 )
