@@ -1,10 +1,14 @@
 *) object return type problem (addref or not) => add special flag for that
 *) add "copy" custom function, external helper function or "class member method"
-*) add clean pre-step: before any generation of include or AutoGenWrap file clean previous any existing files
+*) add "create" custom function, external helper function for creation of new object instances
+*) add clean pre-step: before any generation of include or AutoGenWrap file clean previous any existing files (and command line argumen for removing the existing content)
+*) modules support (ability to include another XML API description file from the current API description XML)
 *) dynamic_cast support
 *) exception support, exception policies: don't handle exceptions, ellipse handling & std::exception (primitive), exceptions from list
 *) callbacks support
 *) template support
+*) standard module for wrapping STL classes (a huge topic, maybe start wrapping only some basic things)
+*) standard module for wrapping boost classes (a huge topic, maybe start wrapping only some basic things)
 *) flat type maps
 ===
 *) implement Dynamic traits for Windows
