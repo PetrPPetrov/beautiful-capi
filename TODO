@@ -1,4 +1,3 @@
-*) object return type problem (addref or not) => add special flag for that
 *) add "copy" custom function, external helper function or "class member method"
 *) add "create" custom function, external helper function for creation of new object instances
 *) add clean pre-step: before any generation of include or AutoGenWrap file clean previous any existing files (and command line argumen for removing the existing content)
