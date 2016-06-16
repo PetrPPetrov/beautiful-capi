@@ -22,7 +22,7 @@
 #include <iostream>
 #include "PrinterImpl.h"
 
-// Newly created objects implies to have value 1 of reference counter
+// By default newly created objects implies to have value 1 of reference counter
 Example::PrinterImpl::PrinterImpl() : mRefCount(1)
 {
     std::cout << "Printer ctor" << std::endl;

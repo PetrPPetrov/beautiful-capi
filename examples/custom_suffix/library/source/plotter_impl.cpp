@@ -22,7 +22,7 @@
 #include <iostream>
 #include "plotter_impl.h"
 
- // Newly created objects implies to have value 1 of reference counter
+// By default newly created objects implies to have value 1 of reference counter
 hello_world::plotter_impl::plotter_impl() : reference_count(1)
 {
     std::cout << "Plotter ctor" << std::endl;

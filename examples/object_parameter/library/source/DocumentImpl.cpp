@@ -22,7 +22,7 @@
 #include <iostream>
 #include "DocumentImpl.h"
 
-// Newly created objects implies to have value 1 of reference counter
+// By default newly created objects implies to have value 1 of reference counter
 Example::DocumentImpl::DocumentImpl() : mRefCount(1), mPage(0)
 {
     std::cout << "Document ctor" << std::endl;
@@ -69,9 +69,7 @@ void Example::DocumentImpl::Show() const
 
 Example::PageImpl* Example::DocumentImpl::GetPage() const
 {
-    PageImpl* result = mPage;
-    result->AddRef();
-    return result;
+    return mPage;
 }
 
 void Example::DocumentImpl::SetPage(PageImpl* page)

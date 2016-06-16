@@ -22,7 +22,7 @@
 #include <iostream>
 #include "PageImpl.h"
 
-// Newly created objects implies to have value 1 of reference counter
+// By default newly created objects implies to have value 1 of reference counter
 Example::PageImpl::PageImpl() : mRefCount(1), mWidth(200), mHeight(100)
 {
     std::cout << "Page ctor" << std::endl;
