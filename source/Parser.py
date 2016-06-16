@@ -136,6 +136,7 @@ class TClass(object):
 class TConstructor(object):
     def __init__(self):
         self.m_name = ""
+        self.m_return_value_add_ref = False
         self.m_arguments = []
     
     def load(self, dom_node):
@@ -146,6 +147,9 @@ class TConstructor(object):
         if dom_node.hasAttribute("name"):
             cur_attr = dom_node.getAttribute("name")
             self.m_name = cur_attr
+        if dom_node.hasAttribute("return_value_add_ref"):
+            cur_attr = dom_node.getAttribute("return_value_add_ref")
+            self.m_return_value_add_ref = string_to_bool(cur_attr)
     
 
 class TMethod(TConstructor):

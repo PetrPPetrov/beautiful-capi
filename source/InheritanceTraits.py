@@ -41,6 +41,8 @@ class InheritanceTraitsBase(TraitsBase):
                     self.capi_generator.get_c_from_wrapped_arguments_for_function(constructor.m_arguments)
                 )
             ))
+            if constructor.m_return_value_add_ref:
+                self.capi_generator.lifecycle_traits.generate_add_ref_for_constructor()
         c_function_declaration = 'void* {constructor_c_function}({arguments_list})'.format(
             constructor_c_function=self.capi_generator.get_namespace_id().lower(),
             arguments_list=', '.join(self.capi_generator.get_wrapped_argument_pairs(constructor.m_arguments))

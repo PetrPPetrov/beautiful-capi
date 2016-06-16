@@ -19,12 +19,18 @@
  *
  */
 
+#if defined(_WIN32) && defined(_DEBUG)
+#include <crtdbg.h>
+#endif
 #include <iostream>
 #include <cstdlib>
 #include "hello_world/hello_world.h"
 
 int main()
 {
+#if defined(_WIN32) && defined(_DEBUG)
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+#endif
     hello_world::printer printer; // It has copy semantic (value semantic)
     printer.show();
 

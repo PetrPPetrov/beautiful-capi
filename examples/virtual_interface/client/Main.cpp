@@ -19,6 +19,9 @@
  *
  */
 
+#if defined(_WIN32) && defined(_DEBUG)
+#include <crtdbg.h>
+#endif
 #include <iostream>
 #include <cstdlib>
 #include "Example.h"
@@ -30,6 +33,9 @@ void show(Example::IShapeRawPtr shape)
 
 int main()
 {
+#if defined(_WIN32) && defined(_DEBUG)
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+#endif
     Example::IShapeRawPtr triangle = Example::CreateTriangle();
     Example::IShapeRawPtr shape0(Example::CreateCircle());
     Example::IShapeRawPtr shape1(Example::CreateRectangle());

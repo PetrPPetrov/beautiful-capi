@@ -19,6 +19,9 @@
  *
  */
 
+#if defined(_WIN32) && defined(_DEBUG)
+#include <crtdbg.h>
+#endif
 #include <iostream>
 #include <cstdlib>
 #include "Circular/ClassA.h"
@@ -26,6 +29,9 @@
 
 int main()
 {
+#if defined(_WIN32) && defined(_DEBUG)
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+#endif
     Circular::ClassA a_object;
     Circular::ClassB b_object;
     Circular::ClassA a_object1;

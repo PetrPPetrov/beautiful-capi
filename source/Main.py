@@ -156,10 +156,11 @@ class CapiGenerator(object):
             with FileGenerator.IndentScope(self.output_header, '};'):
                 self.output_header.put_line('void* m_pointer;')
                 self.output_header.put_line('bool m_object_was_created;')
+                self.output_header.put_line('const bool m_add_ref;')
                 with FileGenerator.Unindent(self.output_header):
                     self.output_header.put_line('public:')
-                self.output_header.put_line('explicit forward_pointer_holder(void* pointer)')
-                self.output_header.put_line(' : m_object_was_created(false), m_pointer(pointer)')
+                self.output_header.put_line('forward_pointer_holder(void* pointer, bool add_ref)')
+                self.output_header.put_line(' : m_object_was_created(false), m_pointer(pointer), m_add_ref(add_ref)')
                 with FileGenerator.IndentScope(self.output_header):
                     pass
                 self.output_header.put_line('~forward_pointer_holder()')
@@ -169,11 +170,11 @@ class CapiGenerator(object):
                         self.output_header.put_line('reinterpret_cast<WrappedObjType*>(this)->~WrappedObjType();')
                 self.output_header.put_line('operator WrappedObjType()')
                 with FileGenerator.IndentScope(self.output_header):
-                    self.output_header.put_line('return WrappedObjType(m_pointer, true);')
+                    self.output_header.put_line('return WrappedObjType(m_pointer, m_add_ref);')
                 self.output_header.put_line('WrappedObjType* operator->()')
                 with FileGenerator.IndentScope(self.output_header):
                     self.output_header.put_line('m_object_was_created = true;')
-                    self.output_header.put_line('return new(this) WrappedObjType(m_pointer, true);')
+                    self.output_header.put_line('return new(this) WrappedObjType(m_pointer, m_add_ref);')
                 self.output_header.put_line('void* get_raw_pointer() const')
                 with FileGenerator.IndentScope(self.output_header):
                     self.output_header.put_line('return m_pointer;')
@@ -242,7 +243,7 @@ class CapiGenerator(object):
             with FileGenerator.Unindent(self.output_header):
                 self.output_header.put_line('public:')
             self.lifecycle_traits.generate_copy_constructor()
-            self.lifecycle_traits.generate_void_constructor()
+            self.lifecycle_traits.generate_std_methods()
             for constructor in cur_class.m_constructors:
                 self.inheritance_traits.generate_constructor(constructor)
             self.lifecycle_traits.generate_destructor()
@@ -263,7 +264,8 @@ class CapiGenerator(object):
                     '{c_function}({arguments})'.format(
                         c_function=self.get_namespace_id().lower(),
                         arguments=', '.join(self.get_c_from_wrapped_arguments(method.m_arguments))
-                    )
+                    ),
+                    method
                 ))
             c_function_declaration = '{return_type} {c_function}({arguments})'.format(
                 return_type=self.get_c_type(method.m_return),
@@ -297,7 +299,8 @@ class CapiGenerator(object):
                 '{c_function}({arguments})'.format(
                     c_function=c_function_name,
                     arguments=', '.join(self.get_c_from_wrapped_arguments_for_function(function.m_arguments))
-                )
+                ),
+                function
             ))
         self.output_header.put_line('')
         c_function_declaration = '{return_type} {c_function}({arguments})'.format(
@@ -357,13 +360,15 @@ class CapiGenerator(object):
         return type_name
 
     # Wrapped types
-    def get_wrapped_return_instruction(self, type_name, rest_expression):
+    def get_wrapped_return_instruction(self, type_name, rest_expression, method):
         if type_name:
             if self.__is_class_type(type_name):
-                return 'return {result_type}{fwd_suffix}({rest_expr});'.format(
+                return 'return {result_type}{fwd_suffix}({rest_expr}, {add_ref});'.format(
                     result_type=type_name,
                     fwd_suffix=self.params_description.m_forward_typedef_suffix,
-                    rest_expr=rest_expression)
+                    rest_expr=rest_expression,
+                    add_ref='true' if method.m_return_value_add_ref else 'false'
+                )
             else:
                 return 'return {0};'.format(rest_expression)
         else:

@@ -18,7 +18,14 @@
 *) implement Dynamic traits for Unix
 *) implement combined (dynamic & implib) mode
 ===
-*) write more examples and tests: hello_world, reference_counted, copy_semantic, move_semantic, virtual_interface, data_structures, shared_ptr, weak_ptr, dynamic_cast, dynamic_load, exceptions_basic, exceptions_list, single_load
+*) write more examples and tests:
+    +) interoperability example (the same source code works both outside of library and inside the library)
+    +) data_structures
+    +) weak_ptr
+    +) dynamic_cast
+    +) dynamic_load
+    +) exceptions_basic
+    +) exceptions_list
 *) develop automated testing system
 *) test various cases: single_file, namespace_at_folder, implib_dynamic_load, no_namespace_header, all params (the same test, only parameters xml are different)
 *) write documentation - manual and FAQ

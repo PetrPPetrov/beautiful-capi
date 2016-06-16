@@ -19,6 +19,9 @@
  *
  */
 
+#if defined(_WIN32) && defined(_DEBUG)
+#include <crtdbg.h>
+#endif
 #include <iostream>
 #include <cstdlib>
 #if test00
@@ -62,6 +65,9 @@ Example::Geometry::Brep::Body create_body()
 
 int main()
 {
+#if defined(_WIN32) && defined(_DEBUG)
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+#endif
     Example::Geometry::Brep::Body body = create_body();
     body.SetName("new name");
     f1(body);

@@ -19,12 +19,19 @@
  *
  */
 
+#if defined(_WIN32) && defined(_DEBUG)
+#include <crtdbg.h>
+#endif
 #include <iostream>
 #include <cstdlib>
 #include "Example/Example.h"
 
+
 int main()
 {
+#if defined(_WIN32) && defined(_DEBUG)
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+#endif
     Example::DocumentPtr main_document;
     main_document->Show();
 
