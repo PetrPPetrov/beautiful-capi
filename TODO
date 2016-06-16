@@ -2,6 +2,7 @@
 *) add "create" custom function, external helper function for creation of new object instances
 *) add clean pre-step: before any generation of include or AutoGenWrap file clean previous any existing files (and command line argumen for removing the existing content)
 *) modules support (ability to include another XML API description file from the current API description XML)
+
 *) dynamic_cast support
 *) exception support, exception policies: don't handle exceptions, ellipse handling & std::exception (primitive), exceptions from list
 *) callbacks support
@@ -16,6 +17,7 @@
 *) avoid duplicated include files (implementation_header)
 *) implement Dynamic traits for Unix
 *) implement combined (dynamic & implib) mode
+*) shuffle Capi mode
 ===
 *) write more examples and tests:
     +) interoperability example (the same source code works both outside of library and inside the library)
