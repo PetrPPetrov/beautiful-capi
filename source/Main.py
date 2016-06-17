@@ -30,7 +30,8 @@ from CfunctionTraits import CreateLoaderTraits
 from FileTraits import CreateFileTraits
 from FileGenerator import WatchdogScope
 from FileGenerator import IfDefScope
-from DownCast import generate_down_casts_for_namespace
+from CapiFwd import process_capi
+from CapiFwd import process_fwd
 import FileGenerator
 import Parser
 import ParamsParser
@@ -81,8 +82,8 @@ class CapiGenerator(object):
         self.output_header.put_automatic_generation_warning(self.params_description.m_automatic_generated_warning)
 
         with WatchdogScope(self.output_header, '{0}_INCLUDED'.format(self.get_namespace_id().upper())):
-            self.__process_capi()
-            self.__process_fwd(namespace)
+            process_capi(self)
+            process_fwd(self, namespace)
             self.loader_traits.add_impl_header(namespace.m_implementation_header)
 
             for cur_namespace in namespace.m_namespaces:
@@ -105,80 +106,6 @@ class CapiGenerator(object):
                     for cur_namespace in self.cur_namespace_path:
                         self.output_header.put_line('}', '')
                     self.output_header.put_line('')
-
-    def __process_capi(self):
-        if len(self.cur_namespace_path) == 1:
-            self.output_header = self.file_traits.get_file_for_capi(self.cur_namespace_path)
-            self.output_header.put_copyright_header(self.params_description.m_copyright_header)
-            self.output_header.put_automatic_generation_warning(self.params_description.m_automatic_generated_warning)
-            with WatchdogScope(self.output_header, '{0}_CAPI_INCLUDED'.format(self.get_namespace_id().upper())):
-                self.loader_traits.generate_c_functions_declarations()
-        self.output_header = self.file_traits.get_file_for_namespace(self.cur_namespace_path)
-        self.file_traits.include_capi_header(self.cur_namespace_path)
-
-    def __process_fwd(self, namespace):
-        if len(self.cur_namespace_path) == 1:
-            self.output_header = self.file_traits.get_file_for_fwd(self.cur_namespace_path)
-            self.output_header.put_copyright_header(self.params_description.m_copyright_header)
-            self.output_header.put_automatic_generation_warning(self.params_description.m_automatic_generated_warning)
-            with WatchdogScope(self.output_header, '{0}_FWD_INCLUDED'.format(self.get_namespace_id().upper())):
-                self.output_header.put_line('')
-                with IfDefScope(self.output_header, '__cplusplus'):
-                    self.output_header.put_line('#include <memory>')
-                    self.output_header.put_line('')
-                    self.__generate_forwards(namespace, True)
-                    generate_down_casts_for_namespace(self.output_header, namespace, self)
-        self.output_header = self.file_traits.get_file_for_namespace(self.cur_namespace_path)
-        self.file_traits.include_fwd_header(self.cur_namespace_path)
-
-    def __generate_forwards(self, namespace, top_level_namespace):
-        self.output_header.put_line('namespace {0}'.format(namespace.m_name))
-        with FileGenerator.IndentScope(self.output_header):
-            if top_level_namespace:
-                self.__generate_forward_holder()
-            for cur_class in namespace.m_classes:
-                with CreateLifecycleTraits(cur_class, self):
-                    self.output_header.put_line('class {0};'.format(
-                        cur_class.m_name + self.lifecycle_traits.get_suffix()))
-                    self.output_header.put_line(
-                        'typedef beautiful_capi::forward_pointer_holder<{0}> {1};'.format(
-                            cur_class.m_name + self.lifecycle_traits.get_suffix(),
-                            cur_class.m_name + self.params_description.m_forward_typedef_suffix))
-            for nested_namespace in namespace.m_namespaces:
-                with NamespaceScope(self.cur_namespace_path, nested_namespace):
-                    self.__generate_forwards(nested_namespace, False)
-
-    def __generate_forward_holder(self):
-        self.output_header.put_line('namespace beautiful_capi')
-        with FileGenerator.IndentScope(self.output_header):
-            self.output_header.put_line('template<typename WrappedObjType>')
-            self.output_header.put_line('class forward_pointer_holder')
-            with FileGenerator.IndentScope(self.output_header, '};'):
-                self.output_header.put_line('void* m_pointer;')
-                self.output_header.put_line('bool m_object_was_created;')
-                self.output_header.put_line('const bool m_add_ref;')
-                with FileGenerator.Unindent(self.output_header):
-                    self.output_header.put_line('public:')
-                self.output_header.put_line('forward_pointer_holder(void* pointer, bool add_ref)')
-                self.output_header.put_line(' : m_object_was_created(false), m_pointer(pointer), m_add_ref(add_ref)')
-                with FileGenerator.IndentScope(self.output_header):
-                    pass
-                self.output_header.put_line('~forward_pointer_holder()')
-                with FileGenerator.IndentScope(self.output_header):
-                    self.output_header.put_line('if (m_object_was_created)')
-                    with FileGenerator.IndentScope(self.output_header):
-                        self.output_header.put_line('reinterpret_cast<WrappedObjType*>(this)->~WrappedObjType();')
-                self.output_header.put_line('operator WrappedObjType()')
-                with FileGenerator.IndentScope(self.output_header):
-                    self.output_header.put_line('return WrappedObjType(m_pointer, m_add_ref);')
-                self.output_header.put_line('WrappedObjType* operator->()')
-                with FileGenerator.IndentScope(self.output_header):
-                    self.output_header.put_line('m_object_was_created = true;')
-                    self.output_header.put_line('return new(this) WrappedObjType(m_pointer, m_add_ref);')
-                self.output_header.put_line('void* get_raw_pointer() const')
-                with FileGenerator.IndentScope(self.output_header):
-                    self.output_header.put_line('return m_pointer;')
-        self.output_header.put_line('')
 
     def __process_class(self, cur_class):
         self.output_header = self.file_traits.get_file_for_class(self.cur_namespace_path, cur_class)
