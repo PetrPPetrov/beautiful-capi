@@ -315,7 +315,9 @@ class CapiGenerator(object):
 
     def get_wrapped_type(self, type_name):
         if self.__is_class_type(type_name):
-            return 'const {0}&'.format(type_name + self.lifecycle_traits.get_suffix())
+            cur_type = self.__get_class_type(type_name)
+            with CreateLifecycleTraits(cur_type, self):
+                return 'const {0}&'.format(type_name + self.lifecycle_traits.get_suffix())
         else:
             return self.get_cpp_type(type_name)
 

@@ -121,10 +121,11 @@ class CreateInheritanceTraits(object):
     def __init__(self, cur_class, capi_generator):
         self.cur_class = cur_class
         self.capi_generator = capi_generator
+        self.previous_inheritance_traits = capi_generator.inheritance_traits
 
     def __enter__(self):
         self.capi_generator.inheritance_traits = create_inheritance_traits(self.cur_class, self.capi_generator)
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         del self.capi_generator.inheritance_traits
-        self.capi_generator.inheritance_traits = None
+        self.capi_generator.inheritance_traits = self.previous_inheritance_traits
