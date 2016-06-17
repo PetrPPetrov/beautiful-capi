@@ -37,6 +37,12 @@ class LifecycleTraitsBase(TraitsBase):
             ))
             self.put_line('{object_var} = 0;'.format(object_var=Constants.object_var))
 
+    def get_base_init(self):
+        if self.cur_class.m_base:
+            return ' : {base_class_name}(0, false)'.format(base_class_name=self.cur_class.m_base + self.get_suffix())
+        else:
+            return ''
+
     def generate_delete_destructor(self):
         self.put_line('~{class_name}()'.format(
             class_name=self.cur_class.m_name + self.get_suffix()))
@@ -89,19 +95,22 @@ class CopySemantic(LifecycleTraitsBase):
         self.generate_delete_destructor()
 
     def generate_copy_constructor(self):
-        self.put_line('{class_name}(const {class_name}& other)'.format(
-            class_name=self.cur_class.m_name + self.get_suffix()))
+        self.put_line('{class_name}(const {class_name}& other){base_init}'.format(
+            class_name=self.cur_class.m_name + self.get_suffix(), base_init=self.get_base_init())
+        )
         with self.indent_scope():
             self.put_line('SetObject({copy_c_function}(other.{object_var}));'.format(
                 copy_c_function=self.capi_generator.get_namespace_id().lower() + Constants.copy_suffix,
                 object_var=Constants.object_var
             ))
-        self.put_line('{class_name}(void *object_pointer, bool /*add_ref*/)'.format(
-            class_name=self.cur_class.m_name + self.get_suffix()))
+        self.put_line('{class_name}(void *object_pointer, bool /*add_ref*/){base_init}'.format(
+            class_name=self.cur_class.m_name + self.get_suffix(), base_init=self.get_base_init())
+        )
         with self.indent_scope():
-            self.put_line('SetObject({copy_c_function}(object_pointer));'.format(
-                copy_c_function=self.capi_generator.get_namespace_id().lower() + Constants.copy_suffix
-            ))
+            # self.put_line('SetObject({copy_c_function}(object_pointer));'.format(
+            #     copy_c_function=self.capi_generator.get_namespace_id().lower() + Constants.copy_suffix
+            # ))
+            self.put_line('SetObject(object_pointer);')
         c_function_declaration = 'void* {copy_c_function}(void* object_pointer)'.format(
             copy_c_function=self.capi_generator.get_namespace_id().lower() + Constants.copy_suffix)
         self.capi_generator.loader_traits.add_c_function_declaration(c_function_declaration)
@@ -123,12 +132,12 @@ class RawPointerSemantic(LifecycleTraitsBase):
         pass
 
     def generate_copy_constructor(self):
-        self.put_line('{class_name}(const {class_name}& other)'.format(
-            class_name=self.cur_class.m_name + self.get_suffix()))
+        self.put_line('{class_name}(const {class_name}& other){base_init}'.format(
+            class_name=self.cur_class.m_name + self.get_suffix(), base_init=self.get_base_init()))
         with self.indent_scope():
             self.put_line('SetObject(other.{object_var});'.format(object_var=Constants.object_var))
-        self.put_line('{class_name}(void *object_pointer, bool /*add_ref*/)'.format(
-            class_name=self.cur_class.m_name + self.get_suffix()))
+        self.put_line('{class_name}(void *object_pointer, bool /*add_ref*/){base_init}'.format(
+            class_name=self.cur_class.m_name + self.get_suffix(), base_init=self.get_base_init()))
         with self.indent_scope():
             self.put_line('SetObject(object_pointer);')
 
@@ -174,19 +183,19 @@ class RefCountedSemantic(LifecycleTraitsBase):
             self.put_source_line('')
 
     def generate_copy_constructor(self):
-        self.put_line('{class_name}(const {class_name}& other)'.format(
-            class_name=self.cur_class.m_name + self.get_suffix()))
+        self.put_line('{class_name}(const {class_name}& other){base_init}'.format(
+            class_name=self.cur_class.m_name + self.get_suffix(), base_init=self.get_base_init()))
         with self.indent_scope():
             self.put_line('SetObject(other.{object_var});'.format(object_var=Constants.object_var))
             self.put_line('{addref_c_function}({object_var});'.format(
                 addref_c_function=self.capi_generator.get_namespace_id().lower() + Constants.addref_suffix,
                 object_var=Constants.object_var
             ))
-        self.put_line('{class_name}(void *object_pointer, bool add_ref)'.format(
-            class_name=self.cur_class.m_name + self.get_suffix()))
+        self.put_line('{class_name}(void *object_pointer, bool add_ref){base_init}'.format(
+            class_name=self.cur_class.m_name + self.get_suffix(), base_init=self.get_base_init()))
         with self.indent_scope():
             self.put_line('SetObject(object_pointer);'.format(object_var=Constants.object_var))
-            self.put_line('if (add_ref)')
+            self.put_line('if (add_ref && object_pointer)')
             with self.indent_scope():
                 self.put_line('{addref_c_function}(object_pointer);'.format(
                     addref_c_function=self.capi_generator.get_namespace_id().lower() + Constants.addref_suffix

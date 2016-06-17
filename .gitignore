@@ -13,6 +13,7 @@ build/
 /examples/circular_reference/library/include/
 /examples/custom_suffix/library/include/
 /examples/boost_shared_ptr/library/include/
+/examples/down_cast/library/include/
 /tests/file_options/library/include/
 AutoGen*
 auto_gen*

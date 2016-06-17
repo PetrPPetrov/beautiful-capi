@@ -19,8 +19,6 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import os
-import posixpath
 import argparse
 from xml.dom.minidom import parse
 from Helpers import NamespaceScope
@@ -32,6 +30,7 @@ from CfunctionTraits import CreateLoaderTraits
 from FileTraits import CreateFileTraits
 from FileGenerator import WatchdogScope
 from FileGenerator import IfDefScope
+from DownCast import generate_down_casts_for_namespace
 import FileGenerator
 import Parser
 import ParamsParser
@@ -128,6 +127,7 @@ class CapiGenerator(object):
                     self.output_header.put_line('#include <memory>')
                     self.output_header.put_line('')
                     self.__generate_forwards(namespace, True)
+                    generate_down_casts_for_namespace(self.output_header, namespace, self)
         self.output_header = self.file_traits.get_file_for_namespace(self.cur_namespace_path)
         self.file_traits.include_fwd_header(self.cur_namespace_path)
 
@@ -192,6 +192,11 @@ class CapiGenerator(object):
                     with WatchdogScope(self.output_header, '{0}_INCLUDED'.format(self.get_namespace_id().upper())):
                         self.file_traits.include_capi_header(self.cur_namespace_path)
                         self.file_traits.include_fwd_header(self.cur_namespace_path)
+                        if cur_class.m_base:
+                            base_class = self.__get_class_type(cur_class.m_base)
+                            path_to_class = cur_class.m_base.split('::')
+                            if base_class:
+                                self.file_traits.include_class_header(path_to_class[:-1], base_class)
                         self.__include_additional_capi_and_fwd(cur_class)
                         self.output_header.put_line('')
                         with IfDefScope(self.output_header, '__cplusplus'):
@@ -233,8 +238,10 @@ class CapiGenerator(object):
 
     def __generate_class(self, cur_class):
         self.loader_traits.add_impl_header(cur_class.m_implementation_class_header)
-        self.output_header.put_line('class {0}'.format(
-            cur_class.m_name + self.lifecycle_traits.get_suffix()))
+        self.output_header.put_line('class {0}{1}'.format(
+            cur_class.m_name + self.lifecycle_traits.get_suffix(),
+            ' : public ' + cur_class.m_base + self.lifecycle_traits.get_suffix() if cur_class.m_base else ''
+        ))
         with FileGenerator.IndentScope(self.output_header, '};'):
             with FileGenerator.Unindent(self.output_header):
                 self.output_header.put_line('protected:')

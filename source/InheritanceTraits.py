@@ -30,9 +30,10 @@ class InheritanceTraitsBase(TraitsBase):
 
     def generate_constructor(self, constructor):
         self.capi_generator.cur_namespace_path.append(constructor.m_name)
-        self.put_line('{class_name}({arguments_list})'.format(
+        self.put_line('{class_name}({arguments_list}){base_init}'.format(
             class_name=self.cur_class.m_name + self.capi_generator.lifecycle_traits.get_suffix(),
-            arguments_list=', '.join(self.capi_generator.get_wrapped_argument_pairs(constructor.m_arguments))
+            arguments_list=', '.join(self.capi_generator.get_wrapped_argument_pairs(constructor.m_arguments)),
+            base_init=self.capi_generator.lifecycle_traits.get_base_init()
         ))
         with self.indent_scope():
             self.put_line('SetObject({constructor_c_function}({arguments_list}));'.format(
@@ -69,17 +70,25 @@ class RequiresCastToBase(InheritanceTraitsBase):
         with self.indent_scope():
             self.put_line('{object_var} = object_pointer;'.format(object_var=Constants.object_var))
             if self.cur_class.m_base:
-                self.put_line('{base_class}::SetObject({cast_to_base}({object_var}));'.format(
-                    base_class=self.cur_class.m_base,
-                    cast_to_base=self.capi_generator.get_namespace_id().lower() + Constants.cast_to_base_suffix,
-                    object_var=Constants.object_var
-                ))
-                c_function_declaration = '{cast_to_base}(void* object_pointer)'.format(
+                self.put_line('if ({object_var})'.format(object_var=Constants.object_var))
+                with self.indent_scope():
+                    self.put_line('{base_class}::SetObject({cast_to_base}({object_var}));'.format(
+                        base_class=self.cur_class.m_base + self.capi_generator.lifecycle_traits.get_suffix(),
+                        cast_to_base=self.capi_generator.get_namespace_id().lower() + Constants.cast_to_base_suffix,
+                        object_var=Constants.object_var
+                    ))
+                self.put_line('else')
+                with self.indent_scope():
+                    self.put_line('{base_class}::SetObject(0);'.format(
+                        base_class=self.cur_class.m_base + self.capi_generator.lifecycle_traits.get_suffix()
+                    ))
+                c_function_declaration = 'void* {cast_to_base}(void* object_pointer)'.format(
                     cast_to_base=self.capi_generator.get_namespace_id().lower() + Constants.cast_to_base_suffix)
                 self.capi_generator.loader_traits.add_c_function_declaration(c_function_declaration)
                 with self.indent_scope_source():
-                    self.put_source_line('return static_cast<{0}*>(static_cast<{1}*>(object_pointer))'.format(
-                        self.cur_class.m_base, self.cur_class.m_implementation_class_name
+                    self.put_source_line('return static_cast<{0}*>(static_cast<{1}*>(object_pointer));'.format(
+                        self.cur_class.m_base,
+                        self.cur_class.m_implementation_class_name
                     ))
                 self.put_source_line('')
 
