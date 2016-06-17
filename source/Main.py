@@ -24,6 +24,7 @@ from xml.dom.minidom import parse
 from Helpers import NamespaceScope
 import Helpers
 from Constants import Constants
+from PreprocessClasses import process_beautiful_capi_root
 from LifecycleTraits import CreateLifecycleTraits
 from InheritanceTraits import CreateInheritanceTraits
 from CfunctionTraits import CreateLoaderTraits
@@ -52,10 +53,12 @@ class CapiGenerator(object):
         self.file_traits = None
         self.lifecycle_traits = None
         self.inheritance_traits = None
+        self.extra_info = {}
 
     def generate(self):
         self.params_description = ParamsParser.load(self.input_params)
         self.api_description = Parser.load(self.input_xml)
+        process_beautiful_capi_root(self.api_description, self)
         with CreateLoaderTraits(self):
             with CreateFileTraits(self):
                 self.output_source = FileGenerator.FileGenerator(self.output_wrap_file_name)
@@ -120,10 +123,10 @@ class CapiGenerator(object):
                         self.file_traits.include_capi_header(self.cur_namespace_path)
                         self.file_traits.include_fwd_header(self.cur_namespace_path)
                         if cur_class.m_base:
-                            base_class = self.__get_class_type(cur_class.m_base)
-                            path_to_class = cur_class.m_base.split('::')
-                            if base_class:
-                                self.file_traits.include_class_header(path_to_class[:-1], base_class)
+                            extra_info_entry = self.extra_info[cur_class]
+                            self.file_traits.include_class_header(
+                                extra_info_entry.full_name_array[:-1], extra_info_entry.base_class_object
+                            )
                         self.__include_additional_capi_and_fwd(cur_class)
                         self.output_header.put_line('')
                         with IfDefScope(self.output_header, '__cplusplus'):
@@ -260,7 +263,7 @@ class CapiGenerator(object):
         path_to_class = type_name.split('::')
         return self.__is_class_type_impl(path_to_class, self.api_description.m_namespaces)
 
-    def __get_class_type(self, type_name):
+    def get_class_type(self, type_name):
         path_to_class = type_name.split('::')
         return self.__get_class_type_impl(path_to_class, self.api_description.m_namespaces)
 
@@ -315,7 +318,7 @@ class CapiGenerator(object):
 
     def get_wrapped_type(self, type_name):
         if self.__is_class_type(type_name):
-            cur_type = self.__get_class_type(type_name)
+            cur_type = self.get_class_type(type_name)
             with CreateLifecycleTraits(cur_type, self):
                 return 'const {0}&'.format(type_name + self.lifecycle_traits.get_suffix())
         else:
@@ -339,7 +342,7 @@ class CapiGenerator(object):
             output_file.put_line('struct raw_pointer_holder { void* raw_pointer; };')
 
     def get_c_from_wrapped_argument(self, argument):
-        class_object = self.__get_class_type(argument.m_type)
+        class_object = self.get_class_type(argument.m_type)
         if class_object:
             return 'reinterpret_cast<const raw_pointer_holder*>(&{0})->raw_pointer'.format(argument.m_name)
         else:
@@ -372,7 +375,7 @@ class CapiGenerator(object):
 
     # C to original types
     def get_c_to_original_argument(self, argument):
-        class_object = self.__get_class_type(argument.m_type)
+        class_object = self.get_class_type(argument.m_type)
         if class_object:
             return 'static_cast<{0}*>({1})'.format(class_object.m_implementation_class_name, argument.m_name)
         else:
