@@ -25,7 +25,6 @@ from Helpers import NamespaceScope
 from LifecycleTraits import CreateLifecycleTraits
 from FileGenerator import WatchdogScope
 from FileGenerator import IfDefScope
-from DownCast import generate_down_casts_for_namespace
 
 
 def process_capi(capi_generator):
@@ -58,7 +57,6 @@ def process_fwd(capi_generator, namespace):
                 capi_generator.output_header.put_line('#include <memory>')
                 capi_generator.output_header.put_line('')
                 generate_forwards(capi_generator, namespace, True)
-                generate_down_casts_for_namespace(capi_generator.output_header, namespace, capi_generator)
     capi_generator.output_header = capi_generator.file_traits.get_file_for_namespace(capi_generator.cur_namespace_path)
     capi_generator.file_traits.include_fwd_header(capi_generator.cur_namespace_path)
 

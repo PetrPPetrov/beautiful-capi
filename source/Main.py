@@ -24,6 +24,7 @@ from xml.dom.minidom import parse
 from Helpers import NamespaceScope
 import Helpers
 from Constants import Constants
+from DownCast import generate_down_casts_for_namespace
 from PreprocessClasses import process_beautiful_capi_root
 from LifecycleTraits import CreateLifecycleTraits
 from InheritanceTraits import CreateInheritanceTraits
@@ -96,19 +97,24 @@ class CapiGenerator(object):
             for cur_class in namespace.m_classes:
                 self.file_traits.include_class_header(self.cur_namespace_path, cur_class)
 
-            if namespace.m_functions:
+            self.output_header.put_line('')
+            with IfDefScope(self.output_header, '__cplusplus'):
                 self.output_header.put_line('')
-                with IfDefScope(self.output_header, '__cplusplus'):
-                    for cur_namespace in self.cur_namespace_path:
-                        self.output_header.put_line('namespace {0} {{ '.format(cur_namespace), '')
-                    self.output_header.put_line('')
+                for cur_namespace in self.cur_namespace_path:
+                    self.output_header.put_line('namespace {0} {{ '.format(cur_namespace), '')
+
+                if namespace.m_functions:
                     self.output_header.put_line('')
                     for function in namespace.m_functions:
                         self.__process_function(function)
                     self.output_header.put_line('')
-                    for cur_namespace in self.cur_namespace_path:
-                        self.output_header.put_line('}', '')
-                    self.output_header.put_line('')
+
+                if len(self.cur_namespace_path) == 1:
+                    generate_down_casts_for_namespace(self.output_header, namespace, self)
+
+                for cur_namespace in self.cur_namespace_path:
+                    self.output_header.put_line('}', '')
+                self.output_header.put_line('')
 
     def __process_class(self, cur_class):
         self.output_header = self.file_traits.get_file_for_class(self.cur_namespace_path, cur_class)
@@ -195,7 +201,7 @@ class CapiGenerator(object):
                 method_name=method.m_name,
                 arguments=', '.join(self.get_wrapped_argument_pairs(method.m_arguments))))
             with FileGenerator.IndentScope(self.output_header):
-                self.__put_raw_pointer_structure_if_required(self.output_header, method.m_arguments)
+                self.put_raw_pointer_structure_if_required(self.output_header, method.m_arguments)
                 self.output_header.put_line(self.get_wrapped_return_instruction(
                     method.m_return,
                     '{c_function}({arguments})'.format(
@@ -230,7 +236,7 @@ class CapiGenerator(object):
             arguments=', '.join(self.get_wrapped_argument_pairs(function.m_arguments))))
         c_function_name = self.get_namespace_id().lower() + Helpers.pascal_to_stl(function.m_name)
         with FileGenerator.IndentScope(self.output_header):
-            self.__put_raw_pointer_structure_if_required(self.output_header, function.m_arguments)
+            self.put_raw_pointer_structure_if_required(self.output_header, function.m_arguments)
             self.output_header.put_line(self.get_wrapped_return_instruction(
                 function.m_return,
                 '{c_function}({arguments})'.format(
@@ -337,9 +343,9 @@ class CapiGenerator(object):
                 return True
         return False
 
-    def __put_raw_pointer_structure_if_required(self, output_file, arguments):
+    def put_raw_pointer_structure_if_required(self, output_file, arguments):
         if self.__is_raw_pointer_structure_required(arguments):
-            output_file.put_line('struct raw_pointer_holder { void* raw_pointer; };')
+            Helpers.put_raw_pointer_structure(output_file)
 
     def get_c_from_wrapped_argument(self, argument):
         class_object = self.get_class_type(argument.m_type)

@@ -31,6 +31,10 @@ def get_self(cur_class):
         return 'self'
 
 
+def put_raw_pointer_structure(output_file):
+    output_file.put_line('struct raw_pointer_holder { void* raw_pointer; };')
+
+
 class NamespaceScope(object):
     def __init__(self, cur_namespace_path, cur_namespace):
         self.cur_namespace_path = cur_namespace_path

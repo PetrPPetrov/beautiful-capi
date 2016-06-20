@@ -36,6 +36,9 @@ class ExtraInfo(object):
         with CreateLifecycleTraits(self.class_object, self.capi_generator):
             return '::'.join(self.full_name_array) + self.capi_generator.lifecycle_traits.get_suffix()
 
+    def get_fwd_class_name(self):
+        return '::'.join(self.full_name_array) + self.capi_generator.params_description.m_forward_typedef_suffix
+
     def get_c_name(self):
         return '_'.join(self.full_name_array).lower()
 

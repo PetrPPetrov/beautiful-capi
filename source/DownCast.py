@@ -20,22 +20,33 @@
 #
 
 import FileGenerator
+import Helpers
 from LifecycleTraits import CreateLifecycleTraits
 
 
 def generate_down_cast(output_file, cur_class, base_class, capi_generator):
     cur_class_extra_info = capi_generator.extra_info[cur_class]
     base_class_extra_info = capi_generator.extra_info[base_class]
-    output_file.put_line('/*template<>')
-    output_file.put_line('inline {return_type} down_cast(const {input_type}& input_object)'.format(
-        return_type=cur_class_extra_info.get_class_name(),
-        input_type=base_class_extra_info.get_class_name()
-    ))
+    output_file.put_line('template<>')
+    output_file.put_line(
+        'inline {return_type} down_cast(const {input_type}& input_object)'.format(
+            return_type=cur_class_extra_info.get_class_name(),
+            input_type=base_class_extra_info.get_class_name()
+        )
+    )
     with FileGenerator.IndentScope(output_file):
-        c_function_declaration = 'void* {0}_cast_to_{1}(void* object_pointer)'.format(
+        Helpers.put_raw_pointer_structure(output_file)
+        c_function_name = '{0}_cast_to_{1}'.format(
             base_class_extra_info.get_c_name(),
             cur_class_extra_info.get_c_name()
         )
+        output_file.put_line(
+            'return {0}({1}(reinterpret_cast<const raw_pointer_holder*>(&input_object)->raw_pointer), true);'.format(
+                cur_class_extra_info.get_class_name(),
+                c_function_name,
+            )
+        )
+        c_function_declaration = 'void* {0}(void* object_pointer)'.format(c_function_name)
         capi_generator.loader_traits.add_c_function_declaration(c_function_declaration)
         with FileGenerator.IndentScope(capi_generator.output_source):
             capi_generator.output_source.put_line(
@@ -45,7 +56,7 @@ def generate_down_cast(output_file, cur_class, base_class, capi_generator):
                 )
             )
         capi_generator.output_source.put_line('')
-    output_file.put_line('*/')
+    output_file.put_line('')
 
 
 def generate_down_casts_for_class(output_file, cur_class, capi_generator):
@@ -62,14 +73,11 @@ def generate_down_casts_for_class(output_file, cur_class, capi_generator):
 
 
 def generate_down_casts_for_namespace(output_file, namespace, capi_generator):
+    output_file.put_line('template<typename TargetType, typename SourceType>')
+    output_file.put_line('TargetType down_cast(const SourceType&);')
     output_file.put_line('')
-    output_file.put_line('namespace {0}'.format(namespace.m_name))
-    with FileGenerator.IndentScope(output_file):
-        output_file.put_line('template<typename TargetType, typename SourceType>')
-        output_file.put_line('TargetType down_cast(const SourceType&);')
-        output_file.put_line('')
-        for cur_class in namespace.m_classes:
-            with CreateLifecycleTraits(cur_class, capi_generator):
-                generate_down_casts_for_class(output_file, cur_class, capi_generator)
-        for nested_namespace in namespace.m_namespaces:
-            generate_down_casts_for_namespace(output_file, nested_namespace, capi_generator)
+    for cur_class in namespace.m_classes:
+        with CreateLifecycleTraits(cur_class, capi_generator):
+            generate_down_casts_for_class(output_file, cur_class, capi_generator)
+    for nested_namespace in namespace.m_namespaces:
+        generate_down_casts_for_namespace(output_file, nested_namespace, capi_generator)

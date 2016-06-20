@@ -26,9 +26,35 @@
 #include <cstdlib>
 #include "Example.h"
 
+using Example::down_cast;
+
 void show(Example::IShapePtr shape)
 {
     shape->Show();
+    if (down_cast<Example::IPolygonPtr>(shape)->IsNotNull())
+    {
+        std::cout << "IPolygon" << std::endl;
+        Example::IPolygonPtr polygon = down_cast<Example::IPolygonPtr>(shape);
+        std::cout << "number of points = " << polygon->GetPointsCount() << std::endl;
+    }
+    if (down_cast<Example::ITrianglePtr>(shape)->IsNotNull())
+    {
+        std::cout << "ITriangle" << std::endl;
+        Example::ITrianglePtr triangle = down_cast<Example::ITrianglePtr>(shape);
+        triangle->SetPoints(-1, 1, 5, 6, 10, 15);
+    }
+    if (down_cast<Example::ISquarePtr>(shape)->IsNotNull())
+    {
+        std::cout << "ISquare" << std::endl;
+        Example::ISquarePtr square = down_cast<Example::ISquarePtr>(shape);
+        square->SetSize(3.14);
+    }
+    if (down_cast<Example::ICirclePtr>(shape)->IsNotNull())
+    {
+        std::cout << "ICircle" << std::endl;
+        Example::ICirclePtr circle = down_cast<Example::ICirclePtr>(shape);
+        circle->SetRadius(7.77);
+    }
 }
 
 int main()
@@ -40,9 +66,16 @@ int main()
     Example::IShapePtr shape0(Example::CreateCircle());
     Example::IShapePtr shape1(Example::CreateSquare());
 
+    std::cout << std::endl << "The first pass." << std::endl;
     show(triangle);
     show(shape0);
     show(shape1);
 
+    std::cout << std::endl << "The second pass." << std::endl;
+    show(triangle);
+    show(shape0);
+    show(shape1);
+
+    std::cout << std::endl;
     return EXIT_SUCCESS;
 }

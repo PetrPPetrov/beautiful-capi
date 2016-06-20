@@ -4,6 +4,7 @@
 *) modules support (ability to include another XML API description file from the current API description XML)
 *) copy semantic return value test for memory leak and fix
 *) check for the life cycle semantic coherence with base class
+*) different default value for return_type_add_ref for constructors and methods
 
 *) dynamic_cast support
 *) exception support, exception policies: don't handle exceptions, ellipse handling & std::exception (primitive), exceptions from list
@@ -12,6 +13,11 @@
 *) standard module for wrapping STL classes (a huge topic, maybe start wrapping only some basic things)
 *) standard module for wrapping boost classes (a huge topic, maybe start wrapping only some basic things)
 *) flat type maps
+*) copy semantic interop
+*) validity checking and reporting:
+    +) circular inheritance
+    +) invalid base class
+    +) invalid argument types
 ===
 *) implement Dynamic traits for Windows
 *) const support for methods

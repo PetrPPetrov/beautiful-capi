@@ -28,5 +28,5 @@ class Constants(object):
     cast_to_base_suffix = '_cast_to_base'
     copy_suffix = '_copy'
     delete_suffix = '_delete'
-    addref_suffix = '_addref'
+    add_ref_suffix = '_add_ref'
     release_suffix = '_release'

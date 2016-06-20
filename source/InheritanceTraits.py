@@ -65,6 +65,20 @@ class RequiresCastToBase(InheritanceTraitsBase):
     def generate_pointer_declaration(self):
         self.capi_generator.output_header.put_line('void* {object_var};'.format(object_var=Constants.object_var))
 
+    def generate_destructor_body(self, terminate_c_function_name):
+        self.put_line('if ({object_var})'.format(object_var=Constants.object_var))
+        with self.indent_scope():
+            self.put_line('{delete_c_function}({object_var});'.format(
+                delete_c_function=terminate_c_function_name,
+                object_var=Constants.object_var
+            ))
+            self.put_line('SetObject(0);')
+
+    def generate_destructor(self, destructor_declaration, terminate_c_function_name):
+        self.put_line(destructor_declaration)
+        with self.indent_scope():
+            self.generate_destructor_body(terminate_c_function_name)
+
     def generate_set_object(self):
         self.put_line('void SetObject(void* object_pointer)')
         with self.indent_scope():
@@ -99,7 +113,17 @@ class SimpleCase(InheritanceTraitsBase):
 
     def generate_pointer_declaration(self):
         if not self.cur_class.m_base:
-            self.capi_generator.output_header.put_line('void* {object_var};'.format(object_var=Constants.object_var))
+            RequiresCastToBase(self.cur_class, self.capi_generator).generate_pointer_declaration()
+
+    def generate_destructor_body(self, terminate_c_function_name):
+        if not self.cur_class.m_base:
+            RequiresCastToBase(self.cur_class, self.capi_generator).generate_destructor_body(terminate_c_function_name)
+
+    def generate_destructor(self, destructor_declaration, terminate_c_function_name):
+        if not self.cur_class.m_base:
+            RequiresCastToBase(self.cur_class, self.capi_generator).generate_destructor(
+                destructor_declaration, terminate_c_function_name
+            )
 
     def generate_set_object(self):
         self.put_line('void SetObject(void* raw_pointer)')
