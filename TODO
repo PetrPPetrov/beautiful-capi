@@ -6,7 +6,6 @@
 *) check for the life cycle semantic coherence with base class
 *) different default value for return_type_add_ref for constructors and methods
 
-*) dynamic_cast support
 *) exception support, exception policies: don't handle exceptions, ellipse handling & std::exception (primitive), exceptions from list
 *) callbacks support
 *) template support
