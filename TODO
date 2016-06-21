@@ -17,6 +17,8 @@
     +) circular inheritance
     +) invalid base class
     +) invalid argument types
+*) move constructors if target language supports C++ 11
+*) assigment operator
 ===
 *) implement Dynamic traits for Windows
 *) const support for methods
