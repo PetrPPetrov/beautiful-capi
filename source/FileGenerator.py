@@ -20,6 +20,9 @@
 #
 
 
+import os
+
+
 class AtomicString(object):
     def __init__(self, string_value):
         self.value = string_value
@@ -42,6 +45,9 @@ class FileGenerator(object):
 
     def __write(self):
         if self.filename:
+            dir_name = os.path.dirname(self.filename)
+            if dir_name and not os.path.exists(dir_name):
+                os.makedirs(dir_name)
             with open(self.filename, 'w') as output_file:
                 if self.file_header:
                     output_file.write(self.file_header + '\n')
@@ -116,6 +122,10 @@ class FileGenerator(object):
     def put_automatic_generation_warning(self, warning_text):
         self.automatic_generation_warning = warning_text
 
+    def put_begin_cpp_comments(self, params_description):
+        self.put_copyright_header(params_description.m_copyright_header)
+        self.put_automatic_generation_warning(params_description.m_automatic_generated_warning)
+
 
 class Indent(object):
     def __init__(self, file_generator):
@@ -181,3 +191,16 @@ class IfDefScope(object):
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.file_generator.put_line('')
         self.file_generator.put_line('#endif /* {0} */'.format(self.condition_string))
+
+
+class NewFileScope(object):
+    def __init__(self, file_generator, capi_generator):
+        self.file_generator = file_generator
+        self.previous_file_generator = capi_generator.output_header
+        self.capi_generator = capi_generator
+
+    def __enter__(self):
+        self.capi_generator.output_header = self.file_generator
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.capi_generator.output_header = self.previous_file_generator

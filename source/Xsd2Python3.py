@@ -149,6 +149,7 @@ class SchemaGenerator(object):
                 field.getAttribute('name'),
                 self.__get_attribute_default_value(field)
         ))
+        self.output_file.put_line('self.m_{0}_filled = False'.format(field.getAttribute('name')))
 
     def __build_load(self, complex_type):
         for element in complex_type.getElementsByTagName('xs:element'):
@@ -195,6 +196,7 @@ class SchemaGenerator(object):
                     attribute.getAttribute('name'),
                     attribute.getAttribute('type')
                 ))
+            self.output_file.put_line('self.m_{0}_filled = True'.format(attribute.getAttribute('name')))
 
 
 def main():

@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://gkmsoft.ru/beautifulcapi-params" xmlns="http://gkmsoft.ru/beautifulcapi-params">
   <xs:element name="params" type="TBeautifulCapiParams"/>
+  <xs:simpleType name="TExceptionHandlingMode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="no_handling"/>
+      <xs:enumeration value="by_first_argument"/>
+    </xs:restriction>
+  </xs:simpleType>
   <xs:complexType name="TBeautifulCapiParams">
     <xs:sequence>
       <xs:element name="copyright_header" type="xs:string" minOccurs="0" maxOccurs="1"/>
@@ -21,5 +27,8 @@
     <xs:attribute name="is_null_method" type="xs:string" use="optional" default="IsNull"/>
     <xs:attribute name="is_not_null_method" type="xs:string" use="optional" default="IsNotNull"/>
     <xs:attribute name="delete_method" type="xs:string" use="optional" default="Delete"/>
+    <xs:attribute name="forward_holder_filename" type="xs:string" use="optional" default="beautiful_capi/forward_holder.h"/>
+    <xs:attribute name="check_and_throw_exception_filename" type="xs:string" use="optional" default="beautiful_capi/check_and_throw_exception.h"/>
+    <xs:attribute name="exception_handling_mode" type="TExceptionHandlingMode" use="optional" default="no_handling"/>
   </xs:complexType>
 </xs:schema>

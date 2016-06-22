@@ -5,6 +5,11 @@
 *) copy semantic return value test for memory leak and fix
 *) check for the life cycle semantic coherence with base class
 *) different default value for return_type_add_ref for constructors and methods
+*) single file mode: avoid double inclusion of the same header body
+*) single file mode: allow compilation with exceptions, circular references etc.
+*) use advances from introducing preprocess classes
+*) don't generate dynamic_casts if impl class is not polymorphic
+*) rename "noexcept" to "no_except"
 
 *) exception support, exception policies: don't handle exceptions, ellipse handling & std::exception (primitive), exceptions from list
 *) callbacks support
@@ -18,6 +23,7 @@
     +) invalid base class
     +) invalid argument types
 *) move constructors if target language supports C++ 11
+*) noexcept methods if target language supports C++ 11
 *) assigment operator
 ===
 *) implement Dynamic traits for Windows

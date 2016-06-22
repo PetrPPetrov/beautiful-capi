@@ -14,6 +14,8 @@ build/
 /examples/custom_suffix/library/include/
 /examples/boost_shared_ptr/library/include/
 /examples/down_cast/library/include/
+/examples/point_set/library/include/
+/examples/exception/library/include/
 /tests/file_options/library/include/
 AutoGen*
 auto_gen*

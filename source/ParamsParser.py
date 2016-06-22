@@ -33,6 +33,19 @@ def string_to_bool(string_value):
     return string_value.lower() in ["true", "on", "yes", "1"]
 
 
+class TExceptionHandlingMode(Enum):
+    no_handling = 0
+    by_first_argument = 1
+
+    @staticmethod
+    def load(value):
+        if value == "no_handling":
+            return TExceptionHandlingMode.no_handling
+        if value == "by_first_argument":
+            return TExceptionHandlingMode.by_first_argument
+        raise ValueError
+
+
 class TBeautifulCapiParams(object):
     def __init__(self):
         self.m_folder_per_namespace = True
@@ -50,6 +63,9 @@ class TBeautifulCapiParams(object):
         self.m_is_null_method = "IsNull"
         self.m_is_not_null_method = "IsNotNull"
         self.m_delete_method = "Delete"
+        self.m_forward_holder_filename = "beautiful_capi/forward_holder.h"
+        self.m_check_and_throw_exception_filename = "beautiful_capi/check_and_throw_exception.h"
+        self.m_exception_handling_mode = TExceptionHandlingMode.no_handling
         self.m_copyright_header = ""
         self.m_automatic_generated_warning = ""
     
@@ -105,6 +121,15 @@ class TBeautifulCapiParams(object):
         if dom_node.hasAttribute("delete_method"):
             cur_attr = dom_node.getAttribute("delete_method")
             self.m_delete_method = cur_attr
+        if dom_node.hasAttribute("forward_holder_filename"):
+            cur_attr = dom_node.getAttribute("forward_holder_filename")
+            self.m_forward_holder_filename = cur_attr
+        if dom_node.hasAttribute("check_and_throw_exception_filename"):
+            cur_attr = dom_node.getAttribute("check_and_throw_exception_filename")
+            self.m_check_and_throw_exception_filename = cur_attr
+        if dom_node.hasAttribute("exception_handling_mode"):
+            cur_attr = dom_node.getAttribute("exception_handling_mode")
+            self.m_exception_handling_mode = TExceptionHandlingMode.load(cur_attr)
     
 
 def load(dom_node):

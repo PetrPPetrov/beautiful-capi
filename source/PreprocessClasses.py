@@ -30,6 +30,7 @@ class ExtraInfo(object):
         self.capi_generator = capi_generator
         self.full_name_array = None
         self.base_class_object = None
+        self.derived_objects = []
         self.class_object = None
 
     def get_class_name(self):
@@ -53,8 +54,22 @@ def process_beautiful_capi_class(cur_class, cur_name_path, capi_generator):
             cur_base_class = capi_generator.get_class_type(cur_base_class_str)
             if cur_base_class:
                 extra_info_entry.base_class_object = cur_base_class
+                # Update derived_objects in base class
+                if cur_base_class in capi_generator.extra_info:
+                    # Case when base class was processed
+                    if cur_class not in capi_generator.extra_info[cur_base_class].derived_objects:
+                        capi_generator.extra_info[cur_base_class].derived_objects.append(cur_class)
+                else:
+                    # Case when base class wasn't processed yet, make dummy entry for it
+                    base_class_dummy_extra_info_entry = ExtraInfo(capi_generator)
+                    base_class_dummy_extra_info_entry.class_object = cur_base_class
+                    base_class_dummy_extra_info_entry.derived_objects.append(cur_class)
+                    capi_generator.extra_info.update({cur_base_class: base_class_dummy_extra_info_entry})
             else:
                 print('Warning: base class ("{0}") is not found'.format(cur_base_class_str))
+        # If dummy entry with derived_objects is exist then merge it
+        if cur_class in capi_generator.extra_info:
+            extra_info_entry.derived_objects += capi_generator.extra_info[cur_class].derived_objects
         capi_generator.extra_info.update({cur_class: extra_info_entry})
 
 
@@ -70,7 +85,7 @@ def process_beautiful_capi_namespace(cur_namespace, cur_name_path, capi_generato
             process_beautiful_capi_class(cur_class, cur_name_path, capi_generator)
 
 
-def process_beautiful_capi_root(root_node, capi_generator):
+def pre_process_beautiful_capi_root(root_node, capi_generator):
     cur_name_path = []
     for cur_namespace in root_node.m_namespaces:
         process_beautiful_capi_namespace(cur_namespace, cur_name_path, capi_generator)

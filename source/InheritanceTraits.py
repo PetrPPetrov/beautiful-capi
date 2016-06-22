@@ -19,9 +19,10 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import Helpers
+import Parser
 from Constants import Constants
 from TraitsBase import TraitsBase
+from ExceptionTraits import CreateExceptionTraits
 
 
 class InheritanceTraitsBase(TraitsBase):
@@ -29,33 +30,34 @@ class InheritanceTraitsBase(TraitsBase):
         super().__init__(cur_class, capi_generator)
 
     def generate_constructor(self, constructor):
-        self.capi_generator.cur_namespace_path.append(constructor.m_name)
-        self.put_line('{class_name}({arguments_list}){base_init}'.format(
-            class_name=self.cur_class.m_name + self.capi_generator.lifecycle_traits.get_suffix(),
-            arguments_list=', '.join(self.capi_generator.get_wrapped_argument_pairs(constructor.m_arguments)),
-            base_init=self.capi_generator.lifecycle_traits.get_base_init()
-        ))
-        with self.indent_scope():
-            self.put_line('SetObject({constructor_c_function}({arguments_list}));'.format(
-                constructor_c_function=self.capi_generator.get_namespace_id().lower(),
-                arguments_list=', '.join(
-                    self.capi_generator.get_c_from_wrapped_arguments_for_function(constructor.m_arguments)
+        with CreateExceptionTraits(constructor, self.cur_class, self.capi_generator):
+            self.capi_generator.cur_namespace_path.append(constructor.m_name)
+            self.put_line('{class_name}({arguments_list}){base_init}'.format(
+                class_name=self.cur_class.m_name + self.capi_generator.lifecycle_traits.get_suffix(),
+                arguments_list=', '.join(self.capi_generator.get_wrapped_argument_pairs(constructor.m_arguments)),
+                base_init=self.capi_generator.lifecycle_traits.get_base_init()
+            ))
+            with self.indent_scope():
+                self.capi_generator.exception_traits.generate_c_call(
+                    self.capi_generator.get_namespace_id().lower(),
+                    'SetObject({c_function}({arguments}))',
+                    True
                 )
-            ))
-            if constructor.m_return_value_add_ref:
-                self.capi_generator.lifecycle_traits.generate_add_ref_for_constructor()
-        c_function_declaration = 'void* {constructor_c_function}({arguments_list})'.format(
-            constructor_c_function=self.capi_generator.get_namespace_id().lower(),
-            arguments_list=', '.join(self.capi_generator.get_wrapped_argument_pairs(constructor.m_arguments))
-        )
-        self.capi_generator.loader_traits.add_c_function_declaration(c_function_declaration)
-        with self.indent_scope_source():
-            self.put_source_line('return new {0}({1});'.format(
-                self.cur_class.m_implementation_class_name,
-                ', '.join(self.capi_generator.get_c_to_original_arguments(constructor.m_arguments))
-            ))
-        self.put_source_line('')
-        self.capi_generator.cur_namespace_path.pop()
+                if constructor.m_return_value_add_ref:
+                    self.capi_generator.lifecycle_traits.generate_add_ref_for_constructor()
+            c_function_declaration = 'void* {constructor_c_function}({arguments_list})'.format(
+                constructor_c_function=self.capi_generator.get_namespace_id().lower(),
+                arguments_list=', '.join(self.capi_generator.exception_traits.get_c_argument_pairs_for_function())
+            )
+            self.capi_generator.loader_traits.add_c_function_declaration(c_function_declaration)
+            with self.indent_scope_source():
+                method_call = 'return new {0}({1});'.format(
+                    self.cur_class.m_implementation_class_name,
+                    ', '.join(self.capi_generator.get_c_to_original_arguments(constructor.m_arguments))
+                )
+                self.capi_generator.exception_traits.generate_implementation_call(method_call, 'void*')
+            self.put_source_line('')
+            self.capi_generator.cur_namespace_path.pop()
 
 
 class RequiresCastToBase(InheritanceTraitsBase):
@@ -68,10 +70,11 @@ class RequiresCastToBase(InheritanceTraitsBase):
     def generate_destructor_body(self, terminate_c_function_name):
         self.put_line('if ({object_var})'.format(object_var=Constants.object_var))
         with self.indent_scope():
-            self.put_line('{delete_c_function}({object_var});'.format(
-                delete_c_function=terminate_c_function_name,
-                object_var=Constants.object_var
-            ))
+            self.capi_generator.lifecycle_traits.delete_exception_traits.generate_c_call(
+                terminate_c_function_name,
+                '{c_function}({arguments})',
+                False
+            )
             self.put_line('SetObject(0);')
 
     def generate_destructor(self, destructor_declaration, terminate_c_function_name):
@@ -101,7 +104,7 @@ class RequiresCastToBase(InheritanceTraitsBase):
                 self.capi_generator.loader_traits.add_c_function_declaration(c_function_declaration)
                 with self.indent_scope_source():
                     self.put_source_line('return static_cast<{0}*>(static_cast<{1}*>(object_pointer));'.format(
-                        self.cur_class.m_base,
+                        self.capi_generator.extra_info[self.cur_class].base_class_object.m_implementation_class_name,
                         self.cur_class.m_implementation_class_name
                     ))
                 self.put_source_line('')
@@ -151,5 +154,4 @@ class CreateInheritanceTraits(object):
         self.capi_generator.inheritance_traits = create_inheritance_traits(self.cur_class, self.capi_generator)
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        del self.capi_generator.inheritance_traits
         self.capi_generator.inheritance_traits = self.previous_inheritance_traits

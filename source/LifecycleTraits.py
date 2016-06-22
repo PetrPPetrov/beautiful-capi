@@ -22,11 +22,28 @@
 import Parser
 from Constants import Constants
 from TraitsBase import TraitsBase
+from ExceptionTraits import create_exception_traits
 
 
 class LifecycleTraitsBase(TraitsBase):
     def __init__(self, cur_class, capi_generator):
         super().__init__(cur_class, capi_generator)
+        delete_method = Parser.TMethod()
+        delete_method.m_name = Constants.delete_suffix
+        delete_method.m_noexcept = True
+        if cur_class.m_delete_or_release_noexcept_filled:
+            delete_method.m_noexcept = cur_class.m_delete_or_release_noexcept
+        self.delete_exception_traits = create_exception_traits(delete_method, cur_class, capi_generator)
+        self.copy_method = Parser.TMethod()
+        self.copy_method.m_name = Constants.copy_suffix
+        other_arg = Parser.TArgument()
+        other_arg.m_type = 'void*'
+        other_arg.m_name = 'other.{0}'.format(Constants.object_var)
+        self.copy_method.m_arguments.append(other_arg)
+        self.copy_method.m_noexcept = False
+        if cur_class.m_copy_or_add_ref_noexcept_filled:
+            self.copy_method.m_noexcept = cur_class.m_copy_or_add_ref_noexcept
+        self.copy_exception_traits = create_exception_traits(self.copy_method, cur_class, capi_generator)
 
     def get_base_init(self):
         if self.cur_class.m_base:
@@ -42,14 +59,16 @@ class LifecycleTraitsBase(TraitsBase):
 
     def generate_delete_c_function(self):
         delete_c_function_name = self.get_delete_c_function_name()
-        c_function_declaration = 'void {delete_c_function}(void* object_pointer)'.format(
-            delete_c_function=delete_c_function_name
+        c_function_declaration = 'void {delete_c_function}({arguments_list})'.format(
+            delete_c_function=delete_c_function_name,
+            arguments_list=', '.join(self.delete_exception_traits.get_c_argument_pairs())
         )
         self.capi_generator.loader_traits.add_c_function_declaration(c_function_declaration)
         with self.indent_scope_source():
-            self.put_source_line('delete static_cast<{0}*>(object_pointer);'.format(
+            method_call = 'delete static_cast<{0}*>(object_pointer);'.format(
                 self.cur_class.m_implementation_class_name
-            ))
+            )
+            self.delete_exception_traits.generate_implementation_call(method_call, '')
         self.put_source_line('')
 
     def generate_std_methods(self):
@@ -96,24 +115,42 @@ class CopySemantic(LifecycleTraitsBase):
             class_name=self.cur_class.m_name + self.get_suffix(), base_init=self.get_base_init())
         )
         with self.indent_scope():
-            self.put_line('SetObject({copy_c_function}(other.{object_var}));'.format(
-                copy_c_function=self.capi_generator.get_namespace_id().lower() + Constants.copy_suffix,
-                object_var=Constants.object_var
-            ))
+            self.put_line('if (other.{object_var})'.format(object_var=Constants.object_var))
+            with self.indent_scope():
+                self.copy_exception_traits.generate_c_call(
+                    self.capi_generator.get_namespace_id().lower() + Constants.copy_suffix,
+                    'SetObject({c_function}({arguments}))',
+                    True
+                )
+            self.put_line('else')
+            with self.indent_scope():
+                self.put_line('SetObject(0);')
         self.put_line('{class_name}(void *object_pointer, bool /*add_ref*/){base_init}'.format(
             class_name=self.cur_class.m_name + self.get_suffix(), base_init=self.get_base_init())
         )
         with self.indent_scope():
-            self.put_line('SetObject({copy_c_function}(object_pointer));'.format(
-                copy_c_function=self.capi_generator.get_namespace_id().lower() + Constants.copy_suffix
-            ))
-        c_function_declaration = 'void* {copy_c_function}(void* object_pointer)'.format(
-            copy_c_function=self.capi_generator.get_namespace_id().lower() + Constants.copy_suffix)
+            self.copy_method.m_arguments[0].m_name = 'object_pointer'
+            self.put_line('SetObject(object_pointer);')
+            # self.put_line('if (object_pointer)'.format(object_var=Constants.object_var))
+            # with self.indent_scope():
+            #     self.copy_exception_traits.generate_c_call(
+            #         self.capi_generator.get_namespace_id().lower() + Constants.copy_suffix,
+            #         'SetObject({c_function}({arguments}))',
+            #         True
+            #     )
+            # self.put_line('else')
+            # with self.indent_scope():
+            #     self.put_line('SetObject(0);')
+        c_function_declaration = 'void* {copy_c_function}({arguments_list})'.format(
+            copy_c_function=self.capi_generator.get_namespace_id().lower() + Constants.copy_suffix,
+            arguments_list=', '.join(self.copy_exception_traits.get_c_argument_pairs_for_function())
+        )
         self.capi_generator.loader_traits.add_c_function_declaration(c_function_declaration)
         with self.indent_scope_source():
-            self.put_source_line('return new {0}(*static_cast<{0}*>(object_pointer));'.format(
+            method_call = 'return new {0}(*static_cast<{0}*>(object_pointer));'.format(
                 self.cur_class.m_implementation_class_name
-            ))
+            )
+            self.copy_exception_traits.generate_implementation_call(method_call, 'void*')
         self.put_source_line('')
 
 
@@ -148,6 +185,18 @@ class RawPointerSemantic(LifecycleTraitsBase):
 class RefCountedSemantic(LifecycleTraitsBase):
     def __init__(self, cur_class, capi_generator):
         super().__init__(cur_class, capi_generator)
+        release_method = Parser.TMethod()
+        release_method.m_name = Constants.release_suffix
+        release_method.m_noexcept = True
+        if cur_class.m_delete_or_release_noexcept_filled:
+            release_method.m_noexcept = cur_class.m_delete_or_release_noexcept
+        self.release_exception_traits = create_exception_traits(release_method, cur_class, capi_generator)
+        add_ref_method = Parser.TMethod()
+        add_ref_method.m_name = Constants.add_ref_suffix
+        add_ref_method.m_noexcept = True
+        if cur_class.m_copy_or_add_ref_noexcept_filled:
+            add_ref_method.m_noexcept = cur_class.m_copy_or_add_ref_noexcept
+        self.add_ref_exception_traits = create_exception_traits(add_ref_method, cur_class, capi_generator)
 
     def get_suffix(self):
         return self.capi_generator.params_description.m_wrapper_class_suffix_reference_counted
@@ -158,14 +207,16 @@ class RefCountedSemantic(LifecycleTraitsBase):
             self.get_destructor_declaration(),
             release_c_function_name
         )
-        c_function_declaration = 'void {release_c_function}(void* object_pointer)'.format(
-            release_c_function=release_c_function_name
+        c_function_declaration = 'void {release_c_function}({arguments_list})'.format(
+            release_c_function=release_c_function_name,
+            arguments_list=', '.join(self.release_exception_traits.get_c_argument_pairs())
         )
         self.capi_generator.loader_traits.add_c_function_declaration(c_function_declaration)
         with self.indent_scope_source():
-            self.put_source_line('intrusive_ptr_release(static_cast<{0}*>(object_pointer));'.format(
+            method_call = 'intrusive_ptr_release(static_cast<{0}*>(object_pointer));'.format(
                 self.cur_class.m_implementation_class_name
-            ))
+            )
+            self.release_exception_traits.generate_implementation_call(method_call, '')
         self.put_source_line('')
 
     def generate_copy_constructor(self):
@@ -173,34 +224,43 @@ class RefCountedSemantic(LifecycleTraitsBase):
             class_name=self.cur_class.m_name + self.get_suffix(), base_init=self.get_base_init()))
         with self.indent_scope():
             self.put_line('SetObject(other.{object_var});'.format(object_var=Constants.object_var))
-            self.put_line('{addref_c_function}({object_var});'.format(
-                addref_c_function=self.capi_generator.get_namespace_id().lower() + Constants.add_ref_suffix,
-                object_var=Constants.object_var
-            ))
+            self.add_ref_exception_traits.generate_c_call(
+                self.capi_generator.get_namespace_id().lower() + Constants.add_ref_suffix,
+                '{c_function}({arguments})',
+                False
+            )
         self.put_line('{class_name}(void *object_pointer, bool add_ref){base_init}'.format(
             class_name=self.cur_class.m_name + self.get_suffix(), base_init=self.get_base_init()))
         with self.indent_scope():
             self.put_line('SetObject(object_pointer);'.format(object_var=Constants.object_var))
             self.put_line('if (add_ref && object_pointer)')
             with self.indent_scope():
-                self.put_line('{addref_c_function}(object_pointer);'.format(
-                    addref_c_function=self.capi_generator.get_namespace_id().lower() + Constants.add_ref_suffix
-                ))
-        c_function_declaration = 'void {addref_c_function}(void* object_pointer)'.format(
-            addref_c_function=self.capi_generator.get_namespace_id().lower() + Constants.add_ref_suffix
+                self.add_ref_exception_traits.generate_c_call(
+                    self.capi_generator.get_namespace_id().lower() + Constants.add_ref_suffix,
+                    '{c_function}({arguments})',
+                    False
+                )
+        c_function_declaration = 'void {addref_c_function}({arguments_list})'.format(
+            addref_c_function=self.capi_generator.get_namespace_id().lower() + Constants.add_ref_suffix,
+            arguments_list=', '.join(self.add_ref_exception_traits.get_c_argument_pairs())
         )
         self.capi_generator.loader_traits.add_c_function_declaration(c_function_declaration)
         with self.indent_scope_source():
-            self.put_source_line('intrusive_ptr_add_ref(static_cast<{0}*>(object_pointer));'.format(
+            method_call = 'intrusive_ptr_add_ref(static_cast<{0}*>(object_pointer));'.format(
                 self.cur_class.m_implementation_class_name
-            ))
+            )
+            self.add_ref_exception_traits.generate_implementation_call(method_call, '')
         self.put_source_line('')
 
     def generate_add_ref_for_constructor(self):
-        self.put_line('{addref_c_function}({object_var});'.format(
-            addref_c_function=self.capi_generator.get_namespace_id().lower() + Constants.add_ref_suffix,
-            object_var=Constants.object_var
-        ))
+        with self.indent_scope():
+            # TODO: re-use the existing "exception_info" variable
+            self.put_line('/* TODO: re-use the existing "exception_info" variable */')
+            self.add_ref_exception_traits.generate_c_call(
+                self.capi_generator.get_namespace_id().lower() + Constants.add_ref_suffix,
+                '{c_function}({arguments})',
+                False
+            )
 
 
 str_to_lifecycle = {
@@ -226,5 +286,4 @@ class CreateLifecycleTraits(object):
         self.capi_generator.lifecycle_traits = create_lifecycle_traits(self.cur_class, self.capi_generator)
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        del self.capi_generator.lifecycle_traits
         self.capi_generator.lifecycle_traits = self.previous_lifecycle_traits

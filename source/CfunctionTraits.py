@@ -115,5 +115,4 @@ class CreateLoaderTraits(object):
         self.capi_generator.loader_traits = create_loader_traits(self.capi_generator)
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        del self.capi_generator.loader_traits
         self.capi_generator.loader_traits = self.previous_loader_traits

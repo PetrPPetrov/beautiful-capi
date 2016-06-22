@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<exception:api xmlns:exception="http://gkmsoft.ru/beautifulcapi">
+  <namespace name="Example">
+    <class name="Printer" lifecycle="copy_semantic" delete_or_release_noexcept="false" copy_or_add_ref_noexcept="false" implementation_class_name="Example::PrinterImpl" implementation_class_header="PrinterImpl.h">
+      <constructor name="New"/>
+      <method name="Show" return="const char*">
+        <argument type="const char*" name="text"/>
+      </method>
+      <method name="PowerOn"/>
+      <method name="PowerOff" noexcept="true"/>
+    </class>
+    <class name="Scanner" lifecycle="reference_counted" delete_or_release_noexcept="false" copy_or_add_ref_noexcept="false" implementation_class_name="Example::ScannerImpl" implementation_class_header="ScannerImpl.h">
+      <constructor name="New" return_value_add_ref="false"/>
+      <method name="ScanText" return="const char*"/>
+      <method name="PowerOn"/>
+      <method name="PowerOff" noexcept="true"/>
+    </class>
+  </namespace>
+  <namespace name="Exception">
+    <class name="Generic" exception="true" lifecycle="copy_semantic" implementation_class_name="Exception::GenericImpl" implementation_class_header="Exception/GenericImpl.h">
+      <constructor name="New"/>
+      <method name="GetErrorText" return="const char*" noexcept="true"/>
+    </class>
+    <class name="BadArgument" base="Exception::Generic" exception="true" lifecycle="copy_semantic" implementation_class_name="Exception::BadArgumentImpl" implementation_class_header="Exception/BadArgumentImpl.h">
+      <constructor name="New"/>
+      <method name="GetArgumentName" return="const char*" noexcept="true"/>
+    </class>
+    <class name="NullArgument" base="Exception::BadArgument" exception="true" lifecycle="copy_semantic" implementation_class_name="Exception::NullArgumentImpl" implementation_class_header="Exception/NullArgumentImpl.h">
+      <constructor name="New"/>
+    </class>
+    <class name="DivisionByZero" base="Exception::Generic" exception="true" lifecycle="copy_semantic" implementation_class_name="Exception::DivisionByZeroImpl" implementation_class_header="Exception/DivisionByZeroImpl.h">
+      <constructor name="New"/>
+    </class>
+  </namespace>
+</exception:api>
