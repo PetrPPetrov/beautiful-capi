@@ -173,8 +173,8 @@ class TConstructor(object):
     def __init__(self):
         self.m_name = ""
         self.m_name_filled = False
-        self.m_return_value_add_ref = False
-        self.m_return_value_add_ref_filled = False
+        self.m_return_copy_or_add_ref = False
+        self.m_return_copy_or_add_ref_filled = False
         self.m_noexcept = False
         self.m_noexcept_filled = False
         self.m_arguments = []
@@ -188,10 +188,10 @@ class TConstructor(object):
             cur_attr = dom_node.getAttribute("name")
             self.m_name = cur_attr
             self.m_name_filled = True
-        if dom_node.hasAttribute("return_value_add_ref"):
-            cur_attr = dom_node.getAttribute("return_value_add_ref")
-            self.m_return_value_add_ref = string_to_bool(cur_attr)
-            self.m_return_value_add_ref_filled = True
+        if dom_node.hasAttribute("return_copy_or_add_ref"):
+            cur_attr = dom_node.getAttribute("return_copy_or_add_ref")
+            self.m_return_copy_or_add_ref = string_to_bool(cur_attr)
+            self.m_return_copy_or_add_ref_filled = True
         if dom_node.hasAttribute("noexcept"):
             cur_attr = dom_node.getAttribute("noexcept")
             self.m_noexcept = string_to_bool(cur_attr)

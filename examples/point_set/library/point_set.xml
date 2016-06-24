@@ -61,7 +61,7 @@
                 <argument name="name" type="const char*"/>
             </method>
 
-            <method name="GetPoints" return="PointSet::Points" return_value_add_ref="true"/>
+            <method name="GetPoints" return="PointSet::Points"/>
             <method name="SetPoints">
                 <argument name="value" type="PointSet::Points"/>
             </method>

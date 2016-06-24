@@ -20,6 +20,9 @@
 #
 
 
+from Parser import TConstructor
+
+
 def pascal_to_stl(pascal_name):
     return ''.join(['_' + symbol.lower() if symbol.isupper() else symbol for symbol in pascal_name])
 
@@ -33,6 +36,20 @@ def get_self(cur_class):
 
 def put_raw_pointer_structure(output_file):
     output_file.put_line('struct raw_pointer_holder { void* raw_pointer; };')
+
+
+def get_return_copy_or_add_ref_default_value(constructor_or_method):
+    if type(constructor_or_method) is TConstructor:
+        return False
+    else:
+        return True
+
+
+def get_return_copy_or_add_ref(constructor_or_method):
+    if constructor_or_method.m_return_copy_or_add_ref_filled:
+        return constructor_or_method.m_return_copy_or_add_ref
+    else:
+        return get_return_copy_or_add_ref_default_value(constructor_or_method)
 
 
 class NamespaceScope(object):

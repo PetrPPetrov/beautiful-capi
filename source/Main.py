@@ -311,11 +311,11 @@ class CapiGenerator(object):
     def get_wrapped_result_var(self, type_name, rest_expression, method):
         if type_name:
             if self.__is_class_type(type_name):
-                return '{result_type}{fwd_suffix} result({rest_expr}, {add_ref});'.format(
+                return '{result_type}{fwd_suffix} result({rest_expr}, {copy_or_add_ref});'.format(
                     result_type=type_name,
                     fwd_suffix=self.params_description.m_forward_typedef_suffix,
                     rest_expr=rest_expression,
-                    add_ref='true' if method.m_return_value_add_ref else 'false'
+                    copy_or_add_ref='true' if Helpers.get_return_copy_or_add_ref(method) else 'false'
                 )
             else:
                 return '{0} result({1});'.format(type_name, rest_expression)
@@ -325,11 +325,11 @@ class CapiGenerator(object):
     def get_wrapped_return_instruction(self, type_name, rest_expression, method):
         if type_name:
             if self.__is_class_type(type_name):
-                return 'return {result_type}{fwd_suffix}({rest_expr}, {add_ref});'.format(
+                return 'return {result_type}{fwd_suffix}({rest_expr}, {copy_or_add_ref});'.format(
                     result_type=type_name,
                     fwd_suffix=self.params_description.m_forward_typedef_suffix,
                     rest_expr=rest_expression,
-                    add_ref='true' if method.m_return_value_add_ref else 'false'
+                    copy_or_add_ref='true' if Helpers.get_return_copy_or_add_ref(method) else 'false'
                 )
             else:
                 return 'return {0};'.format(rest_expression)

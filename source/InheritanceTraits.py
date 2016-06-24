@@ -19,10 +19,10 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import Parser
 from Constants import Constants
 from TraitsBase import TraitsBase
 from ExceptionTraits import CreateExceptionTraits
+from Helpers import get_return_copy_or_add_ref
 
 
 class InheritanceTraitsBase(TraitsBase):
@@ -43,8 +43,8 @@ class InheritanceTraitsBase(TraitsBase):
                     'SetObject({c_function}({arguments}))',
                     True
                 )
-                if constructor.m_return_value_add_ref:
-                    self.capi_generator.lifecycle_traits.generate_add_ref_for_constructor()
+                if get_return_copy_or_add_ref(constructor):
+                    self.capi_generator.lifecycle_traits.generate_copy_or_add_ref_for_constructor()
             c_function_declaration = 'void* {constructor_c_function}({arguments_list})'.format(
                 constructor_c_function=self.capi_generator.get_namespace_id().lower(),
                 arguments_list=', '.join(self.capi_generator.exception_traits.get_c_argument_pairs_for_function())

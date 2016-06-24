@@ -93,8 +93,15 @@ class LifecycleTraitsBase(TraitsBase):
     def generate_delete_method(self):
         pass
 
-    def generate_add_ref_for_constructor(self):
-        pass
+    def generate_copy_or_add_ref_for_constructor(self):
+        self.copy_method.m_arguments[0].m_name = Constants.object_var
+        self.put_line('if ({object_var})'.format(object_var=Constants.object_var))
+        with self.indent_scope():
+            self.copy_exception_traits.generate_c_call(
+                '_'.join(self.capi_generator.cur_namespace_path[:-1]).lower() + Constants.copy_suffix,
+                'SetObject({c_function}({arguments}))',
+                True
+            )
 
 
 class CopySemantic(LifecycleTraitsBase):
@@ -125,22 +132,21 @@ class CopySemantic(LifecycleTraitsBase):
             self.put_line('else')
             with self.indent_scope():
                 self.put_line('SetObject(0);')
-        self.put_line('{class_name}(void *object_pointer, bool /*add_ref*/){base_init}'.format(
+        self.put_line('{class_name}(void *object_pointer, bool copy_object){base_init}'.format(
             class_name=self.cur_class.m_name + self.get_suffix(), base_init=self.get_base_init())
         )
         with self.indent_scope():
             self.copy_method.m_arguments[0].m_name = 'object_pointer'
-            self.put_line('SetObject(object_pointer);')
-            # self.put_line('if (object_pointer)'.format(object_var=Constants.object_var))
-            # with self.indent_scope():
-            #     self.copy_exception_traits.generate_c_call(
-            #         self.capi_generator.get_namespace_id().lower() + Constants.copy_suffix,
-            #         'SetObject({c_function}({arguments}))',
-            #         True
-            #     )
-            # self.put_line('else')
-            # with self.indent_scope():
-            #     self.put_line('SetObject(0);')
+            self.put_line('if (object_pointer && copy_object)')
+            with self.indent_scope():
+                self.copy_exception_traits.generate_c_call(
+                    self.capi_generator.get_namespace_id().lower() + Constants.copy_suffix,
+                    'SetObject({c_function}({arguments}))',
+                    True
+                )
+            self.put_line('else')
+            with self.indent_scope():
+                self.put_line('SetObject(object_pointer);')
         c_function_declaration = 'void* {copy_c_function}({arguments_list})'.format(
             copy_c_function=self.capi_generator.get_namespace_id().lower() + Constants.copy_suffix,
             arguments_list=', '.join(self.copy_exception_traits.get_c_argument_pairs_for_function())
@@ -252,12 +258,12 @@ class RefCountedSemantic(LifecycleTraitsBase):
             self.add_ref_exception_traits.generate_implementation_call(method_call, '')
         self.put_source_line('')
 
-    def generate_add_ref_for_constructor(self):
+    def generate_copy_or_add_ref_for_constructor(self):
+        self.copy_method.m_arguments[0].m_name = Constants.object_var
+        self.put_line('if ({object_var})'.format(object_var=Constants.object_var))
         with self.indent_scope():
-            # TODO: re-use the existing "exception_info" variable
-            self.put_line('/* TODO: re-use the existing "exception_info" variable */')
             self.add_ref_exception_traits.generate_c_call(
-                self.capi_generator.get_namespace_id().lower() + Constants.add_ref_suffix,
+                '_'.join(self.capi_generator.cur_namespace_path[:-1]).lower() + Constants.add_ref_suffix,
                 '{c_function}({arguments})',
                 False
             )

@@ -36,7 +36,7 @@
       <xs:element name="argument" minOccurs="0" maxOccurs="unbounded" type="TArgument"/>
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required"/>
-    <xs:attribute name="return_value_add_ref" type="xs:boolean" use="optional" default="false"/>
+    <xs:attribute name="return_copy_or_add_ref" type="xs:boolean" use="optional" default="false"/>
     <xs:attribute name="noexcept" type="xs:boolean" use="optional" default="false"/>
   </xs:complexType>
   <xs:complexType name="TMethod">

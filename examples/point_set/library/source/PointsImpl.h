@@ -39,7 +39,7 @@ namespace PointSet
         void Reserve(size_t capacity) { mPoints.reserve(capacity); }
         void Resize(size_t size, PositionImpl* default_value) { mPoints.resize(size, *default_value); }
 
-        PositionImpl* GetElement(size_t index) { return new PositionImpl( mPoints[index] ); }
+        PositionImpl* GetElement(size_t index) { return &mPoints[index]; }
         void SetElement(size_t index, PositionImpl* value) { mPoints[index] = *value; }
         void PushBack(PositionImpl* value) { mPoints.push_back(*value); }
 

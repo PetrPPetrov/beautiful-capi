@@ -27,8 +27,8 @@
         <argument type="double" name="radius"/>
       </method>
     </class>
-    <function name="CreateTriangle" return="Example::IShape" implementation_name="Example::CreateTriangle" implementation_header="TriangleFactory.h"/>
-    <function name="CreateSquare" return="Example::IShape" implementation_name="Example::CreateSquare" implementation_header="SquareFactory.h"/>
-    <function name="CreateCircle" return="Example::IShape" implementation_name="Example::CreateCircle" implementation_header="CircleFactory.h"/>
+    <function name="CreateTriangle" return="Example::IShape" return_copy_or_add_ref="false" implementation_name="Example::CreateTriangle" implementation_header="TriangleFactory.h"/>
+    <function name="CreateSquare" return="Example::IShape" return_copy_or_add_ref="false" implementation_name="Example::CreateSquare" implementation_header="SquareFactory.h"/>
+    <function name="CreateCircle" return="Example::IShape" return_copy_or_add_ref="false" implementation_name="Example::CreateCircle" implementation_header="CircleFactory.h"/>
   </namespace>
 </down_cast:api>

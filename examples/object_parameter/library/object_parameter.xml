@@ -15,7 +15,7 @@
     <class name="Document" lifecycle="reference_counted" implementation_class_name="Example::DocumentImpl" implementation_class_header="DocumentImpl.h">
       <constructor name="Default"/>
       <method name="Show"/>
-      <method name="GetPage" return="Example::Page" return_value_add_ref="true"/>
+      <method name="GetPage" return="Example::Page"/>
       <method name="SetPage">
         <argument type="Example::Page" name="value"/>
       </method>
