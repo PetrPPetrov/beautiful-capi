@@ -1,6 +1,6 @@
 #
 # Beautiful Capi generates beautiful C API wrappers for your C++ classes
-# Copyright (C) 2015 Petr Petrovich Petrov
+# Copyright (C) 2016 Petr Petrovich Petrov
 #
 # This file is part of Beautiful Capi.
 #
@@ -18,30 +18,25 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-project(raw_pointer_semantic)
 
 cmake_minimum_required(VERSION 2.8)
 
-find_package(PythonInterp 3.4 REQUIRED)
-
-SET(SWIG_DIR "/Users/Shared/Libraries/swig-3.0.10-install/")
-SET(SWIG_EXECUTABLE "/Users/Shared/Libraries/swig-3.0.10-install/bin/swig")
-include(../../example.cmake)
-include(../../swig_example.cmake)
-
-add_capi_generation()
-add_swig_generation(swig RawPointerSemantic)
-
-include_directories(${raw_pointer_semantic_SOURCE_DIR}/source/)
-
-add_library(raw_pointer_semantic SHARED
-  ${raw_pointer_semantic_SOURCE_DIR}/source/AutoGenWrap.cpp
-  ${raw_pointer_semantic_SOURCE_DIR}/source/PrinterImpl.h
-  ${raw_pointer_semantic_SOURCE_DIR}/source/PrinterImpl.cpp
-)
-
-
-setup_swig_module(swig RawPointerSemantic)
-add_swig_python(swig RawPointerSemantic)
-add_swig_csharp(swig RawPointerSemantic)
-
+function(add_capi_generation)
+    add_custom_command(
+        OUTPUT
+            ${CMAKE_CURRENT_SOURCE_DIR}/source/AutoGenWrap.cpp
+        COMMAND
+            ${PYTHON_EXECUTABLE}
+            ${examples_SOURCE_DIR}/../source/Main.py
+            -i ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.xml
+            -p ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}_params.xml
+            -o ${CMAKE_CURRENT_SOURCE_DIR}/include
+            -w ${CMAKE_CURRENT_SOURCE_DIR}/source/AutoGenWrap.cpp
+        MAIN_DEPENDENCY
+            ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.xml
+        DEPENDS
+            ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}_params.xml
+        WORKING_DIRECTORY
+            ${CMAKE_CURRENT_SOURCE_DIR}
+    )
+endfunction(add_capi_generation)

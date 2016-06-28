@@ -30,20 +30,20 @@ namespace hello_world
     public:
         plotter_impl();
         ~plotter_impl();
-        void add_ref();
-        void release();
+        void AddRef();
+        void Release();
     public:
         void draw() const;
     };
 
     inline void intrusive_ptr_add_ref(plotter_impl* plotter)
     {
-        plotter->add_ref();
+        plotter->AddRef();
     }
 
     inline void intrusive_ptr_release(plotter_impl* plotter)
     {
-        plotter->release();
+        plotter->Release();
     }
 }
 

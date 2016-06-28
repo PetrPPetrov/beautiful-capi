@@ -24,13 +24,13 @@ cmake_minimum_required(VERSION 2.8)
 
 find_package(PythonInterp 3.4 REQUIRED)
 
-add_custom_command(
-  OUTPUT ${copy_semantic_SOURCE_DIR}/source/AutoGenWrap.cpp
-  COMMAND ${PYTHON_EXECUTABLE} ${copy_semantic_SOURCE_DIR}/../../../source/Main.py -i ${copy_semantic_SOURCE_DIR}/copy_semantic.xml -p ${copy_semantic_SOURCE_DIR}/copy_semantic_params.xml -o ${copy_semantic_SOURCE_DIR}/include -w ${copy_semantic_SOURCE_DIR}/source/AutoGenWrap.cpp
-  MAIN_DEPENDENCY ${copy_semantic_SOURCE_DIR}/copy_semantic.xml
-  DEPENDS ${copy_semantic_SOURCE_DIR}/copy_semantic_params.xml
-  WORKING_DIRECTORY ${copy_semantic_SOURCE_DIR}
-)
+SET(SWIG_DIR "/Users/Shared/Libraries/swig-3.0.10-install/")
+SET(SWIG_EXECUTABLE "/Users/Shared/Libraries/swig-3.0.10-install/bin/swig")
+include(../../example.cmake)
+include(../../swig_example.cmake)
+
+add_capi_generation()
+add_swig_generation(swig CopySemantic)
 
 include_directories(${copy_semantic_SOURCE_DIR}/source/)
 
@@ -39,3 +39,8 @@ add_library(copy_semantic SHARED
   ${copy_semantic_SOURCE_DIR}/source/PrinterImpl.h
   ${copy_semantic_SOURCE_DIR}/source/PrinterImpl.cpp
 )
+
+
+setup_swig_module(swig CopySemantic)
+add_swig_python(swig CopySemantic)
+add_swig_csharp(swig CopySemantic)

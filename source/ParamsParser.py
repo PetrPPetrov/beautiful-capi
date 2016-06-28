@@ -133,6 +133,10 @@ class TBeautifulCapiParams(object):
     
 
 def load(dom_node):
+    """
+
+    :rtype: TBeautifulCapiParams
+    """
     for root_element in [root for root in dom_node.childNodes if root.localName == "params"]:
         root_params = TBeautifulCapiParams()
         root_params.load(root_element)

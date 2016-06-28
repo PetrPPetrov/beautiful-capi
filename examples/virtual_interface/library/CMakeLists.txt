@@ -24,13 +24,13 @@ cmake_minimum_required(VERSION 2.8)
 
 find_package(PythonInterp 3.4 REQUIRED)
 
-add_custom_command(
-  OUTPUT ${virtual_interface_SOURCE_DIR}/source/AutoGenWrap.cpp
-  COMMAND ${PYTHON_EXECUTABLE} ${virtual_interface_SOURCE_DIR}/../../../source/Main.py -i ${virtual_interface_SOURCE_DIR}/virtual_interface.xml -p ${virtual_interface_SOURCE_DIR}/virtual_interface_params.xml -o ${virtual_interface_SOURCE_DIR}/include -w ${virtual_interface_SOURCE_DIR}/source/AutoGenWrap.cpp
-  MAIN_DEPENDENCY ${virtual_interface_SOURCE_DIR}/virtual_interface.xml
-  DEPENDS ${virtual_interface_SOURCE_DIR}/virtual_interface_params.xml
-  WORKING_DIRECTORY ${virtual_interface_SOURCE_DIR}
-)
+SET(SWIG_DIR "/Users/Shared/Libraries/swig-3.0.10-install/")
+SET(SWIG_EXECUTABLE "/Users/Shared/Libraries/swig-3.0.10-install/bin/swig")
+include(../../example.cmake)
+include(../../swig_example.cmake)
+
+add_capi_generation()
+add_swig_generation(swig VirtualInterface)
 
 include_directories(${virtual_interface_SOURCE_DIR}/source/)
 
@@ -44,3 +44,8 @@ add_library(virtual_interface SHARED
   ${virtual_interface_SOURCE_DIR}/source/CircleFactory.h
   ${virtual_interface_SOURCE_DIR}/source/CircleFactory.cpp
 )
+
+
+setup_swig_module(swig VirtualInterface)
+add_swig_python(swig VirtualInterface)
+add_swig_csharp(swig VirtualInterface)

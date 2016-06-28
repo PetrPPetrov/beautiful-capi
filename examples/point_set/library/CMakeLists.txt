@@ -18,29 +18,21 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+
 project(point_set)
 
 cmake_minimum_required(VERSION 2.8)
 
 find_package(PythonInterp 3.4 REQUIRED)
 
-add_custom_command(
-  OUTPUT
-    ${point_set_SOURCE_DIR}/source/AutoGenWrap.cpp
-  COMMAND
-    ${PYTHON_EXECUTABLE}
-    ${point_set_SOURCE_DIR}/../../../source/Main.py
-    -i ${point_set_SOURCE_DIR}/point_set.xml
-    -p ${point_set_SOURCE_DIR}/point_set_params.xml
-    -o ${point_set_SOURCE_DIR}/include
-    -w ${point_set_SOURCE_DIR}/source/AutoGenWrap.cpp
-  MAIN_DEPENDENCY
-    ${point_set_SOURCE_DIR}/point_set.xml
-  DEPENDS
-    ${point_set_SOURCE_DIR}/point_set_params.xml
-  WORKING_DIRECTORY
-    ${point_set_SOURCE_DIR}
-)
+SET(SWIG_DIR "/Users/Shared/Libraries/swig-3.0.10-install/")
+SET(SWIG_EXECUTABLE "/Users/Shared/Libraries/swig-3.0.10-install/bin/swig")
+include(../../example.cmake)
+include(../../swig_example.cmake)
+
+
+add_capi_generation()
+add_swig_generation(swig PointSet)
 
 include_directories(
   ${boost_shared_ptr_SOURCE_DIR}/../../../3rdparty/boost/core/include/
@@ -64,3 +56,8 @@ add_library(point_set SHARED
   ${point_set_SOURCE_DIR}/source/PositionImpl.h
   ${point_set_SOURCE_DIR}/source/PositionImpl.cpp
 )
+
+
+setup_swig_module(swig PointSet)
+add_swig_python(swig PointSet)
+add_swig_csharp(swig PointSet)

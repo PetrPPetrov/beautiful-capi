@@ -251,6 +251,10 @@ class TArgument(object):
     
 
 def load(dom_node):
+    """
+
+    :rtype: TBeautifulCapiRoot
+    """
     for root_element in [root for root in dom_node.childNodes if root.localName == "api"]:
         root_params = TBeautifulCapiRoot()
         root_params.load(root_element)

@@ -24,13 +24,13 @@ cmake_minimum_required(VERSION 2.8)
 
 find_package(PythonInterp 3.4 REQUIRED)
 
-add_custom_command(
-  OUTPUT ${circular_reference_SOURCE_DIR}/source/AutoGenWrap.cpp
-  COMMAND ${PYTHON_EXECUTABLE} ${circular_reference_SOURCE_DIR}/../../../source/Main.py -i ${circular_reference_SOURCE_DIR}/circular_reference.xml -p ${circular_reference_SOURCE_DIR}/circular_reference_params.xml -o ${circular_reference_SOURCE_DIR}/include -w ${circular_reference_SOURCE_DIR}/source/AutoGenWrap.cpp
-  MAIN_DEPENDENCY ${circular_reference_SOURCE_DIR}/circular_reference.xml
-  DEPENDS ${circular_reference_SOURCE_DIR}/circular_reference_params.xml
-  WORKING_DIRECTORY ${circular_reference_SOURCE_DIR}
-)
+SET(SWIG_DIR "/Users/Shared/Libraries/swig-3.0.10-install/")
+SET(SWIG_EXECUTABLE "/Users/Shared/Libraries/swig-3.0.10-install/bin/swig")
+include(../../example.cmake)
+include(../../swig_example.cmake)
+
+add_capi_generation()
+add_swig_generation(swig CircularReference)
 
 include_directories(${circular_reference_SOURCE_DIR}/source/)
 
@@ -41,3 +41,8 @@ add_library(circular_reference SHARED
   ${circular_reference_SOURCE_DIR}/source/ClassBImpl.h
   ${circular_reference_SOURCE_DIR}/source/ClassBImpl.cpp  
 )
+
+
+setup_swig_module(swig CircularReference)
+add_swig_python(swig CircularReference)
+add_swig_csharp(swig CircularReference)

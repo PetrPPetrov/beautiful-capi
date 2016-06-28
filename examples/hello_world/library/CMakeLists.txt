@@ -24,13 +24,13 @@ cmake_minimum_required(VERSION 2.8)
 
 find_package(PythonInterp 3.4 REQUIRED)
 
-add_custom_command(
-  OUTPUT ${hello_world_SOURCE_DIR}/source/AutoGenWrap.cpp
-  COMMAND ${PYTHON_EXECUTABLE} ${hello_world_SOURCE_DIR}/../../../source/Main.py -i ${hello_world_SOURCE_DIR}/hello_world.xml -p ${hello_world_SOURCE_DIR}/hello_world_params.xml -o ${hello_world_SOURCE_DIR}/include -w ${hello_world_SOURCE_DIR}/source/AutoGenWrap.cpp
-  MAIN_DEPENDENCY ${hello_world_SOURCE_DIR}/hello_world.xml
-  DEPENDS ${hello_world_SOURCE_DIR}/hello_world_params.xml
-  WORKING_DIRECTORY ${hello_world_SOURCE_DIR}
-)
+SET(SWIG_DIR "/Users/Shared/Libraries/swig-3.0.10-install/")
+SET(SWIG_EXECUTABLE "/Users/Shared/Libraries/swig-3.0.10-install/bin/swig")
+include(../../example.cmake)
+include(../../swig_example.cmake)
+
+add_capi_generation()
+add_swig_generation(swig HelloWorld)
 
 include_directories(${hello_world_SOURCE_DIR}/source/)
 
@@ -39,3 +39,8 @@ add_library(hello_world SHARED
   ${hello_world_SOURCE_DIR}/source/PrinterImpl.h
   ${hello_world_SOURCE_DIR}/source/PrinterImpl.cpp
 )
+
+
+setup_swig_module(swig HelloWorld)
+add_swig_python(swig HelloWorld)
+add_swig_csharp(swig HelloWorld)

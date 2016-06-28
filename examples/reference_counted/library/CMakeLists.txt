@@ -24,13 +24,13 @@ cmake_minimum_required(VERSION 2.8)
 
 find_package(PythonInterp 3.4 REQUIRED)
 
-add_custom_command(
-  OUTPUT ${reference_counted_SOURCE_DIR}/source/AutoGenWrap.cpp
-  COMMAND ${PYTHON_EXECUTABLE} ${reference_counted_SOURCE_DIR}/../../../source/Main.py -i ${reference_counted_SOURCE_DIR}/reference_counted.xml -p ${reference_counted_SOURCE_DIR}/reference_counted_params.xml -o ${reference_counted_SOURCE_DIR}/include -w ${reference_counted_SOURCE_DIR}/source/AutoGenWrap.cpp
-  MAIN_DEPENDENCY ${reference_counted_SOURCE_DIR}/reference_counted.xml
-  DEPENDS ${reference_counted_SOURCE_DIR}/reference_counted_params.xml
-  WORKING_DIRECTORY ${reference_counted_SOURCE_DIR}
-)
+SET(SWIG_DIR "/Users/Shared/Libraries/swig-3.0.10-install/")
+SET(SWIG_EXECUTABLE "/Users/Shared/Libraries/swig-3.0.10-install/bin/swig")
+include(../../example.cmake)
+include(../../swig_example.cmake)
+
+add_capi_generation()
+add_swig_generation(swig ReferenceCounted)
 
 include_directories(${reference_counted_SOURCE_DIR}/source/)
 
@@ -39,3 +39,8 @@ add_library(reference_counted SHARED
   ${reference_counted_SOURCE_DIR}/source/PrinterImpl.h
   ${reference_counted_SOURCE_DIR}/source/PrinterImpl.cpp
 )
+
+
+setup_swig_module(swig ReferenceCounted)
+add_swig_python(swig ReferenceCounted)
+add_swig_csharp(swig ReferenceCounted)
