@@ -145,11 +145,11 @@ class SchemaGenerator(object):
                 ))
 
     def __build_init_field(self, field):
-        self.output_file.put_line('self.m_{0} = {1}'.format(
+        self.output_file.put_line('self.{0} = {1}'.format(
                 field.getAttribute('name'),
                 self.__get_attribute_default_value(field)
         ))
-        self.output_file.put_line('self.m_{0}_filled = False'.format(field.getAttribute('name')))
+        self.output_file.put_line('self.{0}_filled = False'.format(field.getAttribute('name')))
 
     def __build_load(self, complex_type):
         for element in complex_type.getElementsByTagName('xs:element'):
@@ -169,7 +169,7 @@ class SchemaGenerator(object):
                     'for text in [text for text in element.childNodes if text.nodeType == text.TEXT_NODE]:'
                 )
                 with FileGenerator.Indent(self.output_file):
-                    self.output_file.put_line('self.m_{0} += text.nodeValue'.format(element.getAttribute('name')))
+                    self.output_file.put_line('self.{0} += text.nodeValue'.format(element.getAttribute('name')))
             else:
                 self.output_file.put_line('new_element = {0}()'.format(element.getAttribute('type')))
                 self.output_file.put_line('new_element.load(element)')
@@ -184,19 +184,19 @@ class SchemaGenerator(object):
                 attribute.getAttribute('name')
             ))
             if attribute.getAttribute('type') == 'xs:string':
-                self.output_file.put_line('self.m_{0} = cur_attr'.format(
+                self.output_file.put_line('self.{0} = cur_attr'.format(
                     attribute.getAttribute('name')
                 ))
             elif attribute.getAttribute('type') == 'xs:boolean':
-                self.output_file.put_line('self.m_{0} = string_to_bool(cur_attr)'.format(
+                self.output_file.put_line('self.{0} = string_to_bool(cur_attr)'.format(
                     attribute.getAttribute('name')
                 ))
             else:
-                self.output_file.put_line('self.m_{0} = {1}.load(cur_attr)'.format(
+                self.output_file.put_line('self.{0} = {1}.load(cur_attr)'.format(
                     attribute.getAttribute('name'),
                     attribute.getAttribute('type')
                 ))
-            self.output_file.put_line('self.m_{0}_filled = True'.format(attribute.getAttribute('name')))
+            self.output_file.put_line('self.{0}_filled = True'.format(attribute.getAttribute('name')))
 
 
 def main():

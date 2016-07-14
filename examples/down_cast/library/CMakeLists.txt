@@ -52,6 +52,7 @@ add_library(down_cast SHARED
   ${down_cast_SOURCE_DIR}/source/CircleFactory.cpp
 )
 
+add_cs_api_generation(cs DownCast)
 
 setup_swig_module(swig DownCast)
 add_swig_python(swig DownCast)

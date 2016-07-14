@@ -100,7 +100,7 @@ class DynamicLoad(CfunctionTraitsBase):
 
 
 def create_loader_traits(capi_generator):
-    if capi_generator.params_description.m_dynamically_load_functions:
+    if capi_generator.params_description.dynamically_load_functions:
         return DynamicLoad(capi_generator)
     else:
         return ImplLib(capi_generator)

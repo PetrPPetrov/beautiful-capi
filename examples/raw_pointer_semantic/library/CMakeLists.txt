@@ -40,6 +40,7 @@ add_library(raw_pointer_semantic SHARED
   ${raw_pointer_semantic_SOURCE_DIR}/source/PrinterImpl.cpp
 )
 
+add_cs_api_generation(cs RawPointerSemantic)
 
 setup_swig_module(swig RawPointerSemantic)
 add_swig_python(swig RawPointerSemantic)

@@ -29,30 +29,30 @@ class LifecycleTraitsBase(TraitsBase):
     def __init__(self, cur_class, capi_generator):
         super().__init__(cur_class, capi_generator)
         delete_method = Parser.TMethod()
-        delete_method.m_name = Constants.delete_suffix
-        delete_method.m_noexcept = True
-        if cur_class.m_delete_or_release_noexcept_filled:
-            delete_method.m_noexcept = cur_class.m_delete_or_release_noexcept
+        delete_method.name = Constants.delete_suffix
+        delete_method.noexcept = True
+        if cur_class.delete_or_release_noexcept_filled:
+            delete_method.noexcept = cur_class.delete_or_release_noexcept
         self.delete_exception_traits = create_exception_traits(delete_method, cur_class, capi_generator)
         self.copy_method = Parser.TMethod()
-        self.copy_method.m_name = Constants.copy_suffix
+        self.copy_method.name = Constants.copy_suffix
         other_arg = Parser.TArgument()
-        other_arg.m_type = 'void*'
-        other_arg.m_name = 'other.{0}'.format(Constants.object_var)
-        self.copy_method.m_arguments.append(other_arg)
-        self.copy_method.m_noexcept = False
-        if cur_class.m_copy_or_add_ref_noexcept_filled:
-            self.copy_method.m_noexcept = cur_class.m_copy_or_add_ref_noexcept
+        other_arg.type = 'void*'
+        other_arg.name = 'other.{0}'.format(Constants.object_var)
+        self.copy_method.arguments.append(other_arg)
+        self.copy_method.noexcept = False
+        if cur_class.copy_or_add_ref_noexcept_filled:
+            self.copy_method.noexcept = cur_class.copy_or_add_ref_noexcept
         self.copy_exception_traits = create_exception_traits(self.copy_method, cur_class, capi_generator)
 
     def get_base_init(self):
-        if self.cur_class.m_base:
-            return ' : {base_class_name}(0, false)'.format(base_class_name=self.cur_class.m_base + self.get_suffix())
+        if self.cur_class.base:
+            return ' : {base_class_name}(0, false)'.format(base_class_name=self.cur_class.base + self.get_suffix())
         else:
             return ''
 
     def get_destructor_declaration(self):
-        return '~' + self.cur_class.m_name + self.get_suffix() + '()'
+        return '~' + self.cur_class.name + self.get_suffix() + '()'
 
     def get_delete_c_function_name(self):
         return self.capi_generator.get_namespace_id().lower() + Constants.delete_suffix
@@ -66,27 +66,27 @@ class LifecycleTraitsBase(TraitsBase):
         self.capi_generator.loader_traits.add_c_function_declaration(c_function_declaration)
         with self.indent_scope_source():
             method_call = 'delete static_cast<{0}*>(object_pointer);'.format(
-                self.cur_class.m_implementation_class_name
+                self.cur_class.implementation_class_name
             )
             self.delete_exception_traits.generate_implementation_call(method_call, '')
         self.put_source_line('')
 
     def generate_std_methods(self):
-        self.put_line('bool {0}() const'.format(self.capi_generator.params_description.m_is_null_method))
+        self.put_line('bool {0}() const'.format(self.capi_generator.params_description.is_null_method))
         with self.indent_scope():
             self.put_line('return !{0};'.format(Constants.object_var))
-        self.put_line('bool {0}() const'.format(self.capi_generator.params_description.m_is_not_null_method))
+        self.put_line('bool {0}() const'.format(self.capi_generator.params_description.is_not_null_method))
         with self.indent_scope():
             self.put_line('return {0} != 0;'.format(Constants.object_var))
         self.put_line('bool operator!() const')
         with self.indent_scope():
             self.put_line('return !{0};'.format(Constants.object_var))
         self.put_line('{class_name}* operator->()'.format(
-            class_name=self.cur_class.m_name + self.get_suffix()))
+            class_name=self.cur_class.name + self.get_suffix()))
         with self.indent_scope():
             self.put_line('return this;')
         self.put_line('const {class_name}* operator->() const'.format(
-            class_name=self.cur_class.m_name + self.get_suffix()))
+            class_name=self.cur_class.name + self.get_suffix()))
         with self.indent_scope():
             self.put_line('return this;')
 
@@ -94,7 +94,7 @@ class LifecycleTraitsBase(TraitsBase):
         pass
 
     def generate_copy_or_add_ref_for_constructor(self):
-        self.copy_method.m_arguments[0].m_name = Constants.object_var
+        self.copy_method.arguments[0].name = Constants.object_var
         self.put_line('if ({object_var})'.format(object_var=Constants.object_var))
         with self.indent_scope():
             self.copy_exception_traits.generate_c_call(
@@ -109,7 +109,7 @@ class CopySemantic(LifecycleTraitsBase):
         super().__init__(cur_class, capi_generator)
 
     def get_suffix(self):
-        return self.capi_generator.params_description.m_wrapper_class_suffix_copy_semantic
+        return self.capi_generator.params_description.wrapper_class_suffix_copy_semantic
 
     def generate_destructor(self):
         self.capi_generator.inheritance_traits.generate_destructor(
@@ -119,7 +119,7 @@ class CopySemantic(LifecycleTraitsBase):
 
     def generate_copy_constructor(self):
         self.put_line('{class_name}(const {class_name}& other){base_init}'.format(
-            class_name=self.cur_class.m_name + self.get_suffix(), base_init=self.get_base_init())
+            class_name=self.cur_class.name + self.get_suffix(), base_init=self.get_base_init())
         )
         with self.indent_scope():
             self.put_line('if (other.{object_var})'.format(object_var=Constants.object_var))
@@ -133,10 +133,10 @@ class CopySemantic(LifecycleTraitsBase):
             with self.indent_scope():
                 self.put_line('SetObject(0);')
         self.put_line('{class_name}(void *object_pointer, bool copy_object){base_init}'.format(
-            class_name=self.cur_class.m_name + self.get_suffix(), base_init=self.get_base_init())
+            class_name=self.cur_class.name + self.get_suffix(), base_init=self.get_base_init())
         )
         with self.indent_scope():
-            self.copy_method.m_arguments[0].m_name = 'object_pointer'
+            self.copy_method.arguments[0].name = 'object_pointer'
             self.put_line('if (object_pointer && copy_object)')
             with self.indent_scope():
                 self.copy_exception_traits.generate_c_call(
@@ -154,7 +154,7 @@ class CopySemantic(LifecycleTraitsBase):
         self.capi_generator.loader_traits.add_c_function_declaration(c_function_declaration)
         with self.indent_scope_source():
             method_call = 'return new {0}(*static_cast<{0}*>(object_pointer));'.format(
-                self.cur_class.m_implementation_class_name
+                self.cur_class.implementation_class_name
             )
             self.copy_exception_traits.generate_implementation_call(method_call, 'void*')
         self.put_source_line('')
@@ -165,24 +165,24 @@ class RawPointerSemantic(LifecycleTraitsBase):
         super().__init__(cur_class, capi_generator)
 
     def get_suffix(self):
-        return self.capi_generator.params_description.m_wrapper_class_suffix_raw_pointer
+        return self.capi_generator.params_description.wrapper_class_suffix_raw_pointer
 
     def generate_destructor(self):
         pass
 
     def generate_copy_constructor(self):
         self.put_line('{class_name}(const {class_name}& other){base_init}'.format(
-            class_name=self.cur_class.m_name + self.get_suffix(), base_init=self.get_base_init()))
+            class_name=self.cur_class.name + self.get_suffix(), base_init=self.get_base_init()))
         with self.indent_scope():
             self.put_line('SetObject(other.{object_var});'.format(object_var=Constants.object_var))
         self.put_line('{class_name}(void *object_pointer, bool /*add_ref*/){base_init}'.format(
-            class_name=self.cur_class.m_name + self.get_suffix(), base_init=self.get_base_init()))
+            class_name=self.cur_class.name + self.get_suffix(), base_init=self.get_base_init()))
         with self.indent_scope():
             self.put_line('SetObject(object_pointer);')
 
     def generate_delete_method(self):
         self.capi_generator.inheritance_traits.generate_destructor(
-            'void ' + self.capi_generator.params_description.m_delete_method + '()',
+            'void ' + self.capi_generator.params_description.delete_method + '()',
             self.get_delete_c_function_name()
         )
         self.generate_delete_c_function()
@@ -192,20 +192,20 @@ class RefCountedSemantic(LifecycleTraitsBase):
     def __init__(self, cur_class, capi_generator):
         super().__init__(cur_class, capi_generator)
         release_method = Parser.TMethod()
-        release_method.m_name = Constants.release_suffix
-        release_method.m_noexcept = True
-        if cur_class.m_delete_or_release_noexcept_filled:
-            release_method.m_noexcept = cur_class.m_delete_or_release_noexcept
+        release_method.name = Constants.release_suffix
+        release_method.noexcept = True
+        if cur_class.delete_or_release_noexcept_filled:
+            release_method.noexcept = cur_class.delete_or_release_noexcept
         self.release_exception_traits = create_exception_traits(release_method, cur_class, capi_generator)
         add_ref_method = Parser.TMethod()
-        add_ref_method.m_name = Constants.add_ref_suffix
-        add_ref_method.m_noexcept = True
-        if cur_class.m_copy_or_add_ref_noexcept_filled:
-            add_ref_method.m_noexcept = cur_class.m_copy_or_add_ref_noexcept
+        add_ref_method.name = Constants.add_ref_suffix
+        add_ref_method.noexcept = True
+        if cur_class.copy_or_add_ref_noexcept_filled:
+            add_ref_method.noexcept = cur_class.copy_or_add_ref_noexcept
         self.add_ref_exception_traits = create_exception_traits(add_ref_method, cur_class, capi_generator)
 
     def get_suffix(self):
-        return self.capi_generator.params_description.m_wrapper_class_suffix_reference_counted
+        return self.capi_generator.params_description.wrapper_class_suffix_reference_counted
 
     def generate_destructor(self):
         release_c_function_name = self.capi_generator.get_namespace_id().lower() + Constants.release_suffix
@@ -220,14 +220,14 @@ class RefCountedSemantic(LifecycleTraitsBase):
         self.capi_generator.loader_traits.add_c_function_declaration(c_function_declaration)
         with self.indent_scope_source():
             method_call = 'intrusive_ptr_release(static_cast<{0}*>(object_pointer));'.format(
-                self.cur_class.m_implementation_class_name
+                self.cur_class.implementation_class_name
             )
             self.release_exception_traits.generate_implementation_call(method_call, '')
         self.put_source_line('')
 
     def generate_copy_constructor(self):
         self.put_line('{class_name}(const {class_name}& other){base_init}'.format(
-            class_name=self.cur_class.m_name + self.get_suffix(), base_init=self.get_base_init()))
+            class_name=self.cur_class.name + self.get_suffix(), base_init=self.get_base_init()))
         with self.indent_scope():
             self.put_line('SetObject(other.{object_var});'.format(object_var=Constants.object_var))
             self.add_ref_exception_traits.generate_c_call(
@@ -236,7 +236,7 @@ class RefCountedSemantic(LifecycleTraitsBase):
                 False
             )
         self.put_line('{class_name}(void *object_pointer, bool add_ref){base_init}'.format(
-            class_name=self.cur_class.m_name + self.get_suffix(), base_init=self.get_base_init()))
+            class_name=self.cur_class.name + self.get_suffix(), base_init=self.get_base_init()))
         with self.indent_scope():
             self.put_line('SetObject(object_pointer);'.format(object_var=Constants.object_var))
             self.put_line('if (add_ref && object_pointer)')
@@ -253,13 +253,13 @@ class RefCountedSemantic(LifecycleTraitsBase):
         self.capi_generator.loader_traits.add_c_function_declaration(c_function_declaration)
         with self.indent_scope_source():
             method_call = 'intrusive_ptr_add_ref(static_cast<{0}*>(object_pointer));'.format(
-                self.cur_class.m_implementation_class_name
+                self.cur_class.implementation_class_name
             )
             self.add_ref_exception_traits.generate_implementation_call(method_call, '')
         self.put_source_line('')
 
     def generate_copy_or_add_ref_for_constructor(self):
-        self.copy_method.m_arguments[0].m_name = Constants.object_var
+        self.copy_method.arguments[0].name = Constants.object_var
         self.put_line('if ({object_var})'.format(object_var=Constants.object_var))
         with self.indent_scope():
             self.add_ref_exception_traits.generate_c_call(
@@ -277,8 +277,8 @@ str_to_lifecycle = {
 
 
 def create_lifecycle_traits(cur_class, capi_generator):
-    if cur_class.m_lifecycle in str_to_lifecycle:
-        return str_to_lifecycle[cur_class.m_lifecycle](cur_class, capi_generator)
+    if cur_class.lifecycle in str_to_lifecycle:
+        return str_to_lifecycle[cur_class.lifecycle](cur_class, capi_generator)
     raise ValueError
 
 

@@ -44,6 +44,7 @@ add_library(custom_suffix SHARED
   ${custom_suffix_SOURCE_DIR}/source/plotter_impl.cpp
 )
 
+add_cs_api_generation(cs CustomSuffix)
 
 setup_swig_module(swig CustomSuffix)
 add_swig_python(swig CustomSuffix)

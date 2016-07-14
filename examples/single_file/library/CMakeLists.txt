@@ -40,6 +40,7 @@ add_library(single_file SHARED
   ${single_file_SOURCE_DIR}/source/PrinterImpl.cpp
 )
 
+add_cs_api_generation(cs SingleFile)
 
 setup_swig_module(swig SingleFile)
 add_swig_python(swig SingleFile)

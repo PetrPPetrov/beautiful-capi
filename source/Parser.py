@@ -51,203 +51,203 @@ class TLifecycle(Enum):
 
 class TBeautifulCapiRoot(object):
     def __init__(self):
-        self.m_namespaces = []
+        self.namespaces = []
     
     def load(self, dom_node):
         for element in [node for node in dom_node.childNodes if node.nodeName == "namespace"]:
             new_element = TNamespace()
             new_element.load(element)
-            self.m_namespaces.append(new_element)
+            self.namespaces.append(new_element)
     
 
 class TNamespace(object):
     def __init__(self):
-        self.m_name = ""
-        self.m_name_filled = False
-        self.m_implementation_header = ""
-        self.m_implementation_header_filled = False
-        self.m_namespaces = []
-        self.m_classes = []
-        self.m_functions = []
+        self.name = ""
+        self.name_filled = False
+        self.implementation_header = ""
+        self.implementation_header_filled = False
+        self.namespaces = []
+        self.classes = []
+        self.functions = []
     
     def load(self, dom_node):
         for element in [node for node in dom_node.childNodes if node.nodeName == "namespace"]:
             new_element = TNamespace()
             new_element.load(element)
-            self.m_namespaces.append(new_element)
+            self.namespaces.append(new_element)
         for element in [node for node in dom_node.childNodes if node.nodeName == "class"]:
             new_element = TClass()
             new_element.load(element)
-            self.m_classes.append(new_element)
+            self.classes.append(new_element)
         for element in [node for node in dom_node.childNodes if node.nodeName == "function"]:
             new_element = TFunction()
             new_element.load(element)
-            self.m_functions.append(new_element)
+            self.functions.append(new_element)
         if dom_node.hasAttribute("name"):
             cur_attr = dom_node.getAttribute("name")
-            self.m_name = cur_attr
-            self.m_name_filled = True
+            self.name = cur_attr
+            self.name_filled = True
         if dom_node.hasAttribute("implementation_header"):
             cur_attr = dom_node.getAttribute("implementation_header")
-            self.m_implementation_header = cur_attr
-            self.m_implementation_header_filled = True
+            self.implementation_header = cur_attr
+            self.implementation_header_filled = True
     
 
 class TClass(object):
     def __init__(self):
-        self.m_name = ""
-        self.m_name_filled = False
-        self.m_base = ""
-        self.m_base_filled = False
-        self.m_implementation_class_name = ""
-        self.m_implementation_class_name_filled = False
-        self.m_implementation_class_header = ""
-        self.m_implementation_class_header_filled = False
-        self.m_lifecycle = TLifecycle.reference_counted
-        self.m_lifecycle_filled = False
-        self.m_requires_cast_to_base = True
-        self.m_requires_cast_to_base_filled = False
-        self.m_pointer_access = False
-        self.m_pointer_access_filled = False
-        self.m_exception = False
-        self.m_exception_filled = False
-        self.m_copy_or_add_ref_noexcept = False
-        self.m_copy_or_add_ref_noexcept_filled = False
-        self.m_delete_or_release_noexcept = False
-        self.m_delete_or_release_noexcept_filled = False
-        self.m_constructors = []
-        self.m_methods = []
+        self.name = ""
+        self.name_filled = False
+        self.base = ""
+        self.base_filled = False
+        self.implementation_class_name = ""
+        self.implementation_class_name_filled = False
+        self.implementation_class_header = ""
+        self.implementation_class_header_filled = False
+        self.lifecycle = TLifecycle.reference_counted
+        self.lifecycle_filled = False
+        self.requires_cast_to_base = True
+        self.requires_cast_to_base_filled = False
+        self.pointer_access = False
+        self.pointer_access_filled = False
+        self.exception = False
+        self.exception_filled = False
+        self.copy_or_add_ref_noexcept = False
+        self.copy_or_add_ref_noexcept_filled = False
+        self.delete_or_release_noexcept = False
+        self.delete_or_release_noexcept_filled = False
+        self.constructors = []
+        self.methods = []
     
     def load(self, dom_node):
         for element in [node for node in dom_node.childNodes if node.nodeName == "constructor"]:
             new_element = TConstructor()
             new_element.load(element)
-            self.m_constructors.append(new_element)
+            self.constructors.append(new_element)
         for element in [node for node in dom_node.childNodes if node.nodeName == "method"]:
             new_element = TMethod()
             new_element.load(element)
-            self.m_methods.append(new_element)
+            self.methods.append(new_element)
         if dom_node.hasAttribute("name"):
             cur_attr = dom_node.getAttribute("name")
-            self.m_name = cur_attr
-            self.m_name_filled = True
+            self.name = cur_attr
+            self.name_filled = True
         if dom_node.hasAttribute("base"):
             cur_attr = dom_node.getAttribute("base")
-            self.m_base = cur_attr
-            self.m_base_filled = True
+            self.base = cur_attr
+            self.base_filled = True
         if dom_node.hasAttribute("implementation_class_name"):
             cur_attr = dom_node.getAttribute("implementation_class_name")
-            self.m_implementation_class_name = cur_attr
-            self.m_implementation_class_name_filled = True
+            self.implementation_class_name = cur_attr
+            self.implementation_class_name_filled = True
         if dom_node.hasAttribute("implementation_class_header"):
             cur_attr = dom_node.getAttribute("implementation_class_header")
-            self.m_implementation_class_header = cur_attr
-            self.m_implementation_class_header_filled = True
+            self.implementation_class_header = cur_attr
+            self.implementation_class_header_filled = True
         if dom_node.hasAttribute("lifecycle"):
             cur_attr = dom_node.getAttribute("lifecycle")
-            self.m_lifecycle = TLifecycle.load(cur_attr)
-            self.m_lifecycle_filled = True
+            self.lifecycle = TLifecycle.load(cur_attr)
+            self.lifecycle_filled = True
         if dom_node.hasAttribute("requires_cast_to_base"):
             cur_attr = dom_node.getAttribute("requires_cast_to_base")
-            self.m_requires_cast_to_base = string_to_bool(cur_attr)
-            self.m_requires_cast_to_base_filled = True
+            self.requires_cast_to_base = string_to_bool(cur_attr)
+            self.requires_cast_to_base_filled = True
         if dom_node.hasAttribute("pointer_access"):
             cur_attr = dom_node.getAttribute("pointer_access")
-            self.m_pointer_access = string_to_bool(cur_attr)
-            self.m_pointer_access_filled = True
+            self.pointer_access = string_to_bool(cur_attr)
+            self.pointer_access_filled = True
         if dom_node.hasAttribute("exception"):
             cur_attr = dom_node.getAttribute("exception")
-            self.m_exception = string_to_bool(cur_attr)
-            self.m_exception_filled = True
+            self.exception = string_to_bool(cur_attr)
+            self.exception_filled = True
         if dom_node.hasAttribute("copy_or_add_ref_noexcept"):
             cur_attr = dom_node.getAttribute("copy_or_add_ref_noexcept")
-            self.m_copy_or_add_ref_noexcept = string_to_bool(cur_attr)
-            self.m_copy_or_add_ref_noexcept_filled = True
+            self.copy_or_add_ref_noexcept = string_to_bool(cur_attr)
+            self.copy_or_add_ref_noexcept_filled = True
         if dom_node.hasAttribute("delete_or_release_noexcept"):
             cur_attr = dom_node.getAttribute("delete_or_release_noexcept")
-            self.m_delete_or_release_noexcept = string_to_bool(cur_attr)
-            self.m_delete_or_release_noexcept_filled = True
+            self.delete_or_release_noexcept = string_to_bool(cur_attr)
+            self.delete_or_release_noexcept_filled = True
     
 
 class TConstructor(object):
     def __init__(self):
-        self.m_name = ""
-        self.m_name_filled = False
-        self.m_return_copy_or_add_ref = False
-        self.m_return_copy_or_add_ref_filled = False
-        self.m_noexcept = False
-        self.m_noexcept_filled = False
-        self.m_arguments = []
+        self.name = ""
+        self.name_filled = False
+        self.return_copy_or_add_ref = False
+        self.return_copy_or_add_ref_filled = False
+        self.noexcept = False
+        self.noexcept_filled = False
+        self.arguments = []
     
     def load(self, dom_node):
         for element in [node for node in dom_node.childNodes if node.nodeName == "argument"]:
             new_element = TArgument()
             new_element.load(element)
-            self.m_arguments.append(new_element)
+            self.arguments.append(new_element)
         if dom_node.hasAttribute("name"):
             cur_attr = dom_node.getAttribute("name")
-            self.m_name = cur_attr
-            self.m_name_filled = True
+            self.name = cur_attr
+            self.name_filled = True
         if dom_node.hasAttribute("return_copy_or_add_ref"):
             cur_attr = dom_node.getAttribute("return_copy_or_add_ref")
-            self.m_return_copy_or_add_ref = string_to_bool(cur_attr)
-            self.m_return_copy_or_add_ref_filled = True
+            self.return_copy_or_add_ref = string_to_bool(cur_attr)
+            self.return_copy_or_add_ref_filled = True
         if dom_node.hasAttribute("noexcept"):
             cur_attr = dom_node.getAttribute("noexcept")
-            self.m_noexcept = string_to_bool(cur_attr)
-            self.m_noexcept_filled = True
+            self.noexcept = string_to_bool(cur_attr)
+            self.noexcept_filled = True
     
 
 class TMethod(TConstructor):
     def __init__(self):
         super().__init__()
-        self.m_return = ""
-        self.m_return_filled = False
+        self.return_type = ""
+        self.return_type_filled = False
     
     def load(self, dom_node):
         super().load(dom_node)
         if dom_node.hasAttribute("return"):
             cur_attr = dom_node.getAttribute("return")
-            self.m_return = cur_attr
-            self.m_return_filled = True
+            self.return_type = cur_attr
+            self.return_type_filled = True
     
 
 class TFunction(TMethod):
     def __init__(self):
         super().__init__()
-        self.m_implementation_name = ""
-        self.m_implementation_name_filled = False
-        self.m_implementation_header = ""
-        self.m_implementation_header_filled = False
+        self.implementation_name = ""
+        self.implementation_name_filled = False
+        self.implementation_header = ""
+        self.implementation_header_filled = False
     
     def load(self, dom_node):
         super().load(dom_node)
         if dom_node.hasAttribute("implementation_name"):
             cur_attr = dom_node.getAttribute("implementation_name")
-            self.m_implementation_name = cur_attr
-            self.m_implementation_name_filled = True
+            self.implementation_name = cur_attr
+            self.implementation_name_filled = True
         if dom_node.hasAttribute("implementation_header"):
             cur_attr = dom_node.getAttribute("implementation_header")
-            self.m_implementation_header = cur_attr
-            self.m_implementation_header_filled = True
+            self.implementation_header = cur_attr
+            self.implementation_header_filled = True
     
 
 class TArgument(object):
     def __init__(self):
-        self.m_name = ""
-        self.m_name_filled = False
-        self.m_type = ""
-        self.m_type_filled = False
+        self.name = ""
+        self.name_filled = False
+        self.type = ""
+        self.type_filled = False
     
     def load(self, dom_node):
         if dom_node.hasAttribute("name"):
             cur_attr = dom_node.getAttribute("name")
-            self.m_name = cur_attr
-            self.m_name_filled = True
+            self.name = cur_attr
+            self.name_filled = True
         if dom_node.hasAttribute("type"):
             cur_attr = dom_node.getAttribute("type")
-            self.m_type = cur_attr
-            self.m_type_filled = True
+            self.type = cur_attr
+            self.type_filled = True
     
 
 def load(dom_node):

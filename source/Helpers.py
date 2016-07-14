@@ -28,7 +28,7 @@ def pascal_to_stl(pascal_name):
 
 
 def get_self(cur_class):
-    if cur_class.m_pointer_access:
+    if cur_class.pointer_access:
         return '(*self)'
     else:
         return 'self'
@@ -46,8 +46,8 @@ def get_return_copy_or_add_ref_default_value(constructor_or_method):
 
 
 def get_return_copy_or_add_ref(constructor_or_method):
-    if constructor_or_method.m_return_copy_or_add_ref_filled:
-        return constructor_or_method.m_return_copy_or_add_ref
+    if constructor_or_method.return_copy_or_add_ref_filled:
+        return constructor_or_method.return_copy_or_add_ref
     else:
         return get_return_copy_or_add_ref_default_value(constructor_or_method)
 
@@ -58,7 +58,7 @@ class NamespaceScope(object):
         self.cur_namespace = cur_namespace
 
     def __enter__(self):
-        self.cur_namespace_path.append(self.cur_namespace.m_name)
+        self.cur_namespace_path.append(self.cur_namespace.name)
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.cur_namespace_path.pop()

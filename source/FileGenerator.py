@@ -123,8 +123,8 @@ class FileGenerator(object):
         self.automatic_generation_warning = warning_text
 
     def put_begin_cpp_comments(self, params_description):
-        self.put_copyright_header(params_description.m_copyright_header)
-        self.put_automatic_generation_warning(params_description.m_automatic_generated_warning)
+        self.put_copyright_header(params_description.copyright_header)
+        self.put_automatic_generation_warning(params_description.automatic_generated_warning)
 
 
 class Indent(object):

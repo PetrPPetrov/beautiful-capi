@@ -71,7 +71,7 @@ class CapiGenerator(object):
                     generate_forward_holder(self)
                     self.output_source = FileGenerator.FileGenerator(self.output_wrap_file_name)
                     self.output_source.put_begin_cpp_comments(self.params_description)
-                    for namespace in self.api_description.m_namespaces:
+                    for namespace in self.api_description.namespaces:
                         self.__process_namespace(namespace)
                     self.exception_traits.generate_check_and_throw_exception_header()
 
@@ -82,10 +82,10 @@ class CapiGenerator(object):
         with NamespaceScope(self.cur_namespace_path, namespace):
             self.__process_namespace_header(namespace)
 
-            for nested_namespace in namespace.m_namespaces:
+            for nested_namespace in namespace.namespaces:
                 self.__process_namespace(nested_namespace)
 
-            for cur_class in namespace.m_classes:
+            for cur_class in namespace.classes:
                 self.__process_class(cur_class)
 
     def __process_namespace_header(self, namespace):
@@ -95,13 +95,13 @@ class CapiGenerator(object):
         with WatchdogScope(self.output_header, '{0}_INCLUDED'.format(self.get_namespace_id().upper())):
             process_capi(self)
             process_fwd(self, namespace)
-            self.loader_traits.add_impl_header(namespace.m_implementation_header)
+            self.loader_traits.add_impl_header(namespace.implementation_header)
 
-            for cur_namespace in namespace.m_namespaces:
+            for cur_namespace in namespace.namespaces:
                 with NamespaceScope(self.cur_namespace_path, cur_namespace):
                     self.file_traits.include_namespace_header(self.cur_namespace_path)
 
-            for cur_class in namespace.m_classes:
+            for cur_class in namespace.classes:
                 self.file_traits.include_class_header(self.cur_namespace_path, cur_class)
 
             if len(self.cur_namespace_path) == 1:
@@ -116,8 +116,8 @@ class CapiGenerator(object):
                 self.output_header.put_line('')
                 self.output_header.put_line('')
 
-                if namespace.m_functions:
-                    for function in namespace.m_functions:
+                if namespace.functions:
+                    for function in namespace.functions:
                         self.__process_function(function)
 
                 if len(self.cur_namespace_path) == 1:
@@ -136,7 +136,7 @@ class CapiGenerator(object):
                     with WatchdogScope(self.output_header, '{0}_INCLUDED'.format(self.get_namespace_id().upper())):
                         self.file_traits.include_capi_header(self.cur_namespace_path)
                         self.file_traits.include_fwd_header(self.cur_namespace_path)
-                        if cur_class.m_base:
+                        if cur_class.base:
                             extra_info_entry = self.extra_info[cur_class]
                             self.file_traits.include_class_header(
                                 extra_info_entry.full_name_array[:-1], extra_info_entry.base_class_object
@@ -158,9 +158,9 @@ class CapiGenerator(object):
 
     def __include_additional_capi_and_fwd(self, cur_class):
         additional_namespaces = {}
-        for constructor in cur_class.m_constructors:
+        for constructor in cur_class.constructors:
             self.__include_additional_capi_and_fwd_function(constructor, additional_namespaces)
-        for method in cur_class.m_methods:
+        for method in cur_class.methods:
             self.__include_additional_capi_and_fwd_method(method, additional_namespaces)
         for additional_namespace in additional_namespaces.keys():
             if additional_namespace != self.cur_namespace_path[0]:
@@ -172,19 +172,19 @@ class CapiGenerator(object):
             additional_namespaces.update({type_name.split('::')[0]: True})
 
     def __include_additional_capi_and_fwd_function(self, function, additional_namespaces):
-        for argument in function.m_arguments:
-            self.__include_additional_capi_and_fwd_check_type(argument.m_type, additional_namespaces)
+        for argument in function.arguments:
+            self.__include_additional_capi_and_fwd_check_type(argument.type, additional_namespaces)
 
     def __include_additional_capi_and_fwd_method(self, method, additional_namespaces):
         self.__include_additional_capi_and_fwd_function(method, additional_namespaces)
-        if self.__is_class_type(method.m_return):
-            self.__include_additional_capi_and_fwd_check_type(method.m_return, additional_namespaces)
+        if self.__is_class_type(method.return_type):
+            self.__include_additional_capi_and_fwd_check_type(method.return_type, additional_namespaces)
 
     def __generate_class(self, cur_class):
-        self.loader_traits.add_impl_header(cur_class.m_implementation_class_header)
+        self.loader_traits.add_impl_header(cur_class.implementation_class_header)
         self.output_header.put_line('class {0}{1}'.format(
-            cur_class.m_name + self.lifecycle_traits.get_suffix(),
-            ' : public ' + cur_class.m_base + self.lifecycle_traits.get_suffix() if cur_class.m_base else ''
+            cur_class.name + self.lifecycle_traits.get_suffix(),
+            ' : public ' + cur_class.base + self.lifecycle_traits.get_suffix() if cur_class.base else ''
         ))
         with FileGenerator.IndentScope(self.output_header, '};'):
             with FileGenerator.Unindent(self.output_header):
@@ -195,20 +195,20 @@ class CapiGenerator(object):
                 self.output_header.put_line('public:')
             self.lifecycle_traits.generate_copy_constructor()
             self.lifecycle_traits.generate_std_methods()
-            for constructor in cur_class.m_constructors:
+            for constructor in cur_class.constructors:
                 self.inheritance_traits.generate_constructor(constructor)
             self.lifecycle_traits.generate_destructor()
             self.lifecycle_traits.generate_delete_method()
-            for method in cur_class.m_methods:
+            for method in cur_class.methods:
                 self.__generate_method(method, cur_class)
 
     def __generate_method(self, method, cur_class):
         with CreateExceptionTraits(method, cur_class, self):
             with NamespaceScope(self.cur_namespace_path, method):
                 self.output_header.put_line('{return_type} {method_name}({arguments})'.format(
-                    return_type=self.get_wrapped_return_type(method.m_return),
-                    method_name=method.m_name,
-                    arguments=', '.join(self.get_wrapped_argument_pairs(method.m_arguments))))
+                    return_type=self.get_wrapped_return_type(method.return_type),
+                    method_name=method.name,
+                    arguments=', '.join(self.get_wrapped_argument_pairs(method.arguments))))
                 with FileGenerator.IndentScope(self.output_header):
                     self.exception_traits.generate_c_call(
                         self.get_namespace_id().lower(),
@@ -216,34 +216,34 @@ class CapiGenerator(object):
                         False
                     )
                 c_function_declaration = '{return_type} {c_function}({arguments})'.format(
-                    return_type=self.get_c_type(method.m_return),
+                    return_type=self.get_c_type(method.return_type),
                     c_function=self.get_namespace_id().lower(),
                     arguments=', '.join(self.exception_traits.get_c_argument_pairs())
                 )
                 self.loader_traits.add_c_function_declaration(c_function_declaration)
                 with FileGenerator.IndentScope(self.output_source):
                     self.output_source.put_line('{0}* self = static_cast<{0}*>(object_pointer);'.format(
-                        cur_class.m_implementation_class_name
+                        cur_class.implementation_class_name
                     ))
                     method_call = '{0}{1}->{2}({3});'.format(
-                        self.get_c_return_instruction(method.m_return),
+                        self.get_c_return_instruction(method.return_type),
                         Helpers.get_self(cur_class),
-                        method.m_name,
-                        ', '.join(self.get_c_to_original_arguments(method.m_arguments))
+                        method.name,
+                        ', '.join(self.get_c_to_original_arguments(method.arguments))
                     )
-                    self.exception_traits.generate_implementation_call(method_call, method.m_return)
+                    self.exception_traits.generate_implementation_call(method_call, method.return_type)
                 self.output_source.put_line('')
 
     def __process_function(self, function):
         with CreateExceptionTraits(function, None, self):
-            self.loader_traits.add_impl_header(function.m_implementation_header)
+            self.loader_traits.add_impl_header(function.implementation_header)
             self.output_header.put_line('inline {return_type} {function_name}({arguments})'.format(
-                return_type=self.get_wrapped_return_type(function.m_return),
-                function_name=function.m_name,
-                arguments=', '.join(self.get_wrapped_argument_pairs(function.m_arguments))))
-            c_function_name = self.get_namespace_id().lower() + Helpers.pascal_to_stl(function.m_name)
+                return_type=self.get_wrapped_return_type(function.return_type),
+                function_name=function.name,
+                arguments=', '.join(self.get_wrapped_argument_pairs(function.arguments))))
+            c_function_name = self.get_namespace_id().lower() + Helpers.pascal_to_stl(function.name)
             with FileGenerator.IndentScope(self.output_header):
-                self.put_raw_pointer_structure_if_required(self.output_header, function.m_arguments)
+                self.put_raw_pointer_structure_if_required(self.output_header, function.arguments)
                 self.exception_traits.generate_c_call(
                     c_function_name,
                     '{c_function}({arguments})',
@@ -251,42 +251,42 @@ class CapiGenerator(object):
                 )
             self.output_header.put_line('')
             c_function_declaration = '{return_type} {c_function}({arguments})'.format(
-                return_type=self.get_c_type(function.m_return),
+                return_type=self.get_c_type(function.return_type),
                 c_function=c_function_name,
                 arguments=', '.join(self.exception_traits.get_c_argument_pairs_for_function())
             )
             self.loader_traits.add_c_function_declaration(c_function_declaration)
             with FileGenerator.IndentScope(self.output_source):
                 method_call = '{return_instruction}{function_name}({arguments});'.format(
-                    return_instruction=self.get_c_return_instruction(function.m_return),
-                    function_name=function.m_name
-                    if not function.m_implementation_name else function.m_implementation_name,
-                    arguments=', '.join(self.get_c_to_original_arguments(function.m_arguments))
+                    return_instruction=self.get_c_return_instruction(function.return_type),
+                    function_name=function.name
+                    if not function.implementation_name else function.implementation_name,
+                    arguments=', '.join(self.get_c_to_original_arguments(function.arguments))
                 )
-                self.exception_traits.generate_implementation_call(method_call, function.m_return)
+                self.exception_traits.generate_implementation_call(method_call, function.return_type)
             self.output_source.put_line('')
 
     def __process_source_begin(self):
-        self.output_source.put_copyright_header(self.params_description.m_copyright_header)
-        self.output_source.put_automatic_generation_warning(self.params_description.m_automatic_generated_warning)
+        self.output_source.put_copyright_header(self.params_description.copyright_header)
+        self.output_source.put_automatic_generation_warning(self.params_description.automatic_generated_warning)
 
     def __is_class_type(self, type_name):
         path_to_class = type_name.split('::')
-        return self.__is_class_type_impl(path_to_class, self.api_description.m_namespaces)
+        return self.__is_class_type_impl(path_to_class, self.api_description.namespaces)
 
     def get_class_type(self, type_name):
         path_to_class = type_name.split('::')
-        return self.__get_class_type_impl(path_to_class, self.api_description.m_namespaces)
+        return self.__get_class_type_impl(path_to_class, self.api_description.namespaces)
 
     def __get_class_type_impl(self, path_to_class, classes_or_namespaces):
         for class_or_namespace in classes_or_namespaces:
-            if class_or_namespace.m_name == path_to_class[0]:
+            if class_or_namespace.name == path_to_class[0]:
                 if len(path_to_class) == 1:
                     return class_or_namespace
                 elif len(path_to_class) == 2:
-                    return self.__get_class_type_impl(path_to_class[1:], class_or_namespace.m_classes)
+                    return self.__get_class_type_impl(path_to_class[1:], class_or_namespace.classes)
                 else:
-                    return self.__get_class_type_impl(path_to_class[1:], class_or_namespace.m_namespaces)
+                    return self.__get_class_type_impl(path_to_class[1:], class_or_namespace.namespaces)
         return None
 
     def __is_class_type_impl(self, path_to_class, classes_or_namespaces):
@@ -313,7 +313,7 @@ class CapiGenerator(object):
             if self.__is_class_type(type_name):
                 return '{result_type}{fwd_suffix} result({rest_expr}, {copy_or_add_ref});'.format(
                     result_type=type_name,
-                    fwd_suffix=self.params_description.m_forward_typedef_suffix,
+                    fwd_suffix=self.params_description.forward_typedef_suffix,
                     rest_expr=rest_expression,
                     copy_or_add_ref='true' if Helpers.get_return_copy_or_add_ref(method) else 'false'
                 )
@@ -327,7 +327,7 @@ class CapiGenerator(object):
             if self.__is_class_type(type_name):
                 return 'return {result_type}{fwd_suffix}({rest_expr}, {copy_or_add_ref});'.format(
                     result_type=type_name,
-                    fwd_suffix=self.params_description.m_forward_typedef_suffix,
+                    fwd_suffix=self.params_description.forward_typedef_suffix,
                     rest_expr=rest_expression,
                     copy_or_add_ref='true' if Helpers.get_return_copy_or_add_ref(method) else 'false'
                 )
@@ -338,7 +338,7 @@ class CapiGenerator(object):
 
     def get_wrapped_return_type(self, type_name):
         if self.__is_class_type(type_name):
-            return type_name + self.params_description.m_forward_typedef_suffix
+            return type_name + self.params_description.forward_typedef_suffix
         return self.get_cpp_type(type_name)
 
     def get_wrapped_type(self, type_name):
@@ -350,7 +350,7 @@ class CapiGenerator(object):
             return self.get_cpp_type(type_name)
 
     def get_wrapped_argument_pair(self, argument):
-        return '{0} {1}'.format(self.get_wrapped_type(argument.m_type), argument.m_name)
+        return '{0} {1}'.format(self.get_wrapped_type(argument.type), argument.name)
 
     def get_wrapped_argument_pairs(self, arguments):
         return [self.get_wrapped_argument_pair(argument) for argument in arguments]
@@ -358,7 +358,7 @@ class CapiGenerator(object):
     # C types from wrapped types
     def __is_raw_pointer_structure_required(self, arguments):
         for argument in arguments:
-            if self.__is_class_type(argument.m_type):
+            if self.__is_class_type(argument.type):
                 return True
         return False
 
@@ -367,11 +367,11 @@ class CapiGenerator(object):
             Helpers.put_raw_pointer_structure(output_file)
 
     def get_c_from_wrapped_argument(self, argument):
-        class_object = self.get_class_type(argument.m_type)
+        class_object = self.get_class_type(argument.type)
         if class_object:
-            return 'reinterpret_cast<const raw_pointer_holder*>(&{0})->raw_pointer'.format(argument.m_name)
+            return 'reinterpret_cast<const raw_pointer_holder*>(&{0})->raw_pointer'.format(argument.name)
         else:
-            return argument.m_name
+            return argument.name
 
     def get_c_from_wrapped_arguments_impl(self, arguments):
         return [Constants.object_var] + self.get_c_from_wrapped_arguments_for_function_impl(arguments)
@@ -390,7 +390,7 @@ class CapiGenerator(object):
         return self.get_flat_type(type_name)
 
     def get_c_argument_pair(self, argument):
-        return '{0} {1}'.format(self.get_c_type(argument.m_type), argument.m_name)
+        return '{0} {1}'.format(self.get_c_type(argument.type), argument.name)
 
     def get_c_argument_pairs_impl(self, arguments):
         return ['void* object_pointer'] + self.get_c_argument_pairs_for_function_impl(arguments)
@@ -400,11 +400,11 @@ class CapiGenerator(object):
 
     # C to original types
     def get_c_to_original_argument(self, argument):
-        class_object = self.get_class_type(argument.m_type)
+        class_object = self.get_class_type(argument.type)
         if class_object:
-            return 'static_cast<{0}*>({1})'.format(class_object.m_implementation_class_name, argument.m_name)
+            return 'static_cast<{0}*>({1})'.format(class_object.implementation_class_name, argument.name)
         else:
-            return argument.m_name
+            return argument.name
 
     def get_c_to_original_arguments(self, arguments):
         return [self.get_c_to_original_argument(argument) for argument in arguments]

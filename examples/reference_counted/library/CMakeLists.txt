@@ -40,6 +40,7 @@ add_library(reference_counted SHARED
   ${reference_counted_SOURCE_DIR}/source/PrinterImpl.cpp
 )
 
+add_cs_api_generation(cs ReferenceCounted)
 
 setup_swig_module(swig ReferenceCounted)
 add_swig_python(swig ReferenceCounted)

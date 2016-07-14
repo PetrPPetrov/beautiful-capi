@@ -40,6 +40,7 @@ add_library(hello_world SHARED
   ${hello_world_SOURCE_DIR}/source/PrinterImpl.cpp
 )
 
+add_cs_api_generation(cs HelloWorld)
 
 setup_swig_module(swig HelloWorld)
 add_swig_python(swig HelloWorld)

@@ -23,26 +23,11 @@ import argparse
 import os
 from collections import OrderedDict
 
-import Parser
 import ParamsParser
+import Parser
 from FileGenerator import FileGenerator, Indent, IndentScope
 from Helpers import get_return_copy_or_add_ref
-
-
-def get_class_type(type_name: str, api_description: Parser.TBeautifulCapiRoot):
-    path_to_class = type_name.split('::')
-    return __get_class_type_impl(path_to_class, api_description.m_namespaces)
-
-def __get_class_type_impl(path_to_class, classes_or_namespaces):
-    for class_or_namespace in classes_or_namespaces:
-        if class_or_namespace.m_name == path_to_class[0]:
-            if len(path_to_class) == 1:
-                return class_or_namespace
-            elif len(path_to_class) == 2:
-                return __get_class_type_impl(path_to_class[1:], class_or_namespace.m_classes)
-            else:
-                return __get_class_type_impl(path_to_class[1:], class_or_namespace.m_namespaces)
-    return None
+from TypeInfo import get_class_type
 
 
 class Description(object):
@@ -50,7 +35,6 @@ class Description(object):
         from xml.dom.minidom import parse
         self.params = ParamsParser.load(parse(input_params))
         self.api = Parser.load(parse(input_xml))
-        #process_beautiful_capi_root(self.api, self)
 
 
 class Module(object):
@@ -64,8 +48,8 @@ class Module(object):
             os.makedirs(self.root_folder)
 
         module_file = FileGenerator(os.path.join(self.root_folder, self.name + '.i'))
-        module_file.copyright_header = self.description.params.m_copyright_header
-        module_file.automatic_generation_warning = self.description.params.m_automatic_generated_warning
+        module_file.copyright_header = self.description.params.copyright_header
+        module_file.automatic_generation_warning = self.description.params.automatic_generated_warning
 
         module_file.put_line('%module(directors="1", allprotected="1") {module_name}'.format(module_name=self.name))
         module_file.put_line('//enable namespace support')
@@ -95,8 +79,8 @@ class Module(object):
         module_file.put_line('')
         module_file.put_line('//include namespaces')
 
-        for namespace in self.description.api.m_namespaces:
-            module_file.put_line('%include {namespace}.swg'.format(namespace=namespace.m_name))
+        for namespace in self.description.api.namespaces:
+            module_file.put_line('%include {namespace}.swg'.format(namespace=namespace.name))
             Namespace(namespace, self.description, self.root_folder).generate()
 
 
@@ -110,17 +94,19 @@ class Namespace(object):
         if not os.path.exists(self.root_folder):
             os.makedirs(self.root_folder)
 
-        namespace_file = FileGenerator(os.path.join(self.root_folder, self.namespace.m_name + '.swg'))
+        namespace_file = FileGenerator(os.path.join(self.root_folder, self.namespace.name + '.swg'))
 
-        namespace_file.copyright_header = self.description.params.m_copyright_header
-        namespace_file.automatic_generation_warning = self.description.params.m_automatic_generated_warning
+        namespace_file.copyright_header = self.description.params.copyright_header
+        namespace_file.automatic_generation_warning = self.description.params.automatic_generated_warning
 
         headers = OrderedDict()
-        for element in self.namespace.m_classes + self.namespace.m_functions:
+        for element in self.namespace.classes + self.namespace.functions:
             if isinstance(element, Parser.TClass):
-                header = element.m_implementation_class_header
-            elif isinstance(element, Parser.TFunction) and element.m_implementation_header_filled:
-                header = element.m_implementation_header
+                header = element.implementation_class_header
+            elif isinstance(element, Parser.TFunction) and element.implementation_header_filled:
+                header = element.implementation_header
+            else:
+                header = None
 
             if header:
                 if header not in headers.keys():
@@ -143,20 +129,19 @@ class Namespace(object):
 
             namespace_file.put_line('%include "{header}"'.format(header=header))
 
-        for namespace in self.namespace.m_namespaces:
-            namespace_file.put_line('%include {current}/{child}.swg'.format(current=self.namespace.m_name,
-                                                                            child=namespace.m_name))
-            Namespace(namespace, self.description, os.path.join(self.root_folder, namespace.m_name)).generate()
+        for namespace in self.namespace.namespaces:
+            namespace_file.put_line('%include {current}/{child}.swg'.format(current=self.namespace.name,
+                                                                            child=namespace.name))
+            Namespace(namespace, self.description, os.path.join(self.root_folder, self.namespace.name)).generate()
 
     def generate_class(self, element: Parser.TClass, swig_file: FileGenerator):
-        nspaces = element.m_implementation_class_name.split('::')
+        nspaces = element.implementation_class_name.split('::')
         impl_name = nspaces.pop(-1)
 
-        swig_file.put_line('%rename("{iface}", %$isclass) {impl};'.format(iface=element.m_name, impl=impl_name))
+        swig_file.put_line('%rename("{iface}", %$isclass) {impl};'.format(iface=element.name, impl=impl_name))
         swig_file.put_line('%feature("director") {impl};'.format(impl=impl_name))
 
-        if element.m_pointer_access_filled and element.m_pointer_access:
-
+        if element.pointer_access_filled and element.pointer_access:
             nspace_decls = ['namespace ' + n for n in nspaces]
             nspace_open = ' { '.join(nspace_decls + [' '])
             nspace_close = '} ' * len(nspaces)
@@ -167,51 +152,54 @@ class Namespace(object):
                 swig_file.put_line('class {impl} {{}};'.format(impl=impl_name))
                 swig_file.put_line('%extend {impl}'.format(impl=impl_name))
                 with IndentScope(swig_file):
-
-                    for constructor in element.m_constructors:
-                        arg_names = [arg.m_name for arg in constructor.m_arguments]
-                        arg_desc = [arg.m_type + ' ' + arg.m_name for arg in constructor.m_arguments]
+                    for constructor in element.constructors:
+                        arg_names = [arg.name for arg in constructor.arguments]
+                        arg_desc = [arg.type + ' ' + arg.name for arg in constructor.arguments]
 
                         swig_file.put_line('{impl}({args})'.format(impl=impl_name, args=', '.join(arg_desc)))
                         with IndentScope(swig_file):
-                            swig_file.put_line('return new {full_name}({args});'.format(full_name=element.m_implementation_class_name, args=', '.join(arg_names)))
+                            swig_file.put_line('return new {full_name}({args});'.format(
+                                full_name=element.implementation_class_name, args=', '.join(arg_names)))
 
-                    for method in element.m_methods:
-                        arg_names = [arg.m_name for arg in method.m_arguments]
-                        arg_desc = [arg.m_type + ' ' + arg.m_name for arg in method.m_arguments]
+                    for method in element.methods:
+                        arg_names = [arg.name for arg in method.arguments]
+                        arg_desc = [arg.type + ' ' + arg.name for arg in method.arguments]
 
-                        swig_file.put_line('{ret} {name}({args})'.format(ret=method.m_return if method.m_return else 'void', name=method.m_name, args=', '.join(arg_desc)))
+                        swig_file.put_line('{ret} {name}({args})'.format(
+                            ret=method.return_type if method.return_type else 'void', name=method.name,
+                            args=', '.join(arg_desc)))
                         with IndentScope(swig_file):
-                            line = '$self->operator->()->{name}({args});'.format(name=method.m_name, args=', '.join(arg_names))
-                            if method.m_return_filled and method.m_return is not 'void':
+                            line = '$self->operator->()->{name}({args});'.format(name=method.name,
+                                                                                 args=', '.join(arg_names))
+                            if method.return_type_filled and method.return_type is not 'void':
                                 line = 'return ' + line
                             swig_file.put_line(line)
             swig_file.put_line(nspace_close)
-            swig_file.put_line('%rename($ignore, %$isclass) {impl};'.format(iface=element.m_name, impl=impl_name))
+            swig_file.put_line('%rename($ignore, %$isclass) {impl};'.format(iface=element.name, impl=impl_name))
         else:
-            if element.m_lifecycle == Parser.TLifecycle.reference_counted:
+            if element.lifecycle == Parser.TLifecycle.reference_counted:
                 swig_file.put_line('%feature("ref")   {impl} "$this->AddRef();"'.format(impl=impl_name))
                 swig_file.put_line('%feature("unref") {impl} "$this->Release();"'.format(impl=impl_name))
-            if element.m_lifecycle != Parser.TLifecycle.raw_pointer_semantic:
-                leaky = filter(lambda m: get_return_copy_or_add_ref(m), element.m_methods)
+            if element.lifecycle != Parser.TLifecycle.raw_pointer_semantic:
+                leaky = filter(lambda m: get_return_copy_or_add_ref(m), element.methods)
                 for method in leaky:
                     # TODO: may need to fully specify method parameters
-                    swig_file.put_line('%newobject {impl}::{method};'.format(impl=impl_name, method=method.m_name))
+                    swig_file.put_line('%newobject {impl}::{method};'.format(impl=impl_name, method=method.name))
 
-        if element.m_base_filled:
-            base_type = get_class_type(element.m_base, self.description.api)
+        if element.base_filled:
+            base_type = get_class_type(element.base, self.description.api)
             while base_type:
                 swig_file.put_line('%downcast({base}_to_{impl}, {full_impl}, {full_base})'.format(
-                    full_impl=element.m_implementation_class_name, full_base=base_type.m_implementation_class_name,
-                    impl=impl_name, base=base_type.m_implementation_class_name.split('::')[-1]))
+                    full_impl=element.implementation_class_name, full_base=base_type.implementation_class_name,
+                    impl=impl_name, base=base_type.implementation_class_name.split('::')[-1]))
 
-                base_type = get_class_type(base_type.m_base, self.description.api)
+                base_type = get_class_type(base_type.base, self.description.api)
 
     @staticmethod
     def generate_function(function: Parser.TFunction, swig_file: FileGenerator):
-        impl_name = function.m_implementation_name.split('::')[-1]
+        impl_name = function.implementation_name.split('::')[-1]
         swig_file.put_line(
-            '%rename("{iface}", %$isfunction, %$not %$ismember) {impl};'.format(iface=function.m_name, impl=impl_name))
+            '%rename("{iface}", %$isfunction, %$not %$ismember) {impl};'.format(iface=function.name, impl=impl_name))
         if get_return_copy_or_add_ref(function):
             swig_file.put_line('%newobject {impl};'.format(impl=impl_name))
 

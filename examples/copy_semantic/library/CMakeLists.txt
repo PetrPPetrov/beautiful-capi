@@ -40,6 +40,7 @@ add_library(copy_semantic SHARED
   ${copy_semantic_SOURCE_DIR}/source/PrinterImpl.cpp
 )
 
+add_cs_api_generation(cs CopySemantic)
 
 setup_swig_module(swig CopySemantic)
 add_swig_python(swig CopySemantic)

@@ -42,6 +42,7 @@ add_library(object_parameter SHARED
   ${object_parameter_SOURCE_DIR}/source/DocumentImpl.cpp
 )
 
+add_cs_api_generation(cs ObjectParameter)
 
 setup_swig_module(swig ObjectParameter)
 add_swig_python(swig ObjectParameter)

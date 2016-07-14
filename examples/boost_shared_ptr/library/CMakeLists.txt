@@ -51,6 +51,7 @@ add_library(boost_shared_ptr SHARED
   ${boost_shared_ptr_SOURCE_DIR}/source/PrinterImpl.cpp
 )
 
+add_cs_api_generation(cs BoostSharedPtr)
 
 setup_swig_module(swig BoostSharedPtr)
 add_swig_python(swig BoostSharedPtr)

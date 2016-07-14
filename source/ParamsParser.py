@@ -48,88 +48,88 @@ class TExceptionHandlingMode(Enum):
 
 class TBeautifulCapiParams(object):
     def __init__(self):
-        self.m_folder_per_namespace = True
-        self.m_file_per_class = True
-        self.m_namespace_header_at_parent_folder = True
-        self.m_generate_single_file = False
-        self.m_single_header_name = "Output.h"
-        self.m_dynamically_load_functions = False
-        self.m_capi_header_suffix = "Capi"
-        self.m_fwd_header_suffix = "Fwd"
-        self.m_wrapper_class_suffix_copy_semantic = ""
-        self.m_wrapper_class_suffix_reference_counted = "Ptr"
-        self.m_wrapper_class_suffix_raw_pointer = "RawPtr"
-        self.m_forward_typedef_suffix = "FwdPtr"
-        self.m_is_null_method = "IsNull"
-        self.m_is_not_null_method = "IsNotNull"
-        self.m_delete_method = "Delete"
-        self.m_forward_holder_filename = "beautiful_capi/forward_holder.h"
-        self.m_check_and_throw_exception_filename = "beautiful_capi/check_and_throw_exception.h"
-        self.m_exception_handling_mode = TExceptionHandlingMode.no_handling
-        self.m_copyright_header = ""
-        self.m_automatic_generated_warning = ""
+        self.folder_per_namespace = True
+        self.file_per_class = True
+        self.namespace_header_at_parent_folder = True
+        self.generate_single_file = False
+        self.single_header_name = "Output.h"
+        self.dynamically_load_functions = False
+        self.capi_header_suffix = "Capi"
+        self.fwd_header_suffix = "Fwd"
+        self.wrapper_class_suffix_copy_semantic = ""
+        self.wrapper_class_suffix_reference_counted = "Ptr"
+        self.wrapper_class_suffix_raw_pointer = "RawPtr"
+        self.forward_typedef_suffix = "FwdPtr"
+        self.is_null_method = "IsNull"
+        self.is_not_null_method = "IsNotNull"
+        self.delete_method = "Delete"
+        self.forward_holder_filename = "beautiful_capi/forward_holder.h"
+        self.check_and_throw_exception_filename = "beautiful_capi/check_and_throw_exception.h"
+        self.exception_handling_mode = TExceptionHandlingMode.no_handling
+        self.copyright_header = ""
+        self.automatic_generated_warning = ""
     
     def load(self, dom_node):
         for element in [node for node in dom_node.childNodes if node.nodeName == "copyright_header"]:
             for text in [text for text in element.childNodes if text.nodeType == text.TEXT_NODE]:
-                self.m_copyright_header += text.nodeValue
+                self.copyright_header += text.nodeValue
         for element in [node for node in dom_node.childNodes if node.nodeName == "automatic_generated_warning"]:
             for text in [text for text in element.childNodes if text.nodeType == text.TEXT_NODE]:
-                self.m_automatic_generated_warning += text.nodeValue
+                self.automatic_generated_warning += text.nodeValue
         if dom_node.hasAttribute("folder_per_namespace"):
             cur_attr = dom_node.getAttribute("folder_per_namespace")
-            self.m_folder_per_namespace = string_to_bool(cur_attr)
+            self.folder_per_namespace = string_to_bool(cur_attr)
         if dom_node.hasAttribute("file_per_class"):
             cur_attr = dom_node.getAttribute("file_per_class")
-            self.m_file_per_class = string_to_bool(cur_attr)
+            self.file_per_class = string_to_bool(cur_attr)
         if dom_node.hasAttribute("namespace_header_at_parent_folder"):
             cur_attr = dom_node.getAttribute("namespace_header_at_parent_folder")
-            self.m_namespace_header_at_parent_folder = string_to_bool(cur_attr)
+            self.namespace_header_at_parent_folder = string_to_bool(cur_attr)
         if dom_node.hasAttribute("generate_single_file"):
             cur_attr = dom_node.getAttribute("generate_single_file")
-            self.m_generate_single_file = string_to_bool(cur_attr)
+            self.generate_single_file = string_to_bool(cur_attr)
         if dom_node.hasAttribute("single_header_name"):
             cur_attr = dom_node.getAttribute("single_header_name")
-            self.m_single_header_name = cur_attr
+            self.single_header_name = cur_attr
         if dom_node.hasAttribute("dynamically_load_functions"):
             cur_attr = dom_node.getAttribute("dynamically_load_functions")
-            self.m_dynamically_load_functions = string_to_bool(cur_attr)
+            self.dynamically_load_functions = string_to_bool(cur_attr)
         if dom_node.hasAttribute("capi_header_suffix"):
             cur_attr = dom_node.getAttribute("capi_header_suffix")
-            self.m_capi_header_suffix = cur_attr
+            self.capi_header_suffix = cur_attr
         if dom_node.hasAttribute("fwd_header_suffix"):
             cur_attr = dom_node.getAttribute("fwd_header_suffix")
-            self.m_fwd_header_suffix = cur_attr
+            self.fwd_header_suffix = cur_attr
         if dom_node.hasAttribute("wrapper_class_suffix_copy_semantic"):
             cur_attr = dom_node.getAttribute("wrapper_class_suffix_copy_semantic")
-            self.m_wrapper_class_suffix_copy_semantic = cur_attr
+            self.wrapper_class_suffix_copy_semantic = cur_attr
         if dom_node.hasAttribute("wrapper_class_suffix_reference_counted"):
             cur_attr = dom_node.getAttribute("wrapper_class_suffix_reference_counted")
-            self.m_wrapper_class_suffix_reference_counted = cur_attr
+            self.wrapper_class_suffix_reference_counted = cur_attr
         if dom_node.hasAttribute("wrapper_class_suffix_raw_pointer"):
             cur_attr = dom_node.getAttribute("wrapper_class_suffix_raw_pointer")
-            self.m_wrapper_class_suffix_raw_pointer = cur_attr
+            self.wrapper_class_suffix_raw_pointer = cur_attr
         if dom_node.hasAttribute("forward_typedef_suffix"):
             cur_attr = dom_node.getAttribute("forward_typedef_suffix")
-            self.m_forward_typedef_suffix = cur_attr
+            self.forward_typedef_suffix = cur_attr
         if dom_node.hasAttribute("is_null_method"):
             cur_attr = dom_node.getAttribute("is_null_method")
-            self.m_is_null_method = cur_attr
+            self.is_null_method = cur_attr
         if dom_node.hasAttribute("is_not_null_method"):
             cur_attr = dom_node.getAttribute("is_not_null_method")
-            self.m_is_not_null_method = cur_attr
+            self.is_not_null_method = cur_attr
         if dom_node.hasAttribute("delete_method"):
             cur_attr = dom_node.getAttribute("delete_method")
-            self.m_delete_method = cur_attr
+            self.delete_method = cur_attr
         if dom_node.hasAttribute("forward_holder_filename"):
             cur_attr = dom_node.getAttribute("forward_holder_filename")
-            self.m_forward_holder_filename = cur_attr
+            self.forward_holder_filename = cur_attr
         if dom_node.hasAttribute("check_and_throw_exception_filename"):
             cur_attr = dom_node.getAttribute("check_and_throw_exception_filename")
-            self.m_check_and_throw_exception_filename = cur_attr
+            self.check_and_throw_exception_filename = cur_attr
         if dom_node.hasAttribute("exception_handling_mode"):
             cur_attr = dom_node.getAttribute("exception_handling_mode")
-            self.m_exception_handling_mode = TExceptionHandlingMode.load(cur_attr)
+            self.exception_handling_mode = TExceptionHandlingMode.load(cur_attr)
     
 
 def load(dom_node):

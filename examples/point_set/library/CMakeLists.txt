@@ -57,6 +57,7 @@ add_library(point_set SHARED
   ${point_set_SOURCE_DIR}/source/PositionImpl.cpp
 )
 
+add_cs_api_generation(cs PointSet)
 
 setup_swig_module(swig PointSet)
 add_swig_python(swig PointSet)

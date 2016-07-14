@@ -40,3 +40,21 @@ function(add_capi_generation)
             ${CMAKE_CURRENT_SOURCE_DIR}
     )
 endfunction(add_capi_generation)
+
+function(add_cs_api_generation cs_api_module_dir module_name)
+    add_custom_command(
+        TARGET
+            ${PROJECT_NAME}
+        PRE_BUILD
+        COMMAND
+            ${PYTHON_EXECUTABLE}
+            ARGS
+                ${examples_SOURCE_DIR}/../source/CSharp.py
+                -i ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.xml
+                -p ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}_params.xml
+                -o ${CMAKE_CURRENT_SOURCE_DIR}/${cs_api_module_dir}
+                -m ${module_name}
+        WORKING_DIRECTORY
+            ${CMAKE_CURRENT_SOURCE_DIR}
+    )
+endfunction()
