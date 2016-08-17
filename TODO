@@ -5,11 +5,20 @@
 *) check for the life cycle semantic coherence with base class
 *) single file mode: avoid double inclusion of the same header body
 *) single file mode: allow compilation with exceptions, circular references etc.
-*) use advances from introducing preprocess classes
+*) use advances from introducing preprocess classes (?)
 *) don't generate dynamic_casts if impl class is not polymorphic
-*) rename "noexcept" to "no_except"
+*) rename "noexcept" to "no_except" (?)
+*) review poin_set example
+*) exception codes => classes list for pure C wrapping
+*) add options to rename beatyful_capi namespace and watchdog string
+*) __stdcall or something like that
 
 *) callbacks support
+  a) callbacks with exceptions on customer side
+  b) customization of generated methods and constructors names
+  c) customization of 'noexcept' flags for generated methods and constructors
+  d) small influence of life cycle logic to custom callbacks
+  e) add Callback implementation_header including to AutoGenWrap.cpp
 *) template support
 *) standard module for wrapping STL classes (a huge topic, maybe start wrapping only some basic things)
 *) standard module for wrapping boost classes (a huge topic, maybe start wrapping only some basic things)
@@ -31,6 +40,8 @@
 *) implement combined (dynamic & implib) mode
 *) shuffle Capi mode
 ===
+*) general refactoring: too many things in CapiGenerator
+*) "project_name" idea: one header to include rest headers
 *) write more examples and tests:
     +) interoperability example (the same source code works both outside of library and inside the library)
     +) data_structures

@@ -58,6 +58,9 @@ class SingleFile(FileTraitsBase):
     def get_file_for_check_and_throw_exception(self):
         return self.output_file
 
+    def get_file_for_custom_callbacks(self):
+        return self.output_file
+
     def include_namespace_header(self, namespace_path):
         pass
 
@@ -74,6 +77,9 @@ class SingleFile(FileTraitsBase):
         pass
 
     def include_check_and_throw_exception_header(self):
+        pass
+
+    def include_custom_callbacks(self):
         pass
 
 
@@ -200,6 +206,11 @@ class MultipleFiles(FileTraitsBase):
             os.path.join(self.base_path, self.capi_generator.params_description.m_check_and_throw_exception_filename)
         )
 
+    def get_file_for_custom_callbacks(self):
+        return self.__get_cached_generator(
+            os.path.join(self.base_path, self.capi_generator.params_description.m_custom_callbacks_filename)
+        )
+
     def include_namespace_header(self, namespace_path):
         self.__include_file(self.__get_file_name_for_namespace(namespace_path, PosixJoin()))
 
@@ -218,6 +229,9 @@ class MultipleFiles(FileTraitsBase):
 
     def include_check_and_throw_exception_header(self):
         self.__include_file(self.capi_generator.params_description.m_check_and_throw_exception_filename)
+
+    def include_custom_callbacks(self):
+        self.__include_file(self.capi_generator.params_description.m_custom_callbacks_filename)
 
 
 def create_file_traits(capi_generator):

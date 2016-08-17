@@ -68,6 +68,7 @@ class TNamespace(object):
         self.m_implementation_header_filled = False
         self.m_namespaces = []
         self.m_classes = []
+        self.m_callbacks = []
         self.m_functions = []
     
     def load(self, dom_node):
@@ -79,6 +80,10 @@ class TNamespace(object):
             new_element = TClass()
             new_element.load(element)
             self.m_classes.append(new_element)
+        for element in [node for node in dom_node.childNodes if node.nodeName == "callback"]:
+            new_element = TCallback()
+            new_element.load(element)
+            self.m_callbacks.append(new_element)
         for element in [node for node in dom_node.childNodes if node.nodeName == "function"]:
             new_element = TFunction()
             new_element.load(element)
@@ -117,6 +122,9 @@ class TClass(object):
         self.m_delete_or_release_noexcept_filled = False
         self.m_constructors = []
         self.m_methods = []
+        self.m_code_before_class_definitions = []
+        self.m_code_after_publics = []
+        self.m_code_after_class_definitions = []
     
     def load(self, dom_node):
         for element in [node for node in dom_node.childNodes if node.nodeName == "constructor"]:
@@ -127,6 +135,18 @@ class TClass(object):
             new_element = TMethod()
             new_element.load(element)
             self.m_methods.append(new_element)
+        for element in [node for node in dom_node.childNodes if node.nodeName == "code_before_class_definition"]:
+            new_element = TCodeBlock()
+            new_element.load(element)
+            self.m_code_before_class_definitions.append(new_element)
+        for element in [node for node in dom_node.childNodes if node.nodeName == "code_after_public"]:
+            new_element = TCodeBlock()
+            new_element.load(element)
+            self.m_code_after_publics.append(new_element)
+        for element in [node for node in dom_node.childNodes if node.nodeName == "code_after_class_definition"]:
+            new_element = TCodeBlock()
+            new_element.load(element)
+            self.m_code_after_class_definitions.append(new_element)
         if dom_node.hasAttribute("name"):
             cur_attr = dom_node.getAttribute("name")
             self.m_name = cur_attr
@@ -167,6 +187,42 @@ class TClass(object):
             cur_attr = dom_node.getAttribute("delete_or_release_noexcept")
             self.m_delete_or_release_noexcept = string_to_bool(cur_attr)
             self.m_delete_or_release_noexcept_filled = True
+    
+
+class TCallback(object):
+    def __init__(self):
+        self.m_name = "Callback"
+        self.m_name_filled = False
+        self.m_base = ""
+        self.m_base_filled = False
+        self.m_implementation_class_name = ""
+        self.m_implementation_class_name_filled = False
+        self.m_implementation_class_header = ""
+        self.m_implementation_class_header_filled = False
+        self.m_lifecycle = TLifecycle.reference_counted
+        self.m_lifecycle_filled = False
+    
+    def load(self, dom_node):
+        if dom_node.hasAttribute("name"):
+            cur_attr = dom_node.getAttribute("name")
+            self.m_name = cur_attr
+            self.m_name_filled = True
+        if dom_node.hasAttribute("base"):
+            cur_attr = dom_node.getAttribute("base")
+            self.m_base = cur_attr
+            self.m_base_filled = True
+        if dom_node.hasAttribute("implementation_class_name"):
+            cur_attr = dom_node.getAttribute("implementation_class_name")
+            self.m_implementation_class_name = cur_attr
+            self.m_implementation_class_name_filled = True
+        if dom_node.hasAttribute("implementation_class_header"):
+            cur_attr = dom_node.getAttribute("implementation_class_header")
+            self.m_implementation_class_header = cur_attr
+            self.m_implementation_class_header_filled = True
+        if dom_node.hasAttribute("lifecycle"):
+            cur_attr = dom_node.getAttribute("lifecycle")
+            self.m_lifecycle = TLifecycle.load(cur_attr)
+            self.m_lifecycle_filled = True
     
 
 class TConstructor(object):
@@ -248,6 +304,29 @@ class TArgument(object):
             cur_attr = dom_node.getAttribute("type")
             self.m_type = cur_attr
             self.m_type_filled = True
+    
+
+class TCodeBlock(object):
+    def __init__(self):
+        self.m_lines = []
+    
+    def load(self, dom_node):
+        for element in [node for node in dom_node.childNodes if node.nodeName == "line"]:
+            new_element = TCodeLine()
+            new_element.load(element)
+            self.m_lines.append(new_element)
+    
+
+class TCodeLine(object):
+    def __init__(self):
+        self.m_text = ""
+        self.m_text_filled = False
+    
+    def load(self, dom_node):
+        if dom_node.hasAttribute("text"):
+            cur_attr = dom_node.getAttribute("text")
+            self.m_text = cur_attr
+            self.m_text_filled = True
     
 
 def load(dom_node):

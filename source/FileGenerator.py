@@ -43,6 +43,12 @@ class FileGenerator(object):
     def __del__(self):
         self.__write()
 
+    def __enter__(self):
+        pass
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.__write()
+
     def __write(self):
         if self.filename:
             dir_name = os.path.dirname(self.filename)
@@ -57,6 +63,9 @@ class FileGenerator(object):
                     output_file.write(self.automatic_generation_warning + '\n\n')
                 for line in self.get_lines():
                     output_file.write(line)
+
+    def empty(self):
+        return not self.lines
 
     def get_lines(self):
         result = []
@@ -204,3 +213,32 @@ class NewFileScope(object):
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.capi_generator.output_header = self.previous_file_generator
+
+
+class NewSourceFileScope(object):
+    def __init__(self, file_generator, capi_generator):
+        self.file_generator = file_generator
+        self.previous_file_generator = capi_generator.output_header
+        self.capi_generator = capi_generator
+
+    def __enter__(self):
+        self.capi_generator.output_source = self.file_generator
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.capi_generator.output_source = self.previous_file_generator
+
+
+class NewFilesScope(object):
+    def __init__(self, file_generator, capi_generator):
+        self.file_generator = file_generator
+        self.previous_output_header = capi_generator.output_header
+        self.previous_output_source = capi_generator.output_source
+        self.capi_generator = capi_generator
+
+    def __enter__(self):
+        self.capi_generator.output_header = self.file_generator
+        self.capi_generator.output_source = self.file_generator
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.capi_generator.output_header = self.previous_output_header
+        self.capi_generator.output_source = self.previous_output_source

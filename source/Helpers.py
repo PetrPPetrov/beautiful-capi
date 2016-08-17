@@ -21,6 +21,8 @@
 
 
 from Parser import TConstructor
+from Parser import TCodeBlock
+from Parser import TCodeLine
 
 
 def pascal_to_stl(pascal_name):
@@ -50,6 +52,33 @@ def get_return_copy_or_add_ref(constructor_or_method):
         return constructor_or_method.m_return_copy_or_add_ref
     else:
         return get_return_copy_or_add_ref_default_value(constructor_or_method)
+
+
+def save_file_generator_to_code_blocks(file_generator, code_blocks):
+    new_code_block = TCodeBlock()
+    for cur_line in file_generator.get_lines():
+        new_line = TCodeLine()
+        new_line.m_text = cur_line.replace('\n', '')
+        new_code_block.m_lines.append(new_line)
+    code_blocks.append(new_code_block)
+
+
+def save_line_as_new_code_block(text, code_blocks):
+    new_code_block = TCodeBlock()
+    new_line = TCodeLine()
+    new_line.m_text = text
+    new_code_block.m_lines.append(new_line)
+    code_blocks.append(new_code_block)
+
+
+def output_code_blocks(output_file, code_blocks, prepend_empty_line=False):
+    if prepend_empty_line and code_blocks:
+        output_file.put_line('')
+    for cur_code_block in code_blocks:
+        for cur_code_line in cur_code_block.m_lines:
+            output_file.put_line(cur_code_line.m_text)
+    if not prepend_empty_line and code_blocks:
+        output_file.put_line('')
 
 
 class NamespaceScope(object):

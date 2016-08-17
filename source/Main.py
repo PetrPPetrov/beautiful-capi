@@ -36,6 +36,9 @@ from FileGenerator import IfDefScope
 from CapiFwd import process_capi
 from CapiFwd import process_fwd
 from CapiFwd import generate_forward_holder
+from Callback import generate_callback_classes
+from Callback import generate_custom_callbacks
+from Callback import generate_callbacks_implementations
 import FileGenerator
 import Parser
 import ParamsParser
@@ -59,20 +62,26 @@ class CapiGenerator(object):
         self.exception_traits = None
         self.extra_info = {}
         self.exception_class_2_code = {}
+        self.callback_typedefs = FileGenerator.FileGenerator(None)
+        self.callback_2_class = {}
+        self.callbacks_implementations = FileGenerator.FileGenerator(None)
 
     def generate(self):
         self.params_description = ParamsParser.load(self.input_params)
         self.api_description = Parser.load(self.input_xml)
+        generate_callback_classes(self.api_description, self)
         pre_process_beautiful_capi_root(self.api_description, self)
         with CreateLoaderTraits(self):
             with CreateFileTraits(self):
                 with CreateExceptionTraits(Parser.TConstructor(), None, self):
                     self.exception_traits.generate_codes()
                     generate_forward_holder(self)
+                    generate_custom_callbacks(self.api_description, self)
                     self.output_source = FileGenerator.FileGenerator(self.output_wrap_file_name)
                     self.output_source.put_begin_cpp_comments(self.params_description)
                     for namespace in self.api_description.m_namespaces:
                         self.__process_namespace(namespace)
+                    generate_callbacks_implementations(self.api_description, self)
                     self.exception_traits.generate_check_and_throw_exception_header()
 
     def get_namespace_id(self):
@@ -182,6 +191,7 @@ class CapiGenerator(object):
 
     def __generate_class(self, cur_class):
         self.loader_traits.add_impl_header(cur_class.m_implementation_class_header)
+        Helpers.output_code_blocks(self.output_header, cur_class.m_code_before_class_definitions)
         self.output_header.put_line('class {0}{1}'.format(
             cur_class.m_name + self.lifecycle_traits.get_suffix(),
             ' : public ' + cur_class.m_base + self.lifecycle_traits.get_suffix() if cur_class.m_base else ''
@@ -193,14 +203,17 @@ class CapiGenerator(object):
             self.inheritance_traits.generate_set_object()
             with FileGenerator.Unindent(self.output_header):
                 self.output_header.put_line('public:')
+            Helpers.output_code_blocks(self.output_header, cur_class.m_code_after_publics)
             self.lifecycle_traits.generate_copy_constructor()
             self.lifecycle_traits.generate_std_methods()
+            self.lifecycle_traits.generate_assigment_operator()
             for constructor in cur_class.m_constructors:
                 self.inheritance_traits.generate_constructor(constructor)
             self.lifecycle_traits.generate_destructor()
             self.lifecycle_traits.generate_delete_method()
             for method in cur_class.m_methods:
                 self.__generate_method(method, cur_class)
+        Helpers.output_code_blocks(self.output_header, cur_class.m_code_after_class_definitions, True)
 
     def __generate_method(self, method, cur_class):
         with CreateExceptionTraits(method, cur_class, self):
@@ -349,6 +362,15 @@ class CapiGenerator(object):
         else:
             return self.get_cpp_type(type_name)
 
+    def get_wrapped_argument_for_callback(self, type_name, argument_name):
+        if self.__is_class_type(type_name):
+            return '{0}({1}, true)'.format(type_name, argument_name)
+        else:
+            return self.get_cpp_type(type_name)
+
+    def get_wrapped_argument_pairs_for_callback(self, arguments):
+        return [self.get_wrapped_argument_for_callback(argument) for argument in arguments]
+
     def get_wrapped_argument_pair(self, argument):
         return '{0} {1}'.format(self.get_wrapped_type(argument.m_type), argument.m_name)
 
@@ -408,6 +430,26 @@ class CapiGenerator(object):
 
     def get_c_to_original_arguments(self, arguments):
         return [self.get_c_to_original_argument(argument) for argument in arguments]
+
+    # Original types
+    def get_original_type(self, type_name):
+        class_object = self.get_class_type(type_name)
+        if class_object:
+            return '{0}*'.format(class_object.m_implementation_class_name)
+        else:
+            return self.get_cpp_type(type_name)
+
+    def get_original_argument(self, argument):
+        return self.get_original_type(argument.m_type)
+
+    def get_original_argument_pair(self, argument):
+        return '{0} {1}'.format(self.get_original_type(argument.m_type), argument.m_name)
+
+    def get_original_arguments(self, arguments):
+        return [self.get_original_argument(argument) for argument in arguments]
+
+    def get_original_argument_pairs(self, arguments):
+        return [self.get_original_argument_pair(argument) for argument in arguments]
 
 
 def main():

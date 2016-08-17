@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<callback:api xmlns:callback="http://gkmsoft.ru/beautifulcapi">
+  <namespace name="Example">
+    <class name="Printer" lifecycle="reference_counted" implementation_class_name="Example::IPrinter" implementation_class_header="IPrinter.h">
+      <method name="Print">
+        <argument type="const char*" name="text"/>
+      </method>
+    </class>
+  <function
+    name="CreateDefaultPrinter" return="Example::Printer"
+    return_copy_or_add_ref="false" implementation_name="Example::CreateDefaultPrinterImpl" implementation_header="DefaultPrinterImpl.h"/>
+    <callback
+      name="CustomPrinter" base="Example::Printer"
+      lifecycle="raw_pointer_semantic"
+      implementation_class_name="Example::PrinterBaseImpl" implementation_header="DefaultPrinterImpl.h"/>
+  <class name="Person" lifecycle="copy_semantic" implementation_class_name="Example::PersonImpl" implementation_class_header="PersonImpl.h">
+    <constructor name="Default"/>
+    <method name="SetFirstName">
+      <argument type="const char*" name="first_name"/>
+    </method>
+    <method name="GetFirstName" return="const char*"/>
+    <method name="SetSecondName">
+      <argument type="const char*" name="second_name"/>
+    </method>
+    <method name="GetSecondName" return="const char*"/>
+    <method name="SetAge">
+      <argument type="unsigned int" name="age"/>
+    </method>
+    <method name="GetAge" return="unsigned int"/>
+    <method name="SetMale">
+      <argument type="bool" name="is_male"/>
+    </method>
+    <method name="IsMale" return="bool"/>
+    <method name="Dump">
+      <argument type="Example::Printer" name="printer"/>
+    </method>
+  </class>
+  </namespace>
+</callback:api>

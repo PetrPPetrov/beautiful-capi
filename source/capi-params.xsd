@@ -30,5 +30,6 @@
     <xs:attribute name="forward_holder_filename" type="xs:string" use="optional" default="beautiful_capi/forward_holder.h"/>
     <xs:attribute name="check_and_throw_exception_filename" type="xs:string" use="optional" default="beautiful_capi/check_and_throw_exception.h"/>
     <xs:attribute name="exception_handling_mode" type="TExceptionHandlingMode" use="optional" default="no_handling"/>
+    <xs:attribute name="custom_callbacks_filename" type="xs:string" use="optional" default="beautiful_capi/custom_callbacks.h"/>
   </xs:complexType>
 </xs:schema>

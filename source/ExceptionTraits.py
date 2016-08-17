@@ -170,7 +170,7 @@ class ByFirstArgument(ExceptionTraitsBase):
                 cur_file.put_line('namespace beautiful_capi')
                 with IndentScope(cur_file):
                     cur_file.put_line(
-                        'inline void check_and_throw_exception(int exception_code, void * exception_object);'
+                        'inline void check_and_throw_exception(int exception_code, void* exception_object);'
                     )
 
     @staticmethod

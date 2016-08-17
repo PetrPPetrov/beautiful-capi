@@ -16,6 +16,7 @@ build/
 /examples/down_cast/library/include/
 /examples/point_set/library/include/
 /examples/exception/library/include/
+/examples/callback/library/include/
 /tests/file_options/library/include/
 AutoGen*
 auto_gen*

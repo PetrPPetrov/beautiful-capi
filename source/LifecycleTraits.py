@@ -117,21 +117,25 @@ class CopySemantic(LifecycleTraitsBase):
         )
         self.generate_delete_c_function()
 
+    def __generate_copy_constructor_body(self):
+        self.copy_method.m_arguments[0].m_name = 'other.{0}'.format(Constants.object_var)
+        self.put_line('if (other.{object_var})'.format(object_var=Constants.object_var))
+        with self.indent_scope():
+            self.copy_exception_traits.generate_c_call(
+                self.capi_generator.get_namespace_id().lower() + Constants.copy_suffix,
+                'SetObject({c_function}({arguments}))',
+                True
+            )
+        self.put_line('else')
+        with self.indent_scope():
+            self.put_line('SetObject(0);')
+
     def generate_copy_constructor(self):
         self.put_line('{class_name}(const {class_name}& other){base_init}'.format(
             class_name=self.cur_class.m_name + self.get_suffix(), base_init=self.get_base_init())
         )
         with self.indent_scope():
-            self.put_line('if (other.{object_var})'.format(object_var=Constants.object_var))
-            with self.indent_scope():
-                self.copy_exception_traits.generate_c_call(
-                    self.capi_generator.get_namespace_id().lower() + Constants.copy_suffix,
-                    'SetObject({c_function}({arguments}))',
-                    True
-                )
-            self.put_line('else')
-            with self.indent_scope():
-                self.put_line('SetObject(0);')
+            self.__generate_copy_constructor_body()
         self.put_line('{class_name}(void *object_pointer, bool copy_object){base_init}'.format(
             class_name=self.cur_class.m_name + self.get_suffix(), base_init=self.get_base_init())
         )
@@ -159,6 +163,16 @@ class CopySemantic(LifecycleTraitsBase):
             self.copy_exception_traits.generate_implementation_call(method_call, 'void*')
         self.put_source_line('')
 
+    def generate_assigment_operator(self):
+        self.put_line('{class_name} operator=(const {class_name}& other)'.format(
+            class_name=self.cur_class.m_name + self.get_suffix()))
+        with self.indent_scope():
+            self.put_line('if ({object_var} != other.{object_var})'.format(object_var=Constants.object_var))
+            with self.indent_scope():
+                self.capi_generator.inheritance_traits.generate_destructor_body(self.get_delete_c_function_name())
+                self.__generate_copy_constructor_body()
+            self.put_line('return *this;')
+
 
 class RawPointerSemantic(LifecycleTraitsBase):
     def __init__(self, cur_class, capi_generator):
@@ -179,6 +193,13 @@ class RawPointerSemantic(LifecycleTraitsBase):
             class_name=self.cur_class.m_name + self.get_suffix(), base_init=self.get_base_init()))
         with self.indent_scope():
             self.put_line('SetObject(object_pointer);')
+
+    def generate_assigment_operator(self):
+        self.put_line('{class_name} operator=(const {class_name}& other)'.format(
+            class_name=self.cur_class.m_name + self.get_suffix()))
+        with self.indent_scope():
+            self.put_line('SetObject(other.{object_var});'.format(object_var=Constants.object_var))
+            self.put_line('return *this;')
 
     def generate_delete_method(self):
         self.capi_generator.inheritance_traits.generate_destructor(
@@ -225,27 +246,37 @@ class RefCountedSemantic(LifecycleTraitsBase):
             self.release_exception_traits.generate_implementation_call(method_call, '')
         self.put_source_line('')
 
-    def generate_copy_constructor(self):
-        self.put_line('{class_name}(const {class_name}& other){base_init}'.format(
-            class_name=self.cur_class.m_name + self.get_suffix(), base_init=self.get_base_init()))
+    def __generate_copy_constructor_body(self):
+        self.put_line('SetObject(other.{object_var});'.format(object_var=Constants.object_var))
+        self.put_line('if ({object_var})'.format(object_var=Constants.object_var))
         with self.indent_scope():
-            self.put_line('SetObject(other.{object_var});'.format(object_var=Constants.object_var))
             self.add_ref_exception_traits.generate_c_call(
                 self.capi_generator.get_namespace_id().lower() + Constants.add_ref_suffix,
                 '{c_function}({arguments})',
                 False
             )
+
+    def __generate_copy_constructor_add_ref_body(self):
+        self.put_line('SetObject(object_pointer);'.format(object_var=Constants.object_var))
+        self.put_line('if (add_ref && object_pointer)')
+        with self.indent_scope():
+            self.add_ref_exception_traits.generate_c_call(
+                self.capi_generator.get_namespace_id().lower() + Constants.add_ref_suffix,
+                '{c_function}({arguments})',
+                False
+            )
+
+    def generate_copy_constructor(self):
+        self.put_line('{class_name}(const {class_name}& other){base_init}'.format(
+            class_name=self.cur_class.m_name + self.get_suffix(), base_init=self.get_base_init()))
+        with self.indent_scope():
+            self.__generate_copy_constructor_body()
+
         self.put_line('{class_name}(void *object_pointer, bool add_ref){base_init}'.format(
             class_name=self.cur_class.m_name + self.get_suffix(), base_init=self.get_base_init()))
         with self.indent_scope():
-            self.put_line('SetObject(object_pointer);'.format(object_var=Constants.object_var))
-            self.put_line('if (add_ref && object_pointer)')
-            with self.indent_scope():
-                self.add_ref_exception_traits.generate_c_call(
-                    self.capi_generator.get_namespace_id().lower() + Constants.add_ref_suffix,
-                    '{c_function}({arguments})',
-                    False
-                )
+            self.__generate_copy_constructor_add_ref_body()
+
         c_function_declaration = 'void {addref_c_function}({arguments_list})'.format(
             addref_c_function=self.capi_generator.get_namespace_id().lower() + Constants.add_ref_suffix,
             arguments_list=', '.join(self.add_ref_exception_traits.get_c_argument_pairs())
@@ -257,6 +288,17 @@ class RefCountedSemantic(LifecycleTraitsBase):
             )
             self.add_ref_exception_traits.generate_implementation_call(method_call, '')
         self.put_source_line('')
+
+    def generate_assigment_operator(self):
+        self.put_line('{class_name} operator=(const {class_name}& other)'.format(
+            class_name=self.cur_class.m_name + self.get_suffix()))
+        with self.indent_scope():
+            self.put_line('if ({object_var} != other.{object_var})'.format(object_var=Constants.object_var))
+            with self.indent_scope():
+                release_c_function_name = self.capi_generator.get_namespace_id().lower() + Constants.release_suffix
+                self.capi_generator.inheritance_traits.generate_destructor_body(release_c_function_name)
+                self.__generate_copy_constructor_body()
+            self.put_line('return *this;')
 
     def generate_copy_or_add_ref_for_constructor(self):
         self.copy_method.m_arguments[0].m_name = Constants.object_var
