@@ -51,13 +51,13 @@ class TLifecycle(Enum):
 
 class TBeautifulCapiRoot(object):
     def __init__(self):
-        self.m_namespaces = []
+        self.namespaces = []
     
     def load(self, dom_node):
         for element in [node for node in dom_node.childNodes if node.nodeName == "namespace"]:
             new_element = TNamespace()
             new_element.load(element)
-            self.m_namespaces.append(new_element)
+            self.namespaces.append(new_element)
     
 
 class TNamespace(object):
@@ -66,28 +66,28 @@ class TNamespace(object):
         self.name_filled = False
         self.implementation_header = ""
         self.implementation_header_filled = False
-        self.m_namespaces = []
-        self.m_classes = []
-        self.m_callbacks = []
-        self.m_functions = []
+        self.namespaces = []
+        self.classes = []
+        self.callbacks = []
+        self.functions = []
     
     def load(self, dom_node):
         for element in [node for node in dom_node.childNodes if node.nodeName == "namespace"]:
             new_element = TNamespace()
             new_element.load(element)
-            self.m_namespaces.append(new_element)
+            self.namespaces.append(new_element)
         for element in [node for node in dom_node.childNodes if node.nodeName == "class"]:
             new_element = TClass()
             new_element.load(element)
-            self.m_classes.append(new_element)
+            self.classes.append(new_element)
         for element in [node for node in dom_node.childNodes if node.nodeName == "callback"]:
             new_element = TCallback()
             new_element.load(element)
-            self.m_callbacks.append(new_element)
+            self.callbacks.append(new_element)
         for element in [node for node in dom_node.childNodes if node.nodeName == "function"]:
             new_element = TFunction()
             new_element.load(element)
-            self.m_functions.append(new_element)
+            self.functions.append(new_element)
         if dom_node.hasAttribute("name"):
             cur_attr = dom_node.getAttribute("name")
             self.name = cur_attr
@@ -120,33 +120,33 @@ class TClass(object):
         self.copy_or_add_ref_noexcept_filled = False
         self.delete_or_release_noexcept = False
         self.delete_or_release_noexcept_filled = False
-        self.m_constructors = []
-        self.m_methods = []
-        self.m_code_before_class_definitions = []
-        self.m_code_after_publics = []
-        self.m_code_after_class_definitions = []
+        self.constructors = []
+        self.methods = []
+        self.code_before_class_definitions = []
+        self.code_after_publics = []
+        self.code_after_class_definitions = []
     
     def load(self, dom_node):
         for element in [node for node in dom_node.childNodes if node.nodeName == "constructor"]:
             new_element = TConstructor()
             new_element.load(element)
-            self.m_constructors.append(new_element)
+            self.constructors.append(new_element)
         for element in [node for node in dom_node.childNodes if node.nodeName == "method"]:
             new_element = TMethod()
             new_element.load(element)
-            self.m_methods.append(new_element)
+            self.methods.append(new_element)
         for element in [node for node in dom_node.childNodes if node.nodeName == "code_before_class_definition"]:
             new_element = TCodeBlock()
             new_element.load(element)
-            self.m_code_before_class_definitions.append(new_element)
+            self.code_before_class_definitions.append(new_element)
         for element in [node for node in dom_node.childNodes if node.nodeName == "code_after_public"]:
             new_element = TCodeBlock()
             new_element.load(element)
-            self.m_code_after_publics.append(new_element)
+            self.code_after_publics.append(new_element)
         for element in [node for node in dom_node.childNodes if node.nodeName == "code_after_class_definition"]:
             new_element = TCodeBlock()
             new_element.load(element)
-            self.m_code_after_class_definitions.append(new_element)
+            self.code_after_class_definitions.append(new_element)
         if dom_node.hasAttribute("name"):
             cur_attr = dom_node.getAttribute("name")
             self.name = cur_attr
@@ -233,13 +233,13 @@ class TConstructor(object):
         self.return_copy_or_add_ref_filled = False
         self.noexcept = False
         self.noexcept_filled = False
-        self.m_arguments = []
+        self.arguments = []
     
     def load(self, dom_node):
         for element in [node for node in dom_node.childNodes if node.nodeName == "argument"]:
             new_element = TArgument()
             new_element.load(element)
-            self.m_arguments.append(new_element)
+            self.arguments.append(new_element)
         if dom_node.hasAttribute("name"):
             cur_attr = dom_node.getAttribute("name")
             self.name = cur_attr
@@ -257,15 +257,15 @@ class TConstructor(object):
 class TMethod(TConstructor):
     def __init__(self):
         super().__init__()
-        self.return = ""
-        self.return_filled = False
+        self.return_type = ""
+        self.return_type_filled = False
     
     def load(self, dom_node):
         super().load(dom_node)
-        if dom_node.hasAttribute("return"):
-            cur_attr = dom_node.getAttribute("return")
-            self.return = cur_attr
-            self.return_filled = True
+        if dom_node.hasAttribute("return_type"):
+            cur_attr = dom_node.getAttribute("return_type")
+            self.return_type = cur_attr
+            self.return_type_filled = True
     
 
 class TFunction(TMethod):
@@ -308,13 +308,13 @@ class TArgument(object):
 
 class TCodeBlock(object):
     def __init__(self):
-        self.m_lines = []
+        self.lines = []
     
     def load(self, dom_node):
         for element in [node for node in dom_node.childNodes if node.nodeName == "line"]:
             new_element = TCodeLine()
             new_element.load(element)
-            self.m_lines.append(new_element)
+            self.lines.append(new_element)
     
 
 class TCodeLine(object):
