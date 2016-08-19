@@ -38,7 +38,7 @@ class ExtraInfo(object):
             return '::'.join(self.full_name_array) + self.capi_generator.lifecycle_traits.get_suffix()
 
     def get_fwd_class_name(self):
-        return '::'.join(self.full_name_array) + self.capi_generator.params_description.m_forward_typedef_suffix
+        return '::'.join(self.full_name_array) + self.capi_generator.params_description.forward_typedef_suffix
 
     def get_c_name(self):
         return '_'.join(self.full_name_array).lower()
@@ -49,7 +49,7 @@ def process_beautiful_capi_class(cur_class, cur_name_path, capi_generator):
         extra_info_entry = ExtraInfo(capi_generator)
         extra_info_entry.full_name_array = copy.deepcopy(cur_name_path)
         extra_info_entry.class_object = cur_class
-        cur_base_class_str = cur_class.m_base
+        cur_base_class_str = cur_class.base
         if cur_base_class_str:
             cur_base_class = capi_generator.get_class_type(cur_base_class_str)
             if cur_base_class:
@@ -79,13 +79,13 @@ def process_beautiful_capi_namespace(cur_namespace, cur_name_path, capi_generato
         extra_info_entry.full_name_array = copy.deepcopy(cur_name_path)
         extra_info_entry.class_object = cur_namespace
         capi_generator.extra_info.update({cur_namespace: extra_info_entry})
-        for cur_sub_namespace in cur_namespace.m_namespaces:
+        for cur_sub_namespace in cur_namespace.namespaces:
             process_beautiful_capi_namespace(cur_sub_namespace, cur_name_path, capi_generator)
-        for cur_class in cur_namespace.m_classes:
+        for cur_class in cur_namespace.classes:
             process_beautiful_capi_class(cur_class, cur_name_path, capi_generator)
 
 
 def pre_process_beautiful_capi_root(root_node, capi_generator):
     cur_name_path = []
-    for cur_namespace in root_node.m_namespaces:
+    for cur_namespace in root_node.namespaces:
         process_beautiful_capi_namespace(cur_namespace, cur_name_path, capi_generator)

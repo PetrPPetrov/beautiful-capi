@@ -440,11 +440,11 @@ def generate_callbacks_implementations_impl(cur_callback, base_class, cur_namesp
 def process_namespace_impl(namespace, capi_generator, process_method, begin_ns_method, end_ns_method):
     begin_ns_method(namespace, capi_generator)
     for cur_callback in namespace.m_callbacks:
-        base_class = capi_generator.get_class_type(cur_callback.m_base)
+        base_class = capi_generator.get_class_type(cur_callback.base)
         if base_class:
             process_method(cur_callback, base_class, namespace, capi_generator)
         else:
-            print('Error: base class {0} is not found'.format(cur_callback.m_base))
+            print('Error: base class {0} is not found'.format(cur_callback.base))
     for nested_namespace in namespace.m_namespaces:
         process_namespace_impl(nested_namespace, capi_generator, process_method, begin_ns_method, end_ns_method)
     end_ns_method(namespace, capi_generator)

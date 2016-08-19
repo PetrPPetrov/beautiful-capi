@@ -24,13 +24,13 @@ cmake_minimum_required(VERSION 2.8)
 
 find_package(PythonInterp 3.4 REQUIRED)
 
-add_custom_command(
-  OUTPUT ${boost_shared_ptr_SOURCE_DIR}/source/AutoGenWrap.cpp
-  COMMAND ${PYTHON_EXECUTABLE} ${boost_shared_ptr_SOURCE_DIR}/../../../source/Main.py -i ${boost_shared_ptr_SOURCE_DIR}/boost_shared_ptr.xml -p ${boost_shared_ptr_SOURCE_DIR}/boost_shared_ptr_params.xml -o ${boost_shared_ptr_SOURCE_DIR}/include -w ${boost_shared_ptr_SOURCE_DIR}/source/AutoGenWrap.cpp
-  MAIN_DEPENDENCY ${boost_shared_ptr_SOURCE_DIR}/boost_shared_ptr.xml
-  DEPENDS ${boost_shared_ptr_SOURCE_DIR}/boost_shared_ptr_params.xml
-  WORKING_DIRECTORY ${boost_shared_ptr_SOURCE_DIR}
-)
+SET(SWIG_DIR "/Users/Shared/Libraries/swig-3.0.10-install/")
+SET(SWIG_EXECUTABLE "/Users/Shared/Libraries/swig-3.0.10-install/bin/swig")
+include(../../example.cmake)
+include(../../swig_example.cmake)
+
+add_capi_generation()
+add_swig_generation(swig BoostSharedPtr)
 
 include_directories(
   ${boost_shared_ptr_SOURCE_DIR}/../../../3rdparty/boost/core/include/
@@ -50,3 +50,9 @@ add_library(boost_shared_ptr SHARED
   ${boost_shared_ptr_SOURCE_DIR}/source/PrinterImpl.h
   ${boost_shared_ptr_SOURCE_DIR}/source/PrinterImpl.cpp
 )
+
+add_cs_api_generation(cs BoostSharedPtr)
+
+setup_swig_module(swig BoostSharedPtr)
+add_swig_python(swig BoostSharedPtr)
+add_swig_csharp(swig BoostSharedPtr)

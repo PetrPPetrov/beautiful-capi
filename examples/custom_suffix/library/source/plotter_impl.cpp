@@ -33,7 +33,7 @@ hello_world::plotter_impl::~plotter_impl()
     std::cout << "Plotter dtor" << std::endl;
 }
 
-void hello_world::plotter_impl::add_ref()
+void hello_world::plotter_impl::AddRef()
 {
     if (this)
     {
@@ -41,7 +41,7 @@ void hello_world::plotter_impl::add_ref()
     }
 }
 
-void hello_world::plotter_impl::release()
+void hello_world::plotter_impl::Release()
 {
     if (this)
     {

@@ -24,13 +24,13 @@ cmake_minimum_required(VERSION 2.8)
 
 find_package(PythonInterp 3.4 REQUIRED)
 
-add_custom_command(
-  OUTPUT ${object_parameter_SOURCE_DIR}/source/AutoGenWrap.cpp
-  COMMAND ${PYTHON_EXECUTABLE} ${object_parameter_SOURCE_DIR}/../../../source/Main.py -i ${object_parameter_SOURCE_DIR}/object_parameter.xml -p ${object_parameter_SOURCE_DIR}/object_parameter_params.xml -o ${object_parameter_SOURCE_DIR}/include -w ${object_parameter_SOURCE_DIR}/source/AutoGenWrap.cpp
-  MAIN_DEPENDENCY ${object_parameter_SOURCE_DIR}/object_parameter.xml
-  DEPENDS ${object_parameter_SOURCE_DIR}/object_parameter_params.xml
-  WORKING_DIRECTORY ${object_parameter_SOURCE_DIR}
-)
+SET(SWIG_DIR "/Users/Shared/Libraries/swig-3.0.10-install/")
+SET(SWIG_EXECUTABLE "/Users/Shared/Libraries/swig-3.0.10-install/bin/swig")
+include(../../example.cmake)
+include(../../swig_example.cmake)
+
+add_capi_generation()
+add_swig_generation(swig ObjectParameter)
 
 include_directories(${object_parameter_SOURCE_DIR}/source/)
 
@@ -41,3 +41,10 @@ add_library(object_parameter SHARED
   ${object_parameter_SOURCE_DIR}/source/DocumentImpl.h
   ${object_parameter_SOURCE_DIR}/source/DocumentImpl.cpp
 )
+
+add_cs_api_generation(cs ObjectParameter)
+
+setup_swig_module(swig ObjectParameter)
+add_swig_python(swig ObjectParameter)
+add_swig_csharp(swig ObjectParameter)
+

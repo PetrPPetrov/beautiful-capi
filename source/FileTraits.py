@@ -37,7 +37,7 @@ class SingleFile(FileTraitsBase):
         if not os.path.exists(self.capi_generator.output_folder):
             os.makedirs(self.capi_generator.output_folder)
         self.file_name = os.path.join(self.capi_generator.output_folder,
-                                      self.capi_generator.params_description.m_single_header_name)
+                                      self.capi_generator.params_description.single_header_name)
         self.output_file = FileGenerator.FileGenerator(self.file_name)
 
     def get_file_for_namespace(self, namespace_path):
@@ -129,7 +129,7 @@ class MultipleFiles(FileTraitsBase):
         self.file2generator = {}
 
     def __get_file_name_base_for_namespace_common(self, namespace_path, join_traits):
-        if self.capi_generator.params_description.m_folder_per_namespace:
+        if self.capi_generator.params_description.folder_per_namespace:
             result_folder = join_traits.join_to_base(namespace_path)
         else:
             result_folder = join_traits.get_base_path()
@@ -137,7 +137,7 @@ class MultipleFiles(FileTraitsBase):
         return result_folder
 
     def __get_file_name_base_for_namespace(self, namespace_path, join_traits):
-        if self.capi_generator.params_description.m_namespace_header_at_parent_folder:
+        if self.capi_generator.params_description.namespace_header_at_parent_folder:
             return self.__get_file_name_base_for_namespace_common(namespace_path[:-1], join_traits)
         else:
             return self.__get_file_name_base_for_namespace_common(namespace_path, join_traits)
@@ -149,10 +149,10 @@ class MultipleFiles(FileTraitsBase):
         )
 
     def __get_file_name_for_class(self, namespace_path, cur_class, join_traits):
-        if self.capi_generator.params_description.m_file_per_class:
+        if self.capi_generator.params_description.file_per_class:
             return join_traits.join(
                 self.__get_file_name_base_for_namespace_common(namespace_path, join_traits),
-                cur_class.m_name + '.h'
+                cur_class.name + '.h'
             )
         else:
             return self.__get_file_name_for_namespace(namespace_path, join_traits)
@@ -160,13 +160,13 @@ class MultipleFiles(FileTraitsBase):
     def __get_file_name_for_capi(self, namespace_path, join_traits):
         return join_traits.join(
             self.__get_file_name_base_for_namespace(namespace_path[0:1], join_traits),
-            namespace_path[0] + self.capi_generator.params_description.m_capi_header_suffix + '.h'
+            namespace_path[0] + self.capi_generator.params_description.capi_header_suffix + '.h'
         )
 
     def __get_file_name_for_fwd(self, namespace_path, join_traits):
         return join_traits.join(
             self.__get_file_name_base_for_namespace(namespace_path[0:1], join_traits),
-            namespace_path[0] + self.capi_generator.params_description.m_fwd_header_suffix + '.h'
+            namespace_path[0] + self.capi_generator.params_description.fwd_header_suffix + '.h'
         )
 
     def __get_cached_generator(self, file_name):
@@ -198,12 +198,12 @@ class MultipleFiles(FileTraitsBase):
 
     def get_file_for_forward_holder(self):
         return self.__get_cached_generator(
-            os.path.join(self.base_path, self.capi_generator.params_description.m_forward_holder_filename)
+            os.path.join(self.base_path, self.capi_generator.params_description.forward_holder_filename)
         )
 
     def get_file_for_check_and_throw_exception(self):
         return self.__get_cached_generator(
-            os.path.join(self.base_path, self.capi_generator.params_description.m_check_and_throw_exception_filename)
+            os.path.join(self.base_path, self.capi_generator.params_description.check_and_throw_exception_filename)
         )
 
     def get_file_for_custom_callbacks(self):
@@ -215,7 +215,7 @@ class MultipleFiles(FileTraitsBase):
         self.__include_file(self.__get_file_name_for_namespace(namespace_path, PosixJoin()))
 
     def include_class_header(self, namespace_path, cur_class):
-        if self.capi_generator.params_description.m_file_per_class:
+        if self.capi_generator.params_description.file_per_class:
             self.__include_file(self.__get_file_name_for_class(namespace_path, cur_class, PosixJoin()))
 
     def include_capi_header(self, namespace_path):
@@ -225,17 +225,17 @@ class MultipleFiles(FileTraitsBase):
         self.__include_file(self.__get_file_name_for_fwd(namespace_path, PosixJoin()))
 
     def include_forward_holder_header(self):
-        self.__include_file(self.capi_generator.params_description.m_forward_holder_filename)
+        self.__include_file(self.capi_generator.params_description.forward_holder_filename)
 
     def include_check_and_throw_exception_header(self):
-        self.__include_file(self.capi_generator.params_description.m_check_and_throw_exception_filename)
+        self.__include_file(self.capi_generator.params_description.check_and_throw_exception_filename)
 
     def include_custom_callbacks(self):
         self.__include_file(self.capi_generator.params_description.m_custom_callbacks_filename)
 
 
 def create_file_traits(capi_generator):
-    if capi_generator.params_description.m_generate_single_file:
+    if capi_generator.params_description.generate_single_file:
         return SingleFile(capi_generator)
     else:
         return MultipleFiles(capi_generator)

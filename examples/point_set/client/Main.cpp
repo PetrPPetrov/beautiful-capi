@@ -51,7 +51,6 @@ int main()
         {
             PointSet::Position pos = points->GetElement(i);
             std::cout << "\tpoint #" << i << " ("<< pos->GetX() << ", " << pos->GetY() << ", " << pos->GetZ() << ")" << std::endl;
-            int breakpt = 0;
         }
 
     }

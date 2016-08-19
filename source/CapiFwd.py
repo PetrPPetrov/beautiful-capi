@@ -59,17 +59,17 @@ def process_fwd(capi_generator, namespace):
 
 
 def generate_forwards(capi_generator, namespace):
-    capi_generator.output_header.put_line('namespace {0}'.format(namespace.m_name))
+    capi_generator.output_header.put_line('namespace {0}'.format(namespace.name))
     with FileGenerator.IndentScope(capi_generator.output_header):
-        for cur_class in namespace.m_classes:
+        for cur_class in namespace.classes:
             with CreateLifecycleTraits(cur_class, capi_generator):
                 capi_generator.output_header.put_line('class {0};'.format(
-                    cur_class.m_name + capi_generator.lifecycle_traits.get_suffix()))
+                    cur_class.name + capi_generator.lifecycle_traits.get_suffix()))
                 capi_generator.output_header.put_line(
                     'typedef beautiful_capi::forward_pointer_holder<{0}> {1};'.format(
-                        cur_class.m_name + capi_generator.lifecycle_traits.get_suffix(),
-                        cur_class.m_name + capi_generator.params_description.m_forward_typedef_suffix))
-        for nested_namespace in namespace.m_namespaces:
+                        cur_class.name + capi_generator.lifecycle_traits.get_suffix(),
+                        cur_class.name + capi_generator.params_description.forward_typedef_suffix))
+        for nested_namespace in namespace.namespaces:
             with NamespaceScope(capi_generator.cur_namespace_path, nested_namespace):
                 generate_forwards(capi_generator, nested_namespace)
 

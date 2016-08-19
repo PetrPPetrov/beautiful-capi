@@ -24,13 +24,13 @@ cmake_minimum_required(VERSION 2.8)
 
 find_package(PythonInterp 3.4 REQUIRED)
 
-add_custom_command(
-  OUTPUT ${custom_suffix_SOURCE_DIR}/source/auto_gen_wrap.cpp
-  COMMAND ${PYTHON_EXECUTABLE} ${custom_suffix_SOURCE_DIR}/../../../source/Main.py -i ${custom_suffix_SOURCE_DIR}/custom_suffix.xml -p ${custom_suffix_SOURCE_DIR}/custom_suffix_params.xml -o ${custom_suffix_SOURCE_DIR}/include -w ${custom_suffix_SOURCE_DIR}/source/auto_gen_wrap.cpp
-  MAIN_DEPENDENCY ${custom_suffix_SOURCE_DIR}/custom_suffix.xml
-  DEPENDS ${custom_suffix_SOURCE_DIR}/custom_suffix_params.xml
-  WORKING_DIRECTORY ${custom_suffix_SOURCE_DIR}
-)
+SET(SWIG_DIR "/Users/Shared/Libraries/swig-3.0.10-install/")
+SET(SWIG_EXECUTABLE "/Users/Shared/Libraries/swig-3.0.10-install/bin/swig")
+include(../../example.cmake)
+include(../../swig_example.cmake)
+
+add_capi_generation()
+add_swig_generation(swig CustomSuffix)
 
 include_directories(${custom_suffix_SOURCE_DIR}/source/)
 
@@ -43,3 +43,10 @@ add_library(custom_suffix SHARED
   ${custom_suffix_SOURCE_DIR}/source/plotter_impl.h
   ${custom_suffix_SOURCE_DIR}/source/plotter_impl.cpp
 )
+
+add_cs_api_generation(cs CustomSuffix)
+
+setup_swig_module(swig CustomSuffix)
+add_swig_python(swig CustomSuffix)
+add_swig_csharp(swig CustomSuffix)
+

@@ -51,8 +51,8 @@ def generate_down_cast(output_file, cur_class, base_class, capi_generator):
         with FileGenerator.IndentScope(capi_generator.output_source):
             capi_generator.output_source.put_line(
                 'return dynamic_cast<{0}*>(static_cast<{1}*>(object_pointer));'.format(
-                    cur_class.m_implementation_class_name,
-                    base_class.m_implementation_class_name
+                    cur_class.implementation_class_name,
+                    base_class.implementation_class_name
                 )
             )
         capi_generator.output_source.put_line('')
@@ -60,9 +60,9 @@ def generate_down_cast(output_file, cur_class, base_class, capi_generator):
 
 
 def generate_down_casts_for_class(output_file, cur_class, capi_generator):
-    if cur_class.m_base:
+    if cur_class.base:
         cur_base_class = cur_class
-        while cur_base_class.m_base:
+        while cur_base_class.base:
             extra_info_entry = capi_generator.extra_info[cur_base_class]
             next_base_class = extra_info_entry.base_class_object
             if next_base_class:
@@ -76,8 +76,8 @@ def generate_down_casts_for_namespace(output_file, namespace, capi_generator):
     output_file.put_line('template<typename TargetType, typename SourceType>')
     output_file.put_line('TargetType down_cast(const SourceType&);')
     output_file.put_line('')
-    for cur_class in namespace.m_classes:
+    for cur_class in namespace.classes:
         with CreateLifecycleTraits(cur_class, capi_generator):
             generate_down_casts_for_class(output_file, cur_class, capi_generator)
-    for nested_namespace in namespace.m_namespaces:
+    for nested_namespace in namespace.namespaces:
         generate_down_casts_for_namespace(output_file, nested_namespace, capi_generator)

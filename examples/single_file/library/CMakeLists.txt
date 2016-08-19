@@ -24,13 +24,13 @@ cmake_minimum_required(VERSION 2.8)
 
 find_package(PythonInterp 3.4 REQUIRED)
 
-add_custom_command(
-  OUTPUT ${single_file_SOURCE_DIR}/source/AutoGenWrap.cpp
-  COMMAND ${PYTHON_EXECUTABLE} ${single_file_SOURCE_DIR}/../../../source/Main.py -i ${single_file_SOURCE_DIR}/single_file.xml -p ${single_file_SOURCE_DIR}/single_file_params.xml -o ${single_file_SOURCE_DIR}/include -w ${single_file_SOURCE_DIR}/source/AutoGenWrap.cpp
-  MAIN_DEPENDENCY ${single_file_SOURCE_DIR}/single_file.xml
-  DEPENDS ${single_file_SOURCE_DIR}/single_file_params.xml
-  WORKING_DIRECTORY ${single_file_SOURCE_DIR}
-)
+SET(SWIG_DIR "/Users/Shared/Libraries/swig-3.0.10-install/")
+SET(SWIG_EXECUTABLE "/Users/Shared/Libraries/swig-3.0.10-install/bin/swig")
+include(../../example.cmake)
+include(../../swig_example.cmake)
+
+add_capi_generation()
+add_swig_generation(swig SingleFile)
 
 include_directories(${single_file_SOURCE_DIR}/source/)
 
@@ -39,3 +39,10 @@ add_library(single_file SHARED
   ${single_file_SOURCE_DIR}/source/PrinterImpl.h
   ${single_file_SOURCE_DIR}/source/PrinterImpl.cpp
 )
+
+add_cs_api_generation(cs SingleFile)
+
+setup_swig_module(swig SingleFile)
+add_swig_python(swig SingleFile)
+add_swig_csharp(swig SingleFile)
+
