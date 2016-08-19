@@ -63,7 +63,7 @@ namespace Example
             }
         }
         
-        public  void SetPoints(double x1, double y1, double x2, double y2, double x3, double y3)
+        public  void SetPoints( x1,  y1,  x2,  y2,  x3,  y3)
         {
             DownCastPINVOKE.Invoke_example_itriangle_setpoints(capi_ptr, x1, y1, x2, y2, x3, y3);
         }

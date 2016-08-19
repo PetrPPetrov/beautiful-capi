@@ -23,25 +23,25 @@ cmake_minimum_required(VERSION 2.8)
 
 
 function(add_swig_generation swig_module_dir module_name)
-
-    add_custom_command(
-        OUTPUT
-            ${CMAKE_CURRENT_SOURCE_DIR}/${swig_module_dir}/${module_name}.i
-        COMMAND
-            ${PYTHON_EXECUTABLE}
-            ${examples_SOURCE_DIR}/../source/Swig.py
-            -i ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.xml
-            -p ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}_params.xml
-            -o ${CMAKE_CURRENT_SOURCE_DIR}/${swig_module_dir}
-            -m ${module_name}
-        MAIN_DEPENDENCY
-            ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.xml
-        DEPENDS
-            ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}_params.xml
-        WORKING_DIRECTORY
-            ${CMAKE_CURRENT_SOURCE_DIR}
-    )
-
+    if(SWIG_FOUND AND EXISTS ${SWIG_USE_FILE})
+        add_custom_command(
+            OUTPUT
+                ${CMAKE_CURRENT_SOURCE_DIR}/${swig_module_dir}/${module_name}.i
+            COMMAND
+                ${PYTHON_EXECUTABLE}
+                ${examples_SOURCE_DIR}/../source/Swig.py
+                -i ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.xml
+                -p ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}_params.xml
+                -o ${CMAKE_CURRENT_SOURCE_DIR}/${swig_module_dir}
+                -m ${module_name}
+            MAIN_DEPENDENCY
+                ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.xml
+            DEPENDS
+                ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}_params.xml
+            WORKING_DIRECTORY
+                ${CMAKE_CURRENT_SOURCE_DIR}
+        )
+    endif()
 endfunction()
 
 
@@ -49,8 +49,8 @@ find_package(SWIG)
 
 
 macro(setup_swig_module swig_module_dir module_name)
-    if(SWIG_FOUND)
-        include(${SWIG_USE_FILE})
+    if(SWIG_FOUND AND EXISTS ${SWIG_USE_FILE})
+        include("${SWIG_USE_FILE}")
         include_directories("${CMAKE_CURRENT_SOURCE_DIR}/source")
 
         if(NOT EXISTS ${swig_module_dir}/${module_name}.i)
@@ -65,7 +65,7 @@ endmacro()
 
 
 macro(add_swig_python swig_module_dir module_name)
-    if(SWIG_FOUND)
+    if(SWIG_FOUND AND EXISTS ${SWIG_USE_FILE})
         find_package(PythonLibs)
         include_directories(${PYTHON_INCLUDE_PATH})
 
@@ -77,7 +77,7 @@ endmacro()
 
 
 macro(add_swig_csharp swig_module_dir module_name)
-    if(SWIG_FOUND)
+    if(SWIG_FOUND AND EXISTS ${SWIG_USE_FILE})
         set(CMAKE_SWIG_OUTDIR "${CMAKE_CURRENT_SOURCE_DIR}/${swig_module_dir}_csharp")
         swig_add_module(${PROJECT_NAME}_csharp csharp ${swig_module_dir}/${module_name}.i)
         swig_link_libraries(${PROJECT_NAME}_csharp ${PROJECT_NAME})

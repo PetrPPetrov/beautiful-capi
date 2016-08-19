@@ -63,9 +63,9 @@ namespace Example
             }
         }
         
-        public  int GetPointsCount()
+        public  void GetPointsCount()
         {
-            return DownCastPINVOKE.Invoke_example_ipolygon_getpointscount(capi_ptr);
+            DownCastPINVOKE.Invoke_example_ipolygon_getpointscount(capi_ptr);
         }
     }
 }

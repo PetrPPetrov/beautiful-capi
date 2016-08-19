@@ -208,7 +208,7 @@ class MultipleFiles(FileTraitsBase):
 
     def get_file_for_custom_callbacks(self):
         return self.__get_cached_generator(
-            os.path.join(self.base_path, self.capi_generator.params_description.m_custom_callbacks_filename)
+            os.path.join(self.base_path, self.capi_generator.params_description.custom_callbacks_filename)
         )
 
     def include_namespace_header(self, namespace_path):
@@ -231,7 +231,7 @@ class MultipleFiles(FileTraitsBase):
         self.__include_file(self.capi_generator.params_description.check_and_throw_exception_filename)
 
     def include_custom_callbacks(self):
-        self.__include_file(self.capi_generator.params_description.m_custom_callbacks_filename)
+        self.__include_file(self.capi_generator.params_description.custom_callbacks_filename)
 
 
 def create_file_traits(capi_generator):

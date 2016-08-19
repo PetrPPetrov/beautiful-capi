@@ -27,25 +27,19 @@
 public class ExampleNS
 {
     
-    public static global::Example.IShape CreateTriangle()
+    public static void CreateTriangle()
     {
-        global::System.IntPtr c_ptr = DownCastPINVOKE.Invoke_example_create_triangle();
-        global::Example.IShape ret = (c_ptr == global::System.IntPtr.Zero) ? null : new global::Example.IShape(c_ptr, false);
-        return ret;
+        DownCastPINVOKE.Invoke_example_create_triangle();
     }
     
-    public static global::Example.IShape CreateSquare()
+    public static void CreateSquare()
     {
-        global::System.IntPtr c_ptr = DownCastPINVOKE.Invoke_example_create_square();
-        global::Example.IShape ret = (c_ptr == global::System.IntPtr.Zero) ? null : new global::Example.IShape(c_ptr, false);
-        return ret;
+        DownCastPINVOKE.Invoke_example_create_square();
     }
     
-    public static global::Example.IShape CreateCircle()
+    public static void CreateCircle()
     {
-        global::System.IntPtr c_ptr = DownCastPINVOKE.Invoke_example_create_circle();
-        global::Example.IShape ret = (c_ptr == global::System.IntPtr.Zero) ? null : new global::Example.IShape(c_ptr, false);
-        return ret;
+        DownCastPINVOKE.Invoke_example_create_circle();
     }
     
     public static Example.IPolygon IShape_to_IPolygon(Example.IShape base_ptr)

@@ -63,7 +63,7 @@ namespace Example
             }
         }
         
-        public  void SetSize(double size)
+        public  void SetSize( size)
         {
             DownCastPINVOKE.Invoke_example_isquare_setsize(capi_ptr, size);
         }

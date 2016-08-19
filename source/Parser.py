@@ -292,18 +292,18 @@ class TArgument(object):
     def __init__(self):
         self.name = ""
         self.name_filled = False
-        self.type = ""
-        self.type_filled = False
+        self.type_name = ""
+        self.type_name_filled = False
     
     def load(self, dom_node):
         if dom_node.hasAttribute("name"):
             cur_attr = dom_node.getAttribute("name")
             self.name = cur_attr
             self.name_filled = True
-        if dom_node.hasAttribute("type"):
-            cur_attr = dom_node.getAttribute("type")
-            self.type = cur_attr
-            self.type_filled = True
+        if dom_node.hasAttribute("type_name"):
+            cur_attr = dom_node.getAttribute("type_name")
+            self.type_name = cur_attr
+            self.type_name_filled = True
     
 
 class TCodeBlock(object):

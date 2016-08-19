@@ -63,7 +63,7 @@ namespace Example
             }
         }
         
-        public  void SetRadius(double radius)
+        public  void SetRadius( radius)
         {
             DownCastPINVOKE.Invoke_example_icircle_setradius(capi_ptr, radius);
         }

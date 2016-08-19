@@ -37,7 +37,7 @@ class LifecycleTraitsBase(TraitsBase):
         self.copy_method = Parser.TMethod()
         self.copy_method.name = Constants.copy_suffix
         other_arg = Parser.TArgument()
-        other_arg.type = 'void*'
+        other_arg.type_name = 'void*'
         other_arg.name = 'other.{0}'.format(Constants.object_var)
         self.copy_method.arguments.append(other_arg)
         self.copy_method.noexcept = False
@@ -118,7 +118,7 @@ class CopySemantic(LifecycleTraitsBase):
         self.generate_delete_c_function()
 
     def __generate_copy_constructor_body(self):
-        self.copy_method.m_arguments[0].m_name = 'other.{0}'.format(Constants.object_var)
+        self.copy_method.arguments[0].name = 'other.{0}'.format(Constants.object_var)
         self.put_line('if (other.{object_var})'.format(object_var=Constants.object_var))
         with self.indent_scope():
             self.copy_exception_traits.generate_c_call(
@@ -132,7 +132,7 @@ class CopySemantic(LifecycleTraitsBase):
 
     def generate_copy_constructor(self):
         self.put_line('{class_name}(const {class_name}& other){base_init}'.format(
-            class_name=self.cur_class.m_name + self.get_suffix(), base_init=self.get_base_init())
+            class_name=self.cur_class.name + self.get_suffix(), base_init=self.get_base_init())
         )
         with self.indent_scope():
             self.__generate_copy_constructor_body()
@@ -165,7 +165,7 @@ class CopySemantic(LifecycleTraitsBase):
 
     def generate_assigment_operator(self):
         self.put_line('{class_name} operator=(const {class_name}& other)'.format(
-            class_name=self.cur_class.m_name + self.get_suffix()))
+            class_name=self.cur_class.name + self.get_suffix()))
         with self.indent_scope():
             self.put_line('if ({object_var} != other.{object_var})'.format(object_var=Constants.object_var))
             with self.indent_scope():
@@ -196,7 +196,7 @@ class RawPointerSemantic(LifecycleTraitsBase):
 
     def generate_assigment_operator(self):
         self.put_line('{class_name} operator=(const {class_name}& other)'.format(
-            class_name=self.cur_class.m_name + self.get_suffix()))
+            class_name=self.cur_class.name + self.get_suffix()))
         with self.indent_scope():
             self.put_line('SetObject(other.{object_var});'.format(object_var=Constants.object_var))
             self.put_line('return *this;')
@@ -268,12 +268,12 @@ class RefCountedSemantic(LifecycleTraitsBase):
 
     def generate_copy_constructor(self):
         self.put_line('{class_name}(const {class_name}& other){base_init}'.format(
-            class_name=self.cur_class.m_name + self.get_suffix(), base_init=self.get_base_init()))
+            class_name=self.cur_class.name + self.get_suffix(), base_init=self.get_base_init()))
         with self.indent_scope():
             self.__generate_copy_constructor_body()
 
         self.put_line('{class_name}(void *object_pointer, bool add_ref){base_init}'.format(
-            class_name=self.cur_class.m_name + self.get_suffix(), base_init=self.get_base_init()))
+            class_name=self.cur_class.name + self.get_suffix(), base_init=self.get_base_init()))
         with self.indent_scope():
             self.__generate_copy_constructor_add_ref_body()
 
@@ -291,7 +291,7 @@ class RefCountedSemantic(LifecycleTraitsBase):
 
     def generate_assigment_operator(self):
         self.put_line('{class_name} operator=(const {class_name}& other)'.format(
-            class_name=self.cur_class.m_name + self.get_suffix()))
+            class_name=self.cur_class.name + self.get_suffix()))
         with self.indent_scope():
             self.put_line('if ({object_var} != other.{object_var})'.format(object_var=Constants.object_var))
             with self.indent_scope():

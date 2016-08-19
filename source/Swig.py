@@ -154,7 +154,7 @@ class Namespace(object):
                 with IndentScope(swig_file):
                     for constructor in element.constructors:
                         arg_names = [arg.name for arg in constructor.arguments]
-                        arg_desc = [arg.type + ' ' + arg.name for arg in constructor.arguments]
+                        arg_desc = [arg.type_name + ' ' + arg.name for arg in constructor.arguments]
 
                         swig_file.put_line('{impl}({args})'.format(impl=impl_name, args=', '.join(arg_desc)))
                         with IndentScope(swig_file):
@@ -163,7 +163,7 @@ class Namespace(object):
 
                     for method in element.methods:
                         arg_names = [arg.name for arg in method.arguments]
-                        arg_desc = [arg.type + ' ' + arg.name for arg in method.arguments]
+                        arg_desc = [arg.type_name + ' ' + arg.name for arg in method.arguments]
 
                         swig_file.put_line('{ret} {name}({args})'.format(
                             ret=method.return_type if method.return_type else 'void', name=method.name,

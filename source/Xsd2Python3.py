@@ -34,6 +34,10 @@ def get_name_for_field(element):
         name = 'return_type'
     elif name == 'return_filled':
         name = 'return_type_filled'
+    if name == 'type':
+        name = 'type_name'
+    elif name == 'type_filled':
+        name = 'type_name_filled'
     return name
 
 

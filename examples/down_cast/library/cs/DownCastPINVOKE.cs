@@ -27,13 +27,13 @@
 class DownCastPINVOKE
 {
     [global::System.Runtime.InteropServices.DllImport("down_cast", EntryPoint="example_create_triangle")]
-    public static extern global::System.IntPtr Invoke_example_create_triangle();
+    public static extern void Invoke_example_create_triangle();
     
     [global::System.Runtime.InteropServices.DllImport("down_cast", EntryPoint="example_create_square")]
-    public static extern global::System.IntPtr Invoke_example_create_square();
+    public static extern void Invoke_example_create_square();
     
     [global::System.Runtime.InteropServices.DllImport("down_cast", EntryPoint="example_create_circle")]
-    public static extern global::System.IntPtr Invoke_example_create_circle();
+    public static extern void Invoke_example_create_circle();
     
     [global::System.Runtime.InteropServices.DllImport("down_cast", EntryPoint="example_ishape_release")]
     public static extern void Invoke_example_ishape_release(global::System.Runtime.InteropServices.HandleRef class_arg);
@@ -45,7 +45,7 @@ class DownCastPINVOKE
     public static extern void Invoke_example_ipolygon_release(global::System.Runtime.InteropServices.HandleRef class_arg);
     
     [global::System.Runtime.InteropServices.DllImport("down_cast", EntryPoint="example_ipolygon_getpointscount")]
-    public static extern int Invoke_example_ipolygon_getpointscount(global::System.Runtime.InteropServices.HandleRef capi_ptr);
+    public static extern void Invoke_example_ipolygon_getpointscount(global::System.Runtime.InteropServices.HandleRef capi_ptr);
     
     [global::System.Runtime.InteropServices.DllImport("down_cast", EntryPoint="example_ipolygon_cast_to_base")]
     public static extern global::System.IntPtr Invoke_example_ipolygon_cast_to_base(global::System.IntPtr class_ptr);
@@ -57,7 +57,7 @@ class DownCastPINVOKE
     public static extern void Invoke_example_itriangle_release(global::System.Runtime.InteropServices.HandleRef class_arg);
     
     [global::System.Runtime.InteropServices.DllImport("down_cast", EntryPoint="example_itriangle_setpoints")]
-    public static extern void Invoke_example_itriangle_setpoints(global::System.Runtime.InteropServices.HandleRef capi_ptr, double x1, double y1, double x2, double y2, double x3, double y3);
+    public static extern void Invoke_example_itriangle_setpoints(global::System.Runtime.InteropServices.HandleRef capi_ptr, void x1, void y1, void x2, void y2, void x3, void y3);
     
     [global::System.Runtime.InteropServices.DllImport("down_cast", EntryPoint="example_itriangle_cast_to_base")]
     public static extern global::System.IntPtr Invoke_example_itriangle_cast_to_base(global::System.IntPtr class_ptr);
@@ -72,7 +72,7 @@ class DownCastPINVOKE
     public static extern void Invoke_example_isquare_release(global::System.Runtime.InteropServices.HandleRef class_arg);
     
     [global::System.Runtime.InteropServices.DllImport("down_cast", EntryPoint="example_isquare_setsize")]
-    public static extern void Invoke_example_isquare_setsize(global::System.Runtime.InteropServices.HandleRef capi_ptr, double size);
+    public static extern void Invoke_example_isquare_setsize(global::System.Runtime.InteropServices.HandleRef capi_ptr, void size);
     
     [global::System.Runtime.InteropServices.DllImport("down_cast", EntryPoint="example_isquare_cast_to_base")]
     public static extern global::System.IntPtr Invoke_example_isquare_cast_to_base(global::System.IntPtr class_ptr);
@@ -87,7 +87,7 @@ class DownCastPINVOKE
     public static extern void Invoke_example_icircle_release(global::System.Runtime.InteropServices.HandleRef class_arg);
     
     [global::System.Runtime.InteropServices.DllImport("down_cast", EntryPoint="example_icircle_setradius")]
-    public static extern void Invoke_example_icircle_setradius(global::System.Runtime.InteropServices.HandleRef capi_ptr, double radius);
+    public static extern void Invoke_example_icircle_setradius(global::System.Runtime.InteropServices.HandleRef capi_ptr, void radius);
     
     [global::System.Runtime.InteropServices.DllImport("down_cast", EntryPoint="example_icircle_cast_to_base")]
     public static extern global::System.IntPtr Invoke_example_icircle_cast_to_base(global::System.IntPtr class_ptr);

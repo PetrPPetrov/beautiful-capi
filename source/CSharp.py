@@ -157,29 +157,29 @@ def get_cs_type(type_name: str, api_description: Parser.TBeautifulCapiRoot):
 class Argument(object):
     def __init__(self, api_description: Parser.TBeautifulCapiRoot, name: str, type_name='void'):
         self.name = name
-        self.type = type_name
+        self.type_name = type_name
         self.api = api_description
 
     @property
     def is_class(self):
-        return TypeInfo.is_class_type(self.type, self.api)
+        return TypeInfo.is_class_type(self.type_name, self.api)
 
     def type_pass_to_c(self):
-        return get_cs_capi_pass_type(self.type, self.api)
+        return get_cs_capi_pass_type(self.type_name, self.api)
 
     def type_pass_to_cs(self):
-        return get_cs_type(self.type, self.api)
+        return get_cs_type(self.type_name, self.api)
 
     def type_return_from_c(self):
-        return get_cs_capi_ret_type(self.type, self.api)
+        return get_cs_capi_ret_type(self.type_name, self.api)
 
     def type_return_from_cs(self):
-        return get_cs_type(self.type, self.api)
+        return get_cs_type(self.type_name, self.api)
 
     def value_pass_to_c(self):
         if self.is_class:
             res = '{cs_type}.getCPtr({name})'.format(name=self.name, cs_type=self.type_pass_to_cs())
-        elif self.type == 'size_t':
+        elif self.type_name == 'size_t':
             res = '({c_type}){name}'.format(name=self.name, c_type=self.type_pass_to_c())
         else:
             res = self.name
@@ -554,7 +554,7 @@ class FunctionBase(object):
 
     @property
     def arguments_cs(self):
-        return [Argument(self.module.api, arg.name, arg.type) for arg in self.function.arguments]
+        return [Argument(self.module.api, arg.name, arg.type_name) for arg in self.function.arguments]
 
     @staticmethod
     def arguments_pass(arguments):
@@ -597,7 +597,7 @@ class FunctionBase(object):
                     self.container.write('global::System.IntPtr c_ptr = {call};'.format(call=call))
                     self.container.write('global::System.String ret = (c_ptr == global::System.IntPtr.Zero) ? null : global::System.Runtime.InteropServices.Marshal.PtrToStringAuto(c_ptr);')
                     self.container.write('return ret;')
-                elif self.return_type.type == 'size_t':
+                elif self.return_type.type_name == 'size_t':
                     self.container.write('return ({cs_type}){call};'.format(call=call, cs_type=self.return_type.type_pass_to_cs()))
                 else:
                     line = call + ';'

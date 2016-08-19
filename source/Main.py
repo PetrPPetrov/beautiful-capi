@@ -182,7 +182,7 @@ class CapiGenerator(object):
 
     def __include_additional_capi_and_fwd_function(self, function, additional_namespaces):
         for argument in function.arguments:
-            self.__include_additional_capi_and_fwd_check_type(argument.type, additional_namespaces)
+            self.__include_additional_capi_and_fwd_check_type(argument.type_name, additional_namespaces)
 
     def __include_additional_capi_and_fwd_method(self, method, additional_namespaces):
         self.__include_additional_capi_and_fwd_function(method, additional_namespaces)
@@ -191,7 +191,7 @@ class CapiGenerator(object):
 
     def __generate_class(self, cur_class):
         self.loader_traits.add_impl_header(cur_class.implementation_class_header)
-        Helpers.output_code_blocks(self.output_header, cur_class.m_code_before_class_definitions)
+        Helpers.output_code_blocks(self.output_header, cur_class.code_before_class_definitions)
         self.output_header.put_line('class {0}{1}'.format(
             cur_class.name + self.lifecycle_traits.get_suffix(),
             ' : public ' + cur_class.base + self.lifecycle_traits.get_suffix() if cur_class.base else ''
@@ -203,7 +203,7 @@ class CapiGenerator(object):
             self.inheritance_traits.generate_set_object()
             with FileGenerator.Unindent(self.output_header):
                 self.output_header.put_line('public:')
-            Helpers.output_code_blocks(self.output_header, cur_class.m_code_after_publics)
+            Helpers.output_code_blocks(self.output_header, cur_class.code_after_publics)
             self.lifecycle_traits.generate_copy_constructor()
             self.lifecycle_traits.generate_std_methods()
             self.lifecycle_traits.generate_assigment_operator()
@@ -213,7 +213,7 @@ class CapiGenerator(object):
             self.lifecycle_traits.generate_delete_method()
             for method in cur_class.methods:
                 self.__generate_method(method, cur_class)
-        Helpers.output_code_blocks(self.output_header, cur_class.m_code_after_class_definitions, True)
+        Helpers.output_code_blocks(self.output_header, cur_class.code_after_class_definitions, True)
 
     def __generate_method(self, method, cur_class):
         with CreateExceptionTraits(method, cur_class, self):
@@ -372,7 +372,7 @@ class CapiGenerator(object):
         return [self.get_wrapped_argument_for_callback(argument) for argument in arguments]
 
     def get_wrapped_argument_pair(self, argument):
-        return '{0} {1}'.format(self.get_wrapped_type(argument.type), argument.name)
+        return '{0} {1}'.format(self.get_wrapped_type(argument.type_name), argument.name)
 
     def get_wrapped_argument_pairs(self, arguments):
         return [self.get_wrapped_argument_pair(argument) for argument in arguments]
@@ -380,7 +380,7 @@ class CapiGenerator(object):
     # C types from wrapped types
     def __is_raw_pointer_structure_required(self, arguments):
         for argument in arguments:
-            if self.__is_class_type(argument.type):
+            if self.__is_class_type(argument.type_name):
                 return True
         return False
 
@@ -389,7 +389,7 @@ class CapiGenerator(object):
             Helpers.put_raw_pointer_structure(output_file)
 
     def get_c_from_wrapped_argument(self, argument):
-        class_object = self.get_class_type(argument.type)
+        class_object = self.get_class_type(argument.type_name)
         if class_object:
             return 'reinterpret_cast<const raw_pointer_holder*>(&{0})->raw_pointer'.format(argument.name)
         else:
@@ -412,7 +412,7 @@ class CapiGenerator(object):
         return self.get_flat_type(type_name)
 
     def get_c_argument_pair(self, argument):
-        return '{0} {1}'.format(self.get_c_type(argument.type), argument.name)
+        return '{0} {1}'.format(self.get_c_type(argument.type_name), argument.name)
 
     def get_c_argument_pairs_impl(self, arguments):
         return ['void* object_pointer'] + self.get_c_argument_pairs_for_function_impl(arguments)
@@ -422,7 +422,7 @@ class CapiGenerator(object):
 
     # C to original types
     def get_c_to_original_argument(self, argument):
-        class_object = self.get_class_type(argument.type)
+        class_object = self.get_class_type(argument.type_name)
         if class_object:
             return 'static_cast<{0}*>({1})'.format(class_object.implementation_class_name, argument.name)
         else:
@@ -435,15 +435,15 @@ class CapiGenerator(object):
     def get_original_type(self, type_name):
         class_object = self.get_class_type(type_name)
         if class_object:
-            return '{0}*'.format(class_object.m_implementation_class_name)
+            return '{0}*'.format(class_object.implementation_class_name)
         else:
             return self.get_cpp_type(type_name)
 
     def get_original_argument(self, argument):
-        return self.get_original_type(argument.m_type)
+        return self.get_original_type(argument.type_name)
 
     def get_original_argument_pair(self, argument):
-        return '{0} {1}'.format(self.get_original_type(argument.m_type), argument.m_name)
+        return '{0} {1}'.format(self.get_original_type(argument.type_name), argument.name)
 
     def get_original_arguments(self, arguments):
         return [self.get_original_argument(argument) for argument in arguments]
