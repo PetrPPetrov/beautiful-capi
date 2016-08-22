@@ -161,6 +161,13 @@ class Argument(object):
         self.api = api_description
 
     @property
+    def lifecycle(self):
+        if self.is_class:
+            return TypeInfo.get_class_type(self.type_name, self.api).lifecycle
+        else:
+            return None
+
+    @property
     def is_class(self):
         return TypeInfo.is_class_type(self.type_name, self.api)
 
@@ -369,6 +376,10 @@ class Namespace(FileCreator):
 
 
 class Class(FileCreator):
+    REF_COUNTED = 0
+    COPY = 1
+    RAW_POINTER = 2
+
     def __init__(self, clas: Parser.TClass, namespace: Namespace, root_folder: str):
         super().__init__()
         self.namespace = namespace
@@ -380,6 +391,15 @@ class Class(FileCreator):
         args = super().format_args
         args.update({'namespace': self.namespace, 'module': self.module})
         return args
+
+    @property
+    def semantic(self):
+        if self.clas.lifecycle == Parser.TLifecycle.reference_counted:
+            return Class.REF_COUNTED
+        if self.clas.lifecycle == Parser.TLifecycle.raw_pointer_semantic:
+            return Class.RAW_POINTER
+        if self.clas.lifecycle == Parser.TLifecycle.copy_semantic:
+            return Class.COPY
 
     @property
     def name(self):
@@ -462,6 +482,21 @@ class Class(FileCreator):
                 self.write('global::System.GC.SuppressFinalize(this);')
                 if self.has_base:
                     self.write('base.Dispose();')
+
+        if self.semantic == Class.RAW_POINTER:
+            self.write('')
+            self.write('public {class.virtual_attribute} void Delete()')
+            with self.scope():
+                self.write('lock(this)')
+                with self.scope():
+                    self.write('capi_owned = false;')
+                    self.write('if (capi_ptr.Handle != global::System.IntPtr.Zero)')
+                    with self.scope():
+                        self.write('{module.invoke_module}.{class.invoke_destructor}(capi_ptr);')
+                        self.write('capi_ptr = new global::System.Runtime.InteropServices.HandleRef(null, global::System.IntPtr.Zero);')
+                    self.write('global::System.GC.SuppressFinalize(this);')
+                    if self.has_base:
+                        self.write('base.Dispose();')
 
     def generate_c_ptr_getter(self):
         self.write('internal static global::System.Runtime.InteropServices.HandleRef getCPtr({class.name} obj)')
@@ -581,7 +616,9 @@ class FunctionBase(object):
                 cs_name=self.function.name,
                 invoke_name=self.module.invoke_name(self.capi_name),
                 cs_args=', '.join(self.arguments_description(self.arguments_cs)),
-                c_args=', '.join(self.arguments_pass(self.arguments_c))):
+                c_args=', '.join(self.arguments_pass(self.arguments_c)),
+                owned=self.return_type and str(self.return_type.lifecycle != Parser.TLifecycle.raw_pointer_semantic).lower()
+        ):
 
             self.container.write('')
             self.container.write('public {cs_attr} {ret_type} {cs_name}({cs_args})')
@@ -591,7 +628,7 @@ class FunctionBase(object):
 
                 if TypeInfo.is_class_type(self.function.return_type, self.module.description.api):
                     self.container.write('global::System.IntPtr c_ptr = {call};'.format(call=call))
-                    self.container.write('{ret_type} ret = (c_ptr == global::System.IntPtr.Zero) ? null : new {ret_type}(c_ptr, false);')
+                    self.container.write('{ret_type} ret = (c_ptr == global::System.IntPtr.Zero) ? null : new {ret_type}(c_ptr, {owned});')
                     self.container.write('return ret;')
                 elif self.return_type.type_pass_to_cs() == 'string':
                     self.container.write('global::System.IntPtr c_ptr = {call};'.format(call=call))
@@ -668,11 +705,13 @@ class Constructor(Method):
 
         self.container.write('')
         self.container.write(
-            'public {name}({arg_desc}) : this({module.invoke_module}.{invoke_ctor}({arg_names}), true)',
+            'public {name}({arg_desc}) : this({module.invoke_module}.{invoke_ctor}({arg_names}), {owned})',
             name=self.container.name,
             invoke_ctor=self.module.invoke_name(self.capi_name),
             arg_desc=', '.join(self.arguments_description(self.arguments_cs)),
-            arg_names=', '.join(self.arguments_pass(self.arguments_c)))
+            arg_names=', '.join(self.arguments_pass(self.arguments_c)),
+            owned=str(self.container.semantic != Class.RAW_POINTER).lower()
+        )
 
         with self.container.scope():
             pass
