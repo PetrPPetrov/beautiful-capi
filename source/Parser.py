@@ -60,18 +60,35 @@ class TBeautifulCapiRoot(object):
             self.namespaces.append(new_element)
     
 
+class TApiInclude(object):
+    def __init__(self):
+        self.path = ""
+        self.path_filled = False
+    
+    def load(self, dom_node):
+        if dom_node.hasAttribute("path"):
+            cur_attr = dom_node.getAttribute("path")
+            self.path = cur_attr
+            self.path_filled = True
+    
+
 class TNamespace(object):
     def __init__(self):
         self.name = ""
         self.name_filled = False
         self.implementation_header = ""
         self.implementation_header_filled = False
+        self.includes = []
         self.namespaces = []
         self.classes = []
         self.callbacks = []
         self.functions = []
     
     def load(self, dom_node):
+        for element in [node for node in dom_node.childNodes if node.nodeName == "include"]:
+            new_element = TApiInclude()
+            new_element.load(element)
+            self.includes.append(new_element)
         for element in [node for node in dom_node.childNodes if node.nodeName == "namespace"]:
             new_element = TNamespace()
             new_element.load(element)

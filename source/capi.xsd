@@ -6,8 +6,12 @@
       <xs:element name="namespace" minOccurs="1" maxOccurs="unbounded" type="TNamespace"/>
     </xs:sequence>
   </xs:complexType>
+  <xs:complexType name="TApiInclude">
+    <xs:attribute name="path" type="xs:string" use="required"/>
+  </xs:complexType>
   <xs:complexType name="TNamespace">
     <xs:sequence>
+      <xs:element name="include" minOccurs="0" maxOccurs="unbounded" type="TApiInclude"/>
       <xs:element name="namespace" minOccurs="0" maxOccurs="unbounded" type="TNamespace"/>
       <xs:element name="class" minOccurs="0" maxOccurs="unbounded" type="TClass"/>
       <xs:element name="callback" minOccurs="0" maxOccurs="unbounded" type="TCallback"/>

@@ -25,6 +25,7 @@ from collections import OrderedDict
 
 import ParamsParser
 import Parser
+from ParseRoot import parse_root
 from FileGenerator import FileGenerator, Indent, IndentScope
 from Helpers import get_return_copy_or_add_ref
 from TypeInfo import get_class_type
@@ -34,7 +35,7 @@ class Description(object):
     def __init__(self, input_xml: str, input_params: str):
         from xml.dom.minidom import parse
         self.params = ParamsParser.load(parse(input_params))
-        self.api = Parser.load(parse(input_xml))
+        self.api = parse_root(input_xml)
 
 
 class Module(object):

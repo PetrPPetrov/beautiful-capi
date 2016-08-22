@@ -24,6 +24,7 @@ import os
 
 import ParamsParser
 import Parser
+from ParseRoot import parse_root
 import TypeInfo
 from FileGenerator import FileGenerator, IndentScope
 
@@ -199,7 +200,7 @@ class Description(object):
 
         from xml.dom.minidom import parse
         self.params = ParamsParser.load(parse(input_params))
-        self.api = Parser.load(parse(input_xml))
+        self.api = parse_root(input_xml)
 
 
 class FileCreator(object):
