@@ -21,17 +21,19 @@
 
 cmake_minimum_required(VERSION 2.8)
 
-function(add_capi_generation)
+function(add_capi_generation generated_source)
+    if (NOT generated_source)
+        set(generated_source "${CMAKE_CURRENT_SOURCE_DIR}/source/AutoGenWrap.cpp")
     add_custom_command(
         OUTPUT
-            ${CMAKE_CURRENT_SOURCE_DIR}/source/AutoGenWrap.cpp
+            ${generated_source}
         COMMAND
             ${PYTHON_EXECUTABLE}
             ${examples_SOURCE_DIR}/../source/Main.py
             -i ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.xml
             -p ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}_params.xml
             -o ${CMAKE_CURRENT_SOURCE_DIR}/include
-            -w ${CMAKE_CURRENT_SOURCE_DIR}/source/AutoGenWrap.cpp
+            -w ${generated_source}
         MAIN_DEPENDENCY
             ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.xml
         DEPENDS
