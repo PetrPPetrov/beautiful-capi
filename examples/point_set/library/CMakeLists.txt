@@ -25,8 +25,6 @@ cmake_minimum_required(VERSION 2.8)
 
 find_package(PythonInterp 3.4 REQUIRED)
 
-SET(SWIG_DIR "/Users/Shared/Libraries/swig-3.0.10-install/")
-SET(SWIG_EXECUTABLE "/Users/Shared/Libraries/swig-3.0.10-install/bin/swig")
 include(../../example.cmake)
 include(../../swig_example.cmake)
 
