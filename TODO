@@ -1,7 +1,6 @@
 *) add "copy" custom function, external helper function or "class member method"
 *) add "create" custom function, external helper function for creation of new object instances
 *) add clean pre-step: before any generation of include or AutoGenWrap file clean previous any existing files (and command line argumen for removing the existing content)
-*) modules support (ability to include another XML API description file from the current API description XML)
 *) check for the life cycle semantic coherence with base class
 *) single file mode: avoid double inclusion of the same header body
 *) single file mode: allow compilation with exceptions, circular references etc.
