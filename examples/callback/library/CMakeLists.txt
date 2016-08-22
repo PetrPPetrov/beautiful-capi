@@ -41,4 +41,4 @@ add_library(callback SHARED
   ${callback_SOURCE_DIR}/source/DefaultPrinterImpl.cpp
   ${callback_SOURCE_DIR}/source/PersonImpl.h
   ${callback_SOURCE_DIR}/source/PersonImpl.cpp
-)                                                            
+)
