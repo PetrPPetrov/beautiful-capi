@@ -21,9 +21,13 @@
 
 cmake_minimum_required(VERSION 2.8)
 
-function(add_capi_generation generated_source)
-    if (NOT generated_source)
+function(add_capi_generation)
+    if (ARGN)
+        list(GET ARGN 0 generated_source)
+    else()
         set(generated_source "${CMAKE_CURRENT_SOURCE_DIR}/source/AutoGenWrap.cpp")
+    endif()
+
     add_custom_command(
         OUTPUT
             ${generated_source}
