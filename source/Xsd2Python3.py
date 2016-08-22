@@ -73,7 +73,7 @@ class SchemaGenerator(object):
                     if element.nodeName == 'xs:element':
                         self.output_file.put_line(
                             'for root_element in [root for root in dom_node.childNodes if root.localName == "{0}"]:'
-                            .format(get_name_for_field(element))
+                            .format(element.getAttribute('name'))
                         )
                         with FileGenerator.Indent(self.output_file):
                             self.output_file.put_line('root_params = {0}()'.format(element.getAttribute('type')))
@@ -81,7 +81,7 @@ class SchemaGenerator(object):
                             self.output_file.put_line('return root_params')
 
     def __build_enum(self, enumerator):
-        self.output_file.put_line('class {enum_name}(Enum):'.format(enum_name=get_name_for_field(enumerator)))
+        self.output_file.put_line('class {enum_name}(Enum):'.format(enum_name=enumerator.getAttribute('name')))
         enum_counter = 0
         with FileGenerator.Indent(self.output_file):
             for enumeration in enumerator.getElementsByTagName('xs:enumeration'):
@@ -110,7 +110,7 @@ class SchemaGenerator(object):
         base_class = 'object'
         for cur_base_class in complex_type.getElementsByTagName('xs:extension'):
             base_class = cur_base_class.getAttribute('base')
-        self.output_file.put_line('class {0}({1}):'.format(get_name_for_field(complex_type), base_class))
+        self.output_file.put_line('class {0}({1}):'.format(complex_type.getAttribute('name'), base_class))
         with FileGenerator.Indent(self.output_file):
             self.__build_structure_impl(complex_type, base_class)
         self.output_file.put_line('')
@@ -175,7 +175,7 @@ class SchemaGenerator(object):
     def __build_load_element(self, element):
         self.output_file.put_line(
                 'for element in [node for node in dom_node.childNodes if node.nodeName == "{0}"]:'.format(
-                    get_name_for_field(element)
+                    element.getAttribute('name')
                 )
             )
         with FileGenerator.Indent(self.output_file):
@@ -194,10 +194,10 @@ class SchemaGenerator(object):
                 ))
 
     def __build_load_attribute(self, attribute):
-        self.output_file.put_line('if dom_node.hasAttribute("{0}"):'.format(get_name_for_field(attribute)))
+        self.output_file.put_line('if dom_node.hasAttribute("{0}"):'.format(attribute.getAttribute('name')))
         with FileGenerator.Indent(self.output_file):
             self.output_file.put_line('cur_attr = dom_node.getAttribute("{0}")'.format(
-                get_name_for_field(attribute)
+                attribute.getAttribute('name')
             ))
             if attribute.getAttribute('type') == 'xs:string':
         #TODO

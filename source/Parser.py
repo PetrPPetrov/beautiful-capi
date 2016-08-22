@@ -262,8 +262,8 @@ class TMethod(TConstructor):
     
     def load(self, dom_node):
         super().load(dom_node)
-        if dom_node.hasAttribute("return_type"):
-            cur_attr = dom_node.getAttribute("return_type")
+        if dom_node.hasAttribute("return"):
+            cur_attr = dom_node.getAttribute("return")
             self.return_type = cur_attr
             self.return_type_filled = True
     
@@ -300,8 +300,8 @@ class TArgument(object):
             cur_attr = dom_node.getAttribute("name")
             self.name = cur_attr
             self.name_filled = True
-        if dom_node.hasAttribute("type_name"):
-            cur_attr = dom_node.getAttribute("type_name")
+        if dom_node.hasAttribute("type"):
+            cur_attr = dom_node.getAttribute("type")
             self.type_name = cur_attr
             self.type_name_filled = True
     
