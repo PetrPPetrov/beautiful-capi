@@ -27,7 +27,7 @@ find_package(PythonInterp 3.4 REQUIRED)
 include(../../example.cmake)
 include(../../swig_example.cmake)
 
-add_capi_generation()
+add_capi_generation("${custom_suffix_SOURCE_DIR}/source/auto_gen_wrap.cpp")
 add_swig_generation(swig CustomSuffix)
 
 include_directories(${custom_suffix_SOURCE_DIR}/source/)
