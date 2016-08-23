@@ -56,5 +56,12 @@ Example::DefaultPrinterImpl::~DefaultPrinterImpl()
 
 void Example::DefaultPrinterImpl::Print(const char* text)
 {
-    std::cout << "DefaultPrinter: " << text << std::endl;
+    if (text)
+    {
+        std::cout << "DefaultPrinter: " << text << std::endl;
+    }
+    else
+    {
+        std::cout << "DefaultPrinter: NULL" << std::endl;
+    }
 }

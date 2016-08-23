@@ -10,13 +10,13 @@
 *) review poin_set example
 *) exception codes => classes list for pure C wrapping
 *) add options to rename beatyful_capi namespace and watchdog string
-*) __stdcall or something like that
+*) "project_name" idea: one header to include rest headers
+*) __cdecl, __stdcall or something like that
 
 *) callbacks support
-  a) callbacks with exceptions on customer side
   b) customization of generated methods and constructors names
   c) customization of 'noexcept' flags for generated methods and constructors
-  d) small influence of life cycle logic to custom callbacks
+  d) small influence of life cycle logic to custom callbacks (?)
   e) add Callback implementation_header including to AutoGenWrap.cpp
 *) template support
 *) standard module for wrapping STL classes (a huge topic, maybe start wrapping only some basic things)
@@ -40,7 +40,6 @@
 *) shuffle Capi mode
 ===
 *) general refactoring: too many things in CapiGenerator
-*) "project_name" idea: one header to include rest headers
 *) write more examples and tests:
     +) interoperability example (the same source code works both outside of library and inside the library)
     +) data_structures
@@ -59,6 +58,6 @@
 *) update testing system and tests
 *) inline optimization
 *) C++ modes: C++ 98, C++2003, C++2011, for wrappers and for internals
-*) add Python 2.7 support
+*) add Python 2.7 support (?)
 *) return values of class type should be normal wrapper if it is possible, or it should be forward_pointer_holder if it is circular reference (?)
 *) add automatic inclusion of dependent files (i.e. if ClassA uses ClassB then ClassA.h should include ClassB.h) (?)

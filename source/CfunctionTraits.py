@@ -35,11 +35,10 @@ class ImplLib(CfunctionTraitsBase):
         self.cur_api_declarations = None
         self.cur_capi_prefix = None
         self.impl_headers = None
+        self.__create__impl_headers()
 
     def __create__impl_headers(self):
         self.impl_headers = FileGenerator.FileGenerator(None)
-        self.put_source_file(self.impl_headers)
-        self.put_source_line('')
 
     def __put_define_apple_or_linux(self, put_function):
         put_function('#define {0} {1}'.format(self.cur_api_define, self.cur_capi_prefix))
@@ -62,7 +61,10 @@ class ImplLib(CfunctionTraitsBase):
         put_function('')
 
     def generate_c_functions_declarations(self):
-        self.__create__impl_headers()
+        self.put_source_line('#include <stdexcept>')
+        self.put_source_line('#include <cassert>')
+        self.put_source_file(self.impl_headers)
+        self.put_source_line('')
 
         if not self.capi_generator.callback_typedefs.empty():
             self.capi_generator.callback_typedefs.put_line('')
@@ -83,11 +85,12 @@ class ImplLib(CfunctionTraitsBase):
         self.put_line('')
         self.__put_api_define(self.put_line, self.indent, 'dllimport')
 
-        self.capi_generator.api_defines_generated = True
         self.cur_api_declarations = FileGenerator.FileGenerator(None)
         self.put_file(self.cur_api_declarations)
-        self.put_source_file(self.capi_generator.callback_typedefs)
-        self.put_source_file(self.capi_generator.callbacks_implementations)
+        if not self.capi_generator.api_defines_generated:
+            self.put_source_file(self.capi_generator.callback_typedefs)
+            self.put_source_file(self.capi_generator.callbacks_implementations)
+        self.capi_generator.api_defines_generated = True
 
     def add_c_function_declaration(self, declaration):
         self.cur_api_declarations.put_line('{0} {1};'.format(self.cur_api_define, declaration))

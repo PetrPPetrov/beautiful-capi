@@ -20,7 +20,12 @@
  */
 
 #include <sstream>
+#include <iostream>
 #include "PersonImpl.h"
+#include "Exception/GenericImpl.h"
+#include "Exception/BadArgumentImpl.h"
+#include "Exception/DivisionByZeroImpl.h"
+#include "Exception/NullArgumentImpl.h"
 
 Example::PersonImpl::PersonImpl()
 {
@@ -94,3 +99,35 @@ void Example::PersonImpl::Dump(Example::IPrinter* printer) const
     printer_io << "First Name: " << this->first_name << " Second Name: " << this->second_name << " Age: " << this->age << " Sex: " << (this->male ? "M" : "F");
 }
 
+void Example::PersonImpl::Print(Example::IPrinter* printer, const char* text) const
+{
+    try
+    {
+        printer->Print(text);
+    }
+    catch (Exception::NullArgumentImpl& null_argument_exception)
+    {
+        std::cout << "    *** Exception::NullArgument was thrown" << std::endl;
+        std::cout << "    " << null_argument_exception.GetErrorText() << std::endl;
+        std::cout << "    argument: " << null_argument_exception.GetArgumentName() << std::endl;
+    }
+    catch (Exception::BadArgumentImpl& null_argument_exception)
+    {
+        std::cout << "    *** Exception::BadArgument was thrown" << std::endl;
+        std::cout << "    " << null_argument_exception.GetErrorText() << std::endl;
+    }
+    catch (Exception::GenericImpl& generic_exception)
+    {
+        std::cout << "    *** Exception::Generic was thrown" << std::endl;
+        std::cout << "    " << generic_exception.GetErrorText() << std::endl;
+    }
+    catch (const std::exception& exception)
+    {
+        std::cout << "    *** std::exception was thrown" << std::endl;
+        std::cout << "    " << exception.what() << std::endl;
+    }
+    catch (...)
+    {
+        std::cout << "    *** Unknown exception was hrown" << std::endl;
+    }
+}

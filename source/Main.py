@@ -61,6 +61,7 @@ class CapiGenerator(object):
         self.lifecycle_traits = None
         self.inheritance_traits = None
         self.exception_traits = None
+        self.api_defines_generated = False
         self.extra_info = {}
         self.exception_class_2_code = {}
         self.callback_typedefs = FileGenerator.FileGenerator(None)
@@ -208,7 +209,7 @@ class CapiGenerator(object):
             Helpers.output_code_blocks(self.output_header, cur_class.code_after_publics)
             self.lifecycle_traits.generate_copy_constructor()
             self.lifecycle_traits.generate_std_methods()
-            self.lifecycle_traits.generate_assigment_operator()
+            self.lifecycle_traits.generate_assignment_operator()
             for constructor in cur_class.constructors:
                 self.inheritance_traits.generate_constructor(constructor)
             self.lifecycle_traits.generate_destructor()

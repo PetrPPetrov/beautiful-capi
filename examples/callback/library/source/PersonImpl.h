@@ -45,6 +45,7 @@ namespace Example
         void SetMale(bool is_male);
         bool IsMale() const;
         void Dump(Example::IPrinter* printer) const;
+        void Print(Example::IPrinter* printer, const char* text) const;
     };
 }
 

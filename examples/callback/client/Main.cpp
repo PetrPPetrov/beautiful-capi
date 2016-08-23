@@ -44,6 +44,12 @@ public:
     }
     void Print(const char* text) // Note that this method is non-virtual
     {
+        if (!text)
+        {
+            // This exception will be correctly passed through the library boundary
+            // and will be caught by the library code
+            throw Exception::NullArgument();
+        }
         mLastPrintedText = std::string(text);
         std::transform(mLastPrintedText.begin(), mLastPrintedText.end(), mLastPrintedText.begin(), toupper);
         std::cout << mLastPrintedText << std::endl;
@@ -63,10 +69,15 @@ int main()
 
     Example::PrinterPtr printing_device = Example::CreateDefaultPrinter();
     famous_person.Dump(printing_device);
+    famous_person.Print(printing_device, "Hello World");
 
     CustomPrinterImplementation my_printer_implementation;
     printing_device = Example::create_callback_for_customprinter(my_printer_implementation);
     famous_person.Dump(printing_device);
+
+    // CustomPrinterImplementation::Print() will throw exception (Exception::NullArgument)
+    // and this exception will be caught by the library code
+    famous_person.Print(printing_device, 0);
 
     return EXIT_SUCCESS;
 }

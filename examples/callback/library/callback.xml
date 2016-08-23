@@ -34,6 +34,26 @@
     <method name="Dump">
       <argument type="Example::Printer" name="printer"/>
     </method>
+    <method name="Print">
+      <argument type="Example::Printer" name="printer"/>
+      <argument type="const char*" name="text"/>
+    </method>    
   </class>
+  </namespace>
+  <namespace name="Exception">
+    <class name="Generic" exception="true" lifecycle="copy_semantic" implementation_class_name="Exception::GenericImpl" implementation_class_header="Exception/GenericImpl.h">
+      <constructor name="New"/>
+      <method name="GetErrorText" return="const char*" noexcept="true"/>
+    </class>
+    <class name="BadArgument" base="Exception::Generic" exception="true" lifecycle="copy_semantic" implementation_class_name="Exception::BadArgumentImpl" implementation_class_header="Exception/BadArgumentImpl.h">
+      <constructor name="New"/>
+      <method name="GetArgumentName" return="const char*" noexcept="true"/>
+    </class>
+    <class name="NullArgument" base="Exception::BadArgument" exception="true" lifecycle="copy_semantic" implementation_class_name="Exception::NullArgumentImpl" implementation_class_header="Exception/NullArgumentImpl.h">
+      <constructor name="New"/>
+    </class>
+    <class name="DivisionByZero" base="Exception::Generic" exception="true" lifecycle="copy_semantic" implementation_class_name="Exception::DivisionByZeroImpl" implementation_class_header="Exception/DivisionByZeroImpl.h">
+      <constructor name="New"/>
+    </class>
   </namespace>
 </callback:api>

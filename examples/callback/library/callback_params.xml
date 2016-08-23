@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <params:params xmlns:params="http://gkmsoft.ru/beautifulcapi-params"
-               exception_handling_mode="no_handling"
+               exception_handling_mode="by_first_argument"
                file_per_class="true"
                folder_per_namespace="true"
                generate_single_file="false"

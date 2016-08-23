@@ -22,6 +22,7 @@
 
 import Parser
 from ExceptionTraits import create_exception_traits
+from LifecycleTraits import CreateLifecycleTraits
 from FileGenerator import Indent
 from FileGenerator import IndentScope
 from FileGenerator import NewFilesScope
@@ -164,30 +165,6 @@ def generate_class_for_callback(cur_callback, base_class, cur_namespace, capi_ge
         set_c_function_method.arguments[0].name = 'c_function_pointer'
         new_callback_class.methods.append(set_c_function_method)
 
-        exception_traits = create_exception_traits(cur_method, base_class, capi_generator)
-        callback_customer_wrap = FileGenerator(None)
-        with NewFilesScope(callback_customer_wrap, capi_generator):
-            callback_customer_wrap.put_line('template<typename ImplementationClass>')
-            callback_customer_wrap.put_line(
-                '{return_type} {callback_name}({arguments})'.format(
-                    return_type=capi_generator.get_c_type(cur_method.return_type),
-                    callback_name=get_method_callback_name(cur_callback, cur_method),
-                    arguments=', '.join(exception_traits.get_c_argument_pairs())
-                )
-            )
-            with IndentScope(callback_customer_wrap):
-                callback_customer_wrap.put_line(
-                    'ImplementationClass* self = static_cast<ImplementationClass*>(object_pointer);'
-                )
-                method_call = '{0}self->{1}({2});'.format(
-                    capi_generator.get_c_return_instruction(cur_method.return_type),
-                    cur_method.name,
-                    ', '.join(capi_generator.get_c_to_original_arguments(cur_method.arguments))
-                )
-                exception_traits.generate_implementation_call(method_call, cur_method.return_type)
-        Helpers.save_file_generator_to_code_blocks(callback_customer_wrap,
-                                                   new_callback_class.code_after_class_definitions)
-
     callback_customer_lifecycle = FileGenerator(None)
     if cur_callback.lifecycle == Parser.TLifecycle.copy_semantic:
         callback_customer_lifecycle.put_line('template<typename ImplementationClass>')
@@ -238,73 +215,97 @@ def generate_create_functions_for_callback(cur_callback, base_class, cur_namespa
     callback_class = capi_generator.callback_2_class[cur_callback]
     callback_class_name = capi_generator.extra_info[callback_class].get_class_name()
     callback_class_c_name = capi_generator.extra_info[callback_class].get_c_name()
+    with CreateLifecycleTraits(callback_class, capi_generator):
 
-    if cur_callback.lifecycle == Parser.TLifecycle.copy_semantic:
-        capi_generator.callback_typedefs.put_line(
-            'typedef void* (*{0})(void*);'.format(get_copy_object_callback_type(cur_callback, capi_generator)))
-        capi_generator.callback_typedefs.put_line(
-            'typedef void* (*{0})(void*);'.format(get_delete_object_callback_type(cur_callback, capi_generator)))
-    elif cur_callback.lifecycle == Parser.TLifecycle.reference_counted:
-        capi_generator.callback_typedefs.put_line(
-            'typedef void* (*{0})(void*);'.format(get_add_ref_object_callback_type(cur_callback, capi_generator)))
-        capi_generator.callback_typedefs.put_line(
-            'typedef void* (*{0})(void*);'.format(get_release_object_callback_type(cur_callback, capi_generator)))
+        if cur_callback.lifecycle == Parser.TLifecycle.copy_semantic:
+            capi_generator.callback_typedefs.put_line(
+                'typedef void* (*{0})(void*);'.format(get_copy_object_callback_type(cur_callback, capi_generator)))
+            capi_generator.callback_typedefs.put_line(
+                'typedef void* (*{0})(void*);'.format(get_delete_object_callback_type(cur_callback, capi_generator)))
+        elif cur_callback.lifecycle == Parser.TLifecycle.reference_counted:
+            capi_generator.callback_typedefs.put_line(
+                'typedef void* (*{0})(void*);'.format(get_add_ref_object_callback_type(cur_callback, capi_generator)))
+            capi_generator.callback_typedefs.put_line(
+                'typedef void* (*{0})(void*);'.format(get_release_object_callback_type(cur_callback, capi_generator)))
 
-    for cur_method in base_class.methods:
-        exception_traits = create_exception_traits(cur_method, base_class, capi_generator)
-        callback_typedef = 'typedef {return_type} (*{name})({arguments});'.format(
-            return_type=capi_generator.get_c_type(cur_method.return_type),
-            ns=callback_class_c_name,
-            name=get_method_callback_type(cur_callback, capi_generator, cur_method),
-            arguments=', '.join(exception_traits.get_c_argument_pairs()))
-        capi_generator.callback_typedefs.put_line(callback_typedef)
+        for cur_method in base_class.methods:
+            exception_traits = create_exception_traits(cur_method, base_class, capi_generator)
+            callback_typedef = 'typedef {return_type} (*{name})({arguments});'.format(
+                return_type=capi_generator.get_c_type(cur_method.return_type),
+                ns=callback_class_c_name,
+                name=get_method_callback_type(cur_callback, capi_generator, cur_method),
+                arguments=', '.join(exception_traits.get_c_argument_pairs()))
+            capi_generator.callback_typedefs.put_line(callback_typedef)
 
-    create_callback_function = FileGenerator(None)
-    with NewFilesScope(create_callback_function, capi_generator):
-        create_callback_function.put_line('template<typename ImplementationClass>')
-        create_callback_function.put_line(
-            '{return_type} create_callback_for_{class_suffix}(ImplementationClass* implementation_class)'.format(
-                return_type=callback_class_name,
-                class_suffix=callback_class.name.lower()))
-        with IndentScope(create_callback_function):
-            create_callback_function.put_line('{0} result;'.format(callback_class_name))
-            if cur_callback.lifecycle == Parser.TLifecycle.copy_semantic:
-                create_callback_function.put_line(
-                    'result.SetCFunctionForCopy(callback_for_{0}_copy_object<ImplementationClass>);'.format(
-                        cur_callback.name.lower()))
-                create_callback_function.put_line(
-                    'result.SetCFunctionForDelete(callback_for_{0}_delete_object<ImplementationClass>);'.format(
-                        cur_callback.name.lower()))
-            elif cur_callback.lifecycle == Parser.TLifecycle.reference_counted:
-                create_callback_function.put_line(
-                    'result.SetCFunctionForAddRef(callback_for_{0}_add_ref_object<ImplementationClass>);'.format(
-                        cur_callback.name.lower()))
-                create_callback_function.put_line(
-                    'result.SetCFunctionForRelease(callback_for_{0}_release_object<ImplementationClass>);'.format(
-                        cur_callback.name.lower()
-                    ))
-
-            for cur_method in base_class.methods:
-                cur_callback_name = 'callback_for_{class_suffix}_{method_suffix}'.format(
-                    class_suffix=cur_callback.name.lower(), method_suffix=cur_method.name.lower()
+            callback_customer_wrap = FileGenerator(None)
+            with NewFilesScope(callback_customer_wrap, capi_generator):
+                callback_customer_wrap.put_line('template<typename ImplementationClass>')
+                callback_customer_wrap.put_line(
+                    '{return_type} {callback_name}({arguments})'.format(
+                        return_type=capi_generator.get_c_type(cur_method.return_type),
+                        callback_name=get_method_callback_name(cur_callback, cur_method),
+                        arguments=', '.join(exception_traits.get_c_argument_pairs())
+                    )
                 )
-                create_callback_function.put_line(
-                    'result.SetCFunctionFor{0}({1}<ImplementationClass>);'.format(cur_method.name, cur_callback_name)
-                )
-                create_callback_function.put_line('result.SetObjectPointer(implementation_class);')
-                create_callback_function.put_line('return result;')
+                with IndentScope(callback_customer_wrap):
+                    callback_customer_wrap.put_line(
+                        'ImplementationClass* self = static_cast<ImplementationClass*>(object_pointer);'
+                    )
+                    method_call = '{0}self->{1}({2});'.format(
+                        capi_generator.get_c_return_instruction(cur_method.return_type),
+                        cur_method.name,
+                        ', '.join(capi_generator.get_c_to_original_arguments(cur_method.arguments))
+                    )
+                    exception_traits.generate_implementation_callback(method_call, cur_method.return_type)
+            Helpers.save_file_generator_to_code_blocks(callback_customer_wrap,
+                                                       callback_class.code_after_class_definitions)
 
-        create_callback_function.put_line('template<typename ImplementationClass>')
-        create_callback_function.put_line(
-            '{return_type} create_callback_for_{class_suffix}(ImplementationClass& implementation_class)'.format(
-                return_type=callback_class_name,
-                class_suffix=callback_class.name.lower()))
-        with IndentScope(create_callback_function):
+        create_callback_function = FileGenerator(None)
+        with NewFilesScope(create_callback_function, capi_generator):
+            create_callback_function.put_line('template<typename ImplementationClass>')
             create_callback_function.put_line(
-                'return create_callback_for_{0}(&implementation_class);'.format(callback_class.name.lower()))
+                '{return_type} create_callback_for_{class_suffix}(ImplementationClass* implementation_class)'.format(
+                    return_type=callback_class_name,
+                    class_suffix=callback_class.name.lower()))
+            with IndentScope(create_callback_function):
+                create_callback_function.put_line('{0} result;'.format(callback_class_name))
+                if cur_callback.lifecycle == Parser.TLifecycle.copy_semantic:
+                    create_callback_function.put_line(
+                        'result.SetCFunctionForCopy(callback_for_{0}_copy_object<ImplementationClass>);'.format(
+                            cur_callback.name.lower()))
+                    create_callback_function.put_line(
+                        'result.SetCFunctionForDelete(callback_for_{0}_delete_object<ImplementationClass>);'.format(
+                            cur_callback.name.lower()))
+                elif cur_callback.lifecycle == Parser.TLifecycle.reference_counted:
+                    create_callback_function.put_line(
+                        'result.SetCFunctionForAddRef(callback_for_{0}_add_ref_object<ImplementationClass>);'.format(
+                            cur_callback.name.lower()))
+                    create_callback_function.put_line(
+                        'result.SetCFunctionForRelease(callback_for_{0}_release_object<ImplementationClass>);'.format(
+                            cur_callback.name.lower()
+                        ))
 
-    Helpers.save_file_generator_to_code_blocks(create_callback_function,
-                                               callback_class.code_after_class_definitions)
+                for cur_method in base_class.methods:
+                    cur_callback_name = 'callback_for_{class_suffix}_{method_suffix}'.format(
+                        class_suffix=cur_callback.name.lower(), method_suffix=cur_method.name.lower()
+                    )
+                    create_callback_function.put_line(
+                        'result.SetCFunctionFor{0}({1}<ImplementationClass>);'.format(cur_method.name, cur_callback_name)
+                    )
+                    create_callback_function.put_line('result.SetObjectPointer(implementation_class);')
+                    create_callback_function.put_line('return result;')
+
+            create_callback_function.put_line('template<typename ImplementationClass>')
+            create_callback_function.put_line(
+                '{return_type} create_callback_for_{class_suffix}(ImplementationClass& implementation_class)'.format(
+                    return_type=callback_class_name,
+                    class_suffix=callback_class.name.lower()))
+            with IndentScope(create_callback_function):
+                create_callback_function.put_line(
+                    'return create_callback_for_{0}(&implementation_class);'.format(callback_class.name.lower()))
+
+        Helpers.save_file_generator_to_code_blocks(create_callback_function,
+                                                   callback_class.code_after_class_definitions)
 
 
 def generate_callbacks_implementations_impl(cur_callback, base_class, cur_namespace, capi_generator):
@@ -472,6 +473,7 @@ def generate_callbacks_implementations(root_node, capi_generator):
         with NewFilesScope(capi_generator.callbacks_implementations, capi_generator):
             capi_generator.output_header.put_line('namespace beautiful_capi')
             with IndentScope(capi_generator.output_header):
+                capi_generator.exception_traits.generate_check_and_throw_exception_callback()
                 process_callback_classes_impl(
                     root_node, capi_generator,
                     generate_callbacks_implementations_impl, begin_namespace_gen, end_namespace_gen)

@@ -89,6 +89,11 @@ class LifecycleTraitsBase(TraitsBase):
             class_name=self.cur_class.name + self.get_suffix()))
         with self.indent_scope():
             self.put_line('return this;')
+        self.put_line('void* Detach()')
+        with self.indent_scope():
+            self.put_line('void* result = {0};'.format(Constants.object_var))
+            self.put_line('SetObject(0);')
+            self.put_line('return result;')
 
     def generate_delete_method(self):
         pass
@@ -163,7 +168,7 @@ class CopySemantic(LifecycleTraitsBase):
             self.copy_exception_traits.generate_implementation_call(method_call, 'void*')
         self.put_source_line('')
 
-    def generate_assigment_operator(self):
+    def generate_assignment_operator(self):
         self.put_line('{class_name} operator=(const {class_name}& other)'.format(
             class_name=self.cur_class.name + self.get_suffix()))
         with self.indent_scope():
@@ -194,7 +199,7 @@ class RawPointerSemantic(LifecycleTraitsBase):
         with self.indent_scope():
             self.put_line('SetObject(object_pointer);')
 
-    def generate_assigment_operator(self):
+    def generate_assignment_operator(self):
         self.put_line('{class_name} operator=(const {class_name}& other)'.format(
             class_name=self.cur_class.name + self.get_suffix()))
         with self.indent_scope():
@@ -289,7 +294,7 @@ class RefCountedSemantic(LifecycleTraitsBase):
             self.add_ref_exception_traits.generate_implementation_call(method_call, '')
         self.put_source_line('')
 
-    def generate_assigment_operator(self):
+    def generate_assignment_operator(self):
         self.put_line('{class_name} operator=(const {class_name}& other)'.format(
             class_name=self.cur_class.name + self.get_suffix()))
         with self.indent_scope():

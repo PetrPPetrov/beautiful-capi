@@ -41,4 +41,12 @@ add_library(callback SHARED
   ${callback_SOURCE_DIR}/source/DefaultPrinterImpl.cpp
   ${callback_SOURCE_DIR}/source/PersonImpl.h
   ${callback_SOURCE_DIR}/source/PersonImpl.cpp
+  ${callback_SOURCE_DIR}/source/Exception/GenericImpl.h
+  ${callback_SOURCE_DIR}/source/Exception/GenericImpl.cpp
+  ${callback_SOURCE_DIR}/source/Exception/BadArgumentImpl.h
+  ${callback_SOURCE_DIR}/source/Exception/BadArgumentImpl.cpp
+  ${callback_SOURCE_DIR}/source/Exception/NullArgumentImpl.h
+  ${callback_SOURCE_DIR}/source/Exception/NullArgumentImpl.cpp
+  ${callback_SOURCE_DIR}/source/Exception/DivisionByZeroImpl.h
+  ${callback_SOURCE_DIR}/source/Exception/DivisionByZeroImpl.cpp
 )
