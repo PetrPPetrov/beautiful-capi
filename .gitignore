@@ -1,6 +1,7 @@
 /source/__pycache__/
 /source/.idea/
 *.py[cod]
+*.user
 /.idea/
 build/
 /examples/hello_world/library/include/
