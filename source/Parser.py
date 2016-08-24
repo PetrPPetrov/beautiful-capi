@@ -30,7 +30,11 @@ from enum import Enum
 
 
 def string_to_bool(string_value):
-    return string_value.lower() in ["true", "on", "yes", "1"]
+    return string_value.lower() in ['true', 'on', 'yes', '1']
+
+
+def string_to_int(string_value):
+    return int(string_value)
 
 
 class TLifecycle(Enum):
@@ -80,6 +84,7 @@ class TNamespace(object):
         self.implementation_header_filled = False
         self.includes = []
         self.namespaces = []
+        self.enumerations = []
         self.classes = []
         self.callbacks = []
         self.functions = []
@@ -93,6 +98,10 @@ class TNamespace(object):
             new_element = TNamespace()
             new_element.load(element)
             self.namespaces.append(new_element)
+        for element in [node for node in dom_node.childNodes if node.nodeName == "enumeration"]:
+            new_element = TEnumeration()
+            new_element.load(element)
+            self.enumerations.append(new_element)
         for element in [node for node in dom_node.childNodes if node.nodeName == "class"]:
             new_element = TClass()
             new_element.load(element)
@@ -113,6 +122,47 @@ class TNamespace(object):
             cur_attr = dom_node.getAttribute("implementation_header")
             self.implementation_header = cur_attr
             self.implementation_header_filled = True
+    
+
+class TEnumerationItem(object):
+    def __init__(self):
+        self.name = ""
+        self.name_filled = False
+        self.value = ""
+        self.value_filled = False
+    
+    def load(self, dom_node):
+        if dom_node.hasAttribute("name"):
+            cur_attr = dom_node.getAttribute("name")
+            self.name = cur_attr
+            self.name_filled = True
+        if dom_node.hasAttribute("value"):
+            cur_attr = dom_node.getAttribute("value")
+            self.value = cur_attr
+            self.value_filled = True
+    
+
+class TEnumeration(object):
+    def __init__(self):
+        self.name = ""
+        self.name_filled = False
+        self.underlying_type = ""
+        self.underlying_type_filled = False
+        self.items = []
+    
+    def load(self, dom_node):
+        for element in [node for node in dom_node.childNodes if node.nodeName == "item"]:
+            new_element = TEnumerationItem()
+            new_element.load(element)
+            self.items.append(new_element)
+        if dom_node.hasAttribute("name"):
+            cur_attr = dom_node.getAttribute("name")
+            self.name = cur_attr
+            self.name_filled = True
+        if dom_node.hasAttribute("underlying_type"):
+            cur_attr = dom_node.getAttribute("underlying_type")
+            self.underlying_type = cur_attr
+            self.underlying_type_filled = True
     
 
 class TClass(object):
@@ -137,6 +187,7 @@ class TClass(object):
         self.copy_or_add_ref_noexcept_filled = False
         self.delete_or_release_noexcept = False
         self.delete_or_release_noexcept_filled = False
+        self.enumerations = []
         self.constructors = []
         self.methods = []
         self.code_before_class_definitions = []
@@ -144,6 +195,10 @@ class TClass(object):
         self.code_after_class_definitions = []
     
     def load(self, dom_node):
+        for element in [node for node in dom_node.childNodes if node.nodeName == "enumeration"]:
+            new_element = TEnumeration()
+            new_element.load(element)
+            self.enumerations.append(new_element)
         for element in [node for node in dom_node.childNodes if node.nodeName == "constructor"]:
             new_element = TConstructor()
             new_element.load(element)
@@ -276,6 +331,8 @@ class TMethod(TConstructor):
         super().__init__()
         self.return_type = ""
         self.return_type_filled = False
+        self.const = False
+        self.const_filled = False
     
     def load(self, dom_node):
         super().load(dom_node)
@@ -283,6 +340,10 @@ class TMethod(TConstructor):
             cur_attr = dom_node.getAttribute("return")
             self.return_type = cur_attr
             self.return_type_filled = True
+        if dom_node.hasAttribute("const"):
+            cur_attr = dom_node.getAttribute("const")
+            self.const = string_to_bool(cur_attr)
+            self.const_filled = True
     
 
 class TFunction(TMethod):

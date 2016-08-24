@@ -28,6 +28,10 @@ def string_to_bool(string_value):
     return string_value.lower() in ['true', 'on', 'yes', '1']
 
 
+def string_to_int(string_value):
+    return int(string_value)
+
+
 def get_name_for_field(element):
     name = element.getAttribute('name')
     if name == 'return':
@@ -41,6 +45,14 @@ def get_name_for_field(element):
     return name
 
 
+def copy_source(output_file, code_object):
+    import inspect
+    for line in inspect.getsourcelines(code_object)[0]:
+        output_file.put_line(line.strip('\n'))
+    output_file.put_line('')
+    output_file.put_line('')
+
+
 class SchemaGenerator(object):
     def __init__(self, input_filename, output_filename):
         self.input_xsd = parse(input_filename)
@@ -51,19 +63,14 @@ class SchemaGenerator(object):
         self.output_file.put_python_gnu_gpl_copyright_header()
         self.output_file.put_python_automatic_generation_warning()
         self.output_file.put_line('from enum import Enum\n\n')
-        self.__build_string_to_bool()
+
+        copy_source(self.output_file, string_to_bool)
+        copy_source(self.output_file, string_to_int)
         for simple_type in self.input_xsd.getElementsByTagName('xs:simpleType'):
             self.__build_enum(simple_type)
         for complex_type in self.input_xsd.getElementsByTagName('xs:complexType'):
             self.__build_structure(complex_type)
         self.__build_load_root()
-
-    def __build_string_to_bool(self):
-        self.output_file.put_line('def string_to_bool(string_value):')
-        with FileGenerator.Indent(self.output_file):
-            self.output_file.put_line('return string_value.lower() in ["true", "on", "yes", "1"]')
-        self.output_file.put_line('')
-        self.output_file.put_line('')
 
     def __build_load_root(self):
         self.output_file.put_line('def load(dom_node):')
@@ -143,6 +150,10 @@ class SchemaGenerator(object):
             if attribute.hasAttribute('default'):
                 return str(string_to_bool(attribute.getAttribute('default')))
             return "False"
+        if attribute.getAttribute('type') == 'xs:integer':
+            if attribute.hasAttribute('default'):
+                return str(string_to_int(attribute.getAttribute('default')))
+            return 0
         if attribute.hasAttribute('default'):
             return attribute.getAttribute('type') + '.' + attribute.getAttribute('default')
 
@@ -209,6 +220,11 @@ class SchemaGenerator(object):
                 self.output_file.put_line('self.{0} = string_to_bool(cur_attr)'.format(
                     get_name_for_field(attribute)
                 ))
+            elif attribute.getAttribute('type') == 'xs:integer':
+        #TODO
+                self.output_file.put_line('self.{0} = string_to_int(cur_attr)'.format(
+                    get_name_for_field(attribute)
+                ))
             else:
         #TODO
                 self.output_file.put_line('self.{0} = {1}.load(cur_attr)'.format(
@@ -242,4 +258,6 @@ def main():
     schema_generator = SchemaGenerator(args.input, args.output)
     schema_generator.build_python_scripts()
 
-main()
+
+if __name__ == '__main__':
+    main()

@@ -97,6 +97,9 @@ class CapiGenerator(object):
             for nested_namespace in namespace.namespaces:
                 self.__process_namespace(nested_namespace)
 
+            for enum in namespace.enumerations:
+                self.__generate_enumeration(enum)
+
             for cur_class in namespace.classes:
                 self.__process_class(cur_class)
 
@@ -206,6 +209,8 @@ class CapiGenerator(object):
             self.inheritance_traits.generate_set_object()
             with FileGenerator.Unindent(self.output_header):
                 self.output_header.put_line('public:')
+            for enumeration in cur_class.enumerations:
+                self.__generate_enumeration(enumeration)
             Helpers.output_code_blocks(self.output_header, cur_class.code_after_publics)
             self.lifecycle_traits.generate_copy_constructor()
             self.lifecycle_traits.generate_std_methods()
@@ -250,6 +255,16 @@ class CapiGenerator(object):
                     self.exception_traits.generate_implementation_call(method_call, method.return_type)
                 self.output_source.put_line('')
 
+    def __generate_enumeration(self, enumeration: Parser.TEnumeration):
+        with NamespaceScope(self.cur_namespace_path, enumeration):
+            self.output_header.put_line('enum {enum.name}'.format(enum=enumeration))
+            with FileGenerator.IndentScope(self.output_header, '};'):
+                for item in enumeration.items:
+                    if item.value_filled:
+                        self.output_header.put_line('{item.name} = {item.value},'.format(item=item))
+                    else:
+                        self.output_header.put_line('{item.name},'.format(item=item))
+
     def __process_function(self, function):
         with CreateExceptionTraits(function, None, self):
             self.loader_traits.add_impl_header(function.implementation_header)
@@ -290,6 +305,17 @@ class CapiGenerator(object):
         path_to_class = type_name.split('::')
         return self.__is_class_type_impl(path_to_class, self.api_description.namespaces)
 
+    def __is_enum_type(self, type_name):
+        path_to_enum = type_name.split('::')
+        return self.__is_enum_type_impl(path_to_enum, self.api_description.namespaces)
+
+    def __is_enum_in_class(self, type_name):
+        path_to_enum = type_name.split('::')
+        if self.__is_enum_type_impl(path_to_enum, self.api_description.namespaces) and len(path_to_enum) > 1:
+            return self.__is_class_type_impl(path_to_enum[:-1], self.api_description.namespaces)
+        else:
+            return False
+
     def get_class_type(self, type_name):
         path_to_class = type_name.split('::')
         return self.__get_class_type_impl(path_to_class, self.api_description.namespaces)
@@ -311,11 +337,43 @@ class CapiGenerator(object):
         else:
             return False
 
+    def get_enum_type(self, type_name):
+        path_to_enum = type_name.split('::')
+        return self.__get_enum_type_impl(path_to_enum, self.api_description.namespaces)
+
+    def get_enum_container_class(self, type_name):
+        path_to_enum = type_name.split('::')
+        if self.__is_enum_in_class(type_name):
+            return self.__get_class_type_impl(path_to_enum[:-1], self.api_description.namespaces)
+        else:
+            return None
+
+    def __get_enum_type_impl(self, path_to_enum, enums_or_namespaces):
+        for enum_or_namespace in enums_or_namespaces:
+            if enum_or_namespace.name == path_to_enum[0]:
+                if len(path_to_enum) == 1:
+                    return enum_or_namespace
+                elif len(path_to_enum) == 3:
+                    return self.__get_enum_type_impl(path_to_enum[1:], enum_or_namespace.namespaces + enum_or_namespace.classes)
+                elif len(path_to_enum) == 2:
+                    return self.__get_enum_type_impl(path_to_enum[1:], enum_or_namespace.enumerations)
+                else:
+                    return self.__get_enum_type_impl(path_to_enum[1:], enum_or_namespace.namespaces)
+        return None
+
+    def __is_enum_type_impl(self, path_to_enum, enums_or_namespaces):
+        if self.__get_enum_type_impl(path_to_enum, enums_or_namespaces):
+            return True
+        else:
+            return False
+
     def get_flat_type(self, type_name):
         if not type_name:
             return 'void'
         if self.__is_class_type(type_name):
             return 'void*'
+        if self.__is_enum_type(type_name):
+            return self.get_enum_type(type_name).underlying_type
         return type_name
 
     def get_cpp_type(self, type_name):
@@ -347,6 +405,10 @@ class CapiGenerator(object):
                     rest_expr=rest_expression,
                     copy_or_add_ref='true' if Helpers.get_return_copy_or_add_ref(method) else 'false'
                 )
+            elif self.__is_enum_type(type_name):
+                return 'return static_cast<{cast_type}>({rest_expr});'.format(
+                    cast_type=self.get_wrapped_return_type(type_name),
+                    rest_expr=rest_expression)
             else:
                 return 'return {0};'.format(rest_expression)
         else:
@@ -355,6 +417,8 @@ class CapiGenerator(object):
     def get_wrapped_return_type(self, type_name):
         if self.__is_class_type(type_name):
             return type_name + self.params_description.forward_typedef_suffix
+        elif self.__is_enum_type(type_name):
+            return self.get_wrapped_type(type_name)
         return self.get_cpp_type(type_name)
 
     def get_wrapped_type(self, type_name):
@@ -362,6 +426,14 @@ class CapiGenerator(object):
             cur_type = self.get_class_type(type_name)
             with CreateLifecycleTraits(cur_type, self):
                 return 'const {0}&'.format(type_name + self.lifecycle_traits.get_suffix())
+        elif self.__is_enum_type(type_name):
+            enum_name = type_name
+            if self.__is_enum_in_class(type_name):
+                path_to_enum = type_name.split('::')
+                enum_name = '{class_name}::{enum_name}'.format(
+                    class_name='::'.join(path_to_enum[:-1]) + self.lifecycle_traits.get_suffix(),
+                    enum_name=path_to_enum[-1])
+            return enum_name
         else:
             return self.get_cpp_type(type_name)
 
@@ -407,7 +479,10 @@ class CapiGenerator(object):
     # C types
     def get_c_return_instruction(self, type_name):
         if type_name:
-            return 'return '
+            if self.__is_enum_type(type_name):
+                return 'return ({cast_type})'.format(cast_type=self.get_enum_type(type_name).underlying_type)
+            else:
+                return 'return '
         else:
             return ''
 
@@ -484,4 +559,5 @@ def main():
     schema_generator = CapiGenerator(args.input, args.params, args.output_folder, args.output_wrap_file_name)
     schema_generator.generate()
 
-main()
+if __name__ == '__main__':
+    main()

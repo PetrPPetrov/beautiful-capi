@@ -13,15 +13,30 @@
     <xs:sequence>
       <xs:element name="include" minOccurs="0" maxOccurs="unbounded" type="TApiInclude"/>
       <xs:element name="namespace" minOccurs="0" maxOccurs="unbounded" type="TNamespace"/>
-      <xs:element name="class" minOccurs="0" maxOccurs="unbounded" type="TClass"/>
-      <xs:element name="callback" minOccurs="0" maxOccurs="unbounded" type="TCallback"/>
-      <xs:element name="function" minOccurs="0" maxOccurs="unbounded" type="TFunction"/>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="enumeration" minOccurs="0" maxOccurs="unbounded" type="TEnumeration"/>
+        <xs:element name="class" minOccurs="0" maxOccurs="unbounded" type="TClass"/>
+        <xs:element name="callback" minOccurs="0" maxOccurs="unbounded" type="TCallback"/>
+        <xs:element name="function" minOccurs="0" maxOccurs="unbounded" type="TFunction"/>
+      </xs:choice>
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required"/>
     <xs:attribute name="implementation_header" type="xs:string" use="optional" default=""/>    
   </xs:complexType>
+  <xs:complexType name="TEnumerationItem">
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="value" type="xs:string" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="TEnumeration">
+    <xs:sequence>
+      <xs:element name="item" minOccurs="1" maxOccurs="unbounded" type="TEnumerationItem"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="underlying_type" type="xs:string" use="required"/>
+  </xs:complexType>
   <xs:complexType name="TClass">
     <xs:sequence>
+      <xs:element name="enumeration" minOccurs="0" maxOccurs="unbounded" type="TEnumeration"/>
       <xs:element name="constructor" minOccurs="0" maxOccurs="unbounded" type="TConstructor"/>
       <xs:element name="method" minOccurs="0" maxOccurs="unbounded" type="TMethod"/>
 	  <xs:element name="code_before_class_definition" minOccurs="0" maxOccurs="unbounded" type="TCodeBlock"/>
@@ -58,6 +73,7 @@
     <xs:complexContent>
       <xs:extension base="TConstructor">
         <xs:attribute name="return" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="const" type="xs:boolean" use="optional" default=""/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>

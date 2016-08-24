@@ -234,8 +234,8 @@ class FileCreator(object):
 
             self.file.put_line(written.format(**self.format_args, **self.additional_format, **kwargs) if do_format else written)
 
-    def scope(self):
-        return IndentScope(self.file)
+    def scope(self, ending='}'):
+        return IndentScope(self.file, ending)
 
     def add_format(self, **kwargs):
         return FormatArgs(self, **kwargs)
@@ -359,9 +359,14 @@ class Namespace(FileCreator):
         if len(self.namespace_path) > 1:
             self.write('namespace {namespace.containing_namespace}')
             with self.scope():
-                self.generate_ns_class()
+                self.generate_contents()
         else:
-            self.generate_ns_class()
+            self.generate_contents()
+
+    def generate_contents(self):
+        for enum in self.namespace.enumerations:
+            Enum(enum, self).generate()
+        self.generate_ns_class()
 
     def generate_ns_class(self):
         self.write('public class {namespace.name}NS')
@@ -374,6 +379,48 @@ class Namespace(FileCreator):
 
             for namespace in self.namespace.namespaces:
                 Namespace(namespace, self.module, os.path.join(self.root_folder, self.name)).generate()
+
+
+class Enum(object):
+    def __init__(self, enum: Parser.TEnumeration, container: Namespace or Class):
+        super().__init__()
+        self.container = container
+        self.enum = enum
+
+    @property
+    def name(self):
+        return self.enum.name
+
+    @property
+    def in_class(self):
+        return isinstance(self.container, Class)
+
+    @property
+    def underlying_type(self):
+        return self.enum.underlying_type
+
+    @property
+    def type_name(self):
+        return (self.container.path if self.in_class else self.container.type_name) + '::' + self.enum.name
+
+    @property
+    def module(self):
+        return self.container.module
+
+    @property
+    def api(self):
+        return self.module.api
+
+    def generate(self):
+        with self.container.add_format(enum=self, underlying=get_cs_type(self.underlying_type, self.api)):
+            self.container.write('enum {enum.name} : {underlying}')
+            with self.container.scope('};'):
+                for item in self.enum.items:
+                    with self.container.add_format(item=item):
+                        if item.value_filled:
+                            self.container.write('{item.name} = {item.value},')
+                        else:
+                            self.container.write('{item.name},')
 
 
 class Class(FileCreator):
@@ -446,6 +493,9 @@ class Class(FileCreator):
             self.write('public class {class.name} : {bases}', bases=', '.join(bases))
 
             with self.scope():
+                for enum in self.clas.enumerations:
+                    Enum(enum, self).generate()
+
                 self.generate_fields()
                 self.generate_internal_constructor()
                 self.generate_c_ptr_getter()
@@ -751,4 +801,5 @@ def main():
     module = Module(os.path.expandvars(args.module_name), description, os.path.expandvars(args.output_folder))
     module.generate()
 
-main()
+if __name__ == '__main__':
+    main()

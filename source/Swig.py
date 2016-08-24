@@ -120,6 +120,9 @@ class Namespace(object):
         namespace_file.put_line('%}')
         namespace_file.put_line('')
 
+        for enum in self.namespace.enumerations:
+            self.generate_enum(enum, namespace_file)
+
         for header in headers.keys():
             for element in headers[header]:
                 namespace_file.put_line('')
@@ -135,9 +138,15 @@ class Namespace(object):
                                                                             child=namespace.name))
             Namespace(namespace, self.description, os.path.join(self.root_folder, self.namespace.name)).generate()
 
+    def generate_enum(self, element: Parser.TClass, swig_file: FileGenerator):
+        swig_file.put_line('%rename("{enum}") {impl};'.format(enum=element.name, impl=element.name))
+
     def generate_class(self, element: Parser.TClass, swig_file: FileGenerator):
         nspaces = element.implementation_class_name.split('::')
         impl_name = nspaces.pop(-1)
+
+        for enum in element.enumerations:
+            self.generate_enum(enum, swig_file)
 
         swig_file.put_line('%rename("{iface}", %$isclass) {impl};'.format(iface=element.name, impl=impl_name))
         swig_file.put_line('%feature("director") {impl};'.format(impl=impl_name))
@@ -235,4 +244,5 @@ def main():
     module = Module(args.module_name, description, args.output_folder)
     module.generate()
 
-main()
+if __name__ == '__main__':
+    main()
