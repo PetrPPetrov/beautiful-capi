@@ -24,6 +24,7 @@
 
 #include "PositionImpl.h"
 #include <vector>
+#include <stddef.h>
 
 namespace PointSet
 {
