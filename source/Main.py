@@ -246,12 +246,12 @@ class CapiGenerator(object):
                     self.output_source.put_line('{0}* self = static_cast<{0}*>(object_pointer);'.format(
                         cur_class.implementation_class_name
                     ))
-                    method_call = '{0}{1}->{2}({3});'.format(
-                        self.get_c_return_instruction(method.return_type),
+                    method_call = '{0}->{1}({2})'.format(
                         Helpers.get_self(cur_class),
                         method.name,
                         ', '.join(self.get_c_to_original_arguments(method.arguments))
                     )
+                    method_call = self.make_c_return(method.return_type, method_call)
                     self.exception_traits.generate_implementation_call(method_call, method.return_type)
                 self.output_source.put_line('')
 
@@ -288,12 +288,12 @@ class CapiGenerator(object):
             )
             self.loader_traits.add_c_function_declaration(c_function_declaration)
             with FileGenerator.IndentScope(self.output_source):
-                method_call = '{return_instruction}{function_name}({arguments});'.format(
-                    return_instruction=self.get_c_return_instruction(function.return_type),
+                method_call = '{function_name}({arguments})'.format(
                     function_name=function.name
                     if not function.implementation_name else function.implementation_name,
                     arguments=', '.join(self.get_c_to_original_arguments(function.arguments))
                 )
+                method_call = self.make_c_return(function.return_type, method_call)
                 self.exception_traits.generate_implementation_call(method_call, function.return_type)
             self.output_source.put_line('')
 
@@ -485,6 +485,17 @@ class CapiGenerator(object):
                 return 'return '
         else:
             return ''
+
+    def make_c_return(self, return_type, expression):
+        line = '{expression};'
+        if return_type:
+            if self.__is_enum_type(return_type):
+                line = 'return static_cast<{cast_type}>({{expression}});'.format(
+                    cast_type=self.get_enum_type(return_type).underlying_type)
+            else:
+                line = 'return {expression};'
+        return line.format(expression=expression)
+
 
     def get_c_type(self, type_name):
         return self.get_flat_type(type_name)
