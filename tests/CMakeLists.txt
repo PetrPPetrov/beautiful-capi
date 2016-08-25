@@ -22,4 +22,10 @@ project(tests)
 
 cmake_minimum_required(VERSION 2.8)
 
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
+set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
+if(NOT WIN32)
+  add_definitions(-fvisibility=hidden)
+endif()
+
 add_subdirectory(file_options)
