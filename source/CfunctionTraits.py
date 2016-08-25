@@ -40,8 +40,11 @@ class ImplLib(CfunctionTraitsBase):
     def __create__impl_headers(self):
         self.impl_headers = FileGenerator.FileGenerator(None)
 
-    def __put_define_apple_or_linux(self, put_function):
+    def __put_define_apple(self, put_function):
         put_function('#define {0} {1}'.format(self.cur_api_define, self.cur_capi_prefix))
+
+    def __put_define_linux(self, put_function):
+        put_function('#define {0} {1} __attribute__ ((visibility ("default")))'.format(self.cur_api_define, self.cur_capi_prefix))
 
     def __put_api_define(self, put_function, indent_function, dll_import_or_export):
         put_function('#ifdef _WIN32')
@@ -50,10 +53,10 @@ class ImplLib(CfunctionTraitsBase):
                 self.cur_api_define, self.cur_capi_prefix, dll_import_or_export))
         put_function('#elif __APPLE__')
         with indent_function():
-            self.__put_define_apple_or_linux(put_function)
+            self.__put_define_apple(put_function)
         put_function('#elif __unix__ || __linux__')
         with indent_function():
-            self.__put_define_apple_or_linux(put_function)
+            self.__put_define_linux(put_function)
         put_function('#else')
         with indent_function():
             put_function('#error "Unknown platform"')
