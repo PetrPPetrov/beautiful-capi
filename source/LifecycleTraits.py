@@ -226,7 +226,7 @@ class RawPointerSemantic(LifecycleTraitsBase):
         return 'static_cast<{0}*>({1})'.format(class_object.implementation_class_name, argument.name)
 
     def make_c_return(self, class_object, expression):
-        return 'return ({expression});'.format(expression=expression)
+        return 'return {expression};'.format(expression=expression)
 
 
 class RefCountedSemantic(LifecycleTraitsBase):
@@ -334,7 +334,7 @@ class RefCountedSemantic(LifecycleTraitsBase):
         return 'static_cast<{0}*>({1})'.format(class_object.implementation_class_name, argument.name)
 
     def make_c_return(self, class_object, expression):
-        return 'return ({expression});'.format(expression=expression)
+        return 'return {expression};'.format(expression=expression)
 
 
 str_to_lifecycle = {

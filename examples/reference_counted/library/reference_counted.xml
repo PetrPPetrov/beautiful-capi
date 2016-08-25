@@ -7,5 +7,13 @@
         <argument type="const char*" name="text"/>
       </method>
     </class>
+    <class name="Dumper" lifecycle="copy_semantic" implementation_class_name="Example::DumperImpl" implementation_class_header="DumperImpl.h">
+      <constructor name="New"/>
+      <method name="GetPrinter" return="Example::Printer"/>
+      <method name="SetPrinter">
+        <argument type="Example::Printer" name="printer"/>
+      </method>
+      <method name="Dump"/>
+    </class>
   </namespace>
 </reference_counted:api>

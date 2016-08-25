@@ -36,6 +36,8 @@ add_library(reference_counted SHARED
   ${reference_counted_SOURCE_DIR}/source/AutoGenWrap.cpp
   ${reference_counted_SOURCE_DIR}/source/PrinterImpl.h
   ${reference_counted_SOURCE_DIR}/source/PrinterImpl.cpp
+  ${reference_counted_SOURCE_DIR}/source/DumperImpl.h
+  ${reference_counted_SOURCE_DIR}/source/DumperImpl.cpp
 )
 
 add_cs_api_generation(cs ReferenceCounted)

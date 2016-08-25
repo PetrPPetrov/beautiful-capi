@@ -19,40 +19,25 @@
  *
  */
 
-#if defined(_WIN32) && defined(_DEBUG)
-#include <crtdbg.h>
-#endif
-#include <iostream>
-#include <cstdlib>
-#include "Example.h"
+#ifndef BEAUTIFUL_CAPI_COPY_SEMANTIC_DUMPER_H
+#define BEAUTIFUL_CAPI_COPY_SEMANTIC_DUMPER_H
 
-void f1(Example::PrinterPtr p)
+#include <string>
+#include "PrinterImpl.h"
+
+namespace Example
 {
-    p->Show("from f1()");
+    class DumperImpl
+    {
+        Example::PrinterImpl* mPrinter;
+    public:
+        DumperImpl();
+        DumperImpl(const Example::DumperImpl& other);
+        ~DumperImpl();
+        Example::PrinterImpl* GetPrinter() const;
+        void SetPrinter(Example::PrinterImpl* printer);
+        void Dump();
+    };
 }
 
-Example::PrinterPtr create_printer()
-{
-    Example::PrinterPtr new_printer;
-    new_printer->Show("from create_printer()");
-    return new_printer;
-}
-
-int main()
-{
-#if defined(_WIN32) && defined(_DEBUG)
-    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-#endif
-    Example::PrinterPtr printer = create_printer();
-    printer->Show("from main()");
-    f1(printer);
-
-    Example::Dumper dumper;
-    dumper->SetPrinter(printer);
-    dumper->Dump();
-
-    Example::PrinterPtr printer2 = dumper->GetPrinter();
-    printer2->Show("printer2");
-
-    return EXIT_SUCCESS;
-}
+#endif /* BEAUTIFUL_CAPI_COPY_SEMANTIC_DUMPER_H */

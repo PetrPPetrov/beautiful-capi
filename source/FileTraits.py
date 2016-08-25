@@ -64,7 +64,7 @@ class SingleFile(FileTraitsBase):
     def include_namespace_header(self, namespace_path):
         pass
 
-    def include_class_header(self, namespace_path, cur_class):
+    def include_class_header(self, cur_class):
         pass
 
     def class_header(self, cur_class):

@@ -36,6 +36,8 @@ add_library(raw_pointer_semantic SHARED
   ${raw_pointer_semantic_SOURCE_DIR}/source/AutoGenWrap.cpp
   ${raw_pointer_semantic_SOURCE_DIR}/source/PrinterImpl.h
   ${raw_pointer_semantic_SOURCE_DIR}/source/PrinterImpl.cpp
+  ${raw_pointer_semantic_SOURCE_DIR}/source/DumperImpl.h
+  ${raw_pointer_semantic_SOURCE_DIR}/source/DumperImpl.cpp
 )
 
 add_cs_api_generation(cs RawPointerSemantic)
