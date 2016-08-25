@@ -67,6 +67,9 @@ class SingleFile(FileTraitsBase):
     def include_class_header(self, namespace_path, cur_class):
         pass
 
+    def class_header(self, cur_class):
+       pass
+
     def include_capi_header(self, namespace_path):
         pass
 
@@ -214,9 +217,16 @@ class MultipleFiles(FileTraitsBase):
     def include_namespace_header(self, namespace_path):
         self.__include_file(self.__get_file_name_for_namespace(namespace_path, PosixJoin()))
 
-    def include_class_header(self, namespace_path, cur_class):
+    def include_class_header(self, cur_class):
         if self.capi_generator.params_description.file_per_class:
-            self.__include_file(self.__get_file_name_for_class(namespace_path, cur_class, PosixJoin()))
+            extra_info = self.capi_generator.extra_info[cur_class]
+            self.__include_file(self.__get_file_name_for_class(extra_info.full_name_array[:-1], cur_class, PosixJoin()))
+
+    def class_header(self, cur_class):
+       if self.capi_generator.params_description.file_per_class:
+           extra_info = self.capi_generator.extra_info[cur_class]
+           return self.__get_file_name_for_class(extra_info.full_name_array[:-1], cur_class, PosixJoin())
+       return None
 
     def include_capi_header(self, namespace_path):
         self.__include_file(self.__get_file_name_for_capi(namespace_path, PosixJoin()))

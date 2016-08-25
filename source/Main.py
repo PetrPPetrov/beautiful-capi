@@ -117,7 +117,7 @@ class CapiGenerator(object):
                     self.file_traits.include_namespace_header(self.cur_namespace_path)
 
             for cur_class in namespace.classes:
-                self.file_traits.include_class_header(self.cur_namespace_path, cur_class)
+                self.file_traits.include_class_header(cur_class)
 
             if len(self.cur_namespace_path) == 1:
                 self.exception_traits.include_check_and_throw_exception_header()
@@ -149,13 +149,14 @@ class CapiGenerator(object):
                 with CreateInheritanceTraits(cur_class, self):
                     self.output_header.put_begin_cpp_comments(self.params_description)
                     with WatchdogScope(self.output_header, '{0}_INCLUDED'.format(self.get_namespace_id().upper())):
+                        self.output_header.put_include_files()
+                        for include_info in cur_class.include_headers:
+                            self.output_header.include_header(include_info.file, include_info.system)
                         self.file_traits.include_capi_header(self.cur_namespace_path)
                         self.file_traits.include_fwd_header(self.cur_namespace_path)
                         if cur_class.base:
                             extra_info_entry = self.extra_info[cur_class]
-                            self.file_traits.include_class_header(
-                                extra_info_entry.full_name_array[:-1], extra_info_entry.base_class_object
-                            )
+                            self.file_traits.include_class_header(extra_info_entry.base_class_object)
                         self.__include_additional_capi_and_fwd(cur_class)
                         self.output_header.put_line('')
                         with IfDefScope(self.output_header, '__cplusplus'):

@@ -256,7 +256,8 @@ def generate_create_functions_for_callback(cur_callback, base_class, cur_namespa
                         ', '.join(capi_generator.get_c_to_original_arguments(cur_method.arguments))
                     )
                     method_call = capi_generator.make_c_return(cur_method.return_type, method_call)
-                    exception_traits.generate_implementation_callback(method_call, cur_method.return_type)
+                    exception_traits.generate_implementation_callback(
+                        method_call, cur_method.return_type, callback_class)
             Helpers.save_file_generator_to_code_blocks(callback_customer_wrap,
                                                        callback_class.code_after_class_definitions)
 

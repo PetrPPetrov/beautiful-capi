@@ -31,6 +31,23 @@ class AtomicString(object):
         return [self.value]
 
 
+class IncludeHeaders(object):
+    def __init__(self, included_files):
+        self.included_files = included_files
+
+    def get_lines(self):
+        result_lines = []
+        already_included_files = {}
+        for header_file, is_system in self.included_files:
+            if header_file not in already_included_files:
+                if is_system:
+                    result_lines.append('#include <{0}>\n'.format(header_file))
+                else:
+                    result_lines.append('#include "{0}"\n'.format(header_file))
+                already_included_files.update({header_file: is_system})
+        return result_lines
+
+
 class FileGenerator(object):
     def __init__(self, filename):
         self.filename = filename
@@ -39,6 +56,7 @@ class FileGenerator(object):
         self.copyright_header = None
         self.automatic_generation_warning = None
         self.lines = []
+        self.included_files = []
 
     def __del__(self):
         self.__write()
@@ -85,11 +103,23 @@ class FileGenerator(object):
     def get_indent_str(self):
         return ' ' * self.cur_indent
 
+    def include_header(self, header_file, is_system):
+        self.included_files.append((header_file, is_system))
+
+    def include_user_header(self, header_file):
+        self.include_header(header_file, False)
+
+    def include_system_header(self, header_file):
+        self.include_header(header_file, True)
+
     def put_line(self, line, eol='\n'):
         self.lines.append(AtomicString(self.get_indent_str() + line + eol))
 
     def put_file(self, another_file):
         self.lines.append(another_file)
+
+    def put_include_files(self):
+        self.lines.append(IncludeHeaders(self.included_files))
 
     def put_python_header(self):
         self.file_header = '#!/usr/bin/env python'

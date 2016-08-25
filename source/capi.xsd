@@ -21,7 +21,7 @@
       </xs:choice>
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required"/>
-    <xs:attribute name="implementation_header" type="xs:string" use="optional" default=""/>    
+    <xs:attribute name="implementation_header" type="xs:string" use="optional" default=""/>
   </xs:complexType>
   <xs:complexType name="TEnumerationItem">
     <xs:attribute name="name" type="xs:string" use="required"/>
@@ -40,8 +40,9 @@
       <xs:element name="constructor" minOccurs="0" maxOccurs="unbounded" type="TConstructor"/>
       <xs:element name="method" minOccurs="0" maxOccurs="unbounded" type="TMethod"/>
       <xs:element name="code_before_class_definition" minOccurs="0" maxOccurs="unbounded" type="TCodeBlock"/>
-      <xs:element name="code_after_public" minOccurs="0" maxOccurs="unbounded" type="TCodeBlock"/>	  
-      <xs:element name="code_after_class_definition" minOccurs="0" maxOccurs="unbounded" type="TCodeBlock"/>	  
+      <xs:element name="code_after_public" minOccurs="0" maxOccurs="unbounded" type="TCodeBlock"/>
+      <xs:element name="code_after_class_definition" minOccurs="0" maxOccurs="unbounded" type="TCodeBlock"/>
+      <xs:element name="include_header" minOccurs="0" maxOccurs="unbounded" type="THeaderInclude"/>
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required"/>
     <xs:attribute name="base" type="xs:string" use="optional" default=""/>
@@ -98,10 +99,14 @@
   </xs:simpleType>
   <xs:complexType name="TCodeBlock">
     <xs:sequence>
-      <xs:element name="line" minOccurs="0" maxOccurs="unbounded" type="TCodeLine"/>  
+      <xs:element name="line" minOccurs="0" maxOccurs="unbounded" type="TCodeLine"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="TCodeLine">
     <xs:attribute name="text" type="xs:string" use="required"/>
+  </xs:complexType>
+  <xs:complexType name="THeaderInclude">
+    <xs:attribute name="file" type="xs:string" use="required"/>
+    <xs:attribute name="system" type="xs:boolean" use="optional" default="false"/>
   </xs:complexType>
 </xs:schema>

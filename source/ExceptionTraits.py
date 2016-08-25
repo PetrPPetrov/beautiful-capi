@@ -23,6 +23,7 @@
 import ParamsParser
 import FileGenerator
 from TraitsBase import TraitsBase
+from Parser import THeaderInclude
 from FileGenerator import NewFileScope
 from FileGenerator import WatchdogScope
 from FileGenerator import IndentScope
@@ -62,7 +63,7 @@ class NoHandling(ExceptionTraitsBase):
         cur_file = self.capi_generator.output_source
         cur_file.put_line(method_call)
 
-    def generate_implementation_callback(self, method_call, return_type):
+    def generate_implementation_callback(self, method_call, return_type, callback_class):
         self.generate_implementation_call(method_call, return_type)
 
     def generate_c_call(self, c_method_name, format_string, is_function):
@@ -96,6 +97,7 @@ class ByFirstArgument(ExceptionTraitsBase):
         super().__init__(cur_method, cur_class, capi_generator)
         self.additional_includes = None
         self.current_exception_index = 1
+        self.callback_class = None
 
     def __generate_codes_for_class(self, cur_class):
         if cur_class.exception:
@@ -117,10 +119,7 @@ class ByFirstArgument(ExceptionTraitsBase):
             self.current_exception_index += 1
             cur_class_extra_info = self.capi_generator.extra_info[cur_class]
             with NewFileScope(self.additional_includes, self.capi_generator):
-                self.capi_generator.file_traits.include_class_header(
-                    cur_class_extra_info.full_name_array[:-1],
-                    cur_class
-                )
+                self.capi_generator.file_traits.include_class_header(cur_class)
             with Indent(cur_file):
                 cur_file.put_line('throw {0}(exception_object, false);'.format(cur_class_extra_info.get_class_name()))
 
@@ -267,6 +266,11 @@ class ByFirstArgument(ExceptionTraitsBase):
                 cur_file.put_line('exception_info->object_pointer = exception_object;')
 
     def __generate_catch_for_callback_by_value(self, cur_exception_class):
+        exception_header = self.capi_generator.file_traits.class_header(cur_exception_class)
+        if exception_header:
+            new_exception_header = THeaderInclude()
+            new_exception_header.file = exception_header
+            self.callback_class.include_headers.append(new_exception_header)
         cur_exception_extra_info = self.capi_generator.extra_info[cur_exception_class]
         cur_file = self.capi_generator.output_source
         cur_file.put_line(
@@ -317,7 +321,8 @@ class ByFirstArgument(ExceptionTraitsBase):
     def generate_implementation_call(self, method_call, return_type):
         self.__generate_implementation_call(method_call, return_type, ByFirstArgument.__generate_catch_for_class)
 
-    def generate_implementation_callback(self, method_call, return_type):
+    def generate_implementation_callback(self, method_call, return_type, callback_class):
+        self.callback_class = callback_class
         self.__generate_implementation_call(method_call, return_type, ByFirstArgument.__generate_catch_for_callback)
 
     def generate_c_call(self, c_method_name, format_string, is_function):

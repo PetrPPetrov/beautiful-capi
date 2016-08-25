@@ -193,6 +193,7 @@ class TClass(object):
         self.code_before_class_definitions = []
         self.code_after_publics = []
         self.code_after_class_definitions = []
+        self.include_headers = []
     
     def load(self, dom_node):
         for element in [node for node in dom_node.childNodes if node.nodeName == "enumeration"]:
@@ -219,6 +220,10 @@ class TClass(object):
             new_element = TCodeBlock()
             new_element.load(element)
             self.code_after_class_definitions.append(new_element)
+        for element in [node for node in dom_node.childNodes if node.nodeName == "include_header"]:
+            new_element = THeaderInclude()
+            new_element.load(element)
+            self.include_headers.append(new_element)
         if dom_node.hasAttribute("name"):
             cur_attr = dom_node.getAttribute("name")
             self.name = cur_attr
@@ -405,6 +410,24 @@ class TCodeLine(object):
             cur_attr = dom_node.getAttribute("text")
             self.text = cur_attr
             self.text_filled = True
+    
+
+class THeaderInclude(object):
+    def __init__(self):
+        self.file = ""
+        self.file_filled = False
+        self.system = False
+        self.system_filled = False
+    
+    def load(self, dom_node):
+        if dom_node.hasAttribute("file"):
+            cur_attr = dom_node.getAttribute("file")
+            self.file = cur_attr
+            self.file_filled = True
+        if dom_node.hasAttribute("system"):
+            cur_attr = dom_node.getAttribute("system")
+            self.system = string_to_bool(cur_attr)
+            self.system_filled = True
     
 
 def load(dom_node):
