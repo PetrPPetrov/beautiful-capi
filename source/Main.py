@@ -275,7 +275,6 @@ class CapiGenerator(object):
                 arguments=', '.join(self.get_wrapped_argument_pairs(function.arguments))))
             c_function_name = self.get_namespace_id().lower() + Helpers.pascal_to_stl(function.name)
             with FileGenerator.IndentScope(self.output_header):
-                self.put_raw_pointer_structure_if_required(self.output_header, function.arguments)
                 self.exception_traits.generate_c_call(
                     c_function_name,
                     '{c_function}({arguments})',

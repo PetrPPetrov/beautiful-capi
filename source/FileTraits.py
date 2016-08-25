@@ -68,7 +68,7 @@ class SingleFile(FileTraitsBase):
         pass
 
     def class_header(self, cur_class):
-       pass
+        return None
 
     def include_capi_header(self, namespace_path):
         pass

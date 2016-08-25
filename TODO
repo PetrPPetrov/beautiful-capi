@@ -4,6 +4,7 @@
 *) check for the life cycle semantic coherence with base class
 *) single file mode: avoid double inclusion of the same header body
 *) single file mode: allow compilation with exceptions, circular references etc.
+*) remove settings which are responsible for file options (?)
 *) use advances from introducing preprocess classes (?)
 *) don't generate dynamic_casts if impl class is not polymorphic
 *) rename "noexcept" to "no_except" (?)
