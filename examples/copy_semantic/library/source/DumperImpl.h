@@ -19,6 +19,25 @@
  *
  */
 
-#include <iostream>
-#include "PositionImpl.h"
+#ifndef BEAUTIFUL_CAPI_COPY_SEMANTIC_DUMPER_H
+#define BEAUTIFUL_CAPI_COPY_SEMANTIC_DUMPER_H
 
+#include <string>
+#include "PrinterImpl.h"
+
+namespace Example
+{
+    class DumperImpl
+    {
+        Example::PrinterImpl mPrinter;
+    public:
+        DumperImpl();
+        DumperImpl(const Example::DumperImpl& other);
+        ~DumperImpl();
+        Example::PrinterImpl GetPrinter() const;
+        void SetPrinter(Example::PrinterImpl printer);
+        void Dump();
+    };
+}
+
+#endif /* BEAUTIFUL_CAPI_COPY_SEMANTIC_DUMPER_H */

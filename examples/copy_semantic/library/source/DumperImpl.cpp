@@ -20,5 +20,34 @@
  */
 
 #include <iostream>
-#include "PointSetImpl.h"
+#include "DumperImpl.h"
 
+Example::DumperImpl::DumperImpl()
+{
+    std::cout << "Dumper ctor" << std::endl;
+}
+
+Example::DumperImpl::DumperImpl(const Example::DumperImpl& other)
+{
+    std::cout << "Dumper copy ctor" << std::endl;
+}
+
+Example::DumperImpl::~DumperImpl()
+{
+    std::cout << "Dumper dtor" << std::endl;
+}
+
+Example::PrinterImpl Example::DumperImpl::GetPrinter() const
+{
+    return mPrinter;
+}
+
+void Example::DumperImpl::SetPrinter(Example::PrinterImpl printer)
+{
+    mPrinter = printer;
+}
+
+void Example::DumperImpl::Dump()
+{
+    mPrinter.Show("Dumper::Dump(): dump some text here");
+}

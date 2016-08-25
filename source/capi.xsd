@@ -39,9 +39,9 @@
       <xs:element name="enumeration" minOccurs="0" maxOccurs="unbounded" type="TEnumeration"/>
       <xs:element name="constructor" minOccurs="0" maxOccurs="unbounded" type="TConstructor"/>
       <xs:element name="method" minOccurs="0" maxOccurs="unbounded" type="TMethod"/>
-	  <xs:element name="code_before_class_definition" minOccurs="0" maxOccurs="unbounded" type="TCodeBlock"/>
-	  <xs:element name="code_after_public" minOccurs="0" maxOccurs="unbounded" type="TCodeBlock"/>	  
-	  <xs:element name="code_after_class_definition" minOccurs="0" maxOccurs="unbounded" type="TCodeBlock"/>	  
+      <xs:element name="code_before_class_definition" minOccurs="0" maxOccurs="unbounded" type="TCodeBlock"/>
+      <xs:element name="code_after_public" minOccurs="0" maxOccurs="unbounded" type="TCodeBlock"/>	  
+      <xs:element name="code_after_class_definition" minOccurs="0" maxOccurs="unbounded" type="TCodeBlock"/>	  
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required"/>
     <xs:attribute name="base" type="xs:string" use="optional" default=""/>
@@ -73,7 +73,7 @@
     <xs:complexContent>
       <xs:extension base="TConstructor">
         <xs:attribute name="return" type="xs:string" use="optional" default=""/>
-        <xs:attribute name="const" type="xs:boolean" use="optional" default=""/>
+        <xs:attribute name="const" type="xs:boolean" use="optional" default="false"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -99,7 +99,7 @@
   <xs:complexType name="TCodeBlock">
     <xs:sequence>
       <xs:element name="line" minOccurs="0" maxOccurs="unbounded" type="TCodeLine"/>  
-	</xs:sequence>
+    </xs:sequence>
   </xs:complexType>
   <xs:complexType name="TCodeLine">
     <xs:attribute name="text" type="xs:string" use="required"/>

@@ -36,6 +36,8 @@ add_library(copy_semantic SHARED
   ${copy_semantic_SOURCE_DIR}/source/AutoGenWrap.cpp
   ${copy_semantic_SOURCE_DIR}/source/PrinterImpl.h
   ${copy_semantic_SOURCE_DIR}/source/PrinterImpl.cpp
+  ${copy_semantic_SOURCE_DIR}/source/DumperImpl.h
+  ${copy_semantic_SOURCE_DIR}/source/DumperImpl.cpp
 )
 
 add_cs_api_generation(cs CopySemantic)

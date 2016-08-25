@@ -47,5 +47,12 @@ int main()
     printer.Show("from main()");
     f1(printer);
 
+    Example::Dumper dumper;
+    dumper.SetPrinter(printer);
+    dumper.Dump();
+
+    Example::Printer printer2 = dumper.GetPrinter();
+    printer2.Show("printer2");
+
     return EXIT_SUCCESS;
 }

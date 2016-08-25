@@ -23,6 +23,7 @@
 from Parser import TConstructor
 from Parser import TCodeBlock
 from Parser import TCodeLine
+from Parser import TLifecycle
 
 
 def pascal_to_stl(pascal_name):
@@ -40,18 +41,20 @@ def put_raw_pointer_structure(output_file):
     output_file.put_line('struct raw_pointer_holder { void* raw_pointer; };')
 
 
-def get_return_copy_or_add_ref_default_value(constructor_or_method):
+def get_return_copy_or_add_ref_default_value(constructor_or_method, class_object):
+    if class_object.lifecycle == TLifecycle.copy_semantic:
+        return False
     if type(constructor_or_method) is TConstructor:
         return False
     else:
         return True
 
 
-def get_return_copy_or_add_ref(constructor_or_method):
+def get_return_copy_or_add_ref(constructor_or_method, class_object):
     if constructor_or_method.return_copy_or_add_ref_filled:
         return constructor_or_method.return_copy_or_add_ref
     else:
-        return get_return_copy_or_add_ref_default_value(constructor_or_method)
+        return get_return_copy_or_add_ref_default_value(constructor_or_method, class_object)
 
 
 def save_file_generator_to_code_blocks(file_generator, code_blocks):

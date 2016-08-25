@@ -251,11 +251,11 @@ def generate_create_functions_for_callback(cur_callback, base_class, cur_namespa
                     callback_customer_wrap.put_line(
                         'ImplementationClass* self = static_cast<ImplementationClass*>(object_pointer);'
                     )
-                    method_call = '{0}self->{1}({2});'.format(
-                        capi_generator.get_c_return_instruction(cur_method.return_type),
+                    method_call = 'self->{0}({1})'.format(
                         cur_method.name,
                         ', '.join(capi_generator.get_c_to_original_arguments(cur_method.arguments))
                     )
+                    method_call = capi_generator.make_c_return(cur_method.return_type, method_call)
                     exception_traits.generate_implementation_callback(method_call, cur_method.return_type)
             Helpers.save_file_generator_to_code_blocks(callback_customer_wrap,
                                                        callback_class.code_after_class_definitions)

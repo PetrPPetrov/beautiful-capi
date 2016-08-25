@@ -43,7 +43,7 @@ class InheritanceTraitsBase(TraitsBase):
                     'SetObject({c_function}({arguments}))',
                     True
                 )
-                if get_return_copy_or_add_ref(constructor):
+                if get_return_copy_or_add_ref(constructor, self.cur_class):
                     self.capi_generator.lifecycle_traits.generate_copy_or_add_ref_for_constructor()
             c_function_declaration = 'void* {constructor_c_function}({arguments_list})'.format(
                 constructor_c_function=self.capi_generator.get_namespace_id().lower(),

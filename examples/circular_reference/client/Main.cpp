@@ -32,17 +32,22 @@ int main()
 #if defined(_WIN32) && defined(_DEBUG)
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
-    Circular::ClassA a_object;
-    Circular::ClassB b_object;
-    Circular::ClassA a_object1;
-    Circular::ClassB b_object1;
+    Circular::ClassARawPtr a_object;
+    Circular::ClassBRawPtr b_object;
+    Circular::ClassARawPtr a_object1;
+    Circular::ClassBRawPtr b_object1;
 
     a_object.SetB(b_object);
     b_object1.SetA(a_object1);
 
-    Circular::ClassA tmp_object = b_object1.GetA();
+    Circular::ClassARawPtr tmp_object = b_object1.GetA();
     tmp_object.SetB(b_object);
 
     a_object.GetB()->SetA(a_object1); // We need to use "->" operator here, as GetB() returns forward_pointer_holder<Circular::ClassB>
+
+    a_object.Delete();
+    b_object.Delete();
+    a_object1.Delete();
+    b_object1.Delete();
     return EXIT_SUCCESS;
 }

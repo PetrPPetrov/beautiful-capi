@@ -43,7 +43,6 @@ namespace PointSet
         PointsImpl* GetPoints() { return mPoints.get(); }
         void SetPoints(PointsImpl* points) { mPoints = points; }
 
-
         void AddRef() { if (this) ++mRefCount; }
         void Release()
         {

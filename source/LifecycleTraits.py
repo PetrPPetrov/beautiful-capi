@@ -178,6 +178,14 @@ class CopySemantic(LifecycleTraitsBase):
                 self.__generate_copy_constructor_body()
             self.put_line('return *this;')
 
+    def generate_get_c_to_original_argument(self, class_object, argument):
+        return '*static_cast<{0}*>({1})'.format(class_object.implementation_class_name, argument.name)
+
+    def make_c_return(self, class_object, expression):
+        return 'return {copy}(&{expression});'.format(
+            copy=self.capi_generator.extra_info[class_object].get_c_name() + Constants.copy_suffix,
+            expression=expression)
+
 
 class RawPointerSemantic(LifecycleTraitsBase):
     def __init__(self, cur_class, capi_generator):
@@ -212,6 +220,12 @@ class RawPointerSemantic(LifecycleTraitsBase):
             self.get_delete_c_function_name()
         )
         self.generate_delete_c_function()
+
+    def generate_get_c_to_original_argument(self, class_object, argument):
+        return 'static_cast<{0}*>({1})'.format(class_object.implementation_class_name, argument.name)
+
+    def make_c_return(self, class_object, expression):
+        return 'return ({expression});'.format(expression=expression)
 
 
 class RefCountedSemantic(LifecycleTraitsBase):
@@ -314,6 +328,12 @@ class RefCountedSemantic(LifecycleTraitsBase):
                 '{c_function}({arguments})',
                 False
             )
+
+    def generate_get_c_to_original_argument(self, class_object, argument):
+        return 'static_cast<{0}*>({1})'.format(class_object.implementation_class_name, argument.name)
+
+    def make_c_return(self, class_object, expression):
+        return 'return ({expression});'.format(expression=expression)
 
 
 str_to_lifecycle = {

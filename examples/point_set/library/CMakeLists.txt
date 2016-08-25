@@ -48,11 +48,8 @@ include_directories(
 add_library(point_set SHARED
   ${point_set_SOURCE_DIR}/source/AutoGenWrap.cpp
   ${point_set_SOURCE_DIR}/source/PointSetImpl.h
-  ${point_set_SOURCE_DIR}/source/PointSetImpl.cpp
   ${point_set_SOURCE_DIR}/source/PointsImpl.h
-  ${point_set_SOURCE_DIR}/source/PointsImpl.cpp
   ${point_set_SOURCE_DIR}/source/PositionImpl.h
-  ${point_set_SOURCE_DIR}/source/PositionImpl.cpp
 )
 
 add_cs_api_generation(cs PointSet)

@@ -1,72 +1,58 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <hello_world:api xmlns:hello_world="http://gkmsoft.ru/beautifulcapi">
-    <namespace name="PointSet">
-
-
-        <class name="Position" lifecycle="copy_semantic" implementation_class_name="PointSet::PositionImpl" implementation_class_header="PositionImpl.h">
-            <constructor name="Default"/>
-            <constructor name="Initialized">
-                <argument name="X" type="double"/>
-                <argument name="Y" type="double"/>
-                <argument name="Z" type="double"/>
-            </constructor>
-
-            <method name="GetX" return="double"/>
-            <method name="SetX">
-                <argument name="value" type="double"/>
-            </method>
-
-            <method name="GetY" return="double"/>
-            <method name="SetY">
-                <argument name="value" type="double"/>
-            </method>
-
-            <method name="GetZ" return="double"/>
-            <method name="SetZ">
-                <argument name="value" type="double"/>
-            </method>
-        </class>
-
-        <class name="Points" lifecycle="reference_counted" implementation_class_name="PointSet::PointsImpl" implementation_class_header="PointsImpl.h">
-            <constructor name="Default"/>
-
-            <method name="Size" return="size_t"/>
-            <method name="Reserve">
-                <argument name="capacity" type="size_t"/>
-            </method>
-            <method name="Resize">
-                <argument name="size" type="size_t"/>
-                <argument name="default_value" type="PointSet::Position"/>
-            </method>
-
-            <method name="GetElement" return="PointSet::Position">
-                <argument name="index" type="size_t"/>
-            </method>
-            <method name="SetElement">
-                <argument name="index" type="size_t"/>
-                <argument name="value" type="PointSet::Position"/>
-            </method>
-            <method name="PushBack">
-                <argument name="value" type="PointSet::Position"/>
-            </method>
-
-            <method name="Clear"/>
-        </class>
-
-        <class name="PointSet" lifecycle="reference_counted" implementation_class_name="PointSet::PointSetImpl" implementation_class_header="PointSetImpl.h">
-            <constructor name="Default"/>
-
-            <method name="GetName" return="const char*"/>
-            <method name="SetName">
-                <argument name="name" type="const char*"/>
-            </method>
-
-            <method name="GetPoints" return="PointSet::Points"/>
-            <method name="SetPoints">
-                <argument name="value" type="PointSet::Points"/>
-            </method>
-            
-        </class>
-        
-    </namespace>
+  <namespace name="PointSet">
+    <class name="Position" lifecycle="copy_semantic" implementation_class_name="PointSet::PositionImpl" implementation_class_header="PositionImpl.h">
+      <constructor name="Default"/>
+      <constructor name="Initialized">
+        <argument name="X" type="double"/>
+        <argument name="Y" type="double"/>
+        <argument name="Z" type="double"/>
+      </constructor>
+      <method name="GetX" return="double"/>
+      <method name="SetX">
+        <argument name="value" type="double"/>
+      </method>
+      <method name="GetY" return="double"/>
+      <method name="SetY">
+        <argument name="value" type="double"/>
+      </method>
+      <method name="GetZ" return="double"/>
+      <method name="SetZ">
+        <argument name="value" type="double"/>
+      </method>
+    </class>
+    <class name="Points" lifecycle="reference_counted" implementation_class_name="PointSet::PointsImpl" implementation_class_header="PointsImpl.h">
+      <constructor name="Default"/>
+      <method name="Size" return="size_t"/>
+      <method name="Reserve">
+        <argument name="capacity" type="size_t"/>
+      </method>
+      <method name="Resize">
+        <argument name="size" type="size_t"/>
+        <argument name="default_value" type="PointSet::Position"/>
+      </method>
+      <method name="GetElement" return="PointSet::Position">
+        <argument name="index" type="size_t"/>
+      </method>
+      <method name="SetElement">
+        <argument name="index" type="size_t"/>
+        <argument name="value" type="PointSet::Position"/>
+      </method>
+      <method name="PushBack">
+        <argument name="value" type="PointSet::Position"/>
+      </method>
+      <method name="Clear"/>
+    </class>
+    <class name="PointSet" lifecycle="reference_counted" implementation_class_name="PointSet::PointSetImpl" implementation_class_header="PointSetImpl.h">
+      <constructor name="Default"/>
+      <method name="GetName" return="const char*"/>
+      <method name="SetName">
+        <argument name="name" type="const char*"/>
+      </method>
+      <method name="GetPoints" return="PointSet::Points"/>
+      <method name="SetPoints">
+        <argument name="value" type="PointSet::Points"/>
+      </method>
+    </class>
+  </namespace>
 </hello_world:api>

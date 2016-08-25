@@ -385,11 +385,12 @@ class CapiGenerator(object):
     def get_wrapped_result_var(self, type_name, rest_expression, method):
         if type_name:
             if self.__is_class_type(type_name):
+                cur_type = self.get_class_type(type_name)
                 return '{result_type}{fwd_suffix} result({rest_expr}, {copy_or_add_ref});'.format(
                     result_type=type_name,
                     fwd_suffix=self.params_description.forward_typedef_suffix,
                     rest_expr=rest_expression,
-                    copy_or_add_ref='true' if Helpers.get_return_copy_or_add_ref(method) else 'false'
+                    copy_or_add_ref='true' if Helpers.get_return_copy_or_add_ref(method, cur_type) else 'false'
                 )
             else:
                 return '{0} result({1});'.format(type_name, rest_expression)
@@ -399,11 +400,12 @@ class CapiGenerator(object):
     def get_wrapped_return_instruction(self, type_name, rest_expression, method):
         if type_name:
             if self.__is_class_type(type_name):
+                cur_type = self.get_class_type(type_name)
                 return 'return {result_type}{fwd_suffix}({rest_expr}, {copy_or_add_ref});'.format(
                     result_type=type_name,
                     fwd_suffix=self.params_description.forward_typedef_suffix,
                     rest_expr=rest_expression,
-                    copy_or_add_ref='true' if Helpers.get_return_copy_or_add_ref(method) else 'false'
+                    copy_or_add_ref='true' if Helpers.get_return_copy_or_add_ref(method, cur_type) else 'false'
                 )
             elif self.__is_enum_type(type_name):
                 return 'return static_cast<{cast_type}>({rest_expr});'.format(
@@ -477,25 +479,19 @@ class CapiGenerator(object):
         return [self.get_c_from_wrapped_argument(argument) for argument in arguments]
 
     # C types
-    def get_c_return_instruction(self, type_name):
-        if type_name:
-            if self.__is_enum_type(type_name):
-                return 'return ({cast_type})'.format(cast_type=self.get_enum_type(type_name).underlying_type)
-            else:
-                return 'return '
-        else:
-            return ''
-
     def make_c_return(self, return_type, expression):
         line = '{expression};'
         if return_type:
+            if self.__is_class_type(return_type):
+                class_object = self.get_class_type(return_type)
+                with CreateLifecycleTraits(class_object, self):
+                    return self.lifecycle_traits.make_c_return(class_object, expression)
             if self.__is_enum_type(return_type):
                 line = 'return static_cast<{cast_type}>({{expression}});'.format(
                     cast_type=self.get_enum_type(return_type).underlying_type)
             else:
                 line = 'return {expression};'
         return line.format(expression=expression)
-
 
     def get_c_type(self, type_name):
         return self.get_flat_type(type_name)
@@ -513,7 +509,8 @@ class CapiGenerator(object):
     def get_c_to_original_argument(self, argument):
         class_object = self.get_class_type(argument.type_name)
         if class_object:
-            return 'static_cast<{0}*>({1})'.format(class_object.implementation_class_name, argument.name)
+            with CreateLifecycleTraits(class_object, self):
+                return self.lifecycle_traits.generate_get_c_to_original_argument(class_object, argument)
         else:
             return argument.name
 
