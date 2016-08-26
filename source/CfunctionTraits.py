@@ -32,27 +32,34 @@ class ImplLib(CfunctionTraitsBase):
     def __init__(self, capi_generator):
         super().__init__(capi_generator)
         self.cur_api_define = None
+        self.cur_api_convention = None
         self.cur_api_declarations = None
         self.cur_capi_prefix = None
         self.impl_headers = None
 
-    def __put_define_apple(self, put_function):
-        put_function('#define {0} {1}'.format(self.cur_api_define, self.cur_capi_prefix))
-
-    def __put_define_linux(self, put_function):
-        put_function('#define {0} {1} __attribute__ ((visibility ("default")))'.format(self.cur_api_define, self.cur_capi_prefix))
+    def __put_define_apple_or_linux(self, indent_function, put_function):
+        put_function('#if defined(__GNUC) && GNUC__ >= 4')
+        with indent_function():
+            put_function('#define {0} {1} __attribute__ ((visibility ("default")))'.format(
+                self.cur_api_define, self.cur_capi_prefix))
+        put_function('#else')
+        with indent_function():
+            put_function('#define {0} {1}'.format(self.cur_api_define, self.cur_capi_prefix))
+        put_function('#endif')
+        put_function('#define {0} __attribute__ ((cdecl))'.format(self.cur_api_convention))
 
     def __put_api_define(self, put_function, indent_function, dll_import_or_export):
         put_function('#ifdef _WIN32')
         with indent_function():
             put_function('#define {0} {1} __declspec({2})'.format(
                 self.cur_api_define, self.cur_capi_prefix, dll_import_or_export))
+            put_function('#define {0} __cdecl'.format(self.cur_api_convention))
         put_function('#elif __APPLE__')
         with indent_function():
-            self.__put_define_apple(put_function)
+            self.__put_define_apple_or_linux(indent_function, put_function)
         put_function('#elif __unix__ || __linux__')
         with indent_function():
-            self.__put_define_linux(put_function)
+            self.__put_define_apple_or_linux(indent_function, put_function)
         put_function('#else')
         with indent_function():
             put_function('#error "Unknown platform"')
@@ -71,6 +78,7 @@ class ImplLib(CfunctionTraitsBase):
             self.put_file(self.capi_generator.callback_typedefs)
 
         self.cur_api_define = '{0}_API'.format(self.capi_generator.get_namespace_id().upper())
+        self.cur_api_convention = '{0}_API_CONVENTION'.format(self.capi_generator.get_namespace_id().upper())
         self.cur_capi_prefix = 'extern "C"'
         self.__put_api_define(self.put_source_line, self.indent_source, 'dllexport')
 
@@ -93,8 +101,9 @@ class ImplLib(CfunctionTraitsBase):
         self.capi_generator.api_defines_generated = True
 
     def add_c_function_declaration(self, declaration):
-        self.cur_api_declarations.put_line('{0} {1};'.format(self.cur_api_define, declaration))
-        self.put_source_line('{0} {1}'.format(self.cur_api_define, declaration))
+        declaration_with_convention = declaration.format(convention=self.cur_api_convention)
+        self.cur_api_declarations.put_line('{0} {1};'.format(self.cur_api_define, declaration_with_convention))
+        self.put_source_line('{0} {1}'.format(self.cur_api_define, declaration_with_convention))
 
     def add_impl_header(self, implementation_header):
         if implementation_header:

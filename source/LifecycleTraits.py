@@ -59,7 +59,7 @@ class LifecycleTraitsBase(TraitsBase):
 
     def generate_delete_c_function(self):
         delete_c_function_name = self.get_delete_c_function_name()
-        c_function_declaration = 'void {delete_c_function}({arguments_list})'.format(
+        c_function_declaration = 'void {{convention}} {delete_c_function}({arguments_list})'.format(
             delete_c_function=delete_c_function_name,
             arguments_list=', '.join(self.delete_exception_traits.get_c_argument_pairs())
         )
@@ -156,7 +156,7 @@ class CopySemantic(LifecycleTraitsBase):
             self.put_line('else')
             with self.indent_scope():
                 self.put_line('SetObject(object_pointer);')
-        c_function_declaration = 'void* {copy_c_function}({arguments_list})'.format(
+        c_function_declaration = 'void* {{convention}} {copy_c_function}({arguments_list})'.format(
             copy_c_function=self.capi_generator.get_namespace_id().lower() + Constants.copy_suffix,
             arguments_list=', '.join(self.copy_exception_traits.get_c_argument_pairs_for_function())
         )
@@ -254,7 +254,7 @@ class RefCountedSemantic(LifecycleTraitsBase):
             self.get_destructor_declaration(),
             release_c_function_name
         )
-        c_function_declaration = 'void {release_c_function}({arguments_list})'.format(
+        c_function_declaration = 'void {{convention}} {release_c_function}({arguments_list})'.format(
             release_c_function=release_c_function_name,
             arguments_list=', '.join(self.release_exception_traits.get_c_argument_pairs())
         )
@@ -297,7 +297,7 @@ class RefCountedSemantic(LifecycleTraitsBase):
         with self.indent_scope():
             self.__generate_copy_constructor_add_ref_body()
 
-        c_function_declaration = 'void {addref_c_function}({arguments_list})'.format(
+        c_function_declaration = 'void {{convention}} {addref_c_function}({arguments_list})'.format(
             addref_c_function=self.capi_generator.get_namespace_id().lower() + Constants.add_ref_suffix,
             arguments_list=', '.join(self.add_ref_exception_traits.get_c_argument_pairs())
         )

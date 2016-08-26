@@ -241,7 +241,7 @@ class CapiGenerator(object):
                         '{c_function}({arguments})',
                         False
                     )
-                c_function_declaration = '{return_type} {c_function}({arguments})'.format(
+                c_function_declaration = '{return_type} {{convention}} {c_function}({arguments})'.format(
                     return_type=self.get_c_type(method.return_type),
                     c_function=self.get_namespace_id().lower(),
                     arguments=', '.join(self.exception_traits.get_c_argument_pairs())
@@ -287,7 +287,7 @@ class CapiGenerator(object):
                     True
                 )
             self.output_header.put_line('')
-            c_function_declaration = '{return_type} {c_function}({arguments})'.format(
+            c_function_declaration = '{return_type} {{convention}} {c_function}({arguments})'.format(
                 return_type=self.get_c_type(function.return_type),
                 c_function=c_function_name,
                 arguments=', '.join(self.exception_traits.get_c_argument_pairs_for_function())

@@ -45,7 +45,7 @@ class InheritanceTraitsBase(TraitsBase):
                 )
                 if get_return_copy_or_add_ref(constructor, self.cur_class):
                     self.capi_generator.lifecycle_traits.generate_copy_or_add_ref_for_constructor()
-            c_function_declaration = 'void* {constructor_c_function}({arguments_list})'.format(
+            c_function_declaration = 'void* {{convention}} {constructor_c_function}({arguments_list})'.format(
                 constructor_c_function=self.capi_generator.get_namespace_id().lower(),
                 arguments_list=', '.join(self.capi_generator.exception_traits.get_c_argument_pairs_for_function())
             )
@@ -99,7 +99,7 @@ class RequiresCastToBase(InheritanceTraitsBase):
                     self.put_line('{base_class}::SetObject(0);'.format(
                         base_class=self.cur_class.base + self.capi_generator.lifecycle_traits.get_suffix()
                     ))
-                c_function_declaration = 'void* {cast_to_base}(void* object_pointer)'.format(
+                c_function_declaration = 'void* {{convention}} {cast_to_base}(void* object_pointer)'.format(
                     cast_to_base=self.capi_generator.get_namespace_id().lower() + Constants.cast_to_base_suffix)
                 self.capi_generator.loader_traits.add_c_function_declaration(c_function_declaration)
                 with self.indent_scope_source():

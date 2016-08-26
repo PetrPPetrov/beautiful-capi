@@ -46,7 +46,7 @@ def generate_down_cast(output_file, cur_class, base_class, capi_generator):
                 c_function_name,
             )
         )
-        c_function_declaration = 'void* {0}(void* object_pointer)'.format(c_function_name)
+        c_function_declaration = 'void* {{convention}} {0}(void* object_pointer)'.format(c_function_name)
         capi_generator.loader_traits.add_c_function_declaration(c_function_declaration)
         with FileGenerator.IndentScope(capi_generator.output_source):
             capi_generator.output_source.put_line(
