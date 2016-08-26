@@ -1,4 +1,3 @@
-*) avoid duplicated include files (implementation_header)
 *) exception codes => classes list for pure C wrapping
 *) __cdecl, __stdcall or something like that
 *) enum done?
