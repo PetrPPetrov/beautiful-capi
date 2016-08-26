@@ -29,7 +29,7 @@ namespace Example
     struct IShape
     {
         virtual ~IShape() {} // virtual destructor is required here
-        virtual void Show() = 0;
+        virtual void Show() const = 0;
         virtual void AddRef() = 0;
         virtual void Release() = 0;
     };

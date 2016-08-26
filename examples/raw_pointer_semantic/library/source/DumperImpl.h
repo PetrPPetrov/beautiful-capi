@@ -36,7 +36,7 @@ namespace Example
         ~DumperImpl();
         Example::PrinterImpl* GetPrinter() const;
         void SetPrinter(Example::PrinterImpl* printer);
-        void Dump();
+        void Dump() const;
     };
 }
 

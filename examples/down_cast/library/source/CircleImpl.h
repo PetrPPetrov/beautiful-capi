@@ -33,7 +33,7 @@ namespace Example
     public:
         CircleImpl();
         virtual ~CircleImpl();
-        virtual void Show();
+        virtual void Show() const;
         virtual void SetRadius(double radius);
     };
 }

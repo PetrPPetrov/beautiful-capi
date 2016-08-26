@@ -29,7 +29,7 @@ namespace hello_world
     public:
         scanner_impl();
         ~scanner_impl();
-        void scan();
+        void scan() const;
     };
 }
 

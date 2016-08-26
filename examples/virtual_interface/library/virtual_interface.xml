@@ -2,7 +2,7 @@
 <virtual_interface:api xmlns:virtual_interface="http://gkmsoft.ru/beautifulcapi">
   <namespace name="Example">
     <class name="IShape" lifecycle="raw_pointer_semantic" implementation_class_name="Example::IShape" implementation_class_header="IShape.h">
-      <method name="Show"/>
+      <method name="Show" const="true"/>
     </class>
     <function name="CreateTriangle" return="Example::IShape" implementation_name="Example::Details::CreateTriangle" implementation_header="TriangleFactory.h"/>
     <function name="CreateRectangle" return="Example::IShape" implementation_name="Example::Details::CreateRectangle" implementation_header="RectangleFactory.h"/>

@@ -39,7 +39,7 @@ namespace Example
                 std::cout << "Circle dtor" << std::endl;
             }
 
-            virtual void Show()
+            virtual void Show() const
             {
                 std::cout << "Circle::Show()" << std::endl;
             }

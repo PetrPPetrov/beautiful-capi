@@ -28,7 +28,7 @@ namespace Example
     {
         virtual void AddRef() = 0;
         virtual void Release() = 0;
-        virtual void Print(const char* text) = 0;
+        virtual void Print(const char* text) const = 0;
     };
 
     inline void intrusive_ptr_add_ref(IPrinter* printer)

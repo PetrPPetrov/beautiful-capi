@@ -9,7 +9,7 @@
     </class>
     <class name="Dumper" lifecycle="copy_semantic" implementation_class_name="Example::DumperImpl" implementation_class_header="DumperImpl.h">
       <constructor name="New"/>
-      <method name="GetPrinter" return="Example::Printer"/>
+      <method name="GetPrinter" return="Example::Printer" const="true"/>
       <method name="SetPrinter">
         <argument type="Example::Printer" name="printer"/>
       </method>

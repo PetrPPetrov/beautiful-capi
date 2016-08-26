@@ -2,7 +2,7 @@
 <callback:api xmlns:callback="http://gkmsoft.ru/beautifulcapi">
   <namespace name="Example">
     <class name="Printer" lifecycle="reference_counted" implementation_class_name="Example::IPrinter" implementation_class_header="IPrinter.h">
-      <method name="Print">
+      <method name="Print" const="true">
         <argument type="const char*" name="text"/>
       </method>
     </class>
@@ -18,36 +18,36 @@
     <method name="SetFirstName">
       <argument type="const char*" name="first_name"/>
     </method>
-    <method name="GetFirstName" return="const char*"/>
+    <method name="GetFirstName" return="const char*" const="true"/>
     <method name="SetSecondName">
       <argument type="const char*" name="second_name"/>
     </method>
-    <method name="GetSecondName" return="const char*"/>
+    <method name="GetSecondName" return="const char*" const="true"/>
     <method name="SetAge">
       <argument type="unsigned int" name="age"/>
     </method>
-    <method name="GetAge" return="unsigned int"/>
+    <method name="GetAge" return="unsigned int" const="true"/>
     <method name="SetMale">
       <argument type="bool" name="is_male"/>
     </method>
-    <method name="IsMale" return="bool"/>
-    <method name="Dump">
+    <method name="IsMale" return="bool" const="true"/>
+    <method name="Dump" const="true">
       <argument type="Example::Printer" name="printer"/>
     </method>
-    <method name="Print">
+    <method name="Print" const="true">
       <argument type="Example::Printer" name="printer"/>
       <argument type="const char*" name="text"/>
-    </method>    
+    </method>
   </class>
   </namespace>
   <namespace name="Exception">
     <class name="Generic" exception="true" lifecycle="copy_semantic" implementation_class_name="Exception::GenericImpl" implementation_class_header="Exception/GenericImpl.h">
       <constructor name="New"/>
-      <method name="GetErrorText" return="const char*" noexcept="true"/>
+      <method name="GetErrorText" return="const char*" noexcept="true" const="true"/>
     </class>
     <class name="BadArgument" base="Exception::Generic" exception="true" lifecycle="copy_semantic" implementation_class_name="Exception::BadArgumentImpl" implementation_class_header="Exception/BadArgumentImpl.h">
       <constructor name="New"/>
-      <method name="GetArgumentName" return="const char*" noexcept="true"/>
+      <method name="GetArgumentName" return="const char*" noexcept="true" const="true"/>
     </class>
     <class name="NullArgument" base="Exception::BadArgument" exception="true" lifecycle="copy_semantic" implementation_class_name="Exception::NullArgumentImpl" implementation_class_header="Exception/NullArgumentImpl.h">
       <constructor name="New"/>

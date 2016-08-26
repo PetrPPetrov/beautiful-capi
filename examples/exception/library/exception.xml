@@ -19,11 +19,11 @@
   <namespace name="Exception">
     <class name="Generic" exception="true" lifecycle="copy_semantic" implementation_class_name="Exception::GenericImpl" implementation_class_header="Exception/GenericImpl.h">
       <constructor name="New"/>
-      <method name="GetErrorText" return="const char*" noexcept="true"/>
+      <method name="GetErrorText" return="const char*" noexcept="true" const="true"/>
     </class>
     <class name="BadArgument" base="Exception::Generic" exception="true" lifecycle="copy_semantic" implementation_class_name="Exception::BadArgumentImpl" implementation_class_header="Exception/BadArgumentImpl.h">
       <constructor name="New"/>
-      <method name="GetArgumentName" return="const char*" noexcept="true"/>
+      <method name="GetArgumentName" return="const char*" noexcept="true" const="true"/>
     </class>
     <class name="NullArgument" base="Exception::BadArgument" exception="true" lifecycle="copy_semantic" implementation_class_name="Exception::NullArgumentImpl" implementation_class_header="Exception/NullArgumentImpl.h">
       <constructor name="New"/>

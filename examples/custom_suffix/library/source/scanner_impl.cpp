@@ -32,7 +32,7 @@ hello_world::scanner_impl::~scanner_impl()
     std::cout << "Scanner dtor" << std::endl;
 }
 
-void hello_world::scanner_impl::scan()
+void hello_world::scanner_impl::scan() const
 {
     std::cout << "scanning is done." << std::endl;
 }

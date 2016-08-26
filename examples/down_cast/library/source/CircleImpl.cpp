@@ -32,7 +32,7 @@ Example::CircleImpl::~CircleImpl()
     std::cout << "Circle dtor" << std::endl;
 }
 
-void Example::CircleImpl::Show()
+void Example::CircleImpl::Show() const
 {
     std::cout << "CircleImpl::Show(), radius = " << m_radius << std::endl;
 }

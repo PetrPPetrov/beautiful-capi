@@ -47,7 +47,7 @@ void Example::DumperImpl::SetPrinter(Example::PrinterImpl* printer)
     mPrinter = printer;
 }
 
-void Example::DumperImpl::Dump()
+void Example::DumperImpl::Dump() const
 {
     mPrinter->Show("Dumper::Dump(): dump some text here");
 }

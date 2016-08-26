@@ -2,10 +2,10 @@
 <down_cast:api xmlns:down_cast="http://gkmsoft.ru/beautifulcapi">
   <namespace name="Example">
     <class name="IShape" lifecycle="reference_counted" implementation_class_name="Example::IShape" implementation_class_header="IShape.h">
-      <method name="Show"/>
+      <method name="Show" const="true"/>
     </class>
     <class name="IPolygon" base="Example::IShape" lifecycle="reference_counted" implementation_class_name="Example::IPolygon" implementation_class_header="IPolygon.h">
-      <method name="GetPointsCount" return="int"/>
+      <method name="GetPointsCount" return="int" const="true"/>
     </class>
     <class name="ITriangle" base="Example::IPolygon" lifecycle="reference_counted" implementation_class_name="Example::TriangleImpl" implementation_class_header="TriangleImpl.h">
       <method name="SetPoints">

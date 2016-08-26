@@ -6,14 +6,14 @@
       <method name="SetB">
         <argument type="Circular::ClassB" name="value"/>
       </method>
-      <method name="GetB" return="Circular::ClassB"/>
+      <method name="GetB" return="Circular::ClassB" const="true"/>
     </class>
     <class name="ClassB" lifecycle="raw_pointer_semantic" implementation_class_name="Circular::ClassBImpl" implementation_class_header="ClassBImpl.h">
       <constructor name="Default"/>
       <method name="SetA">
         <argument type="Circular::ClassA" name="value"/>
       </method>
-      <method name="GetA" return="Circular::ClassA"/>
+      <method name="GetA" return="Circular::ClassA" const="true"/>
     </class>
   </namespace>
 </circular_reference:api>

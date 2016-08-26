@@ -8,22 +8,22 @@
         <argument name="Y" type="double"/>
         <argument name="Z" type="double"/>
       </constructor>
-      <method name="GetX" return="double"/>
+      <method name="GetX" return="double" const="true"/>
       <method name="SetX">
         <argument name="value" type="double"/>
       </method>
-      <method name="GetY" return="double"/>
+      <method name="GetY" return="double" const="true"/>
       <method name="SetY">
         <argument name="value" type="double"/>
       </method>
-      <method name="GetZ" return="double"/>
+      <method name="GetZ" return="double" const="true"/>
       <method name="SetZ">
         <argument name="value" type="double"/>
       </method>
     </class>
     <class name="Points" lifecycle="reference_counted" implementation_class_name="PointSet::PointsImpl" implementation_class_header="PointsImpl.h">
       <constructor name="Default"/>
-      <method name="Size" return="size_t"/>
+      <method name="Size" return="size_t" const="true"/>
       <method name="Reserve">
         <argument name="capacity" type="size_t"/>
       </method>
@@ -31,7 +31,7 @@
         <argument name="size" type="size_t"/>
         <argument name="default_value" type="PointSet::Position"/>
       </method>
-      <method name="GetElement" return="PointSet::Position">
+      <method name="GetElement" return="PointSet::Position" const="true">
         <argument name="index" type="size_t"/>
       </method>
       <method name="SetElement">
@@ -45,11 +45,11 @@
     </class>
     <class name="PointSet" lifecycle="reference_counted" implementation_class_name="PointSet::PointSetImpl" implementation_class_header="PointSetImpl.h">
       <constructor name="Default"/>
-      <method name="GetName" return="const char*"/>
+      <method name="GetName" return="const char*" const="true"/>
       <method name="SetName">
         <argument name="name" type="const char*"/>
       </method>
-      <method name="GetPoints" return="PointSet::Points"/>
+      <method name="GetPoints" return="PointSet::Points" const="true"/>
       <method name="SetPoints">
         <argument name="value" type="PointSet::Points"/>
       </method>

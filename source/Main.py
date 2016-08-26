@@ -227,10 +227,12 @@ class CapiGenerator(object):
     def __generate_method(self, method, cur_class):
         with CreateExceptionTraits(method, cur_class, self):
             with NamespaceScope(self.cur_namespace_path, method):
-                self.output_header.put_line('{return_type} {method_name}({arguments})'.format(
+                self.output_header.put_line('{return_type} {method_name}({arguments}){const}'.format(
                     return_type=self.get_wrapped_return_type(method.return_type),
                     method_name=method.name,
-                    arguments=', '.join(self.get_wrapped_argument_pairs(method.arguments))))
+                    arguments=', '.join(self.get_wrapped_argument_pairs(method.arguments)),
+                    const=' const' if method.const else ''
+                ))
                 with FileGenerator.IndentScope(self.output_header):
                     self.exception_traits.generate_c_call(
                         self.get_namespace_id().lower(),
@@ -244,8 +246,10 @@ class CapiGenerator(object):
                 )
                 self.loader_traits.add_c_function_declaration(c_function_declaration)
                 with FileGenerator.IndentScope(self.output_source):
-                    self.output_source.put_line('{0}* self = static_cast<{0}*>(object_pointer);'.format(
-                        cur_class.implementation_class_name
+                    self.output_source.put_line(
+                        '{const}{self_type}* self = static_cast<{self_type}*>(object_pointer);'.format(
+                            const='const ' if method.const else '',
+                            self_type=cur_class.implementation_class_name
                     ))
                     method_call = '{0}->{1}({2})'.format(
                         Helpers.get_self(cur_class),

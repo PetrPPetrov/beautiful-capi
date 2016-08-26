@@ -3,15 +3,15 @@
   <namespace name="hello_world">
     <class name="printer" lifecycle="copy_semantic" implementation_class_name="hello_world::printer_impl" implementation_class_header="printer_impl.h">
       <constructor name="default"/>
-      <method name="show"/>
+      <method name="show" const="true"/>
     </class>
     <class name="scanner" lifecycle="raw_pointer_semantic" implementation_class_name="hello_world::scanner_impl" implementation_class_header="scanner_impl.h">
       <constructor name="default"/>
-      <method name="scan"/>
+      <method name="scan" const="true"/>
     </class>
     <class name="plotter" lifecycle="reference_counted" implementation_class_name="hello_world::plotter_impl" implementation_class_header="plotter_impl.h">
       <constructor name="default"/>
-      <method name="draw"/>
+      <method name="draw" const="true"/>
     </class>
   </namespace>
 </custom_suffix:api>

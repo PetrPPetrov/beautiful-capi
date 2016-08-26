@@ -427,10 +427,11 @@ def generate_callbacks_implementations_impl(cur_callback, base_class, cur_namesp
         for cur_method in base_class.methods:
             exception_traits = create_exception_traits(cur_method, base_class, capi_generator)
             capi_generator.output_source.put_line(
-                '{return_type} {method_name}({arguments})'.format(
+                '{return_type} {method_name}({arguments}){const}'.format(
                     return_type=capi_generator.get_original_type(cur_method.return_type),
                     method_name=cur_method.name,
-                    arguments=', '.join(capi_generator.get_original_argument_pairs(cur_method.arguments))))
+                    arguments=', '.join(capi_generator.get_original_argument_pairs(cur_method.arguments)),
+                    const=' const' if cur_method.const else ''))
             with IndentScope(capi_generator.output_source):
                 exception_traits.generate_c_call(
                     '{0}_callback'.format(cur_method.name.lower()),

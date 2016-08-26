@@ -54,7 +54,7 @@ Example::DefaultPrinterImpl::~DefaultPrinterImpl()
     std::cout << "DefaultPrinterImpl dtor" << std::endl;
 }
 
-void Example::DefaultPrinterImpl::Print(const char* text)
+void Example::DefaultPrinterImpl::Print(const char* text) const
 {
     if (text)
     {

@@ -33,7 +33,7 @@ namespace Example
     public:
         SquareImpl();
         virtual ~SquareImpl();
-        virtual void Show();
+        virtual void Show() const;
         virtual int GetPointsCount() const;
         virtual void SetSize(double size);
     };

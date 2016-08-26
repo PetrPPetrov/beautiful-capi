@@ -41,7 +41,7 @@ namespace Example
     public:
         DefaultPrinterImpl();
         ~DefaultPrinterImpl();
-        virtual void Print(const char* text);
+        virtual void Print(const char* text) const;
     };
 
     inline DefaultPrinterImpl* CreateDefaultPrinterImpl()

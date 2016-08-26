@@ -35,7 +35,7 @@ namespace Example
     public:
         TriangleImpl();
         virtual ~TriangleImpl();
-        virtual void Show();
+        virtual void Show() const;
         virtual int GetPointsCount() const;
         virtual void SetPoints(double x1, double y1, double x2, double y2, double x3, double y3);
     };

@@ -36,11 +36,11 @@ namespace PointSet
     public:
         PointsImpl() : mRefCount(1) {}
 
-        size_t Size() { return mPoints.size(); }
+        size_t Size() const { return mPoints.size(); }
         void Reserve(size_t capacity) { mPoints.reserve(capacity); }
         void Resize(size_t size, PositionImpl default_value) { mPoints.resize(size, default_value); }
 
-        PositionImpl GetElement(size_t index) { return mPoints[index]; }
+        PositionImpl GetElement(size_t index) const { return mPoints[index]; }
         void SetElement(size_t index, PositionImpl value) { mPoints[index] = value; }
         void PushBack(PositionImpl value) { mPoints.push_back(value); }
 

@@ -32,7 +32,7 @@ Example::SquareImpl::~SquareImpl()
     std::cout << "Square dtor" << std::endl;
 }
 
-void Example::SquareImpl::Show()
+void Example::SquareImpl::Show() const
 {
     std::cout << "SquareImpl::Show(), size = " << m_size << std::endl;
 }

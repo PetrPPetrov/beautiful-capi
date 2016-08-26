@@ -33,7 +33,7 @@ Example::TriangleImpl::~TriangleImpl()
     std::cout << "Triangle dtor" << std::endl;
 }
 
-void Example::TriangleImpl::Show()
+void Example::TriangleImpl::Show() const
 {
     std::cout << "TriangleImpl::Show(), x1 = " << m_x1 << " y1 = " << m_y1
               << " x2 = " << m_x2 << " y2 = " << m_y2
