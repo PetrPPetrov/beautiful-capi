@@ -218,17 +218,26 @@ class ByFirstArgument(ExceptionTraitsBase):
                         'inline void check_and_throw_exception(int exception_code, void* exception_object);'
                     )
 
-    @staticmethod
-    def generate_exception_info_impl(cur_file):
+    def generate_exception_info_impl(self, cur_file):
         with WatchdogScope(cur_file, 'BEAUTIFUL_CAPI_EXCEPTION_INFO_DEFINED'):
             cur_file.put_line('struct beautiful_capi_exception_info_t')
             with IndentScope(cur_file, '};'):
                 cur_file.put_line('int code;')
                 cur_file.put_line('void* object_pointer;')
+            cur_file.put_line('')
+            cur_file.put_line('typedef enum')
+            with IndentScope(cur_file, '} beautiful_capi_exception_code_t;'):
+                cur_file.put_line('no_exception = 0,')
+                code_to_exception = {code: exception_class for exception_class, code
+                                     in self.capi_generator.exception_class_2_code.items()}
+                for code, exception_class in code_to_exception.items():
+                    exception_extra_info = self.capi_generator.extra_info[exception_class]
+                    cur_file.put_line('{0} = {1},'.format(exception_extra_info.get_c_name(), code))
+                cur_file.put_line('unknown_exception = -1')
 
     def generate_exception_info(self):
-        ByFirstArgument.generate_exception_info_impl(self.capi_generator.output_header)
-        ByFirstArgument.generate_exception_info_impl(self.capi_generator.output_source)
+        self.generate_exception_info_impl(self.capi_generator.output_header)
+        self.generate_exception_info_impl(self.capi_generator.output_source)
 
     def include_check_and_throw_exception_header(self):
         self.capi_generator.output_header.include_user_header(

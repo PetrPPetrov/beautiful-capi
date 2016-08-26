@@ -1,4 +1,3 @@
-*) exception codes => classes list for pure C wrapping
 *) __cdecl, __stdcall or something like that
 *) enum done?
 *) check for the life cycle semantic coherence with base class
