@@ -4,7 +4,7 @@
     <class name="PrinterSharedPtr" lifecycle="copy_semantic" pointer_access="true" implementation_class_name="Example::PrinterSharedPtr" implementation_class_header="PrinterImpl.h">
       <constructor name="Default"/>
       <method name="Show" const="true">
-        <argument type="const char*" name="text" const="true"/>
+        <argument type="const char*" name="text"/>
       </method>
     </class>
   </namespace>

@@ -21,7 +21,6 @@
 
 
 import ParamsParser
-import FileGenerator
 from TraitsBase import TraitsBase
 from Parser import THeaderInclude
 from FileGenerator import NewFileScope
@@ -95,7 +94,6 @@ class NoHandling(ExceptionTraitsBase):
 class ByFirstArgument(ExceptionTraitsBase):
     def __init__(self, cur_method, cur_class, capi_generator):
         super().__init__(cur_method, cur_class, capi_generator)
-        self.additional_includes = None
         self.current_exception_index = 1
         self.callback_class = None
 
@@ -118,8 +116,7 @@ class ByFirstArgument(ExceptionTraitsBase):
             )
             self.current_exception_index += 1
             cur_class_extra_info = self.capi_generator.extra_info[cur_class]
-            with NewFileScope(self.additional_includes, self.capi_generator):
-                self.capi_generator.file_traits.include_class_header(cur_class)
+            cur_file.include_user_header(self.capi_generator.file_traits.class_header(cur_class))
             with Indent(cur_file):
                 cur_file.put_line('throw {0}(exception_object, false);'.format(cur_class_extra_info.get_class_name()))
 
@@ -203,10 +200,9 @@ class ByFirstArgument(ExceptionTraitsBase):
             cur_file.put_begin_cpp_comments(self.capi_generator.params_description)
             with WatchdogScope(cur_file, 'BEAUTIFUL_CAPI_CHECK_AND_THROW_EXCEPTION_INCLUDED'):
                 with IfDefScope(cur_file, '__cplusplus'):
-                    cur_file.put_line('#include <stdexcept>')
-                    cur_file.put_line('#include <cassert>')
-                    self.additional_includes = FileGenerator.FileGenerator(None)
-                    cur_file.put_file(self.additional_includes)
+                    cur_file.put_include_files()
+                    cur_file.include_system_header('stdexcept')
+                    cur_file.include_system_header('cassert')
                     cur_file.put_line('')
                     cur_file.put_line('namespace beautiful_capi')
                     with IndentScope(cur_file):
@@ -235,7 +231,8 @@ class ByFirstArgument(ExceptionTraitsBase):
         ByFirstArgument.generate_exception_info_impl(self.capi_generator.output_source)
 
     def include_check_and_throw_exception_header(self):
-        self.capi_generator.file_traits.include_check_and_throw_exception_header()
+        self.capi_generator.output_header.include_user_header(
+            self.capi_generator.file_traits.check_and_throw_exception_header())
 
     def __generate_catch_for_class_by_value(self, cur_exception_class):
         cur_file = self.capi_generator.output_source

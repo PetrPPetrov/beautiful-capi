@@ -12,7 +12,7 @@
     <callback
       name="CustomPrinter" base="Example::Printer"
       lifecycle="raw_pointer_semantic"
-      implementation_class_name="Example::PrinterBaseImpl" implementation_header="DefaultPrinterImpl.h"/>
+      implementation_class_name="Example::PrinterBaseImpl" implementation_class_header="DefaultPrinterImpl.h"/>
   <class name="Person" lifecycle="copy_semantic" implementation_class_name="Example::PersonImpl" implementation_class_header="PersonImpl.h">
     <constructor name="Default"/>
     <method name="SetFirstName">

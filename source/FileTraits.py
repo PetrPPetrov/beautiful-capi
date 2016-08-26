@@ -61,29 +61,29 @@ class SingleFile(FileTraitsBase):
     def get_file_for_custom_callbacks(self):
         return self.output_file
 
-    def include_namespace_header(self, namespace_path):
-        pass
-
-    def include_class_header(self, cur_class):
-        pass
+    def namespace_header(self, namespace_path):
+        return None
 
     def class_header(self, cur_class):
         return None
 
-    def include_capi_header(self, namespace_path):
-        pass
+    def class_header(self, cur_class):
+        return None
 
-    def include_fwd_header(self, namespace_path):
-        pass
+    def capi_header(self, namespace_path):
+        return None
 
-    def include_forward_holder_header(self):
-        pass
+    def fwd_header(self, namespace_path):
+        return None
 
-    def include_check_and_throw_exception_header(self):
-        pass
+    def forward_holder_header(self):
+        return None
 
-    def include_custom_callbacks(self):
-        pass
+    def check_and_throw_exception_header(self):
+        return None
+
+    def custom_callbacks(self):
+        return None
 
 
 class PosixJoin(object):
@@ -180,9 +180,6 @@ class MultipleFiles(FileTraitsBase):
             self.file2generator.update({file_name: output_file})
             return output_file
 
-    def __include_file(self, file_name):
-        self.put_line('#include "{0}"'.format(file_name))
-
     def get_file_for_namespace(self, namespace_path):
         output_file_name = self.__get_file_name_for_namespace(namespace_path, OsJoin(self.base_path))
         return self.__get_cached_generator(output_file_name)
@@ -214,34 +211,29 @@ class MultipleFiles(FileTraitsBase):
             os.path.join(self.base_path, self.capi_generator.params_description.custom_callbacks_filename)
         )
 
-    def include_namespace_header(self, namespace_path):
-        self.__include_file(self.__get_file_name_for_namespace(namespace_path, PosixJoin()))
-
-    def include_class_header(self, cur_class):
-        if self.capi_generator.params_description.file_per_class:
-            extra_info = self.capi_generator.extra_info[cur_class]
-            self.__include_file(self.__get_file_name_for_class(extra_info.full_name_array[:-1], cur_class, PosixJoin()))
+    def namespace_header(self, namespace_path):
+        return self.__get_file_name_for_namespace(namespace_path, PosixJoin())
 
     def class_header(self, cur_class):
-       if self.capi_generator.params_description.file_per_class:
-           extra_info = self.capi_generator.extra_info[cur_class]
-           return self.__get_file_name_for_class(extra_info.full_name_array[:-1], cur_class, PosixJoin())
-       return None
+        if self.capi_generator.params_description.file_per_class:
+            extra_info = self.capi_generator.extra_info[cur_class]
+            return self.__get_file_name_for_class(extra_info.full_name_array[:-1], cur_class, PosixJoin())
+        return None
 
-    def include_capi_header(self, namespace_path):
-        self.__include_file(self.__get_file_name_for_capi(namespace_path, PosixJoin()))
+    def capi_header(self, namespace_path):
+        return self.__get_file_name_for_capi(namespace_path, PosixJoin())
 
-    def include_fwd_header(self, namespace_path):
-        self.__include_file(self.__get_file_name_for_fwd(namespace_path, PosixJoin()))
+    def fwd_header(self, namespace_path):
+        return self.__get_file_name_for_fwd(namespace_path, PosixJoin())
 
-    def include_forward_holder_header(self):
-        self.__include_file(self.capi_generator.params_description.forward_holder_filename)
+    def forward_holder_header(self):
+        return self.capi_generator.params_description.forward_holder_filename
 
-    def include_check_and_throw_exception_header(self):
-        self.__include_file(self.capi_generator.params_description.check_and_throw_exception_filename)
+    def check_and_throw_exception_header(self):
+        return self.capi_generator.params_description.check_and_throw_exception_filename
 
-    def include_custom_callbacks(self):
-        self.__include_file(self.capi_generator.params_description.custom_callbacks_filename)
+    def custom_callbacks(self):
+        return self.capi_generator.params_description.custom_callbacks_filename
 
 
 def create_file_traits(capi_generator):

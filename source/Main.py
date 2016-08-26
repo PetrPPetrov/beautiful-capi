@@ -108,6 +108,8 @@ class CapiGenerator(object):
         self.output_header.put_begin_cpp_comments(self.params_description)
 
         with WatchdogScope(self.output_header, '{0}_INCLUDED'.format(self.get_namespace_id().upper())):
+            self.output_header.put_include_files()
+            self.output_header.put_line('')
             process_capi(self)
             process_fwd(self, namespace)
             self.loader_traits.add_impl_header(namespace.implementation_header)
@@ -117,12 +119,11 @@ class CapiGenerator(object):
                     self.file_traits.include_namespace_header(self.cur_namespace_path)
 
             for cur_class in namespace.classes:
-                self.file_traits.include_class_header(cur_class)
+                self.output_header.include_user_header(self.file_traits.class_header(cur_class))
 
             if len(self.cur_namespace_path) == 1:
                 self.exception_traits.include_check_and_throw_exception_header()
 
-            self.output_header.put_line('')
             with IfDefScope(self.output_header, '__cplusplus'):
                 self.output_header.put_line('')
                 for cur_namespace in self.cur_namespace_path:
@@ -150,13 +151,14 @@ class CapiGenerator(object):
                     self.output_header.put_begin_cpp_comments(self.params_description)
                     with WatchdogScope(self.output_header, '{0}_INCLUDED'.format(self.get_namespace_id().upper())):
                         self.output_header.put_include_files()
+                        self.output_header.include_user_header(self.file_traits.capi_header(self.cur_namespace_path))
+                        self.output_header.include_user_header(self.file_traits.fwd_header(self.cur_namespace_path))
                         for include_info in cur_class.include_headers:
                             self.output_header.include_header(include_info.file, include_info.system)
-                        self.file_traits.include_capi_header(self.cur_namespace_path)
-                        self.file_traits.include_fwd_header(self.cur_namespace_path)
                         if cur_class.base:
                             extra_info_entry = self.extra_info[cur_class]
-                            self.file_traits.include_class_header(extra_info_entry.base_class_object)
+                            self.output_header.include_user_header(
+                                self.file_traits.class_header(extra_info_entry.base_class_object))
                         self.__include_additional_capi_and_fwd(cur_class)
                         self.output_header.put_line('')
                         with IfDefScope(self.output_header, '__cplusplus'):

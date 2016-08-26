@@ -57,6 +57,7 @@ class FileGenerator(object):
         self.automatic_generation_warning = None
         self.lines = []
         self.included_files = []
+        self.included_files_were_included = False
 
     def __del__(self):
         self.__write()
@@ -104,7 +105,8 @@ class FileGenerator(object):
         return ' ' * self.cur_indent
 
     def include_header(self, header_file, is_system):
-        self.included_files.append((header_file, is_system))
+        if header_file:
+            self.included_files.append((header_file, is_system))
 
     def include_user_header(self, header_file):
         self.include_header(header_file, False)
@@ -119,7 +121,9 @@ class FileGenerator(object):
         self.lines.append(another_file)
 
     def put_include_files(self):
-        self.lines.append(IncludeHeaders(self.included_files))
+        if not self.included_files_were_included:
+            self.lines.append(IncludeHeaders(self.included_files))
+            self.included_files_were_included = True
 
     def put_python_header(self):
         self.file_header = '#!/usr/bin/env python'

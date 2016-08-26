@@ -35,10 +35,6 @@ class ImplLib(CfunctionTraitsBase):
         self.cur_api_declarations = None
         self.cur_capi_prefix = None
         self.impl_headers = None
-        self.__create__impl_headers()
-
-    def __create__impl_headers(self):
-        self.impl_headers = FileGenerator.FileGenerator(None)
 
     def __put_define_apple(self, put_function):
         put_function('#define {0} {1}'.format(self.cur_api_define, self.cur_capi_prefix))
@@ -64,9 +60,10 @@ class ImplLib(CfunctionTraitsBase):
         put_function('')
 
     def generate_c_functions_declarations(self):
-        self.put_source_line('#include <stdexcept>')
-        self.put_source_line('#include <cassert>')
-        self.put_source_file(self.impl_headers)
+        self.capi_generator.output_source.include_system_header('stdexcept')
+        self.capi_generator.output_source.include_system_header('cassert')
+        self.capi_generator.output_source.put_include_files()
+        self.impl_headers = self.capi_generator.output_source
         self.put_source_line('')
 
         if not self.capi_generator.callback_typedefs.empty():
@@ -101,7 +98,7 @@ class ImplLib(CfunctionTraitsBase):
 
     def add_impl_header(self, implementation_header):
         if implementation_header:
-            self.impl_headers.put_line('#include "{0}"'.format(implementation_header))
+            self.impl_headers.include_user_header(implementation_header)
 
 
 class DynamicLoad(CfunctionTraitsBase):

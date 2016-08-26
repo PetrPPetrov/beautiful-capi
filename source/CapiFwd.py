@@ -38,7 +38,8 @@ def process_capi(capi_generator):
             capi_generator.exception_traits.generate_exception_info()
             capi_generator.loader_traits.generate_c_functions_declarations()
     capi_generator.output_header = capi_generator.file_traits.get_file_for_namespace(capi_generator.cur_namespace_path)
-    capi_generator.file_traits.include_capi_header(capi_generator.cur_namespace_path)
+    capi_generator.output_header.include_user_header(
+        capi_generator.file_traits.capi_header(capi_generator.cur_namespace_path))
 
 
 def process_fwd(capi_generator, namespace):
@@ -49,13 +50,15 @@ def process_fwd(capi_generator, namespace):
                 capi_generator.output_header, '{0}_FWD_INCLUDED'.format(capi_generator.get_namespace_id().upper())
         ):
             with IfDefScope(capi_generator.output_header, '__cplusplus'):
-                capi_generator.output_header.put_line('#include <memory>')
-                capi_generator.file_traits.include_forward_holder_header()
+                capi_generator.output_header.put_include_files()
+                capi_generator.output_header.include_system_header('memory')
+                capi_generator.output_header.include_user_header(capi_generator.file_traits.forward_holder_header())
                 capi_generator.output_header.put_line('')
                 capi_generator.exception_traits.generate_check_and_throw_exception_forward_declaration()
                 generate_forwards(capi_generator, namespace)
     capi_generator.output_header = capi_generator.file_traits.get_file_for_namespace(capi_generator.cur_namespace_path)
-    capi_generator.file_traits.include_fwd_header(capi_generator.cur_namespace_path)
+    capi_generator.output_header.include_user_header(
+        capi_generator.file_traits.fwd_header(capi_generator.cur_namespace_path))
 
 
 def generate_forwards(capi_generator, namespace):
