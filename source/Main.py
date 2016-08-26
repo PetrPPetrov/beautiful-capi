@@ -116,7 +116,7 @@ class CapiGenerator(object):
 
             for cur_namespace in namespace.namespaces:
                 with NamespaceScope(self.cur_namespace_path, cur_namespace):
-                    self.file_traits.include_namespace_header(self.cur_namespace_path)
+                    self.output_header.include_user_header(self.file_traits.namespace_header(self.cur_namespace_path))
 
             for cur_class in namespace.classes:
                 self.output_header.include_user_header(self.file_traits.class_header(cur_class))
