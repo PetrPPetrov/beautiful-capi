@@ -38,7 +38,7 @@ class ImplLib(CfunctionTraitsBase):
         self.impl_headers = None
 
     def __put_define_apple_or_linux(self, indent_function, put_function):
-        put_function('#if defined(__GNUC) && GNUC__ >= 4')
+        put_function('#if defined(__GNUC__) && __GNUC__ >= 4')
         with indent_function():
             put_function('#define {0} {1} __attribute__ ((visibility ("default")))'.format(
                 self.cur_api_define, self.cur_capi_prefix))
@@ -46,14 +46,28 @@ class ImplLib(CfunctionTraitsBase):
         with indent_function():
             put_function('#define {0} {1}'.format(self.cur_api_define, self.cur_capi_prefix))
         put_function('#endif')
-        put_function('#define {0} __attribute__ ((cdecl))'.format(self.cur_api_convention))
+        put_function('#if defined __i386__')
+        with indent_function():
+            put_function('#define {0} __attribute__ ((cdecl))'.format(self.cur_api_convention))
+        put_function('#else')
+        with indent_function():
+            put_function('#define {0}'.format(self.cur_api_convention))
+        put_function('#endif')
 
     def __put_api_define(self, put_function, indent_function, dll_import_or_export):
         put_function('#ifdef _WIN32')
         with indent_function():
-            put_function('#define {0} {1} __declspec({2})'.format(
-                self.cur_api_define, self.cur_capi_prefix, dll_import_or_export))
-            put_function('#define {0} __cdecl'.format(self.cur_api_convention))
+            put_function('#ifdef __GNUC__')
+            with indent_function():
+                put_function('#define {0} {1} __attribute__ (({2}))'.format(
+                    self.cur_api_define, self.cur_capi_prefix, dll_import_or_export))
+                put_function('#define {0} __attribute__ ((cdecl))'.format(self.cur_api_convention))
+            put_function('#else')
+            with indent_function():
+                put_function('#define {0} {1} __declspec({2})'.format(
+                    self.cur_api_define, self.cur_capi_prefix, dll_import_or_export))
+                put_function('#define {0} __cdecl'.format(self.cur_api_convention))
+            put_function('#endif')
         put_function('#elif __APPLE__')
         with indent_function():
             self.__put_define_apple_or_linux(indent_function, put_function)
