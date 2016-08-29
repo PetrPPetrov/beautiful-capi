@@ -18,28 +18,30 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-project(examples)
+project(clanguage)
 
 cmake_minimum_required(VERSION 2.8)
 
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
-set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
-if(NOT WIN32)
-  add_definitions(-fvisibility=hidden)
-endif()
+find_package(PythonInterp 3.4 REQUIRED)
 
-add_subdirectory(hello_world)
-add_subdirectory(reference_counted)
-add_subdirectory(copy_semantic)
-add_subdirectory(raw_pointer_semantic)
-add_subdirectory(virtual_interface)
-add_subdirectory(single_file)
-add_subdirectory(object_parameter)
-add_subdirectory(circular_reference)
-add_subdirectory(custom_suffix)
-add_subdirectory(boost_shared_ptr)
-add_subdirectory(down_cast)
-add_subdirectory(point_set)
-add_subdirectory(exception)
-add_subdirectory(callback)
-add_subdirectory(clanguage)
+include(../../example.cmake)
+include(../../swig_example.cmake)
+
+add_capi_generation()
+add_swig_generation(swig CLanguage)
+
+include_directories(${clanguage_SOURCE_DIR}/source/)
+
+add_library(clanguage SHARED
+  ${clanguage_SOURCE_DIR}/source/AutoGenWrap.cpp
+  ${clanguage_SOURCE_DIR}/source/PrinterImpl.h
+  ${clanguage_SOURCE_DIR}/source/PrinterImpl.cpp
+  ${clanguage_SOURCE_DIR}/source/DumperImpl.h
+  ${clanguage_SOURCE_DIR}/source/DumperImpl.cpp
+)
+
+add_cs_api_generation(cs CLanguage)
+
+setup_swig_module(swig CLanguage)
+add_swig_python(swig CLanguage)
+add_swig_csharp(swig CLanguage)

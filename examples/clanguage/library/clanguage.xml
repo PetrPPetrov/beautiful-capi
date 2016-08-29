@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<copy_semantic:api xmlns:copy_semantic="http://gkmsoft.ru/beautifulcapi">
+  <namespace name="Example">
+    <class name="Printer" lifecycle="copy_semantic" implementation_class_name="Example::PrinterImpl" implementation_class_header="PrinterImpl.h">
+      <constructor name="New"/>
+      <method name="Show">
+        <argument type="const char*" name="text"/>
+      </method>
+    </class>
+    <class name="Dumper" lifecycle="copy_semantic" implementation_class_name="Example::DumperImpl" implementation_class_header="DumperImpl.h">
+      <constructor name="New"/>
+      <method name="GetPrinter" return="Example::Printer" const="true"/>
+      <method name="SetPrinter">
+        <argument type="Example::Printer" name="printer"/>
+      </method>
+      <method name="Dump"/>
+    </class>
+  </namespace>
+</copy_semantic:api>
