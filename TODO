@@ -1,4 +1,3 @@
-*) check for the life cycle semantic coherence with base class
 *) add options to rename beatyful_capi namespace and watchdog string
 *) "project_name" idea: one header to include rest headers
 *) callbacks support
@@ -16,6 +15,7 @@
     +) circular inheritance
     +) invalid base class
     +) invalid argument types
+    +) check for the life cycle semantic coherence with base class
 *) move constructors if target language supports C++ 11
 *) noexcept methods if target language supports C++ 11
 ===
