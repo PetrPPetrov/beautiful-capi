@@ -22,8 +22,6 @@
 #ifndef BEAUTIFUL_CAPI_IPRINTER_H
 #define BEAUTIFUL_CAPI_IPRINTER_H
 
-#include "snippets/Example.h"
-
 namespace Example
 {
 #include "snippets/Example.h"

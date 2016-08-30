@@ -78,6 +78,6 @@ Example::IPrinter::EQuality Example::DefaultPrinterImpl::GetPrintingQuality() co
 
 Example::EPrintingDevice Example::DefaultPrinterImpl::GetDeviceType() const
 {
-    return Example::EPrintingDevice::printer;
+    return Example::printer;
 }
 
