@@ -65,3 +65,19 @@ void Example::DefaultPrinterImpl::Print(const char* text) const
         std::cout << "DefaultPrinter: NULL" << std::endl;
     }
 }
+
+void Example::DefaultPrinterImpl::SetPrintingQuality(Example::IPrinter::EQuality quality)
+{
+    mQuality = quality;
+}
+
+Example::IPrinter::EQuality Example::DefaultPrinterImpl::GetPrintingQuality() const
+{
+    return mQuality;
+}
+
+Example::EPrintingDevice Example::DefaultPrinterImpl::GetDeviceType() const
+{
+    return Example::EPrintingDevice::printer;
+}
+

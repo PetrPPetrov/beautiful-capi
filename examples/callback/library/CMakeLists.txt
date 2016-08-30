@@ -24,13 +24,7 @@ cmake_minimum_required(VERSION 2.8)
 
 find_package(PythonInterp 3.4 REQUIRED)
 
-add_custom_command(
-  OUTPUT ${callback_SOURCE_DIR}/source/AutoGenWrap.cpp
-  COMMAND ${PYTHON_EXECUTABLE} ${callback_SOURCE_DIR}/../../../source/Main.py -i ${callback_SOURCE_DIR}/callback.xml -p ${callback_SOURCE_DIR}/callback_params.xml -o ${callback_SOURCE_DIR}/include -w ${callback_SOURCE_DIR}/source/AutoGenWrap.cpp
-  MAIN_DEPENDENCY ${callback_SOURCE_DIR}/callback.xml
-  DEPENDS ${callback_SOURCE_DIR}/callback_params.xml
-  WORKING_DIRECTORY ${callback_SOURCE_DIR}
-)
+add_capi_generation()
 
 include_directories(${callback_SOURCE_DIR}/source/)
 

@@ -22,13 +22,17 @@
 #ifndef BEAUTIFUL_CAPI_IPRINTER_H
 #define BEAUTIFUL_CAPI_IPRINTER_H
 
+#include "snippets/Example.h"
+
 namespace Example
 {
+#include "snippets/Example.h"
+
     struct IPrinter
     {
         virtual void AddRef() = 0;
         virtual void Release() = 0;
-        virtual void Print(const char* text) const = 0;
+#include "snippets/Example/IPrinter.h"
     };
 
     inline void intrusive_ptr_add_ref(IPrinter* printer)

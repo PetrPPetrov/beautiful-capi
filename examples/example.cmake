@@ -37,6 +37,7 @@ function(add_capi_generation)
             -i ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.xml
             -p ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}_params.xml
             -o ${CMAKE_CURRENT_SOURCE_DIR}/include
+            -s ${CMAKE_CURRENT_SOURCE_DIR}/source/snippets
             -w ${generated_source}
         MAIN_DEPENDENCY
             ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.xml

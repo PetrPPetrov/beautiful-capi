@@ -33,6 +33,7 @@
 class CustomPrinterImplementation
 {
     std::string mLastPrintedText;
+    Example::PrinterPtr::EQuality mQuality;
 public:
     CustomPrinterImplementation()
     {
@@ -54,6 +55,18 @@ public:
         std::transform(mLastPrintedText.begin(), mLastPrintedText.end(), mLastPrintedText.begin(), toupper);
         std::cout << mLastPrintedText << std::endl;
     }
+    void SetPrintingQuality(Example::PrinterPtr::EQuality printing_quality)
+    {
+        mQuality = printing_quality;
+    }
+    Example::PrinterPtr::EQuality GetPrintingQuality() const
+    {
+        return mQuality;
+    }
+    Example::EPrintingDevice GetDeviceType() const
+    {
+        return Example::printer;
+    }
 };
 
 int main()
@@ -65,9 +78,9 @@ int main()
     famous_person.SetFirstName("Isaac");
     famous_person.SetSecondName("Newton");
     famous_person.SetAge(26);
-    famous_person.SetMale(true);
+    famous_person.SetSex(Example::Person::male);
 
-    Example::PrinterPtr printing_device = Example::CreateDefaultPrinter();
+    Example::PrinterPtr printing_device = Example::CreateDefaultPrinter(Example::printer);
     famous_person.Dump(printing_device);
     famous_person.Print(printing_device, "Hello World");
 

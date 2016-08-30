@@ -173,6 +173,8 @@ class TClass(object):
         self.base_filled = False
         self.implementation_class_name = ""
         self.implementation_class_name_filled = False
+        self.internal_interface = False
+        self.internal_interface_filled = False
         self.implementation_class_header = ""
         self.implementation_class_header_filled = False
         self.lifecycle = TLifecycle.reference_counted
@@ -236,6 +238,10 @@ class TClass(object):
             cur_attr = dom_node.getAttribute("implementation_class_name")
             self.implementation_class_name = cur_attr
             self.implementation_class_name_filled = True
+        if dom_node.hasAttribute("internal_interface"):
+            cur_attr = dom_node.getAttribute("internal_interface")
+            self.internal_interface = string_to_bool(cur_attr)
+            self.internal_interface_filled = True
         if dom_node.hasAttribute("implementation_class_header"):
             cur_attr = dom_node.getAttribute("implementation_class_header")
             self.implementation_class_header = cur_attr

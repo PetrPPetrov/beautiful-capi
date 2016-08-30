@@ -87,6 +87,9 @@ class ImplLib(CfunctionTraitsBase):
         self.impl_headers = self.capi_generator.output_source
         self.put_source_line('')
 
+        if not self.capi_generator.c_enums.empty():
+            self.put_file(self.capi_generator.c_enums)
+
         if not self.capi_generator.callback_typedefs.empty():
             self.capi_generator.callback_typedefs.put_line('')
             self.put_file(self.capi_generator.callback_typedefs)

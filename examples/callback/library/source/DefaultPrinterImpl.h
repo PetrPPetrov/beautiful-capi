@@ -23,6 +23,7 @@
 #define BEAUTIFUL_CAPI_DEFAULT_PRINTER_H
 
 #include "IPrinter.h"
+#include "Exception/BadArgumentImpl.h"
 
 namespace Example
 {
@@ -38,15 +39,26 @@ namespace Example
 
     class DefaultPrinterImpl : public PrinterBaseImpl
     {
+        Example::IPrinter::EQuality mQuality;
     public:
         DefaultPrinterImpl();
         ~DefaultPrinterImpl();
         virtual void Print(const char* text) const;
+        virtual void SetPrintingQuality(Example::IPrinter::EQuality quality);
+        virtual Example::IPrinter::EQuality GetPrintingQuality() const;
+        virtual Example::EPrintingDevice GetDeviceType() const;
     };
 
-    inline DefaultPrinterImpl* CreateDefaultPrinterImpl()
+    inline DefaultPrinterImpl* CreateDefaultPrinterImpl(Example::EPrintingDevice printing_device)
     {
-        return new DefaultPrinterImpl();
+        if (printing_device == Example::printer)
+        {
+            return new DefaultPrinterImpl();
+        }
+        else
+        {
+            throw Exception::BadArgumentImpl("Can't create any other device except printers!", "printing_device");
+        }
     }
 }
 
