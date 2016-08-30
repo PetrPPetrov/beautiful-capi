@@ -1,6 +1,6 @@
 using System;
 
-public class CopySemantic {
+public class CLanguage {
     static void Main() {
         Example.Printer printer = new Example.Printer();
         printer.Show("from main()");

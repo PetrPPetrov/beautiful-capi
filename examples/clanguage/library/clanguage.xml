@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<copy_semantic:api xmlns:copy_semantic="http://gkmsoft.ru/beautifulcapi">
+<clanguage:api xmlns:clanguage="http://gkmsoft.ru/beautifulcapi">
   <namespace name="Example">
     <class name="Printer" lifecycle="copy_semantic" implementation_class_name="Example::PrinterImpl" implementation_class_header="PrinterImpl.h">
       <constructor name="New"/>
@@ -16,4 +16,4 @@
       <method name="Dump"/>
     </class>
   </namespace>
-</copy_semantic:api>
+</clanguage:api>

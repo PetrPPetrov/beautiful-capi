@@ -25,7 +25,7 @@ cmake_minimum_required(VERSION 2.8)
 include_directories(${clanguage_client_SOURCE_DIR}/../library/include)
 
 add_executable(clanguage_client
-  ${clanguage_client_SOURCE_DIR}/Main.cpp
+  ${clanguage_client_SOURCE_DIR}/Main.c
 )
 
 if(TARGET clanguage)

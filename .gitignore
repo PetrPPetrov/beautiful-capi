@@ -19,6 +19,7 @@ build/
 /examples/point_set/library/include/
 /examples/exception/library/include/
 /examples/callback/library/include/
+/examples/clanguage/library/include/
 /tests/file_options/library/include/
 AutoGen*
 auto_gen*

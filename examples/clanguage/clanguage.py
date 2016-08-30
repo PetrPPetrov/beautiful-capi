@@ -1,5 +1,5 @@
 
-import CopySemantic
+import CLanguage
 
 
 def f1(p):
@@ -7,7 +7,7 @@ def f1(p):
 
 
 def create_printer():
-    new_printer = CopySemantic.Printer()
+    new_printer = CLanguage.Printer()
     new_printer.Show("from create_printer()")
     return new_printer
 
