@@ -35,7 +35,7 @@ Example::PersonImpl::PersonImpl(const PersonImpl& other_person)
     : first_name(other_person.first_name),
     second_name(other_person.second_name),
     age(other_person.age),
-    male(other_person.male)
+    sex(other_person.sex)
 {
 }
 
@@ -69,14 +69,14 @@ unsigned int Example::PersonImpl::GetAge() const
     return this->age;
 }
 
-void Example::PersonImpl::SetMale(bool is_male)
+void Example::PersonImpl::SetSex(Example::PersonImpl::ESex sex)
 {
-    this->male = is_male;
+    this->sex = sex;
 }
 
-bool Example::PersonImpl::IsMale() const
+Example::PersonImpl::ESex Example::PersonImpl::GetSex() const
 {
-    return this->male;
+    return sex;
 }
 
 void Example::PersonImpl::Dump(Example::IPrinter* printer) const

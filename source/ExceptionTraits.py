@@ -78,11 +78,28 @@ class NoHandling(ExceptionTraitsBase):
             self.cur_method
         ))
 
+    def generate_c_callback(self, c_method_name, format_string, is_function):
+        cur_file = self.capi_generator.output_header
+        cur_file.put_line(self.capi_generator.make_implementation_return(
+            self.cur_method.return_type if hasattr(self.cur_method, 'return_type') else '',
+            format_string.format(
+                c_function=c_method_name,
+                arguments=', '.join(self.get_c_from_original_arguments_for_function() if is_function
+                                    else self.get_c_from_original_arguments())
+            )
+        ))
+
     def get_c_from_wrapped_arguments(self):
         return self.capi_generator.get_c_from_wrapped_arguments_impl(self.cur_method.arguments)
 
     def get_c_from_wrapped_arguments_for_function(self):
         return self.capi_generator.get_c_from_wrapped_arguments_for_function_impl(self.cur_method.arguments)
+
+    def get_c_from_original_arguments(self):
+        return self.capi_generator.get_c_from_original_arguments_impl(self.cur_method.arguments)
+
+    def get_c_from_original_arguments_for_function(self):
+        return self.capi_generator.get_c_from_original_arguments_for_function_impl(self.cur_method.arguments)
 
     def get_c_argument_pairs(self):
         return self.capi_generator.get_c_argument_pairs_impl(self.cur_method.arguments)
@@ -222,11 +239,11 @@ class ByFirstArgument(ExceptionTraitsBase):
         with WatchdogScope(cur_file, 'BEAUTIFUL_CAPI_EXCEPTION_INFO_DEFINED'):
             cur_file.put_line('struct beautiful_capi_exception_info_t')
             with IndentScope(cur_file, '};'):
-                cur_file.put_line('int code;')
+                cur_file.put_line('int code; /* value from beautiful_capi_exception_code_t enumeration */')
                 cur_file.put_line('void* object_pointer;')
             cur_file.put_line('')
-            cur_file.put_line('typedef enum')
-            with IndentScope(cur_file, '} beautiful_capi_exception_code_t;'):
+            cur_file.put_line('enum beautiful_capi_exception_code_t')
+            with IndentScope(cur_file, '};'):
                 cur_file.put_line('no_exception = 0,')
                 code_to_exception = {code: exception_class for exception_class, code
                                      in self.capi_generator.exception_class_2_code.items()}
@@ -350,6 +367,23 @@ class ByFirstArgument(ExceptionTraitsBase):
         if hasattr(self.cur_method, 'return_type') and self.cur_method.return_type:
             cur_file.put_line('return result;')
 
+    def generate_c_callback(self, c_method_name, format_string, is_function):
+        cur_file = self.capi_generator.output_header
+        cur_file.put_line('beautiful_capi_exception_info_t exception_info;')
+        cur_file.put_line(self.capi_generator.get_original_result_var(
+            self.cur_method.return_type if hasattr(self.cur_method, 'return_type') else '',
+            format_string.format(
+                c_function=c_method_name,
+                arguments=', '.join(self.get_c_from_original_arguments_for_function() if is_function
+                                    else self.get_c_from_original_arguments())
+            )
+        ))
+        cur_file.put_line(
+            'beautiful_capi::check_and_throw_exception(exception_info.code, exception_info.object_pointer);'
+        )
+        if hasattr(self.cur_method, 'return_type') and self.cur_method.return_type:
+            cur_file.put_line('return result;')
+
     @staticmethod
     def get_c_from_wrapped():
         return ['&exception_info']
@@ -361,6 +395,14 @@ class ByFirstArgument(ExceptionTraitsBase):
     def get_c_from_wrapped_arguments_for_function(self):
         return ByFirstArgument.get_c_from_wrapped() + \
                self.capi_generator.get_c_from_wrapped_arguments_for_function_impl(self.cur_method.arguments)
+
+    def get_c_from_original_arguments(self):
+        return ByFirstArgument.get_c_from_wrapped() + \
+               self.capi_generator.get_c_from_original_arguments_impl(self.cur_method.arguments)
+
+    def get_c_from_original_arguments_for_function(self):
+        return ByFirstArgument.get_c_from_wrapped() + \
+               self.capi_generator.get_c_from_original_arguments_for_function_impl(self.cur_method.arguments)
 
     @staticmethod
     def get_c_argument():

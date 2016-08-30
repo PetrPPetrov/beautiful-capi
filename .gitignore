@@ -22,6 +22,7 @@ build/
 /tests/file_options/library/include/
 AutoGen*
 auto_gen*
+snippets/
 swig/
 swig_csharp/
 swig_java/

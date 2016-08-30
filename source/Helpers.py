@@ -27,7 +27,18 @@ from Parser import TLifecycle
 
 
 def pascal_to_stl(pascal_name):
-    return ''.join(['_' + symbol.lower() if symbol.isupper() else symbol for symbol in pascal_name])
+    result = ''
+    first = True
+    for letter in pascal_name:
+        if first:
+            result += letter.lower()
+            first = False
+        else:
+            if letter.isupper():
+                result += '_' + letter.lower()
+            else:
+                result += letter
+    return result
 
 
 def get_self(cur_class):

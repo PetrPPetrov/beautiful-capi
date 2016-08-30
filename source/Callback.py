@@ -106,7 +106,7 @@ def generate_class_for_callback(cur_callback, base_class, cur_namespace, capi_ge
     new_callback_class.name = cur_callback.name
     new_callback_class.base = cur_callback.base
     new_callback_class.lifecycle = base_class.lifecycle
-    new_callback_class.implementation_class_name = 'beautiful_capi::' + '::'.join(capi_generator.cur_namespace_path)
+    new_callback_class.implementation_class_name = '::'.join(capi_generator.cur_namespace_path)
     new_callback_class.implementation_class_name += '::AutoGen' + cur_callback.name + 'Impl'
     new_callback_class.implementation_class_name_filled = True
 
@@ -121,6 +121,8 @@ def generate_class_for_callback(cur_callback, base_class, cur_namespace, capi_ge
         set_copy_c_function.arguments.append(Parser.TArgument())
         set_copy_c_function.arguments[0].type_name = get_copy_object_callback_type(cur_callback, capi_generator)
         set_copy_c_function.arguments[0].name = 'c_function_pointer'
+        set_copy_c_function.noexcept = True
+        set_copy_c_function.noexcept_filled = True
         new_callback_class.methods.append(set_copy_c_function)
 
         set_delete_c_function = Parser.TMethod()
@@ -128,6 +130,8 @@ def generate_class_for_callback(cur_callback, base_class, cur_namespace, capi_ge
         set_delete_c_function.arguments.append(Parser.TArgument())
         set_delete_c_function.arguments[0].type_name = get_delete_object_callback_type(cur_callback, capi_generator)
         set_delete_c_function.arguments[0].name = 'c_function_pointer'
+        set_delete_c_function.noexcept = True
+        set_delete_c_function.noexcept_filled = True
         new_callback_class.methods.append(set_delete_c_function)
 
     elif cur_callback.lifecycle == Parser.TLifecycle.reference_counted:
@@ -136,6 +140,8 @@ def generate_class_for_callback(cur_callback, base_class, cur_namespace, capi_ge
         set_add_ref_c_function.arguments.append(Parser.TArgument())
         set_add_ref_c_function.arguments[0].type_name = get_add_ref_object_callback_type(cur_callback, capi_generator)
         set_add_ref_c_function.arguments[0].name = 'c_function_pointer'
+        set_add_ref_c_function.noexcept = True
+        set_add_ref_c_function.noexcept_filled = True
         new_callback_class.methods.append(set_add_ref_c_function)
 
         set_release_c_function = Parser.TMethod()
@@ -143,6 +149,8 @@ def generate_class_for_callback(cur_callback, base_class, cur_namespace, capi_ge
         set_release_c_function.arguments.append(Parser.TArgument())
         set_release_c_function.arguments[0].type_name = get_release_object_callback_type(cur_callback, capi_generator)
         set_release_c_function.arguments[0].name = 'c_function_pointer'
+        set_release_c_function.noexcept = True
+        set_release_c_function.noexcept_filled = True
         new_callback_class.methods.append(set_release_c_function)
 
     set_object_pointer_method = Parser.TMethod()
@@ -150,19 +158,26 @@ def generate_class_for_callback(cur_callback, base_class, cur_namespace, capi_ge
     set_object_pointer_method.arguments.append(Parser.TArgument())
     set_object_pointer_method.arguments[0].type_name = 'void*'
     set_object_pointer_method.arguments[0].name = 'custom_object'
+    set_object_pointer_method.noexcept = True
+    set_object_pointer_method.noexcept_filled = True
     new_callback_class.methods.append(set_object_pointer_method)
 
     get_object_pointer_method = Parser.TMethod()
     get_object_pointer_method.name = 'GetObjectPointer'
     get_object_pointer_method.return_type = 'void*'
+    get_object_pointer_method.noexcept = True
+    get_object_pointer_method.noexcept_filled = True
     new_callback_class.methods.append(get_object_pointer_method)
 
     for cur_method in base_class.methods:
         set_c_function_method = Parser.TMethod()
         set_c_function_method.name = 'SetCFunctionFor{0}'.format(cur_method.name)
         set_c_function_method.arguments.append(Parser.TArgument())
-        set_c_function_method.arguments[0].type_name = get_method_callback_type(cur_callback, capi_generator, cur_method)
+        set_c_function_method.arguments[0].type_name = get_method_callback_type(
+            cur_callback, capi_generator, cur_method)
         set_c_function_method.arguments[0].name = 'c_function_pointer'
+        set_c_function_method.noexcept = True
+        set_c_function_method.noexcept_filled = True
         new_callback_class.methods.append(set_c_function_method)
 
     callback_customer_lifecycle = FileGenerator(None)
@@ -253,7 +268,7 @@ def generate_create_functions_for_callback(cur_callback, base_class, cur_namespa
                     )
                     method_call = 'self->{0}({1})'.format(
                         cur_method.name,
-                        ', '.join(capi_generator.get_c_to_original_arguments(cur_method.arguments))
+                        ', '.join(capi_generator.get_wrapped_argument_from_c_pairs(cur_method.arguments))
                     )
                     method_call = capi_generator.make_c_return(cur_method.return_type, method_call)
                     exception_traits.generate_implementation_callback(
@@ -293,8 +308,8 @@ def generate_create_functions_for_callback(cur_callback, base_class, cur_namespa
                     create_callback_function.put_line(
                         'result.SetCFunctionFor{0}({1}<ImplementationClass>);'.format(cur_method.name, cur_callback_name)
                     )
-                    create_callback_function.put_line('result.SetObjectPointer(implementation_class);')
-                    create_callback_function.put_line('return result;')
+                create_callback_function.put_line('result.SetObjectPointer(implementation_class);')
+                create_callback_function.put_line('return result;')
 
             create_callback_function.put_line('template<typename ImplementationClass>')
             create_callback_function.put_line(
@@ -433,7 +448,7 @@ def generate_callbacks_implementations_impl(cur_callback, base_class, cur_namesp
                     arguments=', '.join(capi_generator.get_original_argument_pairs(cur_method.arguments)),
                     const=' const' if cur_method.const else ''))
             with IndentScope(capi_generator.output_source):
-                exception_traits.generate_c_call(
+                exception_traits.generate_c_callback(
                     '{0}_callback'.format(cur_method.name.lower()),
                     '{c_function}({arguments})',
                     False
@@ -476,7 +491,7 @@ def generate_callbacks_implementations(root_node, capi_generator):
             capi_generator.output_header.put_line('namespace beautiful_capi')
             with IndentScope(capi_generator.output_header):
                 capi_generator.exception_traits.generate_check_and_throw_exception_callback()
-                process_callback_classes_impl(
-                    root_node, capi_generator,
-                    generate_callbacks_implementations_impl, begin_namespace_gen, end_namespace_gen)
+            process_callback_classes_impl(
+                root_node, capi_generator,
+                generate_callbacks_implementations_impl, begin_namespace_gen, end_namespace_gen)
             capi_generator.output_header.put_line('')
