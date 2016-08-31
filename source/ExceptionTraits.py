@@ -221,7 +221,8 @@ class ByFirstArgument(ExceptionTraitsBase):
                     cur_file.include_system_header('stdexcept')
                     cur_file.include_system_header('cassert')
                     cur_file.put_line('')
-                    cur_file.put_line('namespace ' + self.capi_generator.params_description.beautiful_capi_namespace)
+                    cur_file.put_line('namespace ' +
+                                      self.capi_generator.params_description.beautiful_capi_namespace)
                     with IndentScope(cur_file):
                         self.__generate_check_and_throw_exception()
 
@@ -362,7 +363,8 @@ class ByFirstArgument(ExceptionTraitsBase):
             self.cur_method
         ))
         cur_file.put_line(
-            'beautiful_capi::check_and_throw_exception(exception_info.code, exception_info.object_pointer);'
+            '{0}::check_and_throw_exception(exception_info.code, exception_info.object_pointer);'.format(
+                self.capi_generator.params_description.beautiful_capi_namespace)
         )
         if hasattr(self.cur_method, 'return_type') and self.cur_method.return_type:
             cur_file.put_line('return result;')
@@ -379,7 +381,8 @@ class ByFirstArgument(ExceptionTraitsBase):
             )
         ))
         cur_file.put_line(
-            'beautiful_capi::check_and_throw_exception(exception_info.code, exception_info.object_pointer);'
+            '{0}::check_and_throw_exception(exception_info.code, exception_info.object_pointer);'.format(
+                self.capi_generator.params_description.beautiful_capi_namespace)
         )
         if hasattr(self.cur_method, 'return_type') and self.cur_method.return_type:
             cur_file.put_line('return result;')

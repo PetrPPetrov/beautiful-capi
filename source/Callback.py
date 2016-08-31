@@ -488,7 +488,8 @@ def generate_custom_callbacks(root_node, capi_generator):
 def generate_callbacks_implementations(root_node, capi_generator):
     if not capi_generator.callback_typedefs.empty():
         with NewFilesScope(capi_generator.callbacks_implementations, capi_generator):
-            capi_generator.output_header.put_line('namespace ' + capi_generator.params_description.beautiful_capi_namespace)
+            capi_generator.output_header.put_line('namespace ' +
+                                                  capi_generator.params_description.beautiful_capi_namespace)
             with IndentScope(capi_generator.output_header):
                 capi_generator.exception_traits.generate_check_and_throw_exception_callback()
             process_callback_classes_impl(

@@ -88,9 +88,9 @@ class TBeautifulCapiParams(object):
         self.check_and_throw_exception_filename_filled = False
         self.exception_handling_mode = TExceptionHandlingMode.no_handling
         self.exception_handling_mode_filled = False
-        self.beautiful_capi_namespace = "beautiful_capi"
+        self.beautiful_capi_namespace = "beautiful_capi_{project_name}"
         self.beautiful_capi_namespace_filled = False
-        self.autogen_prefix = "{project_name}"
+        self.autogen_prefix = "AutoGen{project_name}"
         self.autogen_prefix_filled = False
         self.copyright_header = ""
         self.copyright_header_filled = False

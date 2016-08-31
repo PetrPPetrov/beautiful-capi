@@ -30,7 +30,7 @@
     <xs:attribute name="forward_holder_filename" type="xs:string" use="optional" default="beautiful_capi_{project_name}/forward_holder.h"/>
     <xs:attribute name="check_and_throw_exception_filename" type="xs:string" use="optional" default="beautiful_capi_{project_name}/check_and_throw_exception.h"/>
     <xs:attribute name="exception_handling_mode" type="TExceptionHandlingMode" use="optional" default="no_handling"/>
-    <xs:attribute name="beautiful_capi_namespace" type="xs:string" use="optional" default="beautiful_capi"/>
-    <xs:attribute name="autogen_prefix" type="xs:string" use="optional" default="{project_name}"/>
+    <xs:attribute name="beautiful_capi_namespace" type="xs:string" use="optional" default="beautiful_capi_{project_name}"/>
+    <xs:attribute name="autogen_prefix" type="xs:string" use="optional" default="AutoGen{project_name}"/>
   </xs:complexType>
 </xs:schema>
