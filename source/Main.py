@@ -80,6 +80,8 @@ class CapiGenerator(object):
     def generate(self):
         self.params_description = ParamsParser.load(self.input_params)
         self.api_description = parse_root(self.input_xml)
+        self.params_description.autogen_prefix = self.params_description.autogen_prefix.format(project_name =
+            self.api_description.project_name)
 
         generate_callback_classes(self.api_description, self)
         pre_process_beautiful_capi_root(self.api_description, self)

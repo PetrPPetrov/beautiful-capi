@@ -107,7 +107,7 @@ def generate_class_for_callback(cur_callback, base_class, cur_namespace, capi_ge
     new_callback_class.base = cur_callback.base
     new_callback_class.lifecycle = base_class.lifecycle
     new_callback_class.implementation_class_name = '::'.join(capi_generator.cur_namespace_path)
-    new_callback_class.implementation_class_name += '::AutoGen' + cur_callback.name + 'Impl'
+    new_callback_class.implementation_class_name += '::{0}'.format(capi_generator.params_description.autogen_prefix) + cur_callback.name + 'Impl'
     new_callback_class.implementation_class_name_filled = True
 
     new_default_constructor = Parser.TConstructor()
@@ -325,7 +325,7 @@ def generate_create_functions_for_callback(cur_callback, base_class, cur_namespa
 
 
 def generate_callbacks_implementations_impl(cur_callback, base_class, cur_namespace, capi_generator):
-    impl_class_name = 'AutoGen{0}Impl'.format(cur_callback.name)
+    impl_class_name = '{0}{1}Impl'.format(capi_generator.params_description.autogen_prefix ,cur_callback.name)
 
     ctor_callback_type = ''
     ctor_callback_name = ''
@@ -488,7 +488,7 @@ def generate_custom_callbacks(root_node, capi_generator):
 def generate_callbacks_implementations(root_node, capi_generator):
     if not capi_generator.callback_typedefs.empty():
         with NewFilesScope(capi_generator.callbacks_implementations, capi_generator):
-            capi_generator.output_header.put_line('namespace beautiful_capi')
+            capi_generator.output_header.put_line('namespace ' + capi_generator.params_description.beautiful_capi_namespace)
             with IndentScope(capi_generator.output_header):
                 capi_generator.exception_traits.generate_check_and_throw_exception_callback()
             process_callback_classes_impl(

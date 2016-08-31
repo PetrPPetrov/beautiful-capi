@@ -55,6 +55,8 @@ class TLifecycle(Enum):
 
 class TBeautifulCapiRoot(object):
     def __init__(self):
+        self.project_name = ""
+        self.project_name_filled = False
         self.namespaces = []
     
     def load(self, dom_node):
@@ -62,6 +64,10 @@ class TBeautifulCapiRoot(object):
             new_element = TNamespace()
             new_element.load(element)
             self.namespaces.append(new_element)
+        if dom_node.hasAttribute("project_name"):
+            cur_attr = dom_node.getAttribute("project_name")
+            self.project_name = cur_attr
+            self.project_name_filled = True
     
 
 class TApiInclude(object):

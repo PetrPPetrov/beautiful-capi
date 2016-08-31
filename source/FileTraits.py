@@ -198,17 +198,16 @@ class MultipleFiles(FileTraitsBase):
 
     def get_file_for_forward_holder(self):
         return self.__get_cached_generator(
-            os.path.join(self.base_path, self.capi_generator.params_description.forward_holder_filename)
+            os.path.join(self.base_path,
+                         self.capi_generator.params_description.forward_holder_filename.format(
+                             project_name=self.capi_generator.api_description.project_name))
         )
 
     def get_file_for_check_and_throw_exception(self):
         return self.__get_cached_generator(
-            os.path.join(self.base_path, self.capi_generator.params_description.check_and_throw_exception_filename)
-        )
-
-    def get_file_for_custom_callbacks(self):
-        return self.__get_cached_generator(
-            os.path.join(self.base_path, self.capi_generator.params_description.custom_callbacks_filename)
+            os.path.join(self.base_path,
+                         self.capi_generator.params_description.check_and_throw_exception_filename.format(
+                             project_name=self.capi_generator.api_description.project_name))
         )
 
     def namespace_header(self, namespace_path):
@@ -227,13 +226,12 @@ class MultipleFiles(FileTraitsBase):
         return self.__get_file_name_for_fwd(namespace_path, PosixJoin())
 
     def forward_holder_header(self):
-        return self.capi_generator.params_description.forward_holder_filename
+        return self.capi_generator.params_description.forward_holder_filename.format(
+            project_name=self.capi_generator.api_description.project_name)
 
     def check_and_throw_exception_header(self):
-        return self.capi_generator.params_description.check_and_throw_exception_filename
-
-    def custom_callbacks(self):
-        return self.capi_generator.params_description.custom_callbacks_filename
+        return self.capi_generator.params_description.check_and_throw_exception_filename.format(
+            project_name=self.capi_generator.api_description.project_name)
 
 
 def create_file_traits(capi_generator):

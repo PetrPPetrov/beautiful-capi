@@ -30,7 +30,11 @@ from enum import Enum
 
 
 def string_to_bool(string_value):
-    return string_value.lower() in ["true", "on", "yes", "1"]
+    return string_value.lower() in ['true', 'on', 'yes', '1']
+
+
+def string_to_int(string_value):
+    return int(string_value)
 
 
 class TExceptionHandlingMode(Enum):
@@ -78,14 +82,16 @@ class TBeautifulCapiParams(object):
         self.is_not_null_method_filled = False
         self.delete_method = "Delete"
         self.delete_method_filled = False
-        self.forward_holder_filename = "beautiful_capi/forward_holder.h"
+        self.forward_holder_filename = "beautiful_capi_{project_name}/forward_holder.h"
         self.forward_holder_filename_filled = False
-        self.check_and_throw_exception_filename = "beautiful_capi/check_and_throw_exception.h"
+        self.check_and_throw_exception_filename = "beautiful_capi_{project_name}/check_and_throw_exception.h"
         self.check_and_throw_exception_filename_filled = False
         self.exception_handling_mode = TExceptionHandlingMode.no_handling
         self.exception_handling_mode_filled = False
-        self.custom_callbacks_filename = "beautiful_capi/custom_callbacks.h"
-        self.custom_callbacks_filename_filled = False
+        self.beautiful_capi_namespace = "beautiful_capi"
+        self.beautiful_capi_namespace_filled = False
+        self.autogen_prefix = "{project_name}"
+        self.autogen_prefix_filled = False
         self.copyright_header = ""
         self.copyright_header_filled = False
         self.automatic_generated_warning = ""
@@ -170,10 +176,14 @@ class TBeautifulCapiParams(object):
             cur_attr = dom_node.getAttribute("exception_handling_mode")
             self.exception_handling_mode = TExceptionHandlingMode.load(cur_attr)
             self.exception_handling_mode_filled = True
-        if dom_node.hasAttribute("custom_callbacks_filename"):
-            cur_attr = dom_node.getAttribute("custom_callbacks_filename")
-            self.custom_callbacks_filename = cur_attr
-            self.custom_callbacks_filename_filled = True
+        if dom_node.hasAttribute("beautiful_capi_namespace"):
+            cur_attr = dom_node.getAttribute("beautiful_capi_namespace")
+            self.beautiful_capi_namespace = cur_attr
+            self.beautiful_capi_namespace_filled = True
+        if dom_node.hasAttribute("autogen_prefix"):
+            cur_attr = dom_node.getAttribute("autogen_prefix")
+            self.autogen_prefix = cur_attr
+            self.autogen_prefix_filled = True
     
 
 def load(dom_node):

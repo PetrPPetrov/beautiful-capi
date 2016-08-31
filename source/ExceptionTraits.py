@@ -221,7 +221,7 @@ class ByFirstArgument(ExceptionTraitsBase):
                     cur_file.include_system_header('stdexcept')
                     cur_file.include_system_header('cassert')
                     cur_file.put_line('')
-                    cur_file.put_line('namespace beautiful_capi')
+                    cur_file.put_line('namespace ' + self.capi_generator.params_description.beautiful_capi_namespace)
                     with IndentScope(cur_file):
                         self.__generate_check_and_throw_exception()
 
@@ -229,7 +229,7 @@ class ByFirstArgument(ExceptionTraitsBase):
         cur_file = self.capi_generator.output_header
         cur_file.put_begin_cpp_comments(self.capi_generator.params_description)
         with WatchdogScope(cur_file, 'BEAUTIFUL_CAPI_CHECK_AND_THROW_EXCEPTION_FORWARD_DECLARATION'):
-                cur_file.put_line('namespace beautiful_capi')
+                cur_file.put_line('namespace ' + self.capi_generator.params_description.beautiful_capi_namespace)
                 with IndentScope(cur_file):
                     cur_file.put_line(
                         'inline void check_and_throw_exception(int exception_code, void* exception_object);'

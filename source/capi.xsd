@@ -5,6 +5,7 @@
     <xs:sequence>
       <xs:element name="namespace" minOccurs="1" maxOccurs="unbounded" type="TNamespace"/>
     </xs:sequence>
+    <xs:attribute name="project_name" type="xs:string" use="required"/>
   </xs:complexType>
   <xs:complexType name="TApiInclude">
     <xs:attribute name="path" type="xs:string" use="required"/>

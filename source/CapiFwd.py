@@ -82,7 +82,7 @@ def generate_forward_holder(capi_generator):
         capi_generator.output_header.put_begin_cpp_comments(capi_generator.params_description)
         with WatchdogScope(capi_generator.output_header, 'BEAUTIFUL_CAPI_FORWARD_HOLDER_INCLUDED'):
             with IfDefScope(capi_generator.output_header, '__cplusplus'):
-                capi_generator.output_header.put_line('namespace beautiful_capi')
+                capi_generator.output_header.put_line('namespace ' + capi_generator.params_description.beautiful_capi_namespace)
                 with FileGenerator.IndentScope(capi_generator.output_header):
                     capi_generator.output_header.put_line('template<typename WrappedObjType>')
                     capi_generator.output_header.put_line('class forward_pointer_holder')
