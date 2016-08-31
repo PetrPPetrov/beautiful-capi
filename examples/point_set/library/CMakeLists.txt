@@ -33,15 +33,15 @@ add_capi_generation()
 add_swig_generation(swig PointSet)
 
 include_directories(
-  ${boost_shared_ptr_SOURCE_DIR}/../../../3rdparty/boost/core/include/
-  ${boost_shared_ptr_SOURCE_DIR}/../../../3rdparty/boost/config/include/
-  ${boost_shared_ptr_SOURCE_DIR}/../../../3rdparty/boost/assert/include/
-  ${boost_shared_ptr_SOURCE_DIR}/../../../3rdparty/boost/throw_exception/include/
-  ${boost_shared_ptr_SOURCE_DIR}/../../../3rdparty/boost/predef/include/
-  ${boost_shared_ptr_SOURCE_DIR}/../../../3rdparty/boost/smart_ptr/include/
-  ${boost_shared_ptr_SOURCE_DIR}/../../../3rdparty/boost/type_traits/include/
-  ${boost_shared_ptr_SOURCE_DIR}/../../../3rdparty/boost/static_assert/include/
-  ${boost_shared_ptr_SOURCE_DIR}/../../../3rdparty/boost/align/include/
+  ${point_set_SOURCE_DIR}/../../../3rdparty/boost/core/include/
+  ${point_set_SOURCE_DIR}/../../../3rdparty/boost/config/include/
+  ${point_set_SOURCE_DIR}/../../../3rdparty/boost/assert/include/
+  ${point_set_SOURCE_DIR}/../../../3rdparty/boost/throw_exception/include/
+  ${point_set_SOURCE_DIR}/../../../3rdparty/boost/predef/include/
+  ${point_set_SOURCE_DIR}/../../../3rdparty/boost/smart_ptr/include/
+  ${point_set_SOURCE_DIR}/../../../3rdparty/boost/type_traits/include/
+  ${point_set_SOURCE_DIR}/../../../3rdparty/boost/static_assert/include/
+  ${point_set_SOURCE_DIR}/../../../3rdparty/boost/align/include/
   ${point_set_SOURCE_DIR}/source/
 )
 

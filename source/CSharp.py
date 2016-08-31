@@ -230,9 +230,14 @@ class FileCreator(object):
     def __write_line(self, line: str, **kwargs):
         if self.file:
             written = line.strip()
-            do_format = written not in '{}'
 
-            self.file.put_line(written.format(**self.format_args, **self.additional_format, **kwargs) if do_format else written)
+            do_format = written not in '{}'
+            
+            dict_share = dict()
+            dict_share.update(self.format_args)
+            dict_share.update(self.additional_format)
+            dict_share.update(kwargs)
+            self.file.put_line(written.format(**dict_share) if do_format else written)
 
     def scope(self, ending='}'):
         return IndentScope(self.file, ending)
