@@ -105,3 +105,9 @@ class NamespaceScope(object):
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.cur_namespace_path.pop()
+
+
+class BeautifulCapiException(Exception):
+    def __init__(self, message):
+        self.message = message
+

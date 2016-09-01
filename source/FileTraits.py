@@ -40,6 +40,9 @@ class SingleFile(FileTraitsBase):
                                       self.capi_generator.params_description.single_header_name)
         self.output_file = FileGenerator.FileGenerator(self.file_name)
 
+    def get_file_for_root_header(self):
+        return None
+
     def get_file_for_namespace(self, namespace_path):
         return self.output_file
 
@@ -179,6 +182,10 @@ class MultipleFiles(FileTraitsBase):
             output_file = FileGenerator.FileGenerator(file_name)
             self.file2generator.update({file_name: output_file})
             return output_file
+
+    def get_file_for_root_header(self):
+        return self.__get_cached_generator(
+            os.path.join(self.base_path, self.capi_generator.params_description.root_header))
 
     def get_file_for_namespace(self, namespace_path):
         output_file_name = self.__get_file_name_for_namespace(namespace_path, OsJoin(self.base_path))

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<hello_world:api xmlns:hello_world="http://gkmsoft.ru/beautifulcapi">
+<hello_world:api xmlns:hello_world="http://gkmsoft.ru/beautifulcapi" project_name="PointSet">
   <namespace name="PointSet">
     <class name="Position" lifecycle="copy_semantic" implementation_class_name="PointSet::PositionImpl" implementation_class_header="PositionImpl.h">
       <constructor name="Default"/>

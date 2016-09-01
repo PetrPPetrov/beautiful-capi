@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<custom_suffix:api xmlns:custom_suffix="http://gkmsoft.ru/beautifulcapi">
+<custom_suffix:api xmlns:custom_suffix="http://gkmsoft.ru/beautifulcapi" project_name="custom_suffix">
   <namespace name="hello_world">
     <class name="printer" lifecycle="copy_semantic" implementation_class_name="hello_world::printer_impl" implementation_class_header="printer_impl.h">
       <constructor name="default"/>

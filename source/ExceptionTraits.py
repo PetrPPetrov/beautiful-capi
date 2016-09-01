@@ -114,6 +114,12 @@ class ByFirstArgument(ExceptionTraitsBase):
         self.current_exception_index = 1
         self.callback_class = None
 
+    def __exception_info_t(self):
+        return self.capi_generator.params_description.beautiful_capi_namespace.lower() + '_exception_info_t'
+
+    def __exception_code_t(self):
+        return self.capi_generator.params_description.beautiful_capi_namespace.lower() + '_exception_code_t'
+
     def __generate_codes_for_class(self, cur_class):
         if cur_class.exception:
             self.capi_generator.exception_class_2_code.update({cur_class: self.current_exception_index})
@@ -215,7 +221,9 @@ class ByFirstArgument(ExceptionTraitsBase):
         ):
             cur_file = self.capi_generator.output_header
             cur_file.put_begin_cpp_comments(self.capi_generator.params_description)
-            with WatchdogScope(cur_file, 'BEAUTIFUL_CAPI_CHECK_AND_THROW_EXCEPTION_INCLUDED'):
+            with WatchdogScope(cur_file, '{0}_CHECK_AND_THROW_EXCEPTION_INCLUDED'.format(
+                self.capi_generator.params_description.beautiful_capi_namespace.upper()
+            )):
                 with IfDefScope(cur_file, '__cplusplus'):
                     cur_file.put_include_files()
                     cur_file.include_system_header('stdexcept')
@@ -229,7 +237,9 @@ class ByFirstArgument(ExceptionTraitsBase):
     def generate_check_and_throw_exception_forward_declaration(self):
         cur_file = self.capi_generator.output_header
         cur_file.put_begin_cpp_comments(self.capi_generator.params_description)
-        with WatchdogScope(cur_file, 'BEAUTIFUL_CAPI_CHECK_AND_THROW_EXCEPTION_FORWARD_DECLARATION'):
+        with WatchdogScope(cur_file, '{0}_CHECK_AND_THROW_EXCEPTION_FORWARD_DECLARATION'.format(
+            self.capi_generator.params_description.beautiful_capi_namespace.upper()
+        )):
                 cur_file.put_line('namespace ' + self.capi_generator.params_description.beautiful_capi_namespace)
                 with IndentScope(cur_file):
                     cur_file.put_line(
@@ -237,13 +247,14 @@ class ByFirstArgument(ExceptionTraitsBase):
                     )
 
     def generate_exception_info_impl(self, cur_file):
-        with WatchdogScope(cur_file, 'BEAUTIFUL_CAPI_EXCEPTION_INFO_DEFINED'):
-            cur_file.put_line('struct beautiful_capi_exception_info_t')
+        with WatchdogScope(cur_file, '{0}_EXCEPTION_INFO_DEFINED'.format(
+                self.capi_generator.params_description.beautiful_capi_namespace.upper())):
+            cur_file.put_line('struct {0}'.format(self.__exception_info_t()))
             with IndentScope(cur_file, '};'):
-                cur_file.put_line('int code; /* value from beautiful_capi_exception_code_t enumeration */')
+                cur_file.put_line('int code; /* value from {0} enumeration */'.format(self.__exception_code_t()))
                 cur_file.put_line('void* object_pointer;')
             cur_file.put_line('')
-            cur_file.put_line('enum beautiful_capi_exception_code_t')
+            cur_file.put_line('enum {0}'.format(self.__exception_code_t()))
             with IndentScope(cur_file, '};'):
                 cur_file.put_line('no_exception = 0,')
                 code_to_exception = {code: exception_class for exception_class, code
@@ -352,7 +363,7 @@ class ByFirstArgument(ExceptionTraitsBase):
     def generate_c_call(self, c_method_name, format_string, is_function):
         cur_file = self.capi_generator.output_header
         self.capi_generator.put_raw_pointer_structure_if_required(cur_file, self.cur_method.arguments)
-        cur_file.put_line('beautiful_capi_exception_info_t exception_info;')
+        cur_file.put_line('{0} exception_info;'.format(self.__exception_info_t()))
         cur_file.put_line(self.capi_generator.get_wrapped_result_var(
             self.cur_method.return_type if hasattr(self.cur_method, 'return_type') else '',
             format_string.format(
@@ -371,7 +382,7 @@ class ByFirstArgument(ExceptionTraitsBase):
 
     def generate_c_callback(self, c_method_name, format_string, is_function):
         cur_file = self.capi_generator.output_header
-        cur_file.put_line('beautiful_capi_exception_info_t exception_info;')
+        cur_file.put_line('{0} exception_info;'.format(self.__exception_info_t()))
         cur_file.put_line(self.capi_generator.get_original_result_var(
             self.cur_method.return_type if hasattr(self.cur_method, 'return_type') else '',
             format_string.format(
@@ -407,16 +418,15 @@ class ByFirstArgument(ExceptionTraitsBase):
         return ByFirstArgument.get_c_from_wrapped() + \
                self.capi_generator.get_c_from_original_arguments_for_function_impl(self.cur_method.arguments)
 
-    @staticmethod
-    def get_c_argument():
-        return ['beautiful_capi_exception_info_t* exception_info']
+    def __get_c_argument(self):
+        return ['{0}* exception_info'.format(self.__exception_info_t())]
 
     def get_c_argument_pairs(self):
-        return ByFirstArgument.get_c_argument() + \
+        return self.__get_c_argument() + \
                self.capi_generator.get_c_argument_pairs_impl(self.cur_method.arguments)
 
     def get_c_argument_pairs_for_function(self):
-        return ByFirstArgument.get_c_argument() + \
+        return self.__get_c_argument() + \
                self.capi_generator.get_c_argument_pairs_for_function_impl(self.cur_method.arguments)
 
 

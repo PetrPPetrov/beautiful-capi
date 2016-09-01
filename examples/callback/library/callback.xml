@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<callback:api xmlns:callback="http://gkmsoft.ru/beautifulcapi" project_name="callback123">
+<callback:api xmlns:callback="http://gkmsoft.ru/beautifulcapi" project_name="Callback">
   <namespace name="Example">
     <enumeration name="EPrintingDevice" underlying_type="int">
       <item name="printer" value="1"/>

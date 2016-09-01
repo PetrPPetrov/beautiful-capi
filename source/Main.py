@@ -21,6 +21,7 @@
 
 import argparse
 import os
+import shutil
 from xml.dom.minidom import parse
 from Helpers import NamespaceScope
 import Helpers
@@ -52,7 +53,8 @@ class CapiGenerator(object):
                  input_params_filename,
                  output_folder,
                  output_wrap_file_name,
-                 internal_snippets_folder):
+                 internal_snippets_folder,
+                 clean):
         self.input_xml = input_filename
         self.input_params = parse(input_params_filename)
         self.output_folder = output_folder
@@ -76,14 +78,24 @@ class CapiGenerator(object):
         self.callback_typedefs = FileGenerator.FileGenerator(None)
         self.callback_2_class = {}
         self.callbacks_implementations = FileGenerator.FileGenerator(None)
+        if clean:
+            if os.path.exists(self.output_folder):
+                shutil.rmtree(self.output_folder)
+            if os.path.exists(self.internal_snippets_folder):
+                shutil.rmtree(self.internal_snippets_folder)
 
     def generate(self):
         self.params_description = ParamsParser.load(self.input_params)
         self.api_description = parse_root(self.input_xml)
-        self.params_description.autogen_prefix = self.params_description.autogen_prefix.format(
-            project_name = self.api_description.project_name)
+
+        if not self.api_description.project_name:
+            raise Helpers.BeautifulCapiException('project_name parameter is not specified')
         self.params_description.beautiful_capi_namespace = self.params_description.beautiful_capi_namespace.format(
-            project_name = self.api_description.project_name)
+            project_name=self.api_description.project_name)
+        self.params_description.autogen_prefix = self.params_description.autogen_prefix.format(
+            project_name=self.api_description.project_name)
+        self.params_description.root_header = self.params_description.root_header.format(
+            project_name=self.api_description.project_name)
 
         generate_callback_classes(self.api_description, self)
         pre_process_beautiful_capi_root(self.api_description, self)
@@ -99,6 +111,21 @@ class CapiGenerator(object):
                         self.__process_namespace(namespace)
                     generate_callbacks_implementations(self.api_description, self)
                     self.exception_traits.generate_check_and_throw_exception_header()
+                self.__generate_root_header()
+
+    def __generate_root_header(self):
+        if self.params_description.root_header:
+            root_header = self.file_traits.get_file_for_root_header()
+            if root_header:
+                with FileGenerator.NewFilesScope(root_header, self):
+                    root_header.put_begin_cpp_comments(self.params_description)
+                    with WatchdogScope(root_header, '{0}_INCLUDED'.format(
+                            self.params_description.root_header.replace('.', '_').upper())):
+                        root_header.put_include_files()
+                        for cur_root_namespace in self.api_description.namespaces:
+                            with NamespaceScope(self.cur_namespace_path, cur_root_namespace):
+                                root_header.include_user_header(
+                                    self.file_traits.namespace_header(self.cur_namespace_path))
 
     def get_namespace_id(self):
         return '_'.join(self.cur_namespace_path)
@@ -709,6 +736,10 @@ def main():
     parser.add_argument(
         '-s', '--internal-snippets-folder', nargs=None, default='./internal_snippets', metavar='OUTPUT_SNIPPETS',
         help='specifies output folder for generated library snippets')
+    parser.add_argument(
+        '-c', '--clean', nargs=None, default='False', metavar='CLEAN',
+        help='specifies whether if clean input and snippets directories'
+    )
 
     args = parser.parse_args()
 
@@ -717,7 +748,8 @@ def main():
         args.params,
         args.output_folder,
         args.output_wrap_file_name,
-        args.internal_snippets_folder
+        args.internal_snippets_folder,
+        args.clean
     )
     schema_generator.generate()
 

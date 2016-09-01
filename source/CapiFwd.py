@@ -81,7 +81,8 @@ def generate_forwards(capi_generator, namespace):
 def generate_forward_holder(capi_generator):
     with NewFileScope(capi_generator.file_traits.get_file_for_forward_holder(), capi_generator):
         capi_generator.output_header.put_begin_cpp_comments(capi_generator.params_description)
-        with WatchdogScope(capi_generator.output_header, 'BEAUTIFUL_CAPI_FORWARD_HOLDER_INCLUDED'):
+        with WatchdogScope(capi_generator.output_header, '{0}_FORWARD_HOLDER_INCLUDED'.format(
+                capi_generator.params_description.beautiful_capi_namespace.upper())):
             with IfDefScope(capi_generator.output_header, '__cplusplus'):
                 capi_generator.output_header.put_line('namespace ' +
                                                       capi_generator.params_description.beautiful_capi_namespace)

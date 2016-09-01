@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<object_parameter:api xmlns:object_parameter="http://gkmsoft.ru/beautifulcapi">
+<object_parameter:api xmlns:object_parameter="http://gkmsoft.ru/beautifulcapi" project_name="ObjectParameter">
   <namespace name="Example">
     <class name="Page" lifecycle="reference_counted" implementation_class_name="Example::PageImpl" implementation_class_header="PageImpl.h">
       <constructor name="Default"/>

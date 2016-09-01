@@ -82,16 +82,18 @@ class TBeautifulCapiParams(object):
         self.is_not_null_method_filled = False
         self.delete_method = "Delete"
         self.delete_method_filled = False
-        self.forward_holder_filename = "beautiful_capi_{project_name}/forward_holder.h"
+        self.forward_holder_filename = "{project_name}/common/forward_holder.h"
         self.forward_holder_filename_filled = False
-        self.check_and_throw_exception_filename = "beautiful_capi_{project_name}/check_and_throw_exception.h"
+        self.check_and_throw_exception_filename = "{project_name}/common/check_and_throw_exception.h"
         self.check_and_throw_exception_filename_filled = False
         self.exception_handling_mode = TExceptionHandlingMode.no_handling
         self.exception_handling_mode_filled = False
         self.beautiful_capi_namespace = "beautiful_capi_{project_name}"
         self.beautiful_capi_namespace_filled = False
-        self.autogen_prefix = "AutoGen{project_name}"
+        self.autogen_prefix = "AutoGen_{project_name}_"
         self.autogen_prefix_filled = False
+        self.root_header = "{project_name}.h"
+        self.root_header_filled = False
         self.copyright_header = ""
         self.copyright_header_filled = False
         self.automatic_generated_warning = ""
@@ -184,6 +186,10 @@ class TBeautifulCapiParams(object):
             cur_attr = dom_node.getAttribute("autogen_prefix")
             self.autogen_prefix = cur_attr
             self.autogen_prefix_filled = True
+        if dom_node.hasAttribute("root_header"):
+            cur_attr = dom_node.getAttribute("root_header")
+            self.root_header = cur_attr
+            self.root_header_filled = True
     
 
 def load(dom_node):

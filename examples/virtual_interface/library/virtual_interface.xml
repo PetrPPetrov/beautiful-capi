@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<virtual_interface:api xmlns:virtual_interface="http://gkmsoft.ru/beautifulcapi">
+<virtual_interface:api xmlns:virtual_interface="http://gkmsoft.ru/beautifulcapi" project_name="VirtualInterface">
   <namespace name="Example">
     <class name="IShape" lifecycle="raw_pointer_semantic" implementation_class_name="Example::IShape" implementation_class_header="IShape.h">
       <method name="Show" const="true"/>

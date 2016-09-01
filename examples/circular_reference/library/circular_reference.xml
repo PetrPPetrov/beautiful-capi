@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<circular_reference:api xmlns:circular_reference="http://gkmsoft.ru/beautifulcapi">
+<circular_reference:api xmlns:circular_reference="http://gkmsoft.ru/beautifulcapi" project_name="CircularReference">
   <namespace name="Circular">
     <class name="ClassA" lifecycle="raw_pointer_semantic" implementation_class_name="Circular::ClassAImpl" implementation_class_header="ClassAImpl.h">
       <constructor name="Default"/>

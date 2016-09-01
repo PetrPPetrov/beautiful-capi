@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<down_cast:api xmlns:down_cast="http://gkmsoft.ru/beautifulcapi">
+<down_cast:api xmlns:down_cast="http://gkmsoft.ru/beautifulcapi" project_name="DownCast">
   <namespace name="Example">
     <class name="IShape" lifecycle="reference_counted" implementation_class_name="Example::IShape" implementation_class_header="IShape.h">
       <method name="Show" const="true"/>
