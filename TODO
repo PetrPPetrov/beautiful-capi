@@ -2,7 +2,6 @@
   a) customization of generated methods and constructors names (?)
   b) customization of 'noexcept' flags for generated methods and constructors (?)
   c) small influence of life cycle logic to custom callbacks (?)
-  d) add Callback implementation_header including to AutoGenWrap.cpp
 *) add "copy" custom function, external helper function or "class member method"
 *) add "create" custom function, external helper function for creation of new object instances
 *) template support

@@ -325,8 +325,10 @@ def generate_create_functions_for_callback(cur_callback, base_class, cur_namespa
 
 
 def generate_callbacks_implementations_impl(cur_callback, base_class, cur_namespace, capi_generator):
-    impl_class_name = '{0}{1}Impl'.format(capi_generator.params_description.autogen_prefix ,cur_callback.name)
+    if cur_callback.implementation_class_header_filled:
+        capi_generator.loader_traits.add_impl_header(cur_callback.implementation_class_header)
 
+    impl_class_name = '{0}{1}Impl'.format(capi_generator.params_description.autogen_prefix, cur_callback.name)
     ctor_callback_type = ''
     ctor_callback_name = ''
     dtor_callback_type = ''
