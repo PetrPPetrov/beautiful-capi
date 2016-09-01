@@ -34,6 +34,11 @@ namespace Example
                 std::cout << "Rectangle ctor" << std::endl;
             }
 
+            Rectangle(const Rectangle& other)
+            {
+                std::cout << "Rectangle copy ctor" << std::endl;
+            }
+
             virtual ~Rectangle()
             {
                 std::cout << "Rectangle dtor" << std::endl;

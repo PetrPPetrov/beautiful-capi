@@ -27,6 +27,11 @@ Example::SquareImpl::SquareImpl() : m_size(1.0)
     std::cout << "Square ctor" << std::endl;
 }
 
+Example::SquareImpl::SquareImpl(const SquareImpl& other) : m_size(other.m_size)
+{
+    std::cout << "Square copy ctor" << std::endl;
+}
+
 Example::SquareImpl::~SquareImpl()
 {
     std::cout << "Square dtor" << std::endl;

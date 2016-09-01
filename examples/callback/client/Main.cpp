@@ -29,7 +29,6 @@
 #include <algorithm>
 #include "Example.h"
 
-
 class CustomPrinterImplementation
 {
     std::string mLastPrintedText;

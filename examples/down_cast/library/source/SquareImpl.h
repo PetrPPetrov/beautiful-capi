@@ -32,6 +32,7 @@ namespace Example
         double m_size;
     public:
         SquareImpl();
+        SquareImpl(const SquareImpl& other);
         virtual ~SquareImpl();
         virtual void Show() const;
         virtual int GetPointsCount() const;

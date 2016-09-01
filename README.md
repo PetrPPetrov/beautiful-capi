@@ -1,5 +1,5 @@
 # beautiful-capi
-Another wrapper for producing beautiful C API.
+Another wrapper generator for producing beautiful C API.
 
 This program generates all required C++ and C code to wrap
 your C++ classes to use them in compiler-independent way.
@@ -13,7 +13,7 @@ In  today's  modern  software  development  environment, there are may
 C/C++ parsing techniques such as SWIG, web services many more.
 
 This  project is to write a new automatic code generation tool similar
-to SWIG, except the output is not Java/Python, it is ANSI-C.
+to SWIG, except the output is not Java/Python, it is ANSI-C & C++.
 
 This is a little different than SWIG, generating pure C API output, formatted to be easily human readable.
 Compiled  libs could be linked by another compiler or language (unlike

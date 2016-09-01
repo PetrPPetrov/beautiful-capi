@@ -28,6 +28,7 @@ namespace hello_world
     {
     public:
         printer_impl();
+        printer_impl(const printer_impl& other);
         ~printer_impl();
         void show() const;
     };

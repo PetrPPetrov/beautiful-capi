@@ -1,0 +1,27 @@
+./copy_semantic_client
+___std::cout___
+Printer ctor
+print text: from create_printer()
+Printer copy ctor
+Printer dtor
+print text: from main()
+Printer copy ctor
+print text: from f1()
+Printer dtor
+Printer ctor
+Dumper ctor
+Printer copy ctor
+Printer dtor
+print text: Dumper::Dump(): dump some text here
+Printer copy ctor
+Printer copy ctor
+Printer dtor
+Printer copy ctor
+Printer dtor
+print text: printer2
+Printer dtor
+Dumper dtor
+Printer dtor
+Printer dtor
+___std::cerr___
+___eof___

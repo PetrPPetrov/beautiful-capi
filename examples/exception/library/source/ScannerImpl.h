@@ -32,6 +32,7 @@ namespace Example
         std::string mScannedText;
     public:
         ScannerImpl();
+        ScannerImpl(const ScannerImpl& other);
         ~ScannerImpl();
         void AddRef();
         void Release();

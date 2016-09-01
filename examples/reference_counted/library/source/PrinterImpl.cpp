@@ -28,6 +28,12 @@ Example::PrinterImpl::PrinterImpl() : mRefCount(1)
     std::cout << "Printer ctor" << std::endl;
 }
 
+// By default newly created objects implies to have value 1 of reference counter
+Example::PrinterImpl::PrinterImpl(const PrinterImpl& other) : mRefCount(1)
+{
+    std::cout << "Printer copy ctor! (should be never called)" << std::endl;
+}
+
 Example::PrinterImpl::~PrinterImpl()
 {
     std::cout << "Printer dtor" << std::endl;

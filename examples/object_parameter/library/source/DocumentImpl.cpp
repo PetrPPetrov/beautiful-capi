@@ -28,6 +28,13 @@ Example::DocumentImpl::DocumentImpl() : mRefCount(1), mPage(0)
     std::cout << "Document ctor" << std::endl;
 }
 
+// By default newly created objects implies to have value 1 of reference counter
+Example::DocumentImpl::DocumentImpl(const DocumentImpl& other) : mRefCount(1), mPage(other.mPage)
+{
+    std::cout << "Document copy ctor! (should be never called)" << std::endl;
+    mPage->AddRef();
+}
+
 Example::DocumentImpl::~DocumentImpl()
 {
     std::cout << "Document dtor" << std::endl;

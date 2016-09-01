@@ -34,6 +34,7 @@ namespace Example
         double m_x3, m_y3;
     public:
         TriangleImpl();
+        TriangleImpl(const TriangleImpl& other);
         virtual ~TriangleImpl();
         virtual void Show() const;
         virtual int GetPointsCount() const;

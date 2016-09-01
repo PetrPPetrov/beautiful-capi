@@ -31,6 +31,7 @@ namespace Example
     {
     public:
         PrinterImpl();
+        PrinterImpl(const PrinterImpl& other);
         ~PrinterImpl();
         void Show(const char* text) const;
     };

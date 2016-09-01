@@ -1,0 +1,13 @@
+./file_options_test09_client
+___std::cout___
+Body ctor
+Body copy ctor
+Body dtor
+Body copy ctor
+Name: new name
+Name: modified name in object copy
+Body dtor
+Name: new name
+Body dtor
+___std::cerr___
+___eof___

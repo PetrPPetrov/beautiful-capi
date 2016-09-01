@@ -35,7 +35,7 @@ Exception::NullArgumentImpl::NullArgumentImpl(const std::string& argument_name)
 }
 
 Exception::NullArgumentImpl::NullArgumentImpl(const NullArgumentImpl& other)
-    : BadArgumentImpl(other)
+    : BadArgumentImpl(other), mArgumentName(other.mArgumentName)
 {
     std::cout << "NullArgument copy ctor" << std::endl;
 }

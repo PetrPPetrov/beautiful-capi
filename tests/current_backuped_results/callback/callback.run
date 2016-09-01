@@ -1,0 +1,38 @@
+./callback_client
+___std::cout___
+Person ctor
+PrinterBase ctor
+DefaultPrinter ctor
+DefaultPrinter: First Name: Isaac Second Name: Newton Age: 26 Sex: F
+DefaultPrinter: Hello World
+CustomPrinterImplementation ctor
+PrinterBase ctor
+DefaultPrinter dtor
+PrinterBase dtor
+FIRST NAME: ISAAC SECOND NAME: NEWTON AGE: 26 SEX: F
+Generic ctor
+BadArgument ctor
+NullArgument ctor
+Generic copy ctor
+BadArgument copy ctor
+NullArgument copy ctor
+NullArgument dtor
+BadArgument dtor
+Generic dtor
+Generic copy ctor
+BadArgument copy ctor
+NullArgument copy ctor
+NullArgument dtor
+BadArgument dtor
+Generic dtor
+    *** Exception::NullArgument was thrown
+    null argument
+    argument: n/a
+NullArgument dtor
+BadArgument dtor
+Generic dtor
+CustomPrinterImplementation ctor
+PrinterBase dtor
+Person dtor
+___std::cerr___
+___eof___

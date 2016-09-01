@@ -29,6 +29,7 @@ namespace hello_world
         int reference_count;
     public:
         plotter_impl();
+        plotter_impl(const plotter_impl& other);
         ~plotter_impl();
         void AddRef();
         void Release();

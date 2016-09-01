@@ -28,6 +28,12 @@ Example::ScannerImpl::ScannerImpl() : mRefCount(1)
     std::cout << "Scanner ctor" << std::endl;
 }
 
+// By default newly created objects implies to have value 1 of reference counter
+Example::ScannerImpl::ScannerImpl(const ScannerImpl& other) : mRefCount(1), mScannedText(other.mScannedText)
+{
+    std::cout << "Scanner copy ctor! (should be never called)" << std::endl;
+}
+
 Example::ScannerImpl::~ScannerImpl()
 {
     std::cout << "Scanner dtor" << std::endl;

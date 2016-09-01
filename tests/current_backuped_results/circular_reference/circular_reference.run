@@ -1,0 +1,12 @@
+./circular_reference_client
+___std::cout___
+ClassA ctor
+ClassB ctor
+ClassA ctor
+ClassB ctor
+ClassA dtor
+ClassB dtor
+ClassA dtor
+ClassB dtor
+___std::cerr___
+___eof___

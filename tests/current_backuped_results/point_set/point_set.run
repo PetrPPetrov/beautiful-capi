@@ -1,0 +1,48 @@
+./point_set_client
+___std::cout___
+PointSet ctor
+Points ctor
+Position ctor with param
+Position copy ctor
+Position copy ctor
+Position dtor
+Position dtor
+Position ctor with param
+Position copy ctor
+Position copy ctor
+Position dtor
+Position dtor
+Position ctor with param
+Position copy ctor
+Position copy ctor
+Position dtor
+Position dtor
+PointSet 'Points'
+Position copy ctor
+Position copy ctor
+Position dtor
+Position copy ctor
+Position dtor
+	point #0 (1, 0, 0)
+Position dtor
+Position copy ctor
+Position copy ctor
+Position dtor
+Position copy ctor
+Position dtor
+	point #1 (0, 1, 0)
+Position dtor
+Position copy ctor
+Position copy ctor
+Position dtor
+Position copy ctor
+Position dtor
+	point #2 (0, 0, 1)
+Position dtor
+PointSet dtor
+Points dtor
+Position dtor
+Position dtor
+Position dtor
+___std::cerr___
+___eof___

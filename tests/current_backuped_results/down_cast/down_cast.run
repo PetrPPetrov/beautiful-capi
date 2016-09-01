@@ -1,0 +1,35 @@
+./down_cast_client
+___std::cout___
+Triangle ctor
+Circle ctor
+Square ctor
+
+The first pass.
+TriangleImpl::Show(), x1 = 0 y1 = 0 x2 = 1 y2 = 0 x3 = 0 y3 = 1
+IPolygon
+number of points = 3
+ITriangle
+CircleImpl::Show(), radius = 10
+ICircle
+SquareImpl::Show(), size = 1
+IPolygon
+number of points = 4
+ISquare
+
+The second pass.
+TriangleImpl::Show(), x1 = -1 y1 = 1 x2 = 5 y2 = 6 x3 = 10 y3 = 15
+IPolygon
+number of points = 3
+ITriangle
+CircleImpl::Show(), radius = 7.77
+ICircle
+SquareImpl::Show(), size = 3.14
+IPolygon
+number of points = 4
+ISquare
+
+Square dtor
+Circle dtor
+Triangle dtor
+___std::cerr___
+___eof___

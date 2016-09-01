@@ -28,6 +28,12 @@ Example::TriangleImpl::TriangleImpl()
     std::cout << "Triangle ctor" << std::endl;
 }
 
+Example::TriangleImpl::TriangleImpl(const TriangleImpl& other)
+    : m_x1(other.m_x1), m_y1(other.m_y1), m_x2(other.m_x2), m_y2(other.m_y2), m_x3(other.m_x3), m_y3(other.m_y3)
+{
+    std::cout << "Triangle copy ctor" << std::endl;
+}
+
 Example::TriangleImpl::~TriangleImpl()
 {
     std::cout << "Triangle dtor" << std::endl;

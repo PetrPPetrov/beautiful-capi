@@ -29,7 +29,7 @@ find_package(PythonInterp 3.4 REQUIRED)
 function(bcapi_add_test test_name)
   add_custom_command(
     OUTPUT ${file_option_SOURCE_DIR}/library/source/AutoGenWrap_${test_name}.cpp
-    COMMAND ${PYTHON_EXECUTABLE} ${file_option_SOURCE_DIR}/../../source/Main.py -i ${file_option_SOURCE_DIR}/library/file_options.xml -p ${file_option_SOURCE_DIR}/library/${test_name}_params.xml -o ${file_option_SOURCE_DIR}/library/include/${test_name} -w ${file_option_SOURCE_DIR}/library/source/AutoGenWrap_${test_name}.cpp
+    COMMAND ${PYTHON_EXECUTABLE} ${file_option_SOURCE_DIR}/../../source/Main.py -i ${file_option_SOURCE_DIR}/library/file_options.xml -p ${file_option_SOURCE_DIR}/library/${test_name}_params.xml -o ${file_option_SOURCE_DIR}/library/include/${test_name} -w ${file_option_SOURCE_DIR}/library/source/AutoGenWrap_${test_name}.cpp -s ${file_option_SOURCE_DIR}/library/source/snippets_${test_name}
     MAIN_DEPENDENCY ${file_option_SOURCE_DIR}/library/file_options.xml
     DEPENDS ${file_option_SOURCE_DIR}/library/${test_name}_params.xml
     WORKING_DIRECTORY ${file_option_SOURCE_DIR}

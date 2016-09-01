@@ -22,6 +22,8 @@
 #ifndef BEAUTIFUL_CAPI_POINT_SET_POSITION_H
 #define BEAUTIFUL_CAPI_POINT_SET_POSITION_H
 
+#include <iostream>
+
 namespace PointSet
 {
     class PositionImpl
@@ -31,9 +33,22 @@ namespace PointSet
         double mZ;
 
     public:
-        PositionImpl() : mX(0), mY(0), mZ(0) {}
-        PositionImpl(double x, double y, double z) : mX(x), mY(y), mZ(z) {}
-        PositionImpl(const PositionImpl& other) : mX(other.GetX()), mY(other.GetY()), mZ(other.GetZ()) {}
+        PositionImpl() : mX(0), mY(0), mZ(0)
+        {
+            std::cout << "Position ctor" << std::endl;
+        }
+        ~PositionImpl()
+        {
+            std::cout << "Position dtor" << std::endl;
+        }
+        PositionImpl(double x, double y, double z) : mX(x), mY(y), mZ(z)
+        {
+            std::cout << "Position ctor with param" << std::endl;
+        }
+        PositionImpl(const PositionImpl& other) : mX(other.GetX()), mY(other.GetY()), mZ(other.GetZ())
+        {
+            std::cout << "Position copy ctor" << std::endl;
+        }
 
         double GetX() const { return mX; }
         double GetY() const { return mY; }

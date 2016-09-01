@@ -24,6 +24,7 @@
 
 #include "PointsImpl.h"
 #include <string>
+#include <iostream>
 #include "boost/smart_ptr/intrusive_ptr.hpp"
 
 namespace PointSet
@@ -35,7 +36,18 @@ namespace PointSet
         int mRefCount;
 
     public:
-        PointSetImpl() : mRefCount(1) {}
+        PointSetImpl() : mRefCount(1)
+        {
+            std::cout << "PointSet ctor" << std::endl;
+        }
+        PointSetImpl(const PointSetImpl& other) : mRefCount(1), mName(other.mName), mPoints(other.mPoints)
+        {
+            std::cout << "PointSet copy ctor! (should be never called)" << std::endl;
+        }
+        ~PointSetImpl()
+        {
+            std::cout << "PointSet dtor" << std::endl;
+        }
 
         const char* GetName() const { return mName.c_str(); }
         void SetName(const char* name) { mName = name; }

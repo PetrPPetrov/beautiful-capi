@@ -29,6 +29,7 @@ namespace Example
         int mRefCount;
     public:
         PrinterImpl();
+        PrinterImpl(const PrinterImpl& other);
         ~PrinterImpl();
         void AddRef();
         void Release();

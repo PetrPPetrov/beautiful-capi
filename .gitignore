@@ -4,7 +4,7 @@
 *.user
 /.idea/
 build/
-/examples/bin/
+bin/
 /examples/hello_world/library/include/
 /examples/reference_counted/library/include/
 /examples/copy_semantic/library/include/

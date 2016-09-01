@@ -48,7 +48,6 @@
 #include "Example/Geometry/Brep/Body.h"
 #endif
 
-
 void f1(Example::Geometry::Brep::Body body)
 {
     std::cout << "Name: " << body.GetName() << std::endl;

@@ -32,6 +32,7 @@ namespace Example
         double m_radius;
     public:
         CircleImpl();
+        CircleImpl(const CircleImpl& other);
         virtual ~CircleImpl();
         virtual void Show() const;
         virtual void SetRadius(double radius);

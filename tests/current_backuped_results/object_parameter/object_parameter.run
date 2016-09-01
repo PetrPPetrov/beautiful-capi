@@ -1,0 +1,14 @@
+./object_parameter_client
+___std::cout___
+Document ctor
+Document show()
+Document is empty
+Page ctor
+Document show()
+Document has 200 x 100 page
+Document show()
+Document has 777 x 100 page
+Document dtor
+Page dtor
+___std::cerr___
+___eof___

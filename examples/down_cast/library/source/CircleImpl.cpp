@@ -27,6 +27,11 @@ Example::CircleImpl::CircleImpl() : m_radius(10.0)
     std::cout << "Circle ctor" << std::endl;
 }
 
+Example::CircleImpl::CircleImpl(const CircleImpl& other) : m_radius(other.m_radius)
+{
+    std::cout << "Circle copy ctor" << std::endl;
+}
+
 Example::CircleImpl::~CircleImpl()
 {
     std::cout << "Circle dtor" << std::endl;

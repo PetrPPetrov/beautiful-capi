@@ -27,6 +27,11 @@ Example::PrinterImpl::PrinterImpl()
     std::cout << "Printer ctor" << std::endl;
 }
 
+Example::PrinterImpl::PrinterImpl(const PrinterImpl& other)
+{
+    std::cout << "Printer copy ctor" << std::endl;
+}
+
 Example::PrinterImpl::~PrinterImpl()
 {
     std::cout << "Printer dtor" << std::endl;

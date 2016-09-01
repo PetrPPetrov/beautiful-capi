@@ -1,0 +1,13 @@
+./custom_suffix_client
+___std::cout___
+Printer ctor
+Hello Beautiful World!
+Scanner ctor
+scanning is done.
+Scanner dtor
+Plotter ctor
+plotter::draw()
+Plotter dtor
+Printer dtor
+___std::cerr___
+___eof___

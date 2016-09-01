@@ -1,0 +1,13 @@
+./raw_pointer_semantic_client
+___std::cout___
+Printer ctor
+print text: from create_printer()
+print text: from main()
+print text: from f1()
+Dumper ctor
+print text: Dumper::Dump(): dump some text here
+print text: printer2
+Printer dtor
+Dumper dtor
+___std::cerr___
+___eof___

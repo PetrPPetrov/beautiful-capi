@@ -28,6 +28,12 @@ Example::PageImpl::PageImpl() : mRefCount(1), mWidth(200), mHeight(100)
     std::cout << "Page ctor" << std::endl;
 }
 
+// By default newly created objects implies to have value 1 of reference counter
+Example::PageImpl::PageImpl(const PageImpl& other) : mRefCount(1), mWidth(other.mWidth), mHeight(other.mHeight)
+{
+    std::cout << "Page copy ctor! (should be never called)" << std::endl;
+}
+
 Example::PageImpl::~PageImpl()
 {
     std::cout << "Page dtor" << std::endl;

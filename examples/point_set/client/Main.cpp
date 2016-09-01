@@ -32,7 +32,7 @@ int main()
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
     PointSet::PointSetPtr set;
-    set.SetName("Pointy");
+    set.SetName("Points");
     {
         PointSet::PointsPtr points;
         points.Reserve(3);
@@ -52,7 +52,6 @@ int main()
             PointSet::Position pos = points->GetElement(i);
             std::cout << "\tpoint #" << i << " ("<< pos->GetX() << ", " << pos->GetY() << ", " << pos->GetZ() << ")" << std::endl;
         }
-
     }
     return EXIT_SUCCESS;
 }

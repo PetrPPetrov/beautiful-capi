@@ -34,6 +34,11 @@ namespace Example
                 std::cout << "Circle ctor" << std::endl;
             }
 
+            Circle(const Circle& other)
+            {
+                std::cout << "Circle copy ctor" << std::endl;
+            }
+
             virtual ~Circle()
             {
                 std::cout << "Circle dtor" << std::endl;

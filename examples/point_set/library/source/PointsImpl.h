@@ -23,6 +23,7 @@
 #define BEAUTIFUL_CAPI_POINT_SET_POINTS_H
 
 #include "PositionImpl.h"
+#include <iostream>
 #include <vector>
 #include <stddef.h>
 
@@ -34,7 +35,18 @@ namespace PointSet
         int mRefCount;
 
     public:
-        PointsImpl() : mRefCount(1) {}
+        PointsImpl() : mRefCount(1)
+        {
+            std::cout << "Points ctor" << std::endl;
+        }
+        PointsImpl(const PointsImpl& other) : mRefCount(1), mPoints(other.mPoints)
+        {
+            std::cout << "Points copy ctor! (should be never called)" << std::endl;
+        }
+        ~PointsImpl()
+        {
+            std::cout << "Points dtor" << std::endl;
+        }
 
         size_t Size() const { return mPoints.size(); }
         void Reserve(size_t capacity) { mPoints.reserve(capacity); }

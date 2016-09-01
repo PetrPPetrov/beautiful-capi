@@ -26,7 +26,6 @@
 #include <cstdlib>
 #include "Example/Example.h"
 
-
 int main()
 {
 #if defined(_WIN32) && defined(_DEBUG)

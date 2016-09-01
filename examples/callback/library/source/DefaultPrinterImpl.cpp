@@ -24,10 +24,17 @@
 
 Example::PrinterBaseImpl::PrinterBaseImpl() : mRefCount(1)
 {
+    std::cout << "PrinterBase ctor" << std::endl;
+}
+
+Example::PrinterBaseImpl::PrinterBaseImpl(const PrinterBaseImpl& other) : mRefCount(1)
+{
+    std::cout << "PrinterBase copy ctor! (should never be called)" << std::endl;
 }
 
 Example::PrinterBaseImpl::~PrinterBaseImpl()
 {
+    std::cout << "PrinterBase dtor" << std::endl;
 }
 
 void Example::PrinterBaseImpl::AddRef()
@@ -46,12 +53,17 @@ void Example::PrinterBaseImpl::Release()
 
 Example::DefaultPrinterImpl::DefaultPrinterImpl()
 {
-    std::cout << "DefaultPrinterImpl ctor" << std::endl;
+    std::cout << "DefaultPrinter ctor" << std::endl;
+}
+
+Example::DefaultPrinterImpl::DefaultPrinterImpl(const DefaultPrinterImpl& other) : mQuality(other.mQuality)
+{
+    std::cout << "DefaultPrinter copy ctor" << std::endl;
 }
 
 Example::DefaultPrinterImpl::~DefaultPrinterImpl()
 {
-    std::cout << "DefaultPrinterImpl dtor" << std::endl;
+    std::cout << "DefaultPrinter dtor" << std::endl;
 }
 
 void Example::DefaultPrinterImpl::Print(const char* text) const

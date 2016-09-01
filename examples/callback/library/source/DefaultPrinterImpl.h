@@ -32,6 +32,7 @@ namespace Example
         int mRefCount;
     public:
         PrinterBaseImpl();
+        PrinterBaseImpl(const PrinterBaseImpl& other);
         virtual ~PrinterBaseImpl(); // Virtual destructor is required here
         virtual void AddRef();
         virtual void Release();
@@ -42,6 +43,7 @@ namespace Example
         Example::IPrinter::EQuality mQuality;
     public:
         DefaultPrinterImpl();
+        DefaultPrinterImpl(const DefaultPrinterImpl& other);
         ~DefaultPrinterImpl();
         virtual void Print(const char* text) const;
         virtual void SetPrintingQuality(Example::IPrinter::EQuality quality);

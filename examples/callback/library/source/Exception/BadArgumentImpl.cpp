@@ -35,7 +35,7 @@ Exception::BadArgumentImpl::BadArgumentImpl(const std::string& message, const st
 }
 
 Exception::BadArgumentImpl::BadArgumentImpl(const BadArgumentImpl& other)
-    : GenericImpl(other)
+    : GenericImpl(other), mArgumentName(other.mArgumentName)
 {
     std::cout << "BadArgument copy ctor" << std::endl;
 }

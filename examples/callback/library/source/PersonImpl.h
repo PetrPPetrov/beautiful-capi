@@ -39,6 +39,7 @@ namespace Example
     public:
         PersonImpl();
         PersonImpl(const PersonImpl& other);
+        ~PersonImpl();
         void SetFirstName(const char* first_name);
         const char* GetFirstName() const;
         void SetSecondName(const char* second_name);

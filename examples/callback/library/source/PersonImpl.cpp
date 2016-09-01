@@ -29,6 +29,7 @@
 
 Example::PersonImpl::PersonImpl()
 {
+    std::cout << "Person ctor" << std::endl;
 }
 
 Example::PersonImpl::PersonImpl(const PersonImpl& other_person)
@@ -37,6 +38,12 @@ Example::PersonImpl::PersonImpl(const PersonImpl& other_person)
     age(other_person.age),
     sex(other_person.sex)
 {
+    std::cout << "Person copy ctor" << std::endl;
+}
+
+Example::PersonImpl::~PersonImpl()
+{
+    std::cout << "Person dtor" << std::endl;
 }
 
 void Example::PersonImpl::SetFirstName(const char* first_name)

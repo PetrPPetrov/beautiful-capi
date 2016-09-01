@@ -1,0 +1,9 @@
+./boost_shared_ptr_client
+___std::cout___
+Printer ctor
+from create_printer()
+from main()
+from f1()
+Printer dtor
+___std::cerr___
+___eof___

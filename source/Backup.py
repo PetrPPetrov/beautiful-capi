@@ -20,6 +20,7 @@
 #
 
 import os
+import subprocess
 import argparse
 import shutil
 
@@ -54,24 +55,78 @@ def backup_example(input_folder, example_name, base_backup_folder):
         shutil.copy(auto_gen_wrap_cpp, auto_gen_wrap_cpp_destination)
 
 
+def backup_test(input_folder, test_family, test_name, base_backup_folder):
+    base_test_library_folder = os.path.join(input_folder, 'tests', test_family, 'library')
+    test_include_folder = os.path.join(base_test_library_folder, 'include', test_name)
+    backup_include_folder = os.path.join(base_backup_folder, test_family, test_name, 'include')
+    shutil.copytree(test_include_folder, backup_include_folder)
+    test_snippets_folder = os.path.join(base_test_library_folder, 'source', 'snippets_' + test_name)
+    backup_snippets_folder = os.path.join(base_backup_folder, test_family, test_name, 'snippets')
+    if os.path.exists(test_snippets_folder):
+        shutil.copytree(test_snippets_folder, backup_snippets_folder)
+    auto_gen_wrap_cpp = os.path.join(base_test_library_folder, 'source', 'AutoGenWrap_{0}.cpp'.format(test_name))
+    auto_gen_wrap_cpp_destination = os.path.join(base_backup_folder, test_family, test_name, 'AutoGenWrap.cpp')
+    shutil.copy(auto_gen_wrap_cpp, auto_gen_wrap_cpp_destination)
+
+
+def run_example(input_folder, example_name, backup_file):
+    bin_folder = os.path.join(input_folder, 'bin')
+    os.chdir(bin_folder)
+
+    cs_popen = subprocess.Popen('./' + example_name + '_client', bufsize=-1, shell=False, stdout=subprocess.PIPE)
+    std_out, std_error = cs_popen.communicate()
+    cs_popen.wait()
+
+    with open(backup_file + '.run', 'wb') as output_file:
+        output_file.write(str.encode('{0}\n'.format('./' + example_name + '_client')))
+        output_file.write(str.encode('___std::cout___\n'))
+        if std_out:
+            output_file.write(std_out)
+        output_file.write(str.encode('___std::cerr___\n'))
+        if std_error:
+            output_file.write(std_error)
+        output_file.write(str.encode('___eof___\n'))
+
+
+def process_example(input_folder, example_name, base_backup_folder):
+    backup_example(input_folder, example_name, base_backup_folder)
+    run_example(input_folder, example_name, os.path.join(base_backup_folder, example_name, example_name))
+
+
+def process_test(input_folder, test_family, test_name, base_backup_folder):
+    backup_test(input_folder, test_family, test_name, base_backup_folder)
+    run_example(input_folder, '{0}_{1}'.format(test_family, test_name),
+                os.path.join(base_backup_folder, test_family, test_name, test_name))
+
+
 def backup_beautiful_capi(input_folder, output_folder):
     print('input folder: {0}'.format(input_folder))
     base_backup_folder = get_next_backup_folder(output_folder)
     print('output folder: {0}'.format(base_backup_folder))
-    backup_example(input_folder, 'boost_shared_ptr', base_backup_folder)
-    backup_example(input_folder, 'callback', base_backup_folder)
-    backup_example(input_folder, 'circular_reference', base_backup_folder)
-    backup_example(input_folder, 'copy_semantic', base_backup_folder)
-    backup_example(input_folder, 'custom_suffix', base_backup_folder)
-    backup_example(input_folder, 'down_cast', base_backup_folder)
-    backup_example(input_folder, 'exception', base_backup_folder)
-    backup_example(input_folder, 'hello_world', base_backup_folder)
-    backup_example(input_folder, 'object_parameter', base_backup_folder)
-    backup_example(input_folder, 'point_set', base_backup_folder)
-    backup_example(input_folder, 'raw_pointer_semantic', base_backup_folder)
-    backup_example(input_folder, 'reference_counted', base_backup_folder)
-    backup_example(input_folder, 'single_file', base_backup_folder)
-    backup_example(input_folder, 'virtual_interface', base_backup_folder)
+    process_example(input_folder, 'boost_shared_ptr', base_backup_folder)
+    process_example(input_folder, 'callback', base_backup_folder)
+    process_example(input_folder, 'circular_reference', base_backup_folder)
+    process_example(input_folder, 'copy_semantic', base_backup_folder)
+    process_example(input_folder, 'custom_suffix', base_backup_folder)
+    process_example(input_folder, 'down_cast', base_backup_folder)
+    process_example(input_folder, 'exception', base_backup_folder)
+    process_example(input_folder, 'hello_world', base_backup_folder)
+    process_example(input_folder, 'object_parameter', base_backup_folder)
+    process_example(input_folder, 'point_set', base_backup_folder)
+    process_example(input_folder, 'raw_pointer_semantic', base_backup_folder)
+    process_example(input_folder, 'reference_counted', base_backup_folder)
+    process_example(input_folder, 'single_file', base_backup_folder)
+    process_example(input_folder, 'virtual_interface', base_backup_folder)
+    process_test(input_folder, 'file_options', 'test00', base_backup_folder)
+    process_test(input_folder, 'file_options', 'test01', base_backup_folder)
+    process_test(input_folder, 'file_options', 'test02', base_backup_folder)
+    process_test(input_folder, 'file_options', 'test03', base_backup_folder)
+    process_test(input_folder, 'file_options', 'test04', base_backup_folder)
+    process_test(input_folder, 'file_options', 'test05', base_backup_folder)
+    process_test(input_folder, 'file_options', 'test06', base_backup_folder)
+    process_test(input_folder, 'file_options', 'test07', base_backup_folder)
+    process_test(input_folder, 'file_options', 'test08', base_backup_folder)
+    process_test(input_folder, 'file_options', 'test09', base_backup_folder)
 
 
 def main():

@@ -1,0 +1,29 @@
+./exception_client
+___std::cout___
+Printer ctor
+Scanner ctor
+Scanner power on
+Scanned text: Hello World!
+Scanner power off
+Printer power on
+print text: from main()
+Trying to show null pointer
+Generic ctor
+BadArgument ctor
+NullArgument ctor
+Generic copy ctor
+BadArgument copy ctor
+NullArgument copy ctor
+NullArgument dtor
+BadArgument dtor
+Generic dtor
+Scanner dtor
+Printer dtor
+    *** Exception::NullArgument was thrown
+    null argument
+    argument: text
+NullArgument dtor
+BadArgument dtor
+Generic dtor
+___std::cerr___
+___eof___

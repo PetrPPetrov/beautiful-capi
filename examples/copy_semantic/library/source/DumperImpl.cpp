@@ -27,7 +27,7 @@ Example::DumperImpl::DumperImpl()
     std::cout << "Dumper ctor" << std::endl;
 }
 
-Example::DumperImpl::DumperImpl(const Example::DumperImpl& other)
+Example::DumperImpl::DumperImpl(const Example::DumperImpl& other) : mPrinter(other.mPrinter)
 {
     std::cout << "Dumper copy ctor" << std::endl;
 }

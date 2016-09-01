@@ -32,6 +32,7 @@ namespace Example
         PageImpl* mPage; // better to use a smart-pointer here, but for this example (for simpilicity) we use raw pointer and manually call AddRef()\Release()
     public:
         DocumentImpl();
+        DocumentImpl(const DocumentImpl& other);
         ~DocumentImpl();
 
         void AddRef();

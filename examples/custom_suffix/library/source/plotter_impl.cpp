@@ -28,6 +28,12 @@ hello_world::plotter_impl::plotter_impl() : reference_count(1)
     std::cout << "Plotter ctor" << std::endl;
 }
 
+// By default newly created objects implies to have value 1 of reference counter
+hello_world::plotter_impl::plotter_impl(const plotter_impl& other) : reference_count(1)
+{
+    std::cout << "Plotter copy ctor!!! (should never be called)" << std::endl;
+}
+
 hello_world::plotter_impl::~plotter_impl()
 {
     std::cout << "Plotter dtor" << std::endl;

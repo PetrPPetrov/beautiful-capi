@@ -27,6 +27,11 @@ hello_world::printer_impl::printer_impl()
     std::cout << "Printer ctor" << std::endl;
 }
 
+hello_world::printer_impl::printer_impl(const printer_impl& other)
+{
+    std::cout << "Printer copy ctor" << std::endl;
+}
+
 hello_world::printer_impl::~printer_impl()
 {
     std::cout << "Printer dtor" << std::endl;

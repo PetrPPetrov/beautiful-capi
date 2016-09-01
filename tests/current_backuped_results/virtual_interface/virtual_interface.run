@@ -1,0 +1,13 @@
+./virtual_interface_client
+___std::cout___
+Triangle ctor
+Circle ctor
+Rectangle ctor
+Triangle::Show()
+Circle::Show()
+Rectangle::Show()
+Triangle dtor
+Circle dtor
+Rectangle dtor
+___std::cerr___
+___eof___

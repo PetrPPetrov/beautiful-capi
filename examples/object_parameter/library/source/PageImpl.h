@@ -33,6 +33,7 @@ namespace Example
         size_t mHeight;
     public:
         PageImpl();
+        PageImpl(const PageImpl& other);
         ~PageImpl();
 
         void AddRef();

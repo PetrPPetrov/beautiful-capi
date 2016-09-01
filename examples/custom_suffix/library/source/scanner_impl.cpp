@@ -27,6 +27,11 @@ hello_world::scanner_impl::scanner_impl()
     std::cout << "Scanner ctor" << std::endl;
 }
 
+hello_world::scanner_impl::scanner_impl(const scanner_impl& other)
+{
+    std::cout << "Scanner copy ctor" << std::endl;
+}
+
 hello_world::scanner_impl::~scanner_impl()
 {
     std::cout << "Scanner dtor" << std::endl;

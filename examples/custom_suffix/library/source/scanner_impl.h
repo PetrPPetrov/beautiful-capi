@@ -28,6 +28,7 @@ namespace hello_world
     {
     public:
         scanner_impl();
+        scanner_impl(const scanner_impl& other);
         ~scanner_impl();
         void scan() const;
     };
