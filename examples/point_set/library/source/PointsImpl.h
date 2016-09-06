@@ -35,10 +35,12 @@ namespace PointSet
         int mRefCount;
 
     public:
+        // By default newly created objects implies to have value 1 of reference counter
         PointsImpl() : mRefCount(1)
         {
             std::cout << "Points ctor" << std::endl;
         }
+        // By default newly created objects implies to have value 1 of reference counter
         PointsImpl(const PointsImpl& other) : mRefCount(1), mPoints(other.mPoints)
         {
             std::cout << "Points copy ctor! (should be never called)" << std::endl;

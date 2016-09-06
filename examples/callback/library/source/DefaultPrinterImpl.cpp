@@ -22,11 +22,13 @@
 #include <iostream>
 #include "DefaultPrinterImpl.h"
 
+// By default newly created objects implies to have value 1 of reference counter
 Example::PrinterBaseImpl::PrinterBaseImpl() : mRefCount(1)
 {
     std::cout << "PrinterBase ctor" << std::endl;
 }
 
+// By default newly created objects implies to have value 1 of reference counter
 Example::PrinterBaseImpl::PrinterBaseImpl(const PrinterBaseImpl& other) : mRefCount(1)
 {
     std::cout << "PrinterBase copy ctor! (should never be called)" << std::endl;

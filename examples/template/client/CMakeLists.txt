@@ -18,23 +18,17 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-project(examples)
+project(template_client)
 
 cmake_minimum_required(VERSION 2.8)
 
-add_subdirectory(hello_world)
-add_subdirectory(reference_counted)
-add_subdirectory(copy_semantic)
-add_subdirectory(raw_pointer_semantic)
-add_subdirectory(virtual_interface)
-add_subdirectory(single_file)
-add_subdirectory(object_parameter)
-add_subdirectory(circular_reference)
-add_subdirectory(custom_suffix)
-add_subdirectory(boost_shared_ptr)
-add_subdirectory(down_cast)
-add_subdirectory(point_set)
-add_subdirectory(exception)
-add_subdirectory(callback)
-add_subdirectory(clanguage)
-add_subdirectory(template)
+include_directories(${template_client_SOURCE_DIR}/../library/include)
+
+add_executable(template_client
+  ${template_client_SOURCE_DIR}/Main.cpp
+)
+
+if(TARGET template)
+  add_dependencies(template_client template)
+endif()
+target_link_libraries(template_client template)

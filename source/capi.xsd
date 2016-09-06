@@ -5,7 +5,7 @@
     <xs:sequence>
       <xs:element name="namespace" minOccurs="1" maxOccurs="unbounded" type="TNamespace"/>
     </xs:sequence>
-    <xs:attribute name="project_name" type="xs:string" use="required"/>
+    <xs:attribute name="project_name" type="xs:string" use="optional" />
   </xs:complexType>
   <xs:complexType name="TApiInclude">
     <xs:attribute name="path" type="xs:string" use="required"/>
@@ -19,6 +19,7 @@
         <xs:element name="class" minOccurs="0" maxOccurs="unbounded" type="TClass"/>
         <xs:element name="callback" minOccurs="0" maxOccurs="unbounded" type="TCallback"/>
         <xs:element name="function" minOccurs="0" maxOccurs="unbounded" type="TFunction"/>
+        <xs:element name="template" minOccurs="0" maxOccurs="unbounded" type="TTemplate"/>
       </xs:choice>
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required"/>
@@ -34,6 +35,23 @@
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required"/>
     <xs:attribute name="underlying_type" type="xs:string" use="required"/>
+  </xs:complexType>
+  <xs:complexType name="TTemplate">
+    <xs:sequence>
+      <xs:element name="argument" minOccurs="0" maxOccurs="unbounded" type="TArgument"/>
+      <xs:element name="instantiation" minOccurs="1" maxOccurs="unbounded" type="TInstantiation"/>
+      <xs:element name="class" minOccurs="1" maxOccurs="1" type="TClass"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+  </xs:complexType>
+  <xs:complexType name="TInstantiation">
+    <xs:sequence>
+      <xs:element name="argument"  minOccurs="1" maxOccurs="unbounded" type="TInstantiationArgument"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TInstantiationArgument">
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="value" type="xs:string" use="required"/>
   </xs:complexType>
   <xs:complexType name="TClass">
     <xs:sequence>
@@ -54,6 +72,7 @@
     <xs:attribute name="requires_cast_to_base" type="xs:boolean" use="optional" default="true"/>
     <xs:attribute name="pointer_access" type="xs:boolean" use="optional" default="false"/>
     <xs:attribute name="exception" type="xs:boolean" use="optional" default="false"/>
+    <xs:attribute name="template_line" type="xs:string" use="optional" default=""/>
     <xs:attribute name="copy_or_add_ref_noexcept" type="xs:boolean" use="optional" default="false"/>
     <xs:attribute name="delete_or_release_noexcept" type="xs:boolean" use="optional" default="false"/>
   </xs:complexType>

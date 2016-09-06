@@ -23,6 +23,7 @@
 import os
 import posixpath
 import FileGenerator
+import Helpers
 from TraitsBase import TraitsBase
 
 
@@ -158,7 +159,7 @@ class MultipleFiles(FileTraitsBase):
         if self.capi_generator.params_description.file_per_class:
             return join_traits.join(
                 self.__get_file_name_base_for_namespace_common(namespace_path, join_traits),
-                cur_class.name + '.h'
+                Helpers.replace_template_to_filename(cur_class.name) + '.h'
             )
         else:
             return self.__get_file_name_for_namespace(namespace_path, join_traits)

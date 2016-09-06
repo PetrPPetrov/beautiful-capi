@@ -44,34 +44,6 @@ namespace Exception {
 template<typename TargetType, typename SourceType>
 TargetType down_cast(const SourceType&);
 
-template<>
-inline Exception::BadArgument down_cast(const Exception::Generic& input_object)
-{
-    struct raw_pointer_holder { void* raw_pointer; };
-    return Exception::BadArgument(exception_generic_cast_to_exception_badargument(reinterpret_cast<const raw_pointer_holder*>(&input_object)->raw_pointer), true);
-}
-
-template<>
-inline Exception::NullArgument down_cast(const Exception::BadArgument& input_object)
-{
-    struct raw_pointer_holder { void* raw_pointer; };
-    return Exception::NullArgument(exception_badargument_cast_to_exception_nullargument(reinterpret_cast<const raw_pointer_holder*>(&input_object)->raw_pointer), true);
-}
-
-template<>
-inline Exception::NullArgument down_cast(const Exception::Generic& input_object)
-{
-    struct raw_pointer_holder { void* raw_pointer; };
-    return Exception::NullArgument(exception_generic_cast_to_exception_nullargument(reinterpret_cast<const raw_pointer_holder*>(&input_object)->raw_pointer), true);
-}
-
-template<>
-inline Exception::DivisionByZero down_cast(const Exception::Generic& input_object)
-{
-    struct raw_pointer_holder { void* raw_pointer; };
-    return Exception::DivisionByZero(exception_generic_cast_to_exception_divisionbyzero(reinterpret_cast<const raw_pointer_holder*>(&input_object)->raw_pointer), true);
-}
-
 }
 
 #endif /* __cplusplus */

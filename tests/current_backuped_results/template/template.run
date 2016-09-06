@@ -1,0 +1,285 @@
+./template_client
+___std::cout___
+Vector ctor
+Vector has 4 elements
+5 7 3 10 
+Vector ctor
+Vector has 2 elements
+3.14 2.71 
+Position ctor
+X: 0 Y: 15.5 Z: 0 
+Position ctor
+Position4D ctor
+X: 0 Y: 0 Z: 0 
+W: 0.5 
+Vector ctor
+Position ctor
+Position4D ctor
+Position copy ctor
+Position4D copy ctor
+Position copy ctor
+Position4D copy ctor
+Position4D dtor
+Position dtor
+Position4D dtor
+Position dtor
+Position ctor
+Position4D ctor
+Position copy ctor
+Position4D copy ctor
+Position copy ctor
+Position4D copy ctor
+Position4D dtor
+Position dtor
+Position copy ctor
+Position4D copy ctor
+Position4D dtor
+Position dtor
+Position4D dtor
+Position dtor
+Vector has 2 elements
+Position copy ctor
+Position4D copy ctor
+Position copy ctor
+Position4D copy ctor
+Position4D dtor
+Position dtor
+Position copy ctor
+Position4D copy ctor
+X: 0 Y: 0 Z: 0 
+W: 1 
+Position4D dtor
+Position dtor
+Position4D dtor
+Position dtor
+Position copy ctor
+Position4D copy ctor
+Position copy ctor
+Position4D copy ctor
+Position4D dtor
+Position dtor
+Position copy ctor
+Position4D copy ctor
+X: 0 Y: 0 Z: 0 
+W: 1 
+Position4D dtor
+Position dtor
+Position4D dtor
+Position dtor
+
+Vector ctor
+Position copy ctor
+Position4D copy ctor
+Position copy ctor
+Position4D copy ctor
+Vector copy ctor
+Position copy ctor
+Position4D copy ctor
+Position copy ctor
+Position4D copy ctor
+Vector copy ctor
+Vector dtor
+Position4D dtor
+Position dtor
+Position4D dtor
+Position dtor
+Position copy ctor
+Position4D copy ctor
+Position copy ctor
+Position4D copy ctor
+Vector copy ctor
+Position copy ctor
+Position4D copy ctor
+Position copy ctor
+Position4D copy ctor
+Vector copy ctor
+Vector dtor
+Position4D dtor
+Position dtor
+Position4D dtor
+Position dtor
+Position copy ctor
+Position4D copy ctor
+Position copy ctor
+Position4D copy ctor
+Vector copy ctor
+Vector dtor
+Position4D dtor
+Position dtor
+Position4D dtor
+Position dtor
+Vector has 2 elements
+Position copy ctor
+Position4D copy ctor
+Position copy ctor
+Position4D copy ctor
+Vector copy ctor
+Position copy ctor
+Position4D copy ctor
+Position copy ctor
+Position4D copy ctor
+Vector copy ctor
+Vector dtor
+Position4D dtor
+Position dtor
+Position4D dtor
+Position dtor
+Position copy ctor
+Position4D copy ctor
+Position copy ctor
+Position4D copy ctor
+Vector copy ctor
+Vector has 2 elements
+Position copy ctor
+Position4D copy ctor
+Position copy ctor
+Position4D copy ctor
+Position4D dtor
+Position dtor
+Position copy ctor
+Position4D copy ctor
+X: 0 Y: 0 Z: 0 
+W: 1 
+Position4D dtor
+Position dtor
+Position4D dtor
+Position dtor
+Position copy ctor
+Position4D copy ctor
+Position copy ctor
+Position4D copy ctor
+Position4D dtor
+Position dtor
+Position copy ctor
+Position4D copy ctor
+X: 0 Y: 0 Z: 0 
+W: 1 
+Position4D dtor
+Position dtor
+Position4D dtor
+Position dtor
+
+Vector dtor
+Position4D dtor
+Position dtor
+Position4D dtor
+Position dtor
+Vector dtor
+Position4D dtor
+Position dtor
+Position4D dtor
+Position dtor
+Position copy ctor
+Position4D copy ctor
+Position copy ctor
+Position4D copy ctor
+Vector copy ctor
+Position copy ctor
+Position4D copy ctor
+Position copy ctor
+Position4D copy ctor
+Vector copy ctor
+Vector dtor
+Position4D dtor
+Position dtor
+Position4D dtor
+Position dtor
+Position copy ctor
+Position4D copy ctor
+Position copy ctor
+Position4D copy ctor
+Vector copy ctor
+Vector has 2 elements
+Position copy ctor
+Position4D copy ctor
+Position copy ctor
+Position4D copy ctor
+Position4D dtor
+Position dtor
+Position copy ctor
+Position4D copy ctor
+X: 0 Y: 0 Z: 0 
+W: 1 
+Position4D dtor
+Position dtor
+Position4D dtor
+Position dtor
+Position copy ctor
+Position4D copy ctor
+Position copy ctor
+Position4D copy ctor
+Position4D dtor
+Position dtor
+Position copy ctor
+Position4D copy ctor
+X: 0 Y: 0 Z: 0 
+W: 1 
+Position4D dtor
+Position dtor
+Position4D dtor
+Position dtor
+
+Vector dtor
+Position4D dtor
+Position dtor
+Position4D dtor
+Position dtor
+Vector dtor
+Position4D dtor
+Position dtor
+Position4D dtor
+Position dtor
+
+VectorOfObjects ctor
+Position ctor
+Model ctor
+Position ctor
+Model ctor
+Vector has 2 elements
+Model
+name: model1
+Position copy ctor
+Position copy ctor
+Position dtor
+Position copy ctor
+X: 0 Y: 0 Z: 0 
+Position dtor
+Position dtor
+Model
+name: model2
+Position copy ctor
+Position copy ctor
+Position dtor
+Position copy ctor
+X: 0 Y: 0 Z: 0 
+Position dtor
+Position dtor
+
+VectorOfObjects dtor
+Model dtor
+Position dtor
+Model dtor
+Position dtor
+Vector dtor
+Vector dtor
+Position4D dtor
+Position dtor
+Position4D dtor
+Position dtor
+Vector dtor
+Position4D dtor
+Position dtor
+Position4D dtor
+Position dtor
+Vector dtor
+Position4D dtor
+Position dtor
+Position4D dtor
+Position dtor
+Position4D dtor
+Position dtor
+Position dtor
+Vector dtor
+Vector dtor
+___std::cerr___
+___eof___

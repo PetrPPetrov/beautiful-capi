@@ -94,10 +94,6 @@ typedef int (*example_customprinter_getdevicetype_callback_type)(beautiful_capi_
     #error "Unknown platform"
 #endif
 
-EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_generic_cast_to_exception_badargument(void* object_pointer);
-EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_badargument_cast_to_exception_nullargument(void* object_pointer);
-EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_generic_cast_to_exception_nullargument(void* object_pointer);
-EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_generic_cast_to_exception_divisionbyzero(void* object_pointer);
 EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_generic_copy(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
 EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_generic_new(beautiful_capi_callback_exception_info_t* exception_info);
 EXCEPTION_API void EXCEPTION_API_CONVENTION exception_generic_delete(void* object_pointer);

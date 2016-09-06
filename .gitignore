@@ -20,6 +20,7 @@ bin/
 /examples/exception/library/include/
 /examples/callback/library/include/
 /examples/clanguage/library/include/
+/examples/template/library/include/
 /tests/file_options/library/include/
 AutoGen*
 auto_gen*

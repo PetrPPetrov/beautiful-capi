@@ -26,6 +26,17 @@ class TraitsBase(object):
     def __init__(self, cur_class, capi_generator):
         self.cur_class = cur_class
         self.capi_generator = capi_generator
+        try:
+            self.cur_extra_info = None
+            if cur_class:
+                self.cur_extra_info = capi_generator.extra_info[cur_class]
+            self.cur_base_extra_info = None
+            if self.cur_class and self.cur_class.base:
+                base_class_type = capi_generator.get_class_type(self.cur_class.base)
+                if base_class_type:
+                    self.cur_base_extra_info = self.capi_generator.extra_info[base_class_type]
+        except:
+            pass
 
     def put_line(self, line, eol='\n'):
         self.capi_generator.output_header.put_line(line, eol)
@@ -50,3 +61,15 @@ class TraitsBase(object):
 
     def indent_scope_source(self):
         return FileGenerator.IndentScope(self.capi_generator.output_source)
+
+    def get_cur_class_short_name(self):
+        return self.cur_extra_info.get_class_short_name()
+
+    def get_cur_class_name(self):
+        return self.cur_extra_info.get_class_name()
+
+    def get_base_class_short_name(self):
+        return self.cur_base_extra_info.get_class_short_name()
+
+    def get_base_class_name(self):
+        return self.cur_base_extra_info.get_class_name()

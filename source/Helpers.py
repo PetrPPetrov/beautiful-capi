@@ -24,6 +24,7 @@ from Parser import TConstructor
 from Parser import TCodeBlock
 from Parser import TCodeLine
 from Parser import TLifecycle
+from LifecycleTraits import CreateLifecycleTraits
 
 
 def pascal_to_stl(pascal_name):
@@ -39,6 +40,105 @@ def pascal_to_stl(pascal_name):
             else:
                 result += letter
     return result
+
+
+def replace_template_to_filename(template_name):
+    return template_name.replace('<', '_').replace('>', '').replace('::', '').replace('*', 'p').replace(' ', '')
+
+
+def replace_template_to_c_id(template_name):
+    return template_name.replace('<', '_').replace('>', '').replace('::', '').replace('*', 'p').replace(' ', '')
+
+
+def replace_double_greater(template_name):
+    while template_name.find('>>') != -1:
+        template_name = template_name.replace('>>', '> >')
+    return template_name
+
+
+def get_template_name(type_name):
+    if type_name.find('<') == -1:
+        return type_name
+    else:
+        return type_name[:type_name.find('<')]
+
+
+def get_template_tail(type_name):
+    if type_name.find('<') == -1:
+        return ''
+    else:
+        return type_name[type_name.find('<'):]
+
+
+def get_template_arguments_count(type_name):
+    if type_name.find('<') == -1:
+        return 0
+    level = 0
+    index = type_name.find('<')
+    arguments_count = 1
+    while index < len(type_name):
+        if type_name[index] == '<':
+            level += 1
+        elif type_name[index] == '>':
+            level -= 1
+        elif level == 1 and type_name[index] == ',':
+            arguments_count += 1
+        index += 1
+    return arguments_count
+
+
+def get_template_argument(type_name, argument_index):
+    if type_name.find('<') == -1:
+        return None
+    level = 0
+    index = type_name.find('<')
+    cur_argument_index = 0
+    cur_argument_value = ''
+    while index < len(type_name):
+        if type_name[index] == '>':
+            level -= 1
+        if level == 1 and type_name[index] == ',':
+            if cur_argument_index == argument_index:
+                return cur_argument_value.strip()
+            cur_argument_index += 1
+            cur_argument_value = ''
+        elif level > 0:
+            cur_argument_value += type_name[index]
+        if type_name[index] == '<':
+            level += 1
+        index += 1
+    if cur_argument_index == argument_index:
+        return cur_argument_value.strip()
+    else:
+        return None
+
+
+def replace_template_argument(type_name, argument_index, new_value):
+    if type_name.find('<') == -1:
+        return type_name
+    level = 0
+    index = type_name.find('<')
+    cur_argument_index = 0
+    cur_argument_start = index + 1
+    while index < len(type_name):
+        if type_name[index] == '>':
+            level -= 1
+        if level == 1 and type_name[index] == ',':
+            if cur_argument_index == argument_index:
+                return (type_name[:cur_argument_start] + new_value + type_name[index:]).strip()
+            cur_argument_index += 1
+            cur_argument_start = index + 1
+        if type_name[index] == '<':
+            level += 1
+        index += 1
+    if cur_argument_index == argument_index:
+        return (type_name[:cur_argument_start] + new_value + '>').strip()
+    else:
+        return None
+
+
+def format_type(type_name):
+    return replace_double_greater(type_name)
 
 
 def get_self(cur_class):

@@ -19,43 +19,54 @@
  *
  */
 
-#ifndef BEAUTIFUL_CAPI_POINT_SET_POINTSET_H
-#define BEAUTIFUL_CAPI_POINT_SET_POINTSET_H
+#ifndef BEAUTIFUL_CAPI_TEMPLATE_MODELIMPL_H
+#define BEAUTIFUL_CAPI_TEMPLATE_MODELIMPL_H
 
-#include "PointsImpl.h"
-#include <string>
+#include <vector>
 #include <iostream>
-#include "boost/smart_ptr/intrusive_ptr.hpp"
+#include "PositionImpl.h"
 
-namespace PointSet
+namespace Example
 {
-    class PointSetImpl
+    template<typename WorkType>
+    class ModelImpl
     {
-        boost::intrusive_ptr<PointsImpl> mPoints;
-        std::string mName;
         int mRefCount;
+        Example::PositionImpl<WorkType> mPosition;
+        std::string mName;
 
     public:
         // By default newly created objects implies to have value 1 of reference counter
-        PointSetImpl() : mRefCount(1)
+        ModelImpl() : mRefCount(1)
         {
-            std::cout << "PointSet ctor" << std::endl;
+            std::cout << "Model ctor" << std::endl;
         }
         // By default newly created objects implies to have value 1 of reference counter
-        PointSetImpl(const PointSetImpl& other) : mRefCount(1), mName(other.mName), mPoints(other.mPoints)
+        ModelImpl(const ModelImpl& other) : mRefCount(1), mPosition(other.mPoints)
         {
-            std::cout << "PointSet copy ctor! (should be never called)" << std::endl;
+            std::cout << "Model copy ctor! (should be never called)" << std::endl;
         }
-        ~PointSetImpl()
+        ~ModelImpl()
         {
-            std::cout << "PointSet dtor" << std::endl;
+            std::cout << "Model dtor" << std::endl;
         }
 
-        const char* GetName() const { return mName.c_str(); }
-        void SetName(const char* name) { mName = name; }
-
-        PointsImpl* GetPoints() const { return mPoints.get(); }
-        void SetPoints(PointsImpl* points) { mPoints = points; }
+        const char* GetName() const
+        {
+            return mName.c_str();
+        }
+        void SetName(const char* name)
+        {
+            mName = name;
+        }
+        Example::PositionImpl<WorkType> GetPosition() const
+        {
+            return mPosition;
+        }
+        void SetPosition(Example::PositionImpl<WorkType> position)
+        {
+            mPosition = position;
+        }
 
         void AddRef() { if (this) ++mRefCount; }
         void Release()
@@ -71,15 +82,17 @@ namespace PointSet
         }
     };
 
-    inline void intrusive_ptr_add_ref(PointSetImpl* printer)
+    template<typename WorkType>
+    inline void intrusive_ptr_add_ref(ModelImpl<WorkType>* printer)
     {
         printer->AddRef();
     }
 
-    inline void intrusive_ptr_release(PointSetImpl* printer)
+    template<typename WorkType>
+    inline void intrusive_ptr_release(ModelImpl<WorkType>* printer)
     {
         printer->Release();
     }
 }
 
-#endif /* BEAUTIFUL_CAPI_POINT_SET_POINTSET_H */
+#endif /* BEAUTIFUL_CAPI_TEMPLATE_MODELIMPL_H */

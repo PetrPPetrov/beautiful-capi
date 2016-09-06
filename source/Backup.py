@@ -117,6 +117,7 @@ def backup_beautiful_capi(input_folder, output_folder):
     process_example(input_folder, 'reference_counted', base_backup_folder)
     process_example(input_folder, 'single_file', base_backup_folder)
     process_example(input_folder, 'virtual_interface', base_backup_folder)
+    process_example(input_folder, 'template', base_backup_folder)
     process_test(input_folder, 'file_options', 'test00', base_backup_folder)
     process_test(input_folder, 'file_options', 'test01', base_backup_folder)
     process_test(input_folder, 'file_options', 'test02', base_backup_folder)

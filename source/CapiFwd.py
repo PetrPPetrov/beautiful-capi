@@ -64,15 +64,26 @@ def process_fwd(capi_generator, namespace):
 def generate_forwards(capi_generator, namespace):
     capi_generator.output_header.put_line('namespace {0}'.format(namespace.name))
     with FileGenerator.IndentScope(capi_generator.output_header):
-        for cur_class in namespace.classes:
-            with CreateLifecycleTraits(cur_class, capi_generator):
+        for cur_template in namespace.templates:
+            with CreateLifecycleTraits(cur_template.classes[0], capi_generator):
+                template_arguments = ', '.join(
+                    ['{0} {1}'.format(argument.type_name, argument.name) for argument in cur_template.arguments])
+                capi_generator.output_header.put_line('template<{0}>'.format(template_arguments))
                 capi_generator.output_header.put_line('class {0};'.format(
-                    cur_class.name + capi_generator.lifecycle_traits.get_suffix()))
-                capi_generator.output_header.put_line(
-                    'typedef {0}::forward_pointer_holder<{1}> {2};'.format(
-                        capi_generator.params_description.beautiful_capi_namespace,
-                        cur_class.name + capi_generator.lifecycle_traits.get_suffix(),
-                        cur_class.name + capi_generator.params_description.forward_typedef_suffix))
+                    cur_template.name + capi_generator.lifecycle_traits.get_suffix()))
+        for cur_class in namespace.classes:
+            cur_extra_info = capi_generator.extra_info[cur_class]
+            with CreateLifecycleTraits(cur_class, capi_generator):
+                if cur_class.template_line:
+                    capi_generator.output_header.put_line(cur_class.template_line)
+                capi_generator.output_header.put_line('class {0};'.format(
+                    cur_extra_info.get_class_short_name()))
+                if not cur_class.template_line:
+                    capi_generator.output_header.put_line(
+                        'typedef {0}::forward_pointer_holder<{1}> {2};'.format(
+                            capi_generator.params_description.beautiful_capi_namespace,
+                            cur_class.name + capi_generator.lifecycle_traits.get_suffix(),
+                            cur_class.name + capi_generator.params_description.forward_typedef_suffix))
         for nested_namespace in namespace.namespaces:
             with NamespaceScope(capi_generator.cur_namespace_path, nested_namespace):
                 generate_forwards(capi_generator, nested_namespace)

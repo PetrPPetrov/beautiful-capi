@@ -94,6 +94,7 @@ class TNamespace(object):
         self.classes = []
         self.callbacks = []
         self.functions = []
+        self.templates = []
     
     def load(self, dom_node):
         for element in [node for node in dom_node.childNodes if node.nodeName == "include"]:
@@ -120,6 +121,10 @@ class TNamespace(object):
             new_element = TFunction()
             new_element.load(element)
             self.functions.append(new_element)
+        for element in [node for node in dom_node.childNodes if node.nodeName == "template"]:
+            new_element = TTemplate()
+            new_element.load(element)
+            self.templates.append(new_element)
         if dom_node.hasAttribute("name"):
             cur_attr = dom_node.getAttribute("name")
             self.name = cur_attr
@@ -171,6 +176,62 @@ class TEnumeration(object):
             self.underlying_type_filled = True
     
 
+class TTemplate(object):
+    def __init__(self):
+        self.name = ""
+        self.name_filled = False
+        self.arguments = []
+        self.instantiations = []
+        self.classes = []
+    
+    def load(self, dom_node):
+        for element in [node for node in dom_node.childNodes if node.nodeName == "argument"]:
+            new_element = TArgument()
+            new_element.load(element)
+            self.arguments.append(new_element)
+        for element in [node for node in dom_node.childNodes if node.nodeName == "instantiation"]:
+            new_element = TInstantiation()
+            new_element.load(element)
+            self.instantiations.append(new_element)
+        for element in [node for node in dom_node.childNodes if node.nodeName == "class"]:
+            new_element = TClass()
+            new_element.load(element)
+            self.classes.append(new_element)
+        if dom_node.hasAttribute("name"):
+            cur_attr = dom_node.getAttribute("name")
+            self.name = cur_attr
+            self.name_filled = True
+    
+
+class TInstantiation(object):
+    def __init__(self):
+        self.arguments = []
+    
+    def load(self, dom_node):
+        for element in [node for node in dom_node.childNodes if node.nodeName == "argument"]:
+            new_element = TInstantiationArgument()
+            new_element.load(element)
+            self.arguments.append(new_element)
+    
+
+class TInstantiationArgument(object):
+    def __init__(self):
+        self.name = ""
+        self.name_filled = False
+        self.value = ""
+        self.value_filled = False
+    
+    def load(self, dom_node):
+        if dom_node.hasAttribute("name"):
+            cur_attr = dom_node.getAttribute("name")
+            self.name = cur_attr
+            self.name_filled = True
+        if dom_node.hasAttribute("value"):
+            cur_attr = dom_node.getAttribute("value")
+            self.value = cur_attr
+            self.value_filled = True
+    
+
 class TClass(object):
     def __init__(self):
         self.name = ""
@@ -191,6 +252,8 @@ class TClass(object):
         self.pointer_access_filled = False
         self.exception = False
         self.exception_filled = False
+        self.template_line = ""
+        self.template_line_filled = False
         self.copy_or_add_ref_noexcept = False
         self.copy_or_add_ref_noexcept_filled = False
         self.delete_or_release_noexcept = False
@@ -268,6 +331,10 @@ class TClass(object):
             cur_attr = dom_node.getAttribute("exception")
             self.exception = string_to_bool(cur_attr)
             self.exception_filled = True
+        if dom_node.hasAttribute("template_line"):
+            cur_attr = dom_node.getAttribute("template_line")
+            self.template_line = cur_attr
+            self.template_line_filled = True
         if dom_node.hasAttribute("copy_or_add_ref_noexcept"):
             cur_attr = dom_node.getAttribute("copy_or_add_ref_noexcept")
             self.copy_or_add_ref_noexcept = string_to_bool(cur_attr)

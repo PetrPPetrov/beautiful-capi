@@ -22,6 +22,7 @@
 import FileGenerator
 import Helpers
 from LifecycleTraits import CreateLifecycleTraits
+from Parser import TLifecycle
 
 
 def generate_down_cast(output_file, cur_class, base_class, capi_generator):
@@ -60,7 +61,8 @@ def generate_down_cast(output_file, cur_class, base_class, capi_generator):
 
 
 def generate_down_casts_for_class(output_file, cur_class, capi_generator):
-    if cur_class.base:
+    # TODO: allow down_cast for boost::shared_ptr with copy semantic
+    if cur_class.base and cur_class.lifecycle != TLifecycle.copy_semantic:
         cur_base_class = cur_class
         while cur_base_class.base:
             extra_info_entry = capi_generator.extra_info[cur_base_class]

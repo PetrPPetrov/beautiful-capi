@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<template:api xmlns:template="http://gkmsoft.ru/beautifulcapi" project_name="Template">
+  <namespace name="Example">
+    <template name="Position">
+      <argument name="WorkType" type="typename"/>
+      <instantiation>
+        <argument name="WorkType" value="float"/>
+      </instantiation>
+      <instantiation>
+        <argument name="WorkType" value="double"/>
+      </instantiation>
+      <class name="Position" lifecycle="copy_semantic" implementation_class_name="Example::PositionImpl&lt;WorkType>" implementation_class_header="PositionImpl.h">
+        <constructor name="Default"/>
+        <method name="GetX" return="WorkType" const="true"/>
+        <method name="SetX">
+          <argument type="WorkType" name="x"/>
+        </method>
+        <method name="GetY" return="WorkType" const="true"/>
+        <method name="SetY">
+          <argument type="WorkType" name="y"/>
+        </method>
+        <method name="GetZ" return="WorkType" const="true"/>
+        <method name="SetZ">
+          <argument type="WorkType" name="z"/>
+        </method>
+      </class>
+    </template>
+    <template name="Position4D">
+      <argument name="WorkType" type="typename"/>
+      <instantiation>
+        <argument name="WorkType" value="float"/>
+      </instantiation>
+      <instantiation>
+        <argument name="WorkType" value="double"/>
+      </instantiation>
+      <class name="Position4D" lifecycle="copy_semantic" base="Example::Position&lt;WorkType>" implementation_class_name="Example::Position4DImpl&lt;WorkType>" implementation_class_header="PositionImpl.h">
+        <constructor name="Default"/>
+        <method name="GetW" return="WorkType" const="true"/>
+        <method name="SetW">
+          <argument type="WorkType" name="x"/>
+        </method>
+      </class>
+    </template>
+    <template name="Model">
+      <argument name="WorkType" type="typename"/>
+      <instantiation>
+        <argument name="WorkType" value="float"/>
+      </instantiation>
+      <instantiation>
+        <argument name="WorkType" value="double"/>
+      </instantiation>
+      <class name="Model" lifecycle="reference_counted" implementation_class_name="Example::ModelImpl&lt;WorkType>" implementation_class_header="ModelImpl.h">
+        <constructor name="Default"/>
+        <method name="GetName" return="const char*" const="true"/>
+        <method name="SetName">
+          <argument type="const char*" name="name"/>
+        </method>
+        <method name="GetPosition" return="Example::Position&lt;WorkType>" const="true"/>
+        <method name="SetPosition">
+          <argument type="Example::Position&lt;WorkType>" name="position"/>
+        </method>
+      </class>
+    </template>
+    <template name="VectorOf">
+      <argument name="T" type="typename"/>
+      <instantiation>
+        <argument name="T" value="int"/>
+      </instantiation>
+      <instantiation>
+        <argument name="T" value="double"/>
+      </instantiation>
+      <instantiation>
+        <argument name="T" value="Example::Position&lt;float>"/>
+      </instantiation>
+      <instantiation>
+        <argument name="T" value="Example::Position&lt;double>"/>
+      </instantiation>
+      <instantiation>
+        <argument name="T" value="Example::Position4D&lt;float>"/>
+      </instantiation>
+      <instantiation>
+        <argument name="T" value="Example::Position4D&lt;double>"/>
+      </instantiation>
+      <instantiation>
+        <argument name="T" value="Example::VectorOf&lt;Example::Position4D&lt;float>>"/>
+      </instantiation>
+      <class name="VectorOf" lifecycle="copy_semantic" implementation_class_name="Example::VectorImpl&lt;T>" implementation_class_header="VectorImpl.h">
+        <constructor name="Default"/>
+        <method name="GetSize" return="int" const="true"/>
+        <method name="Clear"/>
+        <method name="PushBack">
+          <argument type="T" name="value"/>
+        </method>
+        <method name="GetItem" return="T" const="true">
+          <argument type="int" name="index"/>
+        </method>
+      </class>
+    </template>
+    <template name="VectorOfObjects">
+      <argument name="T" type="typename"/>
+      <instantiation>
+        <argument name="T" value="Example::Model&lt;float>"/>
+      </instantiation>
+      <instantiation>
+        <argument name="T" value="Example::Model&lt;double>"/>
+      </instantiation>
+      <class name="VectorOfObjects" lifecycle="reference_counted" implementation_class_name="Example::VectorOfObjectsImpl&lt;T>" implementation_class_header="VectorImpl.h">
+        <constructor name="Default"/>
+        <method name="GetSize" return="int" const="true"/>
+        <method name="Clear"/>
+        <method name="PushBack">
+          <argument type="T" name="value"/>
+        </method>
+        <method name="GetItem" return="T" const="true">
+          <argument type="int" name="index"/>
+        </method>
+      </class>
+    </template>
+  </namespace>
+</template:api>
