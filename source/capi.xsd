@@ -5,7 +5,10 @@
     <xs:sequence>
       <xs:element name="namespace" minOccurs="1" maxOccurs="unbounded" type="TNamespace"/>
     </xs:sequence>
-    <xs:attribute name="project_name" type="xs:string" use="optional" />
+    <xs:attribute name="project_name" type="xs:string" use="optional"/>
+    <xs:attribute name="major_version" type="xs:integer" use="optional" default="1"/>
+    <xs:attribute name="minor_version" type="xs:integer" use="optional" default="0"/>
+    <xs:attribute name="patch_version" type="xs:integer" use="optional" default="0"/>
   </xs:complexType>
   <xs:complexType name="TApiInclude">
     <xs:attribute name="path" type="xs:string" use="required"/>

@@ -57,6 +57,12 @@ class TBeautifulCapiRoot(object):
     def __init__(self):
         self.project_name = ""
         self.project_name_filled = False
+        self.major_version = 1
+        self.major_version_filled = False
+        self.minor_version = 0
+        self.minor_version_filled = False
+        self.patch_version = 0
+        self.patch_version_filled = False
         self.namespaces = []
     
     def load(self, dom_node):
@@ -68,6 +74,18 @@ class TBeautifulCapiRoot(object):
             cur_attr = dom_node.getAttribute("project_name")
             self.project_name = cur_attr
             self.project_name_filled = True
+        if dom_node.hasAttribute("major_version"):
+            cur_attr = dom_node.getAttribute("major_version")
+            self.major_version = string_to_int(cur_attr)
+            self.major_version_filled = True
+        if dom_node.hasAttribute("minor_version"):
+            cur_attr = dom_node.getAttribute("minor_version")
+            self.minor_version = string_to_int(cur_attr)
+            self.minor_version_filled = True
+        if dom_node.hasAttribute("patch_version"):
+            cur_attr = dom_node.getAttribute("patch_version")
+            self.patch_version = string_to_int(cur_attr)
+            self.patch_version_filled = True
     
 
 class TApiInclude(object):
