@@ -47,11 +47,11 @@ def backup_example(input_folder, example_name, base_backup_folder):
         shutil.copytree(example_snippets_folder, backup_snippets_folder)
     auto_gen_wrap_cpp = os.path.join(base_example_library_folder, 'source', 'AutoGenWrap.cpp')
     if os.path.exists(auto_gen_wrap_cpp):
-        auto_gen_wrap_cpp_destination = os.path.join(base_backup_folder, example_name, 'AutoGenWrap.cpp')
+        auto_gen_wrap_cpp_destination = os.path.join(base_backup_folder, example_name, 'AGenWrap.cpp')
         shutil.copy(auto_gen_wrap_cpp, auto_gen_wrap_cpp_destination)
     else:
         auto_gen_wrap_cpp = os.path.join(base_example_library_folder, 'source', 'auto_gen_wrap.cpp')
-        auto_gen_wrap_cpp_destination = os.path.join(base_backup_folder, example_name, 'auto_gen_wrap.cpp')
+        auto_gen_wrap_cpp_destination = os.path.join(base_backup_folder, example_name, 'agen_wrap.cpp')
         shutil.copy(auto_gen_wrap_cpp, auto_gen_wrap_cpp_destination)
 
 
@@ -65,7 +65,7 @@ def backup_test(input_folder, test_family, test_name, base_backup_folder):
     if os.path.exists(test_snippets_folder):
         shutil.copytree(test_snippets_folder, backup_snippets_folder)
     auto_gen_wrap_cpp = os.path.join(base_test_library_folder, 'source', 'AutoGenWrap_{0}.cpp'.format(test_name))
-    auto_gen_wrap_cpp_destination = os.path.join(base_backup_folder, test_family, test_name, 'AutoGenWrap.cpp')
+    auto_gen_wrap_cpp_destination = os.path.join(base_backup_folder, test_family, test_name, 'AGenWrap.cpp')
     shutil.copy(auto_gen_wrap_cpp, auto_gen_wrap_cpp_destination)
 
 

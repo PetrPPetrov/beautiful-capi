@@ -24,7 +24,6 @@ from Parser import TConstructor
 from Parser import TCodeBlock
 from Parser import TCodeLine
 from Parser import TLifecycle
-from LifecycleTraits import CreateLifecycleTraits
 
 
 def pascal_to_stl(pascal_name):

@@ -388,7 +388,7 @@ EXAMPLE_API double EXAMPLE_API_CONVENTION example_vectorof_double_getitem(void* 
 
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vectorof_exampleposition_float_copy(void* object_pointer)
 {
-    return new Example::VectorImpl<Example::PositionImpl<float>>(*static_cast<Example::VectorImpl<Example::PositionImpl<float>>*>(object_pointer));
+    return new Example::VectorImpl<Example::PositionImpl<float> >(*static_cast<Example::VectorImpl<Example::PositionImpl<float> >*>(object_pointer));
 }
 
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vectorof_exampleposition_float_default()
@@ -398,7 +398,7 @@ EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vectorof_exampleposition_float_
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_vectorof_exampleposition_float_delete(void* object_pointer)
 {
-    delete static_cast<Example::VectorImpl<Example::PositionImpl<float>>*>(object_pointer);
+    delete static_cast<Example::VectorImpl<Example::PositionImpl<float> >*>(object_pointer);
 }
 
 EXAMPLE_API int EXAMPLE_API_CONVENTION example_vectorof_exampleposition_float_getsize(void* object_pointer)
@@ -427,7 +427,7 @@ EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vectorof_exampleposition_float_
 
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vectorof_exampleposition_double_copy(void* object_pointer)
 {
-    return new Example::VectorImpl<Example::PositionImpl<double>>(*static_cast<Example::VectorImpl<Example::PositionImpl<double>>*>(object_pointer));
+    return new Example::VectorImpl<Example::PositionImpl<double> >(*static_cast<Example::VectorImpl<Example::PositionImpl<double> >*>(object_pointer));
 }
 
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vectorof_exampleposition_double_default()
@@ -437,7 +437,7 @@ EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vectorof_exampleposition_double
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_vectorof_exampleposition_double_delete(void* object_pointer)
 {
-    delete static_cast<Example::VectorImpl<Example::PositionImpl<double>>*>(object_pointer);
+    delete static_cast<Example::VectorImpl<Example::PositionImpl<double> >*>(object_pointer);
 }
 
 EXAMPLE_API int EXAMPLE_API_CONVENTION example_vectorof_exampleposition_double_getsize(void* object_pointer)
@@ -466,7 +466,7 @@ EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vectorof_exampleposition_double
 
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vectorof_exampleposition4d_float_copy(void* object_pointer)
 {
-    return new Example::VectorImpl<Example::Position4DImpl<float>>(*static_cast<Example::VectorImpl<Example::Position4DImpl<float>>*>(object_pointer));
+    return new Example::VectorImpl<Example::Position4DImpl<float> >(*static_cast<Example::VectorImpl<Example::Position4DImpl<float> >*>(object_pointer));
 }
 
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vectorof_exampleposition4d_float_default()
@@ -476,7 +476,7 @@ EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vectorof_exampleposition4d_floa
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_vectorof_exampleposition4d_float_delete(void* object_pointer)
 {
-    delete static_cast<Example::VectorImpl<Example::Position4DImpl<float>>*>(object_pointer);
+    delete static_cast<Example::VectorImpl<Example::Position4DImpl<float> >*>(object_pointer);
 }
 
 EXAMPLE_API int EXAMPLE_API_CONVENTION example_vectorof_exampleposition4d_float_getsize(void* object_pointer)
@@ -505,7 +505,7 @@ EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vectorof_exampleposition4d_floa
 
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vectorof_exampleposition4d_double_copy(void* object_pointer)
 {
-    return new Example::VectorImpl<Example::Position4DImpl<double>>(*static_cast<Example::VectorImpl<Example::Position4DImpl<double>>*>(object_pointer));
+    return new Example::VectorImpl<Example::Position4DImpl<double> >(*static_cast<Example::VectorImpl<Example::Position4DImpl<double> >*>(object_pointer));
 }
 
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vectorof_exampleposition4d_double_default()
@@ -515,7 +515,7 @@ EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vectorof_exampleposition4d_doub
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_vectorof_exampleposition4d_double_delete(void* object_pointer)
 {
-    delete static_cast<Example::VectorImpl<Example::Position4DImpl<double>>*>(object_pointer);
+    delete static_cast<Example::VectorImpl<Example::Position4DImpl<double> >*>(object_pointer);
 }
 
 EXAMPLE_API int EXAMPLE_API_CONVENTION example_vectorof_exampleposition4d_double_getsize(void* object_pointer)
@@ -544,7 +544,7 @@ EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vectorof_exampleposition4d_doub
 
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vectorof_examplevectorof_exampleposition4d_float_copy(void* object_pointer)
 {
-    return new Example::VectorImpl<Example::VectorImpl<Example::Position4DImpl<float>>>(*static_cast<Example::VectorImpl<Example::VectorImpl<Example::Position4DImpl<float>>>*>(object_pointer));
+    return new Example::VectorImpl<Example::VectorImpl<Example::Position4DImpl<float> > >(*static_cast<Example::VectorImpl<Example::VectorImpl<Example::Position4DImpl<float> > >*>(object_pointer));
 }
 
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vectorof_examplevectorof_exampleposition4d_float_default()
@@ -554,7 +554,7 @@ EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vectorof_examplevectorof_exampl
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_vectorof_examplevectorof_exampleposition4d_float_delete(void* object_pointer)
 {
-    delete static_cast<Example::VectorImpl<Example::VectorImpl<Example::Position4DImpl<float>>>*>(object_pointer);
+    delete static_cast<Example::VectorImpl<Example::VectorImpl<Example::Position4DImpl<float> > >*>(object_pointer);
 }
 
 EXAMPLE_API int EXAMPLE_API_CONVENTION example_vectorof_examplevectorof_exampleposition4d_float_getsize(void* object_pointer)
@@ -578,12 +578,12 @@ EXAMPLE_API void EXAMPLE_API_CONVENTION example_vectorof_examplevectorof_example
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vectorof_examplevectorof_exampleposition4d_float_getitem(void* object_pointer, int index)
 {
     const Example::VectorImpl<Example::VectorImpl<Example::Position4DImpl<float> > >* self = static_cast<Example::VectorImpl<Example::VectorImpl<Example::Position4DImpl<float> > >*>(object_pointer);
-    Example::VectorImpl<Example::Position4DImpl<float>> result(self->GetItem(index)); return example_vectorof_exampleposition4d_float_copy(&result);
+    Example::VectorImpl<Example::Position4DImpl<float> > result(self->GetItem(index)); return example_vectorof_exampleposition4d_float_copy(&result);
 }
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_vectorofobjects_examplemodelptr_float_add_ref(void* object_pointer)
 {
-    intrusive_ptr_add_ref(static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<float>>*>(object_pointer));
+    intrusive_ptr_add_ref(static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<float> >*>(object_pointer));
 }
 
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vectorofobjects_examplemodelptr_float_default()
@@ -593,7 +593,7 @@ EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vectorofobjects_examplemodelptr
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_vectorofobjects_examplemodelptr_float_release(void* object_pointer)
 {
-    intrusive_ptr_release(static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<float>>*>(object_pointer));
+    intrusive_ptr_release(static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<float> >*>(object_pointer));
 }
 
 EXAMPLE_API int EXAMPLE_API_CONVENTION example_vectorofobjects_examplemodelptr_float_getsize(void* object_pointer)
@@ -622,7 +622,7 @@ EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vectorofobjects_examplemodelptr
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_vectorofobjects_examplemodelptr_double_add_ref(void* object_pointer)
 {
-    intrusive_ptr_add_ref(static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<double>>*>(object_pointer));
+    intrusive_ptr_add_ref(static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<double> >*>(object_pointer));
 }
 
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vectorofobjects_examplemodelptr_double_default()
@@ -632,7 +632,7 @@ EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vectorofobjects_examplemodelptr
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_vectorofobjects_examplemodelptr_double_release(void* object_pointer)
 {
-    intrusive_ptr_release(static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<double>>*>(object_pointer));
+    intrusive_ptr_release(static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<double> >*>(object_pointer));
 }
 
 EXAMPLE_API int EXAMPLE_API_CONVENTION example_vectorofobjects_examplemodelptr_double_getsize(void* object_pointer)

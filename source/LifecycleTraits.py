@@ -23,6 +23,7 @@ import Parser
 from Constants import Constants
 from TraitsBase import TraitsBase
 from ExceptionTraits import create_exception_traits
+from Helpers import format_type
 
 
 class LifecycleTraitsBase(TraitsBase):
@@ -66,7 +67,7 @@ class LifecycleTraitsBase(TraitsBase):
         self.capi_generator.loader_traits.add_c_function_declaration(c_function_declaration)
         with self.indent_scope_source():
             method_call = 'delete static_cast<{0}*>(object_pointer);'.format(
-                self.cur_class.implementation_class_name
+                format_type(self.cur_class.implementation_class_name)
             )
             self.delete_exception_traits.generate_implementation_call(method_call, '')
         self.put_source_line('')
@@ -163,7 +164,7 @@ class CopySemantic(LifecycleTraitsBase):
         self.capi_generator.loader_traits.add_c_function_declaration(c_function_declaration)
         with self.indent_scope_source():
             method_call = 'return new {0}(*static_cast<{0}*>(object_pointer));'.format(
-                self.cur_class.implementation_class_name
+                format_type(self.cur_class.implementation_class_name)
             )
             self.copy_exception_traits.generate_implementation_call(method_call, 'void*')
         self.put_source_line('')
@@ -179,11 +180,11 @@ class CopySemantic(LifecycleTraitsBase):
             self.put_line('return *this;')
 
     def generate_get_c_to_original_argument(self, class_object, argument):
-        return '*static_cast<{0}*>({1})'.format(class_object.implementation_class_name, argument.name)
+        return '*static_cast<{0}*>({1})'.format(format_type(class_object.implementation_class_name), argument.name)
 
     def make_c_return(self, class_object, expression):
         return '{return_type} result({expression}); return {copy}(&result);'.format(
-            return_type=class_object.implementation_class_name,
+            return_type=format_type(class_object.implementation_class_name),
             copy=self.capi_generator.extra_info[class_object].get_c_name() + Constants.copy_suffix,
             expression=expression)
 
@@ -223,7 +224,7 @@ class RawPointerSemantic(LifecycleTraitsBase):
         self.generate_delete_c_function()
 
     def generate_get_c_to_original_argument(self, class_object, argument):
-        return 'static_cast<{0}*>({1})'.format(class_object.implementation_class_name, argument.name)
+        return 'static_cast<{0}*>({1})'.format(format_type(class_object.implementation_class_name), argument.name)
 
     def make_c_return(self, class_object, expression):
         return 'return {expression};'.format(expression=expression)
@@ -261,7 +262,7 @@ class RefCountedSemantic(LifecycleTraitsBase):
         self.capi_generator.loader_traits.add_c_function_declaration(c_function_declaration)
         with self.indent_scope_source():
             method_call = 'intrusive_ptr_release(static_cast<{0}*>(object_pointer));'.format(
-                self.cur_class.implementation_class_name
+                format_type(self.cur_class.implementation_class_name)
             )
             self.release_exception_traits.generate_implementation_call(method_call, '')
         self.put_source_line('')
@@ -304,7 +305,7 @@ class RefCountedSemantic(LifecycleTraitsBase):
         self.capi_generator.loader_traits.add_c_function_declaration(c_function_declaration)
         with self.indent_scope_source():
             method_call = 'intrusive_ptr_add_ref(static_cast<{0}*>(object_pointer));'.format(
-                self.cur_class.implementation_class_name
+                format_type(self.cur_class.implementation_class_name)
             )
             self.add_ref_exception_traits.generate_implementation_call(method_call, '')
         self.put_source_line('')
@@ -331,7 +332,7 @@ class RefCountedSemantic(LifecycleTraitsBase):
             )
 
     def generate_get_c_to_original_argument(self, class_object, argument):
-        return 'static_cast<{0}*>({1})'.format(class_object.implementation_class_name, argument.name)
+        return 'static_cast<{0}*>({1})'.format(format_type(class_object.implementation_class_name), argument.name)
 
     def make_c_return(self, class_object, expression):
         return 'return {expression};'.format(expression=expression)

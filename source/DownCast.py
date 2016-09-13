@@ -52,8 +52,8 @@ def generate_down_cast(output_file, cur_class, base_class, capi_generator):
         with FileGenerator.IndentScope(capi_generator.output_source):
             capi_generator.output_source.put_line(
                 'return dynamic_cast<{0}*>(static_cast<{1}*>(object_pointer));'.format(
-                    cur_class.implementation_class_name,
-                    base_class.implementation_class_name
+                    Helpers.format_type(cur_class.implementation_class_name),
+                    Helpers.format_type(base_class.implementation_class_name)
                 )
             )
         capi_generator.output_source.put_line('')
