@@ -24,11 +24,7 @@ cmake_minimum_required(VERSION 2.8)
 
 find_package(PythonInterp 3.4 REQUIRED)
 
-include(../../example.cmake)
-include(../../swig_example.cmake)
-
-add_capi_generation()
-add_swig_generation(swig VirtualInterface)
+include(../../../UseBCapi.cmake)
 
 include_directories(${virtual_interface_SOURCE_DIR}/source/)
 
@@ -43,8 +39,4 @@ add_library(virtual_interface SHARED
   ${virtual_interface_SOURCE_DIR}/source/CircleFactory.cpp
 )
 
-add_cs_api_generation(cs VirtualInterface)
-
-setup_swig_module(swig VirtualInterface)
-add_swig_python(swig VirtualInterface)
-add_swig_csharp(swig VirtualInterface)
+add_bcapi_generation()

@@ -21,11 +21,11 @@
 
 cmake_minimum_required(VERSION 2.8)
 
-function(add_capi_generation)
+function(add_bcapi_generation)
     if (ARGN)
         list(GET ARGN 0 generated_source)
     else()
-        set(generated_source "${CMAKE_CURRENT_SOURCE_DIR}/source/AutoGenWrap.cpp")
+        set(generated_source ${CMAKE_CURRENT_SOURCE_DIR}/source/AutoGenWrap.cpp)
     endif()
 
     add_custom_command(
@@ -33,7 +33,7 @@ function(add_capi_generation)
             ${generated_source}
         COMMAND
             ${PYTHON_EXECUTABLE}
-            ${examples_SOURCE_DIR}/../source/Main.py
+            ${beautiful_capi_SOURCE_DIR}/source/BCapi.py
             -i ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.xml
             -p ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}_params.xml
             -o ${CMAKE_CURRENT_SOURCE_DIR}/include
@@ -46,22 +46,4 @@ function(add_capi_generation)
         WORKING_DIRECTORY
             ${CMAKE_CURRENT_SOURCE_DIR}
     )
-endfunction(add_capi_generation)
-
-function(add_cs_api_generation cs_api_module_dir module_name)
-    add_custom_command(
-        TARGET
-            ${PROJECT_NAME}
-        PRE_BUILD
-        COMMAND
-            ${PYTHON_EXECUTABLE}
-            ARGS
-                ${examples_SOURCE_DIR}/../source/CSharp.py
-                -i ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.xml
-                -p ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}_params.xml
-                -o ${CMAKE_CURRENT_SOURCE_DIR}/${cs_api_module_dir}
-                -m ${module_name}
-        WORKING_DIRECTORY
-            ${CMAKE_CURRENT_SOURCE_DIR}
-    )
-endfunction()
+endfunction(add_bcapi_generation)

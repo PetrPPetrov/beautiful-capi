@@ -24,11 +24,7 @@ cmake_minimum_required(VERSION 2.8)
 
 find_package(PythonInterp 3.4 REQUIRED)
 
-include(../../example.cmake)
-include(../../swig_example.cmake)
-
-add_capi_generation()
-add_swig_generation(swig CircularReference)
+include(../../../UseBCapi.cmake)
 
 include_directories(${circular_reference_SOURCE_DIR}/source/)
 
@@ -40,8 +36,4 @@ add_library(circular_reference SHARED
   ${circular_reference_SOURCE_DIR}/source/ClassBImpl.cpp  
 )
 
-add_cs_api_generation(cs CircularReference)
-
-setup_swig_module(swig CircularReference)
-add_swig_python(swig CircularReference)
-add_swig_csharp(swig CircularReference)
+add_bcapi_generation()

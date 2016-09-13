@@ -25,8 +25,3 @@ bin/
 AutoGen*
 auto_gen*
 snippets/
-swig/
-swig_csharp/
-swig_java/
-swig_python/
-cs/

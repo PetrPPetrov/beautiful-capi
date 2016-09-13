@@ -24,11 +24,7 @@ cmake_minimum_required(VERSION 2.8)
 
 find_package(PythonInterp 3.4 REQUIRED)
 
-include(../../example.cmake)
-include(../../swig_example.cmake)
-
-add_capi_generation()
-add_swig_generation(swig BoostSharedPtr)
+include(../../../UseBCapi.cmake)
 
 include_directories(
   ${boost_shared_ptr_SOURCE_DIR}/../../../3rdparty/boost/core/include/
@@ -49,8 +45,4 @@ add_library(boost_shared_ptr SHARED
   ${boost_shared_ptr_SOURCE_DIR}/source/PrinterImpl.cpp
 )
 
-add_cs_api_generation(cs BoostSharedPtr)
-
-setup_swig_module(swig BoostSharedPtr)
-add_swig_python(swig BoostSharedPtr)
-add_swig_csharp(swig BoostSharedPtr)
+add_bcapi_generation()

@@ -24,11 +24,7 @@ cmake_minimum_required(VERSION 2.8)
 
 find_package(PythonInterp 3.4 REQUIRED)
 
-include(../../example.cmake)
-include(../../swig_example.cmake)
-
-add_capi_generation()
-add_swig_generation(swig ObjectParameter)
+include(../../../UseBCapi.cmake)
 
 include_directories(${object_parameter_SOURCE_DIR}/source/)
 
@@ -40,9 +36,4 @@ add_library(object_parameter SHARED
   ${object_parameter_SOURCE_DIR}/source/DocumentImpl.cpp
 )
 
-add_cs_api_generation(cs ObjectParameter)
-
-setup_swig_module(swig ObjectParameter)
-add_swig_python(swig ObjectParameter)
-add_swig_csharp(swig ObjectParameter)
-
+add_bcapi_generation()

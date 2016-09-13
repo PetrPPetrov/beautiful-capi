@@ -24,11 +24,7 @@ cmake_minimum_required(VERSION 2.8)
 
 find_package(PythonInterp 3.4 REQUIRED)
 
-include(../../example.cmake)
-include(../../swig_example.cmake)
-
-add_capi_generation("${custom_suffix_SOURCE_DIR}/source/auto_gen_wrap.cpp")
-add_swig_generation(swig CustomSuffix)
+include(../../../UseBCapi.cmake)
 
 include_directories(${custom_suffix_SOURCE_DIR}/source/)
 
@@ -42,9 +38,4 @@ add_library(custom_suffix SHARED
   ${custom_suffix_SOURCE_DIR}/source/plotter_impl.cpp
 )
 
-add_cs_api_generation(cs CustomSuffix)
-
-setup_swig_module(swig CustomSuffix)
-add_swig_python(swig CustomSuffix)
-add_swig_csharp(swig CustomSuffix)
-
+add_bcapi_generation(${custom_suffix_SOURCE_DIR}/source/auto_gen_wrap.cpp)

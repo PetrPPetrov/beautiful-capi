@@ -24,11 +24,7 @@ cmake_minimum_required(VERSION 2.8)
 
 find_package(PythonInterp 3.4 REQUIRED)
 
-include(../../example.cmake)
-include(../../swig_example.cmake)
-
-add_capi_generation()
-add_swig_generation(swig CopySemantic)
+include(../../../UseBCapi.cmake)
 
 include_directories(${copy_semantic_SOURCE_DIR}/source/)
 
@@ -40,8 +36,4 @@ add_library(copy_semantic SHARED
   ${copy_semantic_SOURCE_DIR}/source/DumperImpl.cpp
 )
 
-add_cs_api_generation(cs CopySemantic)
-
-setup_swig_module(swig CopySemantic)
-add_swig_python(swig CopySemantic)
-add_swig_csharp(swig CopySemantic)
+add_bcapi_generation()

@@ -99,7 +99,7 @@ def process_test(input_folder, test_family, test_name, base_backup_folder):
                 os.path.join(base_backup_folder, test_family, test_name, test_name))
 
 
-def backup_beautiful_capi(input_folder, output_folder):
+def run_tests(input_folder, output_folder):
     print('input folder: {0}'.format(input_folder))
     base_backup_folder = get_next_backup_folder(output_folder)
     print('output folder: {0}'.format(base_backup_folder))
@@ -138,8 +138,8 @@ def main():
         'under certain conditions.\n')
 
     parser = argparse.ArgumentParser(
-        prog='Beautiful Capi Backup Copy',
-        description='This program backups generated C and C++ files by Beautiful Capi.')
+        prog='Beautiful Capi Test Runner',
+        description='This program runs all executables and backups generated C and C++ files.')
 
     parser.add_argument(
         '-i', '--input-folder', nargs=None,
@@ -149,7 +149,7 @@ def main():
         help='specifies output folder for backup files')
 
     args = parser.parse_args()
-    backup_beautiful_capi(args.input_folder, args.output_folder)
+    run_tests(args.input_folder, args.output_folder)
 
 
 if __name__ == '__main__':

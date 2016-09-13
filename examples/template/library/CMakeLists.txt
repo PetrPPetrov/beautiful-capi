@@ -24,11 +24,7 @@ cmake_minimum_required(VERSION 2.8)
 
 find_package(PythonInterp 3.4 REQUIRED)
 
-include(../../example.cmake)
-include(../../swig_example.cmake)
-
-add_capi_generation()
-add_swig_generation(swig Template)
+include(../../../UseBCapi.cmake)
 
 include_directories(
   ${template_SOURCE_DIR}/../../../3rdparty/boost/core/include/
@@ -50,8 +46,4 @@ add_library(template SHARED
   ${template_SOURCE_DIR}/source/ModelImpl.h
 )
 
-add_cs_api_generation(cs Template)
-
-setup_swig_module(swig Template)
-add_swig_python(swig Template)
-add_swig_csharp(swig Template)
+add_bcapi_generation()

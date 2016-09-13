@@ -24,11 +24,7 @@ cmake_minimum_required(VERSION 2.8)
 
 find_package(PythonInterp 3.4 REQUIRED)
 
-include(../../example.cmake)
-include(../../swig_example.cmake)
-
-add_capi_generation()
-add_swig_generation(swig SingleFile)
+include(../../../UseBCapi.cmake)
 
 include_directories(${single_file_SOURCE_DIR}/source/)
 
@@ -38,9 +34,4 @@ add_library(single_file SHARED
   ${single_file_SOURCE_DIR}/source/PrinterImpl.cpp
 )
 
-add_cs_api_generation(cs SingleFile)
-
-setup_swig_module(swig SingleFile)
-add_swig_python(swig SingleFile)
-add_swig_csharp(swig SingleFile)
-
+add_bcapi_generation()

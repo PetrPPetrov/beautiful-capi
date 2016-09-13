@@ -24,7 +24,7 @@ cmake_minimum_required(VERSION 2.8)
 
 find_package(PythonInterp 3.4 REQUIRED)
 
-add_capi_generation()
+include(../../../UseBCapi.cmake)
 
 include_directories(${callback_SOURCE_DIR}/source/)
 
@@ -44,3 +44,5 @@ add_library(callback SHARED
   ${callback_SOURCE_DIR}/source/Exception/DivisionByZeroImpl.h
   ${callback_SOURCE_DIR}/source/Exception/DivisionByZeroImpl.cpp
 )
+
+add_bcapi_generation()

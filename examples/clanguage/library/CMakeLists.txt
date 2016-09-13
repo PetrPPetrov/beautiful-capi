@@ -24,11 +24,7 @@ cmake_minimum_required(VERSION 2.8)
 
 find_package(PythonInterp 3.4 REQUIRED)
 
-include(../../example.cmake)
-include(../../swig_example.cmake)
-
-add_capi_generation()
-add_swig_generation(swig CLanguage)
+include(../../../UseBCapi.cmake)
 
 include_directories(${clanguage_SOURCE_DIR}/source/)
 
@@ -40,8 +36,4 @@ add_library(clanguage SHARED
   ${clanguage_SOURCE_DIR}/source/DumperImpl.cpp
 )
 
-add_cs_api_generation(cs CLanguage)
-
-setup_swig_module(swig CLanguage)
-add_swig_python(swig CLanguage)
-add_swig_csharp(swig CLanguage)
+add_bcapi_generation()

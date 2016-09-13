@@ -24,13 +24,7 @@ cmake_minimum_required(VERSION 2.8)
 
 find_package(PythonInterp 3.4 REQUIRED)
 
-add_custom_command(
-  OUTPUT ${exception_SOURCE_DIR}/source/AutoGenWrap.cpp
-  COMMAND ${PYTHON_EXECUTABLE} ${exception_SOURCE_DIR}/../../../source/Main.py -i ${exception_SOURCE_DIR}/exception.xml -p ${exception_SOURCE_DIR}/exception_params.xml -o ${exception_SOURCE_DIR}/include -w ${exception_SOURCE_DIR}/source/AutoGenWrap.cpp
-  MAIN_DEPENDENCY ${exception_SOURCE_DIR}/exception.xml
-  DEPENDS ${exception_SOURCE_DIR}/exception_params.xml
-  WORKING_DIRECTORY ${exception_SOURCE_DIR}
-)
+include(../../../UseBCapi.cmake)
 
 include_directories(${exception_SOURCE_DIR}/source/)
 
@@ -49,3 +43,5 @@ add_library(exception SHARED
   ${exception_SOURCE_DIR}/source/Exception/DivisionByZeroImpl.h
   ${exception_SOURCE_DIR}/source/Exception/DivisionByZeroImpl.cpp
 )
+
+add_bcapi_generation()

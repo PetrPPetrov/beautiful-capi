@@ -24,11 +24,8 @@ cmake_minimum_required(VERSION 2.8)
 
 find_package(PythonInterp 3.4 REQUIRED)
 
-include(../../example.cmake)
-include(../../swig_example.cmake)
+include(../../../UseBCapi.cmake)
 
-add_capi_generation()
-add_swig_generation(swig DownCast)
 include_directories(${down_cast_SOURCE_DIR}/source/)
 
 add_library(down_cast SHARED
@@ -50,8 +47,4 @@ add_library(down_cast SHARED
   ${down_cast_SOURCE_DIR}/source/CircleFactory.cpp
 )
 
-add_cs_api_generation(cs DownCast)
-
-setup_swig_module(swig DownCast)
-add_swig_python(swig DownCast)
-add_swig_csharp(swig DownCast)
+add_bcapi_generation()

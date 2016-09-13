@@ -24,11 +24,7 @@ cmake_minimum_required(VERSION 2.8)
 
 find_package(PythonInterp 3.4 REQUIRED)
 
-include(../../example.cmake)
-include(../../swig_example.cmake)
-
-add_capi_generation()
-add_swig_generation(swig HelloWorld)
+include(../../../UseBCapi.cmake)
 
 include_directories(${hello_world_SOURCE_DIR}/source/)
 
@@ -38,8 +34,4 @@ add_library(hello_world SHARED
   ${hello_world_SOURCE_DIR}/source/PrinterImpl.cpp
 )
 
-add_cs_api_generation(cs HelloWorld)
-
-setup_swig_module(swig HelloWorld)
-add_swig_python(swig HelloWorld)
-add_swig_csharp(swig HelloWorld)
+add_bcapi_generation()

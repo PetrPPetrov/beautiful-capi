@@ -25,12 +25,7 @@ cmake_minimum_required(VERSION 2.8)
 
 find_package(PythonInterp 3.4 REQUIRED)
 
-include(../../example.cmake)
-include(../../swig_example.cmake)
-
-
-add_capi_generation()
-add_swig_generation(swig PointSet)
+include(../../../UseBCapi.cmake)
 
 include_directories(
   ${point_set_SOURCE_DIR}/../../../3rdparty/boost/core/include/
@@ -52,8 +47,4 @@ add_library(point_set SHARED
   ${point_set_SOURCE_DIR}/source/PositionImpl.h
 )
 
-add_cs_api_generation(cs PointSet)
-
-setup_swig_module(swig PointSet)
-add_swig_python(swig PointSet)
-add_swig_csharp(swig PointSet)
+add_bcapi_generation()
