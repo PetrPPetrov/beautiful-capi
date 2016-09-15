@@ -9,6 +9,7 @@
     +) check for the life cycle semantic coherence with base class
 *) move constructors if target language supports C++ 11
 *) noexcept methods if target language supports C++ 11
+*) forward C function declarations in AutoGenWrap.cpp
 *) down_cast for boost::shared_ptr (copy_semantic)
 ===
 *) shuffle Capi mode
@@ -24,6 +25,8 @@
   a) customization of generated methods and constructors names (?)
   b) customization of 'noexcept' flags for generated methods and constructors (?)
   c) small influence of life cycle logic to custom callbacks (?)
+  d) process base class methods
+*) support function templates
 *) write more examples and tests:
     +) interoperability example (the same source code works both outside of library and inside the library)
     +) data_structures
