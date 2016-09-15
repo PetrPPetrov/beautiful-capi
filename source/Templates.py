@@ -21,7 +21,6 @@
 
 
 import copy
-from LifecycleTraits import CreateLifecycleTraits
 
 class TemplateProcessor(object):
     def __init__(self, capi_generator):

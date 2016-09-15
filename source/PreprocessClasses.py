@@ -141,6 +141,7 @@ def process_beautiful_capi_class_for_templates(cur_class, capi_generator):
     #print('class name {0}'.format(cur_class.name))
     cur_class.name = replace_template_by_wrap_classes(capi_generator, cur_class.name)
     capi_generator.extra_info[cur_class].full_name_array[-1] = cur_class.name
+    cur_class.base = replace_template_by_wrap_classes(capi_generator, cur_class.base)
     #print('was replaced by {0}'.format(cur_class.name))
 
 

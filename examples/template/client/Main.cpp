@@ -83,6 +83,13 @@ void dump(const Example::VectorOfObjectsPtr<T>& vector)
     std::cout << std::endl;
 }
 
+template<typename T>
+void dump(const Example::VectorOfObjectsDerivedPtr<T>& vector)
+{
+    std::cout << "VectorOfObjectsDerivedPtr" << std::endl;
+    dump(static_cast<const Example::VectorOfObjectsPtr<T>&>(vector));
+}
+
 int main()
 {
 #if defined(_WIN32) && defined(_DEBUG)
@@ -118,7 +125,7 @@ int main()
     vectorz.PushBack(vector3);
     dump(vectorz);
 
-    Example::VectorOfObjectsPtr<Example::ModelPtr<double> > model_vector;
+    Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<double> > model_vector;
     Example::ModelPtr<double> model1;
     Example::ModelPtr<double> model2;
     model1->SetName("model1");
@@ -127,6 +134,8 @@ int main()
     model_vector->PushBack(model1);
     model_vector->PushBack(model2);
     dump(model_vector);
+
+    std::cout << model_vector.GetA() << std::endl;
 
     return EXIT_SUCCESS;
 }

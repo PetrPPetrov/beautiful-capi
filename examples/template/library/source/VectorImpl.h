@@ -91,7 +91,7 @@ namespace Example
         {
             std::cout << "VectorOfObjects copy ctor! (should be never called)" << std::endl;
         }
-        ~VectorOfObjectsImpl()
+        virtual ~VectorOfObjectsImpl()
         {
             std::cout << "VectorOfObjects dtor" << std::endl;
         }
@@ -123,6 +123,30 @@ namespace Example
                     delete this;
                 }
             }
+        }
+    };
+
+    template<typename T>
+    class VectorOfObjectsDerivedImpl : public VectorOfObjectsImpl<T>
+    {
+    public:
+        // By default newly created objects implies to have value 1 of reference counter
+        VectorOfObjectsDerivedImpl()
+        {
+            std::cout << "VectorOfObjectsDerivedImpl ctor" << std::endl;
+        }
+        // By default newly created objects implies to have value 1 of reference counter
+        VectorOfObjectsDerivedImpl(const VectorOfObjectsDerivedImpl& other) : VectorOfObjectsImpl(other)
+        {
+            std::cout << "VectorOfObjectsDerivedImpl copy ctor! (should be never called)" << std::endl;
+        }
+        virtual ~VectorOfObjectsDerivedImpl()
+        {
+            std::cout << "VectorOfObjectsDerivedImpl dtor" << std::endl;
+        }
+        int GetA() const
+        {
+            return 2;
         }
     };
 

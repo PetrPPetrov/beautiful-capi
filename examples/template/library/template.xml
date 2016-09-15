@@ -116,5 +116,18 @@
         </method>
       </class>
     </template>
+    <template name="VectorOfObjectsDerived">
+      <argument name="T" type="typename"/>
+      <instantiation>
+        <argument name="T" value="Example::Model&lt;float>"/>
+      </instantiation>
+      <instantiation>
+        <argument name="T" value="Example::Model&lt;double>"/>
+      </instantiation>
+      <class name="VectorOfObjectsDerived" lifecycle="reference_counted" base="Example::VectorOfObjects&lt;T>" implementation_class_name="Example::VectorOfObjectsDerivedImpl&lt;T>" implementation_class_header="VectorImpl.h">
+        <constructor name="Default"/>
+        <method name="GetA" return="int" const="true"/>
+      </class>
+    </template>
   </namespace>
 </template:api>
