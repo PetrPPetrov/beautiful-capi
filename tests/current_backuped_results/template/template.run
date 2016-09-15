@@ -231,10 +231,12 @@ Position4D dtor
 Position dtor
 
 VectorOfObjects ctor
+VectorOfObjectsDerivedImpl ctor
 Position ctor
 Model ctor
 Position ctor
 Model ctor
+VectorOfObjectsDerivedPtr
 Vector has 2 elements
 Model
 name: model1
@@ -255,6 +257,8 @@ X: 0 Y: 0 Z: 0
 Position dtor
 Position dtor
 
+2
+VectorOfObjectsDerivedImpl dtor
 VectorOfObjects dtor
 Model dtor
 Position dtor

@@ -44,6 +44,8 @@ namespace Example
     class VectorOf;
     template<typename T>
     class VectorOfObjectsPtr;
+    template<typename T>
+    class VectorOfObjectsDerivedPtr;
     template<>
     class Position<float>;
     template<>
@@ -74,6 +76,10 @@ namespace Example
     class VectorOfObjectsPtr<Example::ModelPtr<float> >;
     template<>
     class VectorOfObjectsPtr<Example::ModelPtr<double> >;
+    template<>
+    class VectorOfObjectsDerivedPtr<Example::ModelPtr<float> >;
+    template<>
+    class VectorOfObjectsDerivedPtr<Example::ModelPtr<double> >;
 }
 
 #endif /* __cplusplus */

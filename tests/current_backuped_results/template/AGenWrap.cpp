@@ -64,6 +64,16 @@
     #error "Unknown platform"
 #endif
 
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vectorofobjects_examplemodelptr_float_cast_to_example_vectorofobjectsderived_examplemodelptr_float(void* object_pointer)
+{
+    return dynamic_cast<Example::VectorOfObjectsDerivedImpl<Example::ModelImpl<float> >*>(static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<float> >*>(object_pointer));
+}
+
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vectorofobjects_examplemodelptr_double_cast_to_example_vectorofobjectsderived_examplemodelptr_double(void* object_pointer)
+{
+    return dynamic_cast<Example::VectorOfObjectsDerivedImpl<Example::ModelImpl<double> >*>(static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<double> >*>(object_pointer));
+}
+
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_position_float_copy(void* object_pointer)
 {
     return new Example::PositionImpl<float>(*static_cast<Example::PositionImpl<float>*>(object_pointer));
@@ -657,5 +667,57 @@ EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vectorofobjects_examplemodelptr
 {
     const Example::VectorOfObjectsImpl<Example::ModelImpl<double> >* self = static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<double> >*>(object_pointer);
     return self->GetItem(index);
+}
+
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vectorofobjectsderived_examplemodelptr_float_cast_to_base(void* object_pointer)
+{
+    return static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<float> >*>(static_cast<Example::VectorOfObjectsDerivedImpl<Example::ModelImpl<float> >*>(object_pointer));
+}
+
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_vectorofobjectsderived_examplemodelptr_float_add_ref(void* object_pointer)
+{
+    intrusive_ptr_add_ref(static_cast<Example::VectorOfObjectsDerivedImpl<Example::ModelImpl<float> >*>(object_pointer));
+}
+
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vectorofobjectsderived_examplemodelptr_float_default()
+{
+    return new Example::VectorOfObjectsDerivedImpl<Example::ModelImpl<float> >();
+}
+
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_vectorofobjectsderived_examplemodelptr_float_release(void* object_pointer)
+{
+    intrusive_ptr_release(static_cast<Example::VectorOfObjectsDerivedImpl<Example::ModelImpl<float> >*>(object_pointer));
+}
+
+EXAMPLE_API int EXAMPLE_API_CONVENTION example_vectorofobjectsderived_examplemodelptr_float_geta(void* object_pointer)
+{
+    const Example::VectorOfObjectsDerivedImpl<Example::ModelImpl<float> >* self = static_cast<Example::VectorOfObjectsDerivedImpl<Example::ModelImpl<float> >*>(object_pointer);
+    return self->GetA();
+}
+
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vectorofobjectsderived_examplemodelptr_double_cast_to_base(void* object_pointer)
+{
+    return static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<double> >*>(static_cast<Example::VectorOfObjectsDerivedImpl<Example::ModelImpl<double> >*>(object_pointer));
+}
+
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_vectorofobjectsderived_examplemodelptr_double_add_ref(void* object_pointer)
+{
+    intrusive_ptr_add_ref(static_cast<Example::VectorOfObjectsDerivedImpl<Example::ModelImpl<double> >*>(object_pointer));
+}
+
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vectorofobjectsderived_examplemodelptr_double_default()
+{
+    return new Example::VectorOfObjectsDerivedImpl<Example::ModelImpl<double> >();
+}
+
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_vectorofobjectsderived_examplemodelptr_double_release(void* object_pointer)
+{
+    intrusive_ptr_release(static_cast<Example::VectorOfObjectsDerivedImpl<Example::ModelImpl<double> >*>(object_pointer));
+}
+
+EXAMPLE_API int EXAMPLE_API_CONVENTION example_vectorofobjectsderived_examplemodelptr_double_geta(void* object_pointer)
+{
+    const Example::VectorOfObjectsDerivedImpl<Example::ModelImpl<double> >* self = static_cast<Example::VectorOfObjectsDerivedImpl<Example::ModelImpl<double> >*>(object_pointer);
+    return self->GetA();
 }
 

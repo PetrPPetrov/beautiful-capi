@@ -67,6 +67,8 @@
     #error "Unknown platform"
 #endif
 
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vectorofobjects_examplemodelptr_float_cast_to_example_vectorofobjectsderived_examplemodelptr_float(void* object_pointer);
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vectorofobjects_examplemodelptr_double_cast_to_example_vectorofobjectsderived_examplemodelptr_double(void* object_pointer);
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_position_float_copy(void* object_pointer);
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_position_float_default();
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_position_float_delete(void* object_pointer);
@@ -174,6 +176,16 @@ EXAMPLE_API int EXAMPLE_API_CONVENTION example_vectorofobjects_examplemodelptr_d
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_vectorofobjects_examplemodelptr_double_clear(void* object_pointer);
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_vectorofobjects_examplemodelptr_double_pushback(void* object_pointer, void* value);
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vectorofobjects_examplemodelptr_double_getitem(void* object_pointer, int index);
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vectorofobjectsderived_examplemodelptr_float_cast_to_base(void* object_pointer);
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_vectorofobjectsderived_examplemodelptr_float_add_ref(void* object_pointer);
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vectorofobjectsderived_examplemodelptr_float_default();
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_vectorofobjectsderived_examplemodelptr_float_release(void* object_pointer);
+EXAMPLE_API int EXAMPLE_API_CONVENTION example_vectorofobjectsderived_examplemodelptr_float_geta(void* object_pointer);
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vectorofobjectsderived_examplemodelptr_double_cast_to_base(void* object_pointer);
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_vectorofobjectsderived_examplemodelptr_double_add_ref(void* object_pointer);
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vectorofobjectsderived_examplemodelptr_double_default();
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_vectorofobjectsderived_examplemodelptr_double_release(void* object_pointer);
+EXAMPLE_API int EXAMPLE_API_CONVENTION example_vectorofobjectsderived_examplemodelptr_double_geta(void* object_pointer);
 
 #endif /* EXAMPLE_CAPI_INCLUDED */
 
