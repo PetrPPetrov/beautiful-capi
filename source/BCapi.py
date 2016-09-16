@@ -203,7 +203,7 @@ class CapiGenerator(object):
                 self.output_header.put_line('')
 
     def __process_class(self, cur_class):
-        if cur_class.internal_interface or cur_class.enumerations:
+        if cur_class.abstract or cur_class.enumerations:
             self.internal_snippet = FileGenerator.FileGenerator(
                 os.path.join(
                     self.internal_snippets_folder,
@@ -286,7 +286,7 @@ class CapiGenerator(object):
                 self.output_header.put_line('public:')
             for enumeration in cur_class.enumerations:
                 self.__generate_enumeration_internal_class(enumeration)
-                if not cur_class.internal_interface:
+                if not cur_class.abstract:
                     self.__generate_enumeration_internal_class_only(enumeration)
             Helpers.output_code_blocks(self.output_header, cur_class.code_after_publics)
             self.lifecycle_traits.generate_copy_constructor()
@@ -301,7 +301,7 @@ class CapiGenerator(object):
         Helpers.output_code_blocks(self.output_header, cur_class.code_after_class_definitions, True)
 
     def __generate_internal_class(self, cur_class):
-        if self.internal_snippet and cur_class.internal_interface:
+        if self.internal_snippet and cur_class.abstract:
             impl_class_short_name = \
                 Helpers.get_template_name(cur_class.implementation_class_name).split('::')[-1] + \
                 Helpers.get_template_tail(cur_class.implementation_class_name)

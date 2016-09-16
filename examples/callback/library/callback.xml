@@ -5,7 +5,7 @@
       <item name="printer" value="1"/>
       <item name="plotter" value="2"/>
     </enumeration>
-    <class name="Printer" lifecycle="reference_counted" implementation_class_name="Example::IPrinter" internal_interface="true" implementation_class_header="IPrinter.h">
+    <class name="Printer" lifecycle="reference_counted" abstract="true" implementation_class_name="Example::IPrinter" implementation_class_header="IPrinter.h">
       <enumeration name="EQuality" underlying_type="int">
         <item name="draft"/>
         <item name="normal"/>
