@@ -46,40 +46,6 @@ namespace Example
     class VectorOfObjectsPtr;
     template<typename T>
     class VectorOfObjectsDerivedPtr;
-    template<>
-    class Position<float>;
-    template<>
-    class Position<double>;
-    template<>
-    class Position4D<float>;
-    template<>
-    class Position4D<double>;
-    template<>
-    class ModelPtr<float>;
-    template<>
-    class ModelPtr<double>;
-    template<>
-    class VectorOf<int>;
-    template<>
-    class VectorOf<double>;
-    template<>
-    class VectorOf<Example::Position<float> >;
-    template<>
-    class VectorOf<Example::Position<double> >;
-    template<>
-    class VectorOf<Example::Position4D<float> >;
-    template<>
-    class VectorOf<Example::Position4D<double> >;
-    template<>
-    class VectorOf<Example::VectorOf<Example::Position4D<float> > >;
-    template<>
-    class VectorOfObjectsPtr<Example::ModelPtr<float> >;
-    template<>
-    class VectorOfObjectsPtr<Example::ModelPtr<double> >;
-    template<>
-    class VectorOfObjectsDerivedPtr<Example::ModelPtr<float> >;
-    template<>
-    class VectorOfObjectsDerivedPtr<Example::ModelPtr<double> >;
 }
 
 #endif /* __cplusplus */

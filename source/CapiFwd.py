@@ -74,11 +74,11 @@ def generate_forwards(capi_generator, namespace):
         for cur_class in namespace.classes:
             cur_extra_info = capi_generator.extra_info[cur_class]
             with CreateLifecycleTraits(cur_class, capi_generator):
-                if cur_class.template_line:
-                    capi_generator.output_header.put_line(cur_class.template_line)
-                capi_generator.output_header.put_line('class {0};'.format(
-                    cur_extra_info.get_class_short_name()))
+                #if cur_class.template_line:
+                #    capi_generator.output_header.put_line(cur_class.template_line)
                 if not cur_class.template_line:
+                    capi_generator.output_header.put_line('class {0};'.format(
+                        cur_extra_info.get_class_short_name()))
                     capi_generator.output_header.put_line(
                         'typedef {0}::forward_pointer_holder<{1}> {2};'.format(
                             capi_generator.params_description.beautiful_capi_namespace,
