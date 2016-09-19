@@ -58,13 +58,13 @@
   </xs:complexType>
   <xs:complexType name="TClass">
     <xs:sequence>
+      <xs:element name="include_header" minOccurs="0" maxOccurs="unbounded" type="THeaderInclude"/>
       <xs:element name="enumeration" minOccurs="0" maxOccurs="unbounded" type="TEnumeration"/>
       <xs:element name="constructor" minOccurs="0" maxOccurs="unbounded" type="TConstructor"/>
       <xs:element name="method" minOccurs="0" maxOccurs="unbounded" type="TMethod"/>
       <xs:element name="code_before_class_definition" minOccurs="0" maxOccurs="unbounded" type="TCodeBlock"/>
       <xs:element name="code_after_public" minOccurs="0" maxOccurs="unbounded" type="TCodeBlock"/>
       <xs:element name="code_after_class_definition" minOccurs="0" maxOccurs="unbounded" type="TCodeBlock"/>
-      <xs:element name="include_header" minOccurs="0" maxOccurs="unbounded" type="THeaderInclude"/>
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required"/>
     <xs:attribute name="base" type="xs:string" use="optional" default=""/>

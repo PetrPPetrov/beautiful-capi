@@ -27,6 +27,8 @@
     <xs:attribute name="is_null_method" type="xs:string" use="optional" default="IsNull"/>
     <xs:attribute name="is_not_null_method" type="xs:string" use="optional" default="IsNotNull"/>
     <xs:attribute name="delete_method" type="xs:string" use="optional" default="Delete"/>
+    <xs:attribute name="snippet_implementation_pointer_usage" type="xs:string" use="{implementation_name}*"/>
+    <xs:attribute name="snippet_implementation_value_usage" type="xs:string" use="{implementation_name}"/>
     <xs:attribute name="forward_holder_filename" type="xs:string" use="optional" default="{project_name}/common/forward_holder.h"/>
     <xs:attribute name="check_and_throw_exception_filename" type="xs:string" use="optional" default="{project_name}/common/check_and_throw_exception.h"/>
     <xs:attribute name="exception_handling_mode" type="TExceptionHandlingMode" use="optional" default="no_handling"/>

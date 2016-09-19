@@ -82,6 +82,10 @@ class TBeautifulCapiParams(object):
         self.is_not_null_method_filled = False
         self.delete_method = "Delete"
         self.delete_method_filled = False
+        self.snippet_implementation_pointer_usage = ""
+        self.snippet_implementation_pointer_usage_filled = False
+        self.snippet_implementation_value_usage = ""
+        self.snippet_implementation_value_usage_filled = False
         self.forward_holder_filename = "{project_name}/common/forward_holder.h"
         self.forward_holder_filename_filled = False
         self.check_and_throw_exception_filename = "{project_name}/common/check_and_throw_exception.h"
@@ -166,6 +170,14 @@ class TBeautifulCapiParams(object):
             cur_attr = dom_node.getAttribute("delete_method")
             self.delete_method = cur_attr
             self.delete_method_filled = True
+        if dom_node.hasAttribute("snippet_implementation_pointer_usage"):
+            cur_attr = dom_node.getAttribute("snippet_implementation_pointer_usage")
+            self.snippet_implementation_pointer_usage = cur_attr
+            self.snippet_implementation_pointer_usage_filled = True
+        if dom_node.hasAttribute("snippet_implementation_value_usage"):
+            cur_attr = dom_node.getAttribute("snippet_implementation_value_usage")
+            self.snippet_implementation_value_usage = cur_attr
+            self.snippet_implementation_value_usage_filled = True
         if dom_node.hasAttribute("forward_holder_filename"):
             cur_attr = dom_node.getAttribute("forward_holder_filename")
             self.forward_holder_filename = cur_attr

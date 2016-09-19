@@ -310,9 +310,9 @@ class CapiGenerator(object):
             self.internal_snippet.put_line('virtual ~{0}() {{}}'.format(impl_class_short_name))
             for cur_method in cur_class.methods:
                 method_declaration = 'virtual {return_type} {method_name}({arguments}){const} = 0;'.format(
-                    return_type=self.get_original_type(cur_method.return_type),
+                    return_type=self.get_original_snippet_type(cur_method.return_type),
                     method_name=cur_method.name,
-                    arguments=', '.join(self.get_original_argument_pairs(cur_method.arguments)),
+                    arguments=', '.join(self.get_original_snippet_argument_pairs(cur_method.arguments)),
                     const=' const' if cur_method.const else ''
                 )
                 self.internal_snippet.put_line(method_declaration)
@@ -732,6 +732,31 @@ class CapiGenerator(object):
 
     def get_original_argument_pairs(self, arguments):
         return [self.get_original_argument_pair(argument) for argument in arguments]
+
+    # Original types for snippets
+    def get_original_snippet_type(self, type_name):
+        class_object = self.get_class_type(type_name)
+        if class_object:
+            if class_object.lifecycle == Parser.TLifecycle.copy_semantic:
+                return Helpers.format_type(self.params_description.snippet_implementation_value_usage.format(
+                    implementation_name=class_object.implementation_class_name))
+            else:
+                return Helpers.format_type(self.params_description.snippet_implementation_pointer_usage.format(
+                    implementation_name=class_object.implementation_class_name))
+        else:
+            return self.get_original_type(type_name)
+
+    def get_original_snippet_argument(self, argument):
+        return self.get_original_snippet_type(argument.type_name)
+
+    def get_original_snippet_argument_pair(self, argument):
+        return '{0} {1}'.format(self.get_original_snippet_type(argument.type_name), argument.name)
+
+    def get_original_snippet_arguments(self, arguments):
+        return [self.get_original_snippet_argument(argument) for argument in arguments]
+
+    def get_original_snippet_argument_pairs(self, arguments):
+        return [self.get_original_snippet_argument_pair(argument) for argument in arguments]
 
 
 def main():
