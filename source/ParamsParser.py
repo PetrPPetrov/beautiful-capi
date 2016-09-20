@@ -82,9 +82,9 @@ class TBeautifulCapiParams(object):
         self.is_not_null_method_filled = False
         self.delete_method = "Delete"
         self.delete_method_filled = False
-        self.snippet_implementation_pointer_usage = ""
+        self.snippet_implementation_pointer_usage = "{implementation_name}*"
         self.snippet_implementation_pointer_usage_filled = False
-        self.snippet_implementation_value_usage = ""
+        self.snippet_implementation_value_usage = "{implementation_name}"
         self.snippet_implementation_value_usage_filled = False
         self.forward_holder_filename = "{project_name}/common/forward_holder.h"
         self.forward_holder_filename_filled = False
