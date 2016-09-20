@@ -11,6 +11,7 @@
 *) noexcept methods if target language supports C++ 11
 *) forward C function declarations in AutoGenWrap.cpp
 *) down_cast for boost::shared_ptr (copy_semantic)
+*) move all scripts except BCapi.py in details subfolder, rename BCapi.py to Capi.py
 ===
 *) shuffle Capi mode
 *) implement Dynamic traits for Windows
