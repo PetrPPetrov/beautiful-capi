@@ -119,7 +119,10 @@ def generate_forward_holder(capi_generator):
                                 capi_generator.output_header.put_line(
                                     'reinterpret_cast<WrappedObjType*>(this)->~WrappedObjType();'
                                 )
-                        capi_generator.output_header.put_line('operator WrappedObjType()')
+                        capi_generator.output_header.put_line('operator WrappedObjType() const')
+                        with FileGenerator.IndentScope(capi_generator.output_header):
+                            capi_generator.output_header.put_line('return WrappedObjType(m_pointer, m_add_ref);')
+                        capi_generator.output_header.put_line('WrappedObjType value() const')
                         with FileGenerator.IndentScope(capi_generator.output_header):
                             capi_generator.output_header.put_line('return WrappedObjType(m_pointer, m_add_ref);')
                         capi_generator.output_header.put_line('WrappedObjType* operator->()')

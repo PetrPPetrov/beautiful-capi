@@ -42,11 +42,13 @@ def pascal_to_stl(pascal_name):
 
 
 def replace_template_to_filename(template_name):
-    return template_name.replace('<', '_').replace('>', '').replace('::', '').replace('*', 'p').replace(' ', '')
+    return template_name.replace('<', '_').replace('>', '').replace('::', '').\
+        replace('*', 'p').replace(' ', '').replace(',', '_')
 
 
 def replace_template_to_c_id(template_name):
-    return template_name.replace('<', '_').replace('>', '').replace('::', '').replace('*', 'p').replace(' ', '')
+    return template_name.replace('<', '_').replace('>', '').replace('::', '').\
+        replace('*', 'p').replace(' ', '').replace(',', '_')
 
 
 def replace_double_greater(template_name):

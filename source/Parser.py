@@ -108,6 +108,7 @@ class TNamespace(object):
         self.implementation_header_filled = False
         self.includes = []
         self.namespaces = []
+        self.include_headers = []
         self.enumerations = []
         self.classes = []
         self.callbacks = []
@@ -123,6 +124,10 @@ class TNamespace(object):
             new_element = TNamespace()
             new_element.load(element)
             self.namespaces.append(new_element)
+        for element in [node for node in dom_node.childNodes if node.nodeName == "include_header"]:
+            new_element = THeaderInclude()
+            new_element.load(element)
+            self.include_headers.append(new_element)
         for element in [node for node in dom_node.childNodes if node.nodeName == "enumeration"]:
             new_element = TEnumeration()
             new_element.load(element)
@@ -223,6 +228,8 @@ class TTemplate(object):
 
 class TInstantiation(object):
     def __init__(self):
+        self.typedef_name = ""
+        self.typedef_name_filled = False
         self.arguments = []
     
     def load(self, dom_node):
@@ -230,6 +237,10 @@ class TInstantiation(object):
             new_element = TInstantiationArgument()
             new_element.load(element)
             self.arguments.append(new_element)
+        if dom_node.hasAttribute("typedef_name"):
+            cur_attr = dom_node.getAttribute("typedef_name")
+            self.typedef_name = cur_attr
+            self.typedef_name_filled = True
     
 
 class TInstantiationArgument(object):
@@ -272,19 +283,25 @@ class TClass(object):
         self.exception_filled = False
         self.template_line = ""
         self.template_line_filled = False
+        self.typedef_name = ""
+        self.typedef_name_filled = False
         self.copy_or_add_ref_noexcept = False
         self.copy_or_add_ref_noexcept_filled = False
         self.delete_or_release_noexcept = False
         self.delete_or_release_noexcept_filled = False
+        self.include_headers = []
         self.enumerations = []
         self.constructors = []
         self.methods = []
         self.code_before_class_definitions = []
         self.code_after_publics = []
         self.code_after_class_definitions = []
-        self.include_headers = []
     
     def load(self, dom_node):
+        for element in [node for node in dom_node.childNodes if node.nodeName == "include_header"]:
+            new_element = THeaderInclude()
+            new_element.load(element)
+            self.include_headers.append(new_element)
         for element in [node for node in dom_node.childNodes if node.nodeName == "enumeration"]:
             new_element = TEnumeration()
             new_element.load(element)
@@ -309,10 +326,6 @@ class TClass(object):
             new_element = TCodeBlock()
             new_element.load(element)
             self.code_after_class_definitions.append(new_element)
-        for element in [node for node in dom_node.childNodes if node.nodeName == "include_header"]:
-            new_element = THeaderInclude()
-            new_element.load(element)
-            self.include_headers.append(new_element)
         if dom_node.hasAttribute("name"):
             cur_attr = dom_node.getAttribute("name")
             self.name = cur_attr
@@ -353,6 +366,10 @@ class TClass(object):
             cur_attr = dom_node.getAttribute("template_line")
             self.template_line = cur_attr
             self.template_line_filled = True
+        if dom_node.hasAttribute("typedef_name"):
+            cur_attr = dom_node.getAttribute("typedef_name")
+            self.typedef_name = cur_attr
+            self.typedef_name_filled = True
         if dom_node.hasAttribute("copy_or_add_ref_noexcept"):
             cur_attr = dom_node.getAttribute("copy_or_add_ref_noexcept")
             self.copy_or_add_ref_noexcept = string_to_bool(cur_attr)

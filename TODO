@@ -12,6 +12,10 @@
 *) forward C function declarations in AutoGenWrap.cpp
 *) down_cast for boost::shared_ptr (copy_semantic)
 *) move all scripts except BCapi.py in details subfolder, rename BCapi.py to Capi.py
+*) add some protection enumerator for (void* object_pointer, bool copy_or_add_ref) constructor to avoid implicitly casting
+*) use typedef names where it is possible
+*) add std::nullptr_t constructor if target language supports C++ 11
+*) add runtime check for binary compatibility
 ===
 *) shuffle Capi mode
 *) implement Dynamic traits for Windows

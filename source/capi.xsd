@@ -18,6 +18,7 @@
       <xs:element name="include" minOccurs="0" maxOccurs="unbounded" type="TApiInclude"/>
       <xs:element name="namespace" minOccurs="0" maxOccurs="unbounded" type="TNamespace"/>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="include_header" minOccurs="0" maxOccurs="unbounded" type="THeaderInclude"/>
         <xs:element name="enumeration" minOccurs="0" maxOccurs="unbounded" type="TEnumeration"/>
         <xs:element name="class" minOccurs="0" maxOccurs="unbounded" type="TClass"/>
         <xs:element name="callback" minOccurs="0" maxOccurs="unbounded" type="TCallback"/>
@@ -51,6 +52,7 @@
     <xs:sequence>
       <xs:element name="argument"  minOccurs="1" maxOccurs="unbounded" type="TInstantiationArgument"/>
     </xs:sequence>
+    <xs:attribute name="typedef_name" type="xs:string" use="optional" default=""/>
   </xs:complexType>
   <xs:complexType name="TInstantiationArgument">
     <xs:attribute name="name" type="xs:string" use="required"/>
@@ -76,6 +78,7 @@
     <xs:attribute name="pointer_access" type="xs:boolean" use="optional" default="false"/>
     <xs:attribute name="exception" type="xs:boolean" use="optional" default="false"/>
     <xs:attribute name="template_line" type="xs:string" use="optional" default=""/>
+    <xs:attribute name="typedef_name" type="xs:string" use="optional" default=""/>
     <xs:attribute name="copy_or_add_ref_noexcept" type="xs:boolean" use="optional" default="false"/>
     <xs:attribute name="delete_or_release_noexcept" type="xs:boolean" use="optional" default="false"/>
   </xs:complexType>

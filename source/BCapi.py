@@ -184,6 +184,9 @@ class CapiGenerator(object):
             if len(self.cur_namespace_path) == 1:
                 self.exception_traits.include_check_and_throw_exception_header()
 
+            for include_info in namespace.include_headers:
+                self.output_header.include_header(include_info.file, include_info.system)
+
             with IfDefScope(self.output_header, '__cplusplus'):
                 for cur_namespace in self.cur_namespace_path:
                     self.output_header.put_line('namespace {0} {{ '.format(cur_namespace), '')
@@ -298,6 +301,12 @@ class CapiGenerator(object):
             self.lifecycle_traits.generate_delete_method()
             for method in cur_class.methods:
                 self.__generate_method(method, cur_class)
+        if cur_class.typedef_name:
+            self.output_header.put_line('typedef {0} {1}{2};'.format(
+                TraitsBase(cur_class, self).get_cur_class_short_name(),
+                cur_class.typedef_name,
+                self.lifecycle_traits.get_suffix()
+            ))
         Helpers.output_code_blocks(self.output_header, cur_class.code_after_class_definitions, True)
 
     def __generate_internal_class(self, cur_class):
@@ -395,7 +404,7 @@ class CapiGenerator(object):
                 return_type=self.get_wrapped_return_type(function.return_type),
                 function_name=function.name,
                 arguments=', '.join(self.get_wrapped_argument_pairs(function.arguments))))
-            c_function_name = self.get_namespace_id().lower() + Helpers.pascal_to_stl(function.name)
+            c_function_name = self.get_namespace_id().lower() + '_' + Helpers.pascal_to_stl(function.name)
             with FileGenerator.IndentScope(self.output_header):
                 self.exception_traits.generate_c_call(
                     c_function_name,
@@ -456,7 +465,7 @@ class CapiGenerator(object):
 
     def __get_class_type_impl(self, path_to_class, classes_or_namespaces):
         for class_or_namespace in classes_or_namespaces:
-            if class_or_namespace.name.strip() == path_to_class[0].strip():
+            if class_or_namespace.name.replace(' ', '') == path_to_class[0].replace(' ', ''):
                 if len(path_to_class) == 1:
                     return class_or_namespace
                 elif len(path_to_class) == 2:

@@ -79,6 +79,8 @@ class TemplateProcessor(object):
             new_class = copy.deepcopy(template_class)
             new_class.implementation_class_name = self.__instantiate_impl_type(
                 new_class.implementation_class_name, instantiation)
+            if instantiation.typedef_name:
+                new_class.typedef_name = instantiation.typedef_name
             new_class.base = self.__instantiate_type(new_class.base, instantiation)
             for constructor in new_class.constructors:
                 self.__instantiate_constructor(constructor, instantiation)

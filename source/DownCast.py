@@ -35,6 +35,7 @@ def generate_down_cast(output_file, cur_class, base_class, capi_generator):
             input_type=base_class_extra_info.get_class_name()
         )
     )
+
     with FileGenerator.IndentScope(output_file):
         Helpers.put_raw_pointer_structure(output_file)
         c_function_name = '{0}_cast_to_{1}'.format(
@@ -57,6 +58,18 @@ def generate_down_cast(output_file, cur_class, base_class, capi_generator):
                 )
             )
         capi_generator.output_source.put_line('')
+    output_file.put_line('template<>')
+    output_file.put_line(
+        'inline {return_type} down_cast(const {input_type}& input_fwd_object)'.format(
+            return_type=cur_class_extra_info.get_class_name(),
+            input_type=base_class_extra_info.get_fwd_class_name()
+        )
+    )
+    with FileGenerator.IndentScope(output_file):
+        output_file.put_line('return down_cast<{return_type}, {input_type}>(input_fwd_object.value());'.format(
+            return_type=cur_class_extra_info.get_class_name(),
+            input_type=base_class_extra_info.get_class_name()
+        ))
     output_file.put_line('')
 
 
