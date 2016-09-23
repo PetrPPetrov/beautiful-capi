@@ -102,22 +102,22 @@ def generate_forward_holder(capi_generator):
                     capi_generator.output_header.put_line('class forward_pointer_holder')
                     with FileGenerator.IndentScope(capi_generator.output_header, '};'):
                         capi_generator.output_header.put_line('void* m_pointer;')
-                        capi_generator.output_header.put_line('bool m_object_was_created;')
+                        capi_generator.output_header.put_line('WrappedObjType * m_created_wrapper_object;')
                         capi_generator.output_header.put_line('const bool m_add_ref;')
                         with FileGenerator.Unindent(capi_generator.output_header):
                             capi_generator.output_header.put_line('public:')
                         capi_generator.output_header.put_line('forward_pointer_holder(void* pointer, bool add_ref)')
                         capi_generator.output_header.put_line(
-                            ' : m_object_was_created(false), m_pointer(pointer), m_add_ref(add_ref)'
+                            ' : m_created_wrapper_object(0), m_pointer(pointer), m_add_ref(add_ref)'
                         )
                         with FileGenerator.IndentScope(capi_generator.output_header):
                             pass
                         capi_generator.output_header.put_line('~forward_pointer_holder()')
                         with FileGenerator.IndentScope(capi_generator.output_header):
-                            capi_generator.output_header.put_line('if (m_object_was_created)')
+                            capi_generator.output_header.put_line('if (m_created_wrapper_object)')
                             with FileGenerator.IndentScope(capi_generator.output_header):
                                 capi_generator.output_header.put_line(
-                                    'reinterpret_cast<WrappedObjType*>(this)->~WrappedObjType();'
+                                    'delete m_created_wrapper_object;'
                                 )
                         capi_generator.output_header.put_line('operator WrappedObjType() const')
                         with FileGenerator.IndentScope(capi_generator.output_header):
@@ -127,8 +127,7 @@ def generate_forward_holder(capi_generator):
                             capi_generator.output_header.put_line('return WrappedObjType(m_pointer, m_add_ref);')
                         capi_generator.output_header.put_line('WrappedObjType* operator->()')
                         with FileGenerator.IndentScope(capi_generator.output_header):
-                            capi_generator.output_header.put_line('m_object_was_created = true;')
-                            capi_generator.output_header.put_line('return new(this) WrappedObjType(m_pointer, m_add_ref);')
-                        capi_generator.output_header.put_line('void* get_raw_pointer() const')
-                        with FileGenerator.IndentScope(capi_generator.output_header):
-                            capi_generator.output_header.put_line('return m_pointer;')
+                            capi_generator.output_header.put_line(
+                                'm_created_wrapper_object = new WrappedObjType(m_pointer, m_add_ref);')
+                            capi_generator.output_header.put_line(
+                                'return m_created_wrapper_object;')

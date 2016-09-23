@@ -51,7 +51,7 @@
 *) inline optimization
 *) C++ modes: C++ 98, C++2003, C++2011, for wrappers and for internals
 *) add Python 2.7 support (?)
-*) return values of class type should be normal wrapper if it is possible, or it should be forward_pointer_holder if it is circular reference (?)
+*) return values of class type should be normal wrapper if it is possible, or it should be forward_pointer_holder if it is a circular reference
 *) add automatic inclusion of dependent files (i.e. if ClassA uses ClassB then ClassA.h should include ClassB.h) (?)
 ===
 *) standard module for wrapping STL classes (a huge topic, maybe start wrapping only some basic things)
