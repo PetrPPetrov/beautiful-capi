@@ -15,9 +15,9 @@
   </xs:complexType>
   <xs:complexType name="TNamespace">
     <xs:sequence>
-      <xs:element name="include" minOccurs="0" maxOccurs="unbounded" type="TApiInclude"/>
-      <xs:element name="namespace" minOccurs="0" maxOccurs="unbounded" type="TNamespace"/>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="include" minOccurs="0" maxOccurs="unbounded" type="TApiInclude"/>
+        <xs:element name="namespace" minOccurs="0" maxOccurs="unbounded" type="TNamespace"/>
         <xs:element name="include_header" minOccurs="0" maxOccurs="unbounded" type="THeaderInclude"/>
         <xs:element name="enumeration" minOccurs="0" maxOccurs="unbounded" type="TEnumeration"/>
         <xs:element name="class" minOccurs="0" maxOccurs="unbounded" type="TClass"/>
@@ -64,6 +64,7 @@
       <xs:element name="enumeration" minOccurs="0" maxOccurs="unbounded" type="TEnumeration"/>
       <xs:element name="constructor" minOccurs="0" maxOccurs="unbounded" type="TConstructor"/>
       <xs:element name="method" minOccurs="0" maxOccurs="unbounded" type="TMethod"/>
+      <xs:element name="callback" minOccurs="0" maxOccurs="1" type="TCallback"/>
       <xs:element name="code_before_class_definition" minOccurs="0" maxOccurs="unbounded" type="TCodeBlock"/>
       <xs:element name="code_after_public" minOccurs="0" maxOccurs="unbounded" type="TCodeBlock"/>
       <xs:element name="code_after_class_definition" minOccurs="0" maxOccurs="unbounded" type="TCodeBlock"/>
@@ -83,10 +84,6 @@
     <xs:attribute name="delete_or_release_noexcept" type="xs:boolean" use="optional" default="false"/>
   </xs:complexType>
   <xs:complexType name="TCallback">
-    <xs:attribute name="name" type="xs:string" use="optional" default="Callback"/>
-    <xs:attribute name="base" type="xs:string" use="required"/>
-    <xs:attribute name="implementation_class_name" type="xs:string" use="required"/>
-    <xs:attribute name="implementation_class_header" type="xs:string" use="required"/>
     <xs:attribute name="lifecycle" type="TLifecycle" use="optional" default="reference_counted"/>
   </xs:complexType>
   <xs:complexType name="TConstructor">

@@ -20,443 +20,216 @@
 #
 
 
-import ParamsParser
-from TraitsBase import TraitsBase
-from Parser import THeaderInclude
-from FileGenerator import NewFileScope
-from FileGenerator import WatchdogScope
-from FileGenerator import IndentScope
-from FileGenerator import IfDefScope
-from FileGenerator import Indent
+from ParamsParser import TBeautifulCapiParams
+from FileCache import FileCache
+from FileGenerator import FileGenerator, IndentScope, WatchdogScope, IfDefScope, Indent
+from ArgumentGenerator import ClassTypeGenerator, BuiltinTypeGenerator
+from NamespaceGenerator import NamespaceGenerator
+from ClassGenerator import ClassGenerator
 
 
-class ExceptionTraitsBase(TraitsBase):
-    def __init__(self, cur_method, cur_class, capi_generator):
-        super().__init__(cur_class, capi_generator)
-        self.cur_method = cur_method
-
-
-class NoHandling(ExceptionTraitsBase):
-    def __init__(self, cur_method, cur_class, capi_generator):
-        super().__init__(cur_method, cur_class, capi_generator)
-
-    def generate_codes(self):
+class NoHandling(object):
+    def __init__(self):
         pass
 
-    def generate_check_and_throw_exception_header(self):
+    def generate_exception_info(self, out: FileGenerator):
         pass
 
-    def generate_check_and_throw_exception_forward_declaration(self):
+    def generate_check_and_throw_exception_forward_declaration(self, out: FileGenerator):
         pass
 
-    def generate_exception_info(self):
+    def generate_check_and_throw_exception(self, file_cache: FileCache):
         pass
-
-    def generate_check_and_throw_exception_callback(self):
-        pass
-
-    def include_check_and_throw_exception_header(self):
-        pass
-
-    def generate_implementation_call(self, method_call, return_type):
-        cur_file = self.capi_generator.output_source
-        cur_file.put_line(method_call)
-
-    def generate_implementation_callback(self, method_call, return_type, callback_class):
-        self.generate_implementation_call(method_call, return_type)
-
-    def generate_c_call(self, c_method_name, format_string, is_function):
-        cur_file = self.capi_generator.output_header
-        self.capi_generator.put_raw_pointer_structure_if_required(cur_file, self.cur_method.arguments)
-        cur_file.put_line(self.capi_generator.get_wrapped_return_instruction(
-            self.cur_method.return_type if hasattr(self.cur_method, 'return_type') else '',
-            format_string.format(
-                c_function=c_method_name,
-                arguments=', '.join(self.get_c_from_wrapped_arguments_for_function() if is_function
-                                    else self.get_c_from_wrapped_arguments())
-            ),
-            self.cur_method
-        ))
-
-    def generate_c_callback(self, c_method_name, format_string, is_function):
-        cur_file = self.capi_generator.output_header
-        cur_file.put_line(self.capi_generator.make_implementation_return(
-            self.cur_method.return_type if hasattr(self.cur_method, 'return_type') else '',
-            format_string.format(
-                c_function=c_method_name,
-                arguments=', '.join(self.get_c_from_original_arguments_for_function() if is_function
-                                    else self.get_c_from_original_arguments())
-            )
-        ))
-
-    def get_c_from_wrapped_arguments(self):
-        return self.capi_generator.get_c_from_wrapped_arguments_impl(self.cur_method.arguments)
-
-    def get_c_from_wrapped_arguments_for_function(self):
-        return self.capi_generator.get_c_from_wrapped_arguments_for_function_impl(self.cur_method.arguments)
-
-    def get_c_from_original_arguments(self):
-        return self.capi_generator.get_c_from_original_arguments_impl(self.cur_method.arguments)
-
-    def get_c_from_original_arguments_for_function(self):
-        return self.capi_generator.get_c_from_original_arguments_for_function_impl(self.cur_method.arguments)
-
-    def get_c_argument_pairs(self):
-        return self.capi_generator.get_c_argument_pairs_impl(self.cur_method.arguments)
-
-    def get_c_argument_pairs_for_function(self):
-        return self.capi_generator.get_c_argument_pairs_for_function_impl(self.cur_method.arguments)
-
-
-class ByFirstArgument(ExceptionTraitsBase):
-    def __init__(self, cur_method, cur_class, capi_generator):
-        super().__init__(cur_method, cur_class, capi_generator)
-        self.current_exception_index = 1
-        self.callback_class = None
-
-    def __exception_info_t(self):
-        return self.capi_generator.params_description.beautiful_capi_namespace.lower() + '_exception_info_t'
-
-    def __exception_code_t(self):
-        return self.capi_generator.params_description.beautiful_capi_namespace.lower() + '_exception_code_t'
-
-    def __generate_codes_for_class(self, cur_class):
-        if cur_class.exception:
-            self.capi_generator.exception_class_2_code.update({cur_class: self.current_exception_index})
-            self.current_exception_index += 1
-
-    def __generate_codes_for_namespace(self, namespace):
-        for cur_class in namespace.classes:
-            self.__generate_codes_for_class(cur_class)
-        for nested_namespace in namespace.namespaces:
-            self.__generate_codes_for_namespace(nested_namespace)
-
-    def __process_class(self, cur_class):
-        if cur_class.exception:
-            cur_file = self.capi_generator.output_header
-            cur_file.put_line(
-                'case {0}:'.format(self.capi_generator.exception_class_2_code[cur_class])
-            )
-            self.current_exception_index += 1
-            cur_class_extra_info = self.capi_generator.extra_info[cur_class]
-            cur_file.include_user_header(self.capi_generator.file_traits.class_header(cur_class))
-            with Indent(cur_file):
-                cur_file.put_line('throw {0}(exception_object, false);'.format(cur_class_extra_info.get_class_name()))
-
-    def __process_namespace(self, namespace):
-        for cur_class in namespace.classes:
-            self.__process_class(cur_class)
-        for nested_namespace in namespace.namespaces:
-            self.__process_namespace(nested_namespace)
-
-    def __generate_check_and_throw_exception(self):
-        cur_file = self.capi_generator.output_header
-        cur_file.put_line('inline void check_and_throw_exception(int exception_code, void* exception_object)')
-        with IndentScope(cur_file):
-            cur_file.put_line('switch (exception_code)')
-            with IndentScope(cur_file):
-                cur_file.put_line('case 0:')
-                with Indent(cur_file):
-                    cur_file.put_line('return;')
-                for cur_namespace in self.capi_generator.api_description.namespaces:
-                    self.__process_namespace(cur_namespace)
-                cur_file.put_line('default:')
-                with Indent(cur_file):
-                    cur_file.put_line('assert(false);')
-                cur_file.put_line('case -1:')
-                with Indent(cur_file):
-                    cur_file.put_line('throw std::runtime_error("unknown exception");')
-
-    # TODO: avoid copy-paste from __process_class() method
-    def __process_callback(self, cur_class):
-        if cur_class.exception:
-            cur_file = self.capi_generator.output_header
-            cur_file.put_line(
-                'case {0}:'.format(self.capi_generator.exception_class_2_code[cur_class])
-            )
-            with Indent(cur_file):
-                with IndentScope(cur_file):
-                    cur_file.put_line('{0}* impl_exception_object = static_cast<{0}*>(exception_object);'.format(
-                        cur_class.implementation_class_name
-                    ))
-                    cur_file.put_line('{0} saved_exception_object = *impl_exception_object;'.format(
-                        cur_class.implementation_class_name
-                    ))
-                    cur_file.put_line('delete impl_exception_object;')
-                    cur_file.put_line('throw saved_exception_object;')
-
-    # TODO: avoid copy-paste from __process_namespace() method
-    def __process_namespace_callback(self, namespace):
-        for cur_class in namespace.classes:
-            self.__process_callback(cur_class)
-        for nested_namespace in namespace.namespaces:
-            self.__process_namespace_callback(nested_namespace)
-
-    # TODO: avoid copy-paste from __generate_check_and_throw_exception() method
-    def generate_check_and_throw_exception_callback(self):
-        cur_file = self.capi_generator.output_header
-        cur_file.put_line('inline void check_and_throw_exception(int exception_code, void* exception_object)')
-        with IndentScope(cur_file):
-            cur_file.put_line('switch (exception_code)')
-            with IndentScope(cur_file):
-                cur_file.put_line('case 0:')
-                with Indent(cur_file):
-                    cur_file.put_line('return;')
-                for cur_namespace in self.capi_generator.api_description.namespaces:
-                    self.__process_namespace_callback(cur_namespace)
-                cur_file.put_line('default:')
-                with Indent(cur_file):
-                    cur_file.put_line('assert(false);')
-                cur_file.put_line('case -1:')
-                with Indent(cur_file):
-                    cur_file.put_line('throw std::runtime_error("unknown exception");')
-
-    def generate_codes(self):
-        for cur_namespace in self.capi_generator.api_description.namespaces:
-            self.__generate_codes_for_namespace(cur_namespace)
-
-    def generate_check_and_throw_exception_header(self):
-        with NewFileScope(
-            self.capi_generator.file_traits.get_file_for_check_and_throw_exception(), self.capi_generator
-        ):
-            cur_file = self.capi_generator.output_header
-            cur_file.put_begin_cpp_comments(self.capi_generator.params_description)
-            with WatchdogScope(cur_file, '{0}_CHECK_AND_THROW_EXCEPTION_INCLUDED'.format(
-                self.capi_generator.params_description.beautiful_capi_namespace.upper()
-            )):
-                with IfDefScope(cur_file, '__cplusplus'):
-                    cur_file.put_include_files()
-                    cur_file.include_system_header('stdexcept')
-                    cur_file.include_system_header('cassert')
-                    cur_file.put_line('')
-                    cur_file.put_line('namespace ' +
-                                      self.capi_generator.params_description.beautiful_capi_namespace)
-                    with IndentScope(cur_file):
-                        self.__generate_check_and_throw_exception()
-
-    def generate_check_and_throw_exception_forward_declaration(self):
-        cur_file = self.capi_generator.output_header
-        cur_file.put_begin_cpp_comments(self.capi_generator.params_description)
-        with WatchdogScope(cur_file, '{0}_CHECK_AND_THROW_EXCEPTION_FORWARD_DECLARATION'.format(
-            self.capi_generator.params_description.beautiful_capi_namespace.upper()
-        )):
-                cur_file.put_line('namespace ' + self.capi_generator.params_description.beautiful_capi_namespace)
-                with IndentScope(cur_file):
-                    cur_file.put_line(
-                        'inline void check_and_throw_exception(int exception_code, void* exception_object);'
-                    )
-
-    def generate_exception_info_impl(self, cur_file):
-        with WatchdogScope(cur_file, '{0}_EXCEPTION_INFO_DEFINED'.format(
-                self.capi_generator.params_description.beautiful_capi_namespace.upper())):
-            cur_file.put_line('struct {0}'.format(self.__exception_info_t()))
-            with IndentScope(cur_file, '};'):
-                cur_file.put_line('int code; /* value from {0} enumeration */'.format(self.__exception_code_t()))
-                cur_file.put_line('void* object_pointer;')
-            cur_file.put_line('')
-            cur_file.put_line('enum {0}'.format(self.__exception_code_t()))
-            with IndentScope(cur_file, '};'):
-                cur_file.put_line('no_exception = 0,')
-                code_to_exception = {code: exception_class for exception_class, code
-                                     in self.capi_generator.exception_class_2_code.items()}
-                for code, exception_class in code_to_exception.items():
-                    exception_extra_info = self.capi_generator.extra_info[exception_class]
-                    cur_file.put_line('{0} = {1},'.format(exception_extra_info.get_c_name(), code))
-                cur_file.put_line('unknown_exception = -1')
-
-    def generate_exception_info(self):
-        self.generate_exception_info_impl(self.capi_generator.output_header)
-        self.generate_exception_info_impl(self.capi_generator.output_source)
-
-    def include_check_and_throw_exception_header(self):
-        self.capi_generator.output_header.include_user_header(
-            self.capi_generator.file_traits.check_and_throw_exception_header())
-
-    def __generate_catch_for_class_by_value(self, cur_exception_class):
-        cur_file = self.capi_generator.output_source
-        cur_file.put_line(
-            'catch (const {0}& exception_object)'.format(cur_exception_class.implementation_class_name)
-        )
-        with IndentScope(cur_file):
-            cur_file.put_line('if (exception_info)')
-            with IndentScope(cur_file):
-                cur_file.put_line('exception_info->code = {0};'.format(
-                    self.capi_generator.exception_class_2_code[cur_exception_class])
-                )
-                cur_file.put_line('exception_info->object_pointer = new {0}(exception_object);'.format(
-                    cur_exception_class.implementation_class_name
-                ))
-
-    def __generate_catch_for_class_by_pointer(self, cur_exception_class):
-        cur_file = self.capi_generator.output_source
-        cur_file.put_line(
-            'catch ({0}* exception_object)'.format(cur_exception_class.implementation_class_name)
-        )
-        with IndentScope(cur_file):
-            cur_file.put_line('if (exception_info)')
-            with IndentScope(cur_file):
-                cur_file.put_line('exception_info->code = {0};'.format(
-                    self.capi_generator.exception_class_2_code[cur_exception_class])
-                )
-                cur_file.put_line('exception_info->object_pointer = exception_object;')
-
-    def __generate_catch_for_callback_by_value(self, cur_exception_class):
-        exception_header = self.capi_generator.file_traits.class_header(cur_exception_class)
-        if exception_header:
-            new_exception_header = THeaderInclude()
-            new_exception_header.file = exception_header
-            self.callback_class.include_headers.append(new_exception_header)
-        cur_exception_extra_info = self.capi_generator.extra_info[cur_exception_class]
-        cur_file = self.capi_generator.output_source
-        cur_file.put_line(
-            'catch ({0}& exception_object)'.format(
-                cur_exception_extra_info.get_class_name())
-        )
-        with IndentScope(cur_file):
-            cur_file.put_line('if (exception_info)')
-            with IndentScope(cur_file):
-                cur_file.put_line('exception_info->code = {0};'.format(
-                    self.capi_generator.exception_class_2_code[cur_exception_class])
-                )
-                cur_file.put_line('exception_info->object_pointer = exception_object.Detach();')
-
-    def __generate_catch_for_class(self, cur_exception_class):
-        for derived_exception_class in self.capi_generator.extra_info[cur_exception_class].derived_objects:
-            self.__generate_catch_for_class(derived_exception_class)
-        self.capi_generator.loader_traits.add_impl_header(cur_exception_class.implementation_class_header)
-        self.__generate_catch_for_class_by_value(cur_exception_class)
-        self.__generate_catch_for_class_by_pointer(cur_exception_class)
-
-    def __generate_catch_for_callback(self, cur_exception_class):
-        for derived_exception_class in self.capi_generator.extra_info[cur_exception_class].derived_objects:
-            self.__generate_catch_for_callback(derived_exception_class)
-        self.__generate_catch_for_callback_by_value(cur_exception_class)
-
-    def __generate_implementation_call(self, method_call, return_type, catch_generator):
-        cur_file = self.capi_generator.output_source
-        cur_file.put_line('try')
-        with IndentScope(cur_file):
-            cur_file.put_line('if (exception_info)')
-            with IndentScope(cur_file):
-                cur_file.put_line('exception_info->code = 0;')
-                cur_file.put_line('exception_info->object_pointer = 0;')
-            cur_file.put_line(method_call)
-        for cur_exception_class in self.capi_generator.exception_class_2_code:
-            if not cur_exception_class.base:
-                catch_generator(self, cur_exception_class)
-        cur_file.put_line('catch (...)')
-        with IndentScope(cur_file):
-            cur_file.put_line('if (exception_info)')
-            with IndentScope(cur_file):
-                cur_file.put_line('exception_info->code = -1;')
-                cur_file.put_line('exception_info->object_pointer = 0;')
-        if return_type:
-            cur_file.put_line('return static_cast<{0}>(0);'.format(self.capi_generator.get_c_type(return_type)))
-
-    def generate_implementation_call(self, method_call, return_type):
-        self.__generate_implementation_call(method_call, return_type, ByFirstArgument.__generate_catch_for_class)
-
-    def generate_implementation_callback(self, method_call, return_type, callback_class):
-        self.callback_class = callback_class
-        self.__generate_implementation_call(method_call, return_type, ByFirstArgument.__generate_catch_for_callback)
-
-    def generate_c_call(self, c_method_name, format_string, is_function):
-        cur_file = self.capi_generator.output_header
-        self.capi_generator.put_raw_pointer_structure_if_required(cur_file, self.cur_method.arguments)
-        cur_file.put_line('{0} exception_info;'.format(self.__exception_info_t()))
-        cur_file.put_line(self.capi_generator.get_wrapped_result_var(
-            self.cur_method.return_type if hasattr(self.cur_method, 'return_type') else '',
-            format_string.format(
-                c_function=c_method_name,
-                arguments=', '.join(self.get_c_from_wrapped_arguments_for_function() if is_function
-                                    else self.get_c_from_wrapped_arguments())
-            ),
-            self.cur_method
-        ))
-        cur_file.put_line(
-            '{0}::check_and_throw_exception(exception_info.code, exception_info.object_pointer);'.format(
-                self.capi_generator.params_description.beautiful_capi_namespace)
-        )
-        if hasattr(self.cur_method, 'return_type') and self.cur_method.return_type:
-            cur_file.put_line('return result;')
-
-    def generate_c_callback(self, c_method_name, format_string, is_function):
-        cur_file = self.capi_generator.output_header
-        cur_file.put_line('{0} exception_info;'.format(self.__exception_info_t()))
-        cur_file.put_line(self.capi_generator.get_original_result_var(
-            self.cur_method.return_type if hasattr(self.cur_method, 'return_type') else '',
-            format_string.format(
-                c_function=c_method_name,
-                arguments=', '.join(self.get_c_from_original_arguments_for_function() if is_function
-                                    else self.get_c_from_original_arguments())
-            )
-        ))
-        cur_file.put_line(
-            '{0}::check_and_throw_exception(exception_info.code, exception_info.object_pointer);'.format(
-                self.capi_generator.params_description.beautiful_capi_namespace)
-        )
-        if hasattr(self.cur_method, 'return_type') and self.cur_method.return_type:
-            cur_file.put_line('return result;')
 
     @staticmethod
-    def get_c_from_wrapped():
-        return ['&exception_info']
-
-    def get_c_from_wrapped_arguments(self):
-        return ByFirstArgument.get_c_from_wrapped() + \
-               self.capi_generator.get_c_from_wrapped_arguments_impl(self.cur_method.arguments)
-
-    def get_c_from_wrapped_arguments_for_function(self):
-        return ByFirstArgument.get_c_from_wrapped() + \
-               self.capi_generator.get_c_from_wrapped_arguments_for_function_impl(self.cur_method.arguments)
-
-    def get_c_from_original_arguments(self):
-        return ByFirstArgument.get_c_from_wrapped() + \
-               self.capi_generator.get_c_from_original_arguments_impl(self.cur_method.arguments)
-
-    def get_c_from_original_arguments_for_function(self):
-        return ByFirstArgument.get_c_from_wrapped() + \
-               self.capi_generator.get_c_from_original_arguments_for_function_impl(self.cur_method.arguments)
-
-    def __get_c_argument(self):
-        return ['{0}* exception_info'.format(self.__exception_info_t())]
-
-    def get_c_argument_pairs(self):
-        return self.__get_c_argument() + \
-               self.capi_generator.get_c_argument_pairs_impl(self.cur_method.arguments)
-
-    def get_c_argument_pairs_for_function(self):
-        return self.__get_c_argument() + \
-               self.capi_generator.get_c_argument_pairs_for_function_impl(self.cur_method.arguments)
-
-
-str_to_exception_traits = {
-    ParamsParser.TExceptionHandlingMode.no_handling: NoHandling,
-    ParamsParser.TExceptionHandlingMode.by_first_argument: ByFirstArgument
-}
-
-
-def create_exception_traits(cur_method, cur_class, capi_generator):
-    if cur_method.noexcept:
-        return NoHandling(cur_method, cur_class, capi_generator)
-    if capi_generator.params_description.exception_handling_mode in str_to_exception_traits:
-        return str_to_exception_traits[capi_generator.params_description.exception_handling_mode](
-            cur_method, cur_class, capi_generator
+    def generate_c_call(out: FileGenerator, return_type: ClassTypeGenerator or BuiltinTypeGenerator,
+                        c_function_name: str, arguments: [str]):
+        c_function_call = '{function_name}({arguments})'.format(
+            function_name=c_function_name,
+            arguments=', '.join(arguments)
         )
-    raise ValueError
+        casting_instructions, return_expression = return_type.c_2_wrap_var('', c_function_call)
+        out.put_lines(casting_instructions)
+        out.put_return_cpp_statement(return_expression)
+
+    @staticmethod
+    def modify_c_arguments(arguments: [str]):
+        pass
+
+    @staticmethod
+    def generate_implementation_call(out: FileGenerator,
+                                     return_type: ClassTypeGenerator or BuiltinTypeGenerator, methods_calls: str):
+        for method_call in methods_calls:
+            out.put_line(method_call)
+
+    def include_dependent_implementation_headers(self, file_generator: FileGenerator):
+        pass
 
 
-class CreateExceptionTraits(object):
-    def __init__(self, cur_method, cur_class, capi_generator):
-        self.cur_method = cur_method
-        self.cur_class = cur_class
-        self.capi_generator = capi_generator
-        self.previous_exception_traits = capi_generator.exception_traits
+class ByFirstArgument(object):
+    def __init__(self, params: TBeautifulCapiParams, root_namespace_generators: [NamespaceGenerator]):
+        self.params = params
+        self.root_namespace_generators = root_namespace_generators
+        self.exception_classes = []
+        self.exception_classes_generated = False
 
-    def __enter__(self):
-        self.capi_generator.exception_traits = create_exception_traits(
-            self.cur_method, self.cur_class, self.capi_generator
+    def __exception_info_t(self):
+        return self.params.beautiful_capi_namespace.lower() + '_exception_info_t'
+
+    def __exception_code_t(self):
+        return self.params.beautiful_capi_namespace.lower() + '_exception_code_t'
+
+    def generate_exception_info(self, out: FileGenerator):
+        with WatchdogScope(out, '{0}_EXCEPTION_INFO_DEFINED'.format(
+                self.params.beautiful_capi_namespace.upper())):
+            out.put_line('struct {0}'.format(self.__exception_info_t()))
+            with IndentScope(out, '};'):
+                out.put_line('int code; /* value from {0} enumeration */'.format(self.__exception_code_t()))
+                out.put_line('void* object_pointer;')
+            out.put_line('')
+            out.put_line('enum {0}'.format(self.__exception_code_t()))
+            with IndentScope(out, '};'):
+                out.put_line('no_exception = 0,')
+                code_to_exception = {exception_class.exception_code: exception_class for exception_class
+                                     in self.exception_classes}
+                for code, exception_class in code_to_exception.items():
+                    out.put_line('{0} = {1},'.format(exception_class.full_c_name, code))
+                out.put_line('unknown_exception = -1')
+
+    def generate_check_and_throw_exception_forward_declaration(self, out: FileGenerator):
+        watchdog_string = '{0}_CHECK_AND_THROW_EXCEPTION_FORWARD_DECLARATION'.format(
+            self.params.beautiful_capi_namespace.upper())
+        with WatchdogScope(out, watchdog_string):
+            out.put_line('namespace ' + self.params.beautiful_capi_namespace)
+            with IndentScope(out):
+                out.put_line(
+                    'inline void check_and_throw_exception(int exception_code, void* exception_object);'
+                )
+
+    def generate_check_and_throw_exception(self, file_cache: FileCache):
+        out = file_cache.get_file_for_check_and_throw_exception()
+        out.put_begin_cpp_comments(self.params)
+        with WatchdogScope(out,
+                           self.params.beautiful_capi_namespace.upper() + '_CHECK_AND_THROW_EXCEPTION_INCLUDED'):
+            with IfDefScope(out, '__cplusplus'):
+                out.put_include_files()
+                out.include_system_header('stdexcept')
+                out.include_system_header('cassert')
+                for exception_class in self.exception_classes:
+                    out.include_user_header(
+                        file_cache.class_header(exception_class.full_name_array))
+                out.put_line('namespace {0}'.format(self.params.beautiful_capi_namespace))
+                with IndentScope(out):
+                    out.put_line(
+                        'inline void check_and_throw_exception(int exception_code, void* exception_object)')
+                    with IndentScope(out):
+                        out.put_line('switch (exception_code)')
+                        with IndentScope(out):
+                            out.put_line('case 0:')
+                            with Indent(out):
+                                out.put_line('return;')
+                            code_to_exception = {exception_class.exception_code: exception_class for exception_class
+                                                 in self.exception_classes}
+                            for code, exception_class in code_to_exception.items():
+                                out.put_line('case {0}:'.format(code))
+                                with Indent(out):
+                                    out.put_line('throw {0}(exception_object, false);'.format(
+                                        exception_class.full_wrap_name))
+                            out.put_line('default:')
+                            with Indent(out):
+                                out.put_line('assert(false);')
+                            out.put_line('case -1:')
+                            with Indent(out):
+                                out.put_line('throw std::runtime_error("unknown exception");')
+
+    def generate_c_call(self, out: FileGenerator, return_type: ClassTypeGenerator or BuiltinTypeGenerator,
+                        c_function_name: str, arguments: [str]):
+        out.put_line('{0} exception_info;'.format(self.__exception_info_t()))
+        arguments.insert(0, '&exception_info')
+        c_function_call = '{function_name}({arguments})'.format(
+            function_name=c_function_name,
+            arguments=', '.join(arguments)
         )
+        casting_instructions, return_expression = return_type.c_2_wrap_var('result', c_function_call)
+        out.put_lines(casting_instructions)
+        out.put_line('{0}::check_and_throw_exception(exception_info.code, exception_info.object_pointer);'.format(
+            self.params.beautiful_capi_namespace))
+        out.put_return_cpp_statement(return_expression)
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.capi_generator.exception_traits = self.previous_exception_traits
+    def modify_c_arguments(self, arguments: [str]):
+        arguments.insert(0, '{0}* exception_info'.format(self.__exception_info_t()))
+
+    def __remember_exception_class(self, class_generator: ClassGenerator):
+        if class_generator.class_object.exception and class_generator not in self.exception_classes:
+            for derived_class_generator in class_generator.derived_class_generators:
+                self.__remember_exception_class(derived_class_generator)
+            self.exception_classes.append(class_generator)
+
+    def __remember_exception_classes_for_namespace(self, namespace_generator: NamespaceGenerator):
+        for nested_namespace_generator in namespace_generator.nested_namespaces:
+            self.__remember_exception_classes_for_namespace(nested_namespace_generator)
+        for class_generator in namespace_generator.classes:
+            self.__remember_exception_class(class_generator)
+
+    def __remember_exception_classes(self):
+        if not self.exception_classes_generated:
+            self.exception_classes_generated = True
+            for root_namespace_generator in self.root_namespace_generators:
+                self.__remember_exception_classes_for_namespace(root_namespace_generator)
+
+    @staticmethod
+    def __generate_catch_by_value(out: FileGenerator, exception_class_generator: ClassGenerator):
+        out.put_line('catch (const {0}& exception_object)'.format(
+            exception_class_generator.class_object.implementation_class_name
+        ))
+        with IndentScope(out):
+            out.put_line('if (exception_info)')
+            with IndentScope(out):
+                out.put_line('exception_info->code = {0};'.format(exception_class_generator.exception_code))
+                # TODO: Add exception handling here
+                out.put_line('// TODO: Add exception handling here')
+                out.put_line('exception_info->object_pointer = new {0}(exception_object);'.format(
+                    exception_class_generator.class_object.implementation_class_name
+                ))
+
+    @staticmethod
+    def __generate_catch_by_pointer(out: FileGenerator, exception_class_generator: ClassGenerator):
+        out.put_line('catch ({0}* exception_object)'.format(
+            exception_class_generator.class_object.implementation_class_name
+        ))
+        with IndentScope(out):
+            out.put_line('if (exception_info)')
+            with IndentScope(out):
+                out.put_line('exception_info->code = {0};'.format(exception_class_generator.exception_code))
+                out.put_line('exception_info->object_pointer = exception_object;')
+
+    @staticmethod
+    def __generate_catch(out: FileGenerator, exception_class_generator: ClassGenerator):
+        ByFirstArgument.__generate_catch_by_value(out, exception_class_generator)
+        ByFirstArgument.__generate_catch_by_pointer(out, exception_class_generator)
+
+    def generate_implementation_call(
+            self, out: FileGenerator, return_type: ClassTypeGenerator or BuiltinTypeGenerator, methods_calls: [str]):
+        self.__remember_exception_classes()
+        out.put_line('try')
+        with IndentScope(out):
+            out.put_line('if (exception_info)')
+            with IndentScope(out):
+                out.put_line('exception_info->code = 0;')
+                out.put_line('exception_info->object_pointer = 0;')
+            for method_call in methods_calls:
+                out.put_line(method_call)
+        for exception_class_generator in self.exception_classes:
+            ByFirstArgument.__generate_catch(out, exception_class_generator)
+        out.put_line('catch (...)')
+        with IndentScope(out):
+            out.put_line('if (exception_info)')
+            with IndentScope(out):
+                out.put_line('exception_info->code = -1;')
+                out.put_line('exception_info->object_pointer = 0;')
+        return_type.generate_c_default_return_value(out)
+
+    def include_dependent_implementation_headers(self, file_generator: FileGenerator):
+        for exception_class_generator in self.exception_classes:
+            if exception_class_generator.class_object.implementation_class_header_filled:
+                file_generator.include_user_header(exception_class_generator.class_object.implementation_class_header)

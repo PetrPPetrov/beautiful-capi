@@ -32,7 +32,7 @@ from LifecycleTraits import CreateLifecycleTraits
 from InheritanceTraits import CreateInheritanceTraits
 from CfunctionTraits import CreateLoaderTraits
 from ExceptionTraits import CreateExceptionTraits
-from FileTraits import CreateFileTraits
+from FileCache import CreateFileTraits
 from FileGenerator import WatchdogScope
 from FileGenerator import IfDefScope
 from CapiFwd import process_capi

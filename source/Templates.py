@@ -21,97 +21,53 @@
 
 
 import copy
+from Parser import TInstantiation, TConstructor, TMethod, TNamespace, TTemplate, TBeautifulCapiRoot
+from Helpers import BeautifulCapiException
 
-class TemplateProcessor(object):
-    def __init__(self, capi_generator):
-        self.capi_generator = capi_generator
-        self.begin_namespace_callback = None
-        self.end_namespace_callback = None
-        self.template_callback = None
-        self.cur_namespace_stack = []
-        self.cur_namespace = None
 
-    def __instantiate_type_impl(self, type_name, name, value):
-        return type_name.replace(name, value)
+def instantiate_type(type_name: str, instantiation: TInstantiation):
+    for argument in instantiation.arguments:
+        type_name = type_name.replace(argument.name, argument.value)
+    return type_name
 
-    def __instantiate_return_type_impl(self, type_name, name, value):
-        return type_name.replace(name, value)
 
-    def __instantiate_impl_type_impl(self, type_name, name, value):
-        return type_name.replace(name, value)
+def instantiate_constructor(constructor: TConstructor, instantiation: TInstantiation):
+    for argument in constructor.arguments:
+        argument.type_name = instantiate_type(argument.type_name, instantiation)
 
-    def __instantiate_type(self, type_name, instantiation):
-        for argument in instantiation.arguments:
-            type_name = self.__instantiate_type_impl(type_name, argument.name, argument.value)
-        return type_name
 
-    def __instantiate_return_type(self, type_name, instantiation):
-        for argument in instantiation.arguments:
-            type_name = self.__instantiate_return_type_impl(type_name, argument.name, argument.value)
-        return type_name
+def instantiate_method(method: TMethod, instantiation: TInstantiation):
+    instantiate_constructor(method, instantiation)
+    method.return_type = instantiate_type(method.return_type, instantiation)
 
-    def __instantiate_impl_type(self, type_name, instantiation):
-        for argument in instantiation.arguments:
-            type_name = self.__instantiate_impl_type_impl(type_name, argument.name, argument.value)
-        return type_name
 
-    def __instantiate_constructor(self, constructor, instantiation):
-        for argument in constructor.arguments:
-            argument.type_name = self.__instantiate_type(argument.type_name, instantiation)
+def generate_template_classes(namespace: TNamespace, template: TTemplate):
+    if not template.classes:
+        raise BeautifulCapiException('template have to contain a nested class')
+    template_class = template.classes[0]
+    for instantiation in template.instantiations:
+        new_class = copy.deepcopy(template_class)
+        new_class.implementation_class_name = instantiate_type(new_class.implementation_class_name, instantiation)
+        if instantiation.typedef_name:
+            new_class.typedef_name = instantiation.typedef_name
+        new_class.base = instantiate_type(new_class.base, instantiation)
+        for constructor in new_class.constructors:
+            instantiate_constructor(constructor, instantiation)
+        for method in new_class.methods:
+            instantiate_method(method, instantiation)
+        new_class.template_line = 'template<>'
+        class_suffix = ', '.join([argument.value for argument in instantiation.arguments])
+        new_class.name += '<{0}>'.format(class_suffix)
+        namespace.classes.append(new_class)
 
-    def __instantiate_method(self, method, instantiation):
-        self.__instantiate_constructor(method, instantiation)
-        method.return_type = self.__instantiate_return_type(method.return_type, instantiation)
 
-    def __begin_namespace_callback(self, namespace):
-        self.capi_generator.cur_namespace_path.append(namespace.name)
-        self.cur_namespace_stack.append(self.cur_namespace)
-        self.cur_namespace = namespace
+def process_namespace(namespace: TNamespace):
+    for nested_namespace in namespace.namespaces:
+        process_namespace(nested_namespace)
+    for cur_template in namespace.templates:
+        generate_template_classes(namespace, cur_template)
 
-    def __end_namespace_callback(self, namespace):
-        self.capi_generator.cur_namespace_path.pop()
-        self.cur_namespace = self.cur_namespace_stack[-1]
-        self.cur_namespace_stack.pop()
 
-    def __generate_template_classes(self, template):
-        for instantiation in template.instantiations:
-            template_class = template.classes[0]
-            new_class = copy.deepcopy(template_class)
-            new_class.implementation_class_name = self.__instantiate_impl_type(
-                new_class.implementation_class_name, instantiation)
-            if instantiation.typedef_name:
-                new_class.typedef_name = instantiation.typedef_name
-            new_class.base = self.__instantiate_type(new_class.base, instantiation)
-            for constructor in new_class.constructors:
-                self.__instantiate_constructor(constructor, instantiation)
-            for method in new_class.methods:
-                self.__instantiate_method(method, instantiation)
-            new_class.template_line = 'template<>'
-            class_suffix = ', '.join([argument.value for argument in instantiation.arguments])
-            new_class.name += '<{0}>'.format(class_suffix)
-            self.cur_namespace.classes.append(new_class)
-        # print("template name = {0}".format(template.name))
-
-    def process_template(self, template):
-        if self.template_callback:
-            self.template_callback(self, template)
-
-    def process_namespace(self, namespace):
-        if self.begin_namespace_callback:
-            self.begin_namespace_callback(self, namespace)
-        for nested_namespace in namespace.namespaces:
-            self.process_namespace(nested_namespace)
-        for cur_template in namespace.templates:
-            self.process_template(cur_template)
-        if self.end_namespace_callback:
-            self.end_namespace_callback(self, namespace)
-
-    def process_root_node(self, root_node):
-        for cur_namespace in root_node.namespaces:
-            self.process_namespace(cur_namespace)
-
-    def process(self, root_node):
-        self.begin_namespace_callback = TemplateProcessor.__begin_namespace_callback
-        self.end_namespace_callback = TemplateProcessor.__end_namespace_callback
-        self.template_callback = TemplateProcessor.__generate_template_classes
-        self.process_root_node(root_node)
+def process(root_node: TBeautifulCapiRoot):
+    for cur_namespace in root_node.namespaces:
+        process_namespace(cur_namespace)

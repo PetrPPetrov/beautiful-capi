@@ -21,15 +21,9 @@
 
 
 import Parser
-from ExceptionTraits import create_exception_traits
-from LifecycleTraits import CreateLifecycleTraits
-from FileGenerator import Indent
-from FileGenerator import IndentScope
-from FileGenerator import NewFilesScope
-from FileGenerator import Unindent
-from FileGenerator import FileGenerator
-from Constants import Constants
-import Helpers
+from NamespaceGenerator import NamespaceGenerator
+from ClassGenerator import ClassGenerator
+from ParamsParser import TBeautifulCapiParams
 
 
 def begin_namespace(cur_namespace, capi_generator):
@@ -498,3 +492,147 @@ def generate_callbacks_implementations(root_node, capi_generator):
                 root_node, capi_generator,
                 generate_callbacks_implementations_impl, begin_namespace_gen, end_namespace_gen)
             capi_generator.output_header.put_line('')
+
+
+class CallbackGenerator(object):
+    def __init__(self, params: TBeautifulCapiParams):
+        self.params = params
+
+    def __process_class(self, class_generator: ClassGenerator):
+        if class_generator.class_object.callbacks:
+            callback = class_generator.class_object.callbacks[0]
+            new_callback_class = Parser.TClass()
+            new_callback_class.name = callback.name
+            new_callback_class.base = class_generator.full_name
+            new_callback_class.lifecycle = class_generator.class_object.lifecycle
+            new_callback_class.implementation_class_name = '{parent_ns}::{prefix}{name}Impl'.format(
+                parent_ns=class_generator.parent_namespace.full_name,
+                prefix=self.params.autogen_prefix_for_internal_callback_implementation,
+                name=callback.name)
+            new_callback_class.implementation_class_name_filled = True
+
+            new_default_constructor = Parser.TConstructor()
+            new_default_constructor.name = 'Default'
+            new_callback_class.constructors.append(new_default_constructor)
+
+            if callback.lifecycle == Parser.TLifecycle.copy_semantic:
+
+                set_copy_c_function = Parser.TMethod()
+                set_copy_c_function.name = 'SetCFunctionForCopy'
+                set_copy_c_function.arguments.append(Parser.TArgument())
+                set_copy_c_function.arguments[0].type_name = get_copy_object_callback_type(cur_callback, capi_generator)
+                set_copy_c_function.arguments[0].name = 'c_function_pointer'
+                set_copy_c_function.noexcept = True
+                set_copy_c_function.noexcept_filled = True
+                new_callback_class.methods.append(set_copy_c_function)
+
+                set_delete_c_function = Parser.TMethod()
+                set_delete_c_function.name = 'SetCFunctionForDelete'
+                set_delete_c_function.arguments.append(Parser.TArgument())
+                set_delete_c_function.arguments[0].type_name = get_delete_object_callback_type(cur_callback, capi_generator)
+                set_delete_c_function.arguments[0].name = 'c_function_pointer'
+                set_delete_c_function.noexcept = True
+                set_delete_c_function.noexcept_filled = True
+                new_callback_class.methods.append(set_delete_c_function)
+
+            elif cur_callback.lifecycle == Parser.TLifecycle.reference_counted:
+                set_add_ref_c_function = Parser.TMethod()
+                set_add_ref_c_function.name = 'SetCFunctionForAddRef'
+                set_add_ref_c_function.arguments.append(Parser.TArgument())
+                set_add_ref_c_function.arguments[0].type_name = get_add_ref_object_callback_type(cur_callback, capi_generator)
+                set_add_ref_c_function.arguments[0].name = 'c_function_pointer'
+                set_add_ref_c_function.noexcept = True
+                set_add_ref_c_function.noexcept_filled = True
+                new_callback_class.methods.append(set_add_ref_c_function)
+
+                set_release_c_function = Parser.TMethod()
+                set_release_c_function.name = 'SetCFunctionForRelease'
+                set_release_c_function.arguments.append(Parser.TArgument())
+                set_release_c_function.arguments[0].type_name = get_release_object_callback_type(cur_callback, capi_generator)
+                set_release_c_function.arguments[0].name = 'c_function_pointer'
+                set_release_c_function.noexcept = True
+                set_release_c_function.noexcept_filled = True
+                new_callback_class.methods.append(set_release_c_function)
+
+            set_object_pointer_method = Parser.TMethod()
+            set_object_pointer_method.name = 'SetObjectPointer'
+            set_object_pointer_method.arguments.append(Parser.TArgument())
+            set_object_pointer_method.arguments[0].type_name = 'void*'
+            set_object_pointer_method.arguments[0].name = 'custom_object'
+            set_object_pointer_method.noexcept = True
+            set_object_pointer_method.noexcept_filled = True
+            new_callback_class.methods.append(set_object_pointer_method)
+
+            get_object_pointer_method = Parser.TMethod()
+            get_object_pointer_method.name = 'GetObjectPointer'
+            get_object_pointer_method.return_type = 'void*'
+            get_object_pointer_method.noexcept = True
+            get_object_pointer_method.noexcept_filled = True
+            new_callback_class.methods.append(get_object_pointer_method)
+
+            for cur_method in base_class.methods:
+                set_c_function_method = Parser.TMethod()
+                set_c_function_method.name = 'SetCFunctionFor{0}'.format(cur_method.name)
+                set_c_function_method.arguments.append(Parser.TArgument())
+                set_c_function_method.arguments[0].type_name = get_method_callback_type(
+                    cur_callback, capi_generator, cur_method)
+                set_c_function_method.arguments[0].name = 'c_function_pointer'
+                set_c_function_method.noexcept = True
+                set_c_function_method.noexcept_filled = True
+                new_callback_class.methods.append(set_c_function_method)
+
+            callback_customer_lifecycle = FileGenerator(None)
+            if cur_callback.lifecycle == Parser.TLifecycle.copy_semantic:
+                callback_customer_lifecycle.put_line('template<typename ImplementationClass>')
+                callback_customer_lifecycle.put_line(
+                    'void* {0}(void* object_pointer)'.format(get_copy_object_callback_name(cur_callback)))
+                with IndentScope(callback_customer_lifecycle):
+                    callback_customer_lifecycle.put_line(
+                        'const ImplementationClass* self = static_cast<ImplementationClass*>(object_pointer);'
+                    )
+                    callback_customer_lifecycle.put_line('return new ImplementationClass(*self);')
+                callback_customer_lifecycle.put_line('template<typename ImplementationClass>')
+                callback_customer_lifecycle.put_line(
+                    'void* {0}(void* object_pointer)'.format(get_delete_object_callback_name(cur_callback)))
+                with IndentScope(callback_customer_lifecycle):
+                    callback_customer_lifecycle.put_line(
+                        'const ImplementationClass* self = static_cast<ImplementationClass*>(object_pointer);'
+                    )
+                    callback_customer_lifecycle.put_line('delete self;')
+                    callback_customer_lifecycle.put_line('return 0;')
+            elif cur_callback.lifecycle == Parser.TLifecycle.reference_counted:
+                callback_customer_lifecycle.put_line('template<typename ImplementationClass>')
+                callback_customer_lifecycle.put_line(
+                    'void* {0}(void* object_pointer)'.format(get_add_ref_object_callback_name(cur_callback)))
+                with IndentScope(callback_customer_lifecycle):
+                    callback_customer_lifecycle.put_line(
+                        'const ImplementationClass* self = static_cast<ImplementationClass*>(object_pointer);'
+                    )
+                    callback_customer_lifecycle.put_line('intrusive_ptr_add_ref(self);')
+                    callback_customer_lifecycle.put_line('return object_pointer;')
+                callback_customer_lifecycle.put_line('template<typename ImplementationClass>')
+                callback_customer_lifecycle.put_line(
+                    'void* {0}(void* object_pointer)'.format(get_release_object_callback_name(cur_callback)))
+                with IndentScope(callback_customer_lifecycle):
+                    callback_customer_lifecycle.put_line(
+                        'const ImplementationClass* self = static_cast<ImplementationClass*>(object_pointer);'
+                    )
+                    callback_customer_lifecycle.put_line('intrusive_ptr_release(self);')
+                    callback_customer_lifecycle.put_line('return 0;')
+            if not callback_customer_lifecycle.empty():
+                Helpers.save_file_generator_to_code_blocks(callback_customer_lifecycle,
+                                                           new_callback_class.code_after_class_definitions)
+
+            cur_namespace.classes.append(new_callback_class)
+            capi_generator.callback_2_class.update({cur_callback: new_callback_class})
+
+    def __process_namespace(namespace_generator: NamespaceGenerator):
+        for nested_namespace_generator in namespace_generator.nested_namespaces:
+            process_namespace(nested_namespace_generator)
+        for class_generator in namespace_generator.classes:
+            process_class(class_generator)
+
+
+def process(namespace_generators: [NamespaceGenerator]):
+    for namespace_generator in namespace_generators:
+        process_namespace(namespace_generator)

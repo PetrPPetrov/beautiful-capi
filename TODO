@@ -16,6 +16,8 @@
 *) use typedef names where it is possible
 *) add std::nullptr_t constructor if target language supports C++ 11
 *) add runtime check for binary compatibility
+*) clash with argument names ("object_pointer", "self", "exception_info", "result")
+*) exception during exception class copy constructor (inside catch block)
 ===
 *) shuffle Capi mode
 *) implement Dynamic traits for Windows

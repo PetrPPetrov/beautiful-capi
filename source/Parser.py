@@ -293,6 +293,7 @@ class TClass(object):
         self.enumerations = []
         self.constructors = []
         self.methods = []
+        self.callbacks = []
         self.code_before_class_definitions = []
         self.code_after_publics = []
         self.code_after_class_definitions = []
@@ -314,6 +315,10 @@ class TClass(object):
             new_element = TMethod()
             new_element.load(element)
             self.methods.append(new_element)
+        for element in [node for node in dom_node.childNodes if node.nodeName == "callback"]:
+            new_element = TCallback()
+            new_element.load(element)
+            self.callbacks.append(new_element)
         for element in [node for node in dom_node.childNodes if node.nodeName == "code_before_class_definition"]:
             new_element = TCodeBlock()
             new_element.load(element)
@@ -382,34 +387,10 @@ class TClass(object):
 
 class TCallback(object):
     def __init__(self):
-        self.name = "Callback"
-        self.name_filled = False
-        self.base = ""
-        self.base_filled = False
-        self.implementation_class_name = ""
-        self.implementation_class_name_filled = False
-        self.implementation_class_header = ""
-        self.implementation_class_header_filled = False
         self.lifecycle = TLifecycle.reference_counted
         self.lifecycle_filled = False
     
     def load(self, dom_node):
-        if dom_node.hasAttribute("name"):
-            cur_attr = dom_node.getAttribute("name")
-            self.name = cur_attr
-            self.name_filled = True
-        if dom_node.hasAttribute("base"):
-            cur_attr = dom_node.getAttribute("base")
-            self.base = cur_attr
-            self.base_filled = True
-        if dom_node.hasAttribute("implementation_class_name"):
-            cur_attr = dom_node.getAttribute("implementation_class_name")
-            self.implementation_class_name = cur_attr
-            self.implementation_class_name_filled = True
-        if dom_node.hasAttribute("implementation_class_header"):
-            cur_attr = dom_node.getAttribute("implementation_class_header")
-            self.implementation_class_header = cur_attr
-            self.implementation_class_header_filled = True
         if dom_node.hasAttribute("lifecycle"):
             cur_attr = dom_node.getAttribute("lifecycle")
             self.lifecycle = TLifecycle.load(cur_attr)

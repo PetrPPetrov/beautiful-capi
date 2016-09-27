@@ -19,22 +19,21 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import Parser
-
 import os
+from Parser import load
 from xml.dom.minidom import parse as dom_parse
 
 
-def __get_all_namespaces(root_namespaces: list):
+def get_all_namespaces(root_namespaces: list):
     result = root_namespaces.copy()
     for namespace in root_namespaces:
-        result += __get_all_namespaces(namespace.namespaces)
+        result += get_all_namespaces(namespace.namespaces)
     return result
 
 
 def parse_root(root_api_xml_path: str):
-    root_api = Parser.load(dom_parse(root_api_xml_path))
-    namespaces = __get_all_namespaces(root_api.namespaces)
+    root_api = load(dom_parse(root_api_xml_path))
+    namespaces = get_all_namespaces(root_api.namespaces)
 
     cur_dir = os.path.dirname(root_api_xml_path)
     for namespace in namespaces:

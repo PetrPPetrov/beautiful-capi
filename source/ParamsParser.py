@@ -52,30 +52,28 @@ class TExceptionHandlingMode(Enum):
 
 class TBeautifulCapiParams(object):
     def __init__(self):
-        self.folder_per_namespace = True
-        self.folder_per_namespace_filled = False
-        self.file_per_class = True
-        self.file_per_class_filled = False
+        self.output_folder = ""
+        self.output_folder_filled = False
+        self.internal_snippets_folder = ""
+        self.internal_snippets_folder_filled = False
+        self.output_wrap_file_name = ""
+        self.output_wrap_file_name_filled = False
         self.namespace_header_at_parent_folder = True
         self.namespace_header_at_parent_folder_filled = False
-        self.generate_single_file = False
-        self.generate_single_file_filled = False
-        self.single_header_name = "Output.h"
-        self.single_header_name_filled = False
         self.dynamically_load_functions = False
         self.dynamically_load_functions_filled = False
         self.capi_header_suffix = "Capi"
         self.capi_header_suffix_filled = False
         self.fwd_header_suffix = "Fwd"
         self.fwd_header_suffix_filled = False
+        self.decl_header_suffix = "Decl"
+        self.decl_header_suffix_filled = False
         self.wrapper_class_suffix_copy_semantic = ""
         self.wrapper_class_suffix_copy_semantic_filled = False
         self.wrapper_class_suffix_reference_counted = "Ptr"
         self.wrapper_class_suffix_reference_counted_filled = False
         self.wrapper_class_suffix_raw_pointer = "RawPtr"
         self.wrapper_class_suffix_raw_pointer_filled = False
-        self.forward_typedef_suffix = "FwdPtr"
-        self.forward_typedef_suffix_filled = False
         self.is_null_method = "IsNull"
         self.is_null_method_filled = False
         self.is_not_null_method = "IsNotNull"
@@ -86,16 +84,14 @@ class TBeautifulCapiParams(object):
         self.snippet_implementation_pointer_usage_filled = False
         self.snippet_implementation_value_usage = "{implementation_name}"
         self.snippet_implementation_value_usage_filled = False
-        self.forward_holder_filename = "{project_name}/common/forward_holder.h"
-        self.forward_holder_filename_filled = False
-        self.check_and_throw_exception_filename = "{project_name}/common/check_and_throw_exception.h"
-        self.check_and_throw_exception_filename_filled = False
         self.exception_handling_mode = TExceptionHandlingMode.no_handling
         self.exception_handling_mode_filled = False
+        self.check_and_throw_exception_filename = "{project_name}/common/check_and_throw_exception.h"
+        self.check_and_throw_exception_filename_filled = False
         self.beautiful_capi_namespace = "beautiful_capi_{project_name}"
         self.beautiful_capi_namespace_filled = False
-        self.autogen_prefix = "AutoGen_{project_name}_"
-        self.autogen_prefix_filled = False
+        self.autogen_prefix_for_internal_callback_implementation = "AutoGen_{project_name}_"
+        self.autogen_prefix_for_internal_callback_implementation_filled = False
         self.root_header = "{project_name}.h"
         self.root_header_filled = False
         self.copyright_header = ""
@@ -110,26 +106,22 @@ class TBeautifulCapiParams(object):
         for element in [node for node in dom_node.childNodes if node.nodeName == "automatic_generated_warning"]:
             for text in [text for text in element.childNodes if text.nodeType == text.TEXT_NODE]:
                 self.automatic_generated_warning += text.nodeValue
-        if dom_node.hasAttribute("folder_per_namespace"):
-            cur_attr = dom_node.getAttribute("folder_per_namespace")
-            self.folder_per_namespace = string_to_bool(cur_attr)
-            self.folder_per_namespace_filled = True
-        if dom_node.hasAttribute("file_per_class"):
-            cur_attr = dom_node.getAttribute("file_per_class")
-            self.file_per_class = string_to_bool(cur_attr)
-            self.file_per_class_filled = True
+        if dom_node.hasAttribute("output_folder"):
+            cur_attr = dom_node.getAttribute("output_folder")
+            self.output_folder = cur_attr
+            self.output_folder_filled = True
+        if dom_node.hasAttribute("internal_snippets_folder"):
+            cur_attr = dom_node.getAttribute("internal_snippets_folder")
+            self.internal_snippets_folder = cur_attr
+            self.internal_snippets_folder_filled = True
+        if dom_node.hasAttribute("output_wrap_file_name"):
+            cur_attr = dom_node.getAttribute("output_wrap_file_name")
+            self.output_wrap_file_name = cur_attr
+            self.output_wrap_file_name_filled = True
         if dom_node.hasAttribute("namespace_header_at_parent_folder"):
             cur_attr = dom_node.getAttribute("namespace_header_at_parent_folder")
             self.namespace_header_at_parent_folder = string_to_bool(cur_attr)
             self.namespace_header_at_parent_folder_filled = True
-        if dom_node.hasAttribute("generate_single_file"):
-            cur_attr = dom_node.getAttribute("generate_single_file")
-            self.generate_single_file = string_to_bool(cur_attr)
-            self.generate_single_file_filled = True
-        if dom_node.hasAttribute("single_header_name"):
-            cur_attr = dom_node.getAttribute("single_header_name")
-            self.single_header_name = cur_attr
-            self.single_header_name_filled = True
         if dom_node.hasAttribute("dynamically_load_functions"):
             cur_attr = dom_node.getAttribute("dynamically_load_functions")
             self.dynamically_load_functions = string_to_bool(cur_attr)
@@ -142,6 +134,10 @@ class TBeautifulCapiParams(object):
             cur_attr = dom_node.getAttribute("fwd_header_suffix")
             self.fwd_header_suffix = cur_attr
             self.fwd_header_suffix_filled = True
+        if dom_node.hasAttribute("decl_header_suffix"):
+            cur_attr = dom_node.getAttribute("decl_header_suffix")
+            self.decl_header_suffix = cur_attr
+            self.decl_header_suffix_filled = True
         if dom_node.hasAttribute("wrapper_class_suffix_copy_semantic"):
             cur_attr = dom_node.getAttribute("wrapper_class_suffix_copy_semantic")
             self.wrapper_class_suffix_copy_semantic = cur_attr
@@ -154,10 +150,6 @@ class TBeautifulCapiParams(object):
             cur_attr = dom_node.getAttribute("wrapper_class_suffix_raw_pointer")
             self.wrapper_class_suffix_raw_pointer = cur_attr
             self.wrapper_class_suffix_raw_pointer_filled = True
-        if dom_node.hasAttribute("forward_typedef_suffix"):
-            cur_attr = dom_node.getAttribute("forward_typedef_suffix")
-            self.forward_typedef_suffix = cur_attr
-            self.forward_typedef_suffix_filled = True
         if dom_node.hasAttribute("is_null_method"):
             cur_attr = dom_node.getAttribute("is_null_method")
             self.is_null_method = cur_attr
@@ -178,26 +170,22 @@ class TBeautifulCapiParams(object):
             cur_attr = dom_node.getAttribute("snippet_implementation_value_usage")
             self.snippet_implementation_value_usage = cur_attr
             self.snippet_implementation_value_usage_filled = True
-        if dom_node.hasAttribute("forward_holder_filename"):
-            cur_attr = dom_node.getAttribute("forward_holder_filename")
-            self.forward_holder_filename = cur_attr
-            self.forward_holder_filename_filled = True
-        if dom_node.hasAttribute("check_and_throw_exception_filename"):
-            cur_attr = dom_node.getAttribute("check_and_throw_exception_filename")
-            self.check_and_throw_exception_filename = cur_attr
-            self.check_and_throw_exception_filename_filled = True
         if dom_node.hasAttribute("exception_handling_mode"):
             cur_attr = dom_node.getAttribute("exception_handling_mode")
             self.exception_handling_mode = TExceptionHandlingMode.load(cur_attr)
             self.exception_handling_mode_filled = True
+        if dom_node.hasAttribute("check_and_throw_exception_filename"):
+            cur_attr = dom_node.getAttribute("check_and_throw_exception_filename")
+            self.check_and_throw_exception_filename = cur_attr
+            self.check_and_throw_exception_filename_filled = True
         if dom_node.hasAttribute("beautiful_capi_namespace"):
             cur_attr = dom_node.getAttribute("beautiful_capi_namespace")
             self.beautiful_capi_namespace = cur_attr
             self.beautiful_capi_namespace_filled = True
-        if dom_node.hasAttribute("autogen_prefix"):
-            cur_attr = dom_node.getAttribute("autogen_prefix")
-            self.autogen_prefix = cur_attr
-            self.autogen_prefix_filled = True
+        if dom_node.hasAttribute("autogen_prefix_for_internal_callback_implementation"):
+            cur_attr = dom_node.getAttribute("autogen_prefix_for_internal_callback_implementation")
+            self.autogen_prefix_for_internal_callback_implementation = cur_attr
+            self.autogen_prefix_for_internal_callback_implementation_filled = True
         if dom_node.hasAttribute("root_header"):
             cur_attr = dom_node.getAttribute("root_header")
             self.root_header = cur_attr

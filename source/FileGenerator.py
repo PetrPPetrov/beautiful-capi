@@ -63,7 +63,7 @@ class FileGenerator(object):
         self.__write()
 
     def __enter__(self):
-        self
+        return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.__write()
@@ -117,6 +117,14 @@ class FileGenerator(object):
     def put_line(self, line, eol='\n'):
         self.lines.append(AtomicString(self.get_indent_str() + line + eol))
 
+    def put_lines(self, lines: [str], eol='\n'):
+        for line in lines:
+            self.put_line(line, eol)
+
+    def put_return_cpp_statement(self, expression: str):
+        if expression:
+            self.put_line('return {expression};'.format(expression=expression))
+
     def put_file(self, another_file):
         self.lines.append(another_file)
 
@@ -124,6 +132,7 @@ class FileGenerator(object):
         if not self.included_files_were_included:
             self.lines.append(IncludeHeaders(self.included_files))
             self.included_files_were_included = True
+        self.put_line('')
 
     def put_python_header(self):
         self.file_header = '#!/usr/bin/env python'
@@ -234,45 +243,3 @@ class IfDefScope(object):
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.file_generator.put_line('')
         self.file_generator.put_line('#endif /* {0} */'.format(self.condition_string))
-
-
-class NewFileScope(object):
-    def __init__(self, file_generator, capi_generator):
-        self.file_generator = file_generator
-        self.previous_file_generator = capi_generator.output_header
-        self.capi_generator = capi_generator
-
-    def __enter__(self):
-        self.capi_generator.output_header = self.file_generator
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.capi_generator.output_header = self.previous_file_generator
-
-
-class NewSourceFileScope(object):
-    def __init__(self, file_generator, capi_generator):
-        self.file_generator = file_generator
-        self.previous_file_generator = capi_generator.output_header
-        self.capi_generator = capi_generator
-
-    def __enter__(self):
-        self.capi_generator.output_source = self.file_generator
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.capi_generator.output_source = self.previous_file_generator
-
-
-class NewFilesScope(object):
-    def __init__(self, file_generator, capi_generator):
-        self.file_generator = file_generator
-        self.previous_output_header = capi_generator.output_header
-        self.previous_output_source = capi_generator.output_source
-        self.capi_generator = capi_generator
-
-    def __enter__(self):
-        self.capi_generator.output_header = self.file_generator
-        self.capi_generator.output_source = self.file_generator
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.capi_generator.output_header = self.previous_output_header
-        self.capi_generator.output_source = self.previous_output_source

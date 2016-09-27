@@ -19,140 +19,117 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from Constants import Constants
-from TraitsBase import TraitsBase
-from ExceptionTraits import CreateExceptionTraits
-from Helpers import get_return_copy_or_add_ref
-from Helpers import format_type
+
+from FileGenerator import FileGenerator, IndentScope
 
 
-class InheritanceTraitsBase(TraitsBase):
-    def __init__(self, cur_class, capi_generator):
-        super().__init__(cur_class, capi_generator)
+class RequiresCastToBase(object):
+    @staticmethod
+    def generate_pointer_declaration(out: FileGenerator, class_generator):
+        out.put_line('void* mObject;')
 
-    def generate_constructor(self, constructor):
-        with CreateExceptionTraits(constructor, self.cur_class, self.capi_generator):
-            self.capi_generator.cur_namespace_path.append(constructor.name)
-            self.put_line('{class_name}({arguments_list}){base_init}'.format(
-                class_name=self.get_cur_class_short_name(),
-                arguments_list=', '.join(self.capi_generator.get_wrapped_argument_pairs(constructor.arguments)),
-                base_init=self.capi_generator.lifecycle_traits.get_base_init()
+    @staticmethod
+    def __generate_cast_to_base(class_generator):
+        body = FileGenerator(None)
+        with IndentScope(body):
+            body.put_line('return static_cast<{base_type}*>(static_cast<{this_type}*>(object_pointer));'.format(
+                base_type=class_generator.base_class_generator.class_object.implementation_class_name,
+                this_type=class_generator.class_object.implementation_class_name
             ))
-            with self.indent_scope():
-                self.capi_generator.exception_traits.generate_c_call(
-                    self.capi_generator.get_namespace_id().lower(),
-                    'SetObject({c_function}({arguments}))',
-                    True
-                )
-                if get_return_copy_or_add_ref(constructor, self.cur_class):
-                    self.capi_generator.lifecycle_traits.generate_copy_or_add_ref_for_constructor()
-            c_function_declaration = 'void* {{convention}} {constructor_c_function}({arguments_list})'.format(
-                constructor_c_function=self.capi_generator.get_namespace_id().lower(),
-                arguments_list=', '.join(self.capi_generator.exception_traits.get_c_argument_pairs_for_function())
-            )
-            self.capi_generator.loader_traits.add_c_function_declaration(c_function_declaration)
-            with self.indent_scope_source():
-                method_call = 'return new {0}({1});'.format(
-                    format_type(self.cur_class.implementation_class_name),
-                    ', '.join(self.capi_generator.get_c_to_original_arguments(constructor.arguments))
-                )
-                self.capi_generator.exception_traits.generate_implementation_call(method_call, 'void*')
-            self.put_source_line('')
-            self.capi_generator.cur_namespace_path.pop()
+        class_generator.capi_generator.add_c_function(
+            class_generator.full_name_array,
+            'void*',
+            class_generator.cast_to_base,
+            'void* object_pointer',
+            body)
 
-
-class RequiresCastToBase(InheritanceTraitsBase):
-    def __init__(self, cur_class, capi_generator):
-        super().__init__(cur_class, capi_generator)
-
-    def generate_pointer_declaration(self):
-        self.capi_generator.output_header.put_line('void* {object_var};'.format(object_var=Constants.object_var))
-
-    def generate_destructor_body(self, terminate_c_function_name):
-        self.put_line('if ({object_var})'.format(object_var=Constants.object_var))
-        with self.indent_scope():
-            self.capi_generator.lifecycle_traits.delete_exception_traits.generate_c_call(
-                terminate_c_function_name,
-                '{c_function}({arguments})',
-                False
-            )
-            self.put_line('SetObject(0);')
-
-    def generate_destructor(self, destructor_declaration, terminate_c_function_name):
-        self.put_line(destructor_declaration)
-        with self.indent_scope():
-            self.generate_destructor_body(terminate_c_function_name)
-
-    def generate_set_object(self):
-        self.put_line('void SetObject(void* object_pointer)')
-        with self.indent_scope():
-            self.put_line('{object_var} = object_pointer;'.format(object_var=Constants.object_var))
-            if self.cur_class.base:
-                self.put_line('if ({object_var})'.format(object_var=Constants.object_var))
-                with self.indent_scope():
-                    self.put_line('{base_class}::SetObject({cast_to_base}({object_var}));'.format(
-                        base_class=self.get_base_class_name(),
-                        cast_to_base=self.capi_generator.get_namespace_id().lower() + Constants.cast_to_base_suffix,
-                        object_var=Constants.object_var
+    @staticmethod
+    def generate_set_object(out: FileGenerator, class_generator):
+        out.put_line('void SetObject(void* object_pointer)')
+        with IndentScope(out):
+            out.put_line('mObject = object_pointer;')
+            if class_generator.base_class_generator:
+                RequiresCastToBase.__generate_cast_to_base(class_generator)
+                out.put_line('if (mObject)')
+                with IndentScope(out):
+                    out.put_line('{base_class}::SetObject({cast_to_base}(mObject));'.format(
+                        base_class=class_generator.base_class_generator.full_wrap_name,
+                        cast_to_base=class_generator.cast_to_base
                     ))
-                self.put_line('else')
-                with self.indent_scope():
-                    self.put_line('{base_class}::SetObject(0);'.format(
-                        base_class=self.get_base_class_name()
-                    ))
-                c_function_declaration = 'void* {{convention}} {cast_to_base}(void* object_pointer)'.format(
-                    cast_to_base=self.capi_generator.get_namespace_id().lower() + Constants.cast_to_base_suffix)
-                self.capi_generator.loader_traits.add_c_function_declaration(c_function_declaration)
-                with self.indent_scope_source():
-                    self.put_source_line('return static_cast<{0}*>(static_cast<{1}*>(object_pointer));'.format(
-                        format_type(self.capi_generator.extra_info[self.cur_class].base_class_object.implementation_class_name),
-                        format_type(self.cur_class.implementation_class_name)
-                    ))
-                self.put_source_line('')
+                out.put_line('else')
+                with IndentScope(out):
+                    out.put_line('{base_class}::SetObject(0);'.format(
+                        base_class=class_generator.base_class_generator.full_wrap_name))
+
+    # def generate_destructor_body(out: FileGenerator, class_generator):
+    #     out.put_line('if (mObject)')
+    #     with IndentScope(out):
+    #         self.capi_generator.lifecycle_traits.delete_exception_traits.generate_c_call(
+    #             terminate_c_function_name,
+    #             '{c_function}({arguments})',
+    #             False
+    #         )
+    #         out.put_line('SetObject(0);')
+    #
+    # def generate_destructor(self, destructor_declaration, terminate_c_function_name):
+    #     self.put_line(destructor_declaration)
+    #     with self.indent_scope():
+    #         self.generate_destructor_body(terminate_c_function_name)
 
 
-class SimpleCase(InheritanceTraitsBase):
-    def __init__(self, cur_class, capi_generator):
-        super().__init__(cur_class, capi_generator)
+class SimpleCase(object):
+    @staticmethod
+    def generate_pointer_declaration(out: FileGenerator, class_generator):
+        if not class_generator.base_class_generator:
+            RequiresCastToBase().generate_pointer_declaration(out, class_generator)
 
-    def generate_pointer_declaration(self):
-        if not self.cur_class.base:
-            RequiresCastToBase(self.cur_class, self.capi_generator).generate_pointer_declaration()
-
-    def generate_destructor_body(self, terminate_c_function_name):
-        if not self.cur_class.base:
-            RequiresCastToBase(self.cur_class, self.capi_generator).generate_destructor_body(terminate_c_function_name)
-
-    def generate_destructor(self, destructor_declaration, terminate_c_function_name):
-        if not self.cur_class.base:
-            RequiresCastToBase(self.cur_class, self.capi_generator).generate_destructor(
-                destructor_declaration, terminate_c_function_name
-            )
-
-    def generate_set_object(self):
-        self.put_line('void SetObject(void* raw_pointer)')
-        with self.indent_scope():
-            if self.cur_class.base:
-                self.put_line('{base_class}::SetObject(raw_pointer);')
+    @staticmethod
+    def generate_set_object(out: FileGenerator, class_generator):
+        out.put_line('void SetObject(void* raw_pointer)')
+        with IndentScope(out):
+            if class_generator.base_class_generator:
+                out.put_line('{base_class}::SetObject(raw_pointer);'.format(
+                    base_class=class_generator.base_class_generator.full_wrap_name))
             else:
-                self.put_line('{object_var} = raw_pointer;'.format(object_var=Constants.object_var))
+                out.put_line('mObject = raw_pointer;')
 
 
-def create_inheritance_traits(cur_class, capi_generator):
-    if cur_class.requires_cast_to_base:
-        return RequiresCastToBase(cur_class, capi_generator)
+def create_inheritance_traits(requires_cast_to_base: bool):
+    if requires_cast_to_base:
+        return RequiresCastToBase()
     else:
-        return SimpleCase(cur_class, capi_generator)
+        return SimpleCase()
 
 
-class CreateInheritanceTraits(object):
-    def __init__(self, cur_class, capi_generator):
-        self.cur_class = cur_class
-        self.capi_generator = capi_generator
-        self.previous_inheritance_traits = capi_generator.inheritance_traits
-
-    def __enter__(self):
-        self.capi_generator.inheritance_traits = create_inheritance_traits(self.cur_class, self.capi_generator)
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.capi_generator.inheritance_traits = self.previous_inheritance_traits
+#     def generate_destructor_body(self, terminate_c_function_name):
+#         self.put_line('if ({object_var})'.format(object_var=Constants.object_var))
+#         with self.indent_scope():
+#             self.capi_generator.lifecycle_traits.delete_exception_traits.generate_c_call(
+#                 terminate_c_function_name,
+#                 '{c_function}({arguments})',
+#                 False
+#             )
+#             self.put_line('SetObject(0);')
+#
+#     def generate_destructor(self, destructor_declaration, terminate_c_function_name):
+#         self.put_line(destructor_declaration)
+#         with self.indent_scope():
+#             self.generate_destructor_body(terminate_c_function_name)
+#
+# class SimpleCase(InheritanceTraitsBase):
+#     def __init__(self, cur_class, capi_generator):
+#         super().__init__(cur_class, capi_generator)
+#
+#     def generate_pointer_declaration(self):
+#         if not self.cur_class.base:
+#             RequiresCastToBase(self.cur_class, self.capi_generator).generate_pointer_declaration()
+#
+#     def generate_destructor_body(self, terminate_c_function_name):
+#         if not self.cur_class.base:
+#             RequiresCastToBase(self.cur_class, self.capi_generator).generate_destructor_body(terminate_c_function_name)
+#
+#     def generate_destructor(self, destructor_declaration, terminate_c_function_name):
+#         if not self.cur_class.base:
+#             RequiresCastToBase(self.cur_class, self.capi_generator).generate_destructor(
+#                 destructor_declaration, terminate_c_function_name
+#             )
