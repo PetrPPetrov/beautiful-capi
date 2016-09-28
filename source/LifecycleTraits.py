@@ -23,7 +23,7 @@
 from Parser import TLifecycle
 from ParamsParser import TBeautifulCapiParams
 from FileGenerator import FileGenerator, IndentScope
-from ArgumentGenerator import BuiltinTypeGenerator
+from ArgumentGenerator import BuiltinTypeGenerator, ThisArgumentGenerator
 from Helpers import BeautifulCapiException
 
 
@@ -198,6 +198,36 @@ class CopySemantic(LifecycleTraits):
         out.put_line('')
         super().generate_std_methods_definitions(out, class_generator)
 
+    def generate_c_functions(self, class_generator):
+        copy_c_function_body = FileGenerator(None)
+        with IndentScope(copy_c_function_body):
+            copy_constructor_call = 'return new {impl_name}(*{to_impl_cast});'.format(
+                impl_name=class_generator.class_object.implementation_class_name,
+                to_impl_cast=ThisArgumentGenerator(class_generator).c_2_implementation()
+            )
+            self.init_method_exception_traits.generate_implementation_call(
+                copy_c_function_body, BuiltinTypeGenerator('void*'), [copy_constructor_call])
+        class_generator.capi_generator.add_c_function(
+            class_generator.full_name_array,
+            'void*',
+            class_generator.copy_method,
+            'void* object_pointer',
+            copy_c_function_body)
+
+        delete_c_function_body = FileGenerator(None)
+        with IndentScope(delete_c_function_body):
+            delete_call = 'delete {to_impl_cast};'.format(
+                to_impl_cast=ThisArgumentGenerator(class_generator).c_2_implementation()
+            )
+            self.finish_method_exception_traits.generate_implementation_call(
+                delete_c_function_body, BuiltinTypeGenerator('void'), [delete_call])
+        class_generator.capi_generator.add_c_function(
+            class_generator.full_name_array,
+            'void',
+            class_generator.delete_method,
+            'void* object_pointer',
+            delete_c_function_body)
+
 
 class RawPointerSemantic(LifecycleTraits):
     def __init__(self, params: TBeautifulCapiParams):
@@ -274,6 +304,21 @@ class RawPointerSemantic(LifecycleTraits):
             class_name=class_generator.full_wrap_name))
         with IndentScope(out):
             out.put_line('return this;')
+
+    def generate_c_functions(self, class_generator):
+        delete_c_function_body = FileGenerator(None)
+        with IndentScope(delete_c_function_body):
+            delete_call = 'delete {to_impl_cast};'.format(
+                to_impl_cast=ThisArgumentGenerator(class_generator).c_2_implementation()
+            )
+            self.finish_method_exception_traits.generate_implementation_call(
+                delete_c_function_body, BuiltinTypeGenerator('void'), [delete_call])
+        class_generator.capi_generator.add_c_function(
+            class_generator.full_name_array,
+            'void',
+            class_generator.delete_method,
+            'void* object_pointer',
+            delete_c_function_body)
 
 
 class RefCountedSemantic(LifecycleTraits):
@@ -370,6 +415,35 @@ class RefCountedSemantic(LifecycleTraits):
             class_name=class_generator.full_wrap_name))
         with IndentScope(out):
             out.put_line('return this;')
+
+    def generate_c_functions(self, class_generator):
+        add_ref_c_function_body = FileGenerator(None)
+        with IndentScope(add_ref_c_function_body):
+            add_ref_call = 'intrusive_ptr_add_ref({to_impl_cast});'.format(
+                to_impl_cast=ThisArgumentGenerator(class_generator).c_2_implementation()
+            )
+            self.init_method_exception_traits.generate_implementation_call(
+                add_ref_c_function_body, BuiltinTypeGenerator('void*'), [add_ref_call])
+        class_generator.capi_generator.add_c_function(
+            class_generator.full_name_array,
+            'void',
+            class_generator.add_ref_method,
+            'void* object_pointer',
+            add_ref_c_function_body)
+
+        release_c_function_body = FileGenerator(None)
+        with IndentScope(release_c_function_body):
+            release_call = 'intrusive_ptr_release({to_impl_cast});'.format(
+                to_impl_cast=ThisArgumentGenerator(class_generator).c_2_implementation()
+            )
+            self.finish_method_exception_traits.generate_implementation_call(
+                release_c_function_body, BuiltinTypeGenerator('void'), [release_call])
+        class_generator.capi_generator.add_c_function(
+            class_generator.full_name_array,
+            'void',
+            class_generator.release_method,
+            'void* object_pointer',
+            release_c_function_body)
 
 
 str_to_lifecycle = {

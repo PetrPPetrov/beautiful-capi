@@ -167,6 +167,8 @@ class ClassGenerator(object):
             constructor_generator.generate_c_function(self.capi_generator)
         for method_generator in self.method_generators:
             method_generator.generate_c_function(self.capi_generator)
+        self.lifecycle_traits.generate_c_functions(self)
+        self.inheritance_traits.generate_c_functions(self)
 
     def generate_forward_declaration(self, out: FileGenerator):
         out.put_line('class {0};'.format(self.wrap_name))

@@ -29,21 +29,6 @@ class RequiresCastToBase(object):
         out.put_line('void* mObject;')
 
     @staticmethod
-    def __generate_cast_to_base(class_generator):
-        body = FileGenerator(None)
-        with IndentScope(body):
-            body.put_line('return static_cast<{base_type}*>(static_cast<{this_type}*>(object_pointer));'.format(
-                base_type=class_generator.base_class_generator.class_object.implementation_class_name,
-                this_type=class_generator.class_object.implementation_class_name
-            ))
-        class_generator.capi_generator.add_c_function(
-            class_generator.full_name_array,
-            'void*',
-            class_generator.cast_to_base,
-            'void* object_pointer',
-            body)
-
-    @staticmethod
     def generate_set_object_declaration(out: FileGenerator, class_generator):
         out.put_line('inline void SetObject(void* object_pointer);')
 
@@ -54,7 +39,6 @@ class RequiresCastToBase(object):
         with IndentScope(out):
             out.put_line('mObject = object_pointer;')
             if class_generator.base_class_generator:
-                RequiresCastToBase.__generate_cast_to_base(class_generator)
                 out.put_line('if (mObject)')
                 with IndentScope(out):
                     out.put_line('{base_class}::SetObject({cast_to_base}(mObject));'.format(
@@ -65,6 +49,22 @@ class RequiresCastToBase(object):
                 with IndentScope(out):
                     out.put_line('{base_class}::SetObject(0);'.format(
                         base_class=class_generator.base_class_generator.full_wrap_name))
+
+    @staticmethod
+    def generate_c_functions(class_generator):
+        if class_generator.base_class_generator:
+            body = FileGenerator(None)
+            with IndentScope(body):
+                body.put_line('return static_cast<{base_type}*>(static_cast<{this_type}*>(object_pointer));'.format(
+                    base_type=class_generator.base_class_generator.class_object.implementation_class_name,
+                    this_type=class_generator.class_object.implementation_class_name
+                ))
+            class_generator.capi_generator.add_c_function(
+                class_generator.full_name_array,
+                'void*',
+                class_generator.cast_to_base,
+                'void* object_pointer',
+                body)
 
 
 class SimpleCase(object):
@@ -87,6 +87,9 @@ class SimpleCase(object):
                     base_class=class_generator.base_class_generator.full_wrap_name))
             else:
                 out.put_line('mObject = raw_pointer;')
+
+    def generate_c_functions(self, class_generator):
+        pass
 
 
 def create_inheritance_traits(requires_cast_to_base: bool):
