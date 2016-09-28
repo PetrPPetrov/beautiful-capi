@@ -83,6 +83,18 @@ class ClassGenerator(object):
     def copy_method(self) -> str:
         return self.full_c_name + '_copy'
 
+    @property
+    def delete_method(self) -> str:
+        return self.full_c_name + '_delete'
+
+    @property
+    def add_ref_method(self) -> str:
+        return self.full_c_name + '_add_ref'
+
+    @property
+    def release_method(self) -> str:
+        return self.full_c_name + '_release'
+
     def implementation_result_instructions(self, result_var: str, expression: str) -> ([str], str):
         return self.lifecycle_traits.implementation_result_instructions(self, result_var, expression)
 
@@ -100,10 +112,12 @@ class ClassGenerator(object):
                     method_declaration=method_generator.wrap_declaration()))
                 method_generator.include_dependent_declaration_headers(declaration_header, self.file_cache)
             self.inheritance_traits = create_inheritance_traits(self.class_object.requires_cast_to_base)
+            declaration_header.put_line('')
+            self.lifecycle_traits.generate_std_methods_declarations(declaration_header, self)
             with Unindent(declaration_header):
                 declaration_header.put_line('protected:')
+            self.inheritance_traits.generate_set_object_declaration(declaration_header, self)
             self.inheritance_traits.generate_pointer_declaration(declaration_header, self)
-            self.inheritance_traits.generate_set_object(declaration_header, self)
 
     def __generate_declaration(self):
         declaration_header = self.file_cache.get_file_for_class_decl(self.full_name_array)
@@ -143,6 +157,10 @@ class ClassGenerator(object):
                         definition_header.put_line('')
                     method_generator.generate_wrap_definition(definition_header, self.capi_generator)
                     method_generator.include_dependent_definition_headers(definition_header, self.file_cache)
+                definition_header.put_line('')
+                self.lifecycle_traits.generate_std_methods_definitions(definition_header, self)
+                definition_header.put_line('')
+                self.inheritance_traits.generate_set_object_definition(definition_header, self)
 
     def __generate_c_functions(self):
         for constructor_generator in self.constructor_generators:

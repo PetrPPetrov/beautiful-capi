@@ -44,7 +44,7 @@ class ClassTypeGenerator(object):
 
     def c_2_wrap_var(self, result_var: str, expression: str) -> ([str], str):
         if result_var:
-            return ['{type_name}{result_var}({expression}, true)'.format(
+            return ['{type_name}{result_var}({expression}, true);'.format(
                 type_name=self.wrap_return_type(),
                 result_var=' ' + result_var if result_var else '',
                 expression=expression)], result_var
@@ -103,7 +103,7 @@ class BuiltinTypeGenerator(object):
     def c_2_wrap_var(self, result_var: str, expression: str) -> ([str], str):
         if not self.is_void:
             if result_var:
-                return ['{type_name} {result_var}({expression})'.format(
+                return ['{type_name} {result_var}({expression});'.format(
                     type_name=self.wrap_return_type(),
                     result_var=result_var,
                     expression=expression)], result_var

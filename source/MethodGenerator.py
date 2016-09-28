@@ -64,8 +64,9 @@ class ConstructorGenerator(object):
             arguments=arguments
         ))
         with IndentScope(out):
-            self.exception_traits.generate_c_call(
+            return_expression = self.exception_traits.generate_c_call(
                 out, self.parent_class_as_argument_type, self.full_c_name, arguments_call)
+            out.put_return_cpp_statement(return_expression)
 
     def generate_c_function(self, capi_generator: CapiGenerator):
         argument_declaration_list = [
@@ -145,7 +146,9 @@ class MethodGenerator(object):
             const=' const' if self.method_object.const else ''
         ))
         with IndentScope(out):
-            self.exception_traits.generate_c_call(out, self.return_type_generator, self.full_c_name, arguments_call)
+            return_expression = self.exception_traits.generate_c_call(
+                out, self.return_type_generator, self.full_c_name, arguments_call)
+            out.put_return_cpp_statement(return_expression)
 
     def generate_c_function(self, capi_generator: CapiGenerator):
         argument_declaration_list = [

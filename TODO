@@ -18,6 +18,7 @@
 *) add runtime check for binary compatibility
 *) clash with argument names ("object_pointer", "self", "exception_info", "result")
 *) exception during exception class copy constructor (inside catch block)
+*) get_raw_pointer name customization
 ===
 *) shuffle Capi mode
 *) implement Dynamic traits for Windows

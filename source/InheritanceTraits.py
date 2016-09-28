@@ -44,8 +44,13 @@ class RequiresCastToBase(object):
             body)
 
     @staticmethod
-    def generate_set_object(out: FileGenerator, class_generator):
-        out.put_line('void SetObject(void* object_pointer)')
+    def generate_set_object_declaration(out: FileGenerator, class_generator):
+        out.put_line('inline void SetObject(void* object_pointer);')
+
+    @staticmethod
+    def generate_set_object_definition(out: FileGenerator, class_generator):
+        out.put_line('inline void {namespace}::SetObject(void* object_pointer)'.format(
+            namespace=class_generator.full_wrap_name))
         with IndentScope(out):
             out.put_line('mObject = object_pointer;')
             if class_generator.base_class_generator:
@@ -61,21 +66,6 @@ class RequiresCastToBase(object):
                     out.put_line('{base_class}::SetObject(0);'.format(
                         base_class=class_generator.base_class_generator.full_wrap_name))
 
-    # def generate_destructor_body(out: FileGenerator, class_generator):
-    #     out.put_line('if (mObject)')
-    #     with IndentScope(out):
-    #         self.capi_generator.lifecycle_traits.delete_exception_traits.generate_c_call(
-    #             terminate_c_function_name,
-    #             '{c_function}({arguments})',
-    #             False
-    #         )
-    #         out.put_line('SetObject(0);')
-    #
-    # def generate_destructor(self, destructor_declaration, terminate_c_function_name):
-    #     self.put_line(destructor_declaration)
-    #     with self.indent_scope():
-    #         self.generate_destructor_body(terminate_c_function_name)
-
 
 class SimpleCase(object):
     @staticmethod
@@ -84,8 +74,13 @@ class SimpleCase(object):
             RequiresCastToBase().generate_pointer_declaration(out, class_generator)
 
     @staticmethod
-    def generate_set_object(out: FileGenerator, class_generator):
-        out.put_line('void SetObject(void* raw_pointer)')
+    def generate_set_object_declaration(out: FileGenerator, class_generator):
+        out.put_line('inline void SetObject(void* object_pointer);')
+
+    @staticmethod
+    def generate_set_object_definition(out: FileGenerator, class_generator):
+        out.put_line('inline void {namespace}::SetObject(void* object_pointer)'.format(
+            namespace=class_generator.full_wrap_name))
         with IndentScope(out):
             if class_generator.base_class_generator:
                 out.put_line('{base_class}::SetObject(raw_pointer);'.format(
@@ -99,37 +94,3 @@ def create_inheritance_traits(requires_cast_to_base: bool):
         return RequiresCastToBase()
     else:
         return SimpleCase()
-
-
-#     def generate_destructor_body(self, terminate_c_function_name):
-#         self.put_line('if ({object_var})'.format(object_var=Constants.object_var))
-#         with self.indent_scope():
-#             self.capi_generator.lifecycle_traits.delete_exception_traits.generate_c_call(
-#                 terminate_c_function_name,
-#                 '{c_function}({arguments})',
-#                 False
-#             )
-#             self.put_line('SetObject(0);')
-#
-#     def generate_destructor(self, destructor_declaration, terminate_c_function_name):
-#         self.put_line(destructor_declaration)
-#         with self.indent_scope():
-#             self.generate_destructor_body(terminate_c_function_name)
-#
-# class SimpleCase(InheritanceTraitsBase):
-#     def __init__(self, cur_class, capi_generator):
-#         super().__init__(cur_class, capi_generator)
-#
-#     def generate_pointer_declaration(self):
-#         if not self.cur_class.base:
-#             RequiresCastToBase(self.cur_class, self.capi_generator).generate_pointer_declaration()
-#
-#     def generate_destructor_body(self, terminate_c_function_name):
-#         if not self.cur_class.base:
-#             RequiresCastToBase(self.cur_class, self.capi_generator).generate_destructor_body(terminate_c_function_name)
-#
-#     def generate_destructor(self, destructor_declaration, terminate_c_function_name):
-#         if not self.cur_class.base:
-#             RequiresCastToBase(self.cur_class, self.capi_generator).generate_destructor(
-#                 destructor_declaration, terminate_c_function_name
-#             )

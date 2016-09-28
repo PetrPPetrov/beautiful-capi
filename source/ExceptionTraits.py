@@ -43,14 +43,14 @@ class NoHandling(object):
 
     @staticmethod
     def generate_c_call(out: FileGenerator, return_type: ClassTypeGenerator or BuiltinTypeGenerator,
-                        c_function_name: str, arguments: [str]):
+                        c_function_name: str, arguments: [str]) -> str:
         c_function_call = '{function_name}({arguments})'.format(
             function_name=c_function_name,
             arguments=', '.join(arguments)
         )
         casting_instructions, return_expression = return_type.c_2_wrap_var('', c_function_call)
         out.put_lines(casting_instructions)
-        out.put_return_cpp_statement(return_expression)
+        return return_expression
 
     @staticmethod
     def modify_c_arguments(arguments: [str]):
@@ -143,7 +143,7 @@ class ByFirstArgument(object):
                                 out.put_line('throw std::runtime_error("unknown exception");')
 
     def generate_c_call(self, out: FileGenerator, return_type: ClassTypeGenerator or BuiltinTypeGenerator,
-                        c_function_name: str, arguments: [str]):
+                        c_function_name: str, arguments: [str]) -> str:
         out.put_line('{0} exception_info;'.format(self.__exception_info_t()))
         arguments.insert(0, '&exception_info')
         c_function_call = '{function_name}({arguments})'.format(
@@ -154,7 +154,7 @@ class ByFirstArgument(object):
         out.put_lines(casting_instructions)
         out.put_line('{0}::check_and_throw_exception(exception_info.code, exception_info.object_pointer);'.format(
             self.params.beautiful_capi_namespace))
-        out.put_return_cpp_statement(return_expression)
+        return return_expression
 
     def modify_c_arguments(self, arguments: [str]):
         arguments.insert(0, '{0}* exception_info'.format(self.__exception_info_t()))
