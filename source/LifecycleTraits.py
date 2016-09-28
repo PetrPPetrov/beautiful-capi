@@ -29,7 +29,8 @@ from Helpers import BeautifulCapiException
 
 def get_base_init(class_generator):
     if class_generator.base_class_generator:
-        return ' : {0}(0, false)'.format(class_generator.base_class_generator.full_wrap_name)
+        return ' : {0}({0}:force_creating_from_raw_pointer, 0, false)'.format(
+            class_generator.base_class_generator.full_wrap_name)
     else:
         return ''
 
@@ -120,7 +121,8 @@ class CopySemantic(LifecycleTraits):
 
     def generate_std_methods_declarations(self, out: FileGenerator, class_generator):
         super().generate_copy_constructor_declaration(out, class_generator)
-        out.put_line('inline {class_name}(void *object_pointer, bool copy_object);'.format(
+        out.put_line('enum ECreateFromRawPointer { force_creating_from_raw_pointer };')
+        out.put_line('inline {class_name}(ECreateFromRawPointer, void *object_pointer, bool copy_object);'.format(
             class_name=class_generator.wrap_name))
         out.put_line('inline ~{class_name}();'.format(
             class_name=class_generator.wrap_name))
@@ -243,7 +245,8 @@ class RawPointerSemantic(LifecycleTraits):
 
     def generate_std_methods_declarations(self, out: FileGenerator, class_generator):
         super().generate_copy_constructor_declaration(out, class_generator)
-        out.put_line('inline {class_name}(void *object_pointer, bool);'.format(
+        out.put_line('enum ECreateFromRawPointer { force_creating_from_raw_pointer };')
+        out.put_line('inline {class_name}(ECreateFromRawPointer, void *object_pointer, bool);'.format(
             class_name=class_generator.wrap_name))
         out.put_line('inline void Delete();'.format(
             class_name=class_generator.wrap_name))
@@ -335,7 +338,8 @@ class RefCountedSemantic(LifecycleTraits):
 
     def generate_std_methods_declarations(self, out: FileGenerator, class_generator):
         super().generate_copy_constructor_declaration(out, class_generator)
-        out.put_line('inline {class_name}(void *object_pointer, bool add_ref_object);'.format(
+        out.put_line('enum ECreateFromRawPointer { force_creating_from_raw_pointer };')
+        out.put_line('inline {class_name}(ECreateFromRawPointer, void *object_pointer, bool add_ref_object);'.format(
             class_name=class_generator.wrap_name))
         out.put_line('inline ~{class_name}();'.format(
             class_name=class_generator.wrap_name))

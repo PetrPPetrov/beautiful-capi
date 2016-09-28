@@ -54,6 +54,10 @@ def format_type(type_name):
     return replace_double_greater(type_name)
 
 
+def bool_to_str(value: bool) -> str:
+    return 'true' if value else 'false'
+
+
 def replace_template_to_filename(template_name):
     return template_name.replace('<', '_').replace('>', '').replace('::', '').\
         replace('*', 'p').replace(' ', '').replace(',', '_')

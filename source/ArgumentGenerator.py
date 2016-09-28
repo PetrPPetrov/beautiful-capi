@@ -22,11 +22,13 @@
 
 from FileGenerator import FileGenerator
 from FileCache import FileCache
+from Helpers import bool_to_str
 
 
 class ClassTypeGenerator(object):
     def __init__(self, class_argument_generator):
         self.class_argument_generator = class_argument_generator
+        self.copy_or_add_ref_when_c_2_wrap = False
 
     def wrap_argument_declaration(self) -> str:
         return 'const {type_name}&'.format(type_name=self.class_argument_generator.full_wrap_name)
@@ -43,14 +45,20 @@ class ClassTypeGenerator(object):
         return 'void*'
 
     def c_2_wrap_var(self, result_var: str, expression: str) -> ([str], str):
+        internal_expression = '{type_name}::force_creating_from_raw_pointer, {expression}, {copy_or_add_ref}'.format(
+            type_name=self.wrap_return_type(),
+            expression=expression,
+            copy_or_add_ref=bool_to_str(self.copy_or_add_ref_when_c_2_wrap)
+        )
         if result_var:
-            return ['{type_name}{result_var}({expression}, true);'.format(
+            return ['{type_name}{result_var}({internal_expression});'.format(
                 type_name=self.wrap_return_type(),
                 result_var=' ' + result_var if result_var else '',
-                expression=expression)], result_var
+                internal_expression=internal_expression
+            )], result_var
         else:
-            return [], '{type_name}({expression}, true)'.format(
-                type_name=self.wrap_return_type(), expression=expression)
+            return [], '{type_name}({internal_expression})'.format(
+                type_name=self.wrap_return_type(), internal_expression=internal_expression)
 
     def c_2_implementation(self, name: str) -> str:
         return 'static_cast<{implementation_class_name}*>({name})'.format(
