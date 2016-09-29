@@ -21,11 +21,12 @@
 
 
 import copy
-from Parser import TMethod, TConstructor
+from Parser import TMethod, TFunction, TConstructor
 from ParamsParser import TBeautifulCapiParams
 from FileGenerator import FileGenerator, IndentScope
 from FileCache import FileCache
 from ClassGenerator import ClassGenerator
+from NamespaceGenerator import NamespaceGenerator
 from ArgumentGenerator import ClassTypeGenerator, ThisArgumentGenerator
 from CapiGenerator import CapiGenerator
 from Helpers import get_c_name
@@ -100,6 +101,7 @@ class ConstructorGenerator(object):
             argument_generator.include_dependent_declaration_headers(file_generator, file_cache)
 
     def include_dependent_definition_headers(self, file_generator: FileGenerator, file_cache: FileCache):
+        self.exception_traits.include_dependent_definition_headers(file_generator, file_cache)
         for argument_generator in self.argument_generators:
             argument_generator.include_dependent_definition_headers(file_generator, file_cache)
 
@@ -123,7 +125,7 @@ class MethodGenerator(object):
 
     @property
     def c_arguments_list(self) -> []:
-        result = copy.deepcopy(self.argument_generators)
+        result = copy.copy(self.argument_generators)
         result.insert(0, ThisArgumentGenerator(self.parent_class_generator))
         return result
 
@@ -201,6 +203,7 @@ class MethodGenerator(object):
         self.return_type_generator.include_dependent_declaration_headers(file_generator, file_cache)
 
     def include_dependent_definition_headers(self, file_generator: FileGenerator, file_cache: FileCache):
+        self.exception_traits.include_dependent_definition_headers(file_generator, file_cache)
         for argument_generator in self.argument_generators:
             argument_generator.include_dependent_definition_headers(file_generator, file_cache)
         self.return_type_generator.include_dependent_definition_headers(file_generator, file_cache)
@@ -214,3 +217,81 @@ class MethodGenerator(object):
             const=' const' if self.method_object.const else ''
         )
         out.put_line(declaration)
+
+
+class FunctionGenerator(object):
+    def __init__(self, function_object: TFunction,
+                 parent_namespace_generator: NamespaceGenerator, params: TBeautifulCapiParams):
+        self.function_object = function_object
+        self.parent_namespace_generator = parent_namespace_generator
+        self.argument_generators = []
+        self.return_type_generator = None
+        self.params = params
+        self.exception_traits = None
+
+    @property
+    def full_c_name(self) -> str:
+        return get_c_name(self.parent_namespace_generator.full_c_name + '_' + self.function_object.name)
+
+    @property
+    def wrap_name(self) -> str:
+        return self.function_object.name
+
+    @property
+    def full_wrap_name(self) -> str:
+        return '::'.join([self.parent_namespace_generator.full_wrap_name, self.function_object.name])
+
+    def generate_wrap_definition(self, out: FileGenerator, capi_generator: CapiGenerator):
+        self.exception_traits = capi_generator.get_exception_traits(self.function_object.noexcept)
+        arguments = ', '.join(
+            [argument_generator.wrap_argument_declaration() for argument_generator in self.argument_generators])
+        arguments_call = [argument_generator.wrap_2_c() for argument_generator in self.argument_generators]
+        out.put_line('inline {return_type} {name}({arguments})'.format(
+            return_type=self.return_type_generator.wrap_return_type(),
+            name=self.wrap_name,
+            arguments=arguments
+        ))
+        with IndentScope(out):
+            self.return_type_generator.copy_or_add_ref_when_c_2_wrap = True
+            if self.function_object.return_copy_or_add_ref_filled:
+                self.return_type_generator.copy_or_add_ref_when_c_2_wrap = self.function_object.return_copy_or_add_ref
+
+            return_expression = self.exception_traits.generate_c_call(
+                out, self.return_type_generator, self.full_c_name, arguments_call)
+            out.put_return_cpp_statement(return_expression)
+
+    def generate_c_function(self, capi_generator: CapiGenerator):
+        c_arguments = ', '.join(
+            [argument_generator.c_argument_declaration() for argument_generator in self.argument_generators])
+        implementation_arguments = ', '.join(
+            [argument_generator.c_2_implementation() for argument_generator in self.argument_generators])
+        c_function_body = FileGenerator(None)
+        with IndentScope(c_function_body):
+            implementation_call = '{method_name}({arguments})'.format(
+                method_name=self.function_object.implementation_name,
+                arguments=implementation_arguments
+            )
+            calling_instructions, return_expression = self.return_type_generator.implementation_2_c_var(
+                '', implementation_call
+            )
+            if return_expression:
+                calling_instructions.append('return {0};'.format(return_expression))
+            self.exception_traits.generate_implementation_call(
+                c_function_body, self.return_type_generator, calling_instructions)
+        capi_generator.add_c_function(
+            self.parent_namespace_generator.full_name_array,
+            self.return_type_generator.c_argument_declaration(),
+            self.full_c_name,
+            c_arguments,
+            c_function_body
+        )
+
+    def include_dependent_definition_headers(self, file_generator: FileGenerator, file_cache: FileCache):
+        self.exception_traits.include_dependent_definition_headers(file_generator, file_cache)
+        for argument_generator in self.argument_generators:
+            argument_generator.include_dependent_definition_headers(file_generator, file_cache)
+        self.return_type_generator.include_dependent_definition_headers(file_generator, file_cache)
+
+    def include_dependent_implementation_headers(self, capi_generator: CapiGenerator):
+        if self.function_object.implementation_header_filled:
+            capi_generator.additional_includes.include_user_header(self.function_object.implementation_header)

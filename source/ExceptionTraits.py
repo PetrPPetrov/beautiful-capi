@@ -32,6 +32,9 @@ class NoHandling(object):
     def __init__(self):
         pass
 
+    def include_dependent_definition_headers(self, file_generator: FileGenerator, file_cache: FileCache):
+        pass
+
     def generate_exception_info(self, out: FileGenerator):
         pass
 
@@ -79,6 +82,10 @@ class ByFirstArgument(object):
     def __exception_code_t(self):
         return self.params.beautiful_capi_namespace.lower() + '_exception_code_t'
 
+    @staticmethod
+    def include_dependent_definition_headers(file_generator: FileGenerator, file_cache: FileCache):
+        file_generator.include_user_header(file_cache.check_and_throw_exception_header())
+
     def generate_exception_info(self, out: FileGenerator):
         with WatchdogScope(out, '{0}_EXCEPTION_INFO_DEFINED'.format(
                 self.params.beautiful_capi_namespace.upper())):
@@ -106,6 +113,26 @@ class ByFirstArgument(object):
                     'inline void check_and_throw_exception(int exception_code, void* exception_object);'
                 )
 
+    def __create_check_and_throw_exceptions_body(self, out: FileGenerator):
+        out.put_line('switch (exception_code)')
+        with IndentScope(out):
+            out.put_line('case 0:')
+            with Indent(out):
+                out.put_line('return;')
+            code_to_exception = {exception_class.exception_code: exception_class for exception_class
+                                 in self.exception_classes}
+            for code, exception_class in code_to_exception.items():
+                out.put_line('case {0}:'.format(code))
+                with Indent(out):
+                    out.put_line('throw {0}({0}::force_creating_from_raw_pointer, exception_object, false);'.format(
+                        exception_class.full_wrap_name))
+            out.put_line('default:')
+            with Indent(out):
+                out.put_line('assert(false);')
+            out.put_line('case -1:')
+            with Indent(out):
+                out.put_line('throw std::runtime_error("unknown exception");')
+
     def generate_check_and_throw_exception(self, file_cache: FileCache):
         out = file_cache.get_file_for_check_and_throw_exception()
         out.put_begin_cpp_comments(self.params)
@@ -123,24 +150,7 @@ class ByFirstArgument(object):
                     out.put_line(
                         'inline void check_and_throw_exception(int exception_code, void* exception_object)')
                     with IndentScope(out):
-                        out.put_line('switch (exception_code)')
-                        with IndentScope(out):
-                            out.put_line('case 0:')
-                            with Indent(out):
-                                out.put_line('return;')
-                            code_to_exception = {exception_class.exception_code: exception_class for exception_class
-                                                 in self.exception_classes}
-                            for code, exception_class in code_to_exception.items():
-                                out.put_line('case {0}:'.format(code))
-                                with Indent(out):
-                                    out.put_line('throw {0}(exception_object, false);'.format(
-                                        exception_class.full_wrap_name))
-                            out.put_line('default:')
-                            with Indent(out):
-                                out.put_line('assert(false);')
-                            out.put_line('case -1:')
-                            with Indent(out):
-                                out.put_line('throw std::runtime_error("unknown exception");')
+                        self.__create_check_and_throw_exceptions_body(out)
 
     def generate_c_call(self, out: FileGenerator, return_type: ClassTypeGenerator or BuiltinTypeGenerator,
                         c_function_name: str, arguments: [str]) -> str:

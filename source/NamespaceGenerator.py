@@ -35,6 +35,7 @@ class NamespaceGenerator(object):
         self.enum_generators = []
         self.nested_namespaces = []
         self.classes = []
+        self.functions = []
         self.params = params
 
     @property
@@ -100,6 +101,20 @@ class NamespaceGenerator(object):
                 namespace_header.include_user_header(
                     file_cache.namespace_header(nested_namespace_generator.full_name_array))
                 nested_namespace_generator.__generate_namespace_headers(file_cache, capi_generator)
+            for class_generator in self.classes:
+                namespace_header.include_user_header(
+                    file_cache.class_header(class_generator.full_name_array))
+            if self.functions:
+                with IfDefScope(namespace_header, '__cplusplus'):
+                    namespace_header.put_line(self.one_line_namespace_begin)
+                    namespace_header.put_line('')
+                    for function_generator in self.functions:
+                        function_generator.generate_wrap_definition(namespace_header, capi_generator)
+                        function_generator.generate_c_function(capi_generator)
+                        function_generator.include_dependent_definition_headers(namespace_header, file_cache)
+                        function_generator.include_dependent_implementation_headers(capi_generator)
+                    namespace_header.put_line('')
+                    namespace_header.put_line(self.one_line_namespace_end)
 
     def __generate_forward_declarations_impl(self, out: FileGenerator):
         out.put_line('namespace {0}'.format(self.name))

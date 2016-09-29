@@ -24,7 +24,7 @@ from Parser import TClass, TEnumeration, TNamespace, TArgument, TBeautifulCapiRo
 from ParamsParser import TBeautifulCapiParams
 from NamespaceGenerator import NamespaceGenerator
 from ClassGenerator import ClassGenerator
-from MethodGenerator import MethodGenerator, ConstructorGenerator
+from MethodGenerator import MethodGenerator, FunctionGenerator, ConstructorGenerator
 from ArgumentGenerator import ClassTypeGenerator, BuiltinTypeGenerator, EnumTypeGenerator, ArgumentGenerator
 from EnumGenerator import EnumGenerator
 from Helpers import BeautifulCapiException
@@ -74,6 +74,9 @@ class GeneratorCreator(object):
             new_namespace_generator.enum_generators.append(new_enum_generator)
         for cur_class in namespace.classes:
             new_namespace_generator.classes.append(self.__create_class_generator(cur_class))
+        for cur_function in namespace.functions:
+            new_namespace_generator.functions.append(
+                FunctionGenerator(cur_function, new_namespace_generator, self.params))
         self.cur_namespace_generator = previous_namespace_generator
         return new_namespace_generator
 
@@ -102,6 +105,12 @@ class GeneratorCreator(object):
         method_generator.return_type_generator = self.__create_type_generator(
             method_generator.method_object.return_type)
 
+    def __bind_function(self, function_generator: FunctionGenerator):
+        for argument in function_generator.function_object.arguments:
+            function_generator.argument_generators.append(self.__create_argument_generator(argument))
+        function_generator.return_type_generator = self.__create_type_generator(
+            function_generator.function_object.return_type)
+
     def __bind_class(self, class_generator: ClassGenerator):
         if class_generator.class_object.base:
             base_class_str = class_generator.class_object.base.replace(' ', '')
@@ -123,6 +132,8 @@ class GeneratorCreator(object):
             self.__bind_namespace(nested_namespace_generator)
         for class_generator in namespace_generator.classes:
             self.__bind_class(class_generator)
+        for function_generator in namespace_generator.functions:
+            self.__bind_function(function_generator)
 
     def bind_namespaces(self, namespace_generators: [NamespaceGenerator]):
         for namespace_generator in namespace_generators:
