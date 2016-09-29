@@ -100,6 +100,10 @@ class CopySemantic(LifecycleTraits):
     def __init__(self, params: TBeautifulCapiParams):
         super().__init__(params.wrapper_class_suffix_copy_semantic, params)
 
+    @property
+    def snippet_implementation_usage(self) -> str:
+        return self.params.snippet_implementation_value_usage
+
     @staticmethod
     def implementation_result_instructions(class_generator, result_var: str, expression: str) -> ([str], str):
         instructions = ['{impl_class_name} result_implementation_copy({expression});'.format(
@@ -235,6 +239,10 @@ class RawPointerSemantic(LifecycleTraits):
     def __init__(self, params: TBeautifulCapiParams):
         super().__init__(params.wrapper_class_suffix_raw_pointer, params)
 
+    @property
+    def snippet_implementation_usage(self) -> str:
+        return self.params.snippet_implementation_pointer_usage
+
     @staticmethod
     def implementation_result_instructions(class_generator, result_var: str, expression: str) -> ([str], str):
         if result_var:
@@ -327,6 +335,10 @@ class RawPointerSemantic(LifecycleTraits):
 class RefCountedSemantic(LifecycleTraits):
     def __init__(self, params: TBeautifulCapiParams):
         super().__init__(params.wrapper_class_suffix_reference_counted, params)
+
+    @property
+    def snippet_implementation_usage(self) -> str:
+        return self.params.snippet_implementation_pointer_usage
 
     @staticmethod
     def implementation_result_instructions(class_generator, result_var: str, expression: str) -> ([str], str):

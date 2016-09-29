@@ -22,6 +22,7 @@
 
 from FileGenerator import FileGenerator
 from FileCache import FileCache
+from NamespaceGenerator import NamespaceGenerator
 from Helpers import bool_to_str
 
 
@@ -51,9 +52,9 @@ class ClassTypeGenerator(object):
             copy_or_add_ref=bool_to_str(self.copy_or_add_ref_when_c_2_wrap)
         )
         if result_var:
-            return ['{type_name}{result_var}({internal_expression});'.format(
+            return ['{type_name} {result_var}({internal_expression});'.format(
                 type_name=self.wrap_return_type(),
-                result_var=' ' + result_var if result_var else '',
+                result_var=result_var,
                 internal_expression=internal_expression
             )], result_var
         else:
@@ -65,6 +66,9 @@ class ClassTypeGenerator(object):
             implementation_class_name=self.class_argument_generator.class_object.implementation_class_name,
             name=name
         )
+
+    def snippet_implementation_declaration(self) -> str:
+        return self.class_argument_generator.snippet_implementation_declaration
 
     def implementation_2_c_var(self, result_var: str, expression: str) -> ([str], str):
         return self.class_argument_generator.implementation_result_instructions(result_var, expression)
@@ -82,9 +86,72 @@ class ClassTypeGenerator(object):
             file_cache.class_header(self.class_argument_generator.full_name_array))
 
 
-# class EnumTypeGenerator(object):
-#     def __init__(self, enum_argument_generator):
-#         pass
+class EnumTypeGenerator(object):
+    def __init__(self, enum_argument_generator):
+        self.enum_argument_generator = enum_argument_generator
+
+    def wrap_argument_declaration(self) -> str:
+        return self.enum_argument_generator.full_wrap_name
+
+    def wrap_return_type(self) -> str:
+        return self.enum_argument_generator.full_wrap_name
+
+    def wrap_2_c(self, name: str) -> str:
+        return 'static_cast<{c_type}>({name})'.format(c_type=self.c_argument_declaration(), name=name)
+
+    def c_argument_declaration(self) -> str:
+        return self.enum_argument_generator.enum_object.underlying_type
+
+    def c_2_wrap_var(self, result_var: str, expression: str) -> ([str], str):
+        if result_var:
+            return ['{type_name} {result_var}(static_cast<{type_name}>({expression}));'.format(
+                type_name=self.wrap_return_type(),
+                result_var=result_var,
+                expression=expression
+            )], result_var
+        else:
+            return [], '{type_name}(static_cast<{type_name}>({expression}))'.format(
+                type_name=self.wrap_return_type(), expression=expression)
+
+    def c_2_implementation(self, name: str) -> str:
+        return 'static_cast<{implementation_name}>({name})'.format(
+            implementation_name=self.enum_argument_generator.implementation_name,
+            name=name
+        )
+
+    def snippet_implementation_declaration(self) -> str:
+        return self.enum_argument_generator.implementation_name
+
+    def implementation_2_c_var(self, result_var: str, expression: str) -> ([str], str):
+        casting_expression = 'static_cast<{c_type}>({expression})'.format(
+            c_type=self.c_argument_declaration(), expression=expression
+        )
+        if result_var:
+            return ['{type_name} {result_var}({expression});'.format(
+                type_name=self.c_argument_declaration(),
+                result_var=result_var,
+                expression=casting_expression)], result_var
+        else:
+            return [], casting_expression
+
+    def generate_c_default_return_value(self, out: FileGenerator):
+        out.put_line('return static_cast<{c_type}>(0);'.format(c_type=self.c_argument_declaration()))
+
+    def include_dependent_declaration_headers(self, file_generator: FileGenerator, file_cache: FileCache):
+        parent_generator = self.enum_argument_generator.parent_generator
+        if type(parent_generator) is NamespaceGenerator:
+            header_to_include = file_cache.namespace_header(parent_generator.full_name_array)
+        else:
+            header_to_include = file_cache.class_header_decl(parent_generator.full_name_array)
+        file_generator.include_user_header(header_to_include)
+
+    def include_dependent_definition_headers(self, file_generator: FileGenerator, file_cache: FileCache):
+        pass
+
+
+def include_dependent_definition_headers(self, file_generator: FileGenerator, file_cache: FileCache):
+    file_generator.include_user_header(
+        file_cache.class_header(self.class_argument_generator.full_name_array))
 
 
 class BuiltinTypeGenerator(object):
@@ -123,6 +190,9 @@ class BuiltinTypeGenerator(object):
     @staticmethod
     def c_2_implementation(name: str) -> str:
         return name
+
+    def snippet_implementation_declaration(self) -> str:
+        return 'void' if self.is_void else self.type_name
 
     def implementation_2_c_var(self, result_var: str, expression: str) -> ([str], str):
         if not self.is_void:
@@ -163,6 +233,9 @@ class ArgumentGenerator(object):
 
     def c_2_implementation(self) -> str:
         return self.type_generator.c_2_implementation(self.name)
+
+    def snippet_implementation_declaration(self) -> str:
+        return self.type_generator.snippet_implementation_declaration() + ' ' + self.name
 
     def include_dependent_declaration_headers(self, file_generator: FileGenerator, file_cache: FileCache):
         self.type_generator.include_dependent_declaration_headers(file_generator, file_cache)

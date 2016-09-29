@@ -20,12 +20,13 @@
 #
 
 
-from Parser import TClass, TMethod, TConstructor, TNamespace, TArgument, TBeautifulCapiRoot
+from Parser import TClass, TEnumeration, TNamespace, TArgument, TBeautifulCapiRoot
 from ParamsParser import TBeautifulCapiParams
 from NamespaceGenerator import NamespaceGenerator
 from ClassGenerator import ClassGenerator
 from MethodGenerator import MethodGenerator, ConstructorGenerator
-from ArgumentGenerator import ClassTypeGenerator, BuiltinTypeGenerator, ArgumentGenerator
+from ArgumentGenerator import ClassTypeGenerator, BuiltinTypeGenerator, EnumTypeGenerator, ArgumentGenerator
+from EnumGenerator import EnumGenerator
 from Helpers import BeautifulCapiException
 
 
@@ -36,12 +37,21 @@ class GeneratorCreator(object):
         self.params = params
         self.cur_exception_code = 1
 
-    def __register_class_or_namespace_generator(self, class_or_namespace: ClassGenerator or NamespaceGenerator):
-        self.full_name_2_generator.update({class_or_namespace.full_name.replace(' ', ''): class_or_namespace})
+    def __register_class_or_namespace_generator(
+            self, generator: ClassGenerator or NamespaceGenerator or EnumGenerator):
+        self.full_name_2_generator.update({generator.full_name.replace(' ', ''): generator})
+
+    def __create_enum_generator(self, cur_enum: TEnumeration, parent_generator) -> EnumGenerator:
+        new_enum_generator = EnumGenerator(cur_enum, parent_generator)
+        self.__register_class_or_namespace_generator(new_enum_generator)
+        return new_enum_generator
 
     def __create_class_generator(self, cur_class: TClass) -> ClassGenerator:
         new_class_generator = ClassGenerator(cur_class, self.cur_namespace_generator, self.params)
         self.__register_class_or_namespace_generator(new_class_generator)
+        for cur_enum in cur_class.enumerations:
+            new_enum_generator = self.__create_enum_generator(cur_enum, new_class_generator)
+            new_class_generator.enum_generators.append(new_enum_generator)
         for constructor in cur_class.constructors:
             new_constructor_generator = ConstructorGenerator(constructor, new_class_generator, self.params)
             new_class_generator.constructor_generators.append(new_constructor_generator)
@@ -59,6 +69,9 @@ class GeneratorCreator(object):
         for nested_namespace in namespace.namespaces:
             new_namespace_generator.nested_namespaces.append(
                 self.create_namespace_generator(nested_namespace))
+        for cur_enum in namespace.enumerations:
+            new_enum_generator = self.__create_enum_generator(cur_enum, new_namespace_generator)
+            new_namespace_generator.enum_generators.append(new_enum_generator)
         for cur_class in namespace.classes:
             new_namespace_generator.classes.append(self.__create_class_generator(cur_class))
         self.cur_namespace_generator = previous_namespace_generator
@@ -66,7 +79,13 @@ class GeneratorCreator(object):
 
     def __create_type_generator(self, type_name: str) -> ClassTypeGenerator or BuiltinTypeGenerator:
         if type_name.replace(' ', '') in self.full_name_2_generator:
-            return ClassTypeGenerator(self.full_name_2_generator[type_name])
+            type_generator = self.full_name_2_generator[type_name.replace(' ', '')]
+            if type(type_generator) is ClassGenerator:
+                return ClassTypeGenerator(type_generator)
+            elif type(type_generator) is EnumGenerator:
+                return EnumTypeGenerator(type_generator)
+            else:
+                raise BeautifulCapiException('namespace is used as type name')
         else:
             return BuiltinTypeGenerator(type_name)
 

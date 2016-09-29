@@ -21,7 +21,6 @@
         <xs:element name="include_header" minOccurs="0" maxOccurs="unbounded" type="THeaderInclude"/>
         <xs:element name="enumeration" minOccurs="0" maxOccurs="unbounded" type="TEnumeration"/>
         <xs:element name="class" minOccurs="0" maxOccurs="unbounded" type="TClass"/>
-        <xs:element name="callback" minOccurs="0" maxOccurs="unbounded" type="TCallback"/>
         <xs:element name="function" minOccurs="0" maxOccurs="unbounded" type="TFunction"/>
         <xs:element name="template" minOccurs="0" maxOccurs="unbounded" type="TTemplate"/>
       </xs:choice>

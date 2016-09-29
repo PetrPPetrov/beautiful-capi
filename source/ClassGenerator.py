@@ -20,15 +20,16 @@
 #
 
 
+import os
 from Parser import TClass
 from ParamsParser import TBeautifulCapiParams
 from FileCache import FileCache
-from FileGenerator import FileGenerator, IfDefScope, IndentScope, Unindent
+from FileGenerator import FileGenerator, IfDefScope, WatchdogScope, IndentScope, Unindent
 from CapiGenerator import CapiGenerator
 from NamespaceGenerator import NamespaceGenerator
 from LifecycleTraits import create_lifecycle_traits
 from InheritanceTraits import create_inheritance_traits
-from Helpers import get_c_name
+from Helpers import get_c_name, get_template_name, replace_template_to_filename, get_template_tail
 
 
 class ClassGenerator(object):
@@ -38,6 +39,7 @@ class ClassGenerator(object):
         self.parent_namespace = parent_namespace
         self.base_class_generator = None
         self.derived_class_generators = []
+        self.enum_generators = []
         self.constructor_generators = []
         self.method_generators = []
         self.params = params
@@ -76,6 +78,14 @@ class ClassGenerator(object):
         return get_c_name(self.full_name)
 
     @property
+    def implementation_name(self) -> str:
+        return self.class_object.implementation_class_name
+
+    @property
+    def snippet_implementation_declaration(self) -> str:
+        return self.lifecycle_traits.snippet_implementation_usage.format(implementation_name=self.implementation_name)
+
+    @property
     def cast_to_base(self) -> str:
         return self.full_c_name + '_cast_to_base'
 
@@ -103,6 +113,10 @@ class ClassGenerator(object):
         with IndentScope(declaration_header, '};'):
             with Unindent(declaration_header):
                 declaration_header.put_line('public:')
+            for enum_generator in self.enum_generators:
+                enum_generator.generate_enum_definition(declaration_header)
+            if self.enum_generators:
+                declaration_header.put_line('')
             for constructor_generator in self.constructor_generators:
                 declaration_header.put_line('{constructor_declaration};'.format(
                     constructor_declaration=constructor_generator.wrap_declaration()))
@@ -123,7 +137,7 @@ class ClassGenerator(object):
         declaration_header = self.file_cache.get_file_for_class_decl(self.full_name_array)
         declaration_header.put_begin_cpp_comments(self.params)
         watchdog_string = '_'.join([item.upper() for item in self.full_name_array]) + '_DECLARATION_INCLUDED'
-        with IfDefScope(declaration_header, watchdog_string):
+        with WatchdogScope(declaration_header, watchdog_string):
             declaration_header.put_include_files()
             declaration_header.include_user_header(self.file_cache.capi_header(self.full_name_array))
             declaration_header.include_user_header(self.file_cache.fwd_header(self.full_name_array))
@@ -138,7 +152,7 @@ class ClassGenerator(object):
         definition_header = self.file_cache.get_file_for_class(self.full_name_array)
         definition_header.put_begin_cpp_comments(self.params)
         watchdog_string = '_'.join([item.upper() for item in self.full_name_array]) + '_DEFINITION_INCLUDED'
-        with IfDefScope(definition_header, watchdog_string):
+        with WatchdogScope(definition_header, watchdog_string):
             definition_header.put_include_files()
             definition_header.include_user_header(self.file_cache.class_header_decl(self.full_name_array))
             with IfDefScope(definition_header, '__cplusplus'):
@@ -170,6 +184,21 @@ class ClassGenerator(object):
         self.lifecycle_traits.generate_c_functions(self)
         self.inheritance_traits.generate_c_functions(self)
 
+    def __generate_snippet(self):
+        if self.enum_generators or self.class_object.abstract:
+            snippet_file_name = os.path.join(
+                self.params.internal_snippets_folder, *get_template_name(self.implementation_name).split('::'))
+            snippet_file_name += replace_template_to_filename(get_template_tail(self.implementation_name)) + '.h'
+            snippet_file = FileGenerator(snippet_file_name)
+            snippet_file.put_begin_cpp_comments(self.params)
+            for enum_generator in self.enum_generators:
+                enum_generator.generate_enum_definition(snippet_file)
+            if self.class_object.abstract:
+                snippet_file.put_line('')
+                snippet_file.put_line('virtual ~{impl_name}() {{}}'.format(impl_name=self.implementation_name))
+                for method_generator in self.method_generators:
+                    method_generator.generate_snippet(snippet_file)
+
     def generate_forward_declaration(self, out: FileGenerator):
         out.put_line('class {0};'.format(self.wrap_name))
 
@@ -181,3 +210,4 @@ class ClassGenerator(object):
         self.__generate_declaration()
         self.__generate_definition()
         self.__generate_c_functions()
+        self.__generate_snippet()

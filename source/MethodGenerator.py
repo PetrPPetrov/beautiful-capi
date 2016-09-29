@@ -204,3 +204,13 @@ class MethodGenerator(object):
         for argument_generator in self.argument_generators:
             argument_generator.include_dependent_definition_headers(file_generator, file_cache)
         self.return_type_generator.include_dependent_definition_headers(file_generator, file_cache)
+
+    def generate_snippet(self, out: FileGenerator):
+        arguments = ', '.join([arg_gen.snippet_implementation_declaration() for arg_gen in self.argument_generators])
+        declaration = 'virtual {return_type} {name}({arguments}){const} = 0;'.format(
+            return_type=self.return_type_generator.snippet_implementation_declaration(),
+            name=self.method_object.name,
+            arguments=arguments,
+            const=' const' if self.method_object.const else ''
+        )
+        out.put_line(declaration)
