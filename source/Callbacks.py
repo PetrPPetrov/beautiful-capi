@@ -23,6 +23,7 @@
 from Parser import TClass, TConstructor, TMethod, TArgument, TLifecycle
 from NamespaceGenerator import NamespaceGenerator
 from FileGenerator import FileGenerator, IndentScope, Unindent, Indent
+from Helpers import if_required_then_add_empty_line
 
 
 def get_callback_impl_name(class_generator) -> str:
@@ -180,12 +181,6 @@ def process(namespace_generators: [NamespaceGenerator]):
         process_namespace(cur_namespace)
 
 
-def if_required_then_add_empty_line(first_flag: bool, out) -> bool:
-    if not first_flag:
-        out.put_line('')
-    return False
-
-
 def get_copy_callback_name(class_generator):
     return '{0}_copy_callback'.format(class_generator.base_class_generator.c_name)
 
@@ -193,14 +188,25 @@ def get_copy_callback_name(class_generator):
 def generate_copy_callback_declaration(first_flag, class_generator, out) -> bool:
     first_flag = if_required_then_add_empty_line(first_flag, out)
     out.put_line('template<typename ImplementationClass>')
-    out.put_line('inline void* {0}(void* object_pointer);'.format(get_copy_callback_name(class_generator)))
+    out.put_line('void* {top_ns}_API_CONVENTION {name}(void* object_pointer);'.format(
+        top_ns=class_generator.full_name_array[0].upper(),
+        name=get_copy_callback_name(class_generator)))
     return first_flag
 
 
+def add_copy_callback_typedef(class_generator):
+    class_generator.capi_generator.add_c_function_pointer(
+        class_generator.full_name_array,
+        'void*', class_generator.copy_callback_type, 'void* object_pointer')
+
+
 def generate_copy_callback_definition(first_flag, class_generator, out) -> bool:
+    add_copy_callback_typedef(class_generator)
     first_flag = if_required_then_add_empty_line(first_flag, out)
     out.put_line('template<typename ImplementationClass>')
-    out.put_line('inline void* {0}(void* object_pointer)'.format(get_copy_callback_name(class_generator)))
+    out.put_line('void* {top_ns}_API_CONVENTION {name}(void* object_pointer)'.format(
+        top_ns=class_generator.full_name_array[0].upper(),
+        name=get_copy_callback_name(class_generator)))
     with IndentScope(out):
         out.put_line('ImplementationClass* self = static_cast<ImplementationClass*>(object_pointer);')
         out.put_line('return new ImplementationClass(*self);')
@@ -214,14 +220,25 @@ def get_delete_callback_name(class_generator):
 def generate_delete_callback_declaration(first_flag, class_generator, out) -> bool:
     first_flag = if_required_then_add_empty_line(first_flag, out)
     out.put_line('template<typename ImplementationClass>')
-    out.put_line('inline void {0}(void* object_pointer);'.format(get_delete_callback_name(class_generator)))
+    out.put_line('void {top_ns}_API_CONVENTION {name}(void* object_pointer);'.format(
+        top_ns=class_generator.full_name_array[0].upper(),
+        name=get_delete_callback_name(class_generator)))
     return first_flag
 
 
+def add_delete_callback_typedef(class_generator):
+    class_generator.capi_generator.add_c_function_pointer(
+        class_generator.full_name_array,
+        'void', class_generator.delete_callback_type, 'void* object_pointer')
+
+
 def generate_delete_callback_definition(first_flag, class_generator, out) -> bool:
+    add_delete_callback_typedef(class_generator)
     first_flag = if_required_then_add_empty_line(first_flag, out)
     out.put_line('template<typename ImplementationClass>')
-    out.put_line('inline void {0}(void* object_pointer)'.format(get_delete_callback_name(class_generator)))
+    out.put_line('void {top_ns}_API_CONVENTION {name}(void* object_pointer)'.format(
+        top_ns=class_generator.full_name_array[0].upper(),
+        name=get_delete_callback_name(class_generator)))
     with IndentScope(out):
         out.put_line('ImplementationClass* self = static_cast<ImplementationClass*>(object_pointer);')
         out.put_line('delete self;')
@@ -245,14 +262,25 @@ def get_add_ref_callback_name(class_generator):
 def generate_add_ref_callback_declaration(first_flag, class_generator, out) -> bool:
     first_flag = if_required_then_add_empty_line(first_flag, out)
     out.put_line('template<typename ImplementationClass>')
-    out.put_line('inline void {0}(void* object_pointer);'.format(get_add_ref_callback_name(class_generator)))
+    out.put_line('void {top_ns}_API_CONVENTION {name}(void* object_pointer);'.format(
+        top_ns=class_generator.full_name_array[0].upper(),
+        name=get_add_ref_callback_name(class_generator)))
     return first_flag
 
 
+def add_add_ref_callback_typedef(class_generator):
+    class_generator.capi_generator.add_c_function_pointer(
+        class_generator.full_name_array,
+        'void', class_generator.add_ref_callback_type, 'void* object_pointer')
+
+
 def generate_add_ref_callback_definition(first_flag, class_generator, out) -> bool:
+    add_add_ref_callback_typedef(class_generator)
     first_flag = if_required_then_add_empty_line(first_flag, out)
     out.put_line('template<typename ImplementationClass>')
-    out.put_line('inline void {0}(void* object_pointer)'.format(get_add_ref_callback_name(class_generator)))
+    out.put_line('void {top_ns}_API_CONVENTION {name}(void* object_pointer)'.format(
+        top_ns=class_generator.full_name_array[0].upper(),
+        name=get_add_ref_callback_name(class_generator)))
     with IndentScope(out):
         out.put_line('ImplementationClass* self = static_cast<ImplementationClass*>(object_pointer);')
         out.put_line('intrusive_ptr_add_ref(self);')
@@ -266,14 +294,25 @@ def get_release_callback_name(class_generator):
 def generate_release_callback_declaration(first_flag, class_generator, out) -> bool:
     first_flag = if_required_then_add_empty_line(first_flag, out)
     out.put_line('template<typename ImplementationClass>')
-    out.put_line('inline void {0}(void* object_pointer);'.format(get_release_callback_name(class_generator)))
+    out.put_line('void {top_ns}_API_CONVENTION {name}(void* object_pointer);'.format(
+        top_ns=class_generator.full_name_array[0].upper(),
+        name=get_release_callback_name(class_generator)))
     return first_flag
 
 
+def add_release_callback_typedef(class_generator):
+    class_generator.capi_generator.add_c_function_pointer(
+        class_generator.full_name_array,
+        'void', class_generator.release_callback_type, 'void* object_pointer')
+
+
 def generate_release_callback_definition(first_flag, class_generator, out) -> bool:
+    add_release_callback_typedef(class_generator)
     first_flag = if_required_then_add_empty_line(first_flag, out)
     out.put_line('template<typename ImplementationClass>')
-    out.put_line('inline void {0}(void* object_pointer)'.format(get_release_callback_name(class_generator)))
+    out.put_line('void {top_ns}_API_CONVENTION {name}(void* object_pointer)'.format(
+        top_ns=class_generator.full_name_array[0].upper(),
+        name=get_release_callback_name(class_generator)))
     with IndentScope(out):
         out.put_line('ImplementationClass* self = static_cast<ImplementationClass*>(object_pointer);')
         out.put_line('intrusive_ptr_release(self);')
@@ -304,15 +343,29 @@ def generate_method_callback_declaration(first_flag, cur_method_generator, out) 
     cur_method_generator.exception_traits.modify_c_arguments(c_argument_declaration_list)
 
     out.put_line('template<typename ImplementationClass>')
-    out.put_line('inline {return_type} {callback_name}({arguments});'.format(
-            return_type=cur_method_generator.return_type_generator.c_argument_declaration(),
-            callback_name=get_method_callback_name(cur_method_generator),
-            arguments=', '.join(c_argument_declaration_list)
-        ))
+    out.put_line('{return_type} {top_ns}_API_CONVENTION {callback_name}({arguments});'.format(
+        top_ns=cur_method_generator.parent_class_generator.full_name_array[0].upper(),
+        return_type=cur_method_generator.return_type_generator.c_argument_declaration(),
+        callback_name=get_method_callback_name(cur_method_generator),
+        arguments=', '.join(c_argument_declaration_list)
+    ))
     return first_flag
 
 
+def add_method_callback_typedef(cur_method_generator):
+    c_argument_declaration_list = [
+        arg_gen.c_argument_declaration() for arg_gen in cur_method_generator.c_arguments_list]
+    cur_method_generator.exception_traits.modify_c_arguments(c_argument_declaration_list)
+
+    cur_method_generator.parent_class_generator.capi_generator.add_c_function_pointer(
+        cur_method_generator.parent_class_generator.full_name_array,
+        cur_method_generator.return_type_generator.c_argument_declaration(),
+        cur_method_generator.callback_type,
+        ', '.join(c_argument_declaration_list))
+
+
 def generate_method_callback_definition(first_flag, cur_method_generator, out) -> bool:
+    add_method_callback_typedef(cur_method_generator)
     first_flag = if_required_then_add_empty_line(first_flag, out)
 
     c_argument_declaration_list = [
@@ -320,11 +373,12 @@ def generate_method_callback_definition(first_flag, cur_method_generator, out) -
     cur_method_generator.exception_traits.modify_c_arguments(c_argument_declaration_list)
 
     out.put_line('template<typename ImplementationClass>')
-    out.put_line('inline {return_type} {callback_name}({arguments})'.format(
-            return_type=cur_method_generator.return_type_generator.c_argument_declaration(),
-            callback_name=get_method_callback_name(cur_method_generator),
-            arguments=', '.join(c_argument_declaration_list)
-        ))
+    out.put_line('{return_type} {top_ns}_API_CONVENTION {callback_name}({arguments})'.format(
+        top_ns=cur_method_generator.parent_class_generator.full_name_array[0].upper(),
+        return_type=cur_method_generator.return_type_generator.c_argument_declaration(),
+        callback_name=get_method_callback_name(cur_method_generator),
+        arguments=', '.join(c_argument_declaration_list)
+    ))
     with IndentScope(out):
         out.put_line(
             '{const}ImplementationClass* self = static_cast<ImplementationClass*>(object_pointer);'.format(
@@ -410,7 +464,7 @@ def generate_create_callback_definition(first_flag, out: FileGenerator, class_ge
     callback = class_generator.base_class_generator.class_object.callbacks[0]
     out.put_line('template<typename ImplementationClass>')
     out.put_line(
-        'inline {return_type} create_callback_for_{class_suffix}(ImplementationClass* implementation_class)'.format(
+        '{return_type} create_callback_for_{class_suffix}(ImplementationClass* implementation_class)'.format(
             return_type=class_generator.full_wrap_name,
             class_suffix=class_generator.base_class_generator.c_name))
     with IndentScope(out):

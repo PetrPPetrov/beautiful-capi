@@ -80,8 +80,8 @@ class GeneratorCreator(object):
         self.cur_namespace_generator = previous_namespace_generator
         return new_namespace_generator
 
-    def __create_type_generator(self, type_name: str)\
-            -> ClassTypeGenerator or EnumTypeGenerator or BuiltinTypeGenerator:
+    def __create_type_generator(
+            self, type_name: str) -> ClassTypeGenerator or EnumTypeGenerator or BuiltinTypeGenerator:
         if type_name.replace(' ', '') in self.full_name_2_generator:
             type_generator = self.full_name_2_generator[type_name.replace(' ', '')]
             if type(type_generator) is ClassGenerator:

@@ -150,14 +150,10 @@ def replace_template_argument(type_name, argument_index, new_value):
         return None
 
 
-def output_code_blocks(output_file, code_blocks, prepend_empty_line=False):
-    if prepend_empty_line and code_blocks:
-        output_file.put_line('')
-    for cur_code_block in code_blocks:
-        for cur_code_line in cur_code_block.lines:
-            output_file.put_line(cur_code_line.text)
-    if not prepend_empty_line and code_blocks:
-        output_file.put_line('')
+def if_required_then_add_empty_line(first_flag: bool, out) -> bool:
+    if not first_flag:
+        out.put_line('')
+    return False
 
 
 class BeautifulCapiException(Exception):
