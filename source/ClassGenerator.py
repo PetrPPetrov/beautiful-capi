@@ -89,6 +89,10 @@ class ClassGenerator(object):
         return self.lifecycle_traits.snippet_implementation_usage.format(implementation_name=self.implementation_name)
 
     @property
+    def method_copy_or_add_ref_default_value(self) -> bool:
+        return self.lifecycle_traits.method_copy_or_add_ref_default_value
+
+    @property
     def cast_to_base(self) -> str:
         return self.full_c_name + '_cast_to_base'
 

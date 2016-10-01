@@ -167,7 +167,8 @@ class MethodGenerator(object):
             const=' const' if self.method_object.const else ''
         ))
         with IndentScope(out):
-            self.return_type_generator.copy_or_add_ref_when_c_2_wrap = True
+            parent_class = self.parent_class_generator
+            self.return_type_generator.copy_or_add_ref_when_c_2_wrap = parent_class.method_copy_or_add_ref_default_value
             if self.method_object.return_copy_or_add_ref_filled:
                 self.return_type_generator.copy_or_add_ref_when_c_2_wrap = self.method_object.return_copy_or_add_ref
 
