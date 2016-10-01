@@ -36,22 +36,28 @@ def get_base_init(class_generator):
 
 
 class LifecycleTraits(object):
-    def __init__(self, class_suffix: str, params: TBeautifulCapiParams):
+    def __init__(self, class_suffix: str, default_init_noexcept: bool, default_finish_noexcept: bool,
+                 params: TBeautifulCapiParams):
         self.suffix = class_suffix
         self.params = params
         self.init_method_exception_traits = None
         self.finish_method_exception_traits = None
+        self.default_value_for_init_noexcept = default_init_noexcept
+        self.default_value_for_finish_noexcept = default_finish_noexcept
+
+    def create_exception_traits(self, properties_container, capi_generator):
+        init_method_no_except = self.default_value_for_init_noexcept
+        if properties_container.copy_or_add_ref_noexcept_filled:
+            init_method_no_except = properties_container.copy_or_add_ref_noexcept
+        self.init_method_exception_traits = capi_generator.get_exception_traits(init_method_no_except)
+        finish_method_no_except = self.default_value_for_finish_noexcept
+        if properties_container.delete_or_release_noexcept_filled:
+            finish_method_no_except = properties_container.delete_or_release_noexcept
+        self.finish_method_exception_traits = capi_generator.get_exception_traits(
+            finish_method_no_except)
 
     def __create_exception_traits(self, class_generator):
-        init_method_no_except = False
-        if class_generator.class_object.copy_or_add_ref_noexcept_filled:
-            init_method_no_except = class_generator.class_object.copy_or_add_ref_noexcept
-        self.init_method_exception_traits = class_generator.capi_generator.get_exception_traits(init_method_no_except)
-        finish_method_no_except = True
-        if class_generator.class_object.delete_or_release_noexcept_filled:
-            finish_method_no_except = class_generator.class_object.delete_or_release_noexcept
-        self.finish_method_exception_traits = class_generator.capi_generator.get_exception_traits(
-            finish_method_no_except)
+        self.create_exception_traits(class_generator.class_object, class_generator.capi_generator)
 
     @staticmethod
     def generate_copy_constructor_declaration(out: FileGenerator, class_generator):
@@ -98,7 +104,7 @@ class LifecycleTraits(object):
 
 class CopySemantic(LifecycleTraits):
     def __init__(self, params: TBeautifulCapiParams):
-        super().__init__(params.wrapper_class_suffix_copy_semantic, params)
+        super().__init__(params.wrapper_class_suffix_copy_semantic, False, True, params)
 
     @property
     def snippet_implementation_usage(self) -> str:
@@ -217,11 +223,13 @@ class CopySemantic(LifecycleTraits):
             )
             self.init_method_exception_traits.generate_implementation_call(
                 copy_c_function_body, BuiltinTypeGenerator('void*'), [copy_constructor_call])
+        argument_list = ['void* object_pointer']
+        self.init_method_exception_traits.modify_c_arguments(argument_list)
         class_generator.capi_generator.add_c_function(
             class_generator.full_name_array,
             'void*',
             class_generator.copy_method,
-            'void* object_pointer',
+            ', '.join(argument_list),
             copy_c_function_body)
 
         delete_c_function_body = FileGenerator(None)
@@ -231,17 +239,19 @@ class CopySemantic(LifecycleTraits):
             )
             self.finish_method_exception_traits.generate_implementation_call(
                 delete_c_function_body, BuiltinTypeGenerator('void'), [delete_call])
+        argument_list = ['void* object_pointer']
+        self.finish_method_exception_traits.modify_c_arguments(argument_list)
         class_generator.capi_generator.add_c_function(
             class_generator.full_name_array,
             'void',
             class_generator.delete_method,
-            'void* object_pointer',
+            ', '.join(argument_list),
             delete_c_function_body)
 
 
 class RawPointerSemantic(LifecycleTraits):
     def __init__(self, params: TBeautifulCapiParams):
-        super().__init__(params.wrapper_class_suffix_raw_pointer, params)
+        super().__init__(params.wrapper_class_suffix_raw_pointer, False, True, params)
 
     @property
     def snippet_implementation_usage(self) -> str:
@@ -332,17 +342,19 @@ class RawPointerSemantic(LifecycleTraits):
             )
             self.finish_method_exception_traits.generate_implementation_call(
                 delete_c_function_body, BuiltinTypeGenerator('void'), [delete_call])
+        argument_list = ['void* object_pointer']
+        self.finish_method_exception_traits.modify_c_arguments(argument_list)
         class_generator.capi_generator.add_c_function(
             class_generator.full_name_array,
             'void',
             class_generator.delete_method,
-            'void* object_pointer',
+            ', '.join(argument_list),
             delete_c_function_body)
 
 
 class RefCountedSemantic(LifecycleTraits):
     def __init__(self, params: TBeautifulCapiParams):
-        super().__init__(params.wrapper_class_suffix_reference_counted, params)
+        super().__init__(params.wrapper_class_suffix_reference_counted, True, True, params)
 
     @property
     def snippet_implementation_usage(self) -> str:
@@ -452,11 +464,13 @@ class RefCountedSemantic(LifecycleTraits):
             )
             self.init_method_exception_traits.generate_implementation_call(
                 add_ref_c_function_body, BuiltinTypeGenerator('void*'), [add_ref_call])
+        argument_list = ['void* object_pointer']
+        self.init_method_exception_traits.modify_c_arguments(argument_list)
         class_generator.capi_generator.add_c_function(
             class_generator.full_name_array,
             'void',
             class_generator.add_ref_method,
-            'void* object_pointer',
+            ', '.join(argument_list),
             add_ref_c_function_body)
 
         release_c_function_body = FileGenerator(None)
@@ -466,11 +480,13 @@ class RefCountedSemantic(LifecycleTraits):
             )
             self.finish_method_exception_traits.generate_implementation_call(
                 release_c_function_body, BuiltinTypeGenerator('void'), [release_call])
+        argument_list = ['void* object_pointer']
+        self.finish_method_exception_traits.modify_c_arguments(argument_list)
         class_generator.capi_generator.add_c_function(
             class_generator.full_name_array,
             'void',
             class_generator.release_method,
-            'void* object_pointer',
+            ', '.join(argument_list),
             release_c_function_body)
 
 

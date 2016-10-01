@@ -155,3 +155,5 @@ class NamespaceGenerator(object):
         for class_generator in self.classes:
             class_generator.generate(file_cache, capi_generator)
         self.__generate_snippet()
+        if self.namespace_object.implementation_header_filled:
+            capi_generator.additional_includes.include_user_header(self.namespace_object.implementation_header)

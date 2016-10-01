@@ -282,16 +282,13 @@ class TClass(object):
         self.typedef_name_filled = False
         self.copy_or_add_ref_noexcept = False
         self.copy_or_add_ref_noexcept_filled = False
-        self.delete_or_release_noexcept = False
+        self.delete_or_release_noexcept = True
         self.delete_or_release_noexcept_filled = False
         self.include_headers = []
         self.enumerations = []
         self.constructors = []
         self.methods = []
         self.callbacks = []
-        self.code_before_class_definitions = []
-        self.code_after_publics = []
-        self.code_after_class_definitions = []
     
     def load(self, dom_node):
         for element in [node for node in dom_node.childNodes if node.nodeName == "include_header"]:
@@ -314,18 +311,6 @@ class TClass(object):
             new_element = TCallback()
             new_element.load(element)
             self.callbacks.append(new_element)
-        for element in [node for node in dom_node.childNodes if node.nodeName == "code_before_class_definition"]:
-            new_element = TCodeBlock()
-            new_element.load(element)
-            self.code_before_class_definitions.append(new_element)
-        for element in [node for node in dom_node.childNodes if node.nodeName == "code_after_public"]:
-            new_element = TCodeBlock()
-            new_element.load(element)
-            self.code_after_publics.append(new_element)
-        for element in [node for node in dom_node.childNodes if node.nodeName == "code_after_class_definition"]:
-            new_element = TCodeBlock()
-            new_element.load(element)
-            self.code_after_class_definitions.append(new_element)
         if dom_node.hasAttribute("name"):
             cur_attr = dom_node.getAttribute("name")
             self.name = cur_attr
@@ -384,12 +369,24 @@ class TCallback(object):
     def __init__(self):
         self.lifecycle = TLifecycle.reference_counted
         self.lifecycle_filled = False
+        self.copy_or_add_ref_noexcept = False
+        self.copy_or_add_ref_noexcept_filled = False
+        self.delete_or_release_noexcept = True
+        self.delete_or_release_noexcept_filled = False
     
     def load(self, dom_node):
         if dom_node.hasAttribute("lifecycle"):
             cur_attr = dom_node.getAttribute("lifecycle")
             self.lifecycle = TLifecycle.load(cur_attr)
             self.lifecycle_filled = True
+        if dom_node.hasAttribute("copy_or_add_ref_noexcept"):
+            cur_attr = dom_node.getAttribute("copy_or_add_ref_noexcept")
+            self.copy_or_add_ref_noexcept = string_to_bool(cur_attr)
+            self.copy_or_add_ref_noexcept_filled = True
+        if dom_node.hasAttribute("delete_or_release_noexcept"):
+            cur_attr = dom_node.getAttribute("delete_or_release_noexcept")
+            self.delete_or_release_noexcept = string_to_bool(cur_attr)
+            self.delete_or_release_noexcept_filled = True
     
 
 class TConstructor(object):
@@ -477,29 +474,6 @@ class TArgument(object):
             cur_attr = dom_node.getAttribute("type")
             self.type_name = cur_attr
             self.type_name_filled = True
-    
-
-class TCodeBlock(object):
-    def __init__(self):
-        self.lines = []
-    
-    def load(self, dom_node):
-        for element in [node for node in dom_node.childNodes if node.nodeName == "line"]:
-            new_element = TCodeLine()
-            new_element.load(element)
-            self.lines.append(new_element)
-    
-
-class TCodeLine(object):
-    def __init__(self):
-        self.text = ""
-        self.text_filled = False
-    
-    def load(self, dom_node):
-        if dom_node.hasAttribute("text"):
-            cur_attr = dom_node.getAttribute("text")
-            self.text = cur_attr
-            self.text_filled = True
     
 
 class THeaderInclude(object):

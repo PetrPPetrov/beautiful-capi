@@ -51,6 +51,7 @@ class ClassGenerator(object):
         self.file_cache = None
         self.capi_generator = None
         self.exception_code = -1
+        self.callback_lifecycle_traits = None
 
     @property
     def name(self) -> str:
@@ -91,6 +92,10 @@ class ClassGenerator(object):
     @property
     def method_copy_or_add_ref_default_value(self) -> bool:
         return self.lifecycle_traits.method_copy_or_add_ref_default_value
+
+    @property
+    def is_callback(self) -> bool:
+        return self.base_class_generator and self.base_class_generator.class_object.callbacks
 
     @property
     def cast_to_base(self) -> str:
@@ -163,6 +168,12 @@ class ClassGenerator(object):
         self.inheritance_traits.generate_set_object_declaration(declaration_header, self)
         self.inheritance_traits.generate_pointer_declaration(declaration_header, self)
 
+    def __generate_callback_lifecycle_traits(self):
+        if self.is_callback:
+            callback = self.base_class_generator.class_object.callbacks[0]
+            self.callback_lifecycle_traits = create_lifecycle_traits(callback.lifecycle, self.params)
+            self.callback_lifecycle_traits.create_exception_traits(callback, self.capi_generator)
+
     def __generate_class_declaration(self, declaration_header: FileGenerator):
         if self.base_class_generator:
             declaration_header.put_line('class {name}: public {base_class}'.format(
@@ -174,6 +185,7 @@ class ClassGenerator(object):
             declaration_header.put_line('class {name}'.format(name=self.wrap_name))
         with IndentScope(declaration_header, '};'):
             self.__generate_class_body(declaration_header)
+        self.__generate_callback_lifecycle_traits()
         generate_callbacks_on_client_side_declarations(declaration_header, self)
 
     def __generate_declaration(self):

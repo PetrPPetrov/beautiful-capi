@@ -64,9 +64,6 @@
       <xs:element name="constructor" minOccurs="0" maxOccurs="unbounded" type="TConstructor"/>
       <xs:element name="method" minOccurs="0" maxOccurs="unbounded" type="TMethod"/>
       <xs:element name="callback" minOccurs="0" maxOccurs="1" type="TCallback"/>
-      <xs:element name="code_before_class_definition" minOccurs="0" maxOccurs="unbounded" type="TCodeBlock"/>
-      <xs:element name="code_after_public" minOccurs="0" maxOccurs="unbounded" type="TCodeBlock"/>
-      <xs:element name="code_after_class_definition" minOccurs="0" maxOccurs="unbounded" type="TCodeBlock"/>
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required"/>
     <xs:attribute name="base" type="xs:string" use="optional" default=""/>
@@ -80,10 +77,12 @@
     <xs:attribute name="template_line" type="xs:string" use="optional" default=""/>
     <xs:attribute name="typedef_name" type="xs:string" use="optional" default=""/>
     <xs:attribute name="copy_or_add_ref_noexcept" type="xs:boolean" use="optional" default="false"/>
-    <xs:attribute name="delete_or_release_noexcept" type="xs:boolean" use="optional" default="false"/>
+    <xs:attribute name="delete_or_release_noexcept" type="xs:boolean" use="optional" default="true"/>
   </xs:complexType>
   <xs:complexType name="TCallback">
     <xs:attribute name="lifecycle" type="TLifecycle" use="optional" default="reference_counted"/>
+    <xs:attribute name="copy_or_add_ref_noexcept" type="xs:boolean" use="optional" default="false"/>
+    <xs:attribute name="delete_or_release_noexcept" type="xs:boolean" use="optional" default="true"/>
   </xs:complexType>
   <xs:complexType name="TConstructor">
     <xs:sequence>
@@ -120,14 +119,6 @@
       <xs:enumeration value="reference_counted"/>
     </xs:restriction>
   </xs:simpleType>
-  <xs:complexType name="TCodeBlock">
-    <xs:sequence>
-      <xs:element name="line" minOccurs="0" maxOccurs="unbounded" type="TCodeLine"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="TCodeLine">
-    <xs:attribute name="text" type="xs:string" use="required"/>
-  </xs:complexType>
   <xs:complexType name="THeaderInclude">
     <xs:attribute name="file" type="xs:string" use="required"/>
     <xs:attribute name="system" type="xs:boolean" use="optional" default="false"/>
