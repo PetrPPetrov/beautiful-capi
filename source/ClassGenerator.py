@@ -29,6 +29,9 @@ from CapiGenerator import CapiGenerator
 from NamespaceGenerator import NamespaceGenerator
 from LifecycleTraits import create_lifecycle_traits
 from InheritanceTraits import create_inheritance_traits
+from Callbacks import generate_callbacks_on_client_side_definitions
+from Callbacks import generate_callbacks_on_client_side_declarations
+from Callbacks import generate_callbacks_on_library_side
 from Helpers import get_c_name, get_template_name, replace_template_to_filename, get_template_tail
 
 
@@ -105,33 +108,69 @@ class ClassGenerator(object):
     def release_method(self) -> str:
         return self.full_c_name + '_release'
 
+    @property
+    def copy_callback_type(self) -> str:
+        return self.full_c_name + '_copy_callback_type'
+
+    @property
+    def delete_callback_type(self) -> str:
+        return self.full_c_name + '_delete_callback_type'
+
+    @property
+    def add_ref_callback_type(self) -> str:
+        return self.full_c_name + '_add_ref_callback_type'
+
+    @property
+    def release_callback_type(self) -> str:
+        return self.full_c_name + '_release_callback_type'
+
     def implementation_result_instructions(self, result_var: str, expression: str) -> ([str], str):
         return self.lifecycle_traits.implementation_result_instructions(self, result_var, expression)
 
-    def __generate_declaration_body(self, declaration_header: FileGenerator):
-        declaration_header.put_line('class {name}'.format(name=self.wrap_name))
-        with IndentScope(declaration_header, '};'):
-            with Unindent(declaration_header):
-                declaration_header.put_line('public:')
-            for enum_generator in self.enum_generators:
-                enum_generator.generate_enum_definition(declaration_header)
-            if self.enum_generators:
-                declaration_header.put_line('')
-            for constructor_generator in self.constructor_generators:
-                declaration_header.put_line('{constructor_declaration};'.format(
-                    constructor_declaration=constructor_generator.wrap_declaration()))
-                constructor_generator.include_dependent_declaration_headers(declaration_header, self.file_cache)
-            for method_generator in self.method_generators:
-                declaration_header.put_line('{method_declaration};'.format(
-                    method_declaration=method_generator.wrap_declaration()))
-                method_generator.include_dependent_declaration_headers(declaration_header, self.file_cache)
-            self.inheritance_traits = create_inheritance_traits(self.class_object.requires_cast_to_base)
+    def __generate_enum_definitions(self, declaration_header):
+        for enum_generator in self.enum_generators:
+            enum_generator.generate_enum_definition(declaration_header)
+        if self.enum_generators:
             declaration_header.put_line('')
-            self.lifecycle_traits.generate_std_methods_declarations(declaration_header, self)
-            with Unindent(declaration_header):
-                declaration_header.put_line('protected:')
-            self.inheritance_traits.generate_set_object_declaration(declaration_header, self)
-            self.inheritance_traits.generate_pointer_declaration(declaration_header, self)
+
+    def __generate_constructor_declarations(self, declaration_header):
+        for constructor_generator in self.constructor_generators:
+            declaration_header.put_line('{constructor_declaration};'.format(
+                constructor_declaration=constructor_generator.wrap_declaration()))
+            constructor_generator.include_dependent_declaration_headers(declaration_header, self.file_cache)
+
+    def __generate_method_declarations(self, declaration_header):
+        for method_generator in self.method_generators:
+            declaration_header.put_line('{method_declaration};'.format(
+                method_declaration=method_generator.wrap_declaration(self.capi_generator)))
+            method_generator.include_dependent_declaration_headers(declaration_header, self.file_cache)
+
+    def __generate_class_body(self, declaration_header):
+        with Unindent(declaration_header):
+            declaration_header.put_line('public:')
+        self.__generate_enum_definitions(declaration_header)
+        self.__generate_constructor_declarations(declaration_header)
+        self.__generate_method_declarations(declaration_header)
+        self.inheritance_traits = create_inheritance_traits(self.class_object.requires_cast_to_base)
+        declaration_header.put_line('')
+        self.lifecycle_traits.generate_std_methods_declarations(declaration_header, self)
+        with Unindent(declaration_header):
+            declaration_header.put_line('protected:')
+        self.inheritance_traits.generate_set_object_declaration(declaration_header, self)
+        self.inheritance_traits.generate_pointer_declaration(declaration_header, self)
+
+    def __generate_class_declaration(self, declaration_header: FileGenerator):
+        if self.base_class_generator:
+            declaration_header.put_line('class {name}: public {base_class}'.format(
+                name=self.wrap_name,
+                base_class=self.base_class_generator.full_wrap_name))
+            declaration_header.include_user_header(
+                self.file_cache.class_header_decl(self.base_class_generator.full_name_array))
+        else:
+            declaration_header.put_line('class {name}'.format(name=self.wrap_name))
+        with IndentScope(declaration_header, '};'):
+            self.__generate_class_body(declaration_header)
+        generate_callbacks_on_client_side_declarations(declaration_header, self)
 
     def __generate_declaration(self):
         declaration_header = self.file_cache.get_file_for_class_decl(self.full_name_array)
@@ -144,9 +183,28 @@ class ClassGenerator(object):
             with IfDefScope(declaration_header, '__cplusplus'):
                 declaration_header.put_line(self.parent_namespace.one_line_namespace_begin)
                 declaration_header.put_line('')
-                self.__generate_declaration_body(declaration_header)
+                self.__generate_class_declaration(declaration_header)
                 declaration_header.put_line('')
                 declaration_header.put_line(self.parent_namespace.one_line_namespace_end)
+
+    def __generate_constructor_definitions(self, definition_header, first_method):
+        for constructor_generator in self.constructor_generators:
+            if first_method:
+                first_method = False
+            else:
+                definition_header.put_line('')
+            constructor_generator.generate_wrap_definition(definition_header, self.capi_generator)
+            constructor_generator.include_dependent_definition_headers(definition_header, self.file_cache)
+        return first_method
+
+    def __generate_method_definitions(self, definition_header, first_method):
+        for method_generator in self.method_generators:
+            if first_method:
+                first_method = False
+            else:
+                definition_header.put_line('')
+            method_generator.generate_wrap_definition(definition_header)
+            method_generator.include_dependent_definition_headers(definition_header, self.file_cache)
 
     def __generate_definition(self):
         definition_header = self.file_cache.get_file_for_class(self.full_name_array)
@@ -155,26 +213,18 @@ class ClassGenerator(object):
         with WatchdogScope(definition_header, watchdog_string):
             definition_header.put_include_files()
             definition_header.include_user_header(self.file_cache.class_header_decl(self.full_name_array))
+            if self.base_class_generator:
+                definition_header.include_user_header(
+                    self.file_cache.class_header(self.base_class_generator.full_name_array))
             with IfDefScope(definition_header, '__cplusplus'):
                 first_method = True
-                for constructor_generator in self.constructor_generators:
-                    if first_method:
-                        first_method = False
-                    else:
-                        definition_header.put_line('')
-                    constructor_generator.generate_wrap_definition(definition_header, self.capi_generator)
-                    constructor_generator.include_dependent_definition_headers(definition_header, self.file_cache)
-                for method_generator in self.method_generators:
-                    if first_method:
-                        first_method = False
-                    else:
-                        definition_header.put_line('')
-                    method_generator.generate_wrap_definition(definition_header, self.capi_generator)
-                    method_generator.include_dependent_definition_headers(definition_header, self.file_cache)
+                first_method = self.__generate_constructor_definitions(definition_header, first_method)
+                self.__generate_method_definitions(definition_header, first_method)
                 definition_header.put_line('')
                 self.lifecycle_traits.generate_std_methods_definitions(definition_header, self)
                 definition_header.put_line('')
                 self.inheritance_traits.generate_set_object_definition(definition_header, self)
+                generate_callbacks_on_client_side_definitions(definition_header, self)
 
     def __generate_c_functions(self):
         for constructor_generator in self.constructor_generators:
@@ -183,6 +233,8 @@ class ClassGenerator(object):
             method_generator.generate_c_function(self.capi_generator)
         self.lifecycle_traits.generate_c_functions(self)
         self.inheritance_traits.generate_c_functions(self)
+        if self.class_object.implementation_class_header_filled:
+            self.capi_generator.additional_includes.include_user_header(self.class_object.implementation_class_header)
 
     def __generate_snippet(self):
         if self.enum_generators or self.class_object.abstract:
@@ -205,9 +257,8 @@ class ClassGenerator(object):
     def generate(self, file_cache: FileCache, capi_generator: CapiGenerator):
         self.file_cache = file_cache
         self.capi_generator = capi_generator
-        if self.class_object.implementation_class_header_filled:
-            self.capi_generator.additional_includes.include_user_header(self.class_object.implementation_class_header)
         self.__generate_declaration()
         self.__generate_definition()
         self.__generate_c_functions()
         self.__generate_snippet()
+        generate_callbacks_on_library_side(self, capi_generator)

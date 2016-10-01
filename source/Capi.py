@@ -29,6 +29,7 @@ from CreateGenerators import create_namespace_generators
 from FileCache import FileCache
 from CapiGenerator import CapiGenerator
 from Templates import process as process_templates
+from Callbacks import process as process_callbacks
 from ParamsParser import TBeautifulCapiParams, TExceptionHandlingMode, load
 from ParseRoot import parse_root
 
@@ -62,7 +63,8 @@ class Capi(object):
         )
         params.beautiful_capi_namespace = params.beautiful_capi_namespace.format(
             project_name=self.api_description.project_name)
-        params.autogen_prefix = params.autogen_prefix_for_internal_callback_implementation.format(
+        autogen_prefix_template = params.autogen_prefix_for_internal_callback_implementation
+        params.autogen_prefix_for_internal_callback_implementation = autogen_prefix_template.format(
             project_name=self.api_description.project_name)
         params.root_header = params.root_header.format(
             project_name=self.api_description.project_name)
@@ -76,6 +78,10 @@ class Capi(object):
         self.substitute_project_name(self.params_description)
 
         process_templates(self.api_description)
+        first_namespace_generators = create_namespace_generators(
+            self.api_description, self.params_description)
+
+        process_callbacks(first_namespace_generators)
         namespace_generators = create_namespace_generators(
             self.api_description, self.params_description)
 

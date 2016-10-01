@@ -60,8 +60,6 @@ class TBeautifulCapiParams(object):
         self.output_wrap_file_name_filled = False
         self.namespace_header_at_parent_folder = True
         self.namespace_header_at_parent_folder_filled = False
-        self.dynamically_load_functions = False
-        self.dynamically_load_functions_filled = False
         self.capi_header_suffix = "Capi"
         self.capi_header_suffix_filled = False
         self.fwd_header_suffix = "Fwd"
@@ -122,10 +120,6 @@ class TBeautifulCapiParams(object):
             cur_attr = dom_node.getAttribute("namespace_header_at_parent_folder")
             self.namespace_header_at_parent_folder = string_to_bool(cur_attr)
             self.namespace_header_at_parent_folder_filled = True
-        if dom_node.hasAttribute("dynamically_load_functions"):
-            cur_attr = dom_node.getAttribute("dynamically_load_functions")
-            self.dynamically_load_functions = string_to_bool(cur_attr)
-            self.dynamically_load_functions_filled = True
         if dom_node.hasAttribute("capi_header_suffix"):
             cur_attr = dom_node.getAttribute("capi_header_suffix")
             self.capi_header_suffix = cur_attr

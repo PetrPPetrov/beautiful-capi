@@ -116,12 +116,28 @@ class MethodGenerator(object):
         self.exception_traits = None
 
     @property
+    def name(self) -> str:
+        return self.method_object.name
+
+    @property
+    def c_name(self) -> str:
+        return get_c_name(self.name)
+
+    @property
     def full_c_name(self) -> str:
         return get_c_name(self.parent_class_generator.full_c_name + '_' + self.method_object.name)
 
     @property
+    def wrap_name(self) -> str:
+        return self.method_object.name
+
+    @property
     def full_wrap_name(self) -> str:
         return '::'.join([self.parent_class_generator.full_wrap_name, self.method_object.name])
+
+    @property
+    def callback_type(self) -> str:
+        return self.full_c_name + '_callback_type'
 
     @property
     def c_arguments_list(self) -> []:
@@ -129,7 +145,8 @@ class MethodGenerator(object):
         result.insert(0, ThisArgumentGenerator(self.parent_class_generator))
         return result
 
-    def wrap_declaration(self) -> str:
+    def wrap_declaration(self, capi_generator: CapiGenerator) -> str:
+        self.exception_traits = capi_generator.get_exception_traits(self.method_object.noexcept)
         arguments = ', '.join(
             [argument_generator.wrap_argument_declaration() for argument_generator in self.argument_generators])
         return 'inline {return_type} {name}({arguments}){const}'.format(
@@ -139,8 +156,7 @@ class MethodGenerator(object):
             const=' const' if self.method_object.const else ''
         )
 
-    def generate_wrap_definition(self, out: FileGenerator, capi_generator: CapiGenerator):
-        self.exception_traits = capi_generator.get_exception_traits(self.method_object.noexcept)
+    def generate_wrap_definition(self, out: FileGenerator):
         arguments = ', '.join(
             [argument_generator.wrap_argument_declaration() for argument_generator in self.argument_generators])
         arguments_call = [argument_generator.wrap_2_c() for argument_generator in self.c_arguments_list]

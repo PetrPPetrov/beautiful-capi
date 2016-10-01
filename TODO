@@ -19,6 +19,7 @@
 *) clash with argument names ("object_pointer", "self", "exception_info", "result")
 *) exception during exception class copy constructor (inside catch block)
 *) get_raw_pointer name customization
+*) c_2_implementation and implementation_2_c customization
 ===
 *) shuffle Capi mode
 *) implement Dynamic traits for Windows

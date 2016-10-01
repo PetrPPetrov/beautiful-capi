@@ -52,6 +52,7 @@ class CapiGenerator(object):
         self.additional_includes.put_include_files()
         self.additional_includes.include_system_header('stdexcept')
         self.additional_includes.include_system_header('cassert')
+        self.callback_implementations = []
         self.cur_api_define = None
         self.cur_capi_prefix = None
         self.cur_api_convention = None
@@ -123,6 +124,14 @@ class CapiGenerator(object):
         output_capi_impl.put_file(self.additional_includes)
         self.main_exception_traits.generate_exception_info(output_capi_impl)
         self.main_exception_traits.generate_check_and_throw_exception(file_cache)
+
+        if self.callback_implementations:
+            self.main_exception_traits.generate_check_and_throw_exception_for_impl(output_capi_impl)
+            output_capi_impl.put_line('')
+
+        for callback_implementation in self.callback_implementations:
+            output_capi_impl.put_file(callback_implementation)
+            output_capi_impl.put_line('')
 
         for namespace_name, c_functions in self.namespace_name_2_c_functions.items():
             # We always have at least one element

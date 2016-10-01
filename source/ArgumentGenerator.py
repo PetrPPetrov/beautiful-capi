@@ -61,11 +61,33 @@ class ClassTypeGenerator(object):
             return [], '{type_name}({internal_expression})'.format(
                 type_name=self.wrap_return_type(), internal_expression=internal_expression)
 
+    @staticmethod
+    def wrap_2_c_var(result_var: str, expression: str) -> ([str], str):
+        internal_expression = '{expression}.get_raw_pointer()'.format(expression=expression)
+        if result_var:
+            return ['void* {result_var}({internal_expression});'.format(
+                result_var=result_var,
+                internal_expression=internal_expression
+            )], result_var
+        else:
+            return [], internal_expression
+
     def c_2_implementation(self, name: str) -> str:
         return 'static_cast<{implementation_class_name}*>({name})'.format(
             implementation_class_name=self.class_argument_generator.class_object.implementation_class_name,
             name=name
         )
+
+    def c_2_implementation_var(self, result_var: str, expression: str) -> ([str], str):
+        if result_var:
+            return ['{impl_name} {result_var}({expression});'.format(
+                impl_name=self.snippet_implementation_declaration(),
+                result_var=result_var,
+                expression=expression)], result_var
+        else:
+            return [], '{impl_name}({expression})'.format(
+                impl_name=self.snippet_implementation_declaration(),
+                expression=expression)
 
     def snippet_implementation_declaration(self) -> str:
         return self.class_argument_generator.snippet_implementation_declaration
@@ -113,11 +135,25 @@ class EnumTypeGenerator(object):
             return [], '{type_name}(static_cast<{type_name}>({expression}))'.format(
                 type_name=self.wrap_return_type(), expression=expression)
 
+    def wrap_2_c_var(self, result_var: str, expression: str) -> ([str], str):
+        return self.implementation_2_c_var(result_var, expression)
+
     def c_2_implementation(self, name: str) -> str:
         return 'static_cast<{implementation_name}>({name})'.format(
             implementation_name=self.enum_argument_generator.implementation_name,
             name=name
         )
+
+    def c_2_implementation_var(self, result_var: str, expression: str) -> ([str], str):
+        if result_var:
+            return ['{impl_name} {result_var}(static_cast<{impl_name}>({expression}));'.format(
+                impl_name=self.snippet_implementation_declaration(),
+                result_var=result_var,
+                expression=expression)], result_var
+        else:
+            return [], 'static_cast<{impl_name}>({expression})'.format(
+                impl_name=self.snippet_implementation_declaration(),
+                expression=expression)
 
     def snippet_implementation_declaration(self) -> str:
         return self.enum_argument_generator.implementation_name
@@ -147,11 +183,6 @@ class EnumTypeGenerator(object):
 
     def include_dependent_definition_headers(self, file_generator: FileGenerator, file_cache: FileCache):
         pass
-
-
-def include_dependent_definition_headers(self, file_generator: FileGenerator, file_cache: FileCache):
-    file_generator.include_user_header(
-        file_cache.class_header(self.class_argument_generator.full_name_array))
 
 
 class BuiltinTypeGenerator(object):
@@ -187,9 +218,24 @@ class BuiltinTypeGenerator(object):
         else:
             return [expression + ';'], ''
 
+    def wrap_2_c_var(self, result_var: str, expression: str) -> ([str], str):
+        return self.implementation_2_c_var(result_var, expression)
+
     @staticmethod
     def c_2_implementation(name: str) -> str:
         return name
+
+    def c_2_implementation_var(self, result_var: str, expression: str) -> ([str], str):
+        if not self.is_void:
+            if result_var:
+                return ['{impl_name} {result_var}({expression});'.format(
+                    impl_name=self.snippet_implementation_declaration(),
+                    result_var=result_var,
+                    expression=expression)], result_var
+            else:
+                return [], expression
+        else:
+            return [expression + ';'], ''
 
     def snippet_implementation_declaration(self) -> str:
         return 'void' if self.is_void else self.type_name
@@ -231,11 +277,17 @@ class ArgumentGenerator(object):
     def c_argument_declaration(self) -> str:
         return self.type_generator.c_argument_declaration() + ' ' + self.name
 
+    def c_2_wrap(self) -> str:
+        return self.type_generator.c_2_wrap_var('', self.name)[1]
+
     def c_2_implementation(self) -> str:
         return self.type_generator.c_2_implementation(self.name)
 
     def snippet_implementation_declaration(self) -> str:
         return self.type_generator.snippet_implementation_declaration() + ' ' + self.name
+
+    def implementation_2_c(self) -> str:
+        return self.type_generator.implementation_2_c_var('', self.name)[1]
 
     def include_dependent_declaration_headers(self, file_generator: FileGenerator, file_cache: FileCache):
         self.type_generator.include_dependent_declaration_headers(file_generator, file_cache)
@@ -258,6 +310,9 @@ class ThisArgumentGenerator(object):
 
     def c_2_implementation(self) -> str:
         return self.type_generator.c_2_implementation('object_pointer')
+
+    def implementation_2_c(self) -> str:
+        return self.type_generator.implementation_2_c_var('', 'mObject')[1]
 
     def include_dependent_declaration_headers(self, file_generator: FileGenerator, file_cache: FileCache):
         pass

@@ -111,7 +111,6 @@ class TNamespace(object):
         self.include_headers = []
         self.enumerations = []
         self.classes = []
-        self.callbacks = []
         self.functions = []
         self.templates = []
     
@@ -136,10 +135,6 @@ class TNamespace(object):
             new_element = TClass()
             new_element.load(element)
             self.classes.append(new_element)
-        for element in [node for node in dom_node.childNodes if node.nodeName == "callback"]:
-            new_element = TCallback()
-            new_element.load(element)
-            self.callbacks.append(new_element)
         for element in [node for node in dom_node.childNodes if node.nodeName == "function"]:
             new_element = TFunction()
             new_element.load(element)

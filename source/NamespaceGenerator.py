@@ -81,19 +81,35 @@ class NamespaceGenerator(object):
         return '{parent_ns}}}'.format(
             parent_ns=self.parent_namespace.one_line_namespace_end if self.parent_namespace else '')
 
+    def __generate_namespace_enumerators(self, namespace_header):
+        if self.enum_generators:
+            with IfDefScope(namespace_header, '__cplusplus'):
+                namespace_header.put_line(self.one_line_namespace_begin)
+                namespace_header.put_line('')
+                for enum_generator in self.enum_generators:
+                    enum_generator.generate_enum_definition(namespace_header)
+                namespace_header.put_line('')
+                namespace_header.put_line(self.one_line_namespace_end)
+            namespace_header.put_line('')
+
+    def __generate_namespace_functions(self, capi_generator, file_cache, namespace_header):
+        if self.functions:
+            with IfDefScope(namespace_header, '__cplusplus'):
+                namespace_header.put_line(self.one_line_namespace_begin)
+                namespace_header.put_line('')
+                for function_generator in self.functions:
+                    function_generator.generate_wrap_definition(namespace_header, capi_generator)
+                    function_generator.generate_c_function(capi_generator)
+                    function_generator.include_dependent_definition_headers(namespace_header, file_cache)
+                    function_generator.include_dependent_implementation_headers(capi_generator)
+                namespace_header.put_line('')
+                namespace_header.put_line(self.one_line_namespace_end)
+
     def __generate_namespace_headers(self, file_cache: FileCache, capi_generator: CapiGenerator):
         namespace_header = file_cache.get_file_for_namespace(self.full_name_array)
         namespace_header.put_begin_cpp_comments(self.params)
         with WatchdogScope(namespace_header, self.full_name.upper() + '_INCLUDED'):
-            if self.enum_generators:
-                with IfDefScope(namespace_header, '__cplusplus'):
-                    namespace_header.put_line(self.one_line_namespace_begin)
-                    namespace_header.put_line('')
-                    for enum_generator in self.enum_generators:
-                        enum_generator.generate_enum_definition(namespace_header)
-                    namespace_header.put_line('')
-                    namespace_header.put_line(self.one_line_namespace_end)
-                namespace_header.put_line('')
+            self.__generate_namespace_enumerators(namespace_header)
             namespace_header.put_include_files()
             namespace_header.include_user_header(file_cache.capi_header(self.full_name_array))
             namespace_header.include_user_header(file_cache.fwd_header(self.full_name_array))
@@ -104,17 +120,7 @@ class NamespaceGenerator(object):
             for class_generator in self.classes:
                 namespace_header.include_user_header(
                     file_cache.class_header(class_generator.full_name_array))
-            if self.functions:
-                with IfDefScope(namespace_header, '__cplusplus'):
-                    namespace_header.put_line(self.one_line_namespace_begin)
-                    namespace_header.put_line('')
-                    for function_generator in self.functions:
-                        function_generator.generate_wrap_definition(namespace_header, capi_generator)
-                        function_generator.generate_c_function(capi_generator)
-                        function_generator.include_dependent_definition_headers(namespace_header, file_cache)
-                        function_generator.include_dependent_implementation_headers(capi_generator)
-                    namespace_header.put_line('')
-                    namespace_header.put_line(self.one_line_namespace_end)
+            self.__generate_namespace_functions(capi_generator, file_cache, namespace_header)
 
     def __generate_forward_declarations_impl(self, out: FileGenerator):
         out.put_line('namespace {0}'.format(self.name))
