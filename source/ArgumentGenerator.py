@@ -264,7 +264,7 @@ class BuiltinTypeGenerator(object):
 
 
 class ArgumentGenerator(object):
-    def __init__(self, type_generator: ClassTypeGenerator or BuiltinTypeGenerator, name: str):
+    def __init__(self, type_generator: ClassTypeGenerator or EnumTypeGenerator or BuiltinTypeGenerator, name: str):
         self.type_generator = type_generator
         self.name = name
 
