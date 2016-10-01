@@ -278,8 +278,11 @@ class FunctionGenerator(object):
             out.put_return_cpp_statement(return_expression)
 
     def generate_c_function(self, capi_generator: CapiGenerator):
-        c_arguments = ', '.join(
-            [argument_generator.c_argument_declaration() for argument_generator in self.argument_generators])
+        c_arguments_list = [
+            argument_generator.c_argument_declaration() for argument_generator in self.argument_generators
+        ]
+        self.exception_traits.modify_c_arguments(c_arguments_list)
+        c_arguments = ', '.join(c_arguments_list)
         implementation_arguments = ', '.join(
             [argument_generator.c_2_implementation() for argument_generator in self.argument_generators])
         c_function_body = FileGenerator(None)
