@@ -4,7 +4,8 @@
                folder_per_namespace="true"
                generate_single_file="false"
                namespace_header_at_parent_folder="true"
-               dynamically_load_functions="false">
+               dynamically_load_functions="false"
+               root_header="DownCast.h">
   <copyright_header>/*
  * Beautiful Capi generates beautiful C API wrappers for your C++ classes
  * Copyright (C) 2015 Petr Petrovich Petrov

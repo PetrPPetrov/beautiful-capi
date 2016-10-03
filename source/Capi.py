@@ -27,7 +27,8 @@ from xml.dom.minidom import parse
 from Helpers import BeautifulCapiException
 from CreateGenerators import create_namespace_generators
 from FileCache import FileCache
-from CapiGenerator import CapiGenerator
+from CapiGenerator import CapiGenerator, WatchdogScope
+from FileGenerator import FileGenerator
 from Templates import process as process_templates
 from Callbacks import process as process_callbacks
 from ParamsParser import TBeautifulCapiParams, TExceptionHandlingMode, load
@@ -55,7 +56,7 @@ class Capi(object):
             if os.path.exists(self.internal_snippets_folder):
                 shutil.rmtree(self.internal_snippets_folder)
 
-    def substitute_project_name(self, params: TBeautifulCapiParams):
+    def __substitute_project_name(self, params: TBeautifulCapiParams):
         if not self.api_description.project_name:
             raise BeautifulCapiException('project_name parameter is not specified')
         params.check_and_throw_exception_filename = params.check_and_throw_exception_filename.format(
@@ -69,36 +70,45 @@ class Capi(object):
         params.root_header = params.root_header.format(
             project_name=self.api_description.project_name)
 
+    def __generate_root_header(self, namespace_generators: [], file_cache: FileCache):
+        if self.params_description.root_header and self.api_description.project_name:
+            root_header = FileGenerator(os.path.join(self.output_folder, self.params_description.root_header))
+            root_header.put_begin_cpp_comments(self.params_description)
+            with WatchdogScope(root_header, self.api_description.project_name.upper() + '_LIBRARY_INCLUDED'):
+                root_header.put_include_files(False)
+                for namespace_generator in namespace_generators:
+                    root_header.include_user_header(file_cache.namespace_header(namespace_generator.full_name_array))
+
+    def __generate(self):
+        process_templates(self.api_description)
+        first_namespace_generators = create_namespace_generators(
+            self.api_description, self.params_description)
+        process_callbacks(first_namespace_generators)
+        namespace_generators = create_namespace_generators(
+            self.api_description, self.params_description)
+        by_first_argument_exception_traits = ExceptionTraits.ByFirstArgument(
+            self.params_description, namespace_generators)
+        no_handling_exception_traits = ExceptionTraits.NoHandling()
+        if self.params_description.exception_handling_mode == TExceptionHandlingMode.by_first_argument:
+            main_exception_traits = by_first_argument_exception_traits
+        else:
+            main_exception_traits = no_handling_exception_traits
+        capi_generator = CapiGenerator(main_exception_traits, no_handling_exception_traits)
+        file_cache = FileCache(self.params_description)
+        for namespace_generator in namespace_generators:
+            namespace_generator.generate(file_cache, capi_generator)
+        capi_generator.generate(file_cache, self.params_description)
+        self.__generate_root_header(namespace_generators, file_cache)
+
     def generate(self):
         self.params_description = load(self.input_params)
         self.params_description.output_folder = self.output_folder
         self.params_description.internal_snippets_folder = self.internal_snippets_folder
         self.params_description.output_wrap_file_name = self.output_wrap_file_name
         self.api_description = parse_root(self.input_xml)
-        self.substitute_project_name(self.params_description)
+        self.__substitute_project_name(self.params_description)
 
-        process_templates(self.api_description)
-        first_namespace_generators = create_namespace_generators(
-            self.api_description, self.params_description)
-
-        process_callbacks(first_namespace_generators)
-        namespace_generators = create_namespace_generators(
-            self.api_description, self.params_description)
-
-        by_first_argument_exception_traits = ExceptionTraits.ByFirstArgument(
-                self.params_description, namespace_generators)
-        no_handling_exception_traits = ExceptionTraits.NoHandling()
-        if self.params_description.exception_handling_mode == TExceptionHandlingMode.by_first_argument:
-            main_exception_traits = by_first_argument_exception_traits
-        else:
-            main_exception_traits = no_handling_exception_traits
-
-        capi_generator = CapiGenerator(main_exception_traits, no_handling_exception_traits)
-        file_cache = FileCache(self.params_description)
-        for namespace_generator in namespace_generators:
-            namespace_generator.generate(file_cache, capi_generator)
-
-        capi_generator.generate(file_cache, self.params_description)
+        self.__generate()
 
 
 def main():

@@ -128,11 +128,12 @@ class FileGenerator(object):
     def put_file(self, another_file):
         self.lines.append(another_file)
 
-    def put_include_files(self):
+    def put_include_files(self, add_empty_line:bool=True):
         if not self.included_files_were_included:
             self.lines.append(IncludeHeaders(self.included_files))
             self.included_files_were_included = True
-        self.put_line('')
+        if add_empty_line:
+            self.put_line('')
 
     def put_python_header(self):
         self.file_header = '#!/usr/bin/env python'

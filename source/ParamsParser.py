@@ -90,7 +90,7 @@ class TBeautifulCapiParams(object):
         self.beautiful_capi_namespace_filled = False
         self.autogen_prefix_for_internal_callback_implementation = "AutoGen_{project_name}_"
         self.autogen_prefix_for_internal_callback_implementation_filled = False
-        self.root_header = "{project_name}.h"
+        self.root_header = ""
         self.root_header_filled = False
         self.copyright_header = ""
         self.copyright_header_filled = False
