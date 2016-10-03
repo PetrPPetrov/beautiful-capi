@@ -122,15 +122,14 @@ class CopySemantic(LifecycleTraits):
             expression=expression
         )]
         if result_var:
-            instructions.append('void* {result_var}({copy_method}(&result_implementation_copy));'.format(
+            instructions.append('void* {result_var}(new {impl_class_name}(result_implementation_copy));'.format(
                 result_var=result_var,
-                copy_method=class_generator.copy_method
+                impl_class_name=class_generator.class_object.implementation_class_name
             ))
             return_expression = result_var
         else:
-            return_expression = '{copy_method}(&result_implementation_copy)'.format(
-                result_var=result_var,
-                copy_method=class_generator.copy_method)
+            return_expression = 'new {impl_class_name}(result_implementation_copy)'.format(
+                impl_class_name=class_generator.class_object.implementation_class_name)
         return instructions, return_expression
 
     def generate_std_methods_declarations(self, out: FileGenerator, class_generator):
