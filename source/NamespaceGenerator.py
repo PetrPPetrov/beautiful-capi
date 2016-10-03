@@ -129,6 +129,8 @@ class NamespaceGenerator(object):
                 nested_namespace_generator.__generate_forward_declarations_impl()
             for class_generator in self.classes:
                 class_generator.generate_forward_declaration(out)
+            out.put_line('template<typename TargetType, typename SourceType>')
+            out.put_line('inline TargetType down_cast(const SourceType& source_object);')
 
     def __generate_forward_declarations(self, file_cache: FileCache, capi_generator: CapiGenerator):
         forward_declarations = file_cache.get_file_for_fwd(self.full_name_array)

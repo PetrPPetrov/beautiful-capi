@@ -21,7 +21,7 @@
 
 
 import os
-from Parser import TClass
+from Parser import TClass, TLifecycle
 from ParamsParser import TBeautifulCapiParams
 from FileCache import FileCache
 from FileGenerator import FileGenerator, IfDefScope, WatchdogScope, IndentScope, Unindent
@@ -29,10 +29,12 @@ from CapiGenerator import CapiGenerator
 from NamespaceGenerator import NamespaceGenerator
 from LifecycleTraits import create_lifecycle_traits
 from InheritanceTraits import create_inheritance_traits
+from ArgumentGenerator import ClassTypeGenerator, ArgumentGenerator
 from Callbacks import generate_callbacks_on_client_side_definitions
 from Callbacks import generate_callbacks_on_client_side_declarations
 from Callbacks import generate_callbacks_on_library_side
 from Helpers import get_c_name, get_template_name, replace_template_to_filename, get_template_tail
+from Helpers import if_required_then_add_empty_line
 
 
 class ClassGenerator(object):
@@ -41,6 +43,7 @@ class ClassGenerator(object):
         self.class_object = class_object
         self.parent_namespace = parent_namespace
         self.base_class_generator = None
+        self.base_class_as_argument_type = None
         self.derived_class_generators = []
         self.enum_generators = []
         self.constructor_generators = []
@@ -100,6 +103,10 @@ class ClassGenerator(object):
     @property
     def cast_to_base(self) -> str:
         return self.full_c_name + '_cast_to_base'
+
+    @property
+    def cast_from_base(self) -> str:
+        return self.base_class_generator.full_c_name + '_cast_to_' + self.full_c_name
 
     @property
     def copy_method(self) -> str:
@@ -174,6 +181,16 @@ class ClassGenerator(object):
             self.callback_lifecycle_traits = create_lifecycle_traits(callback.lifecycle, self.params)
             self.callback_lifecycle_traits.create_exception_traits(callback, self.capi_generator)
 
+    def __generate_down_cast_declaration(self, declaration_header):
+        if self.base_class_generator and self.lifecycle_traits != TLifecycle.copy_semantic:
+            self.base_class_as_argument_type = ArgumentGenerator(
+                ClassTypeGenerator(self.base_class_generator), 'base_object')
+            declaration_header.put_line('')
+            declaration_header.put_line('template<>')
+            declaration_header.put_line('inline {cast_to} down_cast({cast_from});'.format(
+                cast_to=self.full_wrap_name, cast_from=self.base_class_as_argument_type.wrap_argument_declaration()
+            ))
+
     def __generate_class_declaration(self, declaration_header: FileGenerator):
         if self.base_class_generator:
             declaration_header.put_line('class {name}: public {base_class}'.format(
@@ -185,6 +202,7 @@ class ClassGenerator(object):
             declaration_header.put_line('class {name}'.format(name=self.wrap_name))
         with IndentScope(declaration_header, '};'):
             self.__generate_class_body(declaration_header)
+        self.__generate_down_cast_declaration(declaration_header)
         self.__generate_callback_lifecycle_traits()
         generate_callbacks_on_client_side_declarations(declaration_header, self)
 
@@ -205,22 +223,32 @@ class ClassGenerator(object):
 
     def __generate_constructor_definitions(self, definition_header, first_method):
         for constructor_generator in self.constructor_generators:
-            if first_method:
-                first_method = False
-            else:
-                definition_header.put_line('')
+            first_method = if_required_then_add_empty_line(first_method, definition_header)
             constructor_generator.generate_wrap_definition(definition_header, self.capi_generator)
             constructor_generator.include_dependent_definition_headers(definition_header, self.file_cache)
         return first_method
 
     def __generate_method_definitions(self, definition_header, first_method):
         for method_generator in self.method_generators:
-            if first_method:
-                first_method = False
-            else:
-                definition_header.put_line('')
+            first_method = if_required_then_add_empty_line(first_method, definition_header)
             method_generator.generate_wrap_definition(definition_header)
             method_generator.include_dependent_definition_headers(definition_header, self.file_cache)
+
+    def __generate_down_cast_definition(self, definition_header):
+        if self.base_class_generator and self.lifecycle_traits != TLifecycle.copy_semantic:
+            definition_header.put_line('')
+            definition_header.put_line('template<>')
+            definition_header.put_line('inline {cast_to} down_cast({cast_from})'.format(
+                cast_to=self.full_wrap_name, cast_from=self.base_class_as_argument_type.wrap_argument_declaration()
+            ))
+            with IndentScope(definition_header):
+                this_class_as_return_type = ClassTypeGenerator(self)
+                this_class_as_return_type.copy_or_add_ref_when_c_2_wrap = True
+                casting_c_call = '{cast_from_base}({base_arg})'.format(
+                    cast_from_base=self.cast_from_base, base_arg=self.base_class_as_argument_type.wrap_2_c())
+                instructions, return_expression = this_class_as_return_type.c_2_wrap_var('', casting_c_call)
+                definition_header.put_lines(instructions)
+                definition_header.put_return_cpp_statement(return_expression)
 
     def __generate_definition(self):
         definition_header = self.file_cache.get_file_for_class(self.full_name_array)
@@ -240,7 +268,27 @@ class ClassGenerator(object):
                 self.lifecycle_traits.generate_std_methods_definitions(definition_header, self)
                 definition_header.put_line('')
                 self.inheritance_traits.generate_set_object_definition(definition_header, self)
+                self.__generate_down_cast_definition(definition_header)
                 generate_callbacks_on_client_side_definitions(definition_header, self)
+
+    def __generate_down_cast_c_function(self):
+        if self.base_class_generator and self.lifecycle_traits != TLifecycle.copy_semantic:
+            body = FileGenerator(None)
+            with IndentScope(body):
+                body.put_line('if ({base_object})'.format(base_object=self.base_class_as_argument_type.name))
+                with IndentScope(body):
+                    body.put_line('return dynamic_cast<{cast_to}*>({cast_from});'.format(
+                        cast_to=self.class_object.implementation_class_name,
+                        cast_from=self.base_class_as_argument_type.c_2_implementation()))
+                body.put_line('else')
+                with IndentScope(body):
+                    body.put_line('return 0;')
+            self.capi_generator.add_c_function(
+                self.full_name_array,
+                'void*',
+                self.cast_from_base,
+                self.base_class_as_argument_type.c_argument_declaration(),
+                body)
 
     def __generate_c_functions(self):
         for constructor_generator in self.constructor_generators:
@@ -249,6 +297,7 @@ class ClassGenerator(object):
             method_generator.generate_c_function(self.capi_generator)
         self.lifecycle_traits.generate_c_functions(self)
         self.inheritance_traits.generate_c_functions(self)
+        self.__generate_down_cast_c_function()
         if self.class_object.implementation_class_header_filled:
             self.capi_generator.additional_includes.include_user_header(self.class_object.implementation_class_header)
 
