@@ -239,11 +239,15 @@ class ByFirstArgument(object):
             out.put_line('if (exception_info)')
             with IndentScope(out):
                 out.put_line('exception_info->code = {0};'.format(exception_class_generator.exception_code))
-                # TODO: Add exception handling here
-                out.put_line('// TODO: Add exception handling here')
-                out.put_line('exception_info->object_pointer = new {0}(exception_object);'.format(
-                    exception_class_generator.class_object.implementation_class_name
-                ))
+                out.put_line('try')
+                with IndentScope(out):
+                    out.put_line('exception_info->object_pointer = new {0}(exception_object);'.format(
+                        exception_class_generator.class_object.implementation_class_name
+                    ))
+                out.put_line('catch (...)')
+                with IndentScope(out):
+                    out.put_line('exception_info->code = -1;')
+                    out.put_line('assert(false);')
 
     @staticmethod
     def __generate_catch_by_pointer(out: FileGenerator, exception_class_generator: ClassGenerator):
@@ -288,7 +292,6 @@ class ByFirstArgument(object):
             out.put_line('if (exception_info)')
             with IndentScope(out):
                 out.put_line('exception_info->code = -1;')
-                out.put_line('exception_info->object_pointer = 0;')
         return_type.generate_c_default_return_value(out)
 
     def generate_implementation_call(self, out: FileGenerator, return_type, method_calls: [str]):
