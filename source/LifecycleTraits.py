@@ -69,23 +69,23 @@ class LifecycleTraits(object):
         self.__create_exception_traits(class_generator)
         out.put_line('inline {class_name}& operator=(const {class_name}& other);'.format(
             class_name=class_generator.wrap_name))
-        out.put_line('inline bool {0}() const;'.format(self.params.is_null_method))
-        out.put_line('inline bool {0}() const;'.format(self.params.is_not_null_method))
+        out.put_line('inline bool {0}() const;'.format(self.params.is_null_method_name))
+        out.put_line('inline bool {0}() const;'.format(self.params.is_not_null_method_name))
         out.put_line('inline bool operator!() const;')
-        out.put_line('inline void* {detach_method}();'.format(detach_method=self.params.detach_method))
+        out.put_line('inline void* {detach_method}();'.format(detach_method=self.params.detach_method_name))
         out.put_line('inline void* {get_raw_pointer_method}() const;'.format(
-            get_raw_pointer_method=self.params.get_raw_pointer_method))
+            get_raw_pointer_method=self.params.get_raw_pointer_method_name))
 
     def generate_std_methods_definitions(self, out: FileGenerator, class_generator):
         out.put_line('inline bool {namespace}::{is_null_method}() const'.format(
             namespace=class_generator.full_wrap_name,
-            is_null_method=self.params.is_null_method))
+            is_null_method=self.params.is_null_method_name))
         with IndentScope(out):
             out.put_line('return !mObject;')
         out.put_line('')
         out.put_line('inline bool {namespace}::{is_not_null_method}() const'.format(
             namespace=class_generator.full_wrap_name,
-            is_not_null_method=self.params.is_not_null_method))
+            is_not_null_method=self.params.is_not_null_method_name))
         with IndentScope(out):
             out.put_line('return mObject != 0;')
         out.put_line('')
@@ -94,21 +94,21 @@ class LifecycleTraits(object):
             out.put_line('return !mObject;')
         out.put_line('')
         out.put_line('inline void* {namespace}::{detach_method}()'.format(
-            namespace=class_generator.full_wrap_name, detach_method=self.params.detach_method))
+            namespace=class_generator.full_wrap_name, detach_method=self.params.detach_method_name))
         with IndentScope(out):
             out.put_line('void* result = mObject;')
             out.put_line('SetObject(0);')
             out.put_line('return result;')
         out.put_line('')
         out.put_line('inline void* {namespace}::{get_raw_pointer_method}() const'.format(
-            namespace=class_generator.full_wrap_name, get_raw_pointer_method=self.params.get_raw_pointer_method))
+            namespace=class_generator.full_wrap_name, get_raw_pointer_method=self.params.get_raw_pointer_method_name))
         with IndentScope(out):
             out.put_line('return mObject;')
 
 
 class CopySemantic(LifecycleTraits):
     def __init__(self, params: TBeautifulCapiParams):
-        super().__init__(params.wrapper_class_suffix_copy_semantic, False, True, params)
+        super().__init__(params.copy_semantic_wrapper_class_suffix, False, True, params)
 
     @property
     def snippet_implementation_usage(self) -> str:
@@ -271,7 +271,7 @@ class CopySemantic(LifecycleTraits):
 
 class RawPointerSemantic(LifecycleTraits):
     def __init__(self, params: TBeautifulCapiParams):
-        super().__init__(params.wrapper_class_suffix_raw_pointer, False, True, params)
+        super().__init__(params.raw_pointer_wrapper_class_suffix, False, True, params)
 
     @property
     def snippet_implementation_usage(self) -> str:
@@ -303,7 +303,7 @@ class RawPointerSemantic(LifecycleTraits):
         out.put_line('inline {class_name}(ECreateFromRawPointer, void *object_pointer, bool);'.format(
             class_name=class_generator.wrap_short_name))
         out.put_line('inline void {delete_method}();'.format(
-            class_name=class_generator.wrap_name, delete_method=self.params.delete_method))
+            class_name=class_generator.wrap_name, delete_method=self.params.delete_method_name))
         super().generate_std_methods_declarations(out, class_generator)
         out.put_line('inline {class_name}* operator->();'.format(class_name=class_generator.wrap_name))
         out.put_line('inline const {class_name}* operator->() const;'.format(class_name=class_generator.wrap_name))
@@ -335,7 +335,7 @@ class RawPointerSemantic(LifecycleTraits):
 
     def __generate_delete_method(self, out: FileGenerator, class_generator):
         out.put_line('inline void {class_name}::{delete_method}()'.format(
-            class_name=class_generator.full_wrap_name, delete_method=self.params.delete_method))
+            class_name=class_generator.full_wrap_name, delete_method=self.params.delete_method_name))
         with IndentScope(out):
             out.put_line('if (mObject)')
             with IndentScope(out):
@@ -392,7 +392,7 @@ class RawPointerSemantic(LifecycleTraits):
 
 class RefCountedSemantic(LifecycleTraits):
     def __init__(self, params: TBeautifulCapiParams):
-        super().__init__(params.wrapper_class_suffix_reference_counted, True, True, params)
+        super().__init__(params.reference_counted_wrapper_class_suffix, True, True, params)
 
     @property
     def snippet_implementation_usage(self) -> str:

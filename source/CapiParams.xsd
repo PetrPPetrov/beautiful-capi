@@ -19,14 +19,15 @@
     <xs:attribute name="capi_header_suffix" type="xs:string" use="optional" default="Capi"/>
     <xs:attribute name="fwd_header_suffix" type="xs:string" use="optional" default="Fwd"/>
     <xs:attribute name="decl_header_suffix" type="xs:string" use="optional" default="Decl"/>
-    <xs:attribute name="wrapper_class_suffix_copy_semantic" type="xs:string" use="optional" default=""/>
-    <xs:attribute name="wrapper_class_suffix_reference_counted" type="xs:string" use="optional" default="Ptr"/>
-    <xs:attribute name="wrapper_class_suffix_raw_pointer" type="xs:string" use="optional" default="RawPtr"/>
-    <xs:attribute name="is_null_method" type="xs:string" use="optional" default="IsNull"/>
-    <xs:attribute name="is_not_null_method" type="xs:string" use="optional" default="IsNotNull"/>
-    <xs:attribute name="detach_method" type="xs:string" use="optional" default="Detach"/>
-    <xs:attribute name="get_raw_pointer_method" type="xs:string" use="optional" default="GetRawPointer"/>
-    <xs:attribute name="delete_method" type="xs:string" use="optional" default="Delete"/>
+    <xs:attribute name="copy_semantic_wrapper_class_suffix" type="xs:string" use="optional" default=""/>
+    <xs:attribute name="reference_counted_wrapper_class_suffix" type="xs:string" use="optional" default="Ptr"/>
+    <xs:attribute name="raw_pointer_wrapper_class_suffix" type="xs:string" use="optional" default="RawPtr"/>
+    <xs:attribute name="is_null_method_name" type="xs:string" use="optional" default="IsNull"/>
+    <xs:attribute name="is_not_null_method_name" type="xs:string" use="optional" default="IsNotNull"/>
+    <xs:attribute name="detach_method_name" type="xs:string" use="optional" default="Detach"/>
+    <xs:attribute name="get_raw_pointer_method_name" type="xs:string" use="optional" default="GetRawPointer"/>
+    <xs:attribute name="delete_method_name" type="xs:string" use="optional" default="Delete"/>
+    <xs:attribute name="exception_info_argument_name" type="xs:string" use="optional" default="exception_info"/>
     <xs:attribute name="snippet_implementation_pointer_usage" type="xs:string" use="optional" default="{implementation_name}*"/>
     <xs:attribute name="snippet_implementation_value_usage" type="xs:string" use="optional" default="{implementation_name}"/>
     <xs:attribute name="exception_handling_mode" type="TExceptionHandlingMode" use="optional" default="no_handling"/>

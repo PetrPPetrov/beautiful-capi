@@ -188,16 +188,19 @@ class ByFirstArgument(object):
                 self.__create_check_and_throw_exceptions_body(out, ByFirstArgument.__generate_throw_impl)
 
     def __generate_c_call(self, out: FileGenerator, instructions: ([str], str)) -> str:
-        out.put_line('{0} exception_info;'.format(self.__exception_info_t()))
+        out.put_line('{exception_info_type} {exception_info};'.format(
+            exception_info_type=self.__exception_info_t(),
+            exception_info=self.params.exception_info_argument_name))
         casting_instructions, return_expression = instructions
         out.put_lines(casting_instructions)
-        out.put_line('{0}::check_and_throw_exception(exception_info.code, exception_info.object_pointer);'.format(
-            self.params.beautiful_capi_namespace))
+        out.put_line('{namespace}::check_and_throw_exception({exception_info}.code, {exception_info}.object_pointer);'.format(
+            namespace=self.params.beautiful_capi_namespace,
+            exception_info=self.params.exception_info_argument_name
+        ))
         return return_expression
 
-    @staticmethod
-    def __get_c_function_call(c_function_name: str, arguments: [str]) -> str:
-        arguments.insert(0, '&exception_info')
+    def __get_c_function_call(self, c_function_name: str, arguments: [str]) -> str:
+        arguments.insert(0, '&{exception_info}'.format(exception_info=self.params.exception_info_argument_name))
         return '{function_name}({arguments})'.format(function_name=c_function_name, arguments=', '.join(arguments))
 
     def generate_c_call(self, out: FileGenerator, return_type, c_function_name: str, arguments: [str]) -> str:
@@ -211,7 +214,10 @@ class ByFirstArgument(object):
         return self.__generate_c_call(out, (casting_instructions, return_expression))
 
     def modify_c_arguments(self, arguments: [str]):
-        arguments.insert(0, '{0}* exception_info'.format(self.__exception_info_t()))
+        arguments.insert(0, '{exception_info_type}* {exception_info}'.format(
+            exception_info_type=self.__exception_info_t(),
+            exception_info=self.params.exception_info_argument_name
+        ))
 
     def __remember_exception_class(self, class_generator: ClassGenerator):
         if class_generator.class_object.exception and class_generator not in self.exception_classes:
@@ -231,73 +237,84 @@ class ByFirstArgument(object):
             for root_namespace_generator in self.root_namespace_generators:
                 self.__remember_exception_classes_for_namespace(root_namespace_generator)
 
-    @staticmethod
-    def __generate_catch_by_value(out: FileGenerator, exception_class_generator: ClassGenerator):
+    def __generate_catch_by_value(self, out: FileGenerator, exception_class_generator: ClassGenerator):
         out.put_line('catch ({0}& exception_object)'.format(
             exception_class_generator.class_object.implementation_class_name
         ))
         with IndentScope(out):
-            out.put_line('if (exception_info)')
+            out.put_line('if ({exception_info})'.format(exception_info=self.params.exception_info_argument_name))
             with IndentScope(out):
-                out.put_line('exception_info->code = {0};'.format(exception_class_generator.exception_code))
+                out.put_line('{exception_info}->code = {code};'.format(
+                    exception_info=self.params.exception_info_argument_name,
+                    code=exception_class_generator.exception_code))
                 out.put_line('try')
                 with IndentScope(out):
-                    out.put_line('exception_info->object_pointer = new {0}(exception_object);'.format(
-                        exception_class_generator.class_object.implementation_class_name
+                    out.put_line('{exception_info}->object_pointer = new {exception_type}(exception_object);'.format(
+                        exception_info=self.params.exception_info_argument_name,
+                        exception_type=exception_class_generator.class_object.implementation_class_name
                     ))
                 out.put_line('catch (...)')
                 with IndentScope(out):
-                    out.put_line('exception_info->code = -1;')
+                    out.put_line('{exception_info}->code = -1;'.format(
+                        exception_info=self.params.exception_info_argument_name))
                     out.put_line('assert(false);')
 
-    @staticmethod
-    def __generate_catch_by_pointer(out: FileGenerator, exception_class_generator: ClassGenerator):
+    def __generate_catch_by_pointer(self, out: FileGenerator, exception_class_generator: ClassGenerator):
         out.put_line('catch ({0}* exception_object)'.format(
             exception_class_generator.class_object.implementation_class_name
         ))
         with IndentScope(out):
-            out.put_line('if (exception_info)')
+            out.put_line('if ({exception_info})'.format(exception_info=self.params.exception_info_argument_name))
             with IndentScope(out):
-                out.put_line('exception_info->code = {0};'.format(exception_class_generator.exception_code))
-                out.put_line('exception_info->object_pointer = exception_object;')
+                out.put_line('{exception_info}->code = {code};'.format(
+                    exception_info=self.params.exception_info_argument_name,
+                    code=exception_class_generator.exception_code))
+                out.put_line('{exception_info}->object_pointer = exception_object;'.format(
+                    exception_info=self.params.exception_info_argument_name
+                ))
 
-    @staticmethod
-    def __generate_catch(out: FileGenerator, exception_class_generator: ClassGenerator):
-        ByFirstArgument.__generate_catch_by_value(out, exception_class_generator)
-        ByFirstArgument.__generate_catch_by_pointer(out, exception_class_generator)
+    def __generate_catch(self, out: FileGenerator, exception_class_generator: ClassGenerator):
+        self.__generate_catch_by_value(out, exception_class_generator)
+        self.__generate_catch_by_pointer(out, exception_class_generator)
 
     def __generate_callback_catch_by_value(self, out: FileGenerator, exception_class_generator: ClassGenerator):
         out.put_line('catch ({0}& exception_object)'.format(
             exception_class_generator.full_wrap_name
         ))
         with IndentScope(out):
-            out.put_line('if (exception_info)')
+            out.put_line('if ({exception_info})'.format(exception_info=self.params.exception_info_argument_name))
             with IndentScope(out):
-                out.put_line('exception_info->code = {0};'.format(exception_class_generator.exception_code))
-                out.put_line('exception_info->object_pointer = exception_object.{detach_method}();'.format(
-                    detach_method=self.params.detach_method
+                out.put_line('{exception_info}->code = {code};'.format(
+                    exception_info=self.params.exception_info_argument_name,
+                    code=exception_class_generator.exception_code))
+                out.put_line('{exception_info}->object_pointer = exception_object.{detach_method}();'.format(
+                    exception_info=self.params.exception_info_argument_name,
+                    detach_method=self.params.detach_method_name
                 ))
 
     def __generate_caught_call(self, out: FileGenerator, return_type, method_calls: [str], catch_generator):
         self.__remember_exception_classes()
         out.put_line('try')
         with IndentScope(out):
-            out.put_line('if (exception_info)')
+            out.put_line('if ({exception_info})'.format(exception_info=self.params.exception_info_argument_name))
             with IndentScope(out):
-                out.put_line('exception_info->code = 0;')
-                out.put_line('exception_info->object_pointer = 0;')
+                out.put_line('{exception_info}->code = 0;'.format(
+                    exception_info=self.params.exception_info_argument_name))
+                out.put_line('{exception_info}->object_pointer = 0;'.format(
+                    exception_info=self.params.exception_info_argument_name))
             out.put_lines(method_calls)
         for exception_class_generator in self.exception_classes:
             catch_generator(out, exception_class_generator)
         out.put_line('catch (...)')
         with IndentScope(out):
-            out.put_line('if (exception_info)')
+            out.put_line('if ({exception_info})'.format(exception_info=self.params.exception_info_argument_name))
             with IndentScope(out):
-                out.put_line('exception_info->code = -1;')
+                out.put_line('{exception_info}->code = -1;'.format(
+                    exception_info=self.params.exception_info_argument_name))
         return_type.generate_c_default_return_value(out)
 
     def generate_implementation_call(self, out: FileGenerator, return_type, method_calls: [str]):
-        self.__generate_caught_call(out, return_type, method_calls, ByFirstArgument.__generate_catch)
+        self.__generate_caught_call(out, return_type, method_calls, self.__generate_catch)
 
     def generate_callback_call(self, out: FileGenerator, return_type, method_calls: [str]):
         self.__generate_caught_call(out, return_type, method_calls, self.__generate_callback_catch_by_value)

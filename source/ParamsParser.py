@@ -66,22 +66,24 @@ class TBeautifulCapiParams(object):
         self.fwd_header_suffix_filled = False
         self.decl_header_suffix = "Decl"
         self.decl_header_suffix_filled = False
-        self.wrapper_class_suffix_copy_semantic = ""
-        self.wrapper_class_suffix_copy_semantic_filled = False
-        self.wrapper_class_suffix_reference_counted = "Ptr"
-        self.wrapper_class_suffix_reference_counted_filled = False
-        self.wrapper_class_suffix_raw_pointer = "RawPtr"
-        self.wrapper_class_suffix_raw_pointer_filled = False
-        self.is_null_method = "IsNull"
-        self.is_null_method_filled = False
-        self.is_not_null_method = "IsNotNull"
-        self.is_not_null_method_filled = False
-        self.detach_method = "Detach"
-        self.detach_method_filled = False
-        self.get_raw_pointer_method = "GetRawPointer"
-        self.get_raw_pointer_method_filled = False
-        self.delete_method = "Delete"
-        self.delete_method_filled = False
+        self.copy_semantic_wrapper_class_suffix = ""
+        self.copy_semantic_wrapper_class_suffix_filled = False
+        self.reference_counted_wrapper_class_suffix = "Ptr"
+        self.reference_counted_wrapper_class_suffix_filled = False
+        self.raw_pointer_wrapper_class_suffix = "RawPtr"
+        self.raw_pointer_wrapper_class_suffix_filled = False
+        self.is_null_method_name = "IsNull"
+        self.is_null_method_name_filled = False
+        self.is_not_null_method_name = "IsNotNull"
+        self.is_not_null_method_name_filled = False
+        self.detach_method_name = "Detach"
+        self.detach_method_name_filled = False
+        self.get_raw_pointer_method_name = "GetRawPointer"
+        self.get_raw_pointer_method_name_filled = False
+        self.delete_method_name = "Delete"
+        self.delete_method_name_filled = False
+        self.exception_info_argument_name = "exception_info"
+        self.exception_info_argument_name_filled = False
         self.snippet_implementation_pointer_usage = "{implementation_name}*"
         self.snippet_implementation_pointer_usage_filled = False
         self.snippet_implementation_value_usage = "{implementation_name}"
@@ -136,38 +138,42 @@ class TBeautifulCapiParams(object):
             cur_attr = dom_node.getAttribute("decl_header_suffix")
             self.decl_header_suffix = cur_attr
             self.decl_header_suffix_filled = True
-        if dom_node.hasAttribute("wrapper_class_suffix_copy_semantic"):
-            cur_attr = dom_node.getAttribute("wrapper_class_suffix_copy_semantic")
-            self.wrapper_class_suffix_copy_semantic = cur_attr
-            self.wrapper_class_suffix_copy_semantic_filled = True
-        if dom_node.hasAttribute("wrapper_class_suffix_reference_counted"):
-            cur_attr = dom_node.getAttribute("wrapper_class_suffix_reference_counted")
-            self.wrapper_class_suffix_reference_counted = cur_attr
-            self.wrapper_class_suffix_reference_counted_filled = True
-        if dom_node.hasAttribute("wrapper_class_suffix_raw_pointer"):
-            cur_attr = dom_node.getAttribute("wrapper_class_suffix_raw_pointer")
-            self.wrapper_class_suffix_raw_pointer = cur_attr
-            self.wrapper_class_suffix_raw_pointer_filled = True
-        if dom_node.hasAttribute("is_null_method"):
-            cur_attr = dom_node.getAttribute("is_null_method")
-            self.is_null_method = cur_attr
-            self.is_null_method_filled = True
-        if dom_node.hasAttribute("is_not_null_method"):
-            cur_attr = dom_node.getAttribute("is_not_null_method")
-            self.is_not_null_method = cur_attr
-            self.is_not_null_method_filled = True
-        if dom_node.hasAttribute("detach_method"):
-            cur_attr = dom_node.getAttribute("detach_method")
-            self.detach_method = cur_attr
-            self.detach_method_filled = True
-        if dom_node.hasAttribute("get_raw_pointer_method"):
-            cur_attr = dom_node.getAttribute("get_raw_pointer_method")
-            self.get_raw_pointer_method = cur_attr
-            self.get_raw_pointer_method_filled = True
-        if dom_node.hasAttribute("delete_method"):
-            cur_attr = dom_node.getAttribute("delete_method")
-            self.delete_method = cur_attr
-            self.delete_method_filled = True
+        if dom_node.hasAttribute("copy_semantic_wrapper_class_suffix"):
+            cur_attr = dom_node.getAttribute("copy_semantic_wrapper_class_suffix")
+            self.copy_semantic_wrapper_class_suffix = cur_attr
+            self.copy_semantic_wrapper_class_suffix_filled = True
+        if dom_node.hasAttribute("reference_counted_wrapper_class_suffix"):
+            cur_attr = dom_node.getAttribute("reference_counted_wrapper_class_suffix")
+            self.reference_counted_wrapper_class_suffix = cur_attr
+            self.reference_counted_wrapper_class_suffix_filled = True
+        if dom_node.hasAttribute("raw_pointer_wrapper_class_suffix"):
+            cur_attr = dom_node.getAttribute("raw_pointer_wrapper_class_suffix")
+            self.raw_pointer_wrapper_class_suffix = cur_attr
+            self.raw_pointer_wrapper_class_suffix_filled = True
+        if dom_node.hasAttribute("is_null_method_name"):
+            cur_attr = dom_node.getAttribute("is_null_method_name")
+            self.is_null_method_name = cur_attr
+            self.is_null_method_name_filled = True
+        if dom_node.hasAttribute("is_not_null_method_name"):
+            cur_attr = dom_node.getAttribute("is_not_null_method_name")
+            self.is_not_null_method_name = cur_attr
+            self.is_not_null_method_name_filled = True
+        if dom_node.hasAttribute("detach_method_name"):
+            cur_attr = dom_node.getAttribute("detach_method_name")
+            self.detach_method_name = cur_attr
+            self.detach_method_name_filled = True
+        if dom_node.hasAttribute("get_raw_pointer_method_name"):
+            cur_attr = dom_node.getAttribute("get_raw_pointer_method_name")
+            self.get_raw_pointer_method_name = cur_attr
+            self.get_raw_pointer_method_name_filled = True
+        if dom_node.hasAttribute("delete_method_name"):
+            cur_attr = dom_node.getAttribute("delete_method_name")
+            self.delete_method_name = cur_attr
+            self.delete_method_name_filled = True
+        if dom_node.hasAttribute("exception_info_argument_name"):
+            cur_attr = dom_node.getAttribute("exception_info_argument_name")
+            self.exception_info_argument_name = cur_attr
+            self.exception_info_argument_name_filled = True
         if dom_node.hasAttribute("snippet_implementation_pointer_usage"):
             cur_attr = dom_node.getAttribute("snippet_implementation_pointer_usage")
             self.snippet_implementation_pointer_usage = cur_attr

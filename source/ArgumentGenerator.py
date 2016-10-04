@@ -42,7 +42,7 @@ class ClassTypeGenerator(object):
 
     def wrap_2_c(self, name: str) -> str:
         return '{name}.{get_raw_pointer_method}()'.format(
-            name=name, get_raw_pointer_method=self.class_argument_generator.params.get_raw_pointer_method)
+            name=name, get_raw_pointer_method=self.class_argument_generator.params.get_raw_pointer_method_name)
 
     @staticmethod
     def c_argument_declaration() -> str:
@@ -324,7 +324,7 @@ class ThisArgumentGenerator(object):
 
     def wrap_2_c(self) -> str:
         return 'this->{get_raw_pointer_method}()'.format(
-            get_raw_pointer_method=self.type_generator.class_argument_generator.params.get_raw_pointer_method)
+            get_raw_pointer_method=self.type_generator.class_argument_generator.params.get_raw_pointer_method_name)
 
     @staticmethod
     def c_argument_declaration() -> str:

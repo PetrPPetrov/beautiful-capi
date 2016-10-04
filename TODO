@@ -13,7 +13,7 @@
 *) down_cast for boost::shared_ptr (copy_semantic)
 *) use typedef names where it is possible
 *) add runtime check for binary compatibility
-*) clash with argument names ("object_pointer", "self", "exception_info", "result")
+*) clash with argument names ("object_pointer", "self", "result")
 *) c_2_implementation and implementation_2_c customization
 *) place down_cast function to target type namespace
 ===
