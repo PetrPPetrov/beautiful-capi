@@ -19,7 +19,7 @@
       </method>
       <method name="GetPrintingQuality" return="Example::Printer::EQuality" const="true"/>
       <method name="GetDeviceType" return="Example::EPrintingDevice" const="true"/>
-      <callback lifecycle="copy_semantic"/>
+      <callback lifecycle="copy_semantic" implementation_class_name="Example::PrinterBaseImpl" implementation_class_header="DefaultPrinterImpl.h"/>
     </class>
     <function name="CreateDefaultPrinter" return="Example::Printer" return_copy_or_add_ref="false" implementation_name="Example::CreateDefaultPrinterImpl" implementation_header="DefaultPrinterImpl.h">
       <argument type="Example::EPrintingDevice" name="printing_device"/>

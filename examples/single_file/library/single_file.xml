@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<single_file:api xmlns:single_file="http://gkmsoft.ru/beautifulcapi" project_name="single_file">
-  <namespace name="HelloWorld">
-    <class name="Printer" lifecycle="copy_semantic" implementation_class_name="HelloWorld::PrinterImpl" implementation_class_header="PrinterImpl.h">
-      <constructor name="Default"/>
-      <method name="Show" const="true"/>
-    </class>
-  </namespace>
-</single_file:api>

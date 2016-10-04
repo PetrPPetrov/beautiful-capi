@@ -27,8 +27,9 @@ from FileGenerator import FileGenerator, IndentScope
 from FileCache import FileCache
 from ClassGenerator import ClassGenerator
 from NamespaceGenerator import NamespaceGenerator
-from ArgumentGenerator import ClassTypeGenerator, ThisArgumentGenerator
+from ArgumentGenerator import ClassTypeGenerator, ThisArgumentGenerator, BuiltinTypeGenerator
 from CapiGenerator import CapiGenerator
+from LifecycleTraits import get_base_init
 from Helpers import get_c_name
 
 
@@ -63,14 +64,16 @@ class ConstructorGenerator(object):
         arguments = ', '.join(
             [argument_generator.wrap_argument_declaration() for argument_generator in self.argument_generators])
         arguments_call = [argument_generator.wrap_2_c() for argument_generator in self.argument_generators]
-        out.put_line('inline {full_name}({arguments})'.format(
-            full_name=self.parent_class_generator.full_wrap_name,
-            arguments=arguments
+        out.put_line('inline {namespace}::{class_name}({arguments}){base_init}'.format(
+            namespace=self.parent_class_generator.full_wrap_name,
+            class_name=self.parent_class_generator.wrap_name,
+            arguments=arguments,
+            base_init=get_base_init(self.parent_class_generator)
         ))
         with IndentScope(out):
-            return_expression = self.exception_traits.generate_c_call(
-                out, self.parent_class_as_argument_type, self.full_c_name, arguments_call)
-            out.put_return_cpp_statement(return_expression)
+            result_expression = self.exception_traits.generate_c_call(
+                out, BuiltinTypeGenerator('void*'), self.full_c_name, arguments_call)
+            out.put_line('SetObject({result_expression});'.format(result_expression=result_expression))
 
     def generate_c_function(self, capi_generator: CapiGenerator):
         argument_declaration_list = [
@@ -167,8 +170,7 @@ class MethodGenerator(object):
             const=' const' if self.method_object.const else ''
         ))
         with IndentScope(out):
-            parent_class = self.parent_class_generator
-            self.return_type_generator.copy_or_add_ref_when_c_2_wrap = parent_class.method_copy_or_add_ref_default_value
+            self.return_type_generator.init_copy_or_add_ref_default_value_for_return()
             if self.method_object.return_copy_or_add_ref_filled:
                 self.return_type_generator.copy_or_add_ref_when_c_2_wrap = self.method_object.return_copy_or_add_ref
 
@@ -269,7 +271,7 @@ class FunctionGenerator(object):
             arguments=arguments
         ))
         with IndentScope(out):
-            self.return_type_generator.copy_or_add_ref_when_c_2_wrap = True
+            self.return_type_generator.init_copy_or_add_ref_default_value_for_return()
             if self.function_object.return_copy_or_add_ref_filled:
                 self.return_type_generator.copy_or_add_ref_when_c_2_wrap = self.function_object.return_copy_or_add_ref
 

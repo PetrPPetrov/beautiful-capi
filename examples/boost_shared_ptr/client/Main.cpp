@@ -28,13 +28,13 @@
 
 void f1(Example::PrinterSharedPtr p)
 {
-    p->Show("from f1()");
+    p.Show("from f1()");
 }
 
 Example::PrinterSharedPtr create_printer()
 {
     Example::PrinterSharedPtr new_printer;
-    new_printer->Show("from create_printer()");
+    new_printer.Show("from create_printer()");
     return new_printer;
 }
 
@@ -44,7 +44,7 @@ int main()
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
     Example::PrinterSharedPtr printer = create_printer();
-    printer->Show("from main()");
+    printer.Show("from main()");
     f1(printer);
 
     return EXIT_SUCCESS;

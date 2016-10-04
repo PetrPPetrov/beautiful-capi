@@ -373,6 +373,10 @@ class TCallback(object):
         self.copy_or_add_ref_noexcept_filled = False
         self.delete_or_release_noexcept = True
         self.delete_or_release_noexcept_filled = False
+        self.implementation_class_name = ""
+        self.implementation_class_name_filled = False
+        self.implementation_class_header = ""
+        self.implementation_class_header_filled = False
     
     def load(self, dom_node):
         if dom_node.hasAttribute("lifecycle"):
@@ -387,6 +391,14 @@ class TCallback(object):
             cur_attr = dom_node.getAttribute("delete_or_release_noexcept")
             self.delete_or_release_noexcept = string_to_bool(cur_attr)
             self.delete_or_release_noexcept_filled = True
+        if dom_node.hasAttribute("implementation_class_name"):
+            cur_attr = dom_node.getAttribute("implementation_class_name")
+            self.implementation_class_name = cur_attr
+            self.implementation_class_name_filled = True
+        if dom_node.hasAttribute("implementation_class_header"):
+            cur_attr = dom_node.getAttribute("implementation_class_header")
+            self.implementation_class_header = cur_attr
+            self.implementation_class_header_filled = True
     
 
 class TConstructor(object):

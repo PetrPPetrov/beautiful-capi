@@ -88,7 +88,7 @@ class TBeautifulCapiParams(object):
         self.check_and_throw_exception_filename_filled = False
         self.beautiful_capi_namespace = "beautiful_capi_{project_name}"
         self.beautiful_capi_namespace_filled = False
-        self.autogen_prefix_for_internal_callback_implementation = "AutoGen_{project_name}_"
+        self.autogen_prefix_for_internal_callback_implementation = "AutoGen_Callback_{project_name}_"
         self.autogen_prefix_for_internal_callback_implementation_filled = False
         self.root_header = ""
         self.root_header_filled = False

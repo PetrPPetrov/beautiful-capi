@@ -113,7 +113,7 @@ class CapiGenerator(object):
 
     def __generate_callback_typedefs(self, namespace_info, out):
         for c_pointer in namespace_info.c_pointers:
-            out.put_line('typedef {return_type} {convention} (*{name})({arguments});'.format(
+            out.put_line('typedef {return_type} ({convention} *{name})({arguments});'.format(
                 return_type=c_pointer.return_type,
                 convention=self.cur_api_convention,
                 name=c_pointer.name,

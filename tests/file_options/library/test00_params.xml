@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <params:params xmlns:params="http://gkmsoft.ru/beautifulcapi-params"
-               generate_single_file="false"
-               dynamically_load_functions="false"
-               file_per_class="true"
-               folder_per_namespace="true"
                namespace_header_at_parent_folder="true">
   <copyright_header>/*
  * Beautiful Capi generates beautiful C API wrappers for your C++ classes

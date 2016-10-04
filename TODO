@@ -9,15 +9,11 @@
     +) check for the life cycle semantic coherence with base class
 *) move constructors if target language supports C++ 11
 *) noexcept methods if target language supports C++ 11
-*) forward C function declarations in AutoGenWrap.cpp
-*) down_cast for boost::shared_ptr (copy_semantic)
-*) move all scripts except BCapi.py in details subfolder, rename BCapi.py to Capi.py
-*) add some protection enumerator for (void* object_pointer, bool copy_or_add_ref) constructor to avoid implicitly casting
-*) use typedef names where it is possible
 *) add std::nullptr_t constructor if target language supports C++ 11
+*) down_cast for boost::shared_ptr (copy_semantic)
+*) use typedef names where it is possible
 *) add runtime check for binary compatibility
 *) clash with argument names ("object_pointer", "self", "exception_info", "result")
-*) exception during exception class copy constructor (inside catch block)
 *) get_raw_pointer name customization
 *) c_2_implementation and implementation_2_c customization
 *) remove name attribute from TTemplate structure

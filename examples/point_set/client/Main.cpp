@@ -50,7 +50,7 @@ int main()
         for (size_t i = 0; i < points->Size() ; ++i)
         {
             PointSet::Position pos = points->GetElement(i);
-            std::cout << "\tpoint #" << i << " ("<< pos->GetX() << ", " << pos->GetY() << ", " << pos->GetZ() << ")" << std::endl;
+            std::cout << "\tpoint #" << i << " ("<< pos.GetX() << ", " << pos.GetY() << ", " << pos.GetZ() << ")" << std::endl;
         }
     }
     return EXIT_SUCCESS;

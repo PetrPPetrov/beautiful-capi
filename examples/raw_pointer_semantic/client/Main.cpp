@@ -48,10 +48,10 @@ int main()
     f1(printer);
 
     Example::Dumper dumper;
-    dumper->SetPrinter(printer);
-    dumper->Dump();
+    dumper.SetPrinter(printer);
+    dumper.Dump();
 
-    Example::PrinterRawPtr printer2 = dumper->GetPrinter();
+    Example::PrinterRawPtr printer2 = dumper.GetPrinter();
     printer2->Show("printer2");
 
     printer->Delete(); // Manually delete this object, because it is non-owning raw pointer

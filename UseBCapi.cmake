@@ -33,7 +33,7 @@ function(add_bcapi_generation)
             ${generated_source}
         COMMAND
             ${PYTHON_EXECUTABLE}
-            ${beautiful_capi_SOURCE_DIR}/source/BCapi.py
+            ${beautiful_capi_SOURCE_DIR}/source/Capi.py
             -i ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.xml
             -p ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}_params.xml
             -o ${CMAKE_CURRENT_SOURCE_DIR}/include

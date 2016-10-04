@@ -83,6 +83,8 @@
     <xs:attribute name="lifecycle" type="TLifecycle" use="optional" default="reference_counted"/>
     <xs:attribute name="copy_or_add_ref_noexcept" type="xs:boolean" use="optional" default="false"/>
     <xs:attribute name="delete_or_release_noexcept" type="xs:boolean" use="optional" default="true"/>
+    <xs:attribute name="implementation_class_name" type="xs:string" use="required"/>
+    <xs:attribute name="implementation_class_header" type="xs:string" use="required"/>
   </xs:complexType>
   <xs:complexType name="TConstructor">
     <xs:sequence>

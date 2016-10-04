@@ -22,29 +22,13 @@
 #if defined(_WIN32) && defined(_DEBUG)
 #include <crtdbg.h>
 #endif
+
 #include <iostream>
 #include <cstdlib>
+
 #if test00
 #include "Example/Geometry/Brep/Body.h"
 #elif test01
-#include "Example/Geometry/Brep/Body.h"
-#elif test02
-#include "Body.h"
-#elif test03
-#include "Body.h"
-#elif test04
-#include "Example/Geometry/Brep.h"
-#elif test05
-#include "Example/Geometry/Brep/Brep.h"
-#elif test06
-#include "Brep.h"
-#elif test07
-#include "Brep.h"
-#elif test08
-#include "ExampleOneHeader.h"
-#elif test09
-#include "Example/Example_forwards.h"
-#include "Example/Example_c_api.h"
 #include "Example/Geometry/Brep/Body.h"
 #endif
 

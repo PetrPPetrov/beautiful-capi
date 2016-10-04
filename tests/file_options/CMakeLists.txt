@@ -32,7 +32,7 @@ function(bcapi_add_test test_name)
       ${file_option_SOURCE_DIR}/library/source/AutoGenWrap_${test_name}.cpp
     COMMAND
       ${PYTHON_EXECUTABLE}
-      ${tests_SOURCE_DIR}/../source/BCapi.py
+      ${tests_SOURCE_DIR}/../source/Capi.py
       -i ${file_option_SOURCE_DIR}/library/file_options.xml
       -p ${file_option_SOURCE_DIR}/library/${test_name}_params.xml
       -o ${file_option_SOURCE_DIR}/library/include/${test_name}
@@ -69,11 +69,3 @@ endfunction()
 
 bcapi_add_test(test00)
 bcapi_add_test(test01)
-bcapi_add_test(test02)
-bcapi_add_test(test03)
-bcapi_add_test(test04)
-bcapi_add_test(test05)
-bcapi_add_test(test06)
-bcapi_add_test(test07)
-bcapi_add_test(test08)
-bcapi_add_test(test09)

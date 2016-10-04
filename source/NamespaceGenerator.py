@@ -44,7 +44,7 @@ class NamespaceGenerator(object):
 
     @property
     def full_name_array(self) -> [str]:
-        return self.parent_namespace + [self.name] if self.parent_namespace else [self.name]
+        return self.parent_namespace.full_name_array + [self.name] if self.parent_namespace else [self.name]
 
     @property
     def full_name(self) -> str:
@@ -126,11 +126,9 @@ class NamespaceGenerator(object):
         out.put_line('namespace {0}'.format(self.name))
         with IndentScope(out):
             for nested_namespace_generator in self.nested_namespaces:
-                nested_namespace_generator.__generate_forward_declarations_impl()
+                nested_namespace_generator.__generate_forward_declarations_impl(out)
             for class_generator in self.classes:
                 class_generator.generate_forward_declaration(out)
-            out.put_line('template<typename TargetType, typename SourceType>')
-            out.put_line('inline TargetType down_cast(const SourceType& source_object);')
 
     def __generate_forward_declarations(self, file_cache: FileCache, capi_generator: CapiGenerator):
         forward_declarations = file_cache.get_file_for_fwd(self.full_name_array)

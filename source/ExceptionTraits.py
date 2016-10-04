@@ -131,14 +131,15 @@ class ByFirstArgument(object):
 
     @staticmethod
     def __generate_throw_impl(out, exception_class):
-        out.put_line('{impl}* impl_exception_object = static_cast<{impl}*>(exception_object);'.format(
-            impl=exception_class.class_object.implementation_class_name
-        ))
-        out.put_line('{impl} saved_exception_object = *impl_exception_object;'.format(
-            impl=exception_class.class_object.implementation_class_name
-        ))
-        out.put_line('delete impl_exception_object;')
-        out.put_line('throw saved_exception_object;')
+        with IndentScope(out):
+            out.put_line('{impl}* impl_exception_object = static_cast<{impl}*>(exception_object);'.format(
+                impl=exception_class.class_object.implementation_class_name
+            ))
+            out.put_line('{impl} saved_exception_object = *impl_exception_object;'.format(
+                impl=exception_class.class_object.implementation_class_name
+            ))
+            out.put_line('delete impl_exception_object;')
+            out.put_line('throw saved_exception_object;')
 
     def __create_check_and_throw_exceptions_body(self, out: FileGenerator, throw_generator):
         out.put_line('switch (exception_code)')

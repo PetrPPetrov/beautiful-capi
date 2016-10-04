@@ -31,6 +31,9 @@ class ClassTypeGenerator(object):
         self.class_argument_generator = class_argument_generator
         self.copy_or_add_ref_when_c_2_wrap = False
 
+    def init_copy_or_add_ref_default_value_for_return(self):
+        self.copy_or_add_ref_when_c_2_wrap = self.class_argument_generator.method_copy_or_add_ref_default_value
+
     def wrap_argument_declaration(self) -> str:
         return 'const {type_name}&'.format(type_name=self.class_argument_generator.full_wrap_name)
 
@@ -73,12 +76,21 @@ class ClassTypeGenerator(object):
             return [], internal_expression
 
     def c_2_implementation(self, name: str) -> str:
-        return 'static_cast<{implementation_class_name}*>({name})'.format(
-            implementation_class_name=self.class_argument_generator.class_object.implementation_class_name,
-            name=name
-        )
+        return self.class_argument_generator.lifecycle_traits.c_2_impl_value(
+            'static_cast<{implementation_class_name}*>({name})'.format(
+                implementation_class_name=self.class_argument_generator.class_object.implementation_class_name,
+                name=name
+            ))
+
+    def c_2_implementation_to_pointer(self, name: str) -> str:
+        return self.class_argument_generator.lifecycle_traits.c_2_impl_pointer(
+            'static_cast<{implementation_class_name}*>({name})'.format(
+                implementation_class_name=self.class_argument_generator.class_object.implementation_class_name,
+                name=name
+            ))
 
     def c_2_implementation_var(self, result_var: str, expression: str) -> ([str], str):
+        expression = self.class_argument_generator.lifecycle_traits.c_2_impl_value().format(expression=expression)
         if result_var:
             return ['{impl_name} {result_var}({expression});'.format(
                 impl_name=self.snippet_implementation_declaration(),
@@ -111,6 +123,9 @@ class ClassTypeGenerator(object):
 class EnumTypeGenerator(object):
     def __init__(self, enum_argument_generator):
         self.enum_argument_generator = enum_argument_generator
+
+    def init_copy_or_add_ref_default_value_for_return(self):
+        pass
 
     def wrap_argument_declaration(self) -> str:
         return self.enum_argument_generator.full_wrap_name
@@ -188,6 +203,9 @@ class EnumTypeGenerator(object):
 class BuiltinTypeGenerator(object):
     def __init__(self, type_name: str):
         self.type_name = type_name
+
+    def init_copy_or_add_ref_default_value_for_return(self):
+        pass
 
     @property
     def is_void(self):
@@ -283,6 +301,9 @@ class ArgumentGenerator(object):
     def c_2_implementation(self) -> str:
         return self.type_generator.c_2_implementation(self.name)
 
+    def c_2_implementation_to_pointer(self) -> str:
+        return self.type_generator.c_2_implementation_to_pointer(self.name)
+
     def snippet_implementation_declaration(self) -> str:
         return self.type_generator.snippet_implementation_declaration() + ' ' + self.name
 
@@ -309,7 +330,7 @@ class ThisArgumentGenerator(object):
         return 'void* object_pointer'
 
     def c_2_implementation(self) -> str:
-        return self.type_generator.c_2_implementation('object_pointer')
+        return self.type_generator.c_2_implementation_to_pointer('object_pointer')
 
     def implementation_2_c(self) -> str:
         return self.type_generator.implementation_2_c_var('', 'mObject')[1]

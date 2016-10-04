@@ -31,7 +31,7 @@
 
 class CustomPrinterImplementation
 {
-    std::string mLastPrintedText;
+    mutable std::string mLastPrintedText;
     Example::PrinterPtr::EQuality mQuality;
 public:
     CustomPrinterImplementation()
@@ -42,7 +42,7 @@ public:
     {
         std::cout << "CustomPrinterImplementation ctor" << std::endl;
     }
-    void Print(const char* text) // Note that this method is non-virtual
+    void Print(const char* text) const // Note that this method is non-virtual
     {
         if (!text)
         {
@@ -84,7 +84,7 @@ int main()
     famous_person.Print(printing_device, "Hello World");
 
     CustomPrinterImplementation my_printer_implementation;
-    printing_device = Example::create_callback_for_customprinter(my_printer_implementation);
+    printing_device = Example::create_callback_for_printer(my_printer_implementation);
     famous_person.Dump(printing_device);
 
     // CustomPrinterImplementation::Print() will throw exception (Exception::NullArgument)
