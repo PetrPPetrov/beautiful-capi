@@ -31,4 +31,3 @@ add_executable(down_cast_client
 if(TARGET down_cast)
   add_dependencies(down_cast_client down_cast)
 endif()
-target_link_libraries(down_cast_client down_cast)

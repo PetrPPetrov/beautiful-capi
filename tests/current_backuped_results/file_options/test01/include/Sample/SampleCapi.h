@@ -67,11 +67,114 @@
     #error "Unknown platform"
 #endif
 
+#ifndef SAMPLE_CAPI_USE_DYNAMIC_LOADER
+
 SAMPLE_API void* SAMPLE_API_CONVENTION sample_data_new();
 SAMPLE_API int SAMPLE_API_CONVENTION sample_data_get_data(void* object_pointer);
 SAMPLE_API void SAMPLE_API_CONVENTION sample_data_set_data(void* object_pointer, int value);
 SAMPLE_API void* SAMPLE_API_CONVENTION sample_data_copy(void* object_pointer);
 SAMPLE_API void SAMPLE_API_CONVENTION sample_data_delete(void* object_pointer);
+
+#else /* SAMPLE_CAPI_USE_DYNAMIC_LOADER */
+
+typedef void* (SAMPLE_API_CONVENTION *sample_data_new_function_type)();
+typedef int (SAMPLE_API_CONVENTION *sample_data_get_data_function_type)(void* object_pointer);
+typedef void (SAMPLE_API_CONVENTION *sample_data_set_data_function_type)(void* object_pointer, int value);
+typedef void* (SAMPLE_API_CONVENTION *sample_data_copy_function_type)(void* object_pointer);
+typedef void (SAMPLE_API_CONVENTION *sample_data_delete_function_type)(void* object_pointer);
+
+#ifdef SAMPLE_CAPI_DEFINE_FUNCTION_POINTERS
+
+extern sample_data_new_function_type sample_data_new = 0;
+extern sample_data_get_data_function_type sample_data_get_data = 0;
+extern sample_data_set_data_function_type sample_data_set_data = 0;
+extern sample_data_copy_function_type sample_data_copy = 0;
+extern sample_data_delete_function_type sample_data_delete = 0;
+
+#else /* SAMPLE_CAPI_DEFINE_FUNCTION_POINTERS */
+
+extern sample_data_new_function_type sample_data_new;
+extern sample_data_get_data_function_type sample_data_get_data;
+extern sample_data_set_data_function_type sample_data_set_data;
+extern sample_data_copy_function_type sample_data_copy;
+extern sample_data_delete_function_type sample_data_delete;
+
+#endif /* SAMPLE_CAPI_DEFINE_FUNCTION_POINTERS */
+
+#ifdef __cplusplus
+
+#include <stdexcept>
+#include <sstream>
+#ifdef _WIN32
+#include <Windows.h>
+#else
+#include <dlfcn.h>
+#endif
+
+namespace Sample
+{
+    class Initialization
+    {
+        #ifdef _WIN32
+        HINSTANCE handle;
+        #else
+        void* handle;
+        #endif
+        
+        template<class FunctionPointerType>
+        void load_function(FunctionPointerType& to_init, const char* name)
+        {
+            #ifdef _WIN32
+            to_init = reinterpret_cast<FunctionPointerType>(GetProcAddress(handle, name));
+            #else
+            to_init = reinterpret_cast<FunctionPointerType>(dlsym(handle, name));
+            #endif
+            if (!to_init)
+            {
+                std::stringstream error_message;
+                error_message << "Can't obtain function " << name;
+                throw std::runtime_error(error_message.str());
+            }
+        }
+        
+        Initialization();
+        Initialization(const Initialization&);
+    public:
+        Initialization(const char* name)
+        {
+            if (!name) throw std::runtime_error("Null library name was passed");
+            #ifdef _WIN32
+            handle = LoadLibraryA(name);
+            #else
+            handle = dlopen(name, RTLD_NOW);
+            #endif
+            if (!handle)
+            {
+                std::stringstream error_message;
+                error_message << "Can't load shared library " << name;
+                throw std::runtime_error(error_message.str());
+            }
+            
+            load_function<sample_data_new_function_type>(sample_data_new, "sample_data_new");
+            load_function<sample_data_get_data_function_type>(sample_data_get_data, "sample_data_get_data");
+            load_function<sample_data_set_data_function_type>(sample_data_set_data, "sample_data_set_data");
+            load_function<sample_data_copy_function_type>(sample_data_copy, "sample_data_copy");
+            load_function<sample_data_delete_function_type>(sample_data_delete, "sample_data_delete");
+        }
+        ~Initialization()
+        {
+            #ifdef _WIN32
+            FreeLibrary(handle);
+            #else
+            dlclose(handle);
+            #endif
+        }
+    };
+}
+
+#endif /* __cplusplus */
+
+#endif /* SAMPLE_CAPI_USE_DYNAMIC_LOADER */
 
 #endif /* SAMPLE_CAPI_INCLUDED */
 

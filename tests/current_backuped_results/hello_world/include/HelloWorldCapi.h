@@ -67,10 +67,109 @@
     #error "Unknown platform"
 #endif
 
+#ifndef HELLOWORLD_CAPI_USE_DYNAMIC_LOADER
+
 HELLOWORLD_API void* HELLOWORLD_API_CONVENTION hello_world_printer_default();
 HELLOWORLD_API void HELLOWORLD_API_CONVENTION hello_world_printer_show(void* object_pointer);
 HELLOWORLD_API void* HELLOWORLD_API_CONVENTION hello_world_printer_copy(void* object_pointer);
 HELLOWORLD_API void HELLOWORLD_API_CONVENTION hello_world_printer_delete(void* object_pointer);
+
+#else /* HELLOWORLD_CAPI_USE_DYNAMIC_LOADER */
+
+typedef void* (HELLOWORLD_API_CONVENTION *hello_world_printer_default_function_type)();
+typedef void (HELLOWORLD_API_CONVENTION *hello_world_printer_show_function_type)(void* object_pointer);
+typedef void* (HELLOWORLD_API_CONVENTION *hello_world_printer_copy_function_type)(void* object_pointer);
+typedef void (HELLOWORLD_API_CONVENTION *hello_world_printer_delete_function_type)(void* object_pointer);
+
+#ifdef HELLOWORLD_CAPI_DEFINE_FUNCTION_POINTERS
+
+extern hello_world_printer_default_function_type hello_world_printer_default = 0;
+extern hello_world_printer_show_function_type hello_world_printer_show = 0;
+extern hello_world_printer_copy_function_type hello_world_printer_copy = 0;
+extern hello_world_printer_delete_function_type hello_world_printer_delete = 0;
+
+#else /* HELLOWORLD_CAPI_DEFINE_FUNCTION_POINTERS */
+
+extern hello_world_printer_default_function_type hello_world_printer_default;
+extern hello_world_printer_show_function_type hello_world_printer_show;
+extern hello_world_printer_copy_function_type hello_world_printer_copy;
+extern hello_world_printer_delete_function_type hello_world_printer_delete;
+
+#endif /* HELLOWORLD_CAPI_DEFINE_FUNCTION_POINTERS */
+
+#ifdef __cplusplus
+
+#include <stdexcept>
+#include <sstream>
+#ifdef _WIN32
+#include <Windows.h>
+#else
+#include <dlfcn.h>
+#endif
+
+namespace HelloWorld
+{
+    class Initialization
+    {
+        #ifdef _WIN32
+        HINSTANCE handle;
+        #else
+        void* handle;
+        #endif
+        
+        template<class FunctionPointerType>
+        void load_function(FunctionPointerType& to_init, const char* name)
+        {
+            #ifdef _WIN32
+            to_init = reinterpret_cast<FunctionPointerType>(GetProcAddress(handle, name));
+            #else
+            to_init = reinterpret_cast<FunctionPointerType>(dlsym(handle, name));
+            #endif
+            if (!to_init)
+            {
+                std::stringstream error_message;
+                error_message << "Can't obtain function " << name;
+                throw std::runtime_error(error_message.str());
+            }
+        }
+        
+        Initialization();
+        Initialization(const Initialization&);
+    public:
+        Initialization(const char* name)
+        {
+            if (!name) throw std::runtime_error("Null library name was passed");
+            #ifdef _WIN32
+            handle = LoadLibraryA(name);
+            #else
+            handle = dlopen(name, RTLD_NOW);
+            #endif
+            if (!handle)
+            {
+                std::stringstream error_message;
+                error_message << "Can't load shared library " << name;
+                throw std::runtime_error(error_message.str());
+            }
+            
+            load_function<hello_world_printer_default_function_type>(hello_world_printer_default, "hello_world_printer_default");
+            load_function<hello_world_printer_show_function_type>(hello_world_printer_show, "hello_world_printer_show");
+            load_function<hello_world_printer_copy_function_type>(hello_world_printer_copy, "hello_world_printer_copy");
+            load_function<hello_world_printer_delete_function_type>(hello_world_printer_delete, "hello_world_printer_delete");
+        }
+        ~Initialization()
+        {
+            #ifdef _WIN32
+            FreeLibrary(handle);
+            #else
+            dlclose(handle);
+            #endif
+        }
+    };
+}
+
+#endif /* __cplusplus */
+
+#endif /* HELLOWORLD_CAPI_USE_DYNAMIC_LOADER */
 
 #endif /* HELLOWORLD_CAPI_INCLUDED */
 

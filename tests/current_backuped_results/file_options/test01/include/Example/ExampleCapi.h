@@ -67,6 +67,8 @@
     #error "Unknown platform"
 #endif
 
+#ifndef EXAMPLE_CAPI_USE_DYNAMIC_LOADER
+
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_geometry_brep_body_new();
 EXAMPLE_API const char* EXAMPLE_API_CONVENTION example_geometry_brep_body_get_name(void* object_pointer);
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_geometry_brep_body_set_name(void* object_pointer, const char* value);
@@ -86,6 +88,163 @@ EXAMPLE_API void* EXAMPLE_API_CONVENTION example_printer_new();
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_show(void* object_pointer, const char* text);
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_printer_copy(void* object_pointer);
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_delete(void* object_pointer);
+
+#else /* EXAMPLE_CAPI_USE_DYNAMIC_LOADER */
+
+typedef void* (EXAMPLE_API_CONVENTION *example_geometry_brep_body_new_function_type)();
+typedef const char* (EXAMPLE_API_CONVENTION *example_geometry_brep_body_get_name_function_type)(void* object_pointer);
+typedef void (EXAMPLE_API_CONVENTION *example_geometry_brep_body_set_name_function_type)(void* object_pointer, const char* value);
+typedef void* (EXAMPLE_API_CONVENTION *example_geometry_brep_body_copy_function_type)(void* object_pointer);
+typedef void (EXAMPLE_API_CONVENTION *example_geometry_brep_body_delete_function_type)(void* object_pointer);
+typedef void* (EXAMPLE_API_CONVENTION *example_geometry_sphere_new_function_type)();
+typedef double (EXAMPLE_API_CONVENTION *example_geometry_sphere_get_radius_function_type)(void* object_pointer);
+typedef void (EXAMPLE_API_CONVENTION *example_geometry_sphere_set_radius_function_type)(void* object_pointer, double value);
+typedef void* (EXAMPLE_API_CONVENTION *example_geometry_sphere_copy_function_type)(void* object_pointer);
+typedef void (EXAMPLE_API_CONVENTION *example_geometry_sphere_delete_function_type)(void* object_pointer);
+typedef void* (EXAMPLE_API_CONVENTION *example_scene_node_new_function_type)();
+typedef const char* (EXAMPLE_API_CONVENTION *example_scene_node_get_name_function_type)(void* object_pointer);
+typedef void (EXAMPLE_API_CONVENTION *example_scene_node_set_name_function_type)(void* object_pointer, const char* value);
+typedef void* (EXAMPLE_API_CONVENTION *example_scene_node_copy_function_type)(void* object_pointer);
+typedef void (EXAMPLE_API_CONVENTION *example_scene_node_delete_function_type)(void* object_pointer);
+typedef void* (EXAMPLE_API_CONVENTION *example_printer_new_function_type)();
+typedef void (EXAMPLE_API_CONVENTION *example_printer_show_function_type)(void* object_pointer, const char* text);
+typedef void* (EXAMPLE_API_CONVENTION *example_printer_copy_function_type)(void* object_pointer);
+typedef void (EXAMPLE_API_CONVENTION *example_printer_delete_function_type)(void* object_pointer);
+
+#ifdef EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS
+
+extern example_geometry_brep_body_new_function_type example_geometry_brep_body_new = 0;
+extern example_geometry_brep_body_get_name_function_type example_geometry_brep_body_get_name = 0;
+extern example_geometry_brep_body_set_name_function_type example_geometry_brep_body_set_name = 0;
+extern example_geometry_brep_body_copy_function_type example_geometry_brep_body_copy = 0;
+extern example_geometry_brep_body_delete_function_type example_geometry_brep_body_delete = 0;
+extern example_geometry_sphere_new_function_type example_geometry_sphere_new = 0;
+extern example_geometry_sphere_get_radius_function_type example_geometry_sphere_get_radius = 0;
+extern example_geometry_sphere_set_radius_function_type example_geometry_sphere_set_radius = 0;
+extern example_geometry_sphere_copy_function_type example_geometry_sphere_copy = 0;
+extern example_geometry_sphere_delete_function_type example_geometry_sphere_delete = 0;
+extern example_scene_node_new_function_type example_scene_node_new = 0;
+extern example_scene_node_get_name_function_type example_scene_node_get_name = 0;
+extern example_scene_node_set_name_function_type example_scene_node_set_name = 0;
+extern example_scene_node_copy_function_type example_scene_node_copy = 0;
+extern example_scene_node_delete_function_type example_scene_node_delete = 0;
+extern example_printer_new_function_type example_printer_new = 0;
+extern example_printer_show_function_type example_printer_show = 0;
+extern example_printer_copy_function_type example_printer_copy = 0;
+extern example_printer_delete_function_type example_printer_delete = 0;
+
+#else /* EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS */
+
+extern example_geometry_brep_body_new_function_type example_geometry_brep_body_new;
+extern example_geometry_brep_body_get_name_function_type example_geometry_brep_body_get_name;
+extern example_geometry_brep_body_set_name_function_type example_geometry_brep_body_set_name;
+extern example_geometry_brep_body_copy_function_type example_geometry_brep_body_copy;
+extern example_geometry_brep_body_delete_function_type example_geometry_brep_body_delete;
+extern example_geometry_sphere_new_function_type example_geometry_sphere_new;
+extern example_geometry_sphere_get_radius_function_type example_geometry_sphere_get_radius;
+extern example_geometry_sphere_set_radius_function_type example_geometry_sphere_set_radius;
+extern example_geometry_sphere_copy_function_type example_geometry_sphere_copy;
+extern example_geometry_sphere_delete_function_type example_geometry_sphere_delete;
+extern example_scene_node_new_function_type example_scene_node_new;
+extern example_scene_node_get_name_function_type example_scene_node_get_name;
+extern example_scene_node_set_name_function_type example_scene_node_set_name;
+extern example_scene_node_copy_function_type example_scene_node_copy;
+extern example_scene_node_delete_function_type example_scene_node_delete;
+extern example_printer_new_function_type example_printer_new;
+extern example_printer_show_function_type example_printer_show;
+extern example_printer_copy_function_type example_printer_copy;
+extern example_printer_delete_function_type example_printer_delete;
+
+#endif /* EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS */
+
+#ifdef __cplusplus
+
+#include <stdexcept>
+#include <sstream>
+#ifdef _WIN32
+#include <Windows.h>
+#else
+#include <dlfcn.h>
+#endif
+
+namespace Example
+{
+    class Initialization
+    {
+        #ifdef _WIN32
+        HINSTANCE handle;
+        #else
+        void* handle;
+        #endif
+        
+        template<class FunctionPointerType>
+        void load_function(FunctionPointerType& to_init, const char* name)
+        {
+            #ifdef _WIN32
+            to_init = reinterpret_cast<FunctionPointerType>(GetProcAddress(handle, name));
+            #else
+            to_init = reinterpret_cast<FunctionPointerType>(dlsym(handle, name));
+            #endif
+            if (!to_init)
+            {
+                std::stringstream error_message;
+                error_message << "Can't obtain function " << name;
+                throw std::runtime_error(error_message.str());
+            }
+        }
+        
+        Initialization();
+        Initialization(const Initialization&);
+    public:
+        Initialization(const char* name)
+        {
+            if (!name) throw std::runtime_error("Null library name was passed");
+            #ifdef _WIN32
+            handle = LoadLibraryA(name);
+            #else
+            handle = dlopen(name, RTLD_NOW);
+            #endif
+            if (!handle)
+            {
+                std::stringstream error_message;
+                error_message << "Can't load shared library " << name;
+                throw std::runtime_error(error_message.str());
+            }
+            
+            load_function<example_geometry_brep_body_new_function_type>(example_geometry_brep_body_new, "example_geometry_brep_body_new");
+            load_function<example_geometry_brep_body_get_name_function_type>(example_geometry_brep_body_get_name, "example_geometry_brep_body_get_name");
+            load_function<example_geometry_brep_body_set_name_function_type>(example_geometry_brep_body_set_name, "example_geometry_brep_body_set_name");
+            load_function<example_geometry_brep_body_copy_function_type>(example_geometry_brep_body_copy, "example_geometry_brep_body_copy");
+            load_function<example_geometry_brep_body_delete_function_type>(example_geometry_brep_body_delete, "example_geometry_brep_body_delete");
+            load_function<example_geometry_sphere_new_function_type>(example_geometry_sphere_new, "example_geometry_sphere_new");
+            load_function<example_geometry_sphere_get_radius_function_type>(example_geometry_sphere_get_radius, "example_geometry_sphere_get_radius");
+            load_function<example_geometry_sphere_set_radius_function_type>(example_geometry_sphere_set_radius, "example_geometry_sphere_set_radius");
+            load_function<example_geometry_sphere_copy_function_type>(example_geometry_sphere_copy, "example_geometry_sphere_copy");
+            load_function<example_geometry_sphere_delete_function_type>(example_geometry_sphere_delete, "example_geometry_sphere_delete");
+            load_function<example_scene_node_new_function_type>(example_scene_node_new, "example_scene_node_new");
+            load_function<example_scene_node_get_name_function_type>(example_scene_node_get_name, "example_scene_node_get_name");
+            load_function<example_scene_node_set_name_function_type>(example_scene_node_set_name, "example_scene_node_set_name");
+            load_function<example_scene_node_copy_function_type>(example_scene_node_copy, "example_scene_node_copy");
+            load_function<example_scene_node_delete_function_type>(example_scene_node_delete, "example_scene_node_delete");
+            load_function<example_printer_new_function_type>(example_printer_new, "example_printer_new");
+            load_function<example_printer_show_function_type>(example_printer_show, "example_printer_show");
+            load_function<example_printer_copy_function_type>(example_printer_copy, "example_printer_copy");
+            load_function<example_printer_delete_function_type>(example_printer_delete, "example_printer_delete");
+        }
+        ~Initialization()
+        {
+            #ifdef _WIN32
+            FreeLibrary(handle);
+            #else
+            dlclose(handle);
+            #endif
+        }
+    };
+}
+
+#endif /* __cplusplus */
+
+#endif /* EXAMPLE_CAPI_USE_DYNAMIC_LOADER */
 
 #endif /* EXAMPLE_CAPI_INCLUDED */
 

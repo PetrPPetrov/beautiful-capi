@@ -67,6 +67,8 @@
     #error "Unknown platform"
 #endif
 
+#ifndef EXAMPLE_CAPI_USE_DYNAMIC_LOADER
+
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_create_triangle();
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_create_square();
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_create_circle();
@@ -95,6 +97,199 @@ EXAMPLE_API void EXAMPLE_API_CONVENTION example_i_circle_add_ref(void* object_po
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_i_circle_release(void* object_pointer);
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_i_circle_cast_to_base(void* object_pointer);
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_i_shape_cast_to_example_i_circle(void* source_object);
+
+#else /* EXAMPLE_CAPI_USE_DYNAMIC_LOADER */
+
+typedef void* (EXAMPLE_API_CONVENTION *example_create_triangle_function_type)();
+typedef void* (EXAMPLE_API_CONVENTION *example_create_square_function_type)();
+typedef void* (EXAMPLE_API_CONVENTION *example_create_circle_function_type)();
+typedef void (EXAMPLE_API_CONVENTION *example_i_shape_show_function_type)(void* object_pointer);
+typedef void (EXAMPLE_API_CONVENTION *example_i_shape_add_ref_function_type)(void* object_pointer);
+typedef void (EXAMPLE_API_CONVENTION *example_i_shape_release_function_type)(void* object_pointer);
+typedef int (EXAMPLE_API_CONVENTION *example_i_polygon_get_points_count_function_type)(void* object_pointer);
+typedef void (EXAMPLE_API_CONVENTION *example_i_polygon_add_ref_function_type)(void* object_pointer);
+typedef void (EXAMPLE_API_CONVENTION *example_i_polygon_release_function_type)(void* object_pointer);
+typedef void* (EXAMPLE_API_CONVENTION *example_i_polygon_cast_to_base_function_type)(void* object_pointer);
+typedef void* (EXAMPLE_API_CONVENTION *example_i_shape_cast_to_example_i_polygon_function_type)(void* source_object);
+typedef void (EXAMPLE_API_CONVENTION *example_i_triangle_set_points_function_type)(void* object_pointer, double x1, double y1, double x2, double y2, double x3, double y3);
+typedef void (EXAMPLE_API_CONVENTION *example_i_triangle_add_ref_function_type)(void* object_pointer);
+typedef void (EXAMPLE_API_CONVENTION *example_i_triangle_release_function_type)(void* object_pointer);
+typedef void* (EXAMPLE_API_CONVENTION *example_i_triangle_cast_to_base_function_type)(void* object_pointer);
+typedef void* (EXAMPLE_API_CONVENTION *example_i_shape_cast_to_example_i_triangle_function_type)(void* source_object);
+typedef void* (EXAMPLE_API_CONVENTION *example_i_polygon_cast_to_example_i_triangle_function_type)(void* source_object);
+typedef void (EXAMPLE_API_CONVENTION *example_i_square_set_size_function_type)(void* object_pointer, double size);
+typedef void (EXAMPLE_API_CONVENTION *example_i_square_add_ref_function_type)(void* object_pointer);
+typedef void (EXAMPLE_API_CONVENTION *example_i_square_release_function_type)(void* object_pointer);
+typedef void* (EXAMPLE_API_CONVENTION *example_i_square_cast_to_base_function_type)(void* object_pointer);
+typedef void* (EXAMPLE_API_CONVENTION *example_i_shape_cast_to_example_i_square_function_type)(void* source_object);
+typedef void* (EXAMPLE_API_CONVENTION *example_i_polygon_cast_to_example_i_square_function_type)(void* source_object);
+typedef void (EXAMPLE_API_CONVENTION *example_i_circle_set_radius_function_type)(void* object_pointer, double radius);
+typedef void (EXAMPLE_API_CONVENTION *example_i_circle_add_ref_function_type)(void* object_pointer);
+typedef void (EXAMPLE_API_CONVENTION *example_i_circle_release_function_type)(void* object_pointer);
+typedef void* (EXAMPLE_API_CONVENTION *example_i_circle_cast_to_base_function_type)(void* object_pointer);
+typedef void* (EXAMPLE_API_CONVENTION *example_i_shape_cast_to_example_i_circle_function_type)(void* source_object);
+
+#ifdef EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS
+
+extern example_create_triangle_function_type example_create_triangle = 0;
+extern example_create_square_function_type example_create_square = 0;
+extern example_create_circle_function_type example_create_circle = 0;
+extern example_i_shape_show_function_type example_i_shape_show = 0;
+extern example_i_shape_add_ref_function_type example_i_shape_add_ref = 0;
+extern example_i_shape_release_function_type example_i_shape_release = 0;
+extern example_i_polygon_get_points_count_function_type example_i_polygon_get_points_count = 0;
+extern example_i_polygon_add_ref_function_type example_i_polygon_add_ref = 0;
+extern example_i_polygon_release_function_type example_i_polygon_release = 0;
+extern example_i_polygon_cast_to_base_function_type example_i_polygon_cast_to_base = 0;
+extern example_i_shape_cast_to_example_i_polygon_function_type example_i_shape_cast_to_example_i_polygon = 0;
+extern example_i_triangle_set_points_function_type example_i_triangle_set_points = 0;
+extern example_i_triangle_add_ref_function_type example_i_triangle_add_ref = 0;
+extern example_i_triangle_release_function_type example_i_triangle_release = 0;
+extern example_i_triangle_cast_to_base_function_type example_i_triangle_cast_to_base = 0;
+extern example_i_shape_cast_to_example_i_triangle_function_type example_i_shape_cast_to_example_i_triangle = 0;
+extern example_i_polygon_cast_to_example_i_triangle_function_type example_i_polygon_cast_to_example_i_triangle = 0;
+extern example_i_square_set_size_function_type example_i_square_set_size = 0;
+extern example_i_square_add_ref_function_type example_i_square_add_ref = 0;
+extern example_i_square_release_function_type example_i_square_release = 0;
+extern example_i_square_cast_to_base_function_type example_i_square_cast_to_base = 0;
+extern example_i_shape_cast_to_example_i_square_function_type example_i_shape_cast_to_example_i_square = 0;
+extern example_i_polygon_cast_to_example_i_square_function_type example_i_polygon_cast_to_example_i_square = 0;
+extern example_i_circle_set_radius_function_type example_i_circle_set_radius = 0;
+extern example_i_circle_add_ref_function_type example_i_circle_add_ref = 0;
+extern example_i_circle_release_function_type example_i_circle_release = 0;
+extern example_i_circle_cast_to_base_function_type example_i_circle_cast_to_base = 0;
+extern example_i_shape_cast_to_example_i_circle_function_type example_i_shape_cast_to_example_i_circle = 0;
+
+#else /* EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS */
+
+extern example_create_triangle_function_type example_create_triangle;
+extern example_create_square_function_type example_create_square;
+extern example_create_circle_function_type example_create_circle;
+extern example_i_shape_show_function_type example_i_shape_show;
+extern example_i_shape_add_ref_function_type example_i_shape_add_ref;
+extern example_i_shape_release_function_type example_i_shape_release;
+extern example_i_polygon_get_points_count_function_type example_i_polygon_get_points_count;
+extern example_i_polygon_add_ref_function_type example_i_polygon_add_ref;
+extern example_i_polygon_release_function_type example_i_polygon_release;
+extern example_i_polygon_cast_to_base_function_type example_i_polygon_cast_to_base;
+extern example_i_shape_cast_to_example_i_polygon_function_type example_i_shape_cast_to_example_i_polygon;
+extern example_i_triangle_set_points_function_type example_i_triangle_set_points;
+extern example_i_triangle_add_ref_function_type example_i_triangle_add_ref;
+extern example_i_triangle_release_function_type example_i_triangle_release;
+extern example_i_triangle_cast_to_base_function_type example_i_triangle_cast_to_base;
+extern example_i_shape_cast_to_example_i_triangle_function_type example_i_shape_cast_to_example_i_triangle;
+extern example_i_polygon_cast_to_example_i_triangle_function_type example_i_polygon_cast_to_example_i_triangle;
+extern example_i_square_set_size_function_type example_i_square_set_size;
+extern example_i_square_add_ref_function_type example_i_square_add_ref;
+extern example_i_square_release_function_type example_i_square_release;
+extern example_i_square_cast_to_base_function_type example_i_square_cast_to_base;
+extern example_i_shape_cast_to_example_i_square_function_type example_i_shape_cast_to_example_i_square;
+extern example_i_polygon_cast_to_example_i_square_function_type example_i_polygon_cast_to_example_i_square;
+extern example_i_circle_set_radius_function_type example_i_circle_set_radius;
+extern example_i_circle_add_ref_function_type example_i_circle_add_ref;
+extern example_i_circle_release_function_type example_i_circle_release;
+extern example_i_circle_cast_to_base_function_type example_i_circle_cast_to_base;
+extern example_i_shape_cast_to_example_i_circle_function_type example_i_shape_cast_to_example_i_circle;
+
+#endif /* EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS */
+
+#ifdef __cplusplus
+
+#include <stdexcept>
+#include <sstream>
+#ifdef _WIN32
+#include <Windows.h>
+#else
+#include <dlfcn.h>
+#endif
+
+namespace Example
+{
+    class Initialization
+    {
+        #ifdef _WIN32
+        HINSTANCE handle;
+        #else
+        void* handle;
+        #endif
+        
+        template<class FunctionPointerType>
+        void load_function(FunctionPointerType& to_init, const char* name)
+        {
+            #ifdef _WIN32
+            to_init = reinterpret_cast<FunctionPointerType>(GetProcAddress(handle, name));
+            #else
+            to_init = reinterpret_cast<FunctionPointerType>(dlsym(handle, name));
+            #endif
+            if (!to_init)
+            {
+                std::stringstream error_message;
+                error_message << "Can't obtain function " << name;
+                throw std::runtime_error(error_message.str());
+            }
+        }
+        
+        Initialization();
+        Initialization(const Initialization&);
+    public:
+        Initialization(const char* name)
+        {
+            if (!name) throw std::runtime_error("Null library name was passed");
+            #ifdef _WIN32
+            handle = LoadLibraryA(name);
+            #else
+            handle = dlopen(name, RTLD_NOW);
+            #endif
+            if (!handle)
+            {
+                std::stringstream error_message;
+                error_message << "Can't load shared library " << name;
+                throw std::runtime_error(error_message.str());
+            }
+            
+            load_function<example_create_triangle_function_type>(example_create_triangle, "example_create_triangle");
+            load_function<example_create_square_function_type>(example_create_square, "example_create_square");
+            load_function<example_create_circle_function_type>(example_create_circle, "example_create_circle");
+            load_function<example_i_shape_show_function_type>(example_i_shape_show, "example_i_shape_show");
+            load_function<example_i_shape_add_ref_function_type>(example_i_shape_add_ref, "example_i_shape_add_ref");
+            load_function<example_i_shape_release_function_type>(example_i_shape_release, "example_i_shape_release");
+            load_function<example_i_polygon_get_points_count_function_type>(example_i_polygon_get_points_count, "example_i_polygon_get_points_count");
+            load_function<example_i_polygon_add_ref_function_type>(example_i_polygon_add_ref, "example_i_polygon_add_ref");
+            load_function<example_i_polygon_release_function_type>(example_i_polygon_release, "example_i_polygon_release");
+            load_function<example_i_polygon_cast_to_base_function_type>(example_i_polygon_cast_to_base, "example_i_polygon_cast_to_base");
+            load_function<example_i_shape_cast_to_example_i_polygon_function_type>(example_i_shape_cast_to_example_i_polygon, "example_i_shape_cast_to_example_i_polygon");
+            load_function<example_i_triangle_set_points_function_type>(example_i_triangle_set_points, "example_i_triangle_set_points");
+            load_function<example_i_triangle_add_ref_function_type>(example_i_triangle_add_ref, "example_i_triangle_add_ref");
+            load_function<example_i_triangle_release_function_type>(example_i_triangle_release, "example_i_triangle_release");
+            load_function<example_i_triangle_cast_to_base_function_type>(example_i_triangle_cast_to_base, "example_i_triangle_cast_to_base");
+            load_function<example_i_shape_cast_to_example_i_triangle_function_type>(example_i_shape_cast_to_example_i_triangle, "example_i_shape_cast_to_example_i_triangle");
+            load_function<example_i_polygon_cast_to_example_i_triangle_function_type>(example_i_polygon_cast_to_example_i_triangle, "example_i_polygon_cast_to_example_i_triangle");
+            load_function<example_i_square_set_size_function_type>(example_i_square_set_size, "example_i_square_set_size");
+            load_function<example_i_square_add_ref_function_type>(example_i_square_add_ref, "example_i_square_add_ref");
+            load_function<example_i_square_release_function_type>(example_i_square_release, "example_i_square_release");
+            load_function<example_i_square_cast_to_base_function_type>(example_i_square_cast_to_base, "example_i_square_cast_to_base");
+            load_function<example_i_shape_cast_to_example_i_square_function_type>(example_i_shape_cast_to_example_i_square, "example_i_shape_cast_to_example_i_square");
+            load_function<example_i_polygon_cast_to_example_i_square_function_type>(example_i_polygon_cast_to_example_i_square, "example_i_polygon_cast_to_example_i_square");
+            load_function<example_i_circle_set_radius_function_type>(example_i_circle_set_radius, "example_i_circle_set_radius");
+            load_function<example_i_circle_add_ref_function_type>(example_i_circle_add_ref, "example_i_circle_add_ref");
+            load_function<example_i_circle_release_function_type>(example_i_circle_release, "example_i_circle_release");
+            load_function<example_i_circle_cast_to_base_function_type>(example_i_circle_cast_to_base, "example_i_circle_cast_to_base");
+            load_function<example_i_shape_cast_to_example_i_circle_function_type>(example_i_shape_cast_to_example_i_circle, "example_i_shape_cast_to_example_i_circle");
+        }
+        ~Initialization()
+        {
+            #ifdef _WIN32
+            FreeLibrary(handle);
+            #else
+            dlclose(handle);
+            #endif
+        }
+    };
+}
+
+#endif /* __cplusplus */
+
+#endif /* EXAMPLE_CAPI_USE_DYNAMIC_LOADER */
 
 #endif /* EXAMPLE_CAPI_INCLUDED */
 

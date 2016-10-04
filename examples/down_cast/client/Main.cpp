@@ -24,6 +24,9 @@
 #endif
 #include <iostream>
 #include <cstdlib>
+
+#define EXAMPLE_CAPI_USE_DYNAMIC_LOADER
+#define EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS
 #include "Example.h"
 
 using Example::down_cast;
@@ -62,6 +65,14 @@ int main()
 #if defined(_WIN32) && defined(_DEBUG)
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
+#ifdef _WIN32
+    Example::Initialization module_init("down_cast.dll");
+#elif __APPLE__
+    Example::Initialization module_init("libdown_cast.dylib");
+#else
+    Example::Initialization module_init("libdown_cast.so");
+#endif
+
     Example::IShapePtr triangle = Example::CreateTriangle();
     Example::IShapePtr shape0(Example::CreateCircle());
     Example::IShapePtr shape1(Example::CreateSquare());

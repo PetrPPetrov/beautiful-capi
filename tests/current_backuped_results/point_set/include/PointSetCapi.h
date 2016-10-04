@@ -67,6 +67,8 @@
     #error "Unknown platform"
 #endif
 
+#ifndef POINTSET_CAPI_USE_DYNAMIC_LOADER
+
 POINTSET_API void* POINTSET_API_CONVENTION point_set_position_default();
 POINTSET_API void* POINTSET_API_CONVENTION point_set_position_initialized(double X, double Y, double Z);
 POINTSET_API double POINTSET_API_CONVENTION point_set_position_get_x(void* object_pointer);
@@ -94,6 +96,195 @@ POINTSET_API void* POINTSET_API_CONVENTION point_set_point_set_get_points(void* 
 POINTSET_API void POINTSET_API_CONVENTION point_set_point_set_set_points(void* object_pointer, void* value);
 POINTSET_API void POINTSET_API_CONVENTION point_set_point_set_add_ref(void* object_pointer);
 POINTSET_API void POINTSET_API_CONVENTION point_set_point_set_release(void* object_pointer);
+
+#else /* POINTSET_CAPI_USE_DYNAMIC_LOADER */
+
+typedef void* (POINTSET_API_CONVENTION *point_set_position_default_function_type)();
+typedef void* (POINTSET_API_CONVENTION *point_set_position_initialized_function_type)(double X, double Y, double Z);
+typedef double (POINTSET_API_CONVENTION *point_set_position_get_x_function_type)(void* object_pointer);
+typedef void (POINTSET_API_CONVENTION *point_set_position_set_x_function_type)(void* object_pointer, double value);
+typedef double (POINTSET_API_CONVENTION *point_set_position_get_y_function_type)(void* object_pointer);
+typedef void (POINTSET_API_CONVENTION *point_set_position_set_y_function_type)(void* object_pointer, double value);
+typedef double (POINTSET_API_CONVENTION *point_set_position_get_z_function_type)(void* object_pointer);
+typedef void (POINTSET_API_CONVENTION *point_set_position_set_z_function_type)(void* object_pointer, double value);
+typedef void* (POINTSET_API_CONVENTION *point_set_position_copy_function_type)(void* object_pointer);
+typedef void (POINTSET_API_CONVENTION *point_set_position_delete_function_type)(void* object_pointer);
+typedef void* (POINTSET_API_CONVENTION *point_set_points_default_function_type)();
+typedef size_t (POINTSET_API_CONVENTION *point_set_points_size_function_type)(void* object_pointer);
+typedef void (POINTSET_API_CONVENTION *point_set_points_reserve_function_type)(void* object_pointer, size_t capacity);
+typedef void (POINTSET_API_CONVENTION *point_set_points_resize_function_type)(void* object_pointer, size_t size, void* default_value);
+typedef void* (POINTSET_API_CONVENTION *point_set_points_get_element_function_type)(void* object_pointer, size_t index);
+typedef void (POINTSET_API_CONVENTION *point_set_points_set_element_function_type)(void* object_pointer, size_t index, void* value);
+typedef void (POINTSET_API_CONVENTION *point_set_points_push_back_function_type)(void* object_pointer, void* value);
+typedef void (POINTSET_API_CONVENTION *point_set_points_clear_function_type)(void* object_pointer);
+typedef void (POINTSET_API_CONVENTION *point_set_points_add_ref_function_type)(void* object_pointer);
+typedef void (POINTSET_API_CONVENTION *point_set_points_release_function_type)(void* object_pointer);
+typedef void* (POINTSET_API_CONVENTION *point_set_point_set_default_function_type)();
+typedef const char* (POINTSET_API_CONVENTION *point_set_point_set_get_name_function_type)(void* object_pointer);
+typedef void (POINTSET_API_CONVENTION *point_set_point_set_set_name_function_type)(void* object_pointer, const char* name);
+typedef void* (POINTSET_API_CONVENTION *point_set_point_set_get_points_function_type)(void* object_pointer);
+typedef void (POINTSET_API_CONVENTION *point_set_point_set_set_points_function_type)(void* object_pointer, void* value);
+typedef void (POINTSET_API_CONVENTION *point_set_point_set_add_ref_function_type)(void* object_pointer);
+typedef void (POINTSET_API_CONVENTION *point_set_point_set_release_function_type)(void* object_pointer);
+
+#ifdef POINTSET_CAPI_DEFINE_FUNCTION_POINTERS
+
+extern point_set_position_default_function_type point_set_position_default = 0;
+extern point_set_position_initialized_function_type point_set_position_initialized = 0;
+extern point_set_position_get_x_function_type point_set_position_get_x = 0;
+extern point_set_position_set_x_function_type point_set_position_set_x = 0;
+extern point_set_position_get_y_function_type point_set_position_get_y = 0;
+extern point_set_position_set_y_function_type point_set_position_set_y = 0;
+extern point_set_position_get_z_function_type point_set_position_get_z = 0;
+extern point_set_position_set_z_function_type point_set_position_set_z = 0;
+extern point_set_position_copy_function_type point_set_position_copy = 0;
+extern point_set_position_delete_function_type point_set_position_delete = 0;
+extern point_set_points_default_function_type point_set_points_default = 0;
+extern point_set_points_size_function_type point_set_points_size = 0;
+extern point_set_points_reserve_function_type point_set_points_reserve = 0;
+extern point_set_points_resize_function_type point_set_points_resize = 0;
+extern point_set_points_get_element_function_type point_set_points_get_element = 0;
+extern point_set_points_set_element_function_type point_set_points_set_element = 0;
+extern point_set_points_push_back_function_type point_set_points_push_back = 0;
+extern point_set_points_clear_function_type point_set_points_clear = 0;
+extern point_set_points_add_ref_function_type point_set_points_add_ref = 0;
+extern point_set_points_release_function_type point_set_points_release = 0;
+extern point_set_point_set_default_function_type point_set_point_set_default = 0;
+extern point_set_point_set_get_name_function_type point_set_point_set_get_name = 0;
+extern point_set_point_set_set_name_function_type point_set_point_set_set_name = 0;
+extern point_set_point_set_get_points_function_type point_set_point_set_get_points = 0;
+extern point_set_point_set_set_points_function_type point_set_point_set_set_points = 0;
+extern point_set_point_set_add_ref_function_type point_set_point_set_add_ref = 0;
+extern point_set_point_set_release_function_type point_set_point_set_release = 0;
+
+#else /* POINTSET_CAPI_DEFINE_FUNCTION_POINTERS */
+
+extern point_set_position_default_function_type point_set_position_default;
+extern point_set_position_initialized_function_type point_set_position_initialized;
+extern point_set_position_get_x_function_type point_set_position_get_x;
+extern point_set_position_set_x_function_type point_set_position_set_x;
+extern point_set_position_get_y_function_type point_set_position_get_y;
+extern point_set_position_set_y_function_type point_set_position_set_y;
+extern point_set_position_get_z_function_type point_set_position_get_z;
+extern point_set_position_set_z_function_type point_set_position_set_z;
+extern point_set_position_copy_function_type point_set_position_copy;
+extern point_set_position_delete_function_type point_set_position_delete;
+extern point_set_points_default_function_type point_set_points_default;
+extern point_set_points_size_function_type point_set_points_size;
+extern point_set_points_reserve_function_type point_set_points_reserve;
+extern point_set_points_resize_function_type point_set_points_resize;
+extern point_set_points_get_element_function_type point_set_points_get_element;
+extern point_set_points_set_element_function_type point_set_points_set_element;
+extern point_set_points_push_back_function_type point_set_points_push_back;
+extern point_set_points_clear_function_type point_set_points_clear;
+extern point_set_points_add_ref_function_type point_set_points_add_ref;
+extern point_set_points_release_function_type point_set_points_release;
+extern point_set_point_set_default_function_type point_set_point_set_default;
+extern point_set_point_set_get_name_function_type point_set_point_set_get_name;
+extern point_set_point_set_set_name_function_type point_set_point_set_set_name;
+extern point_set_point_set_get_points_function_type point_set_point_set_get_points;
+extern point_set_point_set_set_points_function_type point_set_point_set_set_points;
+extern point_set_point_set_add_ref_function_type point_set_point_set_add_ref;
+extern point_set_point_set_release_function_type point_set_point_set_release;
+
+#endif /* POINTSET_CAPI_DEFINE_FUNCTION_POINTERS */
+
+#ifdef __cplusplus
+
+#include <stdexcept>
+#include <sstream>
+#ifdef _WIN32
+#include <Windows.h>
+#else
+#include <dlfcn.h>
+#endif
+
+namespace PointSet
+{
+    class Initialization
+    {
+        #ifdef _WIN32
+        HINSTANCE handle;
+        #else
+        void* handle;
+        #endif
+        
+        template<class FunctionPointerType>
+        void load_function(FunctionPointerType& to_init, const char* name)
+        {
+            #ifdef _WIN32
+            to_init = reinterpret_cast<FunctionPointerType>(GetProcAddress(handle, name));
+            #else
+            to_init = reinterpret_cast<FunctionPointerType>(dlsym(handle, name));
+            #endif
+            if (!to_init)
+            {
+                std::stringstream error_message;
+                error_message << "Can't obtain function " << name;
+                throw std::runtime_error(error_message.str());
+            }
+        }
+        
+        Initialization();
+        Initialization(const Initialization&);
+    public:
+        Initialization(const char* name)
+        {
+            if (!name) throw std::runtime_error("Null library name was passed");
+            #ifdef _WIN32
+            handle = LoadLibraryA(name);
+            #else
+            handle = dlopen(name, RTLD_NOW);
+            #endif
+            if (!handle)
+            {
+                std::stringstream error_message;
+                error_message << "Can't load shared library " << name;
+                throw std::runtime_error(error_message.str());
+            }
+            
+            load_function<point_set_position_default_function_type>(point_set_position_default, "point_set_position_default");
+            load_function<point_set_position_initialized_function_type>(point_set_position_initialized, "point_set_position_initialized");
+            load_function<point_set_position_get_x_function_type>(point_set_position_get_x, "point_set_position_get_x");
+            load_function<point_set_position_set_x_function_type>(point_set_position_set_x, "point_set_position_set_x");
+            load_function<point_set_position_get_y_function_type>(point_set_position_get_y, "point_set_position_get_y");
+            load_function<point_set_position_set_y_function_type>(point_set_position_set_y, "point_set_position_set_y");
+            load_function<point_set_position_get_z_function_type>(point_set_position_get_z, "point_set_position_get_z");
+            load_function<point_set_position_set_z_function_type>(point_set_position_set_z, "point_set_position_set_z");
+            load_function<point_set_position_copy_function_type>(point_set_position_copy, "point_set_position_copy");
+            load_function<point_set_position_delete_function_type>(point_set_position_delete, "point_set_position_delete");
+            load_function<point_set_points_default_function_type>(point_set_points_default, "point_set_points_default");
+            load_function<point_set_points_size_function_type>(point_set_points_size, "point_set_points_size");
+            load_function<point_set_points_reserve_function_type>(point_set_points_reserve, "point_set_points_reserve");
+            load_function<point_set_points_resize_function_type>(point_set_points_resize, "point_set_points_resize");
+            load_function<point_set_points_get_element_function_type>(point_set_points_get_element, "point_set_points_get_element");
+            load_function<point_set_points_set_element_function_type>(point_set_points_set_element, "point_set_points_set_element");
+            load_function<point_set_points_push_back_function_type>(point_set_points_push_back, "point_set_points_push_back");
+            load_function<point_set_points_clear_function_type>(point_set_points_clear, "point_set_points_clear");
+            load_function<point_set_points_add_ref_function_type>(point_set_points_add_ref, "point_set_points_add_ref");
+            load_function<point_set_points_release_function_type>(point_set_points_release, "point_set_points_release");
+            load_function<point_set_point_set_default_function_type>(point_set_point_set_default, "point_set_point_set_default");
+            load_function<point_set_point_set_get_name_function_type>(point_set_point_set_get_name, "point_set_point_set_get_name");
+            load_function<point_set_point_set_set_name_function_type>(point_set_point_set_set_name, "point_set_point_set_set_name");
+            load_function<point_set_point_set_get_points_function_type>(point_set_point_set_get_points, "point_set_point_set_get_points");
+            load_function<point_set_point_set_set_points_function_type>(point_set_point_set_set_points, "point_set_point_set_set_points");
+            load_function<point_set_point_set_add_ref_function_type>(point_set_point_set_add_ref, "point_set_point_set_add_ref");
+            load_function<point_set_point_set_release_function_type>(point_set_point_set_release, "point_set_point_set_release");
+        }
+        ~Initialization()
+        {
+            #ifdef _WIN32
+            FreeLibrary(handle);
+            #else
+            dlclose(handle);
+            #endif
+        }
+    };
+}
+
+#endif /* __cplusplus */
+
+#endif /* POINTSET_CAPI_USE_DYNAMIC_LOADER */
 
 #endif /* POINTSET_CAPI_INCLUDED */
 

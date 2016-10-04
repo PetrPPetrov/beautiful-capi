@@ -67,6 +67,8 @@
     #error "Unknown platform"
 #endif
 
+#ifndef EXAMPLE_CAPI_USE_DYNAMIC_LOADER
+
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_page_default();
 EXAMPLE_API size_t EXAMPLE_API_CONVENTION example_page_get_width(void* object_pointer);
 EXAMPLE_API size_t EXAMPLE_API_CONVENTION example_page_get_height(void* object_pointer);
@@ -80,6 +82,139 @@ EXAMPLE_API void* EXAMPLE_API_CONVENTION example_document_get_page(void* object_
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_document_set_page(void* object_pointer, void* value);
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_document_add_ref(void* object_pointer);
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_document_release(void* object_pointer);
+
+#else /* EXAMPLE_CAPI_USE_DYNAMIC_LOADER */
+
+typedef void* (EXAMPLE_API_CONVENTION *example_page_default_function_type)();
+typedef size_t (EXAMPLE_API_CONVENTION *example_page_get_width_function_type)(void* object_pointer);
+typedef size_t (EXAMPLE_API_CONVENTION *example_page_get_height_function_type)(void* object_pointer);
+typedef void (EXAMPLE_API_CONVENTION *example_page_set_width_function_type)(void* object_pointer, size_t value);
+typedef void (EXAMPLE_API_CONVENTION *example_page_set_height_function_type)(void* object_pointer, size_t value);
+typedef void (EXAMPLE_API_CONVENTION *example_page_add_ref_function_type)(void* object_pointer);
+typedef void (EXAMPLE_API_CONVENTION *example_page_release_function_type)(void* object_pointer);
+typedef void* (EXAMPLE_API_CONVENTION *example_document_default_function_type)();
+typedef void (EXAMPLE_API_CONVENTION *example_document_show_function_type)(void* object_pointer);
+typedef void* (EXAMPLE_API_CONVENTION *example_document_get_page_function_type)(void* object_pointer);
+typedef void (EXAMPLE_API_CONVENTION *example_document_set_page_function_type)(void* object_pointer, void* value);
+typedef void (EXAMPLE_API_CONVENTION *example_document_add_ref_function_type)(void* object_pointer);
+typedef void (EXAMPLE_API_CONVENTION *example_document_release_function_type)(void* object_pointer);
+
+#ifdef EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS
+
+extern example_page_default_function_type example_page_default = 0;
+extern example_page_get_width_function_type example_page_get_width = 0;
+extern example_page_get_height_function_type example_page_get_height = 0;
+extern example_page_set_width_function_type example_page_set_width = 0;
+extern example_page_set_height_function_type example_page_set_height = 0;
+extern example_page_add_ref_function_type example_page_add_ref = 0;
+extern example_page_release_function_type example_page_release = 0;
+extern example_document_default_function_type example_document_default = 0;
+extern example_document_show_function_type example_document_show = 0;
+extern example_document_get_page_function_type example_document_get_page = 0;
+extern example_document_set_page_function_type example_document_set_page = 0;
+extern example_document_add_ref_function_type example_document_add_ref = 0;
+extern example_document_release_function_type example_document_release = 0;
+
+#else /* EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS */
+
+extern example_page_default_function_type example_page_default;
+extern example_page_get_width_function_type example_page_get_width;
+extern example_page_get_height_function_type example_page_get_height;
+extern example_page_set_width_function_type example_page_set_width;
+extern example_page_set_height_function_type example_page_set_height;
+extern example_page_add_ref_function_type example_page_add_ref;
+extern example_page_release_function_type example_page_release;
+extern example_document_default_function_type example_document_default;
+extern example_document_show_function_type example_document_show;
+extern example_document_get_page_function_type example_document_get_page;
+extern example_document_set_page_function_type example_document_set_page;
+extern example_document_add_ref_function_type example_document_add_ref;
+extern example_document_release_function_type example_document_release;
+
+#endif /* EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS */
+
+#ifdef __cplusplus
+
+#include <stdexcept>
+#include <sstream>
+#ifdef _WIN32
+#include <Windows.h>
+#else
+#include <dlfcn.h>
+#endif
+
+namespace Example
+{
+    class Initialization
+    {
+        #ifdef _WIN32
+        HINSTANCE handle;
+        #else
+        void* handle;
+        #endif
+        
+        template<class FunctionPointerType>
+        void load_function(FunctionPointerType& to_init, const char* name)
+        {
+            #ifdef _WIN32
+            to_init = reinterpret_cast<FunctionPointerType>(GetProcAddress(handle, name));
+            #else
+            to_init = reinterpret_cast<FunctionPointerType>(dlsym(handle, name));
+            #endif
+            if (!to_init)
+            {
+                std::stringstream error_message;
+                error_message << "Can't obtain function " << name;
+                throw std::runtime_error(error_message.str());
+            }
+        }
+        
+        Initialization();
+        Initialization(const Initialization&);
+    public:
+        Initialization(const char* name)
+        {
+            if (!name) throw std::runtime_error("Null library name was passed");
+            #ifdef _WIN32
+            handle = LoadLibraryA(name);
+            #else
+            handle = dlopen(name, RTLD_NOW);
+            #endif
+            if (!handle)
+            {
+                std::stringstream error_message;
+                error_message << "Can't load shared library " << name;
+                throw std::runtime_error(error_message.str());
+            }
+            
+            load_function<example_page_default_function_type>(example_page_default, "example_page_default");
+            load_function<example_page_get_width_function_type>(example_page_get_width, "example_page_get_width");
+            load_function<example_page_get_height_function_type>(example_page_get_height, "example_page_get_height");
+            load_function<example_page_set_width_function_type>(example_page_set_width, "example_page_set_width");
+            load_function<example_page_set_height_function_type>(example_page_set_height, "example_page_set_height");
+            load_function<example_page_add_ref_function_type>(example_page_add_ref, "example_page_add_ref");
+            load_function<example_page_release_function_type>(example_page_release, "example_page_release");
+            load_function<example_document_default_function_type>(example_document_default, "example_document_default");
+            load_function<example_document_show_function_type>(example_document_show, "example_document_show");
+            load_function<example_document_get_page_function_type>(example_document_get_page, "example_document_get_page");
+            load_function<example_document_set_page_function_type>(example_document_set_page, "example_document_set_page");
+            load_function<example_document_add_ref_function_type>(example_document_add_ref, "example_document_add_ref");
+            load_function<example_document_release_function_type>(example_document_release, "example_document_release");
+        }
+        ~Initialization()
+        {
+            #ifdef _WIN32
+            FreeLibrary(handle);
+            #else
+            dlclose(handle);
+            #endif
+        }
+    };
+}
+
+#endif /* __cplusplus */
+
+#endif /* EXAMPLE_CAPI_USE_DYNAMIC_LOADER */
 
 #endif /* EXAMPLE_CAPI_INCLUDED */
 
