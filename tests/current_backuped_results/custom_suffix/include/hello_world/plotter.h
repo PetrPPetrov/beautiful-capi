@@ -27,7 +27,7 @@
 #ifndef HELLO_WORLD_PLOTTER_DEFINITION_INCLUDED
 #define HELLO_WORLD_PLOTTER_DEFINITION_INCLUDED
 
-#include "hello_world/plotterDecl.h"
+#include "hello_world/plotter_decl.h"
 
 #ifdef __cplusplus
 

@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <params:params xmlns:params="http://gkmsoft.ru/beautifulcapi-params"
-               file_per_class="true"
-               folder_per_namespace="true"
-               generate_single_file="false"
                namespace_header_at_parent_folder="false"
-               dynamically_load_functions="false"
-               capi_header_suffix="_capi" fwd_header_suffix="_fwd_ptr"
+               capi_header_suffix="_capi" fwd_header_suffix="_fwd_ptr" decl_header_suffix="_decl"
                wrapper_class_suffix_copy_semantic=""
                wrapper_class_suffix_reference_counted="_ptr"
                wrapper_class_suffix_raw_pointer="_raw_ptr"

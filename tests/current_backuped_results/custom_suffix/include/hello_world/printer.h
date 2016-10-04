@@ -27,7 +27,7 @@
 #ifndef HELLO_WORLD_PRINTER_DEFINITION_INCLUDED
 #define HELLO_WORLD_PRINTER_DEFINITION_INCLUDED
 
-#include "hello_world/printerDecl.h"
+#include "hello_world/printer_decl.h"
 
 #ifdef __cplusplus
 

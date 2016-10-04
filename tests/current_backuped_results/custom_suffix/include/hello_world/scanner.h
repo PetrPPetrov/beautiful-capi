@@ -27,7 +27,7 @@
 #ifndef HELLO_WORLD_SCANNER_DEFINITION_INCLUDED
 #define HELLO_WORLD_SCANNER_DEFINITION_INCLUDED
 
-#include "hello_world/scannerDecl.h"
+#include "hello_world/scanner_decl.h"
 
 #ifdef __cplusplus
 
