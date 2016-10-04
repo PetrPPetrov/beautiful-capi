@@ -39,12 +39,12 @@ inline Circular::ClassBRawPtr::ClassBRawPtr()
 
 inline void Circular::ClassBRawPtr::SetA(const Circular::ClassARawPtr& value)
 {
-    circular_class_b_set_a(this->get_raw_pointer(), value.get_raw_pointer());
+    circular_class_b_set_a(this->GetRawPointer(), value.GetRawPointer());
 }
 
 inline Circular::ClassARawPtr Circular::ClassBRawPtr::GetA() const
 {
-    return Circular::ClassARawPtr(Circular::ClassARawPtr::force_creating_from_raw_pointer, circular_class_b_get_a(this->get_raw_pointer()), false);
+    return Circular::ClassARawPtr(Circular::ClassARawPtr::force_creating_from_raw_pointer, circular_class_b_get_a(this->GetRawPointer()), false);
 }
 
 inline Circular::ClassBRawPtr::ClassBRawPtr(const ClassBRawPtr& other)
@@ -94,7 +94,7 @@ inline void* Circular::ClassBRawPtr::Detach()
     return result;
 }
 
-inline void* Circular::ClassBRawPtr::get_raw_pointer() const
+inline void* Circular::ClassBRawPtr::GetRawPointer() const
 {
     return mObject;
 }

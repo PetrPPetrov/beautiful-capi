@@ -72,8 +72,9 @@ class LifecycleTraits(object):
         out.put_line('inline bool {0}() const;'.format(self.params.is_null_method))
         out.put_line('inline bool {0}() const;'.format(self.params.is_not_null_method))
         out.put_line('inline bool operator!() const;')
-        out.put_line('inline void* Detach();')
-        out.put_line('inline void* get_raw_pointer() const;')
+        out.put_line('inline void* {detach_method}();'.format(detach_method=self.params.detach_method))
+        out.put_line('inline void* {get_raw_pointer_method}() const;'.format(
+            get_raw_pointer_method=self.params.get_raw_pointer_method))
 
     def generate_std_methods_definitions(self, out: FileGenerator, class_generator):
         out.put_line('inline bool {namespace}::{is_null_method}() const'.format(
@@ -92,13 +93,15 @@ class LifecycleTraits(object):
         with IndentScope(out):
             out.put_line('return !mObject;')
         out.put_line('')
-        out.put_line('inline void* {namespace}::Detach()'.format(namespace=class_generator.full_wrap_name))
+        out.put_line('inline void* {namespace}::{detach_method}()'.format(
+            namespace=class_generator.full_wrap_name, detach_method=self.params.detach_method))
         with IndentScope(out):
             out.put_line('void* result = mObject;')
             out.put_line('SetObject(0);')
             out.put_line('return result;')
         out.put_line('')
-        out.put_line('inline void* {namespace}::get_raw_pointer() const'.format(namespace=class_generator.full_wrap_name))
+        out.put_line('inline void* {namespace}::{get_raw_pointer_method}() const'.format(
+            namespace=class_generator.full_wrap_name, get_raw_pointer_method=self.params.get_raw_pointer_method))
         with IndentScope(out):
             out.put_line('return mObject;')
 

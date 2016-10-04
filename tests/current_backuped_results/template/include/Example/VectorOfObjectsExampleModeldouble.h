@@ -39,22 +39,22 @@ inline Example::VectorOfObjectsPtr<Example::ModelPtr<double> >::VectorOfObjectsP
 
 inline int Example::VectorOfObjectsPtr<Example::ModelPtr<double> >::GetSize() const
 {
-    return example_vector_of_objects_example_model_double_get_size(this->get_raw_pointer());
+    return example_vector_of_objects_example_model_double_get_size(this->GetRawPointer());
 }
 
 inline void Example::VectorOfObjectsPtr<Example::ModelPtr<double> >::Clear()
 {
-    example_vector_of_objects_example_model_double_clear(this->get_raw_pointer());
+    example_vector_of_objects_example_model_double_clear(this->GetRawPointer());
 }
 
 inline void Example::VectorOfObjectsPtr<Example::ModelPtr<double> >::PushBack(const Example::ModelPtr<double>& value)
 {
-    example_vector_of_objects_example_model_double_push_back(this->get_raw_pointer(), value.get_raw_pointer());
+    example_vector_of_objects_example_model_double_push_back(this->GetRawPointer(), value.GetRawPointer());
 }
 
 inline Example::ModelPtr<double> Example::VectorOfObjectsPtr<Example::ModelPtr<double> >::GetItem(int index) const
 {
-    return Example::ModelPtr<double>(Example::ModelPtr<double>::force_creating_from_raw_pointer, example_vector_of_objects_example_model_double_get_item(this->get_raw_pointer(), index), true);
+    return Example::ModelPtr<double>(Example::ModelPtr<double>::force_creating_from_raw_pointer, example_vector_of_objects_example_model_double_get_item(this->GetRawPointer(), index), true);
 }
 
 inline Example::VectorOfObjectsPtr<Example::ModelPtr<double> >::VectorOfObjectsPtr(const VectorOfObjectsPtr<Example::ModelPtr<double> >& other)
@@ -124,7 +124,7 @@ inline void* Example::VectorOfObjectsPtr<Example::ModelPtr<double> >::Detach()
     return result;
 }
 
-inline void* Example::VectorOfObjectsPtr<Example::ModelPtr<double> >::get_raw_pointer() const
+inline void* Example::VectorOfObjectsPtr<Example::ModelPtr<double> >::GetRawPointer() const
 {
     return mObject;
 }

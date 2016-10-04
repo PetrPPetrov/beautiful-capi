@@ -43,7 +43,7 @@ inline Exception::BadArgument::BadArgument() : Exception::Generic(Exception::Gen
 
 inline const char* Exception::BadArgument::GetArgumentName() const
 {
-    return exception_bad_argument_get_argument_name(this->get_raw_pointer());
+    return exception_bad_argument_get_argument_name(this->GetRawPointer());
 }
 
 inline Exception::BadArgument::BadArgument(const BadArgument& other) : Exception::Generic(Exception::Generic::force_creating_from_raw_pointer, 0, false)
@@ -131,7 +131,7 @@ inline void* Exception::BadArgument::Detach()
     return result;
 }
 
-inline void* Exception::BadArgument::get_raw_pointer() const
+inline void* Exception::BadArgument::GetRawPointer() const
 {
     return mObject;
 }

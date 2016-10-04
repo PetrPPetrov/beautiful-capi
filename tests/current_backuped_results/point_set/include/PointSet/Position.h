@@ -43,32 +43,32 @@ inline PointSet::Position::Position(double X, double Y, double Z)
 
 inline double PointSet::Position::GetX() const
 {
-    return point_set_position_get_x(this->get_raw_pointer());
+    return point_set_position_get_x(this->GetRawPointer());
 }
 
 inline void PointSet::Position::SetX(double value)
 {
-    point_set_position_set_x(this->get_raw_pointer(), value);
+    point_set_position_set_x(this->GetRawPointer(), value);
 }
 
 inline double PointSet::Position::GetY() const
 {
-    return point_set_position_get_y(this->get_raw_pointer());
+    return point_set_position_get_y(this->GetRawPointer());
 }
 
 inline void PointSet::Position::SetY(double value)
 {
-    point_set_position_set_y(this->get_raw_pointer(), value);
+    point_set_position_set_y(this->GetRawPointer(), value);
 }
 
 inline double PointSet::Position::GetZ() const
 {
-    return point_set_position_get_z(this->get_raw_pointer());
+    return point_set_position_get_z(this->GetRawPointer());
 }
 
 inline void PointSet::Position::SetZ(double value)
 {
-    point_set_position_set_z(this->get_raw_pointer(), value);
+    point_set_position_set_z(this->GetRawPointer(), value);
 }
 
 inline PointSet::Position::Position(const Position& other)
@@ -147,7 +147,7 @@ inline void* PointSet::Position::Detach()
     return result;
 }
 
-inline void* PointSet::Position::get_raw_pointer() const
+inline void* PointSet::Position::GetRawPointer() const
 {
     return mObject;
 }

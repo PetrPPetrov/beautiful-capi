@@ -266,8 +266,7 @@ class ByFirstArgument(object):
         ByFirstArgument.__generate_catch_by_value(out, exception_class_generator)
         ByFirstArgument.__generate_catch_by_pointer(out, exception_class_generator)
 
-    @staticmethod
-    def __generate_callback_catch_by_value(out: FileGenerator, exception_class_generator: ClassGenerator):
+    def __generate_callback_catch_by_value(self, out: FileGenerator, exception_class_generator: ClassGenerator):
         out.put_line('catch ({0}& exception_object)'.format(
             exception_class_generator.full_wrap_name
         ))
@@ -275,7 +274,9 @@ class ByFirstArgument(object):
             out.put_line('if (exception_info)')
             with IndentScope(out):
                 out.put_line('exception_info->code = {0};'.format(exception_class_generator.exception_code))
-                out.put_line('exception_info->object_pointer = exception_object.Detach();')
+                out.put_line('exception_info->object_pointer = exception_object.{detach_method}();'.format(
+                    detach_method=self.params.detach_method
+                ))
 
     def __generate_caught_call(self, out: FileGenerator, return_type, method_calls: [str], catch_generator):
         self.__remember_exception_classes()
@@ -299,7 +300,7 @@ class ByFirstArgument(object):
         self.__generate_caught_call(out, return_type, method_calls, ByFirstArgument.__generate_catch)
 
     def generate_callback_call(self, out: FileGenerator, return_type, method_calls: [str]):
-        self.__generate_caught_call(out, return_type, method_calls, ByFirstArgument.__generate_callback_catch_by_value)
+        self.__generate_caught_call(out, return_type, method_calls, self.__generate_callback_catch_by_value)
 
     def include_dependent_implementation_headers(self, file_generator: FileGenerator):
         for exception_class_generator in self.exception_classes:

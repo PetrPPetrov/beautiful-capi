@@ -38,22 +38,22 @@ inline Example::VectorOf<double>::VectorOf()
 
 inline int Example::VectorOf<double>::GetSize() const
 {
-    return example_vector_of_double_get_size(this->get_raw_pointer());
+    return example_vector_of_double_get_size(this->GetRawPointer());
 }
 
 inline void Example::VectorOf<double>::Clear()
 {
-    example_vector_of_double_clear(this->get_raw_pointer());
+    example_vector_of_double_clear(this->GetRawPointer());
 }
 
 inline void Example::VectorOf<double>::PushBack(double value)
 {
-    example_vector_of_double_push_back(this->get_raw_pointer(), value);
+    example_vector_of_double_push_back(this->GetRawPointer(), value);
 }
 
 inline double Example::VectorOf<double>::GetItem(int index) const
 {
-    return example_vector_of_double_get_item(this->get_raw_pointer(), index);
+    return example_vector_of_double_get_item(this->GetRawPointer(), index);
 }
 
 inline Example::VectorOf<double>::VectorOf(const VectorOf<double>& other)
@@ -132,7 +132,7 @@ inline void* Example::VectorOf<double>::Detach()
     return result;
 }
 
-inline void* Example::VectorOf<double>::get_raw_pointer() const
+inline void* Example::VectorOf<double>::GetRawPointer() const
 {
     return mObject;
 }

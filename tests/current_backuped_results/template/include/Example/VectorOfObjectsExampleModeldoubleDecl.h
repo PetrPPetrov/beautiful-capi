@@ -54,7 +54,7 @@ public:
     inline bool IsNotNull() const;
     inline bool operator!() const;
     inline void* Detach();
-    inline void* get_raw_pointer() const;
+    inline void* GetRawPointer() const;
     inline VectorOfObjectsPtr<Example::ModelPtr<double> >* operator->();
     inline const VectorOfObjectsPtr<Example::ModelPtr<double> >* operator->() const;
 protected:

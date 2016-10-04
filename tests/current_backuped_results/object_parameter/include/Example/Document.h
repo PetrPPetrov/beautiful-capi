@@ -39,17 +39,17 @@ inline Example::DocumentPtr::DocumentPtr()
 
 inline void Example::DocumentPtr::Show() const
 {
-    example_document_show(this->get_raw_pointer());
+    example_document_show(this->GetRawPointer());
 }
 
 inline Example::PagePtr Example::DocumentPtr::GetPage() const
 {
-    return Example::PagePtr(Example::PagePtr::force_creating_from_raw_pointer, example_document_get_page(this->get_raw_pointer()), true);
+    return Example::PagePtr(Example::PagePtr::force_creating_from_raw_pointer, example_document_get_page(this->GetRawPointer()), true);
 }
 
 inline void Example::DocumentPtr::SetPage(const Example::PagePtr& value)
 {
-    example_document_set_page(this->get_raw_pointer(), value.get_raw_pointer());
+    example_document_set_page(this->GetRawPointer(), value.GetRawPointer());
 }
 
 inline Example::DocumentPtr::DocumentPtr(const DocumentPtr& other)
@@ -119,7 +119,7 @@ inline void* Example::DocumentPtr::Detach()
     return result;
 }
 
-inline void* Example::DocumentPtr::get_raw_pointer() const
+inline void* Example::DocumentPtr::GetRawPointer() const
 {
     return mObject;
 }

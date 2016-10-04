@@ -39,22 +39,22 @@ inline Example::VectorOf<Example::Position<double> >::VectorOf()
 
 inline int Example::VectorOf<Example::Position<double> >::GetSize() const
 {
-    return example_vector_of_example_position_double_get_size(this->get_raw_pointer());
+    return example_vector_of_example_position_double_get_size(this->GetRawPointer());
 }
 
 inline void Example::VectorOf<Example::Position<double> >::Clear()
 {
-    example_vector_of_example_position_double_clear(this->get_raw_pointer());
+    example_vector_of_example_position_double_clear(this->GetRawPointer());
 }
 
 inline void Example::VectorOf<Example::Position<double> >::PushBack(const Example::Position<double>& value)
 {
-    example_vector_of_example_position_double_push_back(this->get_raw_pointer(), value.get_raw_pointer());
+    example_vector_of_example_position_double_push_back(this->GetRawPointer(), value.GetRawPointer());
 }
 
 inline Example::Position<double> Example::VectorOf<Example::Position<double> >::GetItem(int index) const
 {
-    return Example::Position<double>(Example::Position<double>::force_creating_from_raw_pointer, example_vector_of_example_position_double_get_item(this->get_raw_pointer(), index), false);
+    return Example::Position<double>(Example::Position<double>::force_creating_from_raw_pointer, example_vector_of_example_position_double_get_item(this->GetRawPointer(), index), false);
 }
 
 inline Example::VectorOf<Example::Position<double> >::VectorOf(const VectorOf<Example::Position<double> >& other)
@@ -133,7 +133,7 @@ inline void* Example::VectorOf<Example::Position<double> >::Detach()
     return result;
 }
 
-inline void* Example::VectorOf<Example::Position<double> >::get_raw_pointer() const
+inline void* Example::VectorOf<Example::Position<double> >::GetRawPointer() const
 {
     return mObject;
 }

@@ -51,7 +51,7 @@ public:
     inline bool IsNotNull() const;
     inline bool operator!() const;
     inline void* Detach();
-    inline void* get_raw_pointer() const;
+    inline void* GetRawPointer() const;
 protected:
     inline void SetObject(void* object_pointer);
     void* mObject;

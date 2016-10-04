@@ -35,21 +35,21 @@
 inline void Example::PrinterPtr::Print(const char* text) const
 {
     beautiful_capi_callback_exception_info_t exception_info;
-    example_printer_print(&exception_info, this->get_raw_pointer(), text);
+    example_printer_print(&exception_info, this->GetRawPointer(), text);
     beautiful_capi_Callback::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
 }
 
 inline void Example::PrinterPtr::SetPrintingQuality(Example::PrinterPtr::EQuality quality)
 {
     beautiful_capi_callback_exception_info_t exception_info;
-    example_printer_set_printing_quality(&exception_info, this->get_raw_pointer(), static_cast<int>(quality));
+    example_printer_set_printing_quality(&exception_info, this->GetRawPointer(), static_cast<int>(quality));
     beautiful_capi_Callback::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
 }
 
 inline Example::PrinterPtr::EQuality Example::PrinterPtr::GetPrintingQuality() const
 {
     beautiful_capi_callback_exception_info_t exception_info;
-    Example::PrinterPtr::EQuality result(static_cast<Example::PrinterPtr::EQuality>(example_printer_get_printing_quality(&exception_info, this->get_raw_pointer())));
+    Example::PrinterPtr::EQuality result(static_cast<Example::PrinterPtr::EQuality>(example_printer_get_printing_quality(&exception_info, this->GetRawPointer())));
     beautiful_capi_Callback::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
     return result;
 }
@@ -57,7 +57,7 @@ inline Example::PrinterPtr::EQuality Example::PrinterPtr::GetPrintingQuality() c
 inline Example::EPrintingDevice Example::PrinterPtr::GetDeviceType() const
 {
     beautiful_capi_callback_exception_info_t exception_info;
-    Example::EPrintingDevice result(static_cast<Example::EPrintingDevice>(example_printer_get_device_type(&exception_info, this->get_raw_pointer())));
+    Example::EPrintingDevice result(static_cast<Example::EPrintingDevice>(example_printer_get_device_type(&exception_info, this->GetRawPointer())));
     beautiful_capi_Callback::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
     return result;
 }
@@ -129,7 +129,7 @@ inline void* Example::PrinterPtr::Detach()
     return result;
 }
 
-inline void* Example::PrinterPtr::get_raw_pointer() const
+inline void* Example::PrinterPtr::GetRawPointer() const
 {
     return mObject;
 }

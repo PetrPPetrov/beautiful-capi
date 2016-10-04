@@ -76,6 +76,10 @@ class TBeautifulCapiParams(object):
         self.is_null_method_filled = False
         self.is_not_null_method = "IsNotNull"
         self.is_not_null_method_filled = False
+        self.detach_method = "Detach"
+        self.detach_method_filled = False
+        self.get_raw_pointer_method = "GetRawPointer"
+        self.get_raw_pointer_method_filled = False
         self.delete_method = "Delete"
         self.delete_method_filled = False
         self.snippet_implementation_pointer_usage = "{implementation_name}*"
@@ -152,6 +156,14 @@ class TBeautifulCapiParams(object):
             cur_attr = dom_node.getAttribute("is_not_null_method")
             self.is_not_null_method = cur_attr
             self.is_not_null_method_filled = True
+        if dom_node.hasAttribute("detach_method"):
+            cur_attr = dom_node.getAttribute("detach_method")
+            self.detach_method = cur_attr
+            self.detach_method_filled = True
+        if dom_node.hasAttribute("get_raw_pointer_method"):
+            cur_attr = dom_node.getAttribute("get_raw_pointer_method")
+            self.get_raw_pointer_method = cur_attr
+            self.get_raw_pointer_method_filled = True
         if dom_node.hasAttribute("delete_method"):
             cur_attr = dom_node.getAttribute("delete_method")
             self.delete_method = cur_attr

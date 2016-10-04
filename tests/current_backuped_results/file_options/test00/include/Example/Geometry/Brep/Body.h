@@ -38,12 +38,12 @@ inline Example::Geometry::Brep::Body::Body()
 
 inline const char* Example::Geometry::Brep::Body::GetName()
 {
-    return example_geometry_brep_body_get_name(this->get_raw_pointer());
+    return example_geometry_brep_body_get_name(this->GetRawPointer());
 }
 
 inline void Example::Geometry::Brep::Body::SetName(const char* value)
 {
-    example_geometry_brep_body_set_name(this->get_raw_pointer(), value);
+    example_geometry_brep_body_set_name(this->GetRawPointer(), value);
 }
 
 inline Example::Geometry::Brep::Body::Body(const Body& other)
@@ -122,7 +122,7 @@ inline void* Example::Geometry::Brep::Body::Detach()
     return result;
 }
 
-inline void* Example::Geometry::Brep::Body::get_raw_pointer() const
+inline void* Example::Geometry::Brep::Body::GetRawPointer() const
 {
     return mObject;
 }

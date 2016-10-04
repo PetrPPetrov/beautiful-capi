@@ -43,7 +43,7 @@ inline Example::ScannerPtr::ScannerPtr()
 inline const char* Example::ScannerPtr::ScanText()
 {
     beautiful_capi_exception_exception_info_t exception_info;
-    const char* result(example_scanner_scan_text(&exception_info, this->get_raw_pointer()));
+    const char* result(example_scanner_scan_text(&exception_info, this->GetRawPointer()));
     beautiful_capi_Exception::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
     return result;
 }
@@ -51,13 +51,13 @@ inline const char* Example::ScannerPtr::ScanText()
 inline void Example::ScannerPtr::PowerOn()
 {
     beautiful_capi_exception_exception_info_t exception_info;
-    example_scanner_power_on(&exception_info, this->get_raw_pointer());
+    example_scanner_power_on(&exception_info, this->GetRawPointer());
     beautiful_capi_Exception::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
 }
 
 inline void Example::ScannerPtr::PowerOff()
 {
-    example_scanner_power_off(this->get_raw_pointer());
+    example_scanner_power_off(this->GetRawPointer());
 }
 
 inline Example::ScannerPtr::ScannerPtr(const ScannerPtr& other)
@@ -127,7 +127,7 @@ inline void* Example::ScannerPtr::Detach()
     return result;
 }
 
-inline void* Example::ScannerPtr::get_raw_pointer() const
+inline void* Example::ScannerPtr::GetRawPointer() const
 {
     return mObject;
 }

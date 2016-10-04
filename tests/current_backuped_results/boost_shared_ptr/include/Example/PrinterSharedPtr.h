@@ -38,7 +38,7 @@ inline Example::PrinterSharedPtr::PrinterSharedPtr()
 
 inline void Example::PrinterSharedPtr::Show(const char* text) const
 {
-    example_printer_shared_ptr_show(this->get_raw_pointer(), text);
+    example_printer_shared_ptr_show(this->GetRawPointer(), text);
 }
 
 inline Example::PrinterSharedPtr::PrinterSharedPtr(const PrinterSharedPtr& other)
@@ -117,7 +117,7 @@ inline void* Example::PrinterSharedPtr::Detach()
     return result;
 }
 
-inline void* Example::PrinterSharedPtr::get_raw_pointer() const
+inline void* Example::PrinterSharedPtr::GetRawPointer() const
 {
     return mObject;
 }

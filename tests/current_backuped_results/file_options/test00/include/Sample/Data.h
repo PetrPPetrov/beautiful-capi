@@ -38,12 +38,12 @@ inline Sample::Data::Data()
 
 inline int Sample::Data::GetData()
 {
-    return sample_data_get_data(this->get_raw_pointer());
+    return sample_data_get_data(this->GetRawPointer());
 }
 
 inline void Sample::Data::SetData(int value)
 {
-    sample_data_set_data(this->get_raw_pointer(), value);
+    sample_data_set_data(this->GetRawPointer(), value);
 }
 
 inline Sample::Data::Data(const Data& other)
@@ -122,7 +122,7 @@ inline void* Sample::Data::Detach()
     return result;
 }
 
-inline void* Sample::Data::get_raw_pointer() const
+inline void* Sample::Data::GetRawPointer() const
 {
     return mObject;
 }

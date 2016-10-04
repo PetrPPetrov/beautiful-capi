@@ -14,9 +14,7 @@
 *) use typedef names where it is possible
 *) add runtime check for binary compatibility
 *) clash with argument names ("object_pointer", "self", "exception_info", "result")
-*) get_raw_pointer name customization
 *) c_2_implementation and implementation_2_c customization
-*) remove name attribute from TTemplate structure
 *) place down_cast function to target type namespace
 ===
 *) shuffle Capi mode
@@ -27,12 +25,10 @@
 *) implement combined (dynamic & implib) mode
 *) annotative C api (comments for enum types, typedefs for class types, i.e. typedef void* example_printer_t;)
 ===
-*) general refactoring: too many things in CapiGenerator
 *) callbacks support
   a) customization of generated methods and constructors names (?)
   b) customization of 'noexcept' flags for generated methods and constructors (?)
   c) small influence of life cycle logic to custom callbacks (?)
-  d) process base class methods
 *) support function templates
 *) write more examples and tests:
     +) interoperability example (the same source code works both outside of library and inside the library)
@@ -58,9 +54,5 @@
 *) standard module for wrapping STL classes (a huge topic, maybe start wrapping only some basic things)
 *) standard module for wrapping boost classes (a huge topic, maybe start wrapping only some basic things)
 ===
-*) single file mode: avoid double inclusion of the same header body
-*) single file mode: allow compilation with exceptions, circular references etc.
-*) remove settings which are responsible for file options (?)
-*) use advances from introducing preprocess classes (?)
 *) don't generate dynamic_casts if impl class is not polymorphic
 *) rename "noexcept" to "no_except" (?)

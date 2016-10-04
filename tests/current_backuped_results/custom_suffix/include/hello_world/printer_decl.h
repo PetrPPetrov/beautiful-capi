@@ -48,7 +48,7 @@ public:
     inline bool is_null() const;
     inline bool is_not_null() const;
     inline bool operator!() const;
-    inline void* Detach();
+    inline void* detach();
     inline void* get_raw_pointer() const;
 protected:
     inline void SetObject(void* object_pointer);

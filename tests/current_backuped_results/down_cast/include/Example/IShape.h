@@ -33,7 +33,7 @@
 
 inline void Example::IShapePtr::Show() const
 {
-    example_i_shape_show(this->get_raw_pointer());
+    example_i_shape_show(this->GetRawPointer());
 }
 
 inline Example::IShapePtr::IShapePtr(const IShapePtr& other)
@@ -103,7 +103,7 @@ inline void* Example::IShapePtr::Detach()
     return result;
 }
 
-inline void* Example::IShapePtr::get_raw_pointer() const
+inline void* Example::IShapePtr::GetRawPointer() const
 {
     return mObject;
 }

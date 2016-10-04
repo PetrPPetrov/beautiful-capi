@@ -39,12 +39,12 @@ inline Example::Position4D<float>::Position4D() : Example::Position<float>(Examp
 
 inline float Example::Position4D<float>::GetW() const
 {
-    return example_position4_d_float_get_w(this->get_raw_pointer());
+    return example_position4_d_float_get_w(this->GetRawPointer());
 }
 
 inline void Example::Position4D<float>::SetW(float x)
 {
-    example_position4_d_float_set_w(this->get_raw_pointer(), x);
+    example_position4_d_float_set_w(this->GetRawPointer(), x);
 }
 
 inline Example::Position4D<float>::Position4D(const Position4D<float>& other) : Example::Position<float>(Example::Position<float>::force_creating_from_raw_pointer, 0, false)
@@ -123,7 +123,7 @@ inline void* Example::Position4D<float>::Detach()
     return result;
 }
 
-inline void* Example::Position4D<float>::get_raw_pointer() const
+inline void* Example::Position4D<float>::GetRawPointer() const
 {
     return mObject;
 }

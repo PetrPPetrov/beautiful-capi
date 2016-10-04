@@ -39,22 +39,22 @@ inline Example::ModelPtr<double>::ModelPtr()
 
 inline const char* Example::ModelPtr<double>::GetName() const
 {
-    return example_model_double_get_name(this->get_raw_pointer());
+    return example_model_double_get_name(this->GetRawPointer());
 }
 
 inline void Example::ModelPtr<double>::SetName(const char* name)
 {
-    example_model_double_set_name(this->get_raw_pointer(), name);
+    example_model_double_set_name(this->GetRawPointer(), name);
 }
 
 inline Example::Position<double> Example::ModelPtr<double>::GetPosition() const
 {
-    return Example::Position<double>(Example::Position<double>::force_creating_from_raw_pointer, example_model_double_get_position(this->get_raw_pointer()), false);
+    return Example::Position<double>(Example::Position<double>::force_creating_from_raw_pointer, example_model_double_get_position(this->GetRawPointer()), false);
 }
 
 inline void Example::ModelPtr<double>::SetPosition(const Example::Position<double>& position)
 {
-    example_model_double_set_position(this->get_raw_pointer(), position.get_raw_pointer());
+    example_model_double_set_position(this->GetRawPointer(), position.GetRawPointer());
 }
 
 inline Example::ModelPtr<double>::ModelPtr(const ModelPtr<double>& other)
@@ -124,7 +124,7 @@ inline void* Example::ModelPtr<double>::Detach()
     return result;
 }
 
-inline void* Example::ModelPtr<double>::get_raw_pointer() const
+inline void* Example::ModelPtr<double>::GetRawPointer() const
 {
     return mObject;
 }

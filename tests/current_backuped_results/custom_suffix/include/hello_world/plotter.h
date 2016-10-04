@@ -101,7 +101,7 @@ inline bool hello_world::plotter_ptr::operator!() const
     return !mObject;
 }
 
-inline void* hello_world::plotter_ptr::Detach()
+inline void* hello_world::plotter_ptr::detach()
 {
     void* result = mObject;
     SetObject(0);

@@ -38,12 +38,12 @@ inline Example::Geometry::Sphere::Sphere()
 
 inline double Example::Geometry::Sphere::GetRadius()
 {
-    return example_geometry_sphere_get_radius(this->get_raw_pointer());
+    return example_geometry_sphere_get_radius(this->GetRawPointer());
 }
 
 inline void Example::Geometry::Sphere::SetRadius(double value)
 {
-    example_geometry_sphere_set_radius(this->get_raw_pointer(), value);
+    example_geometry_sphere_set_radius(this->GetRawPointer(), value);
 }
 
 inline Example::Geometry::Sphere::Sphere(const Sphere& other)
@@ -122,7 +122,7 @@ inline void* Example::Geometry::Sphere::Detach()
     return result;
 }
 
-inline void* Example::Geometry::Sphere::get_raw_pointer() const
+inline void* Example::Geometry::Sphere::GetRawPointer() const
 {
     return mObject;
 }

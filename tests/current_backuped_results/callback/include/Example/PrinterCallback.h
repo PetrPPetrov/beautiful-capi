@@ -43,42 +43,42 @@ inline Example::PrinterCallbackPtr::PrinterCallbackPtr() : Example::PrinterPtr(E
 
 inline void Example::PrinterCallbackPtr::SetCFunctionForCopy(example_printer_copy_callback_type c_function_pointer)
 {
-    example_printer_callback_set_c_function_for_copy(this->get_raw_pointer(), c_function_pointer);
+    example_printer_callback_set_c_function_for_copy(this->GetRawPointer(), c_function_pointer);
 }
 
 inline void Example::PrinterCallbackPtr::SetCFunctionForDelete(example_printer_delete_callback_type c_function_pointer)
 {
-    example_printer_callback_set_c_function_for_delete(this->get_raw_pointer(), c_function_pointer);
+    example_printer_callback_set_c_function_for_delete(this->GetRawPointer(), c_function_pointer);
 }
 
 inline void Example::PrinterCallbackPtr::SetObjectPointer(void* custom_object)
 {
-    example_printer_callback_set_object_pointer(this->get_raw_pointer(), custom_object);
+    example_printer_callback_set_object_pointer(this->GetRawPointer(), custom_object);
 }
 
 inline void* Example::PrinterCallbackPtr::GetObjectPointer() const
 {
-    return example_printer_callback_get_object_pointer(this->get_raw_pointer());
+    return example_printer_callback_get_object_pointer(this->GetRawPointer());
 }
 
 inline void Example::PrinterCallbackPtr::SetCFunctionForPrint(example_printer_print_callback_type c_function_pointer)
 {
-    example_printer_callback_set_c_function_for_print(this->get_raw_pointer(), c_function_pointer);
+    example_printer_callback_set_c_function_for_print(this->GetRawPointer(), c_function_pointer);
 }
 
 inline void Example::PrinterCallbackPtr::SetCFunctionForSetPrintingQuality(example_printer_set_printing_quality_callback_type c_function_pointer)
 {
-    example_printer_callback_set_c_function_for_set_printing_quality(this->get_raw_pointer(), c_function_pointer);
+    example_printer_callback_set_c_function_for_set_printing_quality(this->GetRawPointer(), c_function_pointer);
 }
 
 inline void Example::PrinterCallbackPtr::SetCFunctionForGetPrintingQuality(example_printer_get_printing_quality_callback_type c_function_pointer)
 {
-    example_printer_callback_set_c_function_for_get_printing_quality(this->get_raw_pointer(), c_function_pointer);
+    example_printer_callback_set_c_function_for_get_printing_quality(this->GetRawPointer(), c_function_pointer);
 }
 
 inline void Example::PrinterCallbackPtr::SetCFunctionForGetDeviceType(example_printer_get_device_type_callback_type c_function_pointer)
 {
-    example_printer_callback_set_c_function_for_get_device_type(this->get_raw_pointer(), c_function_pointer);
+    example_printer_callback_set_c_function_for_get_device_type(this->GetRawPointer(), c_function_pointer);
 }
 
 inline Example::PrinterCallbackPtr::PrinterCallbackPtr(const PrinterCallbackPtr& other) : Example::PrinterPtr(Example::PrinterPtr::force_creating_from_raw_pointer, 0, false)
@@ -148,7 +148,7 @@ inline void* Example::PrinterCallbackPtr::Detach()
     return result;
 }
 
-inline void* Example::PrinterCallbackPtr::get_raw_pointer() const
+inline void* Example::PrinterCallbackPtr::GetRawPointer() const
 {
     return mObject;
 }
@@ -181,7 +181,7 @@ namespace Example {
 template<>
 inline Example::PrinterCallbackPtr down_cast<Example::PrinterCallbackPtr>(const Example::PrinterPtr& source_object)
 {
-    return Example::PrinterCallbackPtr(Example::PrinterCallbackPtr::force_creating_from_raw_pointer, example_printer_cast_to_example_printer_callback(source_object.get_raw_pointer()), true);
+    return Example::PrinterCallbackPtr(Example::PrinterCallbackPtr::force_creating_from_raw_pointer, example_printer_cast_to_example_printer_callback(source_object.GetRawPointer()), true);
 }
 
 }

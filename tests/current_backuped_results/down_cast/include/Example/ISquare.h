@@ -34,7 +34,7 @@
 
 inline void Example::ISquarePtr::SetSize(double size)
 {
-    example_i_square_set_size(this->get_raw_pointer(), size);
+    example_i_square_set_size(this->GetRawPointer(), size);
 }
 
 inline Example::ISquarePtr::ISquarePtr(const ISquarePtr& other) : Example::IPolygonPtr(Example::IPolygonPtr::force_creating_from_raw_pointer, 0, false)
@@ -104,7 +104,7 @@ inline void* Example::ISquarePtr::Detach()
     return result;
 }
 
-inline void* Example::ISquarePtr::get_raw_pointer() const
+inline void* Example::ISquarePtr::GetRawPointer() const
 {
     return mObject;
 }
@@ -137,7 +137,7 @@ namespace Example {
 template<>
 inline Example::ISquarePtr down_cast<Example::ISquarePtr>(const Example::IShapePtr& source_object)
 {
-    return Example::ISquarePtr(Example::ISquarePtr::force_creating_from_raw_pointer, example_i_shape_cast_to_example_i_square(source_object.get_raw_pointer()), true);
+    return Example::ISquarePtr(Example::ISquarePtr::force_creating_from_raw_pointer, example_i_shape_cast_to_example_i_square(source_object.GetRawPointer()), true);
 }
 
 }
@@ -147,7 +147,7 @@ namespace Example {
 template<>
 inline Example::ISquarePtr down_cast<Example::ISquarePtr>(const Example::IPolygonPtr& source_object)
 {
-    return Example::ISquarePtr(Example::ISquarePtr::force_creating_from_raw_pointer, example_i_polygon_cast_to_example_i_square(source_object.get_raw_pointer()), true);
+    return Example::ISquarePtr(Example::ISquarePtr::force_creating_from_raw_pointer, example_i_polygon_cast_to_example_i_square(source_object.GetRawPointer()), true);
 }
 
 }

@@ -7,6 +7,8 @@
                wrapper_class_suffix_raw_pointer="_raw_ptr"
                forward_typedef_suffix="_fwd_ptr"
                is_null_method="is_null" is_not_null_method="is_not_null"
+               detach_method="detach"
+               get_raw_pointer_method="get_raw_pointer"
                delete_method="deallocate">
   <copyright_header>/*
  * Beautiful Capi generates beautiful C API wrappers for your C++ classes

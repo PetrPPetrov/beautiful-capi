@@ -39,12 +39,12 @@ inline Example::Position4D<double>::Position4D() : Example::Position<double>(Exa
 
 inline double Example::Position4D<double>::GetW() const
 {
-    return example_position4_d_double_get_w(this->get_raw_pointer());
+    return example_position4_d_double_get_w(this->GetRawPointer());
 }
 
 inline void Example::Position4D<double>::SetW(double x)
 {
-    example_position4_d_double_set_w(this->get_raw_pointer(), x);
+    example_position4_d_double_set_w(this->GetRawPointer(), x);
 }
 
 inline Example::Position4D<double>::Position4D(const Position4D<double>& other) : Example::Position<double>(Example::Position<double>::force_creating_from_raw_pointer, 0, false)
@@ -123,7 +123,7 @@ inline void* Example::Position4D<double>::Detach()
     return result;
 }
 
-inline void* Example::Position4D<double>::get_raw_pointer() const
+inline void* Example::Position4D<double>::GetRawPointer() const
 {
     return mObject;
 }

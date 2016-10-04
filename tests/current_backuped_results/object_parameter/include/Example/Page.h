@@ -38,22 +38,22 @@ inline Example::PagePtr::PagePtr()
 
 inline size_t Example::PagePtr::GetWidth() const
 {
-    return example_page_get_width(this->get_raw_pointer());
+    return example_page_get_width(this->GetRawPointer());
 }
 
 inline size_t Example::PagePtr::GetHeight() const
 {
-    return example_page_get_height(this->get_raw_pointer());
+    return example_page_get_height(this->GetRawPointer());
 }
 
 inline void Example::PagePtr::SetWidth(size_t value)
 {
-    example_page_set_width(this->get_raw_pointer(), value);
+    example_page_set_width(this->GetRawPointer(), value);
 }
 
 inline void Example::PagePtr::SetHeight(size_t value)
 {
-    example_page_set_height(this->get_raw_pointer(), value);
+    example_page_set_height(this->GetRawPointer(), value);
 }
 
 inline Example::PagePtr::PagePtr(const PagePtr& other)
@@ -123,7 +123,7 @@ inline void* Example::PagePtr::Detach()
     return result;
 }
 
-inline void* Example::PagePtr::get_raw_pointer() const
+inline void* Example::PagePtr::GetRawPointer() const
 {
     return mObject;
 }

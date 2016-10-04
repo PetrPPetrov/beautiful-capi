@@ -34,7 +34,7 @@
 
 inline void Example::ICirclePtr::SetRadius(double radius)
 {
-    example_i_circle_set_radius(this->get_raw_pointer(), radius);
+    example_i_circle_set_radius(this->GetRawPointer(), radius);
 }
 
 inline Example::ICirclePtr::ICirclePtr(const ICirclePtr& other) : Example::IShapePtr(Example::IShapePtr::force_creating_from_raw_pointer, 0, false)
@@ -104,7 +104,7 @@ inline void* Example::ICirclePtr::Detach()
     return result;
 }
 
-inline void* Example::ICirclePtr::get_raw_pointer() const
+inline void* Example::ICirclePtr::GetRawPointer() const
 {
     return mObject;
 }
@@ -137,7 +137,7 @@ namespace Example {
 template<>
 inline Example::ICirclePtr down_cast<Example::ICirclePtr>(const Example::IShapePtr& source_object)
 {
-    return Example::ICirclePtr(Example::ICirclePtr::force_creating_from_raw_pointer, example_i_shape_cast_to_example_i_circle(source_object.get_raw_pointer()), true);
+    return Example::ICirclePtr(Example::ICirclePtr::force_creating_from_raw_pointer, example_i_shape_cast_to_example_i_circle(source_object.GetRawPointer()), true);
 }
 
 }

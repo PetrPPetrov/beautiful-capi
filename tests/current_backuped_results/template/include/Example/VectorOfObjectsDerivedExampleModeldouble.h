@@ -39,7 +39,7 @@ inline Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<double> >::VectorOfO
 
 inline int Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<double> >::GetA() const
 {
-    return example_vector_of_objects_derived_example_model_double_get_a(this->get_raw_pointer());
+    return example_vector_of_objects_derived_example_model_double_get_a(this->GetRawPointer());
 }
 
 inline Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<double> >::VectorOfObjectsDerivedPtr(const VectorOfObjectsDerivedPtr<Example::ModelPtr<double> >& other) : Example::VectorOfObjectsPtr<Example::ModelPtr<double> >(Example::VectorOfObjectsPtr<Example::ModelPtr<double> >::force_creating_from_raw_pointer, 0, false)
@@ -109,7 +109,7 @@ inline void* Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<double> >::Det
     return result;
 }
 
-inline void* Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<double> >::get_raw_pointer() const
+inline void* Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<double> >::GetRawPointer() const
 {
     return mObject;
 }
@@ -142,7 +142,7 @@ namespace Example {
 template<>
 inline Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<double> > down_cast<Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<double> >>(const Example::VectorOfObjectsPtr<Example::ModelPtr<double> >& source_object)
 {
-    return Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<double> >(Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<double> >::force_creating_from_raw_pointer, example_vector_of_objects_example_model_double_cast_to_example_vector_of_objects_derived_example_model_double(source_object.get_raw_pointer()), true);
+    return Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<double> >(Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<double> >::force_creating_from_raw_pointer, example_vector_of_objects_example_model_double_cast_to_example_vector_of_objects_derived_example_model_double(source_object.GetRawPointer()), true);
 }
 
 }

@@ -39,22 +39,22 @@ inline Example::VectorOf<Example::Position4D<float> >::VectorOf()
 
 inline int Example::VectorOf<Example::Position4D<float> >::GetSize() const
 {
-    return example_vector_of_example_position4_d_float_get_size(this->get_raw_pointer());
+    return example_vector_of_example_position4_d_float_get_size(this->GetRawPointer());
 }
 
 inline void Example::VectorOf<Example::Position4D<float> >::Clear()
 {
-    example_vector_of_example_position4_d_float_clear(this->get_raw_pointer());
+    example_vector_of_example_position4_d_float_clear(this->GetRawPointer());
 }
 
 inline void Example::VectorOf<Example::Position4D<float> >::PushBack(const Example::Position4D<float>& value)
 {
-    example_vector_of_example_position4_d_float_push_back(this->get_raw_pointer(), value.get_raw_pointer());
+    example_vector_of_example_position4_d_float_push_back(this->GetRawPointer(), value.GetRawPointer());
 }
 
 inline Example::Position4D<float> Example::VectorOf<Example::Position4D<float> >::GetItem(int index) const
 {
-    return Example::Position4D<float>(Example::Position4D<float>::force_creating_from_raw_pointer, example_vector_of_example_position4_d_float_get_item(this->get_raw_pointer(), index), false);
+    return Example::Position4D<float>(Example::Position4D<float>::force_creating_from_raw_pointer, example_vector_of_example_position4_d_float_get_item(this->GetRawPointer(), index), false);
 }
 
 inline Example::VectorOf<Example::Position4D<float> >::VectorOf(const VectorOf<Example::Position4D<float> >& other)
@@ -133,7 +133,7 @@ inline void* Example::VectorOf<Example::Position4D<float> >::Detach()
     return result;
 }
 
-inline void* Example::VectorOf<Example::Position4D<float> >::get_raw_pointer() const
+inline void* Example::VectorOf<Example::Position4D<float> >::GetRawPointer() const
 {
     return mObject;
 }

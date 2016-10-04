@@ -81,7 +81,7 @@ inline bool hello_world::scanner_raw_ptr::operator!() const
     return !mObject;
 }
 
-inline void* hello_world::scanner_raw_ptr::Detach()
+inline void* hello_world::scanner_raw_ptr::detach()
 {
     void* result = mObject;
     SetObject(0);

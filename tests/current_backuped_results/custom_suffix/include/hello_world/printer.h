@@ -110,7 +110,7 @@ inline bool hello_world::printer::operator!() const
     return !mObject;
 }
 
-inline void* hello_world::printer::Detach()
+inline void* hello_world::printer::detach()
 {
     void* result = mObject;
     SetObject(0);

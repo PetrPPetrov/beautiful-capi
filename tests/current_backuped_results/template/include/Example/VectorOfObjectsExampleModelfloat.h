@@ -39,22 +39,22 @@ inline Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::VectorOfObjectsPt
 
 inline int Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::GetSize() const
 {
-    return example_vector_of_objects_example_model_float_get_size(this->get_raw_pointer());
+    return example_vector_of_objects_example_model_float_get_size(this->GetRawPointer());
 }
 
 inline void Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::Clear()
 {
-    example_vector_of_objects_example_model_float_clear(this->get_raw_pointer());
+    example_vector_of_objects_example_model_float_clear(this->GetRawPointer());
 }
 
 inline void Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::PushBack(const Example::ModelPtr<float>& value)
 {
-    example_vector_of_objects_example_model_float_push_back(this->get_raw_pointer(), value.get_raw_pointer());
+    example_vector_of_objects_example_model_float_push_back(this->GetRawPointer(), value.GetRawPointer());
 }
 
 inline Example::ModelPtr<float> Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::GetItem(int index) const
 {
-    return Example::ModelPtr<float>(Example::ModelPtr<float>::force_creating_from_raw_pointer, example_vector_of_objects_example_model_float_get_item(this->get_raw_pointer(), index), true);
+    return Example::ModelPtr<float>(Example::ModelPtr<float>::force_creating_from_raw_pointer, example_vector_of_objects_example_model_float_get_item(this->GetRawPointer(), index), true);
 }
 
 inline Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::VectorOfObjectsPtr(const VectorOfObjectsPtr<Example::ModelPtr<float> >& other)
@@ -124,7 +124,7 @@ inline void* Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::Detach()
     return result;
 }
 
-inline void* Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::get_raw_pointer() const
+inline void* Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::GetRawPointer() const
 {
     return mObject;
 }

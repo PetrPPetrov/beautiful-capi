@@ -38,12 +38,12 @@ inline Example::Scene::Node::Node()
 
 inline const char* Example::Scene::Node::GetName()
 {
-    return example_scene_node_get_name(this->get_raw_pointer());
+    return example_scene_node_get_name(this->GetRawPointer());
 }
 
 inline void Example::Scene::Node::SetName(const char* value)
 {
-    example_scene_node_set_name(this->get_raw_pointer(), value);
+    example_scene_node_set_name(this->GetRawPointer(), value);
 }
 
 inline Example::Scene::Node::Node(const Node& other)
@@ -122,7 +122,7 @@ inline void* Example::Scene::Node::Detach()
     return result;
 }
 
-inline void* Example::Scene::Node::get_raw_pointer() const
+inline void* Example::Scene::Node::GetRawPointer() const
 {
     return mObject;
 }

@@ -39,22 +39,22 @@ inline PointSet::PointSetPtr::PointSetPtr()
 
 inline const char* PointSet::PointSetPtr::GetName() const
 {
-    return point_set_point_set_get_name(this->get_raw_pointer());
+    return point_set_point_set_get_name(this->GetRawPointer());
 }
 
 inline void PointSet::PointSetPtr::SetName(const char* name)
 {
-    point_set_point_set_set_name(this->get_raw_pointer(), name);
+    point_set_point_set_set_name(this->GetRawPointer(), name);
 }
 
 inline PointSet::PointsPtr PointSet::PointSetPtr::GetPoints() const
 {
-    return PointSet::PointsPtr(PointSet::PointsPtr::force_creating_from_raw_pointer, point_set_point_set_get_points(this->get_raw_pointer()), true);
+    return PointSet::PointsPtr(PointSet::PointsPtr::force_creating_from_raw_pointer, point_set_point_set_get_points(this->GetRawPointer()), true);
 }
 
 inline void PointSet::PointSetPtr::SetPoints(const PointSet::PointsPtr& value)
 {
-    point_set_point_set_set_points(this->get_raw_pointer(), value.get_raw_pointer());
+    point_set_point_set_set_points(this->GetRawPointer(), value.GetRawPointer());
 }
 
 inline PointSet::PointSetPtr::PointSetPtr(const PointSetPtr& other)
@@ -124,7 +124,7 @@ inline void* PointSet::PointSetPtr::Detach()
     return result;
 }
 
-inline void* PointSet::PointSetPtr::get_raw_pointer() const
+inline void* PointSet::PointSetPtr::GetRawPointer() const
 {
     return mObject;
 }

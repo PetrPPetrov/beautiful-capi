@@ -34,7 +34,7 @@
 
 inline int Example::IPolygonPtr::GetPointsCount() const
 {
-    return example_i_polygon_get_points_count(this->get_raw_pointer());
+    return example_i_polygon_get_points_count(this->GetRawPointer());
 }
 
 inline Example::IPolygonPtr::IPolygonPtr(const IPolygonPtr& other) : Example::IShapePtr(Example::IShapePtr::force_creating_from_raw_pointer, 0, false)
@@ -104,7 +104,7 @@ inline void* Example::IPolygonPtr::Detach()
     return result;
 }
 
-inline void* Example::IPolygonPtr::get_raw_pointer() const
+inline void* Example::IPolygonPtr::GetRawPointer() const
 {
     return mObject;
 }
@@ -137,7 +137,7 @@ namespace Example {
 template<>
 inline Example::IPolygonPtr down_cast<Example::IPolygonPtr>(const Example::IShapePtr& source_object)
 {
-    return Example::IPolygonPtr(Example::IPolygonPtr::force_creating_from_raw_pointer, example_i_shape_cast_to_example_i_polygon(source_object.get_raw_pointer()), true);
+    return Example::IPolygonPtr(Example::IPolygonPtr::force_creating_from_raw_pointer, example_i_shape_cast_to_example_i_polygon(source_object.GetRawPointer()), true);
 }
 
 }

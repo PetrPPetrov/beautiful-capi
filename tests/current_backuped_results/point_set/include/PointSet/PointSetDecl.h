@@ -53,7 +53,7 @@ public:
     inline bool IsNotNull() const;
     inline bool operator!() const;
     inline void* Detach();
-    inline void* get_raw_pointer() const;
+    inline void* GetRawPointer() const;
     inline PointSetPtr* operator->();
     inline const PointSetPtr* operator->() const;
 protected:

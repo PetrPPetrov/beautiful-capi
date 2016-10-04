@@ -24,6 +24,8 @@
     <xs:attribute name="wrapper_class_suffix_raw_pointer" type="xs:string" use="optional" default="RawPtr"/>
     <xs:attribute name="is_null_method" type="xs:string" use="optional" default="IsNull"/>
     <xs:attribute name="is_not_null_method" type="xs:string" use="optional" default="IsNotNull"/>
+    <xs:attribute name="detach_method" type="xs:string" use="optional" default="Detach"/>
+    <xs:attribute name="get_raw_pointer_method" type="xs:string" use="optional" default="GetRawPointer"/>
     <xs:attribute name="delete_method" type="xs:string" use="optional" default="Delete"/>
     <xs:attribute name="snippet_implementation_pointer_usage" type="xs:string" use="optional" default="{implementation_name}*"/>
     <xs:attribute name="snippet_implementation_value_usage" type="xs:string" use="optional" default="{implementation_name}"/>

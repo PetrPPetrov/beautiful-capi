@@ -39,37 +39,37 @@ inline PointSet::PointsPtr::PointsPtr()
 
 inline size_t PointSet::PointsPtr::Size() const
 {
-    return point_set_points_size(this->get_raw_pointer());
+    return point_set_points_size(this->GetRawPointer());
 }
 
 inline void PointSet::PointsPtr::Reserve(size_t capacity)
 {
-    point_set_points_reserve(this->get_raw_pointer(), capacity);
+    point_set_points_reserve(this->GetRawPointer(), capacity);
 }
 
 inline void PointSet::PointsPtr::Resize(size_t size, const PointSet::Position& default_value)
 {
-    point_set_points_resize(this->get_raw_pointer(), size, default_value.get_raw_pointer());
+    point_set_points_resize(this->GetRawPointer(), size, default_value.GetRawPointer());
 }
 
 inline PointSet::Position PointSet::PointsPtr::GetElement(size_t index) const
 {
-    return PointSet::Position(PointSet::Position::force_creating_from_raw_pointer, point_set_points_get_element(this->get_raw_pointer(), index), false);
+    return PointSet::Position(PointSet::Position::force_creating_from_raw_pointer, point_set_points_get_element(this->GetRawPointer(), index), false);
 }
 
 inline void PointSet::PointsPtr::SetElement(size_t index, const PointSet::Position& value)
 {
-    point_set_points_set_element(this->get_raw_pointer(), index, value.get_raw_pointer());
+    point_set_points_set_element(this->GetRawPointer(), index, value.GetRawPointer());
 }
 
 inline void PointSet::PointsPtr::PushBack(const PointSet::Position& value)
 {
-    point_set_points_push_back(this->get_raw_pointer(), value.get_raw_pointer());
+    point_set_points_push_back(this->GetRawPointer(), value.GetRawPointer());
 }
 
 inline void PointSet::PointsPtr::Clear()
 {
-    point_set_points_clear(this->get_raw_pointer());
+    point_set_points_clear(this->GetRawPointer());
 }
 
 inline PointSet::PointsPtr::PointsPtr(const PointsPtr& other)
@@ -139,7 +139,7 @@ inline void* PointSet::PointsPtr::Detach()
     return result;
 }
 
-inline void* PointSet::PointsPtr::get_raw_pointer() const
+inline void* PointSet::PointsPtr::GetRawPointer() const
 {
     return mObject;
 }

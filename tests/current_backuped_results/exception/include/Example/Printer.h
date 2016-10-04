@@ -43,7 +43,7 @@ inline Example::Printer::Printer()
 inline const char* Example::Printer::Show(const char* text)
 {
     beautiful_capi_exception_exception_info_t exception_info;
-    const char* result(example_printer_show(&exception_info, this->get_raw_pointer(), text));
+    const char* result(example_printer_show(&exception_info, this->GetRawPointer(), text));
     beautiful_capi_Exception::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
     return result;
 }
@@ -51,13 +51,13 @@ inline const char* Example::Printer::Show(const char* text)
 inline void Example::Printer::PowerOn()
 {
     beautiful_capi_exception_exception_info_t exception_info;
-    example_printer_power_on(&exception_info, this->get_raw_pointer());
+    example_printer_power_on(&exception_info, this->GetRawPointer());
     beautiful_capi_Exception::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
 }
 
 inline void Example::Printer::PowerOff()
 {
-    example_printer_power_off(this->get_raw_pointer());
+    example_printer_power_off(this->GetRawPointer());
 }
 
 inline Example::Printer::Printer(const Printer& other)
@@ -145,7 +145,7 @@ inline void* Example::Printer::Detach()
     return result;
 }
 
-inline void* Example::Printer::get_raw_pointer() const
+inline void* Example::Printer::GetRawPointer() const
 {
     return mObject;
 }

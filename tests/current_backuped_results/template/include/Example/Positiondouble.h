@@ -38,32 +38,32 @@ inline Example::Position<double>::Position()
 
 inline double Example::Position<double>::GetX() const
 {
-    return example_position_double_get_x(this->get_raw_pointer());
+    return example_position_double_get_x(this->GetRawPointer());
 }
 
 inline void Example::Position<double>::SetX(double x)
 {
-    example_position_double_set_x(this->get_raw_pointer(), x);
+    example_position_double_set_x(this->GetRawPointer(), x);
 }
 
 inline double Example::Position<double>::GetY() const
 {
-    return example_position_double_get_y(this->get_raw_pointer());
+    return example_position_double_get_y(this->GetRawPointer());
 }
 
 inline void Example::Position<double>::SetY(double y)
 {
-    example_position_double_set_y(this->get_raw_pointer(), y);
+    example_position_double_set_y(this->GetRawPointer(), y);
 }
 
 inline double Example::Position<double>::GetZ() const
 {
-    return example_position_double_get_z(this->get_raw_pointer());
+    return example_position_double_get_z(this->GetRawPointer());
 }
 
 inline void Example::Position<double>::SetZ(double z)
 {
-    example_position_double_set_z(this->get_raw_pointer(), z);
+    example_position_double_set_z(this->GetRawPointer(), z);
 }
 
 inline Example::Position<double>::Position(const Position<double>& other)
@@ -142,7 +142,7 @@ inline void* Example::Position<double>::Detach()
     return result;
 }
 
-inline void* Example::Position<double>::get_raw_pointer() const
+inline void* Example::Position<double>::GetRawPointer() const
 {
     return mObject;
 }

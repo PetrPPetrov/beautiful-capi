@@ -48,7 +48,7 @@ public:
     inline bool IsNotNull() const;
     inline bool operator!() const;
     inline void* Detach();
-    inline void* get_raw_pointer() const;
+    inline void* GetRawPointer() const;
     inline IShapePtr* operator->();
     inline const IShapePtr* operator->() const;
 protected:

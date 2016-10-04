@@ -38,7 +38,7 @@ inline Example::PrinterPtr::PrinterPtr()
 
 inline void Example::PrinterPtr::Show(const char* text) const
 {
-    example_printer_show(this->get_raw_pointer(), text);
+    example_printer_show(this->GetRawPointer(), text);
 }
 
 inline Example::PrinterPtr::PrinterPtr(const PrinterPtr& other)
@@ -108,7 +108,7 @@ inline void* Example::PrinterPtr::Detach()
     return result;
 }
 
-inline void* Example::PrinterPtr::get_raw_pointer() const
+inline void* Example::PrinterPtr::GetRawPointer() const
 {
     return mObject;
 }

@@ -44,14 +44,14 @@ inline Example::Person::Person()
 inline void Example::Person::SetFirstName(const char* first_name)
 {
     beautiful_capi_callback_exception_info_t exception_info;
-    example_person_set_first_name(&exception_info, this->get_raw_pointer(), first_name);
+    example_person_set_first_name(&exception_info, this->GetRawPointer(), first_name);
     beautiful_capi_Callback::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
 }
 
 inline const char* Example::Person::GetFirstName() const
 {
     beautiful_capi_callback_exception_info_t exception_info;
-    const char* result(example_person_get_first_name(&exception_info, this->get_raw_pointer()));
+    const char* result(example_person_get_first_name(&exception_info, this->GetRawPointer()));
     beautiful_capi_Callback::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
     return result;
 }
@@ -59,14 +59,14 @@ inline const char* Example::Person::GetFirstName() const
 inline void Example::Person::SetSecondName(const char* second_name)
 {
     beautiful_capi_callback_exception_info_t exception_info;
-    example_person_set_second_name(&exception_info, this->get_raw_pointer(), second_name);
+    example_person_set_second_name(&exception_info, this->GetRawPointer(), second_name);
     beautiful_capi_Callback::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
 }
 
 inline const char* Example::Person::GetSecondName() const
 {
     beautiful_capi_callback_exception_info_t exception_info;
-    const char* result(example_person_get_second_name(&exception_info, this->get_raw_pointer()));
+    const char* result(example_person_get_second_name(&exception_info, this->GetRawPointer()));
     beautiful_capi_Callback::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
     return result;
 }
@@ -74,14 +74,14 @@ inline const char* Example::Person::GetSecondName() const
 inline void Example::Person::SetAge(unsigned int age)
 {
     beautiful_capi_callback_exception_info_t exception_info;
-    example_person_set_age(&exception_info, this->get_raw_pointer(), age);
+    example_person_set_age(&exception_info, this->GetRawPointer(), age);
     beautiful_capi_Callback::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
 }
 
 inline unsigned int Example::Person::GetAge() const
 {
     beautiful_capi_callback_exception_info_t exception_info;
-    unsigned int result(example_person_get_age(&exception_info, this->get_raw_pointer()));
+    unsigned int result(example_person_get_age(&exception_info, this->GetRawPointer()));
     beautiful_capi_Callback::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
     return result;
 }
@@ -89,14 +89,14 @@ inline unsigned int Example::Person::GetAge() const
 inline void Example::Person::SetSex(Example::Person::ESex sex)
 {
     beautiful_capi_callback_exception_info_t exception_info;
-    example_person_set_sex(&exception_info, this->get_raw_pointer(), static_cast<char>(sex));
+    example_person_set_sex(&exception_info, this->GetRawPointer(), static_cast<char>(sex));
     beautiful_capi_Callback::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
 }
 
 inline Example::Person::ESex Example::Person::GetSex() const
 {
     beautiful_capi_callback_exception_info_t exception_info;
-    Example::Person::ESex result(static_cast<Example::Person::ESex>(example_person_get_sex(&exception_info, this->get_raw_pointer())));
+    Example::Person::ESex result(static_cast<Example::Person::ESex>(example_person_get_sex(&exception_info, this->GetRawPointer())));
     beautiful_capi_Callback::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
     return result;
 }
@@ -104,14 +104,14 @@ inline Example::Person::ESex Example::Person::GetSex() const
 inline void Example::Person::Dump(const Example::PrinterPtr& printer) const
 {
     beautiful_capi_callback_exception_info_t exception_info;
-    example_person_dump(&exception_info, this->get_raw_pointer(), printer.get_raw_pointer());
+    example_person_dump(&exception_info, this->GetRawPointer(), printer.GetRawPointer());
     beautiful_capi_Callback::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
 }
 
 inline void Example::Person::Print(const Example::PrinterPtr& printer, const char* text) const
 {
     beautiful_capi_callback_exception_info_t exception_info;
-    example_person_print(&exception_info, this->get_raw_pointer(), printer.get_raw_pointer(), text);
+    example_person_print(&exception_info, this->GetRawPointer(), printer.GetRawPointer(), text);
     beautiful_capi_Callback::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
 }
 
@@ -200,7 +200,7 @@ inline void* Example::Person::Detach()
     return result;
 }
 
-inline void* Example::Person::get_raw_pointer() const
+inline void* Example::Person::GetRawPointer() const
 {
     return mObject;
 }

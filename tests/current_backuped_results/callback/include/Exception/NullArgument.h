@@ -126,7 +126,7 @@ inline void* Exception::NullArgument::Detach()
     return result;
 }
 
-inline void* Exception::NullArgument::get_raw_pointer() const
+inline void* Exception::NullArgument::GetRawPointer() const
 {
     return mObject;
 }

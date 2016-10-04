@@ -39,22 +39,22 @@ inline Example::ModelPtr<float>::ModelPtr()
 
 inline const char* Example::ModelPtr<float>::GetName() const
 {
-    return example_model_float_get_name(this->get_raw_pointer());
+    return example_model_float_get_name(this->GetRawPointer());
 }
 
 inline void Example::ModelPtr<float>::SetName(const char* name)
 {
-    example_model_float_set_name(this->get_raw_pointer(), name);
+    example_model_float_set_name(this->GetRawPointer(), name);
 }
 
 inline Example::Position<float> Example::ModelPtr<float>::GetPosition() const
 {
-    return Example::Position<float>(Example::Position<float>::force_creating_from_raw_pointer, example_model_float_get_position(this->get_raw_pointer()), false);
+    return Example::Position<float>(Example::Position<float>::force_creating_from_raw_pointer, example_model_float_get_position(this->GetRawPointer()), false);
 }
 
 inline void Example::ModelPtr<float>::SetPosition(const Example::Position<float>& position)
 {
-    example_model_float_set_position(this->get_raw_pointer(), position.get_raw_pointer());
+    example_model_float_set_position(this->GetRawPointer(), position.GetRawPointer());
 }
 
 inline Example::ModelPtr<float>::ModelPtr(const ModelPtr<float>& other)
@@ -124,7 +124,7 @@ inline void* Example::ModelPtr<float>::Detach()
     return result;
 }
 
-inline void* Example::ModelPtr<float>::get_raw_pointer() const
+inline void* Example::ModelPtr<float>::GetRawPointer() const
 {
     return mObject;
 }

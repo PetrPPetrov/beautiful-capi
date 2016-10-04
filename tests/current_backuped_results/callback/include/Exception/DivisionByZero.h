@@ -126,7 +126,7 @@ inline void* Exception::DivisionByZero::Detach()
     return result;
 }
 
-inline void* Exception::DivisionByZero::get_raw_pointer() const
+inline void* Exception::DivisionByZero::GetRawPointer() const
 {
     return mObject;
 }

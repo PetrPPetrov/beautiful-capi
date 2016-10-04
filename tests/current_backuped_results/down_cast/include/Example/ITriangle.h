@@ -34,7 +34,7 @@
 
 inline void Example::ITrianglePtr::SetPoints(double x1, double y1, double x2, double y2, double x3, double y3)
 {
-    example_i_triangle_set_points(this->get_raw_pointer(), x1, y1, x2, y2, x3, y3);
+    example_i_triangle_set_points(this->GetRawPointer(), x1, y1, x2, y2, x3, y3);
 }
 
 inline Example::ITrianglePtr::ITrianglePtr(const ITrianglePtr& other) : Example::IPolygonPtr(Example::IPolygonPtr::force_creating_from_raw_pointer, 0, false)
@@ -104,7 +104,7 @@ inline void* Example::ITrianglePtr::Detach()
     return result;
 }
 
-inline void* Example::ITrianglePtr::get_raw_pointer() const
+inline void* Example::ITrianglePtr::GetRawPointer() const
 {
     return mObject;
 }
@@ -137,7 +137,7 @@ namespace Example {
 template<>
 inline Example::ITrianglePtr down_cast<Example::ITrianglePtr>(const Example::IShapePtr& source_object)
 {
-    return Example::ITrianglePtr(Example::ITrianglePtr::force_creating_from_raw_pointer, example_i_shape_cast_to_example_i_triangle(source_object.get_raw_pointer()), true);
+    return Example::ITrianglePtr(Example::ITrianglePtr::force_creating_from_raw_pointer, example_i_shape_cast_to_example_i_triangle(source_object.GetRawPointer()), true);
 }
 
 }
@@ -147,7 +147,7 @@ namespace Example {
 template<>
 inline Example::ITrianglePtr down_cast<Example::ITrianglePtr>(const Example::IPolygonPtr& source_object)
 {
-    return Example::ITrianglePtr(Example::ITrianglePtr::force_creating_from_raw_pointer, example_i_polygon_cast_to_example_i_triangle(source_object.get_raw_pointer()), true);
+    return Example::ITrianglePtr(Example::ITrianglePtr::force_creating_from_raw_pointer, example_i_polygon_cast_to_example_i_triangle(source_object.GetRawPointer()), true);
 }
 
 }
