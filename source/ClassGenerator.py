@@ -250,6 +250,10 @@ class ClassGenerator(object):
             declaration_header.put_line('class {name}'.format(name=self.wrap_name))
         with IndentScope(declaration_header, '};'):
             self.__generate_class_body(declaration_header)
+        if self.class_object.typedef_name:
+            declaration_header.put_line('typedef {wrap_name} {typedef}'.format(
+                wrap_name=self.wrap_name, typedef=self.class_object.typedef_name
+            ))
         self.__generate_down_cast_template_declaration(declaration_header)
         self.__generate_callback_lifecycle_traits()
         generate_callbacks_on_client_side_declarations(declaration_header, self)
