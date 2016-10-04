@@ -28,8 +28,9 @@ enum EQuality
 {
     draft,
     normal,
-    high,
+    high
 };
+
 virtual ~IPrinter() {}
 virtual void Print(const char* text) const = 0;
 virtual void SetPrintingQuality(Example::IPrinter::EQuality quality) = 0;

@@ -33,26 +33,7 @@
 #include "Exception/BadArgument.h"
 #include "Exception/NullArgument.h"
 #include "Exception/DivisionByZero.h"
-#include "Exception/common/check_and_throw_exception.h"
-#include "Example.h"
-#include "Exception.h"
 
-#ifdef __cplusplus
-
-namespace Exception { 
-
-template<typename TargetType, typename SourceType>
-TargetType down_cast(const SourceType&);
-
-}
-
-#endif /* __cplusplus */
 
 #endif /* EXCEPTION_INCLUDED */
-
-#ifndef EXCEPTION_H_INCLUDED
-#define EXCEPTION_H_INCLUDED
-
-
-#endif /* EXCEPTION_H_INCLUDED */
 

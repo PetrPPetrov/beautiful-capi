@@ -34,6 +34,7 @@ class NamespaceGenerator(object):
         self.parent_namespace = parent_namespace
         self.enum_generators = []
         self.nested_namespaces = []
+        self.templates = []
         self.classes = []
         self.functions = []
         self.params = params
@@ -127,6 +128,9 @@ class NamespaceGenerator(object):
         with IndentScope(out):
             for nested_namespace_generator in self.nested_namespaces:
                 nested_namespace_generator.__generate_forward_declarations_impl(out)
+
+            for cur_template in self.templates:
+                cur_template.generate_forward_declaration(out)
             for class_generator in self.classes:
                 class_generator.generate_forward_declaration(out)
 

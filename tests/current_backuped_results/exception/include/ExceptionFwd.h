@@ -29,9 +29,6 @@
 
 #ifdef __cplusplus
 
-#include <memory>
-#include "Exception/common/forward_holder.h"
-
 #ifndef BEAUTIFUL_CAPI_EXCEPTION_CHECK_AND_THROW_EXCEPTION_FORWARD_DECLARATION
 #define BEAUTIFUL_CAPI_EXCEPTION_CHECK_AND_THROW_EXCEPTION_FORWARD_DECLARATION
 
@@ -45,13 +42,9 @@ namespace beautiful_capi_Exception
 namespace Exception
 {
     class Generic;
-    typedef beautiful_capi_Exception::forward_pointer_holder<Generic> GenericFwdPtr;
     class BadArgument;
-    typedef beautiful_capi_Exception::forward_pointer_holder<BadArgument> BadArgumentFwdPtr;
     class NullArgument;
-    typedef beautiful_capi_Exception::forward_pointer_holder<NullArgument> NullArgumentFwdPtr;
     class DivisionByZero;
-    typedef beautiful_capi_Exception::forward_pointer_holder<DivisionByZero> DivisionByZeroFwdPtr;
 }
 
 #endif /* __cplusplus */

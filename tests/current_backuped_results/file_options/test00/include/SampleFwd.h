@@ -29,13 +29,9 @@
 
 #ifdef __cplusplus
 
-#include <memory>
-#include "Test/common/forward_holder.h"
-
 namespace Sample
 {
     class Data;
-    typedef beautiful_capi_Test::forward_pointer_holder<Data> DataFwdPtr;
 }
 
 #endif /* __cplusplus */

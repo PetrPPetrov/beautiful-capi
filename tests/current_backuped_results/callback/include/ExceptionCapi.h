@@ -40,19 +40,13 @@ enum beautiful_capi_callback_exception_code_t
 {
     no_exception = 0,
     exception_generic = 1,
-    exception_badargument = 2,
-    exception_nullargument = 3,
-    exception_divisionbyzero = 4,
+    exception_bad_argument = 2,
+    exception_null_argument = 3,
+    exception_division_by_zero = 4,
     unknown_exception = -1
 };
 
 #endif /* BEAUTIFUL_CAPI_CALLBACK_EXCEPTION_INFO_DEFINED */
-
-typedef void (*example_customprinter_print_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* text);
-typedef void (*example_customprinter_setprintingquality_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, int quality);
-typedef int (*example_customprinter_getprintingquality_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
-typedef int (*example_customprinter_getdevicetype_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
-
 
 #ifdef __cplusplus
     #define EXCEPTION_CAPI_PREFIX extern "C"
@@ -94,23 +88,23 @@ typedef int (*example_customprinter_getdevicetype_callback_type)(beautiful_capi_
     #error "Unknown platform"
 #endif
 
-EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_generic_copy(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
 EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_generic_new(beautiful_capi_callback_exception_info_t* exception_info);
+EXCEPTION_API const char* EXCEPTION_API_CONVENTION exception_generic_get_error_text(void* object_pointer);
+EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_generic_copy(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
 EXCEPTION_API void EXCEPTION_API_CONVENTION exception_generic_delete(void* object_pointer);
-EXCEPTION_API const char* EXCEPTION_API_CONVENTION exception_generic_geterrortext(void* object_pointer);
-EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_badargument_cast_to_base(void* object_pointer);
-EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_badargument_copy(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
-EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_badargument_new(beautiful_capi_callback_exception_info_t* exception_info);
-EXCEPTION_API void EXCEPTION_API_CONVENTION exception_badargument_delete(void* object_pointer);
-EXCEPTION_API const char* EXCEPTION_API_CONVENTION exception_badargument_getargumentname(void* object_pointer);
-EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_nullargument_cast_to_base(void* object_pointer);
-EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_nullargument_copy(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
-EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_nullargument_new(beautiful_capi_callback_exception_info_t* exception_info);
-EXCEPTION_API void EXCEPTION_API_CONVENTION exception_nullargument_delete(void* object_pointer);
-EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_divisionbyzero_cast_to_base(void* object_pointer);
-EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_divisionbyzero_copy(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
-EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_divisionbyzero_new(beautiful_capi_callback_exception_info_t* exception_info);
-EXCEPTION_API void EXCEPTION_API_CONVENTION exception_divisionbyzero_delete(void* object_pointer);
+EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_bad_argument_new(beautiful_capi_callback_exception_info_t* exception_info);
+EXCEPTION_API const char* EXCEPTION_API_CONVENTION exception_bad_argument_get_argument_name(void* object_pointer);
+EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_bad_argument_copy(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+EXCEPTION_API void EXCEPTION_API_CONVENTION exception_bad_argument_delete(void* object_pointer);
+EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_bad_argument_cast_to_base(void* object_pointer);
+EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_null_argument_new(beautiful_capi_callback_exception_info_t* exception_info);
+EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_null_argument_copy(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+EXCEPTION_API void EXCEPTION_API_CONVENTION exception_null_argument_delete(void* object_pointer);
+EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_null_argument_cast_to_base(void* object_pointer);
+EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_division_by_zero_new(beautiful_capi_callback_exception_info_t* exception_info);
+EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_division_by_zero_copy(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+EXCEPTION_API void EXCEPTION_API_CONVENTION exception_division_by_zero_delete(void* object_pointer);
+EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_division_by_zero_cast_to_base(void* object_pointer);
 
 #endif /* EXCEPTION_CAPI_INCLUDED */
 

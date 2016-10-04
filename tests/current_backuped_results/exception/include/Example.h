@@ -31,18 +31,7 @@
 #include "ExampleFwd.h"
 #include "Example/Printer.h"
 #include "Example/Scanner.h"
-#include "Exception/common/check_and_throw_exception.h"
 
-#ifdef __cplusplus
-
-namespace Example { 
-
-template<typename TargetType, typename SourceType>
-TargetType down_cast(const SourceType&);
-
-}
-
-#endif /* __cplusplus */
 
 #endif /* EXAMPLE_INCLUDED */
 

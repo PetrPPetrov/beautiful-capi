@@ -31,13 +31,13 @@
 #include "ExampleFwd.h"
 #include "Example/Scene/Node.h"
 
-#ifdef __cplusplus
 
-namespace Example { namespace Scene { 
+#endif /* EXAMPLE_SCENE_INCLUDED */
 
-}}
+#ifndef EXAMPLE_SCENE_INCLUDED
+#define EXAMPLE_SCENE_INCLUDED
 
-#endif /* __cplusplus */
+
 
 #endif /* EXAMPLE_SCENE_INCLUDED */
 

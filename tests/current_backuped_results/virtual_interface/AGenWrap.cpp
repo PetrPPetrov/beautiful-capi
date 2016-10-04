@@ -65,29 +65,28 @@
     #error "Unknown platform"
 #endif
 
-EXAMPLE_API void* EXAMPLE_API_CONVENTION examplecreate_triangle()
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_create_triangle()
 {
     return Example::Details::CreateTriangle();
 }
 
-EXAMPLE_API void* EXAMPLE_API_CONVENTION examplecreate_rectangle()
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_create_rectangle()
 {
     return Example::Details::CreateRectangle();
 }
 
-EXAMPLE_API void* EXAMPLE_API_CONVENTION examplecreate_circle()
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_create_circle()
 {
     return Example::Details::CreateCircle();
 }
 
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_ishape_delete(void* object_pointer)
-{
-    delete static_cast<Example::IShape*>(object_pointer);
-}
-
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_ishape_show(void* object_pointer)
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_i_shape_show(void* object_pointer)
 {
     const Example::IShape* self = static_cast<Example::IShape*>(object_pointer);
     self->Show();
 }
 
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_i_shape_delete(void* object_pointer)
+{
+    delete static_cast<Example::IShape*>(object_pointer);
+}

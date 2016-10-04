@@ -64,155 +64,155 @@
     #error "Unknown platform"
 #endif
 
-POINTSET_API void* POINTSET_API_CONVENTION pointset_position_copy(void* object_pointer)
-{
-    return new PointSet::PositionImpl(*static_cast<PointSet::PositionImpl*>(object_pointer));
-}
-
-POINTSET_API void* POINTSET_API_CONVENTION pointset_position_default()
+POINTSET_API void* POINTSET_API_CONVENTION point_set_position_default()
 {
     return new PointSet::PositionImpl();
 }
 
-POINTSET_API void* POINTSET_API_CONVENTION pointset_position_initialized(double X, double Y, double Z)
+POINTSET_API void* POINTSET_API_CONVENTION point_set_position_initialized(double X, double Y, double Z)
 {
     return new PointSet::PositionImpl(X, Y, Z);
 }
 
-POINTSET_API void POINTSET_API_CONVENTION pointset_position_delete(void* object_pointer)
-{
-    delete static_cast<PointSet::PositionImpl*>(object_pointer);
-}
-
-POINTSET_API double POINTSET_API_CONVENTION pointset_position_getx(void* object_pointer)
+POINTSET_API double POINTSET_API_CONVENTION point_set_position_get_x(void* object_pointer)
 {
     const PointSet::PositionImpl* self = static_cast<PointSet::PositionImpl*>(object_pointer);
     return self->GetX();
 }
 
-POINTSET_API void POINTSET_API_CONVENTION pointset_position_setx(void* object_pointer, double value)
+POINTSET_API void POINTSET_API_CONVENTION point_set_position_set_x(void* object_pointer, double value)
 {
     PointSet::PositionImpl* self = static_cast<PointSet::PositionImpl*>(object_pointer);
     self->SetX(value);
 }
 
-POINTSET_API double POINTSET_API_CONVENTION pointset_position_gety(void* object_pointer)
+POINTSET_API double POINTSET_API_CONVENTION point_set_position_get_y(void* object_pointer)
 {
     const PointSet::PositionImpl* self = static_cast<PointSet::PositionImpl*>(object_pointer);
     return self->GetY();
 }
 
-POINTSET_API void POINTSET_API_CONVENTION pointset_position_sety(void* object_pointer, double value)
+POINTSET_API void POINTSET_API_CONVENTION point_set_position_set_y(void* object_pointer, double value)
 {
     PointSet::PositionImpl* self = static_cast<PointSet::PositionImpl*>(object_pointer);
     self->SetY(value);
 }
 
-POINTSET_API double POINTSET_API_CONVENTION pointset_position_getz(void* object_pointer)
+POINTSET_API double POINTSET_API_CONVENTION point_set_position_get_z(void* object_pointer)
 {
     const PointSet::PositionImpl* self = static_cast<PointSet::PositionImpl*>(object_pointer);
     return self->GetZ();
 }
 
-POINTSET_API void POINTSET_API_CONVENTION pointset_position_setz(void* object_pointer, double value)
+POINTSET_API void POINTSET_API_CONVENTION point_set_position_set_z(void* object_pointer, double value)
 {
     PointSet::PositionImpl* self = static_cast<PointSet::PositionImpl*>(object_pointer);
     self->SetZ(value);
 }
 
-POINTSET_API void POINTSET_API_CONVENTION pointset_points_add_ref(void* object_pointer)
+POINTSET_API void* POINTSET_API_CONVENTION point_set_position_copy(void* object_pointer)
 {
-    intrusive_ptr_add_ref(static_cast<PointSet::PointsImpl*>(object_pointer));
+    return new PointSet::PositionImpl(*static_cast<PointSet::PositionImpl*>(object_pointer));
 }
 
-POINTSET_API void* POINTSET_API_CONVENTION pointset_points_default()
+POINTSET_API void POINTSET_API_CONVENTION point_set_position_delete(void* object_pointer)
+{
+    delete static_cast<PointSet::PositionImpl*>(object_pointer);
+}
+
+POINTSET_API void* POINTSET_API_CONVENTION point_set_points_default()
 {
     return new PointSet::PointsImpl();
 }
 
-POINTSET_API void POINTSET_API_CONVENTION pointset_points_release(void* object_pointer)
-{
-    intrusive_ptr_release(static_cast<PointSet::PointsImpl*>(object_pointer));
-}
-
-POINTSET_API size_t POINTSET_API_CONVENTION pointset_points_size(void* object_pointer)
+POINTSET_API size_t POINTSET_API_CONVENTION point_set_points_size(void* object_pointer)
 {
     const PointSet::PointsImpl* self = static_cast<PointSet::PointsImpl*>(object_pointer);
     return self->Size();
 }
 
-POINTSET_API void POINTSET_API_CONVENTION pointset_points_reserve(void* object_pointer, size_t capacity)
+POINTSET_API void POINTSET_API_CONVENTION point_set_points_reserve(void* object_pointer, size_t capacity)
 {
     PointSet::PointsImpl* self = static_cast<PointSet::PointsImpl*>(object_pointer);
     self->Reserve(capacity);
 }
 
-POINTSET_API void POINTSET_API_CONVENTION pointset_points_resize(void* object_pointer, size_t size, void* default_value)
+POINTSET_API void POINTSET_API_CONVENTION point_set_points_resize(void* object_pointer, size_t size, void* default_value)
 {
     PointSet::PointsImpl* self = static_cast<PointSet::PointsImpl*>(object_pointer);
     self->Resize(size, *static_cast<PointSet::PositionImpl*>(default_value));
 }
 
-POINTSET_API void* POINTSET_API_CONVENTION pointset_points_getelement(void* object_pointer, size_t index)
+POINTSET_API void* POINTSET_API_CONVENTION point_set_points_get_element(void* object_pointer, size_t index)
 {
     const PointSet::PointsImpl* self = static_cast<PointSet::PointsImpl*>(object_pointer);
-    PointSet::PositionImpl result(self->GetElement(index)); return pointset_position_copy(&result);
+    PointSet::PositionImpl result_implementation_copy(self->GetElement(index));
+    return new PointSet::PositionImpl(result_implementation_copy);
 }
 
-POINTSET_API void POINTSET_API_CONVENTION pointset_points_setelement(void* object_pointer, size_t index, void* value)
+POINTSET_API void POINTSET_API_CONVENTION point_set_points_set_element(void* object_pointer, size_t index, void* value)
 {
     PointSet::PointsImpl* self = static_cast<PointSet::PointsImpl*>(object_pointer);
     self->SetElement(index, *static_cast<PointSet::PositionImpl*>(value));
 }
 
-POINTSET_API void POINTSET_API_CONVENTION pointset_points_pushback(void* object_pointer, void* value)
+POINTSET_API void POINTSET_API_CONVENTION point_set_points_push_back(void* object_pointer, void* value)
 {
     PointSet::PointsImpl* self = static_cast<PointSet::PointsImpl*>(object_pointer);
     self->PushBack(*static_cast<PointSet::PositionImpl*>(value));
 }
 
-POINTSET_API void POINTSET_API_CONVENTION pointset_points_clear(void* object_pointer)
+POINTSET_API void POINTSET_API_CONVENTION point_set_points_clear(void* object_pointer)
 {
     PointSet::PointsImpl* self = static_cast<PointSet::PointsImpl*>(object_pointer);
     self->Clear();
 }
 
-POINTSET_API void POINTSET_API_CONVENTION pointset_pointset_add_ref(void* object_pointer)
+POINTSET_API void POINTSET_API_CONVENTION point_set_points_add_ref(void* object_pointer)
 {
-    intrusive_ptr_add_ref(static_cast<PointSet::PointSetImpl*>(object_pointer));
+    intrusive_ptr_add_ref(static_cast<PointSet::PointsImpl*>(object_pointer));
 }
 
-POINTSET_API void* POINTSET_API_CONVENTION pointset_pointset_default()
+POINTSET_API void POINTSET_API_CONVENTION point_set_points_release(void* object_pointer)
+{
+    intrusive_ptr_release(static_cast<PointSet::PointsImpl*>(object_pointer));
+}
+
+POINTSET_API void* POINTSET_API_CONVENTION point_set_point_set_default()
 {
     return new PointSet::PointSetImpl();
 }
 
-POINTSET_API void POINTSET_API_CONVENTION pointset_pointset_release(void* object_pointer)
-{
-    intrusive_ptr_release(static_cast<PointSet::PointSetImpl*>(object_pointer));
-}
-
-POINTSET_API const char* POINTSET_API_CONVENTION pointset_pointset_getname(void* object_pointer)
+POINTSET_API const char* POINTSET_API_CONVENTION point_set_point_set_get_name(void* object_pointer)
 {
     const PointSet::PointSetImpl* self = static_cast<PointSet::PointSetImpl*>(object_pointer);
     return self->GetName();
 }
 
-POINTSET_API void POINTSET_API_CONVENTION pointset_pointset_setname(void* object_pointer, const char* name)
+POINTSET_API void POINTSET_API_CONVENTION point_set_point_set_set_name(void* object_pointer, const char* name)
 {
     PointSet::PointSetImpl* self = static_cast<PointSet::PointSetImpl*>(object_pointer);
     self->SetName(name);
 }
 
-POINTSET_API void* POINTSET_API_CONVENTION pointset_pointset_getpoints(void* object_pointer)
+POINTSET_API void* POINTSET_API_CONVENTION point_set_point_set_get_points(void* object_pointer)
 {
     const PointSet::PointSetImpl* self = static_cast<PointSet::PointSetImpl*>(object_pointer);
     return self->GetPoints();
 }
 
-POINTSET_API void POINTSET_API_CONVENTION pointset_pointset_setpoints(void* object_pointer, void* value)
+POINTSET_API void POINTSET_API_CONVENTION point_set_point_set_set_points(void* object_pointer, void* value)
 {
     PointSet::PointSetImpl* self = static_cast<PointSet::PointSetImpl*>(object_pointer);
     self->SetPoints(static_cast<PointSet::PointsImpl*>(value));
 }
 
+POINTSET_API void POINTSET_API_CONVENTION point_set_point_set_add_ref(void* object_pointer)
+{
+    intrusive_ptr_add_ref(static_cast<PointSet::PointSetImpl*>(object_pointer));
+}
+
+POINTSET_API void POINTSET_API_CONVENTION point_set_point_set_release(void* object_pointer)
+{
+    intrusive_ptr_release(static_cast<PointSet::PointSetImpl*>(object_pointer));
+}

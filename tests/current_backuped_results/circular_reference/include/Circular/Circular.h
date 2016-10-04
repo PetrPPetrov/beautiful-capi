@@ -32,16 +32,6 @@
 #include "Circular/ClassA.h"
 #include "Circular/ClassB.h"
 
-#ifdef __cplusplus
-
-namespace Circular { 
-
-template<typename TargetType, typename SourceType>
-TargetType down_cast(const SourceType&);
-
-}
-
-#endif /* __cplusplus */
 
 #endif /* CIRCULAR_INCLUDED */
 

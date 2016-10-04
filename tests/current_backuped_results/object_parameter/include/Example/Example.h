@@ -32,16 +32,6 @@
 #include "Example/Page.h"
 #include "Example/Document.h"
 
-#ifdef __cplusplus
-
-namespace Example { 
-
-template<typename TargetType, typename SourceType>
-TargetType down_cast(const SourceType&);
-
-}
-
-#endif /* __cplusplus */
 
 #endif /* EXAMPLE_INCLUDED */
 

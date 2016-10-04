@@ -67,19 +67,19 @@
     #error "Unknown platform"
 #endif
 
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_page_add_ref(void* object_pointer);
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_page_default();
+EXAMPLE_API size_t EXAMPLE_API_CONVENTION example_page_get_width(void* object_pointer);
+EXAMPLE_API size_t EXAMPLE_API_CONVENTION example_page_get_height(void* object_pointer);
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_page_set_width(void* object_pointer, size_t value);
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_page_set_height(void* object_pointer, size_t value);
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_page_add_ref(void* object_pointer);
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_page_release(void* object_pointer);
-EXAMPLE_API size_t EXAMPLE_API_CONVENTION example_page_getwidth(void* object_pointer);
-EXAMPLE_API size_t EXAMPLE_API_CONVENTION example_page_getheight(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_page_setwidth(void* object_pointer, size_t value);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_page_setheight(void* object_pointer, size_t value);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_document_add_ref(void* object_pointer);
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_document_default();
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_document_release(void* object_pointer);
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_document_show(void* object_pointer);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_document_getpage(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_document_setpage(void* object_pointer, void* value);
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_document_get_page(void* object_pointer);
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_document_set_page(void* object_pointer, void* value);
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_document_add_ref(void* object_pointer);
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_document_release(void* object_pointer);
 
 #endif /* EXAMPLE_CAPI_INCLUDED */
 

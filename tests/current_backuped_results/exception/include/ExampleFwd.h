@@ -29,9 +29,6 @@
 
 #ifdef __cplusplus
 
-#include <memory>
-#include "Exception/common/forward_holder.h"
-
 #ifndef BEAUTIFUL_CAPI_EXCEPTION_CHECK_AND_THROW_EXCEPTION_FORWARD_DECLARATION
 #define BEAUTIFUL_CAPI_EXCEPTION_CHECK_AND_THROW_EXCEPTION_FORWARD_DECLARATION
 
@@ -45,9 +42,7 @@ namespace beautiful_capi_Exception
 namespace Example
 {
     class Printer;
-    typedef beautiful_capi_Exception::forward_pointer_holder<Printer> PrinterFwdPtr;
     class ScannerPtr;
-    typedef beautiful_capi_Exception::forward_pointer_holder<ScannerPtr> ScannerFwdPtr;
 }
 
 #endif /* __cplusplus */

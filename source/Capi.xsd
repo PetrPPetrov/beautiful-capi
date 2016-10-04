@@ -45,7 +45,6 @@
       <xs:element name="instantiation" minOccurs="1" maxOccurs="unbounded" type="TInstantiation"/>
       <xs:element name="class" minOccurs="1" maxOccurs="1" type="TClass"/>
     </xs:sequence>
-    <xs:attribute name="name" type="xs:string" use="required"/>
   </xs:complexType>
   <xs:complexType name="TInstantiation">
     <xs:sequence>

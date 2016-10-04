@@ -17,6 +17,7 @@
 *) get_raw_pointer name customization
 *) c_2_implementation and implementation_2_c customization
 *) remove name attribute from TTemplate structure
+*) place down_cast function to target type namespace
 ===
 *) shuffle Capi mode
 *) implement Dynamic traits for Windows

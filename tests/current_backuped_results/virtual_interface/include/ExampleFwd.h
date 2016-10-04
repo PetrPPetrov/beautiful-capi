@@ -29,13 +29,9 @@
 
 #ifdef __cplusplus
 
-#include <memory>
-#include "VirtualInterface/common/forward_holder.h"
-
 namespace Example
 {
     class IShapeRawPtr;
-    typedef beautiful_capi_VirtualInterface::forward_pointer_holder<IShapeRawPtr> IShapeFwdPtr;
 }
 
 #endif /* __cplusplus */

@@ -31,13 +31,20 @@
 #include "Example/ExampleFwd.h"
 #include "Example/Geometry/Brep/Body.h"
 
-#ifdef __cplusplus
 
-namespace Example { namespace Geometry { namespace Brep { 
+#endif /* EXAMPLE_GEOMETRY_BREP_INCLUDED */
 
-}}}
+#ifndef EXAMPLE_GEOMETRY_BREP_INCLUDED
+#define EXAMPLE_GEOMETRY_BREP_INCLUDED
 
-#endif /* __cplusplus */
+
+
+#endif /* EXAMPLE_GEOMETRY_BREP_INCLUDED */
+
+#ifndef EXAMPLE_GEOMETRY_BREP_INCLUDED
+#define EXAMPLE_GEOMETRY_BREP_INCLUDED
+
+
 
 #endif /* EXAMPLE_GEOMETRY_BREP_INCLUDED */
 

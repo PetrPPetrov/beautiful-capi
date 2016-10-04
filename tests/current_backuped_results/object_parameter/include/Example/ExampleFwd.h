@@ -29,15 +29,10 @@
 
 #ifdef __cplusplus
 
-#include <memory>
-#include "ObjectParameter/common/forward_holder.h"
-
 namespace Example
 {
     class PagePtr;
-    typedef beautiful_capi_ObjectParameter::forward_pointer_holder<PagePtr> PageFwdPtr;
     class DocumentPtr;
-    typedef beautiful_capi_ObjectParameter::forward_pointer_holder<DocumentPtr> DocumentFwdPtr;
 }
 
 #endif /* __cplusplus */

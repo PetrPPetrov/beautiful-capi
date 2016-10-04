@@ -40,9 +40,9 @@ enum beautiful_capi_exception_exception_code_t
 {
     no_exception = 0,
     exception_generic = 1,
-    exception_badargument = 2,
-    exception_nullargument = 3,
-    exception_divisionbyzero = 4,
+    exception_bad_argument = 2,
+    exception_null_argument = 3,
+    exception_division_by_zero = 4,
     unknown_exception = -1
 };
 
@@ -88,18 +88,18 @@ enum beautiful_capi_exception_exception_code_t
     #error "Unknown platform"
 #endif
 
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_printer_copy(beautiful_capi_exception_exception_info_t* exception_info, void* object_pointer);
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_printer_new(beautiful_capi_exception_exception_info_t* exception_info);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_delete(void* object_pointer);
 EXAMPLE_API const char* EXAMPLE_API_CONVENTION example_printer_show(beautiful_capi_exception_exception_info_t* exception_info, void* object_pointer, const char* text);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_poweron(beautiful_capi_exception_exception_info_t* exception_info, void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_poweroff(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_scanner_add_ref(void* object_pointer);
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_power_on(beautiful_capi_exception_exception_info_t* exception_info, void* object_pointer);
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_power_off(void* object_pointer);
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_printer_copy(beautiful_capi_exception_exception_info_t* exception_info, void* object_pointer);
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_delete(void* object_pointer);
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_scanner_new(beautiful_capi_exception_exception_info_t* exception_info);
+EXAMPLE_API const char* EXAMPLE_API_CONVENTION example_scanner_scan_text(beautiful_capi_exception_exception_info_t* exception_info, void* object_pointer);
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_scanner_power_on(beautiful_capi_exception_exception_info_t* exception_info, void* object_pointer);
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_scanner_power_off(void* object_pointer);
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_scanner_add_ref(void* object_pointer);
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_scanner_release(void* object_pointer);
-EXAMPLE_API const char* EXAMPLE_API_CONVENTION example_scanner_scantext(beautiful_capi_exception_exception_info_t* exception_info, void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_scanner_poweron(beautiful_capi_exception_exception_info_t* exception_info, void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_scanner_poweroff(void* object_pointer);
 
 #endif /* EXAMPLE_CAPI_INCLUDED */
 

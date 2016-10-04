@@ -29,15 +29,10 @@
 
 #ifdef __cplusplus
 
-#include <memory>
-#include "CopySemantic/common/forward_holder.h"
-
 namespace Example
 {
     class Printer;
-    typedef beautiful_capi_CopySemantic::forward_pointer_holder<Printer> PrinterFwdPtr;
     class Dumper;
-    typedef beautiful_capi_CopySemantic::forward_pointer_holder<Dumper> DumperFwdPtr;
 }
 
 #endif /* __cplusplus */

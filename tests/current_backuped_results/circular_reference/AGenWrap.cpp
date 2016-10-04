@@ -63,47 +63,46 @@
     #error "Unknown platform"
 #endif
 
-CIRCULAR_API void* CIRCULAR_API_CONVENTION circular_classa_default()
+CIRCULAR_API void* CIRCULAR_API_CONVENTION circular_class_a_default()
 {
     return new Circular::ClassAImpl();
 }
 
-CIRCULAR_API void CIRCULAR_API_CONVENTION circular_classa_delete(void* object_pointer)
-{
-    delete static_cast<Circular::ClassAImpl*>(object_pointer);
-}
-
-CIRCULAR_API void CIRCULAR_API_CONVENTION circular_classa_setb(void* object_pointer, void* value)
+CIRCULAR_API void CIRCULAR_API_CONVENTION circular_class_a_set_b(void* object_pointer, void* value)
 {
     Circular::ClassAImpl* self = static_cast<Circular::ClassAImpl*>(object_pointer);
     self->SetB(static_cast<Circular::ClassBImpl*>(value));
 }
 
-CIRCULAR_API void* CIRCULAR_API_CONVENTION circular_classa_getb(void* object_pointer)
+CIRCULAR_API void* CIRCULAR_API_CONVENTION circular_class_a_get_b(void* object_pointer)
 {
     const Circular::ClassAImpl* self = static_cast<Circular::ClassAImpl*>(object_pointer);
     return self->GetB();
 }
 
-CIRCULAR_API void* CIRCULAR_API_CONVENTION circular_classb_default()
+CIRCULAR_API void CIRCULAR_API_CONVENTION circular_class_a_delete(void* object_pointer)
+{
+    delete static_cast<Circular::ClassAImpl*>(object_pointer);
+}
+
+CIRCULAR_API void* CIRCULAR_API_CONVENTION circular_class_b_default()
 {
     return new Circular::ClassBImpl();
 }
 
-CIRCULAR_API void CIRCULAR_API_CONVENTION circular_classb_delete(void* object_pointer)
-{
-    delete static_cast<Circular::ClassBImpl*>(object_pointer);
-}
-
-CIRCULAR_API void CIRCULAR_API_CONVENTION circular_classb_seta(void* object_pointer, void* value)
+CIRCULAR_API void CIRCULAR_API_CONVENTION circular_class_b_set_a(void* object_pointer, void* value)
 {
     Circular::ClassBImpl* self = static_cast<Circular::ClassBImpl*>(object_pointer);
     self->SetA(static_cast<Circular::ClassAImpl*>(value));
 }
 
-CIRCULAR_API void* CIRCULAR_API_CONVENTION circular_classb_geta(void* object_pointer)
+CIRCULAR_API void* CIRCULAR_API_CONVENTION circular_class_b_get_a(void* object_pointer)
 {
     const Circular::ClassBImpl* self = static_cast<Circular::ClassBImpl*>(object_pointer);
     return self->GetA();
 }
 
+CIRCULAR_API void CIRCULAR_API_CONVENTION circular_class_b_delete(void* object_pointer)
+{
+    delete static_cast<Circular::ClassBImpl*>(object_pointer);
+}

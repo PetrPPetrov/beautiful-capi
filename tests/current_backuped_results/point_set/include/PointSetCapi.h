@@ -67,33 +67,33 @@
     #error "Unknown platform"
 #endif
 
-POINTSET_API void* POINTSET_API_CONVENTION pointset_position_copy(void* object_pointer);
-POINTSET_API void* POINTSET_API_CONVENTION pointset_position_default();
-POINTSET_API void* POINTSET_API_CONVENTION pointset_position_initialized(double X, double Y, double Z);
-POINTSET_API void POINTSET_API_CONVENTION pointset_position_delete(void* object_pointer);
-POINTSET_API double POINTSET_API_CONVENTION pointset_position_getx(void* object_pointer);
-POINTSET_API void POINTSET_API_CONVENTION pointset_position_setx(void* object_pointer, double value);
-POINTSET_API double POINTSET_API_CONVENTION pointset_position_gety(void* object_pointer);
-POINTSET_API void POINTSET_API_CONVENTION pointset_position_sety(void* object_pointer, double value);
-POINTSET_API double POINTSET_API_CONVENTION pointset_position_getz(void* object_pointer);
-POINTSET_API void POINTSET_API_CONVENTION pointset_position_setz(void* object_pointer, double value);
-POINTSET_API void POINTSET_API_CONVENTION pointset_points_add_ref(void* object_pointer);
-POINTSET_API void* POINTSET_API_CONVENTION pointset_points_default();
-POINTSET_API void POINTSET_API_CONVENTION pointset_points_release(void* object_pointer);
-POINTSET_API size_t POINTSET_API_CONVENTION pointset_points_size(void* object_pointer);
-POINTSET_API void POINTSET_API_CONVENTION pointset_points_reserve(void* object_pointer, size_t capacity);
-POINTSET_API void POINTSET_API_CONVENTION pointset_points_resize(void* object_pointer, size_t size, void* default_value);
-POINTSET_API void* POINTSET_API_CONVENTION pointset_points_getelement(void* object_pointer, size_t index);
-POINTSET_API void POINTSET_API_CONVENTION pointset_points_setelement(void* object_pointer, size_t index, void* value);
-POINTSET_API void POINTSET_API_CONVENTION pointset_points_pushback(void* object_pointer, void* value);
-POINTSET_API void POINTSET_API_CONVENTION pointset_points_clear(void* object_pointer);
-POINTSET_API void POINTSET_API_CONVENTION pointset_pointset_add_ref(void* object_pointer);
-POINTSET_API void* POINTSET_API_CONVENTION pointset_pointset_default();
-POINTSET_API void POINTSET_API_CONVENTION pointset_pointset_release(void* object_pointer);
-POINTSET_API const char* POINTSET_API_CONVENTION pointset_pointset_getname(void* object_pointer);
-POINTSET_API void POINTSET_API_CONVENTION pointset_pointset_setname(void* object_pointer, const char* name);
-POINTSET_API void* POINTSET_API_CONVENTION pointset_pointset_getpoints(void* object_pointer);
-POINTSET_API void POINTSET_API_CONVENTION pointset_pointset_setpoints(void* object_pointer, void* value);
+POINTSET_API void* POINTSET_API_CONVENTION point_set_position_default();
+POINTSET_API void* POINTSET_API_CONVENTION point_set_position_initialized(double X, double Y, double Z);
+POINTSET_API double POINTSET_API_CONVENTION point_set_position_get_x(void* object_pointer);
+POINTSET_API void POINTSET_API_CONVENTION point_set_position_set_x(void* object_pointer, double value);
+POINTSET_API double POINTSET_API_CONVENTION point_set_position_get_y(void* object_pointer);
+POINTSET_API void POINTSET_API_CONVENTION point_set_position_set_y(void* object_pointer, double value);
+POINTSET_API double POINTSET_API_CONVENTION point_set_position_get_z(void* object_pointer);
+POINTSET_API void POINTSET_API_CONVENTION point_set_position_set_z(void* object_pointer, double value);
+POINTSET_API void* POINTSET_API_CONVENTION point_set_position_copy(void* object_pointer);
+POINTSET_API void POINTSET_API_CONVENTION point_set_position_delete(void* object_pointer);
+POINTSET_API void* POINTSET_API_CONVENTION point_set_points_default();
+POINTSET_API size_t POINTSET_API_CONVENTION point_set_points_size(void* object_pointer);
+POINTSET_API void POINTSET_API_CONVENTION point_set_points_reserve(void* object_pointer, size_t capacity);
+POINTSET_API void POINTSET_API_CONVENTION point_set_points_resize(void* object_pointer, size_t size, void* default_value);
+POINTSET_API void* POINTSET_API_CONVENTION point_set_points_get_element(void* object_pointer, size_t index);
+POINTSET_API void POINTSET_API_CONVENTION point_set_points_set_element(void* object_pointer, size_t index, void* value);
+POINTSET_API void POINTSET_API_CONVENTION point_set_points_push_back(void* object_pointer, void* value);
+POINTSET_API void POINTSET_API_CONVENTION point_set_points_clear(void* object_pointer);
+POINTSET_API void POINTSET_API_CONVENTION point_set_points_add_ref(void* object_pointer);
+POINTSET_API void POINTSET_API_CONVENTION point_set_points_release(void* object_pointer);
+POINTSET_API void* POINTSET_API_CONVENTION point_set_point_set_default();
+POINTSET_API const char* POINTSET_API_CONVENTION point_set_point_set_get_name(void* object_pointer);
+POINTSET_API void POINTSET_API_CONVENTION point_set_point_set_set_name(void* object_pointer, const char* name);
+POINTSET_API void* POINTSET_API_CONVENTION point_set_point_set_get_points(void* object_pointer);
+POINTSET_API void POINTSET_API_CONVENTION point_set_point_set_set_points(void* object_pointer, void* value);
+POINTSET_API void POINTSET_API_CONVENTION point_set_point_set_add_ref(void* object_pointer);
+POINTSET_API void POINTSET_API_CONVENTION point_set_point_set_release(void* object_pointer);
 
 #endif /* POINTSET_CAPI_INCLUDED */
 

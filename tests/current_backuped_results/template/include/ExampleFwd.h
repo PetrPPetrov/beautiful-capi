@@ -29,9 +29,6 @@
 
 #ifdef __cplusplus
 
-#include <memory>
-#include "Template/common/forward_holder.h"
-
 namespace Example
 {
     template<typename WorkType>

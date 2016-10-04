@@ -32,16 +32,6 @@
 #include "Example/Printer.h"
 #include "Example/Dumper.h"
 
-#ifdef __cplusplus
-
-namespace Example { 
-
-template<typename TargetType, typename SourceType>
-TargetType down_cast(const SourceType&);
-
-}
-
-#endif /* __cplusplus */
 
 #endif /* EXAMPLE_INCLUDED */
 

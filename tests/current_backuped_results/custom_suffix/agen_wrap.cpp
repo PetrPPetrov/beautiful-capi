@@ -64,19 +64,9 @@
     #error "Unknown platform"
 #endif
 
-HELLO_WORLD_API void* HELLO_WORLD_API_CONVENTION hello_world_printer_copy(void* object_pointer)
-{
-    return new hello_world::printer_impl(*static_cast<hello_world::printer_impl*>(object_pointer));
-}
-
 HELLO_WORLD_API void* HELLO_WORLD_API_CONVENTION hello_world_printer_default()
 {
     return new hello_world::printer_impl();
-}
-
-HELLO_WORLD_API void HELLO_WORLD_API_CONVENTION hello_world_printer_delete(void* object_pointer)
-{
-    delete static_cast<hello_world::printer_impl*>(object_pointer);
 }
 
 HELLO_WORLD_API void HELLO_WORLD_API_CONVENTION hello_world_printer_show(void* object_pointer)
@@ -85,14 +75,19 @@ HELLO_WORLD_API void HELLO_WORLD_API_CONVENTION hello_world_printer_show(void* o
     self->show();
 }
 
+HELLO_WORLD_API void* HELLO_WORLD_API_CONVENTION hello_world_printer_copy(void* object_pointer)
+{
+    return new hello_world::printer_impl(*static_cast<hello_world::printer_impl*>(object_pointer));
+}
+
+HELLO_WORLD_API void HELLO_WORLD_API_CONVENTION hello_world_printer_delete(void* object_pointer)
+{
+    delete static_cast<hello_world::printer_impl*>(object_pointer);
+}
+
 HELLO_WORLD_API void* HELLO_WORLD_API_CONVENTION hello_world_scanner_default()
 {
     return new hello_world::scanner_impl();
-}
-
-HELLO_WORLD_API void HELLO_WORLD_API_CONVENTION hello_world_scanner_delete(void* object_pointer)
-{
-    delete static_cast<hello_world::scanner_impl*>(object_pointer);
 }
 
 HELLO_WORLD_API void HELLO_WORLD_API_CONVENTION hello_world_scanner_scan(void* object_pointer)
@@ -101,19 +96,14 @@ HELLO_WORLD_API void HELLO_WORLD_API_CONVENTION hello_world_scanner_scan(void* o
     self->scan();
 }
 
-HELLO_WORLD_API void HELLO_WORLD_API_CONVENTION hello_world_plotter_add_ref(void* object_pointer)
+HELLO_WORLD_API void HELLO_WORLD_API_CONVENTION hello_world_scanner_delete(void* object_pointer)
 {
-    intrusive_ptr_add_ref(static_cast<hello_world::plotter_impl*>(object_pointer));
+    delete static_cast<hello_world::scanner_impl*>(object_pointer);
 }
 
 HELLO_WORLD_API void* HELLO_WORLD_API_CONVENTION hello_world_plotter_default()
 {
     return new hello_world::plotter_impl();
-}
-
-HELLO_WORLD_API void HELLO_WORLD_API_CONVENTION hello_world_plotter_release(void* object_pointer)
-{
-    intrusive_ptr_release(static_cast<hello_world::plotter_impl*>(object_pointer));
 }
 
 HELLO_WORLD_API void HELLO_WORLD_API_CONVENTION hello_world_plotter_draw(void* object_pointer)
@@ -122,3 +112,12 @@ HELLO_WORLD_API void HELLO_WORLD_API_CONVENTION hello_world_plotter_draw(void* o
     self->draw();
 }
 
+HELLO_WORLD_API void HELLO_WORLD_API_CONVENTION hello_world_plotter_add_ref(void* object_pointer)
+{
+    intrusive_ptr_add_ref(static_cast<hello_world::plotter_impl*>(object_pointer));
+}
+
+HELLO_WORLD_API void HELLO_WORLD_API_CONVENTION hello_world_plotter_release(void* object_pointer)
+{
+    intrusive_ptr_release(static_cast<hello_world::plotter_impl*>(object_pointer));
+}

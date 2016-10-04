@@ -67,11 +67,11 @@
     #error "Unknown platform"
 #endif
 
-SAMPLE_API void* SAMPLE_API_CONVENTION sample_data_copy(void* object_pointer);
 SAMPLE_API void* SAMPLE_API_CONVENTION sample_data_new();
+SAMPLE_API int SAMPLE_API_CONVENTION sample_data_get_data(void* object_pointer);
+SAMPLE_API void SAMPLE_API_CONVENTION sample_data_set_data(void* object_pointer, int value);
+SAMPLE_API void* SAMPLE_API_CONVENTION sample_data_copy(void* object_pointer);
 SAMPLE_API void SAMPLE_API_CONVENTION sample_data_delete(void* object_pointer);
-SAMPLE_API int SAMPLE_API_CONVENTION sample_data_getdata(void* object_pointer);
-SAMPLE_API void SAMPLE_API_CONVENTION sample_data_setdata(void* object_pointer, int value);
 
 #endif /* SAMPLE_CAPI_INCLUDED */
 

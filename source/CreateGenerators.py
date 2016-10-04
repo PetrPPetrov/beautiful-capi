@@ -23,11 +23,13 @@
 from Parser import TClass, TEnumeration, TNamespace, TArgument, TBeautifulCapiRoot
 from ParamsParser import TBeautifulCapiParams
 from NamespaceGenerator import NamespaceGenerator
+from TemplateGenerator import TemplateGenerator
 from ClassGenerator import ClassGenerator
 from MethodGenerator import MethodGenerator, FunctionGenerator, ConstructorGenerator
 from ArgumentGenerator import ClassTypeGenerator, BuiltinTypeGenerator, EnumTypeGenerator, ArgumentGenerator
 from EnumGenerator import EnumGenerator
-from Helpers import BeautifulCapiException
+from Helpers import BeautifulCapiException, get_template_name, get_template_tail
+from Helpers import get_template_arguments_count, get_template_argument, replace_template_argument
 
 
 class GeneratorCreator(object):
@@ -69,6 +71,9 @@ class GeneratorCreator(object):
         for nested_namespace in namespace.namespaces:
             new_namespace_generator.nested_namespaces.append(
                 self.create_namespace_generator(nested_namespace))
+        for cur_template in namespace.templates:
+            new_namespace_generator.templates.append(
+                TemplateGenerator(cur_template, new_namespace_generator, self.params))
         for cur_enum in namespace.enumerations:
             new_enum_generator = self.__create_enum_generator(cur_enum, new_namespace_generator)
             new_namespace_generator.enum_generators.append(new_enum_generator)
@@ -112,6 +117,19 @@ class GeneratorCreator(object):
         function_generator.return_type_generator = self.__create_type_generator(
             function_generator.function_object.return_type)
 
+    def __replace_template_implementation_class(self, class_generator):
+        implementation_class_name = class_generator.class_object.implementation_class_name
+        template_arguments_count = get_template_arguments_count(implementation_class_name)
+        for index in range(template_arguments_count):
+            original_template_argument = get_template_argument(implementation_class_name, index)
+            original_template_argument_for_search = original_template_argument.replace(' ', '')
+            if original_template_argument_for_search in self.full_name_2_generator:
+                argument_generator = self.full_name_2_generator[original_template_argument_for_search]
+                self.__replace_template_implementation_class(argument_generator)
+                implementation_class_name = replace_template_argument(
+                    implementation_class_name, index, argument_generator.class_object.implementation_class_name)
+        class_generator.class_object.implementation_class_name = implementation_class_name
+
     def __bind_class(self, class_generator: ClassGenerator):
         if class_generator.class_object.base:
             base_class_str = class_generator.class_object.base.replace(' ', '')
@@ -123,10 +141,15 @@ class GeneratorCreator(object):
         if class_generator.class_object.exception:
             class_generator.exception_code = self.cur_exception_code
             self.cur_exception_code += 1
+        template_arguments_count = get_template_arguments_count(class_generator.name)
+        for index in range(template_arguments_count):
+            template_argument = get_template_argument(class_generator.name, index)
+            class_generator.template_argument_generators.append(self.__create_type_generator(template_argument))
         for constructor_generator in class_generator.constructor_generators:
             self.__bind_constructor(constructor_generator)
         for method_generator in class_generator.method_generators:
             self.__bind_method(method_generator)
+        self.__replace_template_implementation_class(class_generator)
 
     def __bind_namespace(self, namespace_generator: NamespaceGenerator):
         for nested_namespace_generator in namespace_generator.nested_namespaces:

@@ -27,5 +27,5 @@
 enum ESex
 {
     male,
-    female,
+    female
 };

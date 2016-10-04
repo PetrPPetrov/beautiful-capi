@@ -29,21 +29,13 @@
 
 #ifdef __cplusplus
 
-#include <memory>
-#include "DownCast/common/forward_holder.h"
-
 namespace Example
 {
     class IShapePtr;
-    typedef beautiful_capi_DownCast::forward_pointer_holder<IShapePtr> IShapeFwdPtr;
     class IPolygonPtr;
-    typedef beautiful_capi_DownCast::forward_pointer_holder<IPolygonPtr> IPolygonFwdPtr;
     class ITrianglePtr;
-    typedef beautiful_capi_DownCast::forward_pointer_holder<ITrianglePtr> ITriangleFwdPtr;
     class ISquarePtr;
-    typedef beautiful_capi_DownCast::forward_pointer_holder<ISquarePtr> ISquareFwdPtr;
     class ICirclePtr;
-    typedef beautiful_capi_DownCast::forward_pointer_holder<ICirclePtr> ICircleFwdPtr;
 }
 
 #endif /* __cplusplus */

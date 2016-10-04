@@ -27,5 +27,5 @@
 enum EPrintingDevice
 {
     printer = 1,
-    plotter = 2,
+    plotter = 2
 };

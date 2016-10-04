@@ -32,13 +32,13 @@
 #include "Example/Geometry/Brep.h"
 #include "Example/Geometry/Sphere.h"
 
-#ifdef __cplusplus
 
-namespace Example { namespace Geometry { 
+#endif /* EXAMPLE_GEOMETRY_INCLUDED */
 
-}}
+#ifndef EXAMPLE_GEOMETRY_INCLUDED
+#define EXAMPLE_GEOMETRY_INCLUDED
 
-#endif /* __cplusplus */
+
 
 #endif /* EXAMPLE_GEOMETRY_INCLUDED */
 

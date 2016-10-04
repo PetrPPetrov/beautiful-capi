@@ -31,10 +31,10 @@
 
 #include <stdexcept>
 #include <cassert>
-#include "Exception/Generic.h"
-#include "Exception/BadArgument.h"
 #include "Exception/NullArgument.h"
+#include "Exception/BadArgument.h"
 #include "Exception/DivisionByZero.h"
+#include "Exception/Generic.h"
 
 namespace beautiful_capi_Callback
 {
@@ -45,13 +45,13 @@ namespace beautiful_capi_Callback
             case 0:
                 return;
             case 1:
-                throw Exception::Generic(exception_object, false);
+                throw Exception::Generic(Exception::Generic::force_creating_from_raw_pointer, exception_object, false);
             case 2:
-                throw Exception::BadArgument(exception_object, false);
+                throw Exception::BadArgument(Exception::BadArgument::force_creating_from_raw_pointer, exception_object, false);
             case 3:
-                throw Exception::NullArgument(exception_object, false);
+                throw Exception::NullArgument(Exception::NullArgument::force_creating_from_raw_pointer, exception_object, false);
             case 4:
-                throw Exception::DivisionByZero(exception_object, false);
+                throw Exception::DivisionByZero(Exception::DivisionByZero::force_creating_from_raw_pointer, exception_object, false);
             default:
                 assert(false);
             case -1:

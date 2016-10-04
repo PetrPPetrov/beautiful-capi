@@ -115,19 +115,10 @@ def run_tests(input_folder, output_folder):
     process_example(input_folder, 'point_set', base_backup_folder)
     process_example(input_folder, 'raw_pointer_semantic', base_backup_folder)
     process_example(input_folder, 'reference_counted', base_backup_folder)
-    process_example(input_folder, 'single_file', base_backup_folder)
     process_example(input_folder, 'virtual_interface', base_backup_folder)
     process_example(input_folder, 'template', base_backup_folder)
     process_test(input_folder, 'file_options', 'test00', base_backup_folder)
     process_test(input_folder, 'file_options', 'test01', base_backup_folder)
-    process_test(input_folder, 'file_options', 'test02', base_backup_folder)
-    process_test(input_folder, 'file_options', 'test03', base_backup_folder)
-    process_test(input_folder, 'file_options', 'test04', base_backup_folder)
-    process_test(input_folder, 'file_options', 'test05', base_backup_folder)
-    process_test(input_folder, 'file_options', 'test06', base_backup_folder)
-    process_test(input_folder, 'file_options', 'test07', base_backup_folder)
-    process_test(input_folder, 'file_options', 'test08', base_backup_folder)
-    process_test(input_folder, 'file_options', 'test09', base_backup_folder)
 
 
 def main():

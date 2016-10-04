@@ -196,8 +196,6 @@ class TEnumeration(object):
 
 class TTemplate(object):
     def __init__(self):
-        self.name = ""
-        self.name_filled = False
         self.arguments = []
         self.instantiations = []
         self.classes = []
@@ -215,10 +213,6 @@ class TTemplate(object):
             new_element = TClass()
             new_element.load(element)
             self.classes.append(new_element)
-        if dom_node.hasAttribute("name"):
-            cur_attr = dom_node.getAttribute("name")
-            self.name = cur_attr
-            self.name_filled = True
     
 
 class TInstantiation(object):

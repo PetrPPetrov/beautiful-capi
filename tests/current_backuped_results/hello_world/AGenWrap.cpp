@@ -62,24 +62,23 @@
     #error "Unknown platform"
 #endif
 
-HELLOWORLD_API void* HELLOWORLD_API_CONVENTION helloworld_printer_copy(void* object_pointer)
-{
-    return new HelloWorld::PrinterImpl(*static_cast<HelloWorld::PrinterImpl*>(object_pointer));
-}
-
-HELLOWORLD_API void* HELLOWORLD_API_CONVENTION helloworld_printer_default()
+HELLOWORLD_API void* HELLOWORLD_API_CONVENTION hello_world_printer_default()
 {
     return new HelloWorld::PrinterImpl();
 }
 
-HELLOWORLD_API void HELLOWORLD_API_CONVENTION helloworld_printer_delete(void* object_pointer)
-{
-    delete static_cast<HelloWorld::PrinterImpl*>(object_pointer);
-}
-
-HELLOWORLD_API void HELLOWORLD_API_CONVENTION helloworld_printer_show(void* object_pointer)
+HELLOWORLD_API void HELLOWORLD_API_CONVENTION hello_world_printer_show(void* object_pointer)
 {
     const HelloWorld::PrinterImpl* self = static_cast<HelloWorld::PrinterImpl*>(object_pointer);
     self->Show();
 }
 
+HELLOWORLD_API void* HELLOWORLD_API_CONVENTION hello_world_printer_copy(void* object_pointer)
+{
+    return new HelloWorld::PrinterImpl(*static_cast<HelloWorld::PrinterImpl*>(object_pointer));
+}
+
+HELLOWORLD_API void HELLOWORLD_API_CONVENTION hello_world_printer_delete(void* object_pointer)
+{
+    delete static_cast<HelloWorld::PrinterImpl*>(object_pointer);
+}

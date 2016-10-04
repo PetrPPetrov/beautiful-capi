@@ -32,24 +32,7 @@
 #include "PointSet/Position.h"
 #include "PointSet/Points.h"
 #include "PointSet/PointSet.h"
-#include "PointSet.h"
 
-#ifdef __cplusplus
-
-namespace PointSet { 
-
-template<typename TargetType, typename SourceType>
-TargetType down_cast(const SourceType&);
-
-}
-
-#endif /* __cplusplus */
 
 #endif /* POINTSET_INCLUDED */
-
-#ifndef POINTSET_H_INCLUDED
-#define POINTSET_H_INCLUDED
-
-
-#endif /* POINTSET_H_INCLUDED */
 

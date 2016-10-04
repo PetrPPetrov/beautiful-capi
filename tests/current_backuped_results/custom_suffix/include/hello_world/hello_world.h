@@ -33,16 +33,6 @@
 #include "hello_world/scanner.h"
 #include "hello_world/plotter.h"
 
-#ifdef __cplusplus
-
-namespace hello_world { 
-
-template<typename TargetType, typename SourceType>
-TargetType down_cast(const SourceType&);
-
-}
-
-#endif /* __cplusplus */
 
 #endif /* HELLO_WORLD_INCLUDED */
 

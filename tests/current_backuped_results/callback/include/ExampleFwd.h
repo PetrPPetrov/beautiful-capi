@@ -29,9 +29,6 @@
 
 #ifdef __cplusplus
 
-#include <memory>
-#include "Callback/common/forward_holder.h"
-
 #ifndef BEAUTIFUL_CAPI_CALLBACK_CHECK_AND_THROW_EXCEPTION_FORWARD_DECLARATION
 #define BEAUTIFUL_CAPI_CALLBACK_CHECK_AND_THROW_EXCEPTION_FORWARD_DECLARATION
 
@@ -45,11 +42,8 @@ namespace beautiful_capi_Callback
 namespace Example
 {
     class PrinterPtr;
-    typedef beautiful_capi_Callback::forward_pointer_holder<PrinterPtr> PrinterFwdPtr;
     class Person;
-    typedef beautiful_capi_Callback::forward_pointer_holder<Person> PersonFwdPtr;
-    class CustomPrinterPtr;
-    typedef beautiful_capi_Callback::forward_pointer_holder<CustomPrinterPtr> CustomPrinterFwdPtr;
+    class PrinterCallbackPtr;
 }
 
 #endif /* __cplusplus */

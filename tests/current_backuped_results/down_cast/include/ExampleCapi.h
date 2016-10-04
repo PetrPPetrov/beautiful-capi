@@ -67,34 +67,34 @@
     #error "Unknown platform"
 #endif
 
-EXAMPLE_API void* EXAMPLE_API_CONVENTION examplecreate_triangle();
-EXAMPLE_API void* EXAMPLE_API_CONVENTION examplecreate_square();
-EXAMPLE_API void* EXAMPLE_API_CONVENTION examplecreate_circle();
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_ishape_cast_to_example_ipolygon(void* object_pointer);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_ipolygon_cast_to_example_itriangle(void* object_pointer);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_ishape_cast_to_example_itriangle(void* object_pointer);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_ipolygon_cast_to_example_isquare(void* object_pointer);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_ishape_cast_to_example_isquare(void* object_pointer);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_ishape_cast_to_example_icircle(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_ishape_add_ref(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_ishape_release(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_ishape_show(void* object_pointer);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_ipolygon_cast_to_base(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_ipolygon_add_ref(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_ipolygon_release(void* object_pointer);
-EXAMPLE_API int EXAMPLE_API_CONVENTION example_ipolygon_getpointscount(void* object_pointer);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_itriangle_cast_to_base(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_itriangle_add_ref(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_itriangle_release(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_itriangle_setpoints(void* object_pointer, double x1, double y1, double x2, double y2, double x3, double y3);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_isquare_cast_to_base(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_isquare_add_ref(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_isquare_release(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_isquare_setsize(void* object_pointer, double size);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_icircle_cast_to_base(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_icircle_add_ref(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_icircle_release(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_icircle_setradius(void* object_pointer, double radius);
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_create_triangle();
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_create_square();
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_create_circle();
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_i_shape_show(void* object_pointer);
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_i_shape_add_ref(void* object_pointer);
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_i_shape_release(void* object_pointer);
+EXAMPLE_API int EXAMPLE_API_CONVENTION example_i_polygon_get_points_count(void* object_pointer);
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_i_polygon_add_ref(void* object_pointer);
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_i_polygon_release(void* object_pointer);
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_i_polygon_cast_to_base(void* object_pointer);
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_i_shape_cast_to_example_i_polygon(void* source_object);
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_i_triangle_set_points(void* object_pointer, double x1, double y1, double x2, double y2, double x3, double y3);
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_i_triangle_add_ref(void* object_pointer);
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_i_triangle_release(void* object_pointer);
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_i_triangle_cast_to_base(void* object_pointer);
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_i_shape_cast_to_example_i_triangle(void* source_object);
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_i_polygon_cast_to_example_i_triangle(void* source_object);
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_i_square_set_size(void* object_pointer, double size);
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_i_square_add_ref(void* object_pointer);
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_i_square_release(void* object_pointer);
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_i_square_cast_to_base(void* object_pointer);
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_i_shape_cast_to_example_i_square(void* source_object);
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_i_polygon_cast_to_example_i_square(void* source_object);
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_i_circle_set_radius(void* object_pointer, double radius);
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_i_circle_add_ref(void* object_pointer);
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_i_circle_release(void* object_pointer);
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_i_circle_cast_to_base(void* object_pointer);
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_i_shape_cast_to_example_i_circle(void* source_object);
 
 #endif /* EXAMPLE_CAPI_INCLUDED */
 

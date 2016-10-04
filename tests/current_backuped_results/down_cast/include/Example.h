@@ -37,66 +37,19 @@
 
 #ifdef __cplusplus
 
-namespace Example { 
+namespace Example {
 
-inline Example::IShapeFwdPtr CreateTriangle()
+inline Example::IShapePtr CreateTriangle()
 {
-    return Example::IShapeFwdPtr(examplecreate_triangle(), false);
+    return Example::IShapePtr(Example::IShapePtr::force_creating_from_raw_pointer, example_create_triangle(), false);
 }
-
-inline Example::IShapeFwdPtr CreateSquare()
+inline Example::IShapePtr CreateSquare()
 {
-    return Example::IShapeFwdPtr(examplecreate_square(), false);
+    return Example::IShapePtr(Example::IShapePtr::force_creating_from_raw_pointer, example_create_square(), false);
 }
-
-inline Example::IShapeFwdPtr CreateCircle()
+inline Example::IShapePtr CreateCircle()
 {
-    return Example::IShapeFwdPtr(examplecreate_circle(), false);
-}
-
-template<typename TargetType, typename SourceType>
-TargetType down_cast(const SourceType&);
-
-template<>
-inline Example::IPolygonPtr down_cast(const Example::IShapePtr& input_object)
-{
-    struct raw_pointer_holder { void* raw_pointer; };
-    return Example::IPolygonPtr(example_ishape_cast_to_example_ipolygon(reinterpret_cast<const raw_pointer_holder*>(&input_object)->raw_pointer), true);
-}
-
-template<>
-inline Example::ITrianglePtr down_cast(const Example::IPolygonPtr& input_object)
-{
-    struct raw_pointer_holder { void* raw_pointer; };
-    return Example::ITrianglePtr(example_ipolygon_cast_to_example_itriangle(reinterpret_cast<const raw_pointer_holder*>(&input_object)->raw_pointer), true);
-}
-
-template<>
-inline Example::ITrianglePtr down_cast(const Example::IShapePtr& input_object)
-{
-    struct raw_pointer_holder { void* raw_pointer; };
-    return Example::ITrianglePtr(example_ishape_cast_to_example_itriangle(reinterpret_cast<const raw_pointer_holder*>(&input_object)->raw_pointer), true);
-}
-
-template<>
-inline Example::ISquarePtr down_cast(const Example::IPolygonPtr& input_object)
-{
-    struct raw_pointer_holder { void* raw_pointer; };
-    return Example::ISquarePtr(example_ipolygon_cast_to_example_isquare(reinterpret_cast<const raw_pointer_holder*>(&input_object)->raw_pointer), true);
-}
-
-template<>
-inline Example::ISquarePtr down_cast(const Example::IShapePtr& input_object)
-{
-    struct raw_pointer_holder { void* raw_pointer; };
-    return Example::ISquarePtr(example_ishape_cast_to_example_isquare(reinterpret_cast<const raw_pointer_holder*>(&input_object)->raw_pointer), true);
-}
-
-template<>
-inline Example::ICirclePtr down_cast(const Example::IShapePtr& input_object)
-{
-    struct raw_pointer_holder { void* raw_pointer; };
-    return Example::ICirclePtr(example_ishape_cast_to_example_icircle(reinterpret_cast<const raw_pointer_holder*>(&input_object)->raw_pointer), true);
+    return Example::IShapePtr(Example::IShapePtr::force_creating_from_raw_pointer, example_create_circle(), false);
 }
 
 }

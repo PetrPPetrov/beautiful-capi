@@ -61,7 +61,8 @@ class LifecycleTraits(object):
 
     @staticmethod
     def generate_copy_constructor_declaration(out: FileGenerator, class_generator):
-        out.put_line('inline {class_name}(const {class_name}& other);'.format(
+        out.put_line('inline {class_short_name}(const {class_name}& other);'.format(
+            class_short_name=class_generator.wrap_short_name,
             class_name=class_generator.wrap_name))
 
     def generate_std_methods_declarations(self, out: FileGenerator, class_generator):
@@ -144,14 +145,15 @@ class CopySemantic(LifecycleTraits):
         super().generate_copy_constructor_declaration(out, class_generator)
         out.put_line('enum ECreateFromRawPointer { force_creating_from_raw_pointer };')
         out.put_line('inline {class_name}(ECreateFromRawPointer, void *object_pointer, bool copy_object);'.format(
-            class_name=class_generator.wrap_name))
+            class_name=class_generator.wrap_short_name))
         out.put_line('inline ~{class_name}();'.format(
-            class_name=class_generator.wrap_name))
+            class_name=class_generator.wrap_short_name))
         super().generate_std_methods_declarations(out, class_generator)
 
     def __generate_copy_constructor_definition(self, out: FileGenerator, class_generator):
-        out.put_line('inline {namespace}::{class_name}(const {class_name}& other){base_init}'.format(
+        out.put_line('inline {namespace}::{class_short_name}(const {class_name}& other){base_init}'.format(
             namespace=class_generator.full_wrap_name,
+            class_short_name=class_generator.wrap_short_name,
             class_name=class_generator.wrap_name,
             base_init=get_base_init(class_generator))
         )
@@ -171,7 +173,7 @@ class CopySemantic(LifecycleTraits):
         )
         out.put_line('inline {namespace}::{class_name}({arguments}){base_init}'.format(
             namespace=class_generator.full_wrap_name,
-            class_name=class_generator.wrap_name,
+            class_name=class_generator.wrap_short_name,
             arguments=constructor_arguments,
             base_init=get_base_init(class_generator))
         )
@@ -188,7 +190,7 @@ class CopySemantic(LifecycleTraits):
     def __generate_destructor(self, out: FileGenerator, class_generator):
         out.put_line('inline {namespace}::~{class_name}()'.format(
             namespace=class_generator.full_wrap_name,
-            class_name=class_generator.wrap_name)
+            class_name=class_generator.wrap_short_name)
         )
         with IndentScope(out):
             out.put_line('if (mObject)')
@@ -296,7 +298,7 @@ class RawPointerSemantic(LifecycleTraits):
         super().generate_copy_constructor_declaration(out, class_generator)
         out.put_line('enum ECreateFromRawPointer { force_creating_from_raw_pointer };')
         out.put_line('inline {class_name}(ECreateFromRawPointer, void *object_pointer, bool);'.format(
-            class_name=class_generator.wrap_name))
+            class_name=class_generator.wrap_short_name))
         out.put_line('inline void {delete_method}();'.format(
             class_name=class_generator.wrap_name, delete_method=self.params.delete_method))
         super().generate_std_methods_declarations(out, class_generator)
@@ -305,8 +307,9 @@ class RawPointerSemantic(LifecycleTraits):
 
     @staticmethod
     def __generate_copy_constructor_definition(out: FileGenerator, class_generator):
-        out.put_line('inline {namespace}::{class_name}(const {class_name}& other){base_init}'.format(
+        out.put_line('inline {namespace}::{class_short_name}(const {class_name}& other){base_init}'.format(
             namespace=class_generator.full_wrap_name,
+            class_short_name=class_generator.wrap_short_name,
             class_name=class_generator.wrap_name,
             base_init=get_base_init(class_generator))
         )
@@ -320,7 +323,7 @@ class RawPointerSemantic(LifecycleTraits):
         )
         out.put_line('inline {namespace}::{class_name}({arguments}){base_init}'.format(
             namespace=class_generator.full_wrap_name,
-            class_name=class_generator.wrap_name,
+            class_name=class_generator.wrap_short_name,
             arguments=constructor_arguments,
             base_init=get_base_init(class_generator))
         )
@@ -416,16 +419,17 @@ class RefCountedSemantic(LifecycleTraits):
         super().generate_copy_constructor_declaration(out, class_generator)
         out.put_line('enum ECreateFromRawPointer { force_creating_from_raw_pointer };')
         out.put_line('inline {class_name}(ECreateFromRawPointer, void *object_pointer, bool add_ref_object);'.format(
-            class_name=class_generator.wrap_name))
+            class_name=class_generator.wrap_short_name))
         out.put_line('inline ~{class_name}();'.format(
-            class_name=class_generator.wrap_name))
+            class_name=class_generator.wrap_short_name))
         super().generate_std_methods_declarations(out, class_generator)
         out.put_line('inline {class_name}* operator->();'.format(class_name=class_generator.wrap_name))
         out.put_line('inline const {class_name}* operator->() const;'.format(class_name=class_generator.wrap_name))
 
     def __generate_copy_constructor_definition(self, out: FileGenerator, class_generator):
-        out.put_line('inline {namespace}::{class_name}(const {class_name}& other){base_init}'.format(
+        out.put_line('inline {namespace}::{class_short_name}(const {class_name}& other){base_init}'.format(
             namespace=class_generator.full_wrap_name,
+            class_short_name=class_generator.wrap_short_name,
             class_name=class_generator.wrap_name,
             base_init=get_base_init(class_generator))
         )
@@ -442,7 +446,7 @@ class RefCountedSemantic(LifecycleTraits):
         )
         out.put_line('inline {namespace}::{class_name}({arguments}){base_init}'.format(
             namespace=class_generator.full_wrap_name,
-            class_name=class_generator.wrap_name,
+            class_name=class_generator.wrap_short_name,
             arguments=constructor_arguments,
             base_init=get_base_init(class_generator))
         )
@@ -456,7 +460,7 @@ class RefCountedSemantic(LifecycleTraits):
     def __generate_destructor(self, out: FileGenerator, class_generator):
         out.put_line('inline {namespace}::~{class_name}()'.format(
             namespace=class_generator.full_wrap_name,
-            class_name=class_generator.wrap_name)
+            class_name=class_generator.wrap_short_name)
         )
         with IndentScope(out):
             out.put_line('if (mObject)')

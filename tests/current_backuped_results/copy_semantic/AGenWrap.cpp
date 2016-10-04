@@ -63,19 +63,9 @@
     #error "Unknown platform"
 #endif
 
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_printer_copy(void* object_pointer)
-{
-    return new Example::PrinterImpl(*static_cast<Example::PrinterImpl*>(object_pointer));
-}
-
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_printer_new()
 {
     return new Example::PrinterImpl();
-}
-
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_delete(void* object_pointer)
-{
-    delete static_cast<Example::PrinterImpl*>(object_pointer);
 }
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_show(void* object_pointer, const char* text)
@@ -84,9 +74,14 @@ EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_show(void* object_pointe
     self->Show(text);
 }
 
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_dumper_copy(void* object_pointer)
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_printer_copy(void* object_pointer)
 {
-    return new Example::DumperImpl(*static_cast<Example::DumperImpl*>(object_pointer));
+    return new Example::PrinterImpl(*static_cast<Example::PrinterImpl*>(object_pointer));
+}
+
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_delete(void* object_pointer)
+{
+    delete static_cast<Example::PrinterImpl*>(object_pointer);
 }
 
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_dumper_new()
@@ -94,18 +89,14 @@ EXAMPLE_API void* EXAMPLE_API_CONVENTION example_dumper_new()
     return new Example::DumperImpl();
 }
 
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_dumper_delete(void* object_pointer)
-{
-    delete static_cast<Example::DumperImpl*>(object_pointer);
-}
-
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_dumper_getprinter(void* object_pointer)
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_dumper_get_printer(void* object_pointer)
 {
     const Example::DumperImpl* self = static_cast<Example::DumperImpl*>(object_pointer);
-    Example::PrinterImpl result(self->GetPrinter()); return example_printer_copy(&result);
+    Example::PrinterImpl result_implementation_copy(self->GetPrinter());
+    return new Example::PrinterImpl(result_implementation_copy);
 }
 
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_dumper_setprinter(void* object_pointer, void* printer)
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_dumper_set_printer(void* object_pointer, void* printer)
 {
     Example::DumperImpl* self = static_cast<Example::DumperImpl*>(object_pointer);
     self->SetPrinter(*static_cast<Example::PrinterImpl*>(printer));
@@ -117,3 +108,12 @@ EXAMPLE_API void EXAMPLE_API_CONVENTION example_dumper_dump(void* object_pointer
     self->Dump();
 }
 
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_dumper_copy(void* object_pointer)
+{
+    return new Example::DumperImpl(*static_cast<Example::DumperImpl*>(object_pointer));
+}
+
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_dumper_delete(void* object_pointer)
+{
+    delete static_cast<Example::DumperImpl*>(object_pointer);
+}

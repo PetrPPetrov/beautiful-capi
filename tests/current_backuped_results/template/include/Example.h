@@ -29,48 +29,24 @@
 
 #include "ExampleCapi.h"
 #include "ExampleFwd.h"
-#include "Example/Position_float.h"
-#include "Example/Position_double.h"
-#include "Example/Position4D_float.h"
-#include "Example/Position4D_double.h"
-#include "Example/Model_float.h"
-#include "Example/Model_double.h"
-#include "Example/VectorOf_int.h"
-#include "Example/VectorOf_double.h"
-#include "Example/VectorOf_ExamplePosition_float.h"
-#include "Example/VectorOf_ExamplePosition_double.h"
-#include "Example/VectorOf_ExamplePosition4D_float.h"
-#include "Example/VectorOf_ExamplePosition4D_double.h"
-#include "Example/VectorOf_ExampleVectorOf_ExamplePosition4D_float.h"
-#include "Example/VectorOfObjects_ExampleModelPtr_float.h"
-#include "Example/VectorOfObjects_ExampleModelPtr_double.h"
-#include "Example/VectorOfObjectsDerived_ExampleModelPtr_float.h"
-#include "Example/VectorOfObjectsDerived_ExampleModelPtr_double.h"
+#include "Example/Positionfloat.h"
+#include "Example/Positiondouble.h"
+#include "Example/Position4Dfloat.h"
+#include "Example/Position4Ddouble.h"
+#include "Example/Modelfloat.h"
+#include "Example/Modeldouble.h"
+#include "Example/VectorOfint.h"
+#include "Example/VectorOfdouble.h"
+#include "Example/VectorOfExamplePositionfloat.h"
+#include "Example/VectorOfExamplePositiondouble.h"
+#include "Example/VectorOfExamplePosition4Dfloat.h"
+#include "Example/VectorOfExamplePosition4Ddouble.h"
+#include "Example/VectorOfExampleVectorOfExamplePosition4Dfloat.h"
+#include "Example/VectorOfObjectsExampleModelfloat.h"
+#include "Example/VectorOfObjectsExampleModeldouble.h"
+#include "Example/VectorOfObjectsDerivedExampleModelfloat.h"
+#include "Example/VectorOfObjectsDerivedExampleModeldouble.h"
 
-#ifdef __cplusplus
-
-namespace Example { 
-
-template<typename TargetType, typename SourceType>
-TargetType down_cast(const SourceType&);
-
-template<>
-inline Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<float> > down_cast(const Example::VectorOfObjectsPtr<Example::ModelPtr<float> >& input_object)
-{
-    struct raw_pointer_holder { void* raw_pointer; };
-    return Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<float> >(example_vectorofobjects_examplemodelptr_float_cast_to_example_vectorofobjectsderived_examplemodelptr_float(reinterpret_cast<const raw_pointer_holder*>(&input_object)->raw_pointer), true);
-}
-
-template<>
-inline Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<double> > down_cast(const Example::VectorOfObjectsPtr<Example::ModelPtr<double> >& input_object)
-{
-    struct raw_pointer_holder { void* raw_pointer; };
-    return Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<double> >(example_vectorofobjects_examplemodelptr_double_cast_to_example_vectorofobjectsderived_examplemodelptr_double(reinterpret_cast<const raw_pointer_holder*>(&input_object)->raw_pointer), true);
-}
-
-}
-
-#endif /* __cplusplus */
 
 #endif /* EXAMPLE_INCLUDED */
 

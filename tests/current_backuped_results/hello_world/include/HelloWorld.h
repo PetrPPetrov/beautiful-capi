@@ -30,24 +30,7 @@
 #include "HelloWorldCapi.h"
 #include "HelloWorldFwd.h"
 #include "HelloWorld/Printer.h"
-#include "HelloWorld.h"
 
-#ifdef __cplusplus
-
-namespace HelloWorld { 
-
-template<typename TargetType, typename SourceType>
-TargetType down_cast(const SourceType&);
-
-}
-
-#endif /* __cplusplus */
 
 #endif /* HELLOWORLD_INCLUDED */
-
-#ifndef HELLOWORLD_H_INCLUDED
-#define HELLOWORLD_H_INCLUDED
-
-
-#endif /* HELLOWORLD_H_INCLUDED */
 

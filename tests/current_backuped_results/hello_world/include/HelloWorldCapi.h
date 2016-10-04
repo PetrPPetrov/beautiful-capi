@@ -67,10 +67,10 @@
     #error "Unknown platform"
 #endif
 
-HELLOWORLD_API void* HELLOWORLD_API_CONVENTION helloworld_printer_copy(void* object_pointer);
-HELLOWORLD_API void* HELLOWORLD_API_CONVENTION helloworld_printer_default();
-HELLOWORLD_API void HELLOWORLD_API_CONVENTION helloworld_printer_delete(void* object_pointer);
-HELLOWORLD_API void HELLOWORLD_API_CONVENTION helloworld_printer_show(void* object_pointer);
+HELLOWORLD_API void* HELLOWORLD_API_CONVENTION hello_world_printer_default();
+HELLOWORLD_API void HELLOWORLD_API_CONVENTION hello_world_printer_show(void* object_pointer);
+HELLOWORLD_API void* HELLOWORLD_API_CONVENTION hello_world_printer_copy(void* object_pointer);
+HELLOWORLD_API void HELLOWORLD_API_CONVENTION hello_world_printer_delete(void* object_pointer);
 
 #endif /* HELLOWORLD_CAPI_INCLUDED */
 

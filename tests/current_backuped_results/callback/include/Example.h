@@ -29,45 +29,35 @@
 
 #ifdef __cplusplus
 
-namespace Example { 
+namespace Example {
 
 enum EPrintingDevice
 {
     printer = 1,
-    plotter = 2,
+    plotter = 2
 };
 
 }
-#endif /* __cplusplus */
 
+#endif /* __cplusplus */
 
 #include "ExampleCapi.h"
 #include "ExampleFwd.h"
 #include "Example/Printer.h"
 #include "Example/Person.h"
-#include "Example/CustomPrinter.h"
+#include "Example/PrinterCallback.h"
 #include "Callback/common/check_and_throw_exception.h"
 
 #ifdef __cplusplus
 
-namespace Example { 
+namespace Example {
 
-inline Example::PrinterFwdPtr CreateDefaultPrinter(Example::EPrintingDevice printing_device)
+inline Example::PrinterPtr CreateDefaultPrinter(Example::EPrintingDevice printing_device)
 {
     beautiful_capi_callback_exception_info_t exception_info;
-    Example::PrinterFwdPtr result(examplecreate_default_printer(&exception_info, static_cast<int>(printing_device)), false);
+    Example::PrinterPtr result(Example::PrinterPtr::force_creating_from_raw_pointer, example_create_default_printer(&exception_info, static_cast<int>(printing_device)), false);
     beautiful_capi_Callback::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
     return result;
-}
-
-template<typename TargetType, typename SourceType>
-TargetType down_cast(const SourceType&);
-
-template<>
-inline Example::CustomPrinterPtr down_cast(const Example::PrinterPtr& input_object)
-{
-    struct raw_pointer_holder { void* raw_pointer; };
-    return Example::CustomPrinterPtr(example_printer_cast_to_example_customprinter(reinterpret_cast<const raw_pointer_holder*>(&input_object)->raw_pointer), true);
 }
 
 }

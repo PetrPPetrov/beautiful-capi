@@ -67,16 +67,16 @@
     #error "Unknown platform"
 #endif
 
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_add_ref(void* object_pointer);
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_printer_new();
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_release(void* object_pointer);
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_show(void* object_pointer, const char* text);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_dumper_copy(void* object_pointer);
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_add_ref(void* object_pointer);
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_release(void* object_pointer);
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_dumper_new();
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_dumper_delete(void* object_pointer);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_dumper_getprinter(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_dumper_setprinter(void* object_pointer, void* printer);
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_dumper_get_printer(void* object_pointer);
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_dumper_set_printer(void* object_pointer, void* printer);
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_dumper_dump(void* object_pointer);
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_dumper_copy(void* object_pointer);
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_dumper_delete(void* object_pointer);
 
 #endif /* EXAMPLE_CAPI_INCLUDED */
 

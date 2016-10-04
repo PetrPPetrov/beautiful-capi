@@ -31,16 +31,6 @@
 #include "ExampleFwd.h"
 #include "Example/PrinterSharedPtr.h"
 
-#ifdef __cplusplus
-
-namespace Example { 
-
-template<typename TargetType, typename SourceType>
-TargetType down_cast(const SourceType&);
-
-}
-
-#endif /* __cplusplus */
 
 #endif /* EXAMPLE_INCLUDED */
 

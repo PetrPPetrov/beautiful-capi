@@ -67,25 +67,25 @@
     #error "Unknown platform"
 #endif
 
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_geometry_brep_body_copy(void* object_pointer);
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_geometry_brep_body_new();
+EXAMPLE_API const char* EXAMPLE_API_CONVENTION example_geometry_brep_body_get_name(void* object_pointer);
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_geometry_brep_body_set_name(void* object_pointer, const char* value);
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_geometry_brep_body_copy(void* object_pointer);
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_geometry_brep_body_delete(void* object_pointer);
-EXAMPLE_API const char* EXAMPLE_API_CONVENTION example_geometry_brep_body_getname(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_geometry_brep_body_setname(void* object_pointer, const char* value);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_geometry_sphere_copy(void* object_pointer);
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_geometry_sphere_new();
+EXAMPLE_API double EXAMPLE_API_CONVENTION example_geometry_sphere_get_radius(void* object_pointer);
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_geometry_sphere_set_radius(void* object_pointer, double value);
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_geometry_sphere_copy(void* object_pointer);
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_geometry_sphere_delete(void* object_pointer);
-EXAMPLE_API double EXAMPLE_API_CONVENTION example_geometry_sphere_getradius(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_geometry_sphere_setradius(void* object_pointer, double value);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_scene_node_copy(void* object_pointer);
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_scene_node_new();
+EXAMPLE_API const char* EXAMPLE_API_CONVENTION example_scene_node_get_name(void* object_pointer);
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_scene_node_set_name(void* object_pointer, const char* value);
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_scene_node_copy(void* object_pointer);
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_scene_node_delete(void* object_pointer);
-EXAMPLE_API const char* EXAMPLE_API_CONVENTION example_scene_node_getname(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_scene_node_setname(void* object_pointer, const char* value);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_printer_copy(void* object_pointer);
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_printer_new();
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_delete(void* object_pointer);
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_show(void* object_pointer, const char* text);
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_printer_copy(void* object_pointer);
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_delete(void* object_pointer);
 
 #endif /* EXAMPLE_CAPI_INCLUDED */
 

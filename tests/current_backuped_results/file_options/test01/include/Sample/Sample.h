@@ -31,16 +31,6 @@
 #include "Sample/SampleFwd.h"
 #include "Sample/Data.h"
 
-#ifdef __cplusplus
-
-namespace Sample { 
-
-template<typename TargetType, typename SourceType>
-TargetType down_cast(const SourceType&);
-
-}
-
-#endif /* __cplusplus */
 
 #endif /* SAMPLE_INCLUDED */
 

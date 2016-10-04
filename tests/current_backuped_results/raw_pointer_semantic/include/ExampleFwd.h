@@ -29,15 +29,10 @@
 
 #ifdef __cplusplus
 
-#include <memory>
-#include "RawPointerSemantic/common/forward_holder.h"
-
 namespace Example
 {
     class PrinterRawPtr;
-    typedef beautiful_capi_RawPointerSemantic::forward_pointer_holder<PrinterRawPtr> PrinterFwdPtr;
     class Dumper;
-    typedef beautiful_capi_RawPointerSemantic::forward_pointer_holder<Dumper> DumperFwdPtr;
 }
 
 #endif /* __cplusplus */

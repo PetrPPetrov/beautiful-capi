@@ -29,17 +29,11 @@
 
 #ifdef __cplusplus
 
-#include <memory>
-#include "custom_suffix/common/forward_holder.h"
-
 namespace hello_world
 {
     class printer;
-    typedef beautiful_capi_custom_suffix::forward_pointer_holder<printer> printer_fwd_ptr;
     class scanner_raw_ptr;
-    typedef beautiful_capi_custom_suffix::forward_pointer_holder<scanner_raw_ptr> scanner_fwd_ptr;
     class plotter_ptr;
-    typedef beautiful_capi_custom_suffix::forward_pointer_holder<plotter_ptr> plotter_fwd_ptr;
 }
 
 #endif /* __cplusplus */

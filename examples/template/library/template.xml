@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <template:api xmlns:template="http://gkmsoft.ru/beautifulcapi" project_name="Template">
   <namespace name="Example">
-    <template name="Position">
+    <template>
       <argument name="WorkType" type="typename"/>
       <instantiation>
         <argument name="WorkType" value="float"/>
@@ -25,7 +25,7 @@
         </method>
       </class>
     </template>
-    <template name="Position4D">
+    <template>
       <argument name="WorkType" type="typename"/>
       <instantiation>
         <argument name="WorkType" value="float"/>
@@ -41,7 +41,7 @@
         </method>
       </class>
     </template>
-    <template name="Model">
+    <template>
       <argument name="WorkType" type="typename"/>
       <instantiation>
         <argument name="WorkType" value="float"/>
@@ -61,7 +61,7 @@
         </method>
       </class>
     </template>
-    <template name="VectorOf">
+    <template>
       <argument name="T" type="typename"/>
       <instantiation>
         <argument name="T" value="int"/>
@@ -96,7 +96,7 @@
         </method>
       </class>
     </template>
-    <template name="VectorOfObjects">
+    <template>
       <argument name="T" type="typename"/>
       <instantiation>
         <argument name="T" value="Example::Model&lt;float>"/>
@@ -116,7 +116,7 @@
         </method>
       </class>
     </template>
-    <template name="VectorOfObjectsDerived">
+    <template>
       <argument name="T" type="typename"/>
       <instantiation>
         <argument name="T" value="Example::Model&lt;float>"/>

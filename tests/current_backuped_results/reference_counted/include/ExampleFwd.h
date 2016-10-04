@@ -29,15 +29,10 @@
 
 #ifdef __cplusplus
 
-#include <memory>
-#include "ReferenceCounted/common/forward_holder.h"
-
 namespace Example
 {
     class PrinterPtr;
-    typedef beautiful_capi_ReferenceCounted::forward_pointer_holder<PrinterPtr> PrinterFwdPtr;
     class Dumper;
-    typedef beautiful_capi_ReferenceCounted::forward_pointer_holder<Dumper> DumperFwdPtr;
 }
 
 #endif /* __cplusplus */

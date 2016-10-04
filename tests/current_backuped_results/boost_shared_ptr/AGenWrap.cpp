@@ -62,24 +62,23 @@
     #error "Unknown platform"
 #endif
 
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_printersharedptr_copy(void* object_pointer)
-{
-    return new Example::PrinterSharedPtr(*static_cast<Example::PrinterSharedPtr*>(object_pointer));
-}
-
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_printersharedptr_default()
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_printer_shared_ptr_default()
 {
     return new Example::PrinterSharedPtr();
 }
 
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_printersharedptr_delete(void* object_pointer)
-{
-    delete static_cast<Example::PrinterSharedPtr*>(object_pointer);
-}
-
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_printersharedptr_show(void* object_pointer, const char* text)
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_shared_ptr_show(void* object_pointer, const char* text)
 {
     const Example::PrinterSharedPtr* self = static_cast<Example::PrinterSharedPtr*>(object_pointer);
     (*self)->Show(text);
 }
 
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_printer_shared_ptr_copy(void* object_pointer)
+{
+    return new Example::PrinterSharedPtr(*static_cast<Example::PrinterSharedPtr*>(object_pointer));
+}
+
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_shared_ptr_delete(void* object_pointer)
+{
+    delete static_cast<Example::PrinterSharedPtr*>(object_pointer);
+}

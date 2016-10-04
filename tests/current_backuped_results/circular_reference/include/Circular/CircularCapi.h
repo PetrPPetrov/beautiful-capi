@@ -67,14 +67,14 @@
     #error "Unknown platform"
 #endif
 
-CIRCULAR_API void* CIRCULAR_API_CONVENTION circular_classa_default();
-CIRCULAR_API void CIRCULAR_API_CONVENTION circular_classa_delete(void* object_pointer);
-CIRCULAR_API void CIRCULAR_API_CONVENTION circular_classa_setb(void* object_pointer, void* value);
-CIRCULAR_API void* CIRCULAR_API_CONVENTION circular_classa_getb(void* object_pointer);
-CIRCULAR_API void* CIRCULAR_API_CONVENTION circular_classb_default();
-CIRCULAR_API void CIRCULAR_API_CONVENTION circular_classb_delete(void* object_pointer);
-CIRCULAR_API void CIRCULAR_API_CONVENTION circular_classb_seta(void* object_pointer, void* value);
-CIRCULAR_API void* CIRCULAR_API_CONVENTION circular_classb_geta(void* object_pointer);
+CIRCULAR_API void* CIRCULAR_API_CONVENTION circular_class_a_default();
+CIRCULAR_API void CIRCULAR_API_CONVENTION circular_class_a_set_b(void* object_pointer, void* value);
+CIRCULAR_API void* CIRCULAR_API_CONVENTION circular_class_a_get_b(void* object_pointer);
+CIRCULAR_API void CIRCULAR_API_CONVENTION circular_class_a_delete(void* object_pointer);
+CIRCULAR_API void* CIRCULAR_API_CONVENTION circular_class_b_default();
+CIRCULAR_API void CIRCULAR_API_CONVENTION circular_class_b_set_a(void* object_pointer, void* value);
+CIRCULAR_API void* CIRCULAR_API_CONVENTION circular_class_b_get_a(void* object_pointer);
+CIRCULAR_API void CIRCULAR_API_CONVENTION circular_class_b_delete(void* object_pointer);
 
 #endif /* CIRCULAR_CAPI_INCLUDED */
 

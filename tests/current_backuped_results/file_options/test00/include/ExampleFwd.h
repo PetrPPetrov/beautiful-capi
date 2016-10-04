@@ -29,31 +29,70 @@
 
 #ifdef __cplusplus
 
-#include <memory>
-#include "Test/common/forward_holder.h"
-
 namespace Example
 {
-    class Printer;
-    typedef beautiful_capi_Test::forward_pointer_holder<Printer> PrinterFwdPtr;
     namespace Geometry
     {
-        class Sphere;
-        typedef beautiful_capi_Test::forward_pointer_holder<Sphere> SphereFwdPtr;
         namespace Brep
         {
             class Body;
-            typedef beautiful_capi_Test::forward_pointer_holder<Body> BodyFwdPtr;
         }
+        class Sphere;
     }
     namespace Scene
     {
         class Node;
-        typedef beautiful_capi_Test::forward_pointer_holder<Node> NodeFwdPtr;
     }
+    class Printer;
 }
 
 #endif /* __cplusplus */
 
 #endif /* EXAMPLE_FWD_INCLUDED */
+
+#ifndef EXAMPLE_GEOMETRY_FWD_INCLUDED
+#define EXAMPLE_GEOMETRY_FWD_INCLUDED
+
+#ifdef __cplusplus
+
+namespace Geometry
+{
+    namespace Brep
+    {
+        class Body;
+    }
+    class Sphere;
+}
+
+#endif /* __cplusplus */
+
+#endif /* EXAMPLE_GEOMETRY_FWD_INCLUDED */
+
+#ifndef EXAMPLE_GEOMETRY_BREP_FWD_INCLUDED
+#define EXAMPLE_GEOMETRY_BREP_FWD_INCLUDED
+
+#ifdef __cplusplus
+
+namespace Brep
+{
+    class Body;
+}
+
+#endif /* __cplusplus */
+
+#endif /* EXAMPLE_GEOMETRY_BREP_FWD_INCLUDED */
+
+#ifndef EXAMPLE_SCENE_FWD_INCLUDED
+#define EXAMPLE_SCENE_FWD_INCLUDED
+
+#ifdef __cplusplus
+
+namespace Scene
+{
+    class Node;
+}
+
+#endif /* __cplusplus */
+
+#endif /* EXAMPLE_SCENE_FWD_INCLUDED */
 

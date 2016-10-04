@@ -29,13 +29,9 @@
 
 #ifdef __cplusplus
 
-#include <memory>
-#include "boost_shared_ptr/common/forward_holder.h"
-
 namespace Example
 {
     class PrinterSharedPtr;
-    typedef beautiful_capi_boost_shared_ptr::forward_pointer_holder<PrinterSharedPtr> PrinterSharedPtrFwdPtr;
 }
 
 #endif /* __cplusplus */

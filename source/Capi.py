@@ -138,7 +138,7 @@ def main():
         '-s', '--internal-snippets-folder', nargs=None, default='./internal_snippets', metavar='OUTPUT_SNIPPETS',
         help='specifies output folder for generated library snippets')
     parser.add_argument(
-        '-c', '--clean', nargs=None, default=False, metavar='CLEAN',
+        '-c', '--clean', nargs=None, default=True, metavar='CLEAN',
         help='specifies whether if clean input and snippets directories'
     )
 

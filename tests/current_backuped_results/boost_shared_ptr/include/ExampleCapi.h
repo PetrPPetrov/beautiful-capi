@@ -67,10 +67,10 @@
     #error "Unknown platform"
 #endif
 
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_printersharedptr_copy(void* object_pointer);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_printersharedptr_default();
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_printersharedptr_delete(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_printersharedptr_show(void* object_pointer, const char* text);
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_printer_shared_ptr_default();
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_shared_ptr_show(void* object_pointer, const char* text);
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_printer_shared_ptr_copy(void* object_pointer);
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_shared_ptr_delete(void* object_pointer);
 
 #endif /* EXAMPLE_CAPI_INCLUDED */
 

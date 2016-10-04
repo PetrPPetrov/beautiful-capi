@@ -33,25 +33,20 @@
 
 #ifdef __cplusplus
 
-namespace Example { 
+namespace Example {
 
-inline Example::IShapeFwdPtr CreateTriangle()
+inline Example::IShapeRawPtr CreateTriangle()
 {
-    return Example::IShapeFwdPtr(examplecreate_triangle(), true);
+    return Example::IShapeRawPtr(Example::IShapeRawPtr::force_creating_from_raw_pointer, example_create_triangle(), false);
 }
-
-inline Example::IShapeFwdPtr CreateRectangle()
+inline Example::IShapeRawPtr CreateRectangle()
 {
-    return Example::IShapeFwdPtr(examplecreate_rectangle(), true);
+    return Example::IShapeRawPtr(Example::IShapeRawPtr::force_creating_from_raw_pointer, example_create_rectangle(), false);
 }
-
-inline Example::IShapeFwdPtr CreateCircle()
+inline Example::IShapeRawPtr CreateCircle()
 {
-    return Example::IShapeFwdPtr(examplecreate_circle(), true);
+    return Example::IShapeRawPtr(Example::IShapeRawPtr::force_creating_from_raw_pointer, example_create_circle(), false);
 }
-
-template<typename TargetType, typename SourceType>
-TargetType down_cast(const SourceType&);
 
 }
 

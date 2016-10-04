@@ -21,6 +21,7 @@
 
 
 import os
+from Helpers import fix_name
 
 
 class AtomicString(object):
@@ -219,7 +220,7 @@ class IndentScope(Indent):
 class WatchdogScope(object):
     def __init__(self, file_generator, watchdog_string):
         self.file_generator = file_generator
-        self.watchdog_string = watchdog_string
+        self.watchdog_string = fix_name(watchdog_string)
 
     def __enter__(self):
         self.file_generator.put_line('#ifndef {0}'.format(self.watchdog_string))

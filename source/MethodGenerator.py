@@ -55,7 +55,7 @@ class ConstructorGenerator(object):
         arguments = ', '.join(
             [argument_generator.wrap_argument_declaration() for argument_generator in self.argument_generators])
         return 'inline {name}({arguments})'.format(
-            name=self.parent_class_generator.wrap_name,
+            name=self.parent_class_generator.wrap_short_name,
             arguments=arguments
         )
 
@@ -66,7 +66,7 @@ class ConstructorGenerator(object):
         arguments_call = [argument_generator.wrap_2_c() for argument_generator in self.argument_generators]
         out.put_line('inline {namespace}::{class_name}({arguments}){base_init}'.format(
             namespace=self.parent_class_generator.full_wrap_name,
-            class_name=self.parent_class_generator.wrap_name,
+            class_name=self.parent_class_generator.wrap_short_name,
             arguments=arguments,
             base_init=get_base_init(self.parent_class_generator)
         ))

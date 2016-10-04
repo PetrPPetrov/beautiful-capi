@@ -34,7 +34,12 @@ from CustomerCallbacks import generate_callbacks_on_client_side_definitions
 from CustomerCallbacks import generate_callbacks_on_client_side_declarations
 from LibraryCallbacks import generate_callbacks_on_library_side
 from Helpers import get_c_name, get_template_name, replace_template_to_filename, get_template_tail
-from Helpers import if_required_then_add_empty_line
+from Helpers import if_required_then_add_empty_line, format_type
+
+
+def put_template_line(out: FileGenerator, class_object: TClass):
+    if class_object.template_line:
+        out.put_line(class_object.template_line)
 
 
 class ClassGenerator(object):
@@ -55,6 +60,12 @@ class ClassGenerator(object):
         self.capi_generator = None
         self.exception_code = -1
         self.callback_lifecycle_traits = None
+        self.template_argument_generators = []
+        self.cached_wrap_template_name = None
+
+    @property
+    def is_template(self) -> bool:
+        return self.class_object.template_line
 
     @property
     def name(self) -> str:
@@ -70,7 +81,15 @@ class ClassGenerator(object):
 
     @property
     def wrap_name(self) -> str:
-        return self.name + self.lifecycle_traits.suffix
+        if self.is_template:
+            self.__create_wrap_template_name()
+            return self.cached_wrap_template_name
+        else:
+            return self.name + self.lifecycle_traits.suffix
+
+    @property
+    def wrap_short_name(self) -> str:
+        return get_template_name(self.wrap_name)
 
     @property
     def full_wrap_name(self) -> str:
@@ -138,6 +157,15 @@ class ClassGenerator(object):
     @property
     def release_callback_type(self) -> str:
         return self.full_c_name + '_release_callback_type'
+
+    def __create_wrap_template_name(self):
+        if not self.cached_wrap_template_name:
+            name_prefix = get_template_name(self.name) + self.lifecycle_traits.suffix
+            template_arguments = [t_arg.wrap_return_type() for t_arg in self.template_argument_generators]
+            raw_name = '{name}<{template_arguments}>'.format(
+                name=name_prefix, template_arguments=', '.join(template_arguments)
+            )
+            self.cached_wrap_template_name = format_type(raw_name)
 
     def implementation_result_instructions(self, result_var: str, expression: str) -> ([str], str):
         return self.lifecycle_traits.implementation_result_instructions(self, result_var, expression)
@@ -211,6 +239,7 @@ class ClassGenerator(object):
                 declaration_header.put_line(cur_base_class_generator.parent_namespace.one_line_namespace_end)
 
     def __generate_class_declaration(self, declaration_header: FileGenerator):
+        put_template_line(declaration_header, self.class_object)
         if self.base_class_generator:
             declaration_header.put_line('class {name}: public {base_class}'.format(
                 name=self.wrap_name,
@@ -352,7 +381,8 @@ class ClassGenerator(object):
                     method_generator.generate_snippet(snippet_file)
 
     def generate_forward_declaration(self, out: FileGenerator):
-        out.put_line('class {0};'.format(self.wrap_name))
+        if not self.class_object.template_line:
+            out.put_line('class {0};'.format(self.wrap_name))
 
     def generate(self, file_cache: FileCache, capi_generator: CapiGenerator):
         self.file_cache = file_cache

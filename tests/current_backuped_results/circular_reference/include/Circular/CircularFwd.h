@@ -29,15 +29,10 @@
 
 #ifdef __cplusplus
 
-#include <memory>
-#include "CircularReference/common/forward_holder.h"
-
 namespace Circular
 {
     class ClassARawPtr;
-    typedef beautiful_capi_CircularReference::forward_pointer_holder<ClassARawPtr> ClassAFwdPtr;
     class ClassBRawPtr;
-    typedef beautiful_capi_CircularReference::forward_pointer_holder<ClassBRawPtr> ClassBFwdPtr;
 }
 
 #endif /* __cplusplus */

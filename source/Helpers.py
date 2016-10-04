@@ -25,14 +25,22 @@ def fix_name(name: str) -> str:
         replace('*', 'p').replace(' ', '').replace(',', '_')
 
 
+def remove_double_underscore(text: str) -> str:
+    while text.find('__') != -1:
+        text = text.replace('__', '_')
+    return text
+
+
+def replace_double_greater(template_name):
+    while template_name.find('>>') != -1:
+        template_name = template_name.replace('>>', '> >')
+    return template_name
+
+
 def get_c_name(name: str) -> str:
     fixed_name = fix_name(name)
     stl_name = pascal_to_stl(fixed_name)
-    next_name = stl_name.replace('__', '_')
-    while next_name != stl_name:
-        stl_name = next_name
-        next_name = stl_name.replace('__', '_')
-    return stl_name
+    return remove_double_underscore(stl_name)
 
 
 def pascal_to_stl(pascal_name: str) -> str:
@@ -59,14 +67,8 @@ def bool_to_str(value: bool) -> str:
 
 
 def replace_template_to_filename(template_name):
-    return template_name.replace('<', '_').replace('>', '').replace('::', '').\
-        replace('*', 'p').replace(' ', '').replace(',', '_')
-
-
-def replace_double_greater(template_name):
-    while template_name.find('>>') != -1:
-        template_name = template_name.replace('>>', '> >')
-    return template_name
+    fixed_name = template_name.replace('<', '').replace('>', '').replace('::', '').replace('*', 'p').replace(' ', '')
+    return remove_double_underscore(fixed_name.replace(',', '_'))
 
 
 def get_template_name(type_name):

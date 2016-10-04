@@ -63,14 +63,38 @@
     #error "Unknown platform"
 #endif
 
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_page_add_ref(void* object_pointer)
-{
-    intrusive_ptr_add_ref(static_cast<Example::PageImpl*>(object_pointer));
-}
-
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_page_default()
 {
     return new Example::PageImpl();
+}
+
+EXAMPLE_API size_t EXAMPLE_API_CONVENTION example_page_get_width(void* object_pointer)
+{
+    const Example::PageImpl* self = static_cast<Example::PageImpl*>(object_pointer);
+    return self->GetWidth();
+}
+
+EXAMPLE_API size_t EXAMPLE_API_CONVENTION example_page_get_height(void* object_pointer)
+{
+    const Example::PageImpl* self = static_cast<Example::PageImpl*>(object_pointer);
+    return self->GetHeight();
+}
+
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_page_set_width(void* object_pointer, size_t value)
+{
+    Example::PageImpl* self = static_cast<Example::PageImpl*>(object_pointer);
+    self->SetWidth(value);
+}
+
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_page_set_height(void* object_pointer, size_t value)
+{
+    Example::PageImpl* self = static_cast<Example::PageImpl*>(object_pointer);
+    self->SetHeight(value);
+}
+
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_page_add_ref(void* object_pointer)
+{
+    intrusive_ptr_add_ref(static_cast<Example::PageImpl*>(object_pointer));
 }
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_page_release(void* object_pointer)
@@ -78,43 +102,9 @@ EXAMPLE_API void EXAMPLE_API_CONVENTION example_page_release(void* object_pointe
     intrusive_ptr_release(static_cast<Example::PageImpl*>(object_pointer));
 }
 
-EXAMPLE_API size_t EXAMPLE_API_CONVENTION example_page_getwidth(void* object_pointer)
-{
-    const Example::PageImpl* self = static_cast<Example::PageImpl*>(object_pointer);
-    return self->GetWidth();
-}
-
-EXAMPLE_API size_t EXAMPLE_API_CONVENTION example_page_getheight(void* object_pointer)
-{
-    const Example::PageImpl* self = static_cast<Example::PageImpl*>(object_pointer);
-    return self->GetHeight();
-}
-
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_page_setwidth(void* object_pointer, size_t value)
-{
-    Example::PageImpl* self = static_cast<Example::PageImpl*>(object_pointer);
-    self->SetWidth(value);
-}
-
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_page_setheight(void* object_pointer, size_t value)
-{
-    Example::PageImpl* self = static_cast<Example::PageImpl*>(object_pointer);
-    self->SetHeight(value);
-}
-
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_document_add_ref(void* object_pointer)
-{
-    intrusive_ptr_add_ref(static_cast<Example::DocumentImpl*>(object_pointer));
-}
-
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_document_default()
 {
     return new Example::DocumentImpl();
-}
-
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_document_release(void* object_pointer)
-{
-    intrusive_ptr_release(static_cast<Example::DocumentImpl*>(object_pointer));
 }
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_document_show(void* object_pointer)
@@ -123,15 +113,24 @@ EXAMPLE_API void EXAMPLE_API_CONVENTION example_document_show(void* object_point
     self->Show();
 }
 
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_document_getpage(void* object_pointer)
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_document_get_page(void* object_pointer)
 {
     const Example::DocumentImpl* self = static_cast<Example::DocumentImpl*>(object_pointer);
     return self->GetPage();
 }
 
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_document_setpage(void* object_pointer, void* value)
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_document_set_page(void* object_pointer, void* value)
 {
     Example::DocumentImpl* self = static_cast<Example::DocumentImpl*>(object_pointer);
     self->SetPage(static_cast<Example::PageImpl*>(value));
 }
 
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_document_add_ref(void* object_pointer)
+{
+    intrusive_ptr_add_ref(static_cast<Example::DocumentImpl*>(object_pointer));
+}
+
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_document_release(void* object_pointer)
+{
+    intrusive_ptr_release(static_cast<Example::DocumentImpl*>(object_pointer));
+}
