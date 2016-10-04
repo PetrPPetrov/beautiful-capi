@@ -34,40 +34,6 @@
 
 #ifdef _WIN32
     #ifdef __GNUC__
-        #define SAMPLE_API extern "C" __attribute__ ((dllexport))
-        #define SAMPLE_API_CONVENTION __attribute__ ((cdecl))
-    #else
-        #define SAMPLE_API extern "C" __declspec(dllexport)
-        #define SAMPLE_API_CONVENTION __cdecl
-    #endif
-#elif __APPLE__
-    #if defined(__GNUC__) && __GNUC__ >= 4
-        #define SAMPLE_API extern "C" __attribute__ ((visibility ("default")))
-    #else
-        #define SAMPLE_API extern "C"
-    #endif
-    #if defined __i386__
-        #define SAMPLE_API_CONVENTION __attribute__ ((cdecl))
-    #else
-        #define SAMPLE_API_CONVENTION
-    #endif
-#elif __unix__ || __linux__
-    #if defined(__GNUC__) && __GNUC__ >= 4
-        #define SAMPLE_API extern "C" __attribute__ ((visibility ("default")))
-    #else
-        #define SAMPLE_API extern "C"
-    #endif
-    #if defined __i386__
-        #define SAMPLE_API_CONVENTION __attribute__ ((cdecl))
-    #else
-        #define SAMPLE_API_CONVENTION
-    #endif
-#else
-    #error "Unknown platform"
-#endif
-
-#ifdef _WIN32
-    #ifdef __GNUC__
         #define EXAMPLE_API extern "C" __attribute__ ((dllexport))
         #define EXAMPLE_API_CONVENTION __attribute__ ((cdecl))
     #else
@@ -100,131 +66,165 @@
     #error "Unknown platform"
 #endif
 
-EXAMPLE_API void* EXAMPLE_API_CONVENTION sample_data_new()
-{
-    return new Sample::DataImpl();
-}
+#ifdef _WIN32
+    #ifdef __GNUC__
+        #define SAMPLE_API extern "C" __attribute__ ((dllexport))
+        #define SAMPLE_API_CONVENTION __attribute__ ((cdecl))
+    #else
+        #define SAMPLE_API extern "C" __declspec(dllexport)
+        #define SAMPLE_API_CONVENTION __cdecl
+    #endif
+#elif __APPLE__
+    #if defined(__GNUC__) && __GNUC__ >= 4
+        #define SAMPLE_API extern "C" __attribute__ ((visibility ("default")))
+    #else
+        #define SAMPLE_API extern "C"
+    #endif
+    #if defined __i386__
+        #define SAMPLE_API_CONVENTION __attribute__ ((cdecl))
+    #else
+        #define SAMPLE_API_CONVENTION
+    #endif
+#elif __unix__ || __linux__
+    #if defined(__GNUC__) && __GNUC__ >= 4
+        #define SAMPLE_API extern "C" __attribute__ ((visibility ("default")))
+    #else
+        #define SAMPLE_API extern "C"
+    #endif
+    #if defined __i386__
+        #define SAMPLE_API_CONVENTION __attribute__ ((cdecl))
+    #else
+        #define SAMPLE_API_CONVENTION
+    #endif
+#else
+    #error "Unknown platform"
+#endif
 
-EXAMPLE_API int EXAMPLE_API_CONVENTION sample_data_get_data(void* object_pointer)
-{
-    Sample::DataImpl* self = static_cast<Sample::DataImpl*>(object_pointer);
-    return self->GetData();
-}
-
-EXAMPLE_API void EXAMPLE_API_CONVENTION sample_data_set_data(void* object_pointer, int value)
-{
-    Sample::DataImpl* self = static_cast<Sample::DataImpl*>(object_pointer);
-    self->SetData(value);
-}
-
-EXAMPLE_API void* EXAMPLE_API_CONVENTION sample_data_copy(void* object_pointer)
-{
-    return new Sample::DataImpl(*static_cast<Sample::DataImpl*>(object_pointer));
-}
-
-EXAMPLE_API void EXAMPLE_API_CONVENTION sample_data_delete(void* object_pointer)
-{
-    delete static_cast<Sample::DataImpl*>(object_pointer);
-}
-
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_geometry_brep_body_new()
+SAMPLE_API void* SAMPLE_API_CONVENTION example_geometry_brep_body_new()
 {
     return new Example::Geometry::Brep::BodyImpl();
 }
 
-EXAMPLE_API const char* EXAMPLE_API_CONVENTION example_geometry_brep_body_get_name(void* object_pointer)
+SAMPLE_API const char* SAMPLE_API_CONVENTION example_geometry_brep_body_get_name(void* object_pointer)
 {
     Example::Geometry::Brep::BodyImpl* self = static_cast<Example::Geometry::Brep::BodyImpl*>(object_pointer);
     return self->GetName();
 }
 
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_geometry_brep_body_set_name(void* object_pointer, const char* value)
+SAMPLE_API void SAMPLE_API_CONVENTION example_geometry_brep_body_set_name(void* object_pointer, const char* value)
 {
     Example::Geometry::Brep::BodyImpl* self = static_cast<Example::Geometry::Brep::BodyImpl*>(object_pointer);
     self->SetName(value);
 }
 
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_geometry_brep_body_copy(void* object_pointer)
+SAMPLE_API void* SAMPLE_API_CONVENTION example_geometry_brep_body_copy(void* object_pointer)
 {
     return new Example::Geometry::Brep::BodyImpl(*static_cast<Example::Geometry::Brep::BodyImpl*>(object_pointer));
 }
 
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_geometry_brep_body_delete(void* object_pointer)
+SAMPLE_API void SAMPLE_API_CONVENTION example_geometry_brep_body_delete(void* object_pointer)
 {
     delete static_cast<Example::Geometry::Brep::BodyImpl*>(object_pointer);
 }
 
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_geometry_sphere_new()
+SAMPLE_API void* SAMPLE_API_CONVENTION example_geometry_sphere_new()
 {
     return new Example::Geometry::SphereImpl();
 }
 
-EXAMPLE_API double EXAMPLE_API_CONVENTION example_geometry_sphere_get_radius(void* object_pointer)
+SAMPLE_API double SAMPLE_API_CONVENTION example_geometry_sphere_get_radius(void* object_pointer)
 {
     Example::Geometry::SphereImpl* self = static_cast<Example::Geometry::SphereImpl*>(object_pointer);
     return self->GetRadius();
 }
 
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_geometry_sphere_set_radius(void* object_pointer, double value)
+SAMPLE_API void SAMPLE_API_CONVENTION example_geometry_sphere_set_radius(void* object_pointer, double value)
 {
     Example::Geometry::SphereImpl* self = static_cast<Example::Geometry::SphereImpl*>(object_pointer);
     self->SetRadius(value);
 }
 
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_geometry_sphere_copy(void* object_pointer)
+SAMPLE_API void* SAMPLE_API_CONVENTION example_geometry_sphere_copy(void* object_pointer)
 {
     return new Example::Geometry::SphereImpl(*static_cast<Example::Geometry::SphereImpl*>(object_pointer));
 }
 
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_geometry_sphere_delete(void* object_pointer)
+SAMPLE_API void SAMPLE_API_CONVENTION example_geometry_sphere_delete(void* object_pointer)
 {
     delete static_cast<Example::Geometry::SphereImpl*>(object_pointer);
 }
 
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_scene_node_new()
+SAMPLE_API void* SAMPLE_API_CONVENTION example_scene_node_new()
 {
     return new Example::Scene::NodeImpl();
 }
 
-EXAMPLE_API const char* EXAMPLE_API_CONVENTION example_scene_node_get_name(void* object_pointer)
+SAMPLE_API const char* SAMPLE_API_CONVENTION example_scene_node_get_name(void* object_pointer)
 {
     Example::Scene::NodeImpl* self = static_cast<Example::Scene::NodeImpl*>(object_pointer);
     return self->GetName();
 }
 
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_scene_node_set_name(void* object_pointer, const char* value)
+SAMPLE_API void SAMPLE_API_CONVENTION example_scene_node_set_name(void* object_pointer, const char* value)
 {
     Example::Scene::NodeImpl* self = static_cast<Example::Scene::NodeImpl*>(object_pointer);
     self->SetName(value);
 }
 
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_scene_node_copy(void* object_pointer)
+SAMPLE_API void* SAMPLE_API_CONVENTION example_scene_node_copy(void* object_pointer)
 {
     return new Example::Scene::NodeImpl(*static_cast<Example::Scene::NodeImpl*>(object_pointer));
 }
 
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_scene_node_delete(void* object_pointer)
+SAMPLE_API void SAMPLE_API_CONVENTION example_scene_node_delete(void* object_pointer)
 {
     delete static_cast<Example::Scene::NodeImpl*>(object_pointer);
 }
 
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_printer_new()
+SAMPLE_API void* SAMPLE_API_CONVENTION example_printer_new()
 {
     return new Example::PrinterImpl();
 }
 
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_show(void* object_pointer, const char* text)
+SAMPLE_API void SAMPLE_API_CONVENTION example_printer_show(void* object_pointer, const char* text)
 {
     Example::PrinterImpl* self = static_cast<Example::PrinterImpl*>(object_pointer);
     self->Show(text);
 }
 
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_printer_copy(void* object_pointer)
+SAMPLE_API void* SAMPLE_API_CONVENTION example_printer_copy(void* object_pointer)
 {
     return new Example::PrinterImpl(*static_cast<Example::PrinterImpl*>(object_pointer));
 }
 
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_delete(void* object_pointer)
+SAMPLE_API void SAMPLE_API_CONVENTION example_printer_delete(void* object_pointer)
 {
     delete static_cast<Example::PrinterImpl*>(object_pointer);
+}
+
+SAMPLE_API void* SAMPLE_API_CONVENTION sample_data_new()
+{
+    return new Sample::DataImpl();
+}
+
+SAMPLE_API int SAMPLE_API_CONVENTION sample_data_get_data(void* object_pointer)
+{
+    Sample::DataImpl* self = static_cast<Sample::DataImpl*>(object_pointer);
+    return self->GetData();
+}
+
+SAMPLE_API void SAMPLE_API_CONVENTION sample_data_set_data(void* object_pointer, int value)
+{
+    Sample::DataImpl* self = static_cast<Sample::DataImpl*>(object_pointer);
+    self->SetData(value);
+}
+
+SAMPLE_API void* SAMPLE_API_CONVENTION sample_data_copy(void* object_pointer)
+{
+    return new Sample::DataImpl(*static_cast<Sample::DataImpl*>(object_pointer));
+}
+
+SAMPLE_API void SAMPLE_API_CONVENTION sample_data_delete(void* object_pointer)
+{
+    delete static_cast<Sample::DataImpl*>(object_pointer);
 }

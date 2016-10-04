@@ -20,6 +20,7 @@
 #
 
 
+from collections import OrderedDict
 from ParamsParser import TBeautifulCapiParams
 from FileGenerator import FileGenerator, WatchdogScope, Indent
 from FileCache import FileCache
@@ -62,6 +63,7 @@ class CapiGenerator(object):
         self.cur_api_define = None
         self.cur_capi_prefix = None
         self.cur_api_convention = None
+        self.sorted_by_ns = None
 
     def get_exception_traits(self, no_except: bool):
         if no_except:
@@ -150,7 +152,7 @@ class CapiGenerator(object):
         self.__put_api_define(output_capi_impl, 'dllexport')
 
     def __generate_capi(self, file_cache, params):
-        for namespace_name, namespace_info in self.namespace_name_2_c_functions.items():
+        for namespace_name, namespace_info in self.sorted_by_ns.items():
             # We always have at least one element
             output_capi = file_cache.get_file_for_capi(namespace_info.c_functions[0].path_to_namespace)
             output_capi.put_begin_cpp_comments(params)
@@ -168,7 +170,7 @@ class CapiGenerator(object):
 
     def __generate_capi_impl(self, output_capi_impl):
         first_namespace = True
-        for namespace_name, namespace_info in self.namespace_name_2_c_functions.items():
+        for namespace_name, namespace_info in self.sorted_by_ns.items():
             first_namespace = if_required_then_add_empty_line(first_namespace, output_capi_impl)
             first_function = True
             for c_function in namespace_info.c_functions:
@@ -211,7 +213,8 @@ class CapiGenerator(object):
         output_capi_impl.put_file(self.additional_includes)
         self.main_exception_traits.generate_exception_info(output_capi_impl)
 
-        for namespace_name, namespace_info in self.namespace_name_2_c_functions.items():
+        self.sorted_by_ns = OrderedDict(sorted(self.namespace_name_2_c_functions.items()))
+        for namespace_name, namespace_info in self.sorted_by_ns.items():
             self.__generate_capi_impl_defines(namespace_name, output_capi_impl)
             self.__generate_callback_typedefs(namespace_info, output_capi_impl)
 
