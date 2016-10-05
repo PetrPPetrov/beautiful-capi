@@ -29,7 +29,6 @@
 
 #include "ExampleCapi.h"
 #include "ExampleFwd.h"
-#include "Example/PrinterDecl.h"
 
 #ifdef __cplusplus
 

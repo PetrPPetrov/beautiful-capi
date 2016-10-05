@@ -29,7 +29,6 @@
 
 #include "ExampleCapi.h"
 #include "ExampleFwd.h"
-#include "Example/VectorOfExamplePosition4DfloatDecl.h"
 
 #ifdef __cplusplus
 

@@ -29,7 +29,6 @@
 
 #include "PointSetCapi.h"
 #include "PointSetFwd.h"
-#include "PointSet/PointsDecl.h"
 
 #ifdef __cplusplus
 

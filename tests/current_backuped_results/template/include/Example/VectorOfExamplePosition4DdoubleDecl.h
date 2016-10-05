@@ -29,7 +29,6 @@
 
 #include "ExampleCapi.h"
 #include "ExampleFwd.h"
-#include "Example/Position4DdoubleDecl.h"
 
 #ifdef __cplusplus
 

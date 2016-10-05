@@ -29,7 +29,6 @@
 
 #include "ExampleCapi.h"
 #include "ExampleFwd.h"
-#include "Example/ModeldoubleDecl.h"
 
 #ifdef __cplusplus
 

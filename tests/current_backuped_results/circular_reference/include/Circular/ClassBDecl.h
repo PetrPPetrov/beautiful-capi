@@ -29,7 +29,6 @@
 
 #include "Circular/CircularCapi.h"
 #include "Circular/CircularFwd.h"
-#include "Circular/ClassADecl.h"
 
 #ifdef __cplusplus
 

@@ -29,7 +29,6 @@
 
 #include "ExampleCapi.h"
 #include "ExampleFwd.h"
-#include "Example/PositionfloatDecl.h"
 
 #ifdef __cplusplus
 

@@ -254,6 +254,8 @@ class ClassGenerator(object):
             declaration_header.put_line('typedef {wrap_name} {typedef}{suffix};'.format(
                 wrap_name=self.wrap_name, typedef=self.class_object.typedef_name, suffix=self.lifecycle_traits.suffix
             ))
+        for template_argument_generator in self.template_argument_generators:
+            template_argument_generator.include_dependent_declaration_headers(declaration_header, self.file_cache)
         self.__generate_down_cast_template_declaration(declaration_header)
         self.__generate_callback_lifecycle_traits()
         generate_callbacks_on_client_side_declarations(declaration_header, self)
