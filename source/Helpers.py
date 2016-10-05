@@ -158,6 +158,11 @@ def if_required_then_add_empty_line(first_flag: bool, out) -> bool:
     return False
 
 
+def include_headers(out, headers):
+    for header in headers:
+        out.include_header(header.file, header.system)
+
+
 class BeautifulCapiException(Exception):
     def __init__(self, message):
         self.message = message

@@ -114,7 +114,7 @@ class ClassTypeGenerator(object):
 
     def include_dependent_declaration_headers(self, file_generator: FileGenerator, file_cache: FileCache):
         file_generator.include_user_header(
-            file_cache.class_header_decl(self.class_argument_generator.full_name_array))
+            file_cache.fwd_header(self.class_argument_generator.full_name_array))
 
     def include_dependent_definition_headers(self, file_generator: FileGenerator, file_cache: FileCache):
         file_generator.include_user_header(

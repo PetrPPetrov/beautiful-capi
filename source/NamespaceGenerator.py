@@ -22,7 +22,7 @@
 
 import os
 from Parser import TNamespace
-from Helpers import get_c_name
+from Helpers import get_c_name, include_headers
 from FileGenerator import FileGenerator, WatchdogScope, IfDefScope, IndentScope
 from CapiGenerator import CapiGenerator
 from FileCache import FileCache
@@ -122,6 +122,7 @@ class NamespaceGenerator(object):
                 namespace_header.include_user_header(
                     file_cache.class_header(class_generator.full_name_array))
             self.__generate_namespace_functions(capi_generator, file_cache, namespace_header)
+            include_headers(namespace_header, self.namespace_object.include_headers)
 
     def __generate_forward_declarations_impl(self, out: FileGenerator):
         out.put_line('namespace {0}'.format(self.name))
@@ -137,7 +138,7 @@ class NamespaceGenerator(object):
     def __generate_forward_declarations(self, file_cache: FileCache, capi_generator: CapiGenerator):
         forward_declarations = file_cache.get_file_for_fwd(self.full_name_array)
         forward_declarations.put_begin_cpp_comments(self.params)
-        with WatchdogScope(forward_declarations, self.full_c_name.upper() + '_FWD_INCLUDED'):
+        with WatchdogScope(forward_declarations, self.full_name.upper() + '_FWD_INCLUDED'):
             with IfDefScope(forward_declarations, '__cplusplus'):
                 capi_generator.main_exception_traits.generate_check_and_throw_exception_forward_declaration(
                     forward_declarations)
@@ -151,13 +152,16 @@ class NamespaceGenerator(object):
             for enum_generator in self.enum_generators:
                 enum_generator.generate_enum_definition(snippet_file)
 
-    def generate(self, file_cache: FileCache, capi_generator: CapiGenerator):
+    def __generate(self, file_cache: FileCache, capi_generator: CapiGenerator):
         self.__generate_namespace_headers(file_cache, capi_generator)
-        self.__generate_forward_declarations(file_cache, capi_generator)
         for nested_namespace in self.nested_namespaces:
-            nested_namespace.generate(file_cache, capi_generator)
+            nested_namespace.__generate(file_cache, capi_generator)
         for class_generator in self.classes:
             class_generator.generate(file_cache, capi_generator)
         self.__generate_snippet()
         if self.namespace_object.implementation_header_filled:
             capi_generator.additional_includes.include_user_header(self.namespace_object.implementation_header)
+
+    def generate(self, file_cache: FileCache, capi_generator: CapiGenerator):
+        self.__generate_forward_declarations(file_cache, capi_generator)
+        self.__generate(file_cache, capi_generator)
