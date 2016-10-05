@@ -47,6 +47,7 @@ public:
     inline Printer(ECreateFromRawPointer, void *object_pointer, bool copy_object);
     inline ~Printer();
     inline Printer& operator=(const Printer& other);
+    static inline Printer Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;
     inline bool operator!() const;

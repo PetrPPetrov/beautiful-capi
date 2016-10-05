@@ -106,6 +106,11 @@ inline Example::Dumper& Example::Dumper::operator=(const Example::Dumper& other)
     return *this;
 }
 
+inline Example::Dumper Example::Dumper::Null()
+{
+    return Example::Dumper(Example::Dumper::force_creating_from_raw_pointer, 0, false);
+}
+
 inline bool Example::Dumper::IsNull() const
 {
     return !mObject;

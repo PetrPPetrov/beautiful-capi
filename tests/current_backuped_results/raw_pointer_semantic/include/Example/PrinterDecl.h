@@ -45,6 +45,7 @@ public:
     inline PrinterRawPtr(ECreateFromRawPointer, void *object_pointer, bool);
     inline void Delete();
     inline PrinterRawPtr& operator=(const PrinterRawPtr& other);
+    static inline PrinterRawPtr Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;
     inline bool operator!() const;

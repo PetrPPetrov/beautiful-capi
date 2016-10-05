@@ -97,6 +97,11 @@ inline Example::DocumentPtr& Example::DocumentPtr::operator=(const Example::Docu
     return *this;
 }
 
+inline Example::DocumentPtr Example::DocumentPtr::Null()
+{
+    return Example::DocumentPtr(Example::DocumentPtr::force_creating_from_raw_pointer, 0, false);
+}
+
 inline bool Example::DocumentPtr::IsNull() const
 {
     return !mObject;

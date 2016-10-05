@@ -123,6 +123,11 @@ inline Example::Printer& Example::Printer::operator=(const Example::Printer& oth
     return *this;
 }
 
+inline Example::Printer Example::Printer::Null()
+{
+    return Example::Printer(Example::Printer::force_creating_from_raw_pointer, 0, false);
+}
+
 inline bool Example::Printer::IsNull() const
 {
     return !mObject;

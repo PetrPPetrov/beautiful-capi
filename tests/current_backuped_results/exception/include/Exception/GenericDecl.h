@@ -45,6 +45,7 @@ public:
     inline Generic(ECreateFromRawPointer, void *object_pointer, bool copy_object);
     inline ~Generic();
     inline Generic& operator=(const Generic& other);
+    static inline Generic Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;
     inline bool operator!() const;

@@ -102,6 +102,11 @@ inline Example::ModelPtr<float>& Example::ModelPtr<float>::operator=(const Examp
     return *this;
 }
 
+inline Example::ModelPtr<float> Example::ModelPtr<float>::Null()
+{
+    return Example::ModelPtr<float>(Example::ModelPtr<float>::force_creating_from_raw_pointer, 0, false);
+}
+
 inline bool Example::ModelPtr<float>::IsNull() const
 {
     return !mObject;

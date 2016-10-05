@@ -117,6 +117,11 @@ inline PointSet::PointsPtr& PointSet::PointsPtr::operator=(const PointSet::Point
     return *this;
 }
 
+inline PointSet::PointsPtr PointSet::PointsPtr::Null()
+{
+    return PointSet::PointsPtr(PointSet::PointsPtr::force_creating_from_raw_pointer, 0, false);
+}
+
 inline bool PointSet::PointsPtr::IsNull() const
 {
     return !mObject;

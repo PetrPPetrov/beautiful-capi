@@ -46,6 +46,7 @@ public:
     inline Body(ECreateFromRawPointer, void *object_pointer, bool copy_object);
     inline ~Body();
     inline Body& operator=(const Body& other);
+    static inline Body Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;
     inline bool operator!() const;

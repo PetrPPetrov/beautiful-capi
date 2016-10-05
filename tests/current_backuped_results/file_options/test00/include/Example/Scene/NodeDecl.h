@@ -46,6 +46,7 @@ public:
     inline Node(ECreateFromRawPointer, void *object_pointer, bool copy_object);
     inline ~Node();
     inline Node& operator=(const Node& other);
+    static inline Node Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;
     inline bool operator!() const;

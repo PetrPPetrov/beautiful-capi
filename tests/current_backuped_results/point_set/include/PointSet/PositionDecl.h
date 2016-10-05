@@ -51,6 +51,7 @@ public:
     inline Position(ECreateFromRawPointer, void *object_pointer, bool copy_object);
     inline ~Position();
     inline Position& operator=(const Position& other);
+    static inline Position Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;
     inline bool operator!() const;

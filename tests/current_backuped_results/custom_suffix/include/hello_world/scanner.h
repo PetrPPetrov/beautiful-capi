@@ -66,6 +66,11 @@ inline hello_world::scanner_raw_ptr& hello_world::scanner_raw_ptr::operator=(con
     return *this;
 }
 
+inline hello_world::scanner_raw_ptr hello_world::scanner_raw_ptr::null()
+{
+    return hello_world::scanner_raw_ptr(hello_world::scanner_raw_ptr::force_creating_from_raw_pointer, 0, false);
+}
+
 inline bool hello_world::scanner_raw_ptr::is_null() const
 {
     return !mObject;

@@ -46,6 +46,7 @@ public:
     inline Data(ECreateFromRawPointer, void *object_pointer, bool copy_object);
     inline ~Data();
     inline Data& operator=(const Data& other);
+    static inline Data Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;
     inline bool operator!() const;

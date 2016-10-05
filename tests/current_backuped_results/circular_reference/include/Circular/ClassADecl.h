@@ -47,6 +47,7 @@ public:
     inline ClassARawPtr(ECreateFromRawPointer, void *object_pointer, bool);
     inline void Delete();
     inline ClassARawPtr& operator=(const ClassARawPtr& other);
+    static inline ClassARawPtr Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;
     inline bool operator!() const;

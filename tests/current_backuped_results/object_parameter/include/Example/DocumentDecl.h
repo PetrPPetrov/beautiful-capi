@@ -48,6 +48,7 @@ public:
     inline DocumentPtr(ECreateFromRawPointer, void *object_pointer, bool add_ref_object);
     inline ~DocumentPtr();
     inline DocumentPtr& operator=(const DocumentPtr& other);
+    static inline DocumentPtr Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;
     inline bool operator!() const;

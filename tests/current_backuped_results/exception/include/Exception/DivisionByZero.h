@@ -104,6 +104,11 @@ inline Exception::DivisionByZero& Exception::DivisionByZero::operator=(const Exc
     return *this;
 }
 
+inline Exception::DivisionByZero Exception::DivisionByZero::Null()
+{
+    return Exception::DivisionByZero(Exception::DivisionByZero::force_creating_from_raw_pointer, 0, false);
+}
+
 inline bool Exception::DivisionByZero::IsNull() const
 {
     return !mObject;

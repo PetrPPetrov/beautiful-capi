@@ -95,6 +95,11 @@ inline hello_world::printer& hello_world::printer::operator=(const hello_world::
     return *this;
 }
 
+inline hello_world::printer hello_world::printer::null()
+{
+    return hello_world::printer(hello_world::printer::force_creating_from_raw_pointer, 0, false);
+}
+
 inline bool hello_world::printer::is_null() const
 {
     return !mObject;

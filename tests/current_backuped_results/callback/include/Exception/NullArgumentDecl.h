@@ -45,6 +45,7 @@ public:
     inline NullArgument(ECreateFromRawPointer, void *object_pointer, bool copy_object);
     inline ~NullArgument();
     inline NullArgument& operator=(const NullArgument& other);
+    static inline NullArgument Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;
     inline bool operator!() const;

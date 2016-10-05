@@ -111,6 +111,11 @@ inline Example::VectorOf<Example::Position4D<double> >& Example::VectorOf<Exampl
     return *this;
 }
 
+inline Example::VectorOf<Example::Position4D<double> > Example::VectorOf<Example::Position4D<double> >::Null()
+{
+    return Example::VectorOf<Example::Position4D<double> >(Example::VectorOf<Example::Position4D<double> >::force_creating_from_raw_pointer, 0, false);
+}
+
 inline bool Example::VectorOf<Example::Position4D<double> >::IsNull() const
 {
     return !mObject;

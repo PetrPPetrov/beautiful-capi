@@ -45,6 +45,7 @@ public:
     inline ITrianglePtr(ECreateFromRawPointer, void *object_pointer, bool add_ref_object);
     inline ~ITrianglePtr();
     inline ITrianglePtr& operator=(const ITrianglePtr& other);
+    static inline ITrianglePtr Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;
     inline bool operator!() const;

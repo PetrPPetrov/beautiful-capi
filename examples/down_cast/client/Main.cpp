@@ -33,6 +33,11 @@ using Example::down_cast;
 
 void show(Example::IShapePtr shape)
 {
+    if (shape->IsNull())
+    {
+        std::cout << "Shape is null" << std::endl;
+        return;
+    }
     shape->Show();
     if (down_cast<Example::IPolygonPtr>(shape)->IsNotNull())
     {
@@ -73,9 +78,13 @@ int main()
     Example::Initialization module_init("libdown_cast.so");
 #endif
 
+    Example::IShapePtr null_shape = Example::IShapePtr::Null();
     Example::IShapePtr triangle = Example::CreateTriangle();
     Example::IShapePtr shape0(Example::CreateCircle());
     Example::IShapePtr shape1(Example::CreateSquare());
+
+    std::cout << std::endl << "Null shape." << std::endl;
+    show(null_shape);
 
     std::cout << std::endl << "The first pass." << std::endl;
     show(triangle);

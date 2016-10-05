@@ -72,6 +72,11 @@ inline Circular::ClassARawPtr& Circular::ClassARawPtr::operator=(const Circular:
     return *this;
 }
 
+inline Circular::ClassARawPtr Circular::ClassARawPtr::Null()
+{
+    return Circular::ClassARawPtr(Circular::ClassARawPtr::force_creating_from_raw_pointer, 0, false);
+}
+
 inline bool Circular::ClassARawPtr::IsNull() const
 {
     return !mObject;

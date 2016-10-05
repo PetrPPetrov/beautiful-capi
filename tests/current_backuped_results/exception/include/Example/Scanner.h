@@ -105,6 +105,11 @@ inline Example::ScannerPtr& Example::ScannerPtr::operator=(const Example::Scanne
     return *this;
 }
 
+inline Example::ScannerPtr Example::ScannerPtr::Null()
+{
+    return Example::ScannerPtr(Example::ScannerPtr::force_creating_from_raw_pointer, 0, false);
+}
+
 inline bool Example::ScannerPtr::IsNull() const
 {
     return !mObject;

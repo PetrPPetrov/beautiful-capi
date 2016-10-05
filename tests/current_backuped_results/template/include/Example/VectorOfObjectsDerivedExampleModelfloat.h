@@ -87,6 +87,11 @@ inline Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<float> >& Example::V
     return *this;
 }
 
+inline Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<float> > Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<float> >::Null()
+{
+    return Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<float> >(Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<float> >::force_creating_from_raw_pointer, 0, false);
+}
+
 inline bool Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<float> >::IsNull() const
 {
     return !mObject;

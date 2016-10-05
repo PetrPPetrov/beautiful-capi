@@ -45,6 +45,7 @@ public:
     inline plotter_ptr(ECreateFromRawPointer, void *object_pointer, bool add_ref_object);
     inline ~plotter_ptr();
     inline plotter_ptr& operator=(const plotter_ptr& other);
+    static inline plotter_ptr null();
     inline bool is_null() const;
     inline bool is_not_null() const;
     inline bool operator!() const;

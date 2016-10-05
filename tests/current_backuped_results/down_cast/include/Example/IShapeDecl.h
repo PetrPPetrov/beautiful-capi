@@ -44,6 +44,7 @@ public:
     inline IShapePtr(ECreateFromRawPointer, void *object_pointer, bool add_ref_object);
     inline ~IShapePtr();
     inline IShapePtr& operator=(const IShapePtr& other);
+    static inline IShapePtr Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;
     inline bool operator!() const;

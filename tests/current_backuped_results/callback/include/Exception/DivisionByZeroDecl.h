@@ -45,6 +45,7 @@ public:
     inline DivisionByZero(ECreateFromRawPointer, void *object_pointer, bool copy_object);
     inline ~DivisionByZero();
     inline DivisionByZero& operator=(const DivisionByZero& other);
+    static inline DivisionByZero Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;
     inline bool operator!() const;

@@ -101,6 +101,11 @@ inline Example::PagePtr& Example::PagePtr::operator=(const Example::PagePtr& oth
     return *this;
 }
 
+inline Example::PagePtr Example::PagePtr::Null()
+{
+    return Example::PagePtr(Example::PagePtr::force_creating_from_raw_pointer, 0, false);
+}
+
 inline bool Example::PagePtr::IsNull() const
 {
     return !mObject;

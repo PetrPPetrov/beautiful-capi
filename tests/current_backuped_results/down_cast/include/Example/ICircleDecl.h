@@ -45,6 +45,7 @@ public:
     inline ICirclePtr(ECreateFromRawPointer, void *object_pointer, bool add_ref_object);
     inline ~ICirclePtr();
     inline ICirclePtr& operator=(const ICirclePtr& other);
+    static inline ICirclePtr Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;
     inline bool operator!() const;

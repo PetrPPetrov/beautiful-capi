@@ -5,6 +5,7 @@
                copy_semantic_wrapper_class_suffix=""
                reference_counted_wrapper_class_suffix="_ptr"
                raw_pointer_wrapper_class_suffix="_raw_ptr"
+               null_method_name="null"
                is_null_method_name="is_null" is_not_null_method_name="is_not_null"
                detach_method_name="detach"
                get_raw_pointer_method_name="get_raw_pointer"

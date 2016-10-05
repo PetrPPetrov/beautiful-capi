@@ -100,6 +100,11 @@ inline Sample::Data& Sample::Data::operator=(const Sample::Data& other)
     return *this;
 }
 
+inline Sample::Data Sample::Data::Null()
+{
+    return Sample::Data(Sample::Data::force_creating_from_raw_pointer, 0, false);
+}
+
 inline bool Sample::Data::IsNull() const
 {
     return !mObject;

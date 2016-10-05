@@ -101,6 +101,11 @@ inline Example::Position4D<double>& Example::Position4D<double>::operator=(const
     return *this;
 }
 
+inline Example::Position4D<double> Example::Position4D<double>::Null()
+{
+    return Example::Position4D<double>(Example::Position4D<double>::force_creating_from_raw_pointer, 0, false);
+}
+
 inline bool Example::Position4D<double>::IsNull() const
 {
     return !mObject;

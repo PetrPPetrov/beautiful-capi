@@ -49,6 +49,7 @@ public:
     inline VectorOf(ECreateFromRawPointer, void *object_pointer, bool copy_object);
     inline ~VectorOf();
     inline VectorOf<double>& operator=(const VectorOf<double>& other);
+    static inline VectorOf<double> Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;
     inline bool operator!() const;

@@ -82,6 +82,11 @@ inline Example::ICirclePtr& Example::ICirclePtr::operator=(const Example::ICircl
     return *this;
 }
 
+inline Example::ICirclePtr Example::ICirclePtr::Null()
+{
+    return Example::ICirclePtr(Example::ICirclePtr::force_creating_from_raw_pointer, 0, false);
+}
+
 inline bool Example::ICirclePtr::IsNull() const
 {
     return !mObject;

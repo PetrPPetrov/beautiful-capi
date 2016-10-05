@@ -72,6 +72,8 @@ class TBeautifulCapiParams(object):
         self.reference_counted_wrapper_class_suffix_filled = False
         self.raw_pointer_wrapper_class_suffix = "RawPtr"
         self.raw_pointer_wrapper_class_suffix_filled = False
+        self.null_method_name = "Null"
+        self.null_method_name_filled = False
         self.is_null_method_name = "IsNull"
         self.is_null_method_name_filled = False
         self.is_not_null_method_name = "IsNotNull"
@@ -150,6 +152,10 @@ class TBeautifulCapiParams(object):
             cur_attr = dom_node.getAttribute("raw_pointer_wrapper_class_suffix")
             self.raw_pointer_wrapper_class_suffix = cur_attr
             self.raw_pointer_wrapper_class_suffix_filled = True
+        if dom_node.hasAttribute("null_method_name"):
+            cur_attr = dom_node.getAttribute("null_method_name")
+            self.null_method_name = cur_attr
+            self.null_method_name_filled = True
         if dom_node.hasAttribute("is_null_method_name"):
             cur_attr = dom_node.getAttribute("is_null_method_name")
             self.is_null_method_name = cur_attr

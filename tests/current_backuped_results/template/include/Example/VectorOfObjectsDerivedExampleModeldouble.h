@@ -87,6 +87,11 @@ inline Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<double> >& Example::
     return *this;
 }
 
+inline Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<double> > Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<double> >::Null()
+{
+    return Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<double> >(Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<double> >::force_creating_from_raw_pointer, 0, false);
+}
+
 inline bool Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<double> >::IsNull() const
 {
     return !mObject;

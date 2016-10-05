@@ -109,6 +109,11 @@ inline Exception::BadArgument& Exception::BadArgument::operator=(const Exception
     return *this;
 }
 
+inline Exception::BadArgument Exception::BadArgument::Null()
+{
+    return Exception::BadArgument(Exception::BadArgument::force_creating_from_raw_pointer, 0, false);
+}
+
 inline bool Exception::BadArgument::IsNull() const
 {
     return !mObject;

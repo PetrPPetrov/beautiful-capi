@@ -82,6 +82,11 @@ inline Example::ISquarePtr& Example::ISquarePtr::operator=(const Example::ISquar
     return *this;
 }
 
+inline Example::ISquarePtr Example::ISquarePtr::Null()
+{
+    return Example::ISquarePtr(Example::ISquarePtr::force_creating_from_raw_pointer, 0, false);
+}
+
 inline bool Example::ISquarePtr::IsNull() const
 {
     return !mObject;

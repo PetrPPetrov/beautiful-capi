@@ -120,6 +120,11 @@ inline Example::Position<float>& Example::Position<float>::operator=(const Examp
     return *this;
 }
 
+inline Example::Position<float> Example::Position<float>::Null()
+{
+    return Example::Position<float>(Example::Position<float>::force_creating_from_raw_pointer, 0, false);
+}
+
 inline bool Example::Position<float>::IsNull() const
 {
     return !mObject;

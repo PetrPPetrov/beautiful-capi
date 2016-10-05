@@ -95,6 +95,11 @@ inline Example::PrinterSharedPtr& Example::PrinterSharedPtr::operator=(const Exa
     return *this;
 }
 
+inline Example::PrinterSharedPtr Example::PrinterSharedPtr::Null()
+{
+    return Example::PrinterSharedPtr(Example::PrinterSharedPtr::force_creating_from_raw_pointer, 0, false);
+}
+
 inline bool Example::PrinterSharedPtr::IsNull() const
 {
     return !mObject;

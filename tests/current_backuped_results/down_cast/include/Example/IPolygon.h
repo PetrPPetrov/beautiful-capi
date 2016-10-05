@@ -82,6 +82,11 @@ inline Example::IPolygonPtr& Example::IPolygonPtr::operator=(const Example::IPol
     return *this;
 }
 
+inline Example::IPolygonPtr Example::IPolygonPtr::Null()
+{
+    return Example::IPolygonPtr(Example::IPolygonPtr::force_creating_from_raw_pointer, 0, false);
+}
+
 inline bool Example::IPolygonPtr::IsNull() const
 {
     return !mObject;

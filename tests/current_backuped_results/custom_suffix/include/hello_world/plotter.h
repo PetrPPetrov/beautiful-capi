@@ -86,6 +86,11 @@ inline hello_world::plotter_ptr& hello_world::plotter_ptr::operator=(const hello
     return *this;
 }
 
+inline hello_world::plotter_ptr hello_world::plotter_ptr::null()
+{
+    return hello_world::plotter_ptr(hello_world::plotter_ptr::force_creating_from_raw_pointer, 0, false);
+}
+
 inline bool hello_world::plotter_ptr::is_null() const
 {
     return !mObject;

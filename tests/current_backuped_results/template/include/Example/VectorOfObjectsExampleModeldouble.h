@@ -102,6 +102,11 @@ inline Example::VectorOfObjectsPtr<Example::ModelPtr<double> >& Example::VectorO
     return *this;
 }
 
+inline Example::VectorOfObjectsPtr<Example::ModelPtr<double> > Example::VectorOfObjectsPtr<Example::ModelPtr<double> >::Null()
+{
+    return Example::VectorOfObjectsPtr<Example::ModelPtr<double> >(Example::VectorOfObjectsPtr<Example::ModelPtr<double> >::force_creating_from_raw_pointer, 0, false);
+}
+
 inline bool Example::VectorOfObjectsPtr<Example::ModelPtr<double> >::IsNull() const
 {
     return !mObject;

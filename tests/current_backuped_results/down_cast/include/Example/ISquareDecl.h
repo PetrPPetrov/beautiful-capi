@@ -45,6 +45,7 @@ public:
     inline ISquarePtr(ECreateFromRawPointer, void *object_pointer, bool add_ref_object);
     inline ~ISquarePtr();
     inline ISquarePtr& operator=(const ISquarePtr& other);
+    static inline ISquarePtr Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;
     inline bool operator!() const;

@@ -45,6 +45,7 @@ public:
     inline scanner_raw_ptr(ECreateFromRawPointer, void *object_pointer, bool);
     inline void deallocate();
     inline scanner_raw_ptr& operator=(const scanner_raw_ptr& other);
+    static inline scanner_raw_ptr null();
     inline bool is_null() const;
     inline bool is_not_null() const;
     inline bool operator!() const;

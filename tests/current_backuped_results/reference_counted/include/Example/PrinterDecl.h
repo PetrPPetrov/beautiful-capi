@@ -45,6 +45,7 @@ public:
     inline PrinterPtr(ECreateFromRawPointer, void *object_pointer, bool add_ref_object);
     inline ~PrinterPtr();
     inline PrinterPtr& operator=(const PrinterPtr& other);
+    static inline PrinterPtr Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;
     inline bool operator!() const;

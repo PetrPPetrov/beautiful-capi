@@ -100,6 +100,11 @@ inline Example::Geometry::Sphere& Example::Geometry::Sphere::operator=(const Exa
     return *this;
 }
 
+inline Example::Geometry::Sphere Example::Geometry::Sphere::Null()
+{
+    return Example::Geometry::Sphere(Example::Geometry::Sphere::force_creating_from_raw_pointer, 0, false);
+}
+
 inline bool Example::Geometry::Sphere::IsNull() const
 {
     return !mObject;

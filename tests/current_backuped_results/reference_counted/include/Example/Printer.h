@@ -86,6 +86,11 @@ inline Example::PrinterPtr& Example::PrinterPtr::operator=(const Example::Printe
     return *this;
 }
 
+inline Example::PrinterPtr Example::PrinterPtr::Null()
+{
+    return Example::PrinterPtr(Example::PrinterPtr::force_creating_from_raw_pointer, 0, false);
+}
+
 inline bool Example::PrinterPtr::IsNull() const
 {
     return !mObject;

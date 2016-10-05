@@ -45,6 +45,7 @@ public:
     inline IPolygonPtr(ECreateFromRawPointer, void *object_pointer, bool add_ref_object);
     inline ~IPolygonPtr();
     inline IPolygonPtr& operator=(const IPolygonPtr& other);
+    static inline IPolygonPtr Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;
     inline bool operator!() const;

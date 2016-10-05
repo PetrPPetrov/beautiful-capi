@@ -125,6 +125,11 @@ inline PointSet::Position& PointSet::Position::operator=(const PointSet::Positio
     return *this;
 }
 
+inline PointSet::Position PointSet::Position::Null()
+{
+    return PointSet::Position(PointSet::Position::force_creating_from_raw_pointer, 0, false);
+}
+
 inline bool PointSet::Position::IsNull() const
 {
     return !mObject;

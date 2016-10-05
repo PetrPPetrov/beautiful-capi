@@ -47,6 +47,7 @@ public:
     inline VectorOfObjectsDerivedPtr(ECreateFromRawPointer, void *object_pointer, bool add_ref_object);
     inline ~VectorOfObjectsDerivedPtr();
     inline VectorOfObjectsDerivedPtr<Example::ModelPtr<double> >& operator=(const VectorOfObjectsDerivedPtr<Example::ModelPtr<double> >& other);
+    static inline VectorOfObjectsDerivedPtr<Example::ModelPtr<double> > Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;
     inline bool operator!() const;

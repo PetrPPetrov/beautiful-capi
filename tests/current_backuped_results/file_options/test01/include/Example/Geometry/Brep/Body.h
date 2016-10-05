@@ -100,6 +100,11 @@ inline Example::Geometry::Brep::Body& Example::Geometry::Brep::Body::operator=(c
     return *this;
 }
 
+inline Example::Geometry::Brep::Body Example::Geometry::Brep::Body::Null()
+{
+    return Example::Geometry::Brep::Body(Example::Geometry::Brep::Body::force_creating_from_raw_pointer, 0, false);
+}
+
 inline bool Example::Geometry::Brep::Body::IsNull() const
 {
     return !mObject;

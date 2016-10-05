@@ -52,6 +52,7 @@ public:
     inline PointsPtr(ECreateFromRawPointer, void *object_pointer, bool add_ref_object);
     inline ~PointsPtr();
     inline PointsPtr& operator=(const PointsPtr& other);
+    static inline PointsPtr Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;
     inline bool operator!() const;

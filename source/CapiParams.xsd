@@ -22,6 +22,7 @@
     <xs:attribute name="copy_semantic_wrapper_class_suffix" type="xs:string" use="optional" default=""/>
     <xs:attribute name="reference_counted_wrapper_class_suffix" type="xs:string" use="optional" default="Ptr"/>
     <xs:attribute name="raw_pointer_wrapper_class_suffix" type="xs:string" use="optional" default="RawPtr"/>
+    <xs:attribute name="null_method_name" type="xs:string" use="optional" default="Null"/>
     <xs:attribute name="is_null_method_name" type="xs:string" use="optional" default="IsNull"/>
     <xs:attribute name="is_not_null_method_name" type="xs:string" use="optional" default="IsNotNull"/>
     <xs:attribute name="detach_method_name" type="xs:string" use="optional" default="Detach"/>

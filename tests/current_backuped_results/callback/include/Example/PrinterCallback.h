@@ -126,6 +126,11 @@ inline Example::PrinterCallbackPtr& Example::PrinterCallbackPtr::operator=(const
     return *this;
 }
 
+inline Example::PrinterCallbackPtr Example::PrinterCallbackPtr::Null()
+{
+    return Example::PrinterCallbackPtr(Example::PrinterCallbackPtr::force_creating_from_raw_pointer, 0, false);
+}
+
 inline bool Example::PrinterCallbackPtr::IsNull() const
 {
     return !mObject;

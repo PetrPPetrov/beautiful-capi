@@ -53,6 +53,7 @@ public:
     inline PrinterCallbackPtr(ECreateFromRawPointer, void *object_pointer, bool add_ref_object);
     inline ~PrinterCallbackPtr();
     inline PrinterCallbackPtr& operator=(const PrinterCallbackPtr& other);
+    static inline PrinterCallbackPtr Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;
     inline bool operator!() const;

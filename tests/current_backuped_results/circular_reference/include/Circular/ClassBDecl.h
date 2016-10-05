@@ -47,6 +47,7 @@ public:
     inline ClassBRawPtr(ECreateFromRawPointer, void *object_pointer, bool);
     inline void Delete();
     inline ClassBRawPtr& operator=(const ClassBRawPtr& other);
+    static inline ClassBRawPtr Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;
     inline bool operator!() const;

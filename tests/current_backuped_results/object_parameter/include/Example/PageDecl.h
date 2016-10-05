@@ -48,6 +48,7 @@ public:
     inline PagePtr(ECreateFromRawPointer, void *object_pointer, bool add_ref_object);
     inline ~PagePtr();
     inline PagePtr& operator=(const PagePtr& other);
+    static inline PagePtr Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;
     inline bool operator!() const;

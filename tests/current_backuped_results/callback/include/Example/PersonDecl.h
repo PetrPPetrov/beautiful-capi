@@ -62,6 +62,7 @@ public:
     inline Person(ECreateFromRawPointer, void *object_pointer, bool copy_object);
     inline ~Person();
     inline Person& operator=(const Person& other);
+    static inline Person Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;
     inline bool operator!() const;

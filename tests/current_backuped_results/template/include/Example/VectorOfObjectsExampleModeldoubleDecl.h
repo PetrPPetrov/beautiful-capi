@@ -50,6 +50,7 @@ public:
     inline VectorOfObjectsPtr(ECreateFromRawPointer, void *object_pointer, bool add_ref_object);
     inline ~VectorOfObjectsPtr();
     inline VectorOfObjectsPtr<Example::ModelPtr<double> >& operator=(const VectorOfObjectsPtr<Example::ModelPtr<double> >& other);
+    static inline VectorOfObjectsPtr<Example::ModelPtr<double> > Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;
     inline bool operator!() const;

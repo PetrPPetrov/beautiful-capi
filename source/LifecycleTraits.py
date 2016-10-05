@@ -69,6 +69,9 @@ class LifecycleTraits(object):
         self.__create_exception_traits(class_generator)
         out.put_line('inline {class_name}& operator=(const {class_name}& other);'.format(
             class_name=class_generator.wrap_name))
+        out.put_line('static inline {class_name} {null_method}();'.format(
+            class_name=class_generator.wrap_name,
+            null_method=self.params.null_method_name))
         out.put_line('inline bool {0}() const;'.format(self.params.is_null_method_name))
         out.put_line('inline bool {0}() const;'.format(self.params.is_not_null_method_name))
         out.put_line('inline bool operator!() const;')
@@ -77,6 +80,13 @@ class LifecycleTraits(object):
             get_raw_pointer_method=self.params.get_raw_pointer_method_name))
 
     def generate_std_methods_definitions(self, out: FileGenerator, class_generator):
+        out.put_line('inline {class_name} {class_name}::{null_method}()'.format(
+            class_name=class_generator.full_wrap_name,
+            null_method=self.params.null_method_name))
+        with IndentScope(out):
+            out.put_line('return {class_name}({class_name}::force_creating_from_raw_pointer, 0, false);'.format(
+                class_name=class_generator.full_wrap_name))
+        out.put_line('')
         out.put_line('inline bool {namespace}::{is_null_method}() const'.format(
             namespace=class_generator.full_wrap_name,
             is_null_method=self.params.is_null_method_name))

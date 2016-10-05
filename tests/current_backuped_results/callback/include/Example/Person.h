@@ -178,6 +178,11 @@ inline Example::Person& Example::Person::operator=(const Example::Person& other)
     return *this;
 }
 
+inline Example::Person Example::Person::Null()
+{
+    return Example::Person(Example::Person::force_creating_from_raw_pointer, 0, false);
+}
+
 inline bool Example::Person::IsNull() const
 {
     return !mObject;

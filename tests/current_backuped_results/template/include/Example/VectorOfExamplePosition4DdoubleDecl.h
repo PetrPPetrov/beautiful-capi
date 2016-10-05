@@ -50,6 +50,7 @@ public:
     inline VectorOf(ECreateFromRawPointer, void *object_pointer, bool copy_object);
     inline ~VectorOf();
     inline VectorOf<Example::Position4D<double> >& operator=(const VectorOf<Example::Position4D<double> >& other);
+    static inline VectorOf<Example::Position4D<double> > Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;
     inline bool operator!() const;

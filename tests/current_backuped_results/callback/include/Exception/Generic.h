@@ -108,6 +108,11 @@ inline Exception::Generic& Exception::Generic::operator=(const Exception::Generi
     return *this;
 }
 
+inline Exception::Generic Exception::Generic::Null()
+{
+    return Exception::Generic(Exception::Generic::force_creating_from_raw_pointer, 0, false);
+}
+
 inline bool Exception::Generic::IsNull() const
 {
     return !mObject;

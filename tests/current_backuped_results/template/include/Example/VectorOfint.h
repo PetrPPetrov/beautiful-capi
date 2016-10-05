@@ -110,6 +110,11 @@ inline Example::VectorOf<int>& Example::VectorOf<int>::operator=(const Example::
     return *this;
 }
 
+inline Example::VectorOf<int> Example::VectorOf<int>::Null()
+{
+    return Example::VectorOf<int>(Example::VectorOf<int>::force_creating_from_raw_pointer, 0, false);
+}
+
 inline bool Example::VectorOf<int>::IsNull() const
 {
     return !mObject;

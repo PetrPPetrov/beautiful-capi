@@ -81,6 +81,11 @@ inline Example::IShapePtr& Example::IShapePtr::operator=(const Example::IShapePt
     return *this;
 }
 
+inline Example::IShapePtr Example::IShapePtr::Null()
+{
+    return Example::IShapePtr(Example::IShapePtr::force_creating_from_raw_pointer, 0, false);
+}
+
 inline bool Example::IShapePtr::IsNull() const
 {
     return !mObject;

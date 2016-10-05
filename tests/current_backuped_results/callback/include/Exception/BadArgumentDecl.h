@@ -46,6 +46,7 @@ public:
     inline BadArgument(ECreateFromRawPointer, void *object_pointer, bool copy_object);
     inline ~BadArgument();
     inline BadArgument& operator=(const BadArgument& other);
+    static inline BadArgument Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;
     inline bool operator!() const;

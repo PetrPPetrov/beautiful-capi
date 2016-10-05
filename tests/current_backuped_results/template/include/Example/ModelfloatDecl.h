@@ -50,6 +50,7 @@ public:
     inline ModelPtr(ECreateFromRawPointer, void *object_pointer, bool add_ref_object);
     inline ~ModelPtr();
     inline ModelPtr<float>& operator=(const ModelPtr<float>& other);
+    static inline ModelPtr<float> Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;
     inline bool operator!() const;

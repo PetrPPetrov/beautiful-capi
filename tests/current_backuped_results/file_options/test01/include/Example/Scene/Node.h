@@ -100,6 +100,11 @@ inline Example::Scene::Node& Example::Scene::Node::operator=(const Example::Scen
     return *this;
 }
 
+inline Example::Scene::Node Example::Scene::Node::Null()
+{
+    return Example::Scene::Node(Example::Scene::Node::force_creating_from_raw_pointer, 0, false);
+}
+
 inline bool Example::Scene::Node::IsNull() const
 {
     return !mObject;

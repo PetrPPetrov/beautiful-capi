@@ -104,6 +104,11 @@ inline Exception::NullArgument& Exception::NullArgument::operator=(const Excepti
     return *this;
 }
 
+inline Exception::NullArgument Exception::NullArgument::Null()
+{
+    return Exception::NullArgument(Exception::NullArgument::force_creating_from_raw_pointer, 0, false);
+}
+
 inline bool Exception::NullArgument::IsNull() const
 {
     return !mObject;

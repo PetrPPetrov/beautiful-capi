@@ -4,6 +4,9 @@ Triangle ctor
 Circle ctor
 Square ctor
 
+Null shape.
+Shape is null
+
 The first pass.
 TriangleImpl::Show(), x1 = 0 y1 = 0 x2 = 1 y2 = 0 x3 = 0 y3 = 1
 IPolygon

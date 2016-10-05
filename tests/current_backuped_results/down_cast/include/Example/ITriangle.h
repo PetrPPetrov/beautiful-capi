@@ -82,6 +82,11 @@ inline Example::ITrianglePtr& Example::ITrianglePtr::operator=(const Example::IT
     return *this;
 }
 
+inline Example::ITrianglePtr Example::ITrianglePtr::Null()
+{
+    return Example::ITrianglePtr(Example::ITrianglePtr::force_creating_from_raw_pointer, 0, false);
+}
+
 inline bool Example::ITrianglePtr::IsNull() const
 {
     return !mObject;
