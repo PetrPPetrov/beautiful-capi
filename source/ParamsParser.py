@@ -100,6 +100,12 @@ class TBeautifulCapiParams(object):
         self.autogen_prefix_for_internal_callback_implementation_filled = False
         self.root_header = ""
         self.root_header_filled = False
+        self.root_header_namespace = ""
+        self.root_header_namespace_filled = False
+        self.root_header_initializer = ""
+        self.root_header_initializer_filled = False
+        self.shared_library_name = ""
+        self.shared_library_name_filled = False
         self.copyright_header = ""
         self.copyright_header_filled = False
         self.automatic_generated_warning = ""
@@ -208,6 +214,18 @@ class TBeautifulCapiParams(object):
             cur_attr = dom_node.getAttribute("root_header")
             self.root_header = cur_attr
             self.root_header_filled = True
+        if dom_node.hasAttribute("root_header_namespace"):
+            cur_attr = dom_node.getAttribute("root_header_namespace")
+            self.root_header_namespace = cur_attr
+            self.root_header_namespace_filled = True
+        if dom_node.hasAttribute("root_header_initializer"):
+            cur_attr = dom_node.getAttribute("root_header_initializer")
+            self.root_header_initializer = cur_attr
+            self.root_header_initializer_filled = True
+        if dom_node.hasAttribute("shared_library_name"):
+            cur_attr = dom_node.getAttribute("shared_library_name")
+            self.shared_library_name = cur_attr
+            self.shared_library_name_filled = True
     
 
 def load(dom_node):

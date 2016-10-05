@@ -36,5 +36,8 @@
     <xs:attribute name="beautiful_capi_namespace" type="xs:string" use="optional" default="beautiful_capi_{project_name}"/>
     <xs:attribute name="autogen_prefix_for_internal_callback_implementation" type="xs:string" use="optional" default="AutoGen_Callback_{project_name}_"/>
     <xs:attribute name="root_header" type="xs:string" use="optional" default=""/>
+    <xs:attribute name="root_header_namespace" type="xs:string" use="optional" default=""/>
+    <xs:attribute name="root_header_initializer" type="xs:string" use="optional" default=""/>
+    <xs:attribute name="shared_library_name" type="xs:string" use="optional" default=""/>
   </xs:complexType>
 </xs:schema>

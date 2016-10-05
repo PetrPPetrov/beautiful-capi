@@ -27,8 +27,8 @@ from xml.dom.minidom import parse
 from Helpers import BeautifulCapiException
 from CreateGenerators import create_namespace_generators
 from FileCache import FileCache
-from CapiGenerator import CapiGenerator, WatchdogScope
-from FileGenerator import FileGenerator
+from CapiGenerator import CapiGenerator
+from FileGenerator import FileGenerator, Indent, IndentScope, Unindent, WatchdogScope, IfDefScope
 from Templates import process as process_templates
 from Callbacks import process as process_callbacks
 from ParamsParser import TBeautifulCapiParams, TExceptionHandlingMode, load
@@ -70,14 +70,70 @@ class Capi(object):
         params.root_header = params.root_header.format(
             project_name=self.api_description.project_name)
 
+    def __generate_root_initializer(self, out: FileGenerator, namespace_generators: []):
+        out.put_line('class {0}'.format(self.params_description.root_header_initializer))
+        with IndentScope(out, '};'):
+            member_names = []
+            for namespace_generator in namespace_generators:
+                member_name = namespace_generator.wrap_name.lower() + '_module_init'
+                out.put_line('{namespace}::Initialization {member};'.format(
+                    namespace=namespace_generator.wrap_name,
+                    member=member_name))
+                member_names.append(member_name)
+            out.put_line('')
+            if not self.params_description.shared_library_name:
+                out.put_line('{0}();'.format(self.params_description.root_header_initializer))
+            with Unindent(out):
+                out.put_line('public:')
+            if member_names:
+                out.put_line('{0}(const char* shared_library_name) :'.format(
+                    self.params_description.root_header_initializer))
+                with Indent(out):
+                    for member_name in member_names[:-1]:
+                        out.put_line('{member_name}(shared_library_name),'.format(member_name=member_name))
+                    out.put_line('{member_name}(shared_library_name)'.format(member_name=member_names[-1]))
+                with IndentScope(out):
+                    pass
+                if self.params_description.shared_library_name:
+                    out.put_line('{0}()'.format(self.params_description.root_header_initializer))
+                    with IndentScope(out):
+                        pass
+
     def __generate_root_header(self, namespace_generators: [], file_cache: FileCache):
         if self.params_description.root_header and self.api_description.project_name:
             root_header = FileGenerator(os.path.join(self.output_folder, self.params_description.root_header))
             root_header.put_begin_cpp_comments(self.params_description)
-            with WatchdogScope(root_header, self.api_description.project_name.upper() + '_LIBRARY_INCLUDED'):
+            with WatchdogScope(root_header, self.api_description.project_name.upper() + '_LIBRARY_ROOT_INCLUDED'):
+                root_header.put_line('#ifdef {0}_LIBRARY_USE_DYNAMIC_LOADER'.format(
+                    self.api_description.project_name.upper()))
+                for namespace_generator in namespace_generators:
+                    root_header.put_line('#define {0}_CAPI_USE_DYNAMIC_LOADER'.format(
+                        namespace_generator.wrap_name.upper()))
+                root_header.put_line('#endif /* {0}_LIBRARY_USE_DYNAMIC_LOADER */'.format(
+                    self.api_description.project_name.upper()))
+                root_header.put_line('')
+
+                root_header.put_line('#ifdef {0}_LIBRARY_DEFINE_FUNCTION_POINTERS'.format(
+                    self.api_description.project_name.upper()))
+                for namespace_generator in namespace_generators:
+                    root_header.put_line('#define {0}_CAPI_DEFINE_FUNCTION_POINTERS'.format(
+                        namespace_generator.wrap_name.upper()))
+                root_header.put_line('#endif /* {0}_LIBRARY_DEFINE_FUNCTION_POINTERS */'.format(
+                    self.api_description.project_name.upper()))
+                root_header.put_line('')
+
                 root_header.put_include_files(False)
                 for namespace_generator in namespace_generators:
                     root_header.include_user_header(file_cache.namespace_header(namespace_generator.full_name_array))
+                if self.params_description.root_header_initializer:
+                    root_header.put_line('')
+                    with IfDefScope(root_header, '__cplusplus'):
+                        if self.params_description.root_header_namespace:
+                            root_header.put_line('namespace {0}'.format(self.params_description.root_header_namespace))
+                            with IndentScope(root_header):
+                                self.__generate_root_initializer(root_header, namespace_generators)
+                        else:
+                            self.__generate_root_initializer(root_header, namespace_generators)
 
     def __generate(self):
         process_templates(self.api_description)
@@ -93,11 +149,11 @@ class Capi(object):
             main_exception_traits = by_first_argument_exception_traits
         else:
             main_exception_traits = no_handling_exception_traits
-        capi_generator = CapiGenerator(main_exception_traits, no_handling_exception_traits)
+        capi_generator = CapiGenerator(main_exception_traits, no_handling_exception_traits, self.params_description)
         file_cache = FileCache(self.params_description)
         for namespace_generator in namespace_generators:
             namespace_generator.generate(file_cache, capi_generator)
-        capi_generator.generate(file_cache, self.params_description)
+        capi_generator.generate(file_cache)
         self.__generate_root_header(namespace_generators, file_cache)
 
     def generate(self):

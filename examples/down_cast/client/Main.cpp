@@ -27,7 +27,7 @@
 
 #define EXAMPLE_CAPI_USE_DYNAMIC_LOADER
 #define EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS
-#include "Example.h"
+#include "DownCast.h"
 
 using Example::down_cast;
 

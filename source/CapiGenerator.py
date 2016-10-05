@@ -51,7 +51,8 @@ class NamespaceInfo(object):
 
 
 class CapiGenerator(object):
-    def __init__(self, main_exception_traits, no_handling_exception_traits):
+    def __init__(self, main_exception_traits, no_handling_exception_traits, params: TBeautifulCapiParams):
+        self.params = params
         self.namespace_name_2_c_functions = {}
         self.main_exception_traits = main_exception_traits
         self.no_handling_exception_traits = no_handling_exception_traits
@@ -187,23 +188,41 @@ class CapiGenerator(object):
         output_capi.put_line('')
 
     @staticmethod
-    def __generate_module_init_constructor(namespace_info, output_capi):
-        output_capi.put_line('Initialization(const char* name)')
+    def __generate_module_init_load_module(namespace_info, output_capi):
+        output_capi.put_line('void load_module(const char* shared_library_name)')
         with IndentScope(output_capi):
-            output_capi.put_line('if (!name) throw std::runtime_error("Null library name was passed");')
+            output_capi.put_line('if (!shared_library_name) throw std::runtime_error("Null library name was passed");')
             output_capi.put_line('#ifdef _WIN32')
-            output_capi.put_line('handle = LoadLibraryA(name);')
+            output_capi.put_line('handle = LoadLibraryA(shared_library_name);')
             output_capi.put_line('#else')
-            output_capi.put_line('handle = dlopen(name, RTLD_NOW);')
+            output_capi.put_line('handle = dlopen(shared_library_name, RTLD_NOW);')
             output_capi.put_line('#endif')
             output_capi.put_line('if (!handle)')
             with IndentScope(output_capi):
                 output_capi.put_line('std::stringstream error_message;')
-                output_capi.put_line('error_message << "Can\'t load shared library " << name;')
+                output_capi.put_line('error_message << "Can\'t load shared library " << shared_library_name;')
                 output_capi.put_line('throw std::runtime_error(error_message.str());')
-            output_capi.put_line('')
             for c_function in namespace_info.c_functions:
                 output_capi.put_line('load_function<{0}_function_type>({0}, "{0}");'.format(c_function.name))
+        output_capi.put_line('')
+
+    def __generate_module_init_constructor(self, output_capi):
+        output_capi.put_line('Initialization(const char* shared_library_name)')
+        with IndentScope(output_capi):
+            output_capi.put_line('load_module(shared_library_name);')
+        if self.params.shared_library_name:
+            output_capi.put_line('Initialization()')
+            with IndentScope(output_capi):
+                output_capi.put_line('#ifdef _WIN32')
+                output_capi.put_line('load_module("{shared_library_name}.dll");'.format(
+                    shared_library_name=self.params.shared_library_name))
+                output_capi.put_line('#elif __APPLE__')
+                output_capi.put_line('load_module("lib{shared_library_name}.dylib");'.format(
+                    shared_library_name=self.params.shared_library_name))
+                output_capi.put_line('#else')
+                output_capi.put_line('load_module("lib{shared_library_name}.so");'.format(
+                    shared_library_name=self.params.shared_library_name))
+                output_capi.put_line('#endif')
 
     @staticmethod
     def __generate_module_init_destructor(output_capi):
@@ -215,21 +234,21 @@ class CapiGenerator(object):
             output_capi.put_line('dlclose(handle);')
             output_capi.put_line('#endif')
 
-    @staticmethod
-    def __generate_module_init_body(namespace_info, output_capi):
+    def __generate_module_init_body(self, namespace_info, output_capi):
         output_capi.put_line('class Initialization')
         with IndentScope(output_capi, '};'):
-            CapiGenerator.__generate_module_init_members(output_capi)
-            CapiGenerator.__generate_module_init_load_function(output_capi)
-            output_capi.put_line('Initialization();')
+            self.__generate_module_init_members(output_capi)
+            self.__generate_module_init_load_function(output_capi)
+            self.__generate_module_init_load_module(namespace_info, output_capi)
+            if not self.params.shared_library_name:
+                output_capi.put_line('Initialization();')
             output_capi.put_line('Initialization(const Initialization&);')
             with Unindent(output_capi):
                 output_capi.put_line('public:')
-            CapiGenerator.__generate_module_init_constructor(namespace_info, output_capi)
-            CapiGenerator.__generate_module_init_destructor(output_capi)
+            self.__generate_module_init_constructor(output_capi)
+            self.__generate_module_init_destructor(output_capi)
 
-    @staticmethod
-    def __generate_module_init(namespace_info, output_capi):
+    def __generate_module_init(self, namespace_info, output_capi):
         output_capi.put_line('')
         with IfDefScope(output_capi, '__cplusplus'):
             output_capi.put_include_files(False)
@@ -244,7 +263,7 @@ class CapiGenerator(object):
             # We always have at least one element
             output_capi.put_line('namespace {0}'.format(namespace_info.c_functions[0].path_to_namespace[0]))
             with IndentScope(output_capi):
-                CapiGenerator.__generate_module_init_body(namespace_info, output_capi)
+                self.__generate_module_init_body(namespace_info, output_capi)
 
     def __generate_dynamic_capi(self, namespace_info, namespace_name, output_capi):
         for c_function in namespace_info.c_functions:
@@ -276,11 +295,11 @@ class CapiGenerator(object):
                 name=c_function.name,
                 arguments=c_function.arguments))
 
-    def __generate_capi(self, file_cache, params):
+    def __generate_capi(self, file_cache):
         for namespace_name, namespace_info in self.sorted_by_ns.items():
             # We always have at least one element
             output_capi = file_cache.get_file_for_capi(namespace_info.c_functions[0].path_to_namespace)
-            output_capi.put_begin_cpp_comments(params)
+            output_capi.put_begin_cpp_comments(self.params)
             with WatchdogScope(output_capi, namespace_name + '_CAPI_INCLUDED'):
                 self.main_exception_traits.generate_exception_info(output_capi)
                 self.__generate_capi_defines(namespace_name, output_capi)
@@ -332,11 +351,11 @@ class CapiGenerator(object):
         else:
             self.namespace_name_2_c_functions[namespace_name].c_pointers.append(new_c_pointer)
 
-    def generate(self, file_cache: FileCache, params: TBeautifulCapiParams):
+    def generate(self, file_cache: FileCache):
         self.main_exception_traits.generate_check_and_throw_exception(file_cache)
 
-        output_capi_impl = FileGenerator(params.output_wrap_file_name)
-        output_capi_impl.put_begin_cpp_comments(params)
+        output_capi_impl = FileGenerator(self.params.output_wrap_file_name)
+        output_capi_impl.put_begin_cpp_comments(self.params)
         output_capi_impl.put_file(self.additional_includes)
         self.main_exception_traits.generate_exception_info(output_capi_impl)
 
@@ -347,4 +366,4 @@ class CapiGenerator(object):
 
         self.__generate_callback_implementations(output_capi_impl)
         self.__generate_capi_impl(output_capi_impl)
-        self.__generate_capi(file_cache, params)
+        self.__generate_capi(file_cache)
