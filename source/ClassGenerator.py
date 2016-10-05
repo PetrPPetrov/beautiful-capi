@@ -34,7 +34,7 @@ from CustomerCallbacks import generate_callbacks_on_client_side_definitions
 from CustomerCallbacks import generate_callbacks_on_client_side_declarations
 from LibraryCallbacks import generate_callbacks_on_library_side
 from Helpers import get_c_name, get_template_name, replace_template_to_filename, get_template_tail
-from Helpers import if_required_then_add_empty_line, format_type
+from Helpers import if_required_then_add_empty_line, format_type, include_headers
 
 
 def put_template_line(out: FileGenerator, class_object: TClass):
@@ -251,8 +251,8 @@ class ClassGenerator(object):
         with IndentScope(declaration_header, '};'):
             self.__generate_class_body(declaration_header)
         if self.class_object.typedef_name:
-            declaration_header.put_line('typedef {wrap_name} {typedef}'.format(
-                wrap_name=self.wrap_name, typedef=self.class_object.typedef_name
+            declaration_header.put_line('typedef {wrap_name} {typedef}{suffix};'.format(
+                wrap_name=self.wrap_name, typedef=self.class_object.typedef_name, suffix=self.lifecycle_traits.suffix
             ))
         self.__generate_down_cast_template_declaration(declaration_header)
         self.__generate_callback_lifecycle_traits()
@@ -273,6 +273,7 @@ class ClassGenerator(object):
                 declaration_header.put_line('')
                 declaration_header.put_line(self.parent_namespace.one_line_namespace_end)
                 self.__generate_down_cast_template_specializations(declaration_header)
+            include_headers(declaration_header, self.class_object.include_headers)
 
     def __generate_constructor_definitions(self, definition_header, first_method):
         for constructor_generator in self.constructor_generators:

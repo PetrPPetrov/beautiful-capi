@@ -22,7 +22,7 @@
 
 import os
 from Parser import TNamespace
-from Helpers import get_c_name
+from Helpers import get_c_name, include_headers
 from FileGenerator import FileGenerator, WatchdogScope, IfDefScope, IndentScope
 from CapiGenerator import CapiGenerator
 from FileCache import FileCache
@@ -122,6 +122,7 @@ class NamespaceGenerator(object):
                 namespace_header.include_user_header(
                     file_cache.class_header(class_generator.full_name_array))
             self.__generate_namespace_functions(capi_generator, file_cache, namespace_header)
+            include_headers(namespace_header, self.namespace_object.include_headers)
 
     def __generate_forward_declarations_impl(self, out: FileGenerator):
         out.put_line('namespace {0}'.format(self.name))

@@ -125,9 +125,10 @@ class GeneratorCreator(object):
             original_template_argument_for_search = original_template_argument.replace(' ', '')
             if original_template_argument_for_search in self.full_name_2_generator:
                 argument_generator = self.full_name_2_generator[original_template_argument_for_search]
-                self.__replace_template_implementation_class(argument_generator)
+                if type(argument_generator) is ClassGenerator:
+                    self.__replace_template_implementation_class(argument_generator)
                 implementation_class_name = replace_template_argument(
-                    implementation_class_name, index, argument_generator.class_object.implementation_class_name)
+                    implementation_class_name, index, argument_generator.implementation_name)
         class_generator.class_object.implementation_class_name = implementation_class_name
 
     def __bind_class(self, class_generator: ClassGenerator):
