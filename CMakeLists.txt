@@ -41,5 +41,6 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_MINSIZEREL ${CMAKE_CURRENT_LIST_DIR}/bin)
 if(NOT WIN32)
   add_definitions(-fvisibility=hidden)
 endif()
+
 add_subdirectory(examples)
 add_subdirectory(tests)
