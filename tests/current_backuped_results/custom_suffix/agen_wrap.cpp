@@ -44,22 +44,22 @@
     #else
         #define HELLO_WORLD_API extern "C"
     #endif
-    #if defined __i386__
+    #ifdef __i386__
         #define HELLO_WORLD_API_CONVENTION __attribute__ ((cdecl))
-    #else
+    #else /* __i386__ */
         #define HELLO_WORLD_API_CONVENTION
-    #endif
+    #endif /* __i386__ */
 #elif __unix__ || __linux__
     #if defined(__GNUC__) && __GNUC__ >= 4
         #define HELLO_WORLD_API extern "C" __attribute__ ((visibility ("default")))
     #else
         #define HELLO_WORLD_API extern "C"
     #endif
-    #if defined __i386__
+    #ifdef __i386__
         #define HELLO_WORLD_API_CONVENTION __attribute__ ((cdecl))
-    #else
+    #else /* __i386__ */
         #define HELLO_WORLD_API_CONVENTION
-    #endif
+    #endif /* __i386__ */
 #else
     #error "Unknown platform"
 #endif

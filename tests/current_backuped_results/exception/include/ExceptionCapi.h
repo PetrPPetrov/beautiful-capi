@@ -50,9 +50,9 @@ enum beautiful_capi_exception_exception_code_t
 
 #ifdef __cplusplus
     #define EXCEPTION_CAPI_PREFIX extern "C"
-#else
+#else /* __cplusplus */
     #define EXCEPTION_CAPI_PREFIX
-#endif
+#endif /* __cplusplus */
 
 #ifdef _WIN32
     #ifdef __GNUC__
@@ -68,193 +68,240 @@ enum beautiful_capi_exception_exception_code_t
     #else
         #define EXCEPTION_API EXCEPTION_CAPI_PREFIX
     #endif
-    #if defined __i386__
+    #ifdef __i386__
         #define EXCEPTION_API_CONVENTION __attribute__ ((cdecl))
-    #else
+    #else /* __i386__ */
         #define EXCEPTION_API_CONVENTION
-    #endif
+    #endif /* __i386__ */
 #elif __unix__ || __linux__
     #if defined(__GNUC__) && __GNUC__ >= 4
         #define EXCEPTION_API EXCEPTION_CAPI_PREFIX __attribute__ ((visibility ("default")))
     #else
         #define EXCEPTION_API EXCEPTION_CAPI_PREFIX
     #endif
-    #if defined __i386__
+    #ifdef __i386__
         #define EXCEPTION_API_CONVENTION __attribute__ ((cdecl))
-    #else
+    #else /* __i386__ */
         #define EXCEPTION_API_CONVENTION
-    #endif
+    #endif /* __i386__ */
 #else
     #error "Unknown platform"
 #endif
 
-#ifndef EXCEPTION_CAPI_USE_DYNAMIC_LOADER
-
-EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_generic_new(beautiful_capi_exception_exception_info_t* exception_info);
-EXCEPTION_API const char* EXCEPTION_API_CONVENTION exception_generic_get_error_text(void* object_pointer);
-EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_generic_copy(beautiful_capi_exception_exception_info_t* exception_info, void* object_pointer);
-EXCEPTION_API void EXCEPTION_API_CONVENTION exception_generic_delete(void* object_pointer);
-EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_bad_argument_new(beautiful_capi_exception_exception_info_t* exception_info);
-EXCEPTION_API const char* EXCEPTION_API_CONVENTION exception_bad_argument_get_argument_name(void* object_pointer);
-EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_bad_argument_copy(beautiful_capi_exception_exception_info_t* exception_info, void* object_pointer);
-EXCEPTION_API void EXCEPTION_API_CONVENTION exception_bad_argument_delete(void* object_pointer);
-EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_bad_argument_cast_to_base(void* object_pointer);
-EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_null_argument_new(beautiful_capi_exception_exception_info_t* exception_info);
-EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_null_argument_copy(beautiful_capi_exception_exception_info_t* exception_info, void* object_pointer);
-EXCEPTION_API void EXCEPTION_API_CONVENTION exception_null_argument_delete(void* object_pointer);
-EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_null_argument_cast_to_base(void* object_pointer);
-EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_division_by_zero_new(beautiful_capi_exception_exception_info_t* exception_info);
-EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_division_by_zero_copy(beautiful_capi_exception_exception_info_t* exception_info, void* object_pointer);
-EXCEPTION_API void EXCEPTION_API_CONVENTION exception_division_by_zero_delete(void* object_pointer);
-EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_division_by_zero_cast_to_base(void* object_pointer);
-
-#else /* EXCEPTION_CAPI_USE_DYNAMIC_LOADER */
-
-typedef void* (EXCEPTION_API_CONVENTION *exception_generic_new_function_type)(beautiful_capi_exception_exception_info_t* exception_info);
-typedef const char* (EXCEPTION_API_CONVENTION *exception_generic_get_error_text_function_type)(void* object_pointer);
-typedef void* (EXCEPTION_API_CONVENTION *exception_generic_copy_function_type)(beautiful_capi_exception_exception_info_t* exception_info, void* object_pointer);
-typedef void (EXCEPTION_API_CONVENTION *exception_generic_delete_function_type)(void* object_pointer);
-typedef void* (EXCEPTION_API_CONVENTION *exception_bad_argument_new_function_type)(beautiful_capi_exception_exception_info_t* exception_info);
-typedef const char* (EXCEPTION_API_CONVENTION *exception_bad_argument_get_argument_name_function_type)(void* object_pointer);
-typedef void* (EXCEPTION_API_CONVENTION *exception_bad_argument_copy_function_type)(beautiful_capi_exception_exception_info_t* exception_info, void* object_pointer);
-typedef void (EXCEPTION_API_CONVENTION *exception_bad_argument_delete_function_type)(void* object_pointer);
-typedef void* (EXCEPTION_API_CONVENTION *exception_bad_argument_cast_to_base_function_type)(void* object_pointer);
-typedef void* (EXCEPTION_API_CONVENTION *exception_null_argument_new_function_type)(beautiful_capi_exception_exception_info_t* exception_info);
-typedef void* (EXCEPTION_API_CONVENTION *exception_null_argument_copy_function_type)(beautiful_capi_exception_exception_info_t* exception_info, void* object_pointer);
-typedef void (EXCEPTION_API_CONVENTION *exception_null_argument_delete_function_type)(void* object_pointer);
-typedef void* (EXCEPTION_API_CONVENTION *exception_null_argument_cast_to_base_function_type)(void* object_pointer);
-typedef void* (EXCEPTION_API_CONVENTION *exception_division_by_zero_new_function_type)(beautiful_capi_exception_exception_info_t* exception_info);
-typedef void* (EXCEPTION_API_CONVENTION *exception_division_by_zero_copy_function_type)(beautiful_capi_exception_exception_info_t* exception_info, void* object_pointer);
-typedef void (EXCEPTION_API_CONVENTION *exception_division_by_zero_delete_function_type)(void* object_pointer);
-typedef void* (EXCEPTION_API_CONVENTION *exception_division_by_zero_cast_to_base_function_type)(void* object_pointer);
-
-#ifdef EXCEPTION_CAPI_DEFINE_FUNCTION_POINTERS
-
-extern exception_generic_new_function_type exception_generic_new = 0;
-extern exception_generic_get_error_text_function_type exception_generic_get_error_text = 0;
-extern exception_generic_copy_function_type exception_generic_copy = 0;
-extern exception_generic_delete_function_type exception_generic_delete = 0;
-extern exception_bad_argument_new_function_type exception_bad_argument_new = 0;
-extern exception_bad_argument_get_argument_name_function_type exception_bad_argument_get_argument_name = 0;
-extern exception_bad_argument_copy_function_type exception_bad_argument_copy = 0;
-extern exception_bad_argument_delete_function_type exception_bad_argument_delete = 0;
-extern exception_bad_argument_cast_to_base_function_type exception_bad_argument_cast_to_base = 0;
-extern exception_null_argument_new_function_type exception_null_argument_new = 0;
-extern exception_null_argument_copy_function_type exception_null_argument_copy = 0;
-extern exception_null_argument_delete_function_type exception_null_argument_delete = 0;
-extern exception_null_argument_cast_to_base_function_type exception_null_argument_cast_to_base = 0;
-extern exception_division_by_zero_new_function_type exception_division_by_zero_new = 0;
-extern exception_division_by_zero_copy_function_type exception_division_by_zero_copy = 0;
-extern exception_division_by_zero_delete_function_type exception_division_by_zero_delete = 0;
-extern exception_division_by_zero_cast_to_base_function_type exception_division_by_zero_cast_to_base = 0;
-
-#else /* EXCEPTION_CAPI_DEFINE_FUNCTION_POINTERS */
-
-extern exception_generic_new_function_type exception_generic_new;
-extern exception_generic_get_error_text_function_type exception_generic_get_error_text;
-extern exception_generic_copy_function_type exception_generic_copy;
-extern exception_generic_delete_function_type exception_generic_delete;
-extern exception_bad_argument_new_function_type exception_bad_argument_new;
-extern exception_bad_argument_get_argument_name_function_type exception_bad_argument_get_argument_name;
-extern exception_bad_argument_copy_function_type exception_bad_argument_copy;
-extern exception_bad_argument_delete_function_type exception_bad_argument_delete;
-extern exception_bad_argument_cast_to_base_function_type exception_bad_argument_cast_to_base;
-extern exception_null_argument_new_function_type exception_null_argument_new;
-extern exception_null_argument_copy_function_type exception_null_argument_copy;
-extern exception_null_argument_delete_function_type exception_null_argument_delete;
-extern exception_null_argument_cast_to_base_function_type exception_null_argument_cast_to_base;
-extern exception_division_by_zero_new_function_type exception_division_by_zero_new;
-extern exception_division_by_zero_copy_function_type exception_division_by_zero_copy;
-extern exception_division_by_zero_delete_function_type exception_division_by_zero_delete;
-extern exception_division_by_zero_cast_to_base_function_type exception_division_by_zero_cast_to_base;
-
-#endif /* EXCEPTION_CAPI_DEFINE_FUNCTION_POINTERS */
-
 #ifdef __cplusplus
 
-#include <stdexcept>
-#include <sstream>
-#ifdef _WIN32
-#include <Windows.h>
-#else
-#include <dlfcn.h>
-#endif
-
-namespace Exception
-{
-    class Initialization
-    {
-        #ifdef _WIN32
-        HINSTANCE handle;
-        #else
-        void* handle;
-        #endif
-        
-        template<class FunctionPointerType>
-        void load_function(FunctionPointerType& to_init, const char* name)
-        {
-            #ifdef _WIN32
-            to_init = reinterpret_cast<FunctionPointerType>(GetProcAddress(handle, name));
-            #else
-            to_init = reinterpret_cast<FunctionPointerType>(dlsym(handle, name));
-            #endif
-            if (!to_init)
-            {
-                std::stringstream error_message;
-                error_message << "Can't obtain function " << name;
-                throw std::runtime_error(error_message.str());
-            }
-        }
-        
-        Initialization();
-        Initialization(const Initialization&);
-    public:
-        Initialization(const char* name)
-        {
-            if (!name) throw std::runtime_error("Null library name was passed");
-            #ifdef _WIN32
-            handle = LoadLibraryA(name);
-            #else
-            handle = dlopen(name, RTLD_NOW);
-            #endif
-            if (!handle)
-            {
-                std::stringstream error_message;
-                error_message << "Can't load shared library " << name;
-                throw std::runtime_error(error_message.str());
-            }
-            
-            load_function<exception_generic_new_function_type>(exception_generic_new, "exception_generic_new");
-            load_function<exception_generic_get_error_text_function_type>(exception_generic_get_error_text, "exception_generic_get_error_text");
-            load_function<exception_generic_copy_function_type>(exception_generic_copy, "exception_generic_copy");
-            load_function<exception_generic_delete_function_type>(exception_generic_delete, "exception_generic_delete");
-            load_function<exception_bad_argument_new_function_type>(exception_bad_argument_new, "exception_bad_argument_new");
-            load_function<exception_bad_argument_get_argument_name_function_type>(exception_bad_argument_get_argument_name, "exception_bad_argument_get_argument_name");
-            load_function<exception_bad_argument_copy_function_type>(exception_bad_argument_copy, "exception_bad_argument_copy");
-            load_function<exception_bad_argument_delete_function_type>(exception_bad_argument_delete, "exception_bad_argument_delete");
-            load_function<exception_bad_argument_cast_to_base_function_type>(exception_bad_argument_cast_to_base, "exception_bad_argument_cast_to_base");
-            load_function<exception_null_argument_new_function_type>(exception_null_argument_new, "exception_null_argument_new");
-            load_function<exception_null_argument_copy_function_type>(exception_null_argument_copy, "exception_null_argument_copy");
-            load_function<exception_null_argument_delete_function_type>(exception_null_argument_delete, "exception_null_argument_delete");
-            load_function<exception_null_argument_cast_to_base_function_type>(exception_null_argument_cast_to_base, "exception_null_argument_cast_to_base");
-            load_function<exception_division_by_zero_new_function_type>(exception_division_by_zero_new, "exception_division_by_zero_new");
-            load_function<exception_division_by_zero_copy_function_type>(exception_division_by_zero_copy, "exception_division_by_zero_copy");
-            load_function<exception_division_by_zero_delete_function_type>(exception_division_by_zero_delete, "exception_division_by_zero_delete");
-            load_function<exception_division_by_zero_cast_to_base_function_type>(exception_division_by_zero_cast_to_base, "exception_division_by_zero_cast_to_base");
-        }
-        ~Initialization()
-        {
-            #ifdef _WIN32
-            FreeLibrary(handle);
-            #else
-            dlclose(handle);
-            #endif
-        }
-    };
-}
+    #ifdef _MSC_VER
+        #if _MSC_VER >= 1900
+            #define EXCEPTION_NOEXCEPT noexcept
+        #else /* _MSC_VER >= 1900 */
+            #define EXCEPTION_NOEXCEPT
+        #endif /* _MSC_VER >= 1900 */
+        #if _MSC_VER >= 1800
+            #define EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES
+        #endif /* _MSC_VER >= 1800 */
+    #else /* _MSC_VER */
+        #if __cplusplus >= 201103L
+            #define EXCEPTION_NOEXCEPT noexcept
+            #define EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES
+        #else /* __cplusplus >= 201103L */
+            #define EXCEPTION_NOEXCEPT
+        #endif /* __cplusplus >= 201103L */
+    #endif /* _MSC_VER */
 
 #endif /* __cplusplus */
 
+#ifndef EXCEPTION_CAPI_USE_DYNAMIC_LOADER
+    
+    EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_generic_new(beautiful_capi_exception_exception_info_t* exception_info);
+    EXCEPTION_API const char* EXCEPTION_API_CONVENTION exception_generic_get_error_text(void* object_pointer);
+    EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_generic_copy(beautiful_capi_exception_exception_info_t* exception_info, void* object_pointer);
+    EXCEPTION_API void EXCEPTION_API_CONVENTION exception_generic_delete(void* object_pointer);
+    EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_bad_argument_new(beautiful_capi_exception_exception_info_t* exception_info);
+    EXCEPTION_API const char* EXCEPTION_API_CONVENTION exception_bad_argument_get_argument_name(void* object_pointer);
+    EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_bad_argument_copy(beautiful_capi_exception_exception_info_t* exception_info, void* object_pointer);
+    EXCEPTION_API void EXCEPTION_API_CONVENTION exception_bad_argument_delete(void* object_pointer);
+    EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_bad_argument_cast_to_base(void* object_pointer);
+    EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_null_argument_new(beautiful_capi_exception_exception_info_t* exception_info);
+    EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_null_argument_copy(beautiful_capi_exception_exception_info_t* exception_info, void* object_pointer);
+    EXCEPTION_API void EXCEPTION_API_CONVENTION exception_null_argument_delete(void* object_pointer);
+    EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_null_argument_cast_to_base(void* object_pointer);
+    EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_division_by_zero_new(beautiful_capi_exception_exception_info_t* exception_info);
+    EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_division_by_zero_copy(beautiful_capi_exception_exception_info_t* exception_info, void* object_pointer);
+    EXCEPTION_API void EXCEPTION_API_CONVENTION exception_division_by_zero_delete(void* object_pointer);
+    EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_division_by_zero_cast_to_base(void* object_pointer);
+    
+#else /* EXCEPTION_CAPI_USE_DYNAMIC_LOADER */
+    
+    typedef void* (EXCEPTION_API_CONVENTION *exception_generic_new_function_type)(beautiful_capi_exception_exception_info_t* exception_info);
+    typedef const char* (EXCEPTION_API_CONVENTION *exception_generic_get_error_text_function_type)(void* object_pointer);
+    typedef void* (EXCEPTION_API_CONVENTION *exception_generic_copy_function_type)(beautiful_capi_exception_exception_info_t* exception_info, void* object_pointer);
+    typedef void (EXCEPTION_API_CONVENTION *exception_generic_delete_function_type)(void* object_pointer);
+    typedef void* (EXCEPTION_API_CONVENTION *exception_bad_argument_new_function_type)(beautiful_capi_exception_exception_info_t* exception_info);
+    typedef const char* (EXCEPTION_API_CONVENTION *exception_bad_argument_get_argument_name_function_type)(void* object_pointer);
+    typedef void* (EXCEPTION_API_CONVENTION *exception_bad_argument_copy_function_type)(beautiful_capi_exception_exception_info_t* exception_info, void* object_pointer);
+    typedef void (EXCEPTION_API_CONVENTION *exception_bad_argument_delete_function_type)(void* object_pointer);
+    typedef void* (EXCEPTION_API_CONVENTION *exception_bad_argument_cast_to_base_function_type)(void* object_pointer);
+    typedef void* (EXCEPTION_API_CONVENTION *exception_null_argument_new_function_type)(beautiful_capi_exception_exception_info_t* exception_info);
+    typedef void* (EXCEPTION_API_CONVENTION *exception_null_argument_copy_function_type)(beautiful_capi_exception_exception_info_t* exception_info, void* object_pointer);
+    typedef void (EXCEPTION_API_CONVENTION *exception_null_argument_delete_function_type)(void* object_pointer);
+    typedef void* (EXCEPTION_API_CONVENTION *exception_null_argument_cast_to_base_function_type)(void* object_pointer);
+    typedef void* (EXCEPTION_API_CONVENTION *exception_division_by_zero_new_function_type)(beautiful_capi_exception_exception_info_t* exception_info);
+    typedef void* (EXCEPTION_API_CONVENTION *exception_division_by_zero_copy_function_type)(beautiful_capi_exception_exception_info_t* exception_info, void* object_pointer);
+    typedef void (EXCEPTION_API_CONVENTION *exception_division_by_zero_delete_function_type)(void* object_pointer);
+    typedef void* (EXCEPTION_API_CONVENTION *exception_division_by_zero_cast_to_base_function_type)(void* object_pointer);
+    
+    #ifdef EXCEPTION_CAPI_DEFINE_FUNCTION_POINTERS
+        
+        extern exception_generic_new_function_type exception_generic_new = 0;
+        extern exception_generic_get_error_text_function_type exception_generic_get_error_text = 0;
+        extern exception_generic_copy_function_type exception_generic_copy = 0;
+        extern exception_generic_delete_function_type exception_generic_delete = 0;
+        extern exception_bad_argument_new_function_type exception_bad_argument_new = 0;
+        extern exception_bad_argument_get_argument_name_function_type exception_bad_argument_get_argument_name = 0;
+        extern exception_bad_argument_copy_function_type exception_bad_argument_copy = 0;
+        extern exception_bad_argument_delete_function_type exception_bad_argument_delete = 0;
+        extern exception_bad_argument_cast_to_base_function_type exception_bad_argument_cast_to_base = 0;
+        extern exception_null_argument_new_function_type exception_null_argument_new = 0;
+        extern exception_null_argument_copy_function_type exception_null_argument_copy = 0;
+        extern exception_null_argument_delete_function_type exception_null_argument_delete = 0;
+        extern exception_null_argument_cast_to_base_function_type exception_null_argument_cast_to_base = 0;
+        extern exception_division_by_zero_new_function_type exception_division_by_zero_new = 0;
+        extern exception_division_by_zero_copy_function_type exception_division_by_zero_copy = 0;
+        extern exception_division_by_zero_delete_function_type exception_division_by_zero_delete = 0;
+        extern exception_division_by_zero_cast_to_base_function_type exception_division_by_zero_cast_to_base = 0;
+        
+    #else /* EXCEPTION_CAPI_DEFINE_FUNCTION_POINTERS */
+        
+        extern exception_generic_new_function_type exception_generic_new;
+        extern exception_generic_get_error_text_function_type exception_generic_get_error_text;
+        extern exception_generic_copy_function_type exception_generic_copy;
+        extern exception_generic_delete_function_type exception_generic_delete;
+        extern exception_bad_argument_new_function_type exception_bad_argument_new;
+        extern exception_bad_argument_get_argument_name_function_type exception_bad_argument_get_argument_name;
+        extern exception_bad_argument_copy_function_type exception_bad_argument_copy;
+        extern exception_bad_argument_delete_function_type exception_bad_argument_delete;
+        extern exception_bad_argument_cast_to_base_function_type exception_bad_argument_cast_to_base;
+        extern exception_null_argument_new_function_type exception_null_argument_new;
+        extern exception_null_argument_copy_function_type exception_null_argument_copy;
+        extern exception_null_argument_delete_function_type exception_null_argument_delete;
+        extern exception_null_argument_cast_to_base_function_type exception_null_argument_cast_to_base;
+        extern exception_division_by_zero_new_function_type exception_division_by_zero_new;
+        extern exception_division_by_zero_copy_function_type exception_division_by_zero_copy;
+        extern exception_division_by_zero_delete_function_type exception_division_by_zero_delete;
+        extern exception_division_by_zero_cast_to_base_function_type exception_division_by_zero_cast_to_base;
+        
+    #endif /* EXCEPTION_CAPI_DEFINE_FUNCTION_POINTERS */
+    
+    #ifdef __cplusplus
+    
+    #include <stdexcept>
+    #include <sstream>
+    
+    #ifdef _WIN32
+        #include <Windows.h>
+    #else /* _WIN32 */
+        #include <dlfcn.h>
+    #endif /* _WIN32 */
+    
+    namespace Exception
+    {
+        class Initialization
+        {
+            #ifdef _WIN32
+                HINSTANCE handle;
+            #else /* _WIN32 */
+                void* handle;
+            #endif /* _WIN32 */
+            
+            template<class FunctionPointerType>
+            void load_function(FunctionPointerType& to_init, const char* name)
+            {
+                #ifdef _WIN32
+                    to_init = reinterpret_cast<FunctionPointerType>(GetProcAddress(handle, name));
+                #else /* _WIN32 */
+                    to_init = reinterpret_cast<FunctionPointerType>(dlsym(handle, name));
+                #endif /* _WIN32 */
+                if (!to_init)
+                {
+                    std::stringstream error_message;
+                    error_message << "Can't obtain function " << name;
+                    throw std::runtime_error(error_message.str());
+                }
+            }
+            
+            void load_module(const char* shared_library_name)
+            {
+                if (!shared_library_name) throw std::runtime_error("Null library name was passed");
+                #ifdef _WIN32
+                    handle = LoadLibraryA(shared_library_name);
+                #else /* _WIN32 */
+                    handle = dlopen(shared_library_name, RTLD_NOW);
+                #endif /* _WIN32 */
+                if (!handle)
+                {
+                    std::stringstream error_message;
+                    error_message << "Can't load shared library " << shared_library_name;
+                    throw std::runtime_error(error_message.str());
+                }
+                load_function<exception_generic_new_function_type>(exception_generic_new, "exception_generic_new");
+                load_function<exception_generic_get_error_text_function_type>(exception_generic_get_error_text, "exception_generic_get_error_text");
+                load_function<exception_generic_copy_function_type>(exception_generic_copy, "exception_generic_copy");
+                load_function<exception_generic_delete_function_type>(exception_generic_delete, "exception_generic_delete");
+                load_function<exception_bad_argument_new_function_type>(exception_bad_argument_new, "exception_bad_argument_new");
+                load_function<exception_bad_argument_get_argument_name_function_type>(exception_bad_argument_get_argument_name, "exception_bad_argument_get_argument_name");
+                load_function<exception_bad_argument_copy_function_type>(exception_bad_argument_copy, "exception_bad_argument_copy");
+                load_function<exception_bad_argument_delete_function_type>(exception_bad_argument_delete, "exception_bad_argument_delete");
+                load_function<exception_bad_argument_cast_to_base_function_type>(exception_bad_argument_cast_to_base, "exception_bad_argument_cast_to_base");
+                load_function<exception_null_argument_new_function_type>(exception_null_argument_new, "exception_null_argument_new");
+                load_function<exception_null_argument_copy_function_type>(exception_null_argument_copy, "exception_null_argument_copy");
+                load_function<exception_null_argument_delete_function_type>(exception_null_argument_delete, "exception_null_argument_delete");
+                load_function<exception_null_argument_cast_to_base_function_type>(exception_null_argument_cast_to_base, "exception_null_argument_cast_to_base");
+                load_function<exception_division_by_zero_new_function_type>(exception_division_by_zero_new, "exception_division_by_zero_new");
+                load_function<exception_division_by_zero_copy_function_type>(exception_division_by_zero_copy, "exception_division_by_zero_copy");
+                load_function<exception_division_by_zero_delete_function_type>(exception_division_by_zero_delete, "exception_division_by_zero_delete");
+                load_function<exception_division_by_zero_cast_to_base_function_type>(exception_division_by_zero_cast_to_base, "exception_division_by_zero_cast_to_base");
+            }
+            
+            Initialization();
+            Initialization(const Initialization&);
+            #ifdef EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES
+                Initialization(Initialization &&) = delete;
+            #endif /* EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES */
+        public:
+            Initialization(const char* shared_library_name)
+            {
+                load_module(shared_library_name);
+            }
+            ~Initialization()
+            {
+                #ifdef _WIN32
+                    FreeLibrary(handle);
+                #else /* _WIN32 */
+                    dlclose(handle);
+                #endif /* _WIN32 */
+                exception_generic_new = 0;
+                exception_generic_get_error_text = 0;
+                exception_generic_copy = 0;
+                exception_generic_delete = 0;
+                exception_bad_argument_new = 0;
+                exception_bad_argument_get_argument_name = 0;
+                exception_bad_argument_copy = 0;
+                exception_bad_argument_delete = 0;
+                exception_bad_argument_cast_to_base = 0;
+                exception_null_argument_new = 0;
+                exception_null_argument_copy = 0;
+                exception_null_argument_delete = 0;
+                exception_null_argument_cast_to_base = 0;
+                exception_division_by_zero_new = 0;
+                exception_division_by_zero_copy = 0;
+                exception_division_by_zero_delete = 0;
+                exception_division_by_zero_cast_to_base = 0;
+            }
+        };
+    }
+    
+    #endif /* __cplusplus */
+    
 #endif /* EXCEPTION_CAPI_USE_DYNAMIC_LOADER */
 
 #endif /* EXCEPTION_CAPI_INCLUDED */

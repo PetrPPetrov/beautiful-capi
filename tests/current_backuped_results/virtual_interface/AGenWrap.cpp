@@ -45,22 +45,22 @@
     #else
         #define EXAMPLE_API extern "C"
     #endif
-    #if defined __i386__
+    #ifdef __i386__
         #define EXAMPLE_API_CONVENTION __attribute__ ((cdecl))
-    #else
+    #else /* __i386__ */
         #define EXAMPLE_API_CONVENTION
-    #endif
+    #endif /* __i386__ */
 #elif __unix__ || __linux__
     #if defined(__GNUC__) && __GNUC__ >= 4
         #define EXAMPLE_API extern "C" __attribute__ ((visibility ("default")))
     #else
         #define EXAMPLE_API extern "C"
     #endif
-    #if defined __i386__
+    #ifdef __i386__
         #define EXAMPLE_API_CONVENTION __attribute__ ((cdecl))
-    #else
+    #else /* __i386__ */
         #define EXAMPLE_API_CONVENTION
-    #endif
+    #endif /* __i386__ */
 #else
     #error "Unknown platform"
 #endif

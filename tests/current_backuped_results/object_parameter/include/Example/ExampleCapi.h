@@ -29,9 +29,9 @@
 
 #ifdef __cplusplus
     #define EXAMPLE_CAPI_PREFIX extern "C"
-#else
+#else /* __cplusplus */
     #define EXAMPLE_CAPI_PREFIX
-#endif
+#endif /* __cplusplus */
 
 #ifdef _WIN32
     #ifdef __GNUC__
@@ -47,173 +47,216 @@
     #else
         #define EXAMPLE_API EXAMPLE_CAPI_PREFIX
     #endif
-    #if defined __i386__
+    #ifdef __i386__
         #define EXAMPLE_API_CONVENTION __attribute__ ((cdecl))
-    #else
+    #else /* __i386__ */
         #define EXAMPLE_API_CONVENTION
-    #endif
+    #endif /* __i386__ */
 #elif __unix__ || __linux__
     #if defined(__GNUC__) && __GNUC__ >= 4
         #define EXAMPLE_API EXAMPLE_CAPI_PREFIX __attribute__ ((visibility ("default")))
     #else
         #define EXAMPLE_API EXAMPLE_CAPI_PREFIX
     #endif
-    #if defined __i386__
+    #ifdef __i386__
         #define EXAMPLE_API_CONVENTION __attribute__ ((cdecl))
-    #else
+    #else /* __i386__ */
         #define EXAMPLE_API_CONVENTION
-    #endif
+    #endif /* __i386__ */
 #else
     #error "Unknown platform"
 #endif
 
-#ifndef EXAMPLE_CAPI_USE_DYNAMIC_LOADER
-
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_page_default();
-EXAMPLE_API size_t EXAMPLE_API_CONVENTION example_page_get_width(void* object_pointer);
-EXAMPLE_API size_t EXAMPLE_API_CONVENTION example_page_get_height(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_page_set_width(void* object_pointer, size_t value);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_page_set_height(void* object_pointer, size_t value);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_page_add_ref(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_page_release(void* object_pointer);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_document_default();
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_document_show(void* object_pointer);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_document_get_page(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_document_set_page(void* object_pointer, void* value);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_document_add_ref(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_document_release(void* object_pointer);
-
-#else /* EXAMPLE_CAPI_USE_DYNAMIC_LOADER */
-
-typedef void* (EXAMPLE_API_CONVENTION *example_page_default_function_type)();
-typedef size_t (EXAMPLE_API_CONVENTION *example_page_get_width_function_type)(void* object_pointer);
-typedef size_t (EXAMPLE_API_CONVENTION *example_page_get_height_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_page_set_width_function_type)(void* object_pointer, size_t value);
-typedef void (EXAMPLE_API_CONVENTION *example_page_set_height_function_type)(void* object_pointer, size_t value);
-typedef void (EXAMPLE_API_CONVENTION *example_page_add_ref_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_page_release_function_type)(void* object_pointer);
-typedef void* (EXAMPLE_API_CONVENTION *example_document_default_function_type)();
-typedef void (EXAMPLE_API_CONVENTION *example_document_show_function_type)(void* object_pointer);
-typedef void* (EXAMPLE_API_CONVENTION *example_document_get_page_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_document_set_page_function_type)(void* object_pointer, void* value);
-typedef void (EXAMPLE_API_CONVENTION *example_document_add_ref_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_document_release_function_type)(void* object_pointer);
-
-#ifdef EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS
-
-extern example_page_default_function_type example_page_default = 0;
-extern example_page_get_width_function_type example_page_get_width = 0;
-extern example_page_get_height_function_type example_page_get_height = 0;
-extern example_page_set_width_function_type example_page_set_width = 0;
-extern example_page_set_height_function_type example_page_set_height = 0;
-extern example_page_add_ref_function_type example_page_add_ref = 0;
-extern example_page_release_function_type example_page_release = 0;
-extern example_document_default_function_type example_document_default = 0;
-extern example_document_show_function_type example_document_show = 0;
-extern example_document_get_page_function_type example_document_get_page = 0;
-extern example_document_set_page_function_type example_document_set_page = 0;
-extern example_document_add_ref_function_type example_document_add_ref = 0;
-extern example_document_release_function_type example_document_release = 0;
-
-#else /* EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS */
-
-extern example_page_default_function_type example_page_default;
-extern example_page_get_width_function_type example_page_get_width;
-extern example_page_get_height_function_type example_page_get_height;
-extern example_page_set_width_function_type example_page_set_width;
-extern example_page_set_height_function_type example_page_set_height;
-extern example_page_add_ref_function_type example_page_add_ref;
-extern example_page_release_function_type example_page_release;
-extern example_document_default_function_type example_document_default;
-extern example_document_show_function_type example_document_show;
-extern example_document_get_page_function_type example_document_get_page;
-extern example_document_set_page_function_type example_document_set_page;
-extern example_document_add_ref_function_type example_document_add_ref;
-extern example_document_release_function_type example_document_release;
-
-#endif /* EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS */
-
 #ifdef __cplusplus
 
-#include <stdexcept>
-#include <sstream>
-#ifdef _WIN32
-#include <Windows.h>
-#else
-#include <dlfcn.h>
-#endif
-
-namespace Example
-{
-    class Initialization
-    {
-        #ifdef _WIN32
-        HINSTANCE handle;
-        #else
-        void* handle;
-        #endif
-        
-        template<class FunctionPointerType>
-        void load_function(FunctionPointerType& to_init, const char* name)
-        {
-            #ifdef _WIN32
-            to_init = reinterpret_cast<FunctionPointerType>(GetProcAddress(handle, name));
-            #else
-            to_init = reinterpret_cast<FunctionPointerType>(dlsym(handle, name));
-            #endif
-            if (!to_init)
-            {
-                std::stringstream error_message;
-                error_message << "Can't obtain function " << name;
-                throw std::runtime_error(error_message.str());
-            }
-        }
-        
-        Initialization();
-        Initialization(const Initialization&);
-    public:
-        Initialization(const char* name)
-        {
-            if (!name) throw std::runtime_error("Null library name was passed");
-            #ifdef _WIN32
-            handle = LoadLibraryA(name);
-            #else
-            handle = dlopen(name, RTLD_NOW);
-            #endif
-            if (!handle)
-            {
-                std::stringstream error_message;
-                error_message << "Can't load shared library " << name;
-                throw std::runtime_error(error_message.str());
-            }
-            
-            load_function<example_page_default_function_type>(example_page_default, "example_page_default");
-            load_function<example_page_get_width_function_type>(example_page_get_width, "example_page_get_width");
-            load_function<example_page_get_height_function_type>(example_page_get_height, "example_page_get_height");
-            load_function<example_page_set_width_function_type>(example_page_set_width, "example_page_set_width");
-            load_function<example_page_set_height_function_type>(example_page_set_height, "example_page_set_height");
-            load_function<example_page_add_ref_function_type>(example_page_add_ref, "example_page_add_ref");
-            load_function<example_page_release_function_type>(example_page_release, "example_page_release");
-            load_function<example_document_default_function_type>(example_document_default, "example_document_default");
-            load_function<example_document_show_function_type>(example_document_show, "example_document_show");
-            load_function<example_document_get_page_function_type>(example_document_get_page, "example_document_get_page");
-            load_function<example_document_set_page_function_type>(example_document_set_page, "example_document_set_page");
-            load_function<example_document_add_ref_function_type>(example_document_add_ref, "example_document_add_ref");
-            load_function<example_document_release_function_type>(example_document_release, "example_document_release");
-        }
-        ~Initialization()
-        {
-            #ifdef _WIN32
-            FreeLibrary(handle);
-            #else
-            dlclose(handle);
-            #endif
-        }
-    };
-}
+    #ifdef _MSC_VER
+        #if _MSC_VER >= 1900
+            #define EXAMPLE_NOEXCEPT noexcept
+        #else /* _MSC_VER >= 1900 */
+            #define EXAMPLE_NOEXCEPT
+        #endif /* _MSC_VER >= 1900 */
+        #if _MSC_VER >= 1800
+            #define EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+        #endif /* _MSC_VER >= 1800 */
+    #else /* _MSC_VER */
+        #if __cplusplus >= 201103L
+            #define EXAMPLE_NOEXCEPT noexcept
+            #define EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+        #else /* __cplusplus >= 201103L */
+            #define EXAMPLE_NOEXCEPT
+        #endif /* __cplusplus >= 201103L */
+    #endif /* _MSC_VER */
 
 #endif /* __cplusplus */
 
+#ifndef EXAMPLE_CAPI_USE_DYNAMIC_LOADER
+    
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_page_default();
+    EXAMPLE_API size_t EXAMPLE_API_CONVENTION example_page_get_width(void* object_pointer);
+    EXAMPLE_API size_t EXAMPLE_API_CONVENTION example_page_get_height(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_page_set_width(void* object_pointer, size_t value);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_page_set_height(void* object_pointer, size_t value);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_page_add_ref(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_page_release(void* object_pointer);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_document_default();
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_document_show(void* object_pointer);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_document_get_page(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_document_set_page(void* object_pointer, void* value);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_document_add_ref(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_document_release(void* object_pointer);
+    
+#else /* EXAMPLE_CAPI_USE_DYNAMIC_LOADER */
+    
+    typedef void* (EXAMPLE_API_CONVENTION *example_page_default_function_type)();
+    typedef size_t (EXAMPLE_API_CONVENTION *example_page_get_width_function_type)(void* object_pointer);
+    typedef size_t (EXAMPLE_API_CONVENTION *example_page_get_height_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_page_set_width_function_type)(void* object_pointer, size_t value);
+    typedef void (EXAMPLE_API_CONVENTION *example_page_set_height_function_type)(void* object_pointer, size_t value);
+    typedef void (EXAMPLE_API_CONVENTION *example_page_add_ref_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_page_release_function_type)(void* object_pointer);
+    typedef void* (EXAMPLE_API_CONVENTION *example_document_default_function_type)();
+    typedef void (EXAMPLE_API_CONVENTION *example_document_show_function_type)(void* object_pointer);
+    typedef void* (EXAMPLE_API_CONVENTION *example_document_get_page_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_document_set_page_function_type)(void* object_pointer, void* value);
+    typedef void (EXAMPLE_API_CONVENTION *example_document_add_ref_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_document_release_function_type)(void* object_pointer);
+    
+    #ifdef EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS
+        
+        extern example_page_default_function_type example_page_default = 0;
+        extern example_page_get_width_function_type example_page_get_width = 0;
+        extern example_page_get_height_function_type example_page_get_height = 0;
+        extern example_page_set_width_function_type example_page_set_width = 0;
+        extern example_page_set_height_function_type example_page_set_height = 0;
+        extern example_page_add_ref_function_type example_page_add_ref = 0;
+        extern example_page_release_function_type example_page_release = 0;
+        extern example_document_default_function_type example_document_default = 0;
+        extern example_document_show_function_type example_document_show = 0;
+        extern example_document_get_page_function_type example_document_get_page = 0;
+        extern example_document_set_page_function_type example_document_set_page = 0;
+        extern example_document_add_ref_function_type example_document_add_ref = 0;
+        extern example_document_release_function_type example_document_release = 0;
+        
+    #else /* EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS */
+        
+        extern example_page_default_function_type example_page_default;
+        extern example_page_get_width_function_type example_page_get_width;
+        extern example_page_get_height_function_type example_page_get_height;
+        extern example_page_set_width_function_type example_page_set_width;
+        extern example_page_set_height_function_type example_page_set_height;
+        extern example_page_add_ref_function_type example_page_add_ref;
+        extern example_page_release_function_type example_page_release;
+        extern example_document_default_function_type example_document_default;
+        extern example_document_show_function_type example_document_show;
+        extern example_document_get_page_function_type example_document_get_page;
+        extern example_document_set_page_function_type example_document_set_page;
+        extern example_document_add_ref_function_type example_document_add_ref;
+        extern example_document_release_function_type example_document_release;
+        
+    #endif /* EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS */
+    
+    #ifdef __cplusplus
+    
+    #include <stdexcept>
+    #include <sstream>
+    
+    #ifdef _WIN32
+        #include <Windows.h>
+    #else /* _WIN32 */
+        #include <dlfcn.h>
+    #endif /* _WIN32 */
+    
+    namespace Example
+    {
+        class Initialization
+        {
+            #ifdef _WIN32
+                HINSTANCE handle;
+            #else /* _WIN32 */
+                void* handle;
+            #endif /* _WIN32 */
+            
+            template<class FunctionPointerType>
+            void load_function(FunctionPointerType& to_init, const char* name)
+            {
+                #ifdef _WIN32
+                    to_init = reinterpret_cast<FunctionPointerType>(GetProcAddress(handle, name));
+                #else /* _WIN32 */
+                    to_init = reinterpret_cast<FunctionPointerType>(dlsym(handle, name));
+                #endif /* _WIN32 */
+                if (!to_init)
+                {
+                    std::stringstream error_message;
+                    error_message << "Can't obtain function " << name;
+                    throw std::runtime_error(error_message.str());
+                }
+            }
+            
+            void load_module(const char* shared_library_name)
+            {
+                if (!shared_library_name) throw std::runtime_error("Null library name was passed");
+                #ifdef _WIN32
+                    handle = LoadLibraryA(shared_library_name);
+                #else /* _WIN32 */
+                    handle = dlopen(shared_library_name, RTLD_NOW);
+                #endif /* _WIN32 */
+                if (!handle)
+                {
+                    std::stringstream error_message;
+                    error_message << "Can't load shared library " << shared_library_name;
+                    throw std::runtime_error(error_message.str());
+                }
+                load_function<example_page_default_function_type>(example_page_default, "example_page_default");
+                load_function<example_page_get_width_function_type>(example_page_get_width, "example_page_get_width");
+                load_function<example_page_get_height_function_type>(example_page_get_height, "example_page_get_height");
+                load_function<example_page_set_width_function_type>(example_page_set_width, "example_page_set_width");
+                load_function<example_page_set_height_function_type>(example_page_set_height, "example_page_set_height");
+                load_function<example_page_add_ref_function_type>(example_page_add_ref, "example_page_add_ref");
+                load_function<example_page_release_function_type>(example_page_release, "example_page_release");
+                load_function<example_document_default_function_type>(example_document_default, "example_document_default");
+                load_function<example_document_show_function_type>(example_document_show, "example_document_show");
+                load_function<example_document_get_page_function_type>(example_document_get_page, "example_document_get_page");
+                load_function<example_document_set_page_function_type>(example_document_set_page, "example_document_set_page");
+                load_function<example_document_add_ref_function_type>(example_document_add_ref, "example_document_add_ref");
+                load_function<example_document_release_function_type>(example_document_release, "example_document_release");
+            }
+            
+            Initialization();
+            Initialization(const Initialization&);
+            #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+                Initialization(Initialization &&) = delete;
+            #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
+        public:
+            Initialization(const char* shared_library_name)
+            {
+                load_module(shared_library_name);
+            }
+            ~Initialization()
+            {
+                #ifdef _WIN32
+                    FreeLibrary(handle);
+                #else /* _WIN32 */
+                    dlclose(handle);
+                #endif /* _WIN32 */
+                example_page_default = 0;
+                example_page_get_width = 0;
+                example_page_get_height = 0;
+                example_page_set_width = 0;
+                example_page_set_height = 0;
+                example_page_add_ref = 0;
+                example_page_release = 0;
+                example_document_default = 0;
+                example_document_show = 0;
+                example_document_get_page = 0;
+                example_document_set_page = 0;
+                example_document_add_ref = 0;
+                example_document_release = 0;
+            }
+        };
+    }
+    
+    #endif /* __cplusplus */
+    
 #endif /* EXAMPLE_CAPI_USE_DYNAMIC_LOADER */
 
 #endif /* EXAMPLE_CAPI_INCLUDED */

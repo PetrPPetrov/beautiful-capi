@@ -50,9 +50,9 @@ enum beautiful_capi_callback_exception_code_t
 
 #ifdef __cplusplus
     #define EXAMPLE_CAPI_PREFIX extern "C"
-#else
+#else /* __cplusplus */
     #define EXAMPLE_CAPI_PREFIX
-#endif
+#endif /* __cplusplus */
 
 #ifdef _WIN32
     #ifdef __GNUC__
@@ -68,286 +68,349 @@ enum beautiful_capi_callback_exception_code_t
     #else
         #define EXAMPLE_API EXAMPLE_CAPI_PREFIX
     #endif
-    #if defined __i386__
+    #ifdef __i386__
         #define EXAMPLE_API_CONVENTION __attribute__ ((cdecl))
-    #else
+    #else /* __i386__ */
         #define EXAMPLE_API_CONVENTION
-    #endif
+    #endif /* __i386__ */
 #elif __unix__ || __linux__
     #if defined(__GNUC__) && __GNUC__ >= 4
         #define EXAMPLE_API EXAMPLE_CAPI_PREFIX __attribute__ ((visibility ("default")))
     #else
         #define EXAMPLE_API EXAMPLE_CAPI_PREFIX
     #endif
-    #if defined __i386__
+    #ifdef __i386__
         #define EXAMPLE_API_CONVENTION __attribute__ ((cdecl))
-    #else
+    #else /* __i386__ */
         #define EXAMPLE_API_CONVENTION
-    #endif
+    #endif /* __i386__ */
 #else
     #error "Unknown platform"
 #endif
 
-#ifndef EXAMPLE_CAPI_USE_DYNAMIC_LOADER
-
-typedef void* (EXAMPLE_API_CONVENTION *example_printer_copy_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_printer_delete_callback_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_printer_print_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* text);
-typedef void (EXAMPLE_API_CONVENTION *example_printer_set_printing_quality_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, int quality);
-typedef int (EXAMPLE_API_CONVENTION *example_printer_get_printing_quality_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
-typedef int (EXAMPLE_API_CONVENTION *example_printer_get_device_type_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
-
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_create_default_printer(beautiful_capi_callback_exception_info_t* exception_info, int printing_device);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_print(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* text);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_set_printing_quality(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, int quality);
-EXAMPLE_API int EXAMPLE_API_CONVENTION example_printer_get_printing_quality(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
-EXAMPLE_API int EXAMPLE_API_CONVENTION example_printer_get_device_type(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_add_ref(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_release(void* object_pointer);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_person_default(beautiful_capi_callback_exception_info_t* exception_info);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_person_set_first_name(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* first_name);
-EXAMPLE_API const char* EXAMPLE_API_CONVENTION example_person_get_first_name(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_person_set_second_name(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* second_name);
-EXAMPLE_API const char* EXAMPLE_API_CONVENTION example_person_get_second_name(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_person_set_age(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, unsigned int age);
-EXAMPLE_API unsigned int EXAMPLE_API_CONVENTION example_person_get_age(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_person_set_sex(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, char sex);
-EXAMPLE_API char EXAMPLE_API_CONVENTION example_person_get_sex(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_person_dump(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, void* printer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_person_print(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, void* printer, const char* text);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_person_copy(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_person_delete(void* object_pointer);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_printer_callback_default(beautiful_capi_callback_exception_info_t* exception_info);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_callback_set_c_function_for_copy(void* object_pointer, example_printer_copy_callback_type c_function_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_callback_set_c_function_for_delete(void* object_pointer, example_printer_delete_callback_type c_function_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_callback_set_object_pointer(void* object_pointer, void* custom_object);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_printer_callback_get_object_pointer(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_callback_set_c_function_for_print(void* object_pointer, example_printer_print_callback_type c_function_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_callback_set_c_function_for_set_printing_quality(void* object_pointer, example_printer_set_printing_quality_callback_type c_function_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_callback_set_c_function_for_get_printing_quality(void* object_pointer, example_printer_get_printing_quality_callback_type c_function_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_callback_set_c_function_for_get_device_type(void* object_pointer, example_printer_get_device_type_callback_type c_function_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_callback_add_ref(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_callback_release(void* object_pointer);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_printer_callback_cast_to_base(void* object_pointer);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_printer_cast_to_example_printer_callback(void* source_object);
-
-#else /* EXAMPLE_CAPI_USE_DYNAMIC_LOADER */
-
-typedef void* (EXAMPLE_API_CONVENTION *example_printer_copy_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_printer_delete_callback_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_printer_print_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* text);
-typedef void (EXAMPLE_API_CONVENTION *example_printer_set_printing_quality_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, int quality);
-typedef int (EXAMPLE_API_CONVENTION *example_printer_get_printing_quality_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
-typedef int (EXAMPLE_API_CONVENTION *example_printer_get_device_type_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
-typedef void* (EXAMPLE_API_CONVENTION *example_create_default_printer_function_type)(beautiful_capi_callback_exception_info_t* exception_info, int printing_device);
-typedef void (EXAMPLE_API_CONVENTION *example_printer_print_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* text);
-typedef void (EXAMPLE_API_CONVENTION *example_printer_set_printing_quality_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, int quality);
-typedef int (EXAMPLE_API_CONVENTION *example_printer_get_printing_quality_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
-typedef int (EXAMPLE_API_CONVENTION *example_printer_get_device_type_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_printer_add_ref_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_printer_release_function_type)(void* object_pointer);
-typedef void* (EXAMPLE_API_CONVENTION *example_person_default_function_type)(beautiful_capi_callback_exception_info_t* exception_info);
-typedef void (EXAMPLE_API_CONVENTION *example_person_set_first_name_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* first_name);
-typedef const char* (EXAMPLE_API_CONVENTION *example_person_get_first_name_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_person_set_second_name_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* second_name);
-typedef const char* (EXAMPLE_API_CONVENTION *example_person_get_second_name_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_person_set_age_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, unsigned int age);
-typedef unsigned int (EXAMPLE_API_CONVENTION *example_person_get_age_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_person_set_sex_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, char sex);
-typedef char (EXAMPLE_API_CONVENTION *example_person_get_sex_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_person_dump_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, void* printer);
-typedef void (EXAMPLE_API_CONVENTION *example_person_print_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, void* printer, const char* text);
-typedef void* (EXAMPLE_API_CONVENTION *example_person_copy_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_person_delete_function_type)(void* object_pointer);
-typedef void* (EXAMPLE_API_CONVENTION *example_printer_callback_default_function_type)(beautiful_capi_callback_exception_info_t* exception_info);
-typedef void (EXAMPLE_API_CONVENTION *example_printer_callback_set_c_function_for_copy_function_type)(void* object_pointer, example_printer_copy_callback_type c_function_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_printer_callback_set_c_function_for_delete_function_type)(void* object_pointer, example_printer_delete_callback_type c_function_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_printer_callback_set_object_pointer_function_type)(void* object_pointer, void* custom_object);
-typedef void* (EXAMPLE_API_CONVENTION *example_printer_callback_get_object_pointer_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_printer_callback_set_c_function_for_print_function_type)(void* object_pointer, example_printer_print_callback_type c_function_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_printer_callback_set_c_function_for_set_printing_quality_function_type)(void* object_pointer, example_printer_set_printing_quality_callback_type c_function_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_printer_callback_set_c_function_for_get_printing_quality_function_type)(void* object_pointer, example_printer_get_printing_quality_callback_type c_function_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_printer_callback_set_c_function_for_get_device_type_function_type)(void* object_pointer, example_printer_get_device_type_callback_type c_function_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_printer_callback_add_ref_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_printer_callback_release_function_type)(void* object_pointer);
-typedef void* (EXAMPLE_API_CONVENTION *example_printer_callback_cast_to_base_function_type)(void* object_pointer);
-typedef void* (EXAMPLE_API_CONVENTION *example_printer_cast_to_example_printer_callback_function_type)(void* source_object);
-
-#ifdef EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS
-
-extern example_create_default_printer_function_type example_create_default_printer = 0;
-extern example_printer_print_function_type example_printer_print = 0;
-extern example_printer_set_printing_quality_function_type example_printer_set_printing_quality = 0;
-extern example_printer_get_printing_quality_function_type example_printer_get_printing_quality = 0;
-extern example_printer_get_device_type_function_type example_printer_get_device_type = 0;
-extern example_printer_add_ref_function_type example_printer_add_ref = 0;
-extern example_printer_release_function_type example_printer_release = 0;
-extern example_person_default_function_type example_person_default = 0;
-extern example_person_set_first_name_function_type example_person_set_first_name = 0;
-extern example_person_get_first_name_function_type example_person_get_first_name = 0;
-extern example_person_set_second_name_function_type example_person_set_second_name = 0;
-extern example_person_get_second_name_function_type example_person_get_second_name = 0;
-extern example_person_set_age_function_type example_person_set_age = 0;
-extern example_person_get_age_function_type example_person_get_age = 0;
-extern example_person_set_sex_function_type example_person_set_sex = 0;
-extern example_person_get_sex_function_type example_person_get_sex = 0;
-extern example_person_dump_function_type example_person_dump = 0;
-extern example_person_print_function_type example_person_print = 0;
-extern example_person_copy_function_type example_person_copy = 0;
-extern example_person_delete_function_type example_person_delete = 0;
-extern example_printer_callback_default_function_type example_printer_callback_default = 0;
-extern example_printer_callback_set_c_function_for_copy_function_type example_printer_callback_set_c_function_for_copy = 0;
-extern example_printer_callback_set_c_function_for_delete_function_type example_printer_callback_set_c_function_for_delete = 0;
-extern example_printer_callback_set_object_pointer_function_type example_printer_callback_set_object_pointer = 0;
-extern example_printer_callback_get_object_pointer_function_type example_printer_callback_get_object_pointer = 0;
-extern example_printer_callback_set_c_function_for_print_function_type example_printer_callback_set_c_function_for_print = 0;
-extern example_printer_callback_set_c_function_for_set_printing_quality_function_type example_printer_callback_set_c_function_for_set_printing_quality = 0;
-extern example_printer_callback_set_c_function_for_get_printing_quality_function_type example_printer_callback_set_c_function_for_get_printing_quality = 0;
-extern example_printer_callback_set_c_function_for_get_device_type_function_type example_printer_callback_set_c_function_for_get_device_type = 0;
-extern example_printer_callback_add_ref_function_type example_printer_callback_add_ref = 0;
-extern example_printer_callback_release_function_type example_printer_callback_release = 0;
-extern example_printer_callback_cast_to_base_function_type example_printer_callback_cast_to_base = 0;
-extern example_printer_cast_to_example_printer_callback_function_type example_printer_cast_to_example_printer_callback = 0;
-
-#else /* EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS */
-
-extern example_create_default_printer_function_type example_create_default_printer;
-extern example_printer_print_function_type example_printer_print;
-extern example_printer_set_printing_quality_function_type example_printer_set_printing_quality;
-extern example_printer_get_printing_quality_function_type example_printer_get_printing_quality;
-extern example_printer_get_device_type_function_type example_printer_get_device_type;
-extern example_printer_add_ref_function_type example_printer_add_ref;
-extern example_printer_release_function_type example_printer_release;
-extern example_person_default_function_type example_person_default;
-extern example_person_set_first_name_function_type example_person_set_first_name;
-extern example_person_get_first_name_function_type example_person_get_first_name;
-extern example_person_set_second_name_function_type example_person_set_second_name;
-extern example_person_get_second_name_function_type example_person_get_second_name;
-extern example_person_set_age_function_type example_person_set_age;
-extern example_person_get_age_function_type example_person_get_age;
-extern example_person_set_sex_function_type example_person_set_sex;
-extern example_person_get_sex_function_type example_person_get_sex;
-extern example_person_dump_function_type example_person_dump;
-extern example_person_print_function_type example_person_print;
-extern example_person_copy_function_type example_person_copy;
-extern example_person_delete_function_type example_person_delete;
-extern example_printer_callback_default_function_type example_printer_callback_default;
-extern example_printer_callback_set_c_function_for_copy_function_type example_printer_callback_set_c_function_for_copy;
-extern example_printer_callback_set_c_function_for_delete_function_type example_printer_callback_set_c_function_for_delete;
-extern example_printer_callback_set_object_pointer_function_type example_printer_callback_set_object_pointer;
-extern example_printer_callback_get_object_pointer_function_type example_printer_callback_get_object_pointer;
-extern example_printer_callback_set_c_function_for_print_function_type example_printer_callback_set_c_function_for_print;
-extern example_printer_callback_set_c_function_for_set_printing_quality_function_type example_printer_callback_set_c_function_for_set_printing_quality;
-extern example_printer_callback_set_c_function_for_get_printing_quality_function_type example_printer_callback_set_c_function_for_get_printing_quality;
-extern example_printer_callback_set_c_function_for_get_device_type_function_type example_printer_callback_set_c_function_for_get_device_type;
-extern example_printer_callback_add_ref_function_type example_printer_callback_add_ref;
-extern example_printer_callback_release_function_type example_printer_callback_release;
-extern example_printer_callback_cast_to_base_function_type example_printer_callback_cast_to_base;
-extern example_printer_cast_to_example_printer_callback_function_type example_printer_cast_to_example_printer_callback;
-
-#endif /* EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS */
-
 #ifdef __cplusplus
 
-#include <stdexcept>
-#include <sstream>
-#ifdef _WIN32
-#include <Windows.h>
-#else
-#include <dlfcn.h>
-#endif
-
-namespace Example
-{
-    class Initialization
-    {
-        #ifdef _WIN32
-        HINSTANCE handle;
-        #else
-        void* handle;
-        #endif
-        
-        template<class FunctionPointerType>
-        void load_function(FunctionPointerType& to_init, const char* name)
-        {
-            #ifdef _WIN32
-            to_init = reinterpret_cast<FunctionPointerType>(GetProcAddress(handle, name));
-            #else
-            to_init = reinterpret_cast<FunctionPointerType>(dlsym(handle, name));
-            #endif
-            if (!to_init)
-            {
-                std::stringstream error_message;
-                error_message << "Can't obtain function " << name;
-                throw std::runtime_error(error_message.str());
-            }
-        }
-        
-        Initialization();
-        Initialization(const Initialization&);
-    public:
-        Initialization(const char* name)
-        {
-            if (!name) throw std::runtime_error("Null library name was passed");
-            #ifdef _WIN32
-            handle = LoadLibraryA(name);
-            #else
-            handle = dlopen(name, RTLD_NOW);
-            #endif
-            if (!handle)
-            {
-                std::stringstream error_message;
-                error_message << "Can't load shared library " << name;
-                throw std::runtime_error(error_message.str());
-            }
-            
-            load_function<example_create_default_printer_function_type>(example_create_default_printer, "example_create_default_printer");
-            load_function<example_printer_print_function_type>(example_printer_print, "example_printer_print");
-            load_function<example_printer_set_printing_quality_function_type>(example_printer_set_printing_quality, "example_printer_set_printing_quality");
-            load_function<example_printer_get_printing_quality_function_type>(example_printer_get_printing_quality, "example_printer_get_printing_quality");
-            load_function<example_printer_get_device_type_function_type>(example_printer_get_device_type, "example_printer_get_device_type");
-            load_function<example_printer_add_ref_function_type>(example_printer_add_ref, "example_printer_add_ref");
-            load_function<example_printer_release_function_type>(example_printer_release, "example_printer_release");
-            load_function<example_person_default_function_type>(example_person_default, "example_person_default");
-            load_function<example_person_set_first_name_function_type>(example_person_set_first_name, "example_person_set_first_name");
-            load_function<example_person_get_first_name_function_type>(example_person_get_first_name, "example_person_get_first_name");
-            load_function<example_person_set_second_name_function_type>(example_person_set_second_name, "example_person_set_second_name");
-            load_function<example_person_get_second_name_function_type>(example_person_get_second_name, "example_person_get_second_name");
-            load_function<example_person_set_age_function_type>(example_person_set_age, "example_person_set_age");
-            load_function<example_person_get_age_function_type>(example_person_get_age, "example_person_get_age");
-            load_function<example_person_set_sex_function_type>(example_person_set_sex, "example_person_set_sex");
-            load_function<example_person_get_sex_function_type>(example_person_get_sex, "example_person_get_sex");
-            load_function<example_person_dump_function_type>(example_person_dump, "example_person_dump");
-            load_function<example_person_print_function_type>(example_person_print, "example_person_print");
-            load_function<example_person_copy_function_type>(example_person_copy, "example_person_copy");
-            load_function<example_person_delete_function_type>(example_person_delete, "example_person_delete");
-            load_function<example_printer_callback_default_function_type>(example_printer_callback_default, "example_printer_callback_default");
-            load_function<example_printer_callback_set_c_function_for_copy_function_type>(example_printer_callback_set_c_function_for_copy, "example_printer_callback_set_c_function_for_copy");
-            load_function<example_printer_callback_set_c_function_for_delete_function_type>(example_printer_callback_set_c_function_for_delete, "example_printer_callback_set_c_function_for_delete");
-            load_function<example_printer_callback_set_object_pointer_function_type>(example_printer_callback_set_object_pointer, "example_printer_callback_set_object_pointer");
-            load_function<example_printer_callback_get_object_pointer_function_type>(example_printer_callback_get_object_pointer, "example_printer_callback_get_object_pointer");
-            load_function<example_printer_callback_set_c_function_for_print_function_type>(example_printer_callback_set_c_function_for_print, "example_printer_callback_set_c_function_for_print");
-            load_function<example_printer_callback_set_c_function_for_set_printing_quality_function_type>(example_printer_callback_set_c_function_for_set_printing_quality, "example_printer_callback_set_c_function_for_set_printing_quality");
-            load_function<example_printer_callback_set_c_function_for_get_printing_quality_function_type>(example_printer_callback_set_c_function_for_get_printing_quality, "example_printer_callback_set_c_function_for_get_printing_quality");
-            load_function<example_printer_callback_set_c_function_for_get_device_type_function_type>(example_printer_callback_set_c_function_for_get_device_type, "example_printer_callback_set_c_function_for_get_device_type");
-            load_function<example_printer_callback_add_ref_function_type>(example_printer_callback_add_ref, "example_printer_callback_add_ref");
-            load_function<example_printer_callback_release_function_type>(example_printer_callback_release, "example_printer_callback_release");
-            load_function<example_printer_callback_cast_to_base_function_type>(example_printer_callback_cast_to_base, "example_printer_callback_cast_to_base");
-            load_function<example_printer_cast_to_example_printer_callback_function_type>(example_printer_cast_to_example_printer_callback, "example_printer_cast_to_example_printer_callback");
-        }
-        ~Initialization()
-        {
-            #ifdef _WIN32
-            FreeLibrary(handle);
-            #else
-            dlclose(handle);
-            #endif
-        }
-    };
-}
+    #ifdef _MSC_VER
+        #if _MSC_VER >= 1900
+            #define EXAMPLE_NOEXCEPT noexcept
+        #else /* _MSC_VER >= 1900 */
+            #define EXAMPLE_NOEXCEPT
+        #endif /* _MSC_VER >= 1900 */
+        #if _MSC_VER >= 1800
+            #define EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+        #endif /* _MSC_VER >= 1800 */
+    #else /* _MSC_VER */
+        #if __cplusplus >= 201103L
+            #define EXAMPLE_NOEXCEPT noexcept
+            #define EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+        #else /* __cplusplus >= 201103L */
+            #define EXAMPLE_NOEXCEPT
+        #endif /* __cplusplus >= 201103L */
+    #endif /* _MSC_VER */
 
 #endif /* __cplusplus */
 
+#ifndef EXAMPLE_CAPI_USE_DYNAMIC_LOADER
+    
+    typedef void* (EXAMPLE_API_CONVENTION *example_printer_copy_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_printer_delete_callback_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_printer_print_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* text);
+    typedef void (EXAMPLE_API_CONVENTION *example_printer_set_printing_quality_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, int quality);
+    typedef int (EXAMPLE_API_CONVENTION *example_printer_get_printing_quality_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+    typedef int (EXAMPLE_API_CONVENTION *example_printer_get_device_type_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+    
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_create_default_printer(beautiful_capi_callback_exception_info_t* exception_info, int printing_device);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_print(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* text);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_set_printing_quality(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, int quality);
+    EXAMPLE_API int EXAMPLE_API_CONVENTION example_printer_get_printing_quality(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+    EXAMPLE_API int EXAMPLE_API_CONVENTION example_printer_get_device_type(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_add_ref(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_release(void* object_pointer);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_person_default(beautiful_capi_callback_exception_info_t* exception_info);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_person_set_first_name(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* first_name);
+    EXAMPLE_API const char* EXAMPLE_API_CONVENTION example_person_get_first_name(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_person_set_second_name(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* second_name);
+    EXAMPLE_API const char* EXAMPLE_API_CONVENTION example_person_get_second_name(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_person_set_age(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, unsigned int age);
+    EXAMPLE_API unsigned int EXAMPLE_API_CONVENTION example_person_get_age(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_person_set_sex(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, char sex);
+    EXAMPLE_API char EXAMPLE_API_CONVENTION example_person_get_sex(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_person_dump(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, void* printer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_person_print(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, void* printer, const char* text);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_person_copy(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_person_delete(void* object_pointer);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_printer_callback_default(beautiful_capi_callback_exception_info_t* exception_info);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_callback_set_c_function_for_copy(void* object_pointer, example_printer_copy_callback_type c_function_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_callback_set_c_function_for_delete(void* object_pointer, example_printer_delete_callback_type c_function_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_callback_set_object_pointer(void* object_pointer, void* custom_object);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_printer_callback_get_object_pointer(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_callback_set_c_function_for_print(void* object_pointer, example_printer_print_callback_type c_function_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_callback_set_c_function_for_set_printing_quality(void* object_pointer, example_printer_set_printing_quality_callback_type c_function_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_callback_set_c_function_for_get_printing_quality(void* object_pointer, example_printer_get_printing_quality_callback_type c_function_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_callback_set_c_function_for_get_device_type(void* object_pointer, example_printer_get_device_type_callback_type c_function_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_callback_add_ref(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_callback_release(void* object_pointer);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_printer_callback_cast_to_base(void* object_pointer);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_printer_cast_to_example_printer_callback(void* source_object);
+    
+#else /* EXAMPLE_CAPI_USE_DYNAMIC_LOADER */
+    
+    typedef void* (EXAMPLE_API_CONVENTION *example_printer_copy_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_printer_delete_callback_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_printer_print_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* text);
+    typedef void (EXAMPLE_API_CONVENTION *example_printer_set_printing_quality_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, int quality);
+    typedef int (EXAMPLE_API_CONVENTION *example_printer_get_printing_quality_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+    typedef int (EXAMPLE_API_CONVENTION *example_printer_get_device_type_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+    typedef void* (EXAMPLE_API_CONVENTION *example_create_default_printer_function_type)(beautiful_capi_callback_exception_info_t* exception_info, int printing_device);
+    typedef void (EXAMPLE_API_CONVENTION *example_printer_print_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* text);
+    typedef void (EXAMPLE_API_CONVENTION *example_printer_set_printing_quality_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, int quality);
+    typedef int (EXAMPLE_API_CONVENTION *example_printer_get_printing_quality_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+    typedef int (EXAMPLE_API_CONVENTION *example_printer_get_device_type_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_printer_add_ref_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_printer_release_function_type)(void* object_pointer);
+    typedef void* (EXAMPLE_API_CONVENTION *example_person_default_function_type)(beautiful_capi_callback_exception_info_t* exception_info);
+    typedef void (EXAMPLE_API_CONVENTION *example_person_set_first_name_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* first_name);
+    typedef const char* (EXAMPLE_API_CONVENTION *example_person_get_first_name_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_person_set_second_name_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* second_name);
+    typedef const char* (EXAMPLE_API_CONVENTION *example_person_get_second_name_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_person_set_age_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, unsigned int age);
+    typedef unsigned int (EXAMPLE_API_CONVENTION *example_person_get_age_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_person_set_sex_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, char sex);
+    typedef char (EXAMPLE_API_CONVENTION *example_person_get_sex_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_person_dump_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, void* printer);
+    typedef void (EXAMPLE_API_CONVENTION *example_person_print_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, void* printer, const char* text);
+    typedef void* (EXAMPLE_API_CONVENTION *example_person_copy_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_person_delete_function_type)(void* object_pointer);
+    typedef void* (EXAMPLE_API_CONVENTION *example_printer_callback_default_function_type)(beautiful_capi_callback_exception_info_t* exception_info);
+    typedef void (EXAMPLE_API_CONVENTION *example_printer_callback_set_c_function_for_copy_function_type)(void* object_pointer, example_printer_copy_callback_type c_function_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_printer_callback_set_c_function_for_delete_function_type)(void* object_pointer, example_printer_delete_callback_type c_function_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_printer_callback_set_object_pointer_function_type)(void* object_pointer, void* custom_object);
+    typedef void* (EXAMPLE_API_CONVENTION *example_printer_callback_get_object_pointer_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_printer_callback_set_c_function_for_print_function_type)(void* object_pointer, example_printer_print_callback_type c_function_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_printer_callback_set_c_function_for_set_printing_quality_function_type)(void* object_pointer, example_printer_set_printing_quality_callback_type c_function_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_printer_callback_set_c_function_for_get_printing_quality_function_type)(void* object_pointer, example_printer_get_printing_quality_callback_type c_function_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_printer_callback_set_c_function_for_get_device_type_function_type)(void* object_pointer, example_printer_get_device_type_callback_type c_function_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_printer_callback_add_ref_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_printer_callback_release_function_type)(void* object_pointer);
+    typedef void* (EXAMPLE_API_CONVENTION *example_printer_callback_cast_to_base_function_type)(void* object_pointer);
+    typedef void* (EXAMPLE_API_CONVENTION *example_printer_cast_to_example_printer_callback_function_type)(void* source_object);
+    
+    #ifdef EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS
+        
+        extern example_create_default_printer_function_type example_create_default_printer = 0;
+        extern example_printer_print_function_type example_printer_print = 0;
+        extern example_printer_set_printing_quality_function_type example_printer_set_printing_quality = 0;
+        extern example_printer_get_printing_quality_function_type example_printer_get_printing_quality = 0;
+        extern example_printer_get_device_type_function_type example_printer_get_device_type = 0;
+        extern example_printer_add_ref_function_type example_printer_add_ref = 0;
+        extern example_printer_release_function_type example_printer_release = 0;
+        extern example_person_default_function_type example_person_default = 0;
+        extern example_person_set_first_name_function_type example_person_set_first_name = 0;
+        extern example_person_get_first_name_function_type example_person_get_first_name = 0;
+        extern example_person_set_second_name_function_type example_person_set_second_name = 0;
+        extern example_person_get_second_name_function_type example_person_get_second_name = 0;
+        extern example_person_set_age_function_type example_person_set_age = 0;
+        extern example_person_get_age_function_type example_person_get_age = 0;
+        extern example_person_set_sex_function_type example_person_set_sex = 0;
+        extern example_person_get_sex_function_type example_person_get_sex = 0;
+        extern example_person_dump_function_type example_person_dump = 0;
+        extern example_person_print_function_type example_person_print = 0;
+        extern example_person_copy_function_type example_person_copy = 0;
+        extern example_person_delete_function_type example_person_delete = 0;
+        extern example_printer_callback_default_function_type example_printer_callback_default = 0;
+        extern example_printer_callback_set_c_function_for_copy_function_type example_printer_callback_set_c_function_for_copy = 0;
+        extern example_printer_callback_set_c_function_for_delete_function_type example_printer_callback_set_c_function_for_delete = 0;
+        extern example_printer_callback_set_object_pointer_function_type example_printer_callback_set_object_pointer = 0;
+        extern example_printer_callback_get_object_pointer_function_type example_printer_callback_get_object_pointer = 0;
+        extern example_printer_callback_set_c_function_for_print_function_type example_printer_callback_set_c_function_for_print = 0;
+        extern example_printer_callback_set_c_function_for_set_printing_quality_function_type example_printer_callback_set_c_function_for_set_printing_quality = 0;
+        extern example_printer_callback_set_c_function_for_get_printing_quality_function_type example_printer_callback_set_c_function_for_get_printing_quality = 0;
+        extern example_printer_callback_set_c_function_for_get_device_type_function_type example_printer_callback_set_c_function_for_get_device_type = 0;
+        extern example_printer_callback_add_ref_function_type example_printer_callback_add_ref = 0;
+        extern example_printer_callback_release_function_type example_printer_callback_release = 0;
+        extern example_printer_callback_cast_to_base_function_type example_printer_callback_cast_to_base = 0;
+        extern example_printer_cast_to_example_printer_callback_function_type example_printer_cast_to_example_printer_callback = 0;
+        
+    #else /* EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS */
+        
+        extern example_create_default_printer_function_type example_create_default_printer;
+        extern example_printer_print_function_type example_printer_print;
+        extern example_printer_set_printing_quality_function_type example_printer_set_printing_quality;
+        extern example_printer_get_printing_quality_function_type example_printer_get_printing_quality;
+        extern example_printer_get_device_type_function_type example_printer_get_device_type;
+        extern example_printer_add_ref_function_type example_printer_add_ref;
+        extern example_printer_release_function_type example_printer_release;
+        extern example_person_default_function_type example_person_default;
+        extern example_person_set_first_name_function_type example_person_set_first_name;
+        extern example_person_get_first_name_function_type example_person_get_first_name;
+        extern example_person_set_second_name_function_type example_person_set_second_name;
+        extern example_person_get_second_name_function_type example_person_get_second_name;
+        extern example_person_set_age_function_type example_person_set_age;
+        extern example_person_get_age_function_type example_person_get_age;
+        extern example_person_set_sex_function_type example_person_set_sex;
+        extern example_person_get_sex_function_type example_person_get_sex;
+        extern example_person_dump_function_type example_person_dump;
+        extern example_person_print_function_type example_person_print;
+        extern example_person_copy_function_type example_person_copy;
+        extern example_person_delete_function_type example_person_delete;
+        extern example_printer_callback_default_function_type example_printer_callback_default;
+        extern example_printer_callback_set_c_function_for_copy_function_type example_printer_callback_set_c_function_for_copy;
+        extern example_printer_callback_set_c_function_for_delete_function_type example_printer_callback_set_c_function_for_delete;
+        extern example_printer_callback_set_object_pointer_function_type example_printer_callback_set_object_pointer;
+        extern example_printer_callback_get_object_pointer_function_type example_printer_callback_get_object_pointer;
+        extern example_printer_callback_set_c_function_for_print_function_type example_printer_callback_set_c_function_for_print;
+        extern example_printer_callback_set_c_function_for_set_printing_quality_function_type example_printer_callback_set_c_function_for_set_printing_quality;
+        extern example_printer_callback_set_c_function_for_get_printing_quality_function_type example_printer_callback_set_c_function_for_get_printing_quality;
+        extern example_printer_callback_set_c_function_for_get_device_type_function_type example_printer_callback_set_c_function_for_get_device_type;
+        extern example_printer_callback_add_ref_function_type example_printer_callback_add_ref;
+        extern example_printer_callback_release_function_type example_printer_callback_release;
+        extern example_printer_callback_cast_to_base_function_type example_printer_callback_cast_to_base;
+        extern example_printer_cast_to_example_printer_callback_function_type example_printer_cast_to_example_printer_callback;
+        
+    #endif /* EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS */
+    
+    #ifdef __cplusplus
+    
+    #include <stdexcept>
+    #include <sstream>
+    
+    #ifdef _WIN32
+        #include <Windows.h>
+    #else /* _WIN32 */
+        #include <dlfcn.h>
+    #endif /* _WIN32 */
+    
+    namespace Example
+    {
+        class Initialization
+        {
+            #ifdef _WIN32
+                HINSTANCE handle;
+            #else /* _WIN32 */
+                void* handle;
+            #endif /* _WIN32 */
+            
+            template<class FunctionPointerType>
+            void load_function(FunctionPointerType& to_init, const char* name)
+            {
+                #ifdef _WIN32
+                    to_init = reinterpret_cast<FunctionPointerType>(GetProcAddress(handle, name));
+                #else /* _WIN32 */
+                    to_init = reinterpret_cast<FunctionPointerType>(dlsym(handle, name));
+                #endif /* _WIN32 */
+                if (!to_init)
+                {
+                    std::stringstream error_message;
+                    error_message << "Can't obtain function " << name;
+                    throw std::runtime_error(error_message.str());
+                }
+            }
+            
+            void load_module(const char* shared_library_name)
+            {
+                if (!shared_library_name) throw std::runtime_error("Null library name was passed");
+                #ifdef _WIN32
+                    handle = LoadLibraryA(shared_library_name);
+                #else /* _WIN32 */
+                    handle = dlopen(shared_library_name, RTLD_NOW);
+                #endif /* _WIN32 */
+                if (!handle)
+                {
+                    std::stringstream error_message;
+                    error_message << "Can't load shared library " << shared_library_name;
+                    throw std::runtime_error(error_message.str());
+                }
+                load_function<example_create_default_printer_function_type>(example_create_default_printer, "example_create_default_printer");
+                load_function<example_printer_print_function_type>(example_printer_print, "example_printer_print");
+                load_function<example_printer_set_printing_quality_function_type>(example_printer_set_printing_quality, "example_printer_set_printing_quality");
+                load_function<example_printer_get_printing_quality_function_type>(example_printer_get_printing_quality, "example_printer_get_printing_quality");
+                load_function<example_printer_get_device_type_function_type>(example_printer_get_device_type, "example_printer_get_device_type");
+                load_function<example_printer_add_ref_function_type>(example_printer_add_ref, "example_printer_add_ref");
+                load_function<example_printer_release_function_type>(example_printer_release, "example_printer_release");
+                load_function<example_person_default_function_type>(example_person_default, "example_person_default");
+                load_function<example_person_set_first_name_function_type>(example_person_set_first_name, "example_person_set_first_name");
+                load_function<example_person_get_first_name_function_type>(example_person_get_first_name, "example_person_get_first_name");
+                load_function<example_person_set_second_name_function_type>(example_person_set_second_name, "example_person_set_second_name");
+                load_function<example_person_get_second_name_function_type>(example_person_get_second_name, "example_person_get_second_name");
+                load_function<example_person_set_age_function_type>(example_person_set_age, "example_person_set_age");
+                load_function<example_person_get_age_function_type>(example_person_get_age, "example_person_get_age");
+                load_function<example_person_set_sex_function_type>(example_person_set_sex, "example_person_set_sex");
+                load_function<example_person_get_sex_function_type>(example_person_get_sex, "example_person_get_sex");
+                load_function<example_person_dump_function_type>(example_person_dump, "example_person_dump");
+                load_function<example_person_print_function_type>(example_person_print, "example_person_print");
+                load_function<example_person_copy_function_type>(example_person_copy, "example_person_copy");
+                load_function<example_person_delete_function_type>(example_person_delete, "example_person_delete");
+                load_function<example_printer_callback_default_function_type>(example_printer_callback_default, "example_printer_callback_default");
+                load_function<example_printer_callback_set_c_function_for_copy_function_type>(example_printer_callback_set_c_function_for_copy, "example_printer_callback_set_c_function_for_copy");
+                load_function<example_printer_callback_set_c_function_for_delete_function_type>(example_printer_callback_set_c_function_for_delete, "example_printer_callback_set_c_function_for_delete");
+                load_function<example_printer_callback_set_object_pointer_function_type>(example_printer_callback_set_object_pointer, "example_printer_callback_set_object_pointer");
+                load_function<example_printer_callback_get_object_pointer_function_type>(example_printer_callback_get_object_pointer, "example_printer_callback_get_object_pointer");
+                load_function<example_printer_callback_set_c_function_for_print_function_type>(example_printer_callback_set_c_function_for_print, "example_printer_callback_set_c_function_for_print");
+                load_function<example_printer_callback_set_c_function_for_set_printing_quality_function_type>(example_printer_callback_set_c_function_for_set_printing_quality, "example_printer_callback_set_c_function_for_set_printing_quality");
+                load_function<example_printer_callback_set_c_function_for_get_printing_quality_function_type>(example_printer_callback_set_c_function_for_get_printing_quality, "example_printer_callback_set_c_function_for_get_printing_quality");
+                load_function<example_printer_callback_set_c_function_for_get_device_type_function_type>(example_printer_callback_set_c_function_for_get_device_type, "example_printer_callback_set_c_function_for_get_device_type");
+                load_function<example_printer_callback_add_ref_function_type>(example_printer_callback_add_ref, "example_printer_callback_add_ref");
+                load_function<example_printer_callback_release_function_type>(example_printer_callback_release, "example_printer_callback_release");
+                load_function<example_printer_callback_cast_to_base_function_type>(example_printer_callback_cast_to_base, "example_printer_callback_cast_to_base");
+                load_function<example_printer_cast_to_example_printer_callback_function_type>(example_printer_cast_to_example_printer_callback, "example_printer_cast_to_example_printer_callback");
+            }
+            
+            Initialization();
+            Initialization(const Initialization&);
+            #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+                Initialization(Initialization &&) = delete;
+            #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
+        public:
+            Initialization(const char* shared_library_name)
+            {
+                load_module(shared_library_name);
+            }
+            ~Initialization()
+            {
+                #ifdef _WIN32
+                    FreeLibrary(handle);
+                #else /* _WIN32 */
+                    dlclose(handle);
+                #endif /* _WIN32 */
+                example_create_default_printer = 0;
+                example_printer_print = 0;
+                example_printer_set_printing_quality = 0;
+                example_printer_get_printing_quality = 0;
+                example_printer_get_device_type = 0;
+                example_printer_add_ref = 0;
+                example_printer_release = 0;
+                example_person_default = 0;
+                example_person_set_first_name = 0;
+                example_person_get_first_name = 0;
+                example_person_set_second_name = 0;
+                example_person_get_second_name = 0;
+                example_person_set_age = 0;
+                example_person_get_age = 0;
+                example_person_set_sex = 0;
+                example_person_get_sex = 0;
+                example_person_dump = 0;
+                example_person_print = 0;
+                example_person_copy = 0;
+                example_person_delete = 0;
+                example_printer_callback_default = 0;
+                example_printer_callback_set_c_function_for_copy = 0;
+                example_printer_callback_set_c_function_for_delete = 0;
+                example_printer_callback_set_object_pointer = 0;
+                example_printer_callback_get_object_pointer = 0;
+                example_printer_callback_set_c_function_for_print = 0;
+                example_printer_callback_set_c_function_for_set_printing_quality = 0;
+                example_printer_callback_set_c_function_for_get_printing_quality = 0;
+                example_printer_callback_set_c_function_for_get_device_type = 0;
+                example_printer_callback_add_ref = 0;
+                example_printer_callback_release = 0;
+                example_printer_callback_cast_to_base = 0;
+                example_printer_cast_to_example_printer_callback = 0;
+            }
+        };
+    }
+    
+    #endif /* __cplusplus */
+    
 #endif /* EXAMPLE_CAPI_USE_DYNAMIC_LOADER */
 
 #endif /* EXAMPLE_CAPI_INCLUDED */

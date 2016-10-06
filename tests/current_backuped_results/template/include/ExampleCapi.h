@@ -29,9 +29,9 @@
 
 #ifdef __cplusplus
     #define EXAMPLE_CAPI_PREFIX extern "C"
-#else
+#else /* __cplusplus */
     #define EXAMPLE_CAPI_PREFIX
-#endif
+#endif /* __cplusplus */
 
 #ifdef _WIN32
     #ifdef __GNUC__
@@ -47,703 +47,852 @@
     #else
         #define EXAMPLE_API EXAMPLE_CAPI_PREFIX
     #endif
-    #if defined __i386__
+    #ifdef __i386__
         #define EXAMPLE_API_CONVENTION __attribute__ ((cdecl))
-    #else
+    #else /* __i386__ */
         #define EXAMPLE_API_CONVENTION
-    #endif
+    #endif /* __i386__ */
 #elif __unix__ || __linux__
     #if defined(__GNUC__) && __GNUC__ >= 4
         #define EXAMPLE_API EXAMPLE_CAPI_PREFIX __attribute__ ((visibility ("default")))
     #else
         #define EXAMPLE_API EXAMPLE_CAPI_PREFIX
     #endif
-    #if defined __i386__
+    #ifdef __i386__
         #define EXAMPLE_API_CONVENTION __attribute__ ((cdecl))
-    #else
+    #else /* __i386__ */
         #define EXAMPLE_API_CONVENTION
-    #endif
+    #endif /* __i386__ */
 #else
     #error "Unknown platform"
 #endif
 
-#ifndef EXAMPLE_CAPI_USE_DYNAMIC_LOADER
-
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_position_float_default();
-EXAMPLE_API float EXAMPLE_API_CONVENTION example_position_float_get_x(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_position_float_set_x(void* object_pointer, float x);
-EXAMPLE_API float EXAMPLE_API_CONVENTION example_position_float_get_y(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_position_float_set_y(void* object_pointer, float y);
-EXAMPLE_API float EXAMPLE_API_CONVENTION example_position_float_get_z(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_position_float_set_z(void* object_pointer, float z);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_position_float_copy(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_position_float_delete(void* object_pointer);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_position_double_default();
-EXAMPLE_API double EXAMPLE_API_CONVENTION example_position_double_get_x(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_position_double_set_x(void* object_pointer, double x);
-EXAMPLE_API double EXAMPLE_API_CONVENTION example_position_double_get_y(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_position_double_set_y(void* object_pointer, double y);
-EXAMPLE_API double EXAMPLE_API_CONVENTION example_position_double_get_z(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_position_double_set_z(void* object_pointer, double z);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_position_double_copy(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_position_double_delete(void* object_pointer);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_position4_d_float_default();
-EXAMPLE_API float EXAMPLE_API_CONVENTION example_position4_d_float_get_w(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_position4_d_float_set_w(void* object_pointer, float x);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_position4_d_float_copy(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_position4_d_float_delete(void* object_pointer);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_position4_d_float_cast_to_base(void* object_pointer);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_position4_d_double_default();
-EXAMPLE_API double EXAMPLE_API_CONVENTION example_position4_d_double_get_w(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_position4_d_double_set_w(void* object_pointer, double x);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_position4_d_double_copy(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_position4_d_double_delete(void* object_pointer);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_position4_d_double_cast_to_base(void* object_pointer);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_model_float_default();
-EXAMPLE_API const char* EXAMPLE_API_CONVENTION example_model_float_get_name(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_model_float_set_name(void* object_pointer, const char* name);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_model_float_get_position(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_model_float_set_position(void* object_pointer, void* position);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_model_float_add_ref(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_model_float_release(void* object_pointer);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_model_double_default();
-EXAMPLE_API const char* EXAMPLE_API_CONVENTION example_model_double_get_name(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_model_double_set_name(void* object_pointer, const char* name);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_model_double_get_position(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_model_double_set_position(void* object_pointer, void* position);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_model_double_add_ref(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_model_double_release(void* object_pointer);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_int_default();
-EXAMPLE_API int EXAMPLE_API_CONVENTION example_vector_of_int_get_size(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_int_clear(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_int_push_back(void* object_pointer, int value);
-EXAMPLE_API int EXAMPLE_API_CONVENTION example_vector_of_int_get_item(void* object_pointer, int index);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_int_copy(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_int_delete(void* object_pointer);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_double_default();
-EXAMPLE_API int EXAMPLE_API_CONVENTION example_vector_of_double_get_size(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_double_clear(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_double_push_back(void* object_pointer, double value);
-EXAMPLE_API double EXAMPLE_API_CONVENTION example_vector_of_double_get_item(void* object_pointer, int index);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_double_copy(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_double_delete(void* object_pointer);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position_float_default();
-EXAMPLE_API int EXAMPLE_API_CONVENTION example_vector_of_example_position_float_get_size(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_position_float_clear(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_position_float_push_back(void* object_pointer, void* value);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position_float_get_item(void* object_pointer, int index);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position_float_copy(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_position_float_delete(void* object_pointer);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position_double_default();
-EXAMPLE_API int EXAMPLE_API_CONVENTION example_vector_of_example_position_double_get_size(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_position_double_clear(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_position_double_push_back(void* object_pointer, void* value);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position_double_get_item(void* object_pointer, int index);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position_double_copy(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_position_double_delete(void* object_pointer);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_float_default();
-EXAMPLE_API int EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_float_get_size(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_float_clear(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_float_push_back(void* object_pointer, void* value);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_float_get_item(void* object_pointer, int index);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_float_copy(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_float_delete(void* object_pointer);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_double_default();
-EXAMPLE_API int EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_double_get_size(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_double_clear(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_double_push_back(void* object_pointer, void* value);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_double_get_item(void* object_pointer, int index);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_double_copy(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_double_delete(void* object_pointer);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_vector_of_example_position4_d_float_default();
-EXAMPLE_API int EXAMPLE_API_CONVENTION example_vector_of_example_vector_of_example_position4_d_float_get_size(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_vector_of_example_position4_d_float_clear(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_vector_of_example_position4_d_float_push_back(void* object_pointer, void* value);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_vector_of_example_position4_d_float_get_item(void* object_pointer, int index);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_vector_of_example_position4_d_float_copy(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_vector_of_example_position4_d_float_delete(void* object_pointer);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_float_default();
-EXAMPLE_API int EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_float_get_size(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_float_clear(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_float_push_back(void* object_pointer, void* value);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_float_get_item(void* object_pointer, int index);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_float_add_ref(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_float_release(void* object_pointer);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_double_default();
-EXAMPLE_API int EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_double_get_size(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_double_clear(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_double_push_back(void* object_pointer, void* value);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_double_get_item(void* object_pointer, int index);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_double_add_ref(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_double_release(void* object_pointer);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_objects_derived_example_model_float_default();
-EXAMPLE_API int EXAMPLE_API_CONVENTION example_vector_of_objects_derived_example_model_float_get_a(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_objects_derived_example_model_float_add_ref(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_objects_derived_example_model_float_release(void* object_pointer);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_objects_derived_example_model_float_cast_to_base(void* object_pointer);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_float_cast_to_example_vector_of_objects_derived_example_model_float(void* source_object);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_objects_derived_example_model_double_default();
-EXAMPLE_API int EXAMPLE_API_CONVENTION example_vector_of_objects_derived_example_model_double_get_a(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_objects_derived_example_model_double_add_ref(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_objects_derived_example_model_double_release(void* object_pointer);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_objects_derived_example_model_double_cast_to_base(void* object_pointer);
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_double_cast_to_example_vector_of_objects_derived_example_model_double(void* source_object);
-
-#else /* EXAMPLE_CAPI_USE_DYNAMIC_LOADER */
-
-typedef void* (EXAMPLE_API_CONVENTION *example_position_float_default_function_type)();
-typedef float (EXAMPLE_API_CONVENTION *example_position_float_get_x_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_position_float_set_x_function_type)(void* object_pointer, float x);
-typedef float (EXAMPLE_API_CONVENTION *example_position_float_get_y_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_position_float_set_y_function_type)(void* object_pointer, float y);
-typedef float (EXAMPLE_API_CONVENTION *example_position_float_get_z_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_position_float_set_z_function_type)(void* object_pointer, float z);
-typedef void* (EXAMPLE_API_CONVENTION *example_position_float_copy_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_position_float_delete_function_type)(void* object_pointer);
-typedef void* (EXAMPLE_API_CONVENTION *example_position_double_default_function_type)();
-typedef double (EXAMPLE_API_CONVENTION *example_position_double_get_x_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_position_double_set_x_function_type)(void* object_pointer, double x);
-typedef double (EXAMPLE_API_CONVENTION *example_position_double_get_y_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_position_double_set_y_function_type)(void* object_pointer, double y);
-typedef double (EXAMPLE_API_CONVENTION *example_position_double_get_z_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_position_double_set_z_function_type)(void* object_pointer, double z);
-typedef void* (EXAMPLE_API_CONVENTION *example_position_double_copy_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_position_double_delete_function_type)(void* object_pointer);
-typedef void* (EXAMPLE_API_CONVENTION *example_position4_d_float_default_function_type)();
-typedef float (EXAMPLE_API_CONVENTION *example_position4_d_float_get_w_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_position4_d_float_set_w_function_type)(void* object_pointer, float x);
-typedef void* (EXAMPLE_API_CONVENTION *example_position4_d_float_copy_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_position4_d_float_delete_function_type)(void* object_pointer);
-typedef void* (EXAMPLE_API_CONVENTION *example_position4_d_float_cast_to_base_function_type)(void* object_pointer);
-typedef void* (EXAMPLE_API_CONVENTION *example_position4_d_double_default_function_type)();
-typedef double (EXAMPLE_API_CONVENTION *example_position4_d_double_get_w_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_position4_d_double_set_w_function_type)(void* object_pointer, double x);
-typedef void* (EXAMPLE_API_CONVENTION *example_position4_d_double_copy_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_position4_d_double_delete_function_type)(void* object_pointer);
-typedef void* (EXAMPLE_API_CONVENTION *example_position4_d_double_cast_to_base_function_type)(void* object_pointer);
-typedef void* (EXAMPLE_API_CONVENTION *example_model_float_default_function_type)();
-typedef const char* (EXAMPLE_API_CONVENTION *example_model_float_get_name_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_model_float_set_name_function_type)(void* object_pointer, const char* name);
-typedef void* (EXAMPLE_API_CONVENTION *example_model_float_get_position_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_model_float_set_position_function_type)(void* object_pointer, void* position);
-typedef void (EXAMPLE_API_CONVENTION *example_model_float_add_ref_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_model_float_release_function_type)(void* object_pointer);
-typedef void* (EXAMPLE_API_CONVENTION *example_model_double_default_function_type)();
-typedef const char* (EXAMPLE_API_CONVENTION *example_model_double_get_name_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_model_double_set_name_function_type)(void* object_pointer, const char* name);
-typedef void* (EXAMPLE_API_CONVENTION *example_model_double_get_position_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_model_double_set_position_function_type)(void* object_pointer, void* position);
-typedef void (EXAMPLE_API_CONVENTION *example_model_double_add_ref_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_model_double_release_function_type)(void* object_pointer);
-typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_int_default_function_type)();
-typedef int (EXAMPLE_API_CONVENTION *example_vector_of_int_get_size_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_vector_of_int_clear_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_vector_of_int_push_back_function_type)(void* object_pointer, int value);
-typedef int (EXAMPLE_API_CONVENTION *example_vector_of_int_get_item_function_type)(void* object_pointer, int index);
-typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_int_copy_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_vector_of_int_delete_function_type)(void* object_pointer);
-typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_double_default_function_type)();
-typedef int (EXAMPLE_API_CONVENTION *example_vector_of_double_get_size_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_vector_of_double_clear_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_vector_of_double_push_back_function_type)(void* object_pointer, double value);
-typedef double (EXAMPLE_API_CONVENTION *example_vector_of_double_get_item_function_type)(void* object_pointer, int index);
-typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_double_copy_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_vector_of_double_delete_function_type)(void* object_pointer);
-typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_example_position_float_default_function_type)();
-typedef int (EXAMPLE_API_CONVENTION *example_vector_of_example_position_float_get_size_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_vector_of_example_position_float_clear_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_vector_of_example_position_float_push_back_function_type)(void* object_pointer, void* value);
-typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_example_position_float_get_item_function_type)(void* object_pointer, int index);
-typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_example_position_float_copy_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_vector_of_example_position_float_delete_function_type)(void* object_pointer);
-typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_example_position_double_default_function_type)();
-typedef int (EXAMPLE_API_CONVENTION *example_vector_of_example_position_double_get_size_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_vector_of_example_position_double_clear_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_vector_of_example_position_double_push_back_function_type)(void* object_pointer, void* value);
-typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_example_position_double_get_item_function_type)(void* object_pointer, int index);
-typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_example_position_double_copy_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_vector_of_example_position_double_delete_function_type)(void* object_pointer);
-typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_example_position4_d_float_default_function_type)();
-typedef int (EXAMPLE_API_CONVENTION *example_vector_of_example_position4_d_float_get_size_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_vector_of_example_position4_d_float_clear_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_vector_of_example_position4_d_float_push_back_function_type)(void* object_pointer, void* value);
-typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_example_position4_d_float_get_item_function_type)(void* object_pointer, int index);
-typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_example_position4_d_float_copy_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_vector_of_example_position4_d_float_delete_function_type)(void* object_pointer);
-typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_example_position4_d_double_default_function_type)();
-typedef int (EXAMPLE_API_CONVENTION *example_vector_of_example_position4_d_double_get_size_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_vector_of_example_position4_d_double_clear_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_vector_of_example_position4_d_double_push_back_function_type)(void* object_pointer, void* value);
-typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_example_position4_d_double_get_item_function_type)(void* object_pointer, int index);
-typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_example_position4_d_double_copy_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_vector_of_example_position4_d_double_delete_function_type)(void* object_pointer);
-typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_example_vector_of_example_position4_d_float_default_function_type)();
-typedef int (EXAMPLE_API_CONVENTION *example_vector_of_example_vector_of_example_position4_d_float_get_size_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_vector_of_example_vector_of_example_position4_d_float_clear_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_vector_of_example_vector_of_example_position4_d_float_push_back_function_type)(void* object_pointer, void* value);
-typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_example_vector_of_example_position4_d_float_get_item_function_type)(void* object_pointer, int index);
-typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_example_vector_of_example_position4_d_float_copy_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_vector_of_example_vector_of_example_position4_d_float_delete_function_type)(void* object_pointer);
-typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_objects_example_model_float_default_function_type)();
-typedef int (EXAMPLE_API_CONVENTION *example_vector_of_objects_example_model_float_get_size_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_vector_of_objects_example_model_float_clear_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_vector_of_objects_example_model_float_push_back_function_type)(void* object_pointer, void* value);
-typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_objects_example_model_float_get_item_function_type)(void* object_pointer, int index);
-typedef void (EXAMPLE_API_CONVENTION *example_vector_of_objects_example_model_float_add_ref_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_vector_of_objects_example_model_float_release_function_type)(void* object_pointer);
-typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_objects_example_model_double_default_function_type)();
-typedef int (EXAMPLE_API_CONVENTION *example_vector_of_objects_example_model_double_get_size_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_vector_of_objects_example_model_double_clear_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_vector_of_objects_example_model_double_push_back_function_type)(void* object_pointer, void* value);
-typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_objects_example_model_double_get_item_function_type)(void* object_pointer, int index);
-typedef void (EXAMPLE_API_CONVENTION *example_vector_of_objects_example_model_double_add_ref_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_vector_of_objects_example_model_double_release_function_type)(void* object_pointer);
-typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_objects_derived_example_model_float_default_function_type)();
-typedef int (EXAMPLE_API_CONVENTION *example_vector_of_objects_derived_example_model_float_get_a_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_vector_of_objects_derived_example_model_float_add_ref_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_vector_of_objects_derived_example_model_float_release_function_type)(void* object_pointer);
-typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_objects_derived_example_model_float_cast_to_base_function_type)(void* object_pointer);
-typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_objects_example_model_float_cast_to_example_vector_of_objects_derived_example_model_float_function_type)(void* source_object);
-typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_objects_derived_example_model_double_default_function_type)();
-typedef int (EXAMPLE_API_CONVENTION *example_vector_of_objects_derived_example_model_double_get_a_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_vector_of_objects_derived_example_model_double_add_ref_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_vector_of_objects_derived_example_model_double_release_function_type)(void* object_pointer);
-typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_objects_derived_example_model_double_cast_to_base_function_type)(void* object_pointer);
-typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_objects_example_model_double_cast_to_example_vector_of_objects_derived_example_model_double_function_type)(void* source_object);
-
-#ifdef EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS
-
-extern example_position_float_default_function_type example_position_float_default = 0;
-extern example_position_float_get_x_function_type example_position_float_get_x = 0;
-extern example_position_float_set_x_function_type example_position_float_set_x = 0;
-extern example_position_float_get_y_function_type example_position_float_get_y = 0;
-extern example_position_float_set_y_function_type example_position_float_set_y = 0;
-extern example_position_float_get_z_function_type example_position_float_get_z = 0;
-extern example_position_float_set_z_function_type example_position_float_set_z = 0;
-extern example_position_float_copy_function_type example_position_float_copy = 0;
-extern example_position_float_delete_function_type example_position_float_delete = 0;
-extern example_position_double_default_function_type example_position_double_default = 0;
-extern example_position_double_get_x_function_type example_position_double_get_x = 0;
-extern example_position_double_set_x_function_type example_position_double_set_x = 0;
-extern example_position_double_get_y_function_type example_position_double_get_y = 0;
-extern example_position_double_set_y_function_type example_position_double_set_y = 0;
-extern example_position_double_get_z_function_type example_position_double_get_z = 0;
-extern example_position_double_set_z_function_type example_position_double_set_z = 0;
-extern example_position_double_copy_function_type example_position_double_copy = 0;
-extern example_position_double_delete_function_type example_position_double_delete = 0;
-extern example_position4_d_float_default_function_type example_position4_d_float_default = 0;
-extern example_position4_d_float_get_w_function_type example_position4_d_float_get_w = 0;
-extern example_position4_d_float_set_w_function_type example_position4_d_float_set_w = 0;
-extern example_position4_d_float_copy_function_type example_position4_d_float_copy = 0;
-extern example_position4_d_float_delete_function_type example_position4_d_float_delete = 0;
-extern example_position4_d_float_cast_to_base_function_type example_position4_d_float_cast_to_base = 0;
-extern example_position4_d_double_default_function_type example_position4_d_double_default = 0;
-extern example_position4_d_double_get_w_function_type example_position4_d_double_get_w = 0;
-extern example_position4_d_double_set_w_function_type example_position4_d_double_set_w = 0;
-extern example_position4_d_double_copy_function_type example_position4_d_double_copy = 0;
-extern example_position4_d_double_delete_function_type example_position4_d_double_delete = 0;
-extern example_position4_d_double_cast_to_base_function_type example_position4_d_double_cast_to_base = 0;
-extern example_model_float_default_function_type example_model_float_default = 0;
-extern example_model_float_get_name_function_type example_model_float_get_name = 0;
-extern example_model_float_set_name_function_type example_model_float_set_name = 0;
-extern example_model_float_get_position_function_type example_model_float_get_position = 0;
-extern example_model_float_set_position_function_type example_model_float_set_position = 0;
-extern example_model_float_add_ref_function_type example_model_float_add_ref = 0;
-extern example_model_float_release_function_type example_model_float_release = 0;
-extern example_model_double_default_function_type example_model_double_default = 0;
-extern example_model_double_get_name_function_type example_model_double_get_name = 0;
-extern example_model_double_set_name_function_type example_model_double_set_name = 0;
-extern example_model_double_get_position_function_type example_model_double_get_position = 0;
-extern example_model_double_set_position_function_type example_model_double_set_position = 0;
-extern example_model_double_add_ref_function_type example_model_double_add_ref = 0;
-extern example_model_double_release_function_type example_model_double_release = 0;
-extern example_vector_of_int_default_function_type example_vector_of_int_default = 0;
-extern example_vector_of_int_get_size_function_type example_vector_of_int_get_size = 0;
-extern example_vector_of_int_clear_function_type example_vector_of_int_clear = 0;
-extern example_vector_of_int_push_back_function_type example_vector_of_int_push_back = 0;
-extern example_vector_of_int_get_item_function_type example_vector_of_int_get_item = 0;
-extern example_vector_of_int_copy_function_type example_vector_of_int_copy = 0;
-extern example_vector_of_int_delete_function_type example_vector_of_int_delete = 0;
-extern example_vector_of_double_default_function_type example_vector_of_double_default = 0;
-extern example_vector_of_double_get_size_function_type example_vector_of_double_get_size = 0;
-extern example_vector_of_double_clear_function_type example_vector_of_double_clear = 0;
-extern example_vector_of_double_push_back_function_type example_vector_of_double_push_back = 0;
-extern example_vector_of_double_get_item_function_type example_vector_of_double_get_item = 0;
-extern example_vector_of_double_copy_function_type example_vector_of_double_copy = 0;
-extern example_vector_of_double_delete_function_type example_vector_of_double_delete = 0;
-extern example_vector_of_example_position_float_default_function_type example_vector_of_example_position_float_default = 0;
-extern example_vector_of_example_position_float_get_size_function_type example_vector_of_example_position_float_get_size = 0;
-extern example_vector_of_example_position_float_clear_function_type example_vector_of_example_position_float_clear = 0;
-extern example_vector_of_example_position_float_push_back_function_type example_vector_of_example_position_float_push_back = 0;
-extern example_vector_of_example_position_float_get_item_function_type example_vector_of_example_position_float_get_item = 0;
-extern example_vector_of_example_position_float_copy_function_type example_vector_of_example_position_float_copy = 0;
-extern example_vector_of_example_position_float_delete_function_type example_vector_of_example_position_float_delete = 0;
-extern example_vector_of_example_position_double_default_function_type example_vector_of_example_position_double_default = 0;
-extern example_vector_of_example_position_double_get_size_function_type example_vector_of_example_position_double_get_size = 0;
-extern example_vector_of_example_position_double_clear_function_type example_vector_of_example_position_double_clear = 0;
-extern example_vector_of_example_position_double_push_back_function_type example_vector_of_example_position_double_push_back = 0;
-extern example_vector_of_example_position_double_get_item_function_type example_vector_of_example_position_double_get_item = 0;
-extern example_vector_of_example_position_double_copy_function_type example_vector_of_example_position_double_copy = 0;
-extern example_vector_of_example_position_double_delete_function_type example_vector_of_example_position_double_delete = 0;
-extern example_vector_of_example_position4_d_float_default_function_type example_vector_of_example_position4_d_float_default = 0;
-extern example_vector_of_example_position4_d_float_get_size_function_type example_vector_of_example_position4_d_float_get_size = 0;
-extern example_vector_of_example_position4_d_float_clear_function_type example_vector_of_example_position4_d_float_clear = 0;
-extern example_vector_of_example_position4_d_float_push_back_function_type example_vector_of_example_position4_d_float_push_back = 0;
-extern example_vector_of_example_position4_d_float_get_item_function_type example_vector_of_example_position4_d_float_get_item = 0;
-extern example_vector_of_example_position4_d_float_copy_function_type example_vector_of_example_position4_d_float_copy = 0;
-extern example_vector_of_example_position4_d_float_delete_function_type example_vector_of_example_position4_d_float_delete = 0;
-extern example_vector_of_example_position4_d_double_default_function_type example_vector_of_example_position4_d_double_default = 0;
-extern example_vector_of_example_position4_d_double_get_size_function_type example_vector_of_example_position4_d_double_get_size = 0;
-extern example_vector_of_example_position4_d_double_clear_function_type example_vector_of_example_position4_d_double_clear = 0;
-extern example_vector_of_example_position4_d_double_push_back_function_type example_vector_of_example_position4_d_double_push_back = 0;
-extern example_vector_of_example_position4_d_double_get_item_function_type example_vector_of_example_position4_d_double_get_item = 0;
-extern example_vector_of_example_position4_d_double_copy_function_type example_vector_of_example_position4_d_double_copy = 0;
-extern example_vector_of_example_position4_d_double_delete_function_type example_vector_of_example_position4_d_double_delete = 0;
-extern example_vector_of_example_vector_of_example_position4_d_float_default_function_type example_vector_of_example_vector_of_example_position4_d_float_default = 0;
-extern example_vector_of_example_vector_of_example_position4_d_float_get_size_function_type example_vector_of_example_vector_of_example_position4_d_float_get_size = 0;
-extern example_vector_of_example_vector_of_example_position4_d_float_clear_function_type example_vector_of_example_vector_of_example_position4_d_float_clear = 0;
-extern example_vector_of_example_vector_of_example_position4_d_float_push_back_function_type example_vector_of_example_vector_of_example_position4_d_float_push_back = 0;
-extern example_vector_of_example_vector_of_example_position4_d_float_get_item_function_type example_vector_of_example_vector_of_example_position4_d_float_get_item = 0;
-extern example_vector_of_example_vector_of_example_position4_d_float_copy_function_type example_vector_of_example_vector_of_example_position4_d_float_copy = 0;
-extern example_vector_of_example_vector_of_example_position4_d_float_delete_function_type example_vector_of_example_vector_of_example_position4_d_float_delete = 0;
-extern example_vector_of_objects_example_model_float_default_function_type example_vector_of_objects_example_model_float_default = 0;
-extern example_vector_of_objects_example_model_float_get_size_function_type example_vector_of_objects_example_model_float_get_size = 0;
-extern example_vector_of_objects_example_model_float_clear_function_type example_vector_of_objects_example_model_float_clear = 0;
-extern example_vector_of_objects_example_model_float_push_back_function_type example_vector_of_objects_example_model_float_push_back = 0;
-extern example_vector_of_objects_example_model_float_get_item_function_type example_vector_of_objects_example_model_float_get_item = 0;
-extern example_vector_of_objects_example_model_float_add_ref_function_type example_vector_of_objects_example_model_float_add_ref = 0;
-extern example_vector_of_objects_example_model_float_release_function_type example_vector_of_objects_example_model_float_release = 0;
-extern example_vector_of_objects_example_model_double_default_function_type example_vector_of_objects_example_model_double_default = 0;
-extern example_vector_of_objects_example_model_double_get_size_function_type example_vector_of_objects_example_model_double_get_size = 0;
-extern example_vector_of_objects_example_model_double_clear_function_type example_vector_of_objects_example_model_double_clear = 0;
-extern example_vector_of_objects_example_model_double_push_back_function_type example_vector_of_objects_example_model_double_push_back = 0;
-extern example_vector_of_objects_example_model_double_get_item_function_type example_vector_of_objects_example_model_double_get_item = 0;
-extern example_vector_of_objects_example_model_double_add_ref_function_type example_vector_of_objects_example_model_double_add_ref = 0;
-extern example_vector_of_objects_example_model_double_release_function_type example_vector_of_objects_example_model_double_release = 0;
-extern example_vector_of_objects_derived_example_model_float_default_function_type example_vector_of_objects_derived_example_model_float_default = 0;
-extern example_vector_of_objects_derived_example_model_float_get_a_function_type example_vector_of_objects_derived_example_model_float_get_a = 0;
-extern example_vector_of_objects_derived_example_model_float_add_ref_function_type example_vector_of_objects_derived_example_model_float_add_ref = 0;
-extern example_vector_of_objects_derived_example_model_float_release_function_type example_vector_of_objects_derived_example_model_float_release = 0;
-extern example_vector_of_objects_derived_example_model_float_cast_to_base_function_type example_vector_of_objects_derived_example_model_float_cast_to_base = 0;
-extern example_vector_of_objects_example_model_float_cast_to_example_vector_of_objects_derived_example_model_float_function_type example_vector_of_objects_example_model_float_cast_to_example_vector_of_objects_derived_example_model_float = 0;
-extern example_vector_of_objects_derived_example_model_double_default_function_type example_vector_of_objects_derived_example_model_double_default = 0;
-extern example_vector_of_objects_derived_example_model_double_get_a_function_type example_vector_of_objects_derived_example_model_double_get_a = 0;
-extern example_vector_of_objects_derived_example_model_double_add_ref_function_type example_vector_of_objects_derived_example_model_double_add_ref = 0;
-extern example_vector_of_objects_derived_example_model_double_release_function_type example_vector_of_objects_derived_example_model_double_release = 0;
-extern example_vector_of_objects_derived_example_model_double_cast_to_base_function_type example_vector_of_objects_derived_example_model_double_cast_to_base = 0;
-extern example_vector_of_objects_example_model_double_cast_to_example_vector_of_objects_derived_example_model_double_function_type example_vector_of_objects_example_model_double_cast_to_example_vector_of_objects_derived_example_model_double = 0;
-
-#else /* EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS */
-
-extern example_position_float_default_function_type example_position_float_default;
-extern example_position_float_get_x_function_type example_position_float_get_x;
-extern example_position_float_set_x_function_type example_position_float_set_x;
-extern example_position_float_get_y_function_type example_position_float_get_y;
-extern example_position_float_set_y_function_type example_position_float_set_y;
-extern example_position_float_get_z_function_type example_position_float_get_z;
-extern example_position_float_set_z_function_type example_position_float_set_z;
-extern example_position_float_copy_function_type example_position_float_copy;
-extern example_position_float_delete_function_type example_position_float_delete;
-extern example_position_double_default_function_type example_position_double_default;
-extern example_position_double_get_x_function_type example_position_double_get_x;
-extern example_position_double_set_x_function_type example_position_double_set_x;
-extern example_position_double_get_y_function_type example_position_double_get_y;
-extern example_position_double_set_y_function_type example_position_double_set_y;
-extern example_position_double_get_z_function_type example_position_double_get_z;
-extern example_position_double_set_z_function_type example_position_double_set_z;
-extern example_position_double_copy_function_type example_position_double_copy;
-extern example_position_double_delete_function_type example_position_double_delete;
-extern example_position4_d_float_default_function_type example_position4_d_float_default;
-extern example_position4_d_float_get_w_function_type example_position4_d_float_get_w;
-extern example_position4_d_float_set_w_function_type example_position4_d_float_set_w;
-extern example_position4_d_float_copy_function_type example_position4_d_float_copy;
-extern example_position4_d_float_delete_function_type example_position4_d_float_delete;
-extern example_position4_d_float_cast_to_base_function_type example_position4_d_float_cast_to_base;
-extern example_position4_d_double_default_function_type example_position4_d_double_default;
-extern example_position4_d_double_get_w_function_type example_position4_d_double_get_w;
-extern example_position4_d_double_set_w_function_type example_position4_d_double_set_w;
-extern example_position4_d_double_copy_function_type example_position4_d_double_copy;
-extern example_position4_d_double_delete_function_type example_position4_d_double_delete;
-extern example_position4_d_double_cast_to_base_function_type example_position4_d_double_cast_to_base;
-extern example_model_float_default_function_type example_model_float_default;
-extern example_model_float_get_name_function_type example_model_float_get_name;
-extern example_model_float_set_name_function_type example_model_float_set_name;
-extern example_model_float_get_position_function_type example_model_float_get_position;
-extern example_model_float_set_position_function_type example_model_float_set_position;
-extern example_model_float_add_ref_function_type example_model_float_add_ref;
-extern example_model_float_release_function_type example_model_float_release;
-extern example_model_double_default_function_type example_model_double_default;
-extern example_model_double_get_name_function_type example_model_double_get_name;
-extern example_model_double_set_name_function_type example_model_double_set_name;
-extern example_model_double_get_position_function_type example_model_double_get_position;
-extern example_model_double_set_position_function_type example_model_double_set_position;
-extern example_model_double_add_ref_function_type example_model_double_add_ref;
-extern example_model_double_release_function_type example_model_double_release;
-extern example_vector_of_int_default_function_type example_vector_of_int_default;
-extern example_vector_of_int_get_size_function_type example_vector_of_int_get_size;
-extern example_vector_of_int_clear_function_type example_vector_of_int_clear;
-extern example_vector_of_int_push_back_function_type example_vector_of_int_push_back;
-extern example_vector_of_int_get_item_function_type example_vector_of_int_get_item;
-extern example_vector_of_int_copy_function_type example_vector_of_int_copy;
-extern example_vector_of_int_delete_function_type example_vector_of_int_delete;
-extern example_vector_of_double_default_function_type example_vector_of_double_default;
-extern example_vector_of_double_get_size_function_type example_vector_of_double_get_size;
-extern example_vector_of_double_clear_function_type example_vector_of_double_clear;
-extern example_vector_of_double_push_back_function_type example_vector_of_double_push_back;
-extern example_vector_of_double_get_item_function_type example_vector_of_double_get_item;
-extern example_vector_of_double_copy_function_type example_vector_of_double_copy;
-extern example_vector_of_double_delete_function_type example_vector_of_double_delete;
-extern example_vector_of_example_position_float_default_function_type example_vector_of_example_position_float_default;
-extern example_vector_of_example_position_float_get_size_function_type example_vector_of_example_position_float_get_size;
-extern example_vector_of_example_position_float_clear_function_type example_vector_of_example_position_float_clear;
-extern example_vector_of_example_position_float_push_back_function_type example_vector_of_example_position_float_push_back;
-extern example_vector_of_example_position_float_get_item_function_type example_vector_of_example_position_float_get_item;
-extern example_vector_of_example_position_float_copy_function_type example_vector_of_example_position_float_copy;
-extern example_vector_of_example_position_float_delete_function_type example_vector_of_example_position_float_delete;
-extern example_vector_of_example_position_double_default_function_type example_vector_of_example_position_double_default;
-extern example_vector_of_example_position_double_get_size_function_type example_vector_of_example_position_double_get_size;
-extern example_vector_of_example_position_double_clear_function_type example_vector_of_example_position_double_clear;
-extern example_vector_of_example_position_double_push_back_function_type example_vector_of_example_position_double_push_back;
-extern example_vector_of_example_position_double_get_item_function_type example_vector_of_example_position_double_get_item;
-extern example_vector_of_example_position_double_copy_function_type example_vector_of_example_position_double_copy;
-extern example_vector_of_example_position_double_delete_function_type example_vector_of_example_position_double_delete;
-extern example_vector_of_example_position4_d_float_default_function_type example_vector_of_example_position4_d_float_default;
-extern example_vector_of_example_position4_d_float_get_size_function_type example_vector_of_example_position4_d_float_get_size;
-extern example_vector_of_example_position4_d_float_clear_function_type example_vector_of_example_position4_d_float_clear;
-extern example_vector_of_example_position4_d_float_push_back_function_type example_vector_of_example_position4_d_float_push_back;
-extern example_vector_of_example_position4_d_float_get_item_function_type example_vector_of_example_position4_d_float_get_item;
-extern example_vector_of_example_position4_d_float_copy_function_type example_vector_of_example_position4_d_float_copy;
-extern example_vector_of_example_position4_d_float_delete_function_type example_vector_of_example_position4_d_float_delete;
-extern example_vector_of_example_position4_d_double_default_function_type example_vector_of_example_position4_d_double_default;
-extern example_vector_of_example_position4_d_double_get_size_function_type example_vector_of_example_position4_d_double_get_size;
-extern example_vector_of_example_position4_d_double_clear_function_type example_vector_of_example_position4_d_double_clear;
-extern example_vector_of_example_position4_d_double_push_back_function_type example_vector_of_example_position4_d_double_push_back;
-extern example_vector_of_example_position4_d_double_get_item_function_type example_vector_of_example_position4_d_double_get_item;
-extern example_vector_of_example_position4_d_double_copy_function_type example_vector_of_example_position4_d_double_copy;
-extern example_vector_of_example_position4_d_double_delete_function_type example_vector_of_example_position4_d_double_delete;
-extern example_vector_of_example_vector_of_example_position4_d_float_default_function_type example_vector_of_example_vector_of_example_position4_d_float_default;
-extern example_vector_of_example_vector_of_example_position4_d_float_get_size_function_type example_vector_of_example_vector_of_example_position4_d_float_get_size;
-extern example_vector_of_example_vector_of_example_position4_d_float_clear_function_type example_vector_of_example_vector_of_example_position4_d_float_clear;
-extern example_vector_of_example_vector_of_example_position4_d_float_push_back_function_type example_vector_of_example_vector_of_example_position4_d_float_push_back;
-extern example_vector_of_example_vector_of_example_position4_d_float_get_item_function_type example_vector_of_example_vector_of_example_position4_d_float_get_item;
-extern example_vector_of_example_vector_of_example_position4_d_float_copy_function_type example_vector_of_example_vector_of_example_position4_d_float_copy;
-extern example_vector_of_example_vector_of_example_position4_d_float_delete_function_type example_vector_of_example_vector_of_example_position4_d_float_delete;
-extern example_vector_of_objects_example_model_float_default_function_type example_vector_of_objects_example_model_float_default;
-extern example_vector_of_objects_example_model_float_get_size_function_type example_vector_of_objects_example_model_float_get_size;
-extern example_vector_of_objects_example_model_float_clear_function_type example_vector_of_objects_example_model_float_clear;
-extern example_vector_of_objects_example_model_float_push_back_function_type example_vector_of_objects_example_model_float_push_back;
-extern example_vector_of_objects_example_model_float_get_item_function_type example_vector_of_objects_example_model_float_get_item;
-extern example_vector_of_objects_example_model_float_add_ref_function_type example_vector_of_objects_example_model_float_add_ref;
-extern example_vector_of_objects_example_model_float_release_function_type example_vector_of_objects_example_model_float_release;
-extern example_vector_of_objects_example_model_double_default_function_type example_vector_of_objects_example_model_double_default;
-extern example_vector_of_objects_example_model_double_get_size_function_type example_vector_of_objects_example_model_double_get_size;
-extern example_vector_of_objects_example_model_double_clear_function_type example_vector_of_objects_example_model_double_clear;
-extern example_vector_of_objects_example_model_double_push_back_function_type example_vector_of_objects_example_model_double_push_back;
-extern example_vector_of_objects_example_model_double_get_item_function_type example_vector_of_objects_example_model_double_get_item;
-extern example_vector_of_objects_example_model_double_add_ref_function_type example_vector_of_objects_example_model_double_add_ref;
-extern example_vector_of_objects_example_model_double_release_function_type example_vector_of_objects_example_model_double_release;
-extern example_vector_of_objects_derived_example_model_float_default_function_type example_vector_of_objects_derived_example_model_float_default;
-extern example_vector_of_objects_derived_example_model_float_get_a_function_type example_vector_of_objects_derived_example_model_float_get_a;
-extern example_vector_of_objects_derived_example_model_float_add_ref_function_type example_vector_of_objects_derived_example_model_float_add_ref;
-extern example_vector_of_objects_derived_example_model_float_release_function_type example_vector_of_objects_derived_example_model_float_release;
-extern example_vector_of_objects_derived_example_model_float_cast_to_base_function_type example_vector_of_objects_derived_example_model_float_cast_to_base;
-extern example_vector_of_objects_example_model_float_cast_to_example_vector_of_objects_derived_example_model_float_function_type example_vector_of_objects_example_model_float_cast_to_example_vector_of_objects_derived_example_model_float;
-extern example_vector_of_objects_derived_example_model_double_default_function_type example_vector_of_objects_derived_example_model_double_default;
-extern example_vector_of_objects_derived_example_model_double_get_a_function_type example_vector_of_objects_derived_example_model_double_get_a;
-extern example_vector_of_objects_derived_example_model_double_add_ref_function_type example_vector_of_objects_derived_example_model_double_add_ref;
-extern example_vector_of_objects_derived_example_model_double_release_function_type example_vector_of_objects_derived_example_model_double_release;
-extern example_vector_of_objects_derived_example_model_double_cast_to_base_function_type example_vector_of_objects_derived_example_model_double_cast_to_base;
-extern example_vector_of_objects_example_model_double_cast_to_example_vector_of_objects_derived_example_model_double_function_type example_vector_of_objects_example_model_double_cast_to_example_vector_of_objects_derived_example_model_double;
-
-#endif /* EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS */
-
 #ifdef __cplusplus
 
-#include <stdexcept>
-#include <sstream>
-#ifdef _WIN32
-#include <Windows.h>
-#else
-#include <dlfcn.h>
-#endif
-
-namespace Example
-{
-    class Initialization
-    {
-        #ifdef _WIN32
-        HINSTANCE handle;
-        #else
-        void* handle;
-        #endif
-        
-        template<class FunctionPointerType>
-        void load_function(FunctionPointerType& to_init, const char* name)
-        {
-            #ifdef _WIN32
-            to_init = reinterpret_cast<FunctionPointerType>(GetProcAddress(handle, name));
-            #else
-            to_init = reinterpret_cast<FunctionPointerType>(dlsym(handle, name));
-            #endif
-            if (!to_init)
-            {
-                std::stringstream error_message;
-                error_message << "Can't obtain function " << name;
-                throw std::runtime_error(error_message.str());
-            }
-        }
-        
-        Initialization();
-        Initialization(const Initialization&);
-    public:
-        Initialization(const char* name)
-        {
-            if (!name) throw std::runtime_error("Null library name was passed");
-            #ifdef _WIN32
-            handle = LoadLibraryA(name);
-            #else
-            handle = dlopen(name, RTLD_NOW);
-            #endif
-            if (!handle)
-            {
-                std::stringstream error_message;
-                error_message << "Can't load shared library " << name;
-                throw std::runtime_error(error_message.str());
-            }
-            
-            load_function<example_position_float_default_function_type>(example_position_float_default, "example_position_float_default");
-            load_function<example_position_float_get_x_function_type>(example_position_float_get_x, "example_position_float_get_x");
-            load_function<example_position_float_set_x_function_type>(example_position_float_set_x, "example_position_float_set_x");
-            load_function<example_position_float_get_y_function_type>(example_position_float_get_y, "example_position_float_get_y");
-            load_function<example_position_float_set_y_function_type>(example_position_float_set_y, "example_position_float_set_y");
-            load_function<example_position_float_get_z_function_type>(example_position_float_get_z, "example_position_float_get_z");
-            load_function<example_position_float_set_z_function_type>(example_position_float_set_z, "example_position_float_set_z");
-            load_function<example_position_float_copy_function_type>(example_position_float_copy, "example_position_float_copy");
-            load_function<example_position_float_delete_function_type>(example_position_float_delete, "example_position_float_delete");
-            load_function<example_position_double_default_function_type>(example_position_double_default, "example_position_double_default");
-            load_function<example_position_double_get_x_function_type>(example_position_double_get_x, "example_position_double_get_x");
-            load_function<example_position_double_set_x_function_type>(example_position_double_set_x, "example_position_double_set_x");
-            load_function<example_position_double_get_y_function_type>(example_position_double_get_y, "example_position_double_get_y");
-            load_function<example_position_double_set_y_function_type>(example_position_double_set_y, "example_position_double_set_y");
-            load_function<example_position_double_get_z_function_type>(example_position_double_get_z, "example_position_double_get_z");
-            load_function<example_position_double_set_z_function_type>(example_position_double_set_z, "example_position_double_set_z");
-            load_function<example_position_double_copy_function_type>(example_position_double_copy, "example_position_double_copy");
-            load_function<example_position_double_delete_function_type>(example_position_double_delete, "example_position_double_delete");
-            load_function<example_position4_d_float_default_function_type>(example_position4_d_float_default, "example_position4_d_float_default");
-            load_function<example_position4_d_float_get_w_function_type>(example_position4_d_float_get_w, "example_position4_d_float_get_w");
-            load_function<example_position4_d_float_set_w_function_type>(example_position4_d_float_set_w, "example_position4_d_float_set_w");
-            load_function<example_position4_d_float_copy_function_type>(example_position4_d_float_copy, "example_position4_d_float_copy");
-            load_function<example_position4_d_float_delete_function_type>(example_position4_d_float_delete, "example_position4_d_float_delete");
-            load_function<example_position4_d_float_cast_to_base_function_type>(example_position4_d_float_cast_to_base, "example_position4_d_float_cast_to_base");
-            load_function<example_position4_d_double_default_function_type>(example_position4_d_double_default, "example_position4_d_double_default");
-            load_function<example_position4_d_double_get_w_function_type>(example_position4_d_double_get_w, "example_position4_d_double_get_w");
-            load_function<example_position4_d_double_set_w_function_type>(example_position4_d_double_set_w, "example_position4_d_double_set_w");
-            load_function<example_position4_d_double_copy_function_type>(example_position4_d_double_copy, "example_position4_d_double_copy");
-            load_function<example_position4_d_double_delete_function_type>(example_position4_d_double_delete, "example_position4_d_double_delete");
-            load_function<example_position4_d_double_cast_to_base_function_type>(example_position4_d_double_cast_to_base, "example_position4_d_double_cast_to_base");
-            load_function<example_model_float_default_function_type>(example_model_float_default, "example_model_float_default");
-            load_function<example_model_float_get_name_function_type>(example_model_float_get_name, "example_model_float_get_name");
-            load_function<example_model_float_set_name_function_type>(example_model_float_set_name, "example_model_float_set_name");
-            load_function<example_model_float_get_position_function_type>(example_model_float_get_position, "example_model_float_get_position");
-            load_function<example_model_float_set_position_function_type>(example_model_float_set_position, "example_model_float_set_position");
-            load_function<example_model_float_add_ref_function_type>(example_model_float_add_ref, "example_model_float_add_ref");
-            load_function<example_model_float_release_function_type>(example_model_float_release, "example_model_float_release");
-            load_function<example_model_double_default_function_type>(example_model_double_default, "example_model_double_default");
-            load_function<example_model_double_get_name_function_type>(example_model_double_get_name, "example_model_double_get_name");
-            load_function<example_model_double_set_name_function_type>(example_model_double_set_name, "example_model_double_set_name");
-            load_function<example_model_double_get_position_function_type>(example_model_double_get_position, "example_model_double_get_position");
-            load_function<example_model_double_set_position_function_type>(example_model_double_set_position, "example_model_double_set_position");
-            load_function<example_model_double_add_ref_function_type>(example_model_double_add_ref, "example_model_double_add_ref");
-            load_function<example_model_double_release_function_type>(example_model_double_release, "example_model_double_release");
-            load_function<example_vector_of_int_default_function_type>(example_vector_of_int_default, "example_vector_of_int_default");
-            load_function<example_vector_of_int_get_size_function_type>(example_vector_of_int_get_size, "example_vector_of_int_get_size");
-            load_function<example_vector_of_int_clear_function_type>(example_vector_of_int_clear, "example_vector_of_int_clear");
-            load_function<example_vector_of_int_push_back_function_type>(example_vector_of_int_push_back, "example_vector_of_int_push_back");
-            load_function<example_vector_of_int_get_item_function_type>(example_vector_of_int_get_item, "example_vector_of_int_get_item");
-            load_function<example_vector_of_int_copy_function_type>(example_vector_of_int_copy, "example_vector_of_int_copy");
-            load_function<example_vector_of_int_delete_function_type>(example_vector_of_int_delete, "example_vector_of_int_delete");
-            load_function<example_vector_of_double_default_function_type>(example_vector_of_double_default, "example_vector_of_double_default");
-            load_function<example_vector_of_double_get_size_function_type>(example_vector_of_double_get_size, "example_vector_of_double_get_size");
-            load_function<example_vector_of_double_clear_function_type>(example_vector_of_double_clear, "example_vector_of_double_clear");
-            load_function<example_vector_of_double_push_back_function_type>(example_vector_of_double_push_back, "example_vector_of_double_push_back");
-            load_function<example_vector_of_double_get_item_function_type>(example_vector_of_double_get_item, "example_vector_of_double_get_item");
-            load_function<example_vector_of_double_copy_function_type>(example_vector_of_double_copy, "example_vector_of_double_copy");
-            load_function<example_vector_of_double_delete_function_type>(example_vector_of_double_delete, "example_vector_of_double_delete");
-            load_function<example_vector_of_example_position_float_default_function_type>(example_vector_of_example_position_float_default, "example_vector_of_example_position_float_default");
-            load_function<example_vector_of_example_position_float_get_size_function_type>(example_vector_of_example_position_float_get_size, "example_vector_of_example_position_float_get_size");
-            load_function<example_vector_of_example_position_float_clear_function_type>(example_vector_of_example_position_float_clear, "example_vector_of_example_position_float_clear");
-            load_function<example_vector_of_example_position_float_push_back_function_type>(example_vector_of_example_position_float_push_back, "example_vector_of_example_position_float_push_back");
-            load_function<example_vector_of_example_position_float_get_item_function_type>(example_vector_of_example_position_float_get_item, "example_vector_of_example_position_float_get_item");
-            load_function<example_vector_of_example_position_float_copy_function_type>(example_vector_of_example_position_float_copy, "example_vector_of_example_position_float_copy");
-            load_function<example_vector_of_example_position_float_delete_function_type>(example_vector_of_example_position_float_delete, "example_vector_of_example_position_float_delete");
-            load_function<example_vector_of_example_position_double_default_function_type>(example_vector_of_example_position_double_default, "example_vector_of_example_position_double_default");
-            load_function<example_vector_of_example_position_double_get_size_function_type>(example_vector_of_example_position_double_get_size, "example_vector_of_example_position_double_get_size");
-            load_function<example_vector_of_example_position_double_clear_function_type>(example_vector_of_example_position_double_clear, "example_vector_of_example_position_double_clear");
-            load_function<example_vector_of_example_position_double_push_back_function_type>(example_vector_of_example_position_double_push_back, "example_vector_of_example_position_double_push_back");
-            load_function<example_vector_of_example_position_double_get_item_function_type>(example_vector_of_example_position_double_get_item, "example_vector_of_example_position_double_get_item");
-            load_function<example_vector_of_example_position_double_copy_function_type>(example_vector_of_example_position_double_copy, "example_vector_of_example_position_double_copy");
-            load_function<example_vector_of_example_position_double_delete_function_type>(example_vector_of_example_position_double_delete, "example_vector_of_example_position_double_delete");
-            load_function<example_vector_of_example_position4_d_float_default_function_type>(example_vector_of_example_position4_d_float_default, "example_vector_of_example_position4_d_float_default");
-            load_function<example_vector_of_example_position4_d_float_get_size_function_type>(example_vector_of_example_position4_d_float_get_size, "example_vector_of_example_position4_d_float_get_size");
-            load_function<example_vector_of_example_position4_d_float_clear_function_type>(example_vector_of_example_position4_d_float_clear, "example_vector_of_example_position4_d_float_clear");
-            load_function<example_vector_of_example_position4_d_float_push_back_function_type>(example_vector_of_example_position4_d_float_push_back, "example_vector_of_example_position4_d_float_push_back");
-            load_function<example_vector_of_example_position4_d_float_get_item_function_type>(example_vector_of_example_position4_d_float_get_item, "example_vector_of_example_position4_d_float_get_item");
-            load_function<example_vector_of_example_position4_d_float_copy_function_type>(example_vector_of_example_position4_d_float_copy, "example_vector_of_example_position4_d_float_copy");
-            load_function<example_vector_of_example_position4_d_float_delete_function_type>(example_vector_of_example_position4_d_float_delete, "example_vector_of_example_position4_d_float_delete");
-            load_function<example_vector_of_example_position4_d_double_default_function_type>(example_vector_of_example_position4_d_double_default, "example_vector_of_example_position4_d_double_default");
-            load_function<example_vector_of_example_position4_d_double_get_size_function_type>(example_vector_of_example_position4_d_double_get_size, "example_vector_of_example_position4_d_double_get_size");
-            load_function<example_vector_of_example_position4_d_double_clear_function_type>(example_vector_of_example_position4_d_double_clear, "example_vector_of_example_position4_d_double_clear");
-            load_function<example_vector_of_example_position4_d_double_push_back_function_type>(example_vector_of_example_position4_d_double_push_back, "example_vector_of_example_position4_d_double_push_back");
-            load_function<example_vector_of_example_position4_d_double_get_item_function_type>(example_vector_of_example_position4_d_double_get_item, "example_vector_of_example_position4_d_double_get_item");
-            load_function<example_vector_of_example_position4_d_double_copy_function_type>(example_vector_of_example_position4_d_double_copy, "example_vector_of_example_position4_d_double_copy");
-            load_function<example_vector_of_example_position4_d_double_delete_function_type>(example_vector_of_example_position4_d_double_delete, "example_vector_of_example_position4_d_double_delete");
-            load_function<example_vector_of_example_vector_of_example_position4_d_float_default_function_type>(example_vector_of_example_vector_of_example_position4_d_float_default, "example_vector_of_example_vector_of_example_position4_d_float_default");
-            load_function<example_vector_of_example_vector_of_example_position4_d_float_get_size_function_type>(example_vector_of_example_vector_of_example_position4_d_float_get_size, "example_vector_of_example_vector_of_example_position4_d_float_get_size");
-            load_function<example_vector_of_example_vector_of_example_position4_d_float_clear_function_type>(example_vector_of_example_vector_of_example_position4_d_float_clear, "example_vector_of_example_vector_of_example_position4_d_float_clear");
-            load_function<example_vector_of_example_vector_of_example_position4_d_float_push_back_function_type>(example_vector_of_example_vector_of_example_position4_d_float_push_back, "example_vector_of_example_vector_of_example_position4_d_float_push_back");
-            load_function<example_vector_of_example_vector_of_example_position4_d_float_get_item_function_type>(example_vector_of_example_vector_of_example_position4_d_float_get_item, "example_vector_of_example_vector_of_example_position4_d_float_get_item");
-            load_function<example_vector_of_example_vector_of_example_position4_d_float_copy_function_type>(example_vector_of_example_vector_of_example_position4_d_float_copy, "example_vector_of_example_vector_of_example_position4_d_float_copy");
-            load_function<example_vector_of_example_vector_of_example_position4_d_float_delete_function_type>(example_vector_of_example_vector_of_example_position4_d_float_delete, "example_vector_of_example_vector_of_example_position4_d_float_delete");
-            load_function<example_vector_of_objects_example_model_float_default_function_type>(example_vector_of_objects_example_model_float_default, "example_vector_of_objects_example_model_float_default");
-            load_function<example_vector_of_objects_example_model_float_get_size_function_type>(example_vector_of_objects_example_model_float_get_size, "example_vector_of_objects_example_model_float_get_size");
-            load_function<example_vector_of_objects_example_model_float_clear_function_type>(example_vector_of_objects_example_model_float_clear, "example_vector_of_objects_example_model_float_clear");
-            load_function<example_vector_of_objects_example_model_float_push_back_function_type>(example_vector_of_objects_example_model_float_push_back, "example_vector_of_objects_example_model_float_push_back");
-            load_function<example_vector_of_objects_example_model_float_get_item_function_type>(example_vector_of_objects_example_model_float_get_item, "example_vector_of_objects_example_model_float_get_item");
-            load_function<example_vector_of_objects_example_model_float_add_ref_function_type>(example_vector_of_objects_example_model_float_add_ref, "example_vector_of_objects_example_model_float_add_ref");
-            load_function<example_vector_of_objects_example_model_float_release_function_type>(example_vector_of_objects_example_model_float_release, "example_vector_of_objects_example_model_float_release");
-            load_function<example_vector_of_objects_example_model_double_default_function_type>(example_vector_of_objects_example_model_double_default, "example_vector_of_objects_example_model_double_default");
-            load_function<example_vector_of_objects_example_model_double_get_size_function_type>(example_vector_of_objects_example_model_double_get_size, "example_vector_of_objects_example_model_double_get_size");
-            load_function<example_vector_of_objects_example_model_double_clear_function_type>(example_vector_of_objects_example_model_double_clear, "example_vector_of_objects_example_model_double_clear");
-            load_function<example_vector_of_objects_example_model_double_push_back_function_type>(example_vector_of_objects_example_model_double_push_back, "example_vector_of_objects_example_model_double_push_back");
-            load_function<example_vector_of_objects_example_model_double_get_item_function_type>(example_vector_of_objects_example_model_double_get_item, "example_vector_of_objects_example_model_double_get_item");
-            load_function<example_vector_of_objects_example_model_double_add_ref_function_type>(example_vector_of_objects_example_model_double_add_ref, "example_vector_of_objects_example_model_double_add_ref");
-            load_function<example_vector_of_objects_example_model_double_release_function_type>(example_vector_of_objects_example_model_double_release, "example_vector_of_objects_example_model_double_release");
-            load_function<example_vector_of_objects_derived_example_model_float_default_function_type>(example_vector_of_objects_derived_example_model_float_default, "example_vector_of_objects_derived_example_model_float_default");
-            load_function<example_vector_of_objects_derived_example_model_float_get_a_function_type>(example_vector_of_objects_derived_example_model_float_get_a, "example_vector_of_objects_derived_example_model_float_get_a");
-            load_function<example_vector_of_objects_derived_example_model_float_add_ref_function_type>(example_vector_of_objects_derived_example_model_float_add_ref, "example_vector_of_objects_derived_example_model_float_add_ref");
-            load_function<example_vector_of_objects_derived_example_model_float_release_function_type>(example_vector_of_objects_derived_example_model_float_release, "example_vector_of_objects_derived_example_model_float_release");
-            load_function<example_vector_of_objects_derived_example_model_float_cast_to_base_function_type>(example_vector_of_objects_derived_example_model_float_cast_to_base, "example_vector_of_objects_derived_example_model_float_cast_to_base");
-            load_function<example_vector_of_objects_example_model_float_cast_to_example_vector_of_objects_derived_example_model_float_function_type>(example_vector_of_objects_example_model_float_cast_to_example_vector_of_objects_derived_example_model_float, "example_vector_of_objects_example_model_float_cast_to_example_vector_of_objects_derived_example_model_float");
-            load_function<example_vector_of_objects_derived_example_model_double_default_function_type>(example_vector_of_objects_derived_example_model_double_default, "example_vector_of_objects_derived_example_model_double_default");
-            load_function<example_vector_of_objects_derived_example_model_double_get_a_function_type>(example_vector_of_objects_derived_example_model_double_get_a, "example_vector_of_objects_derived_example_model_double_get_a");
-            load_function<example_vector_of_objects_derived_example_model_double_add_ref_function_type>(example_vector_of_objects_derived_example_model_double_add_ref, "example_vector_of_objects_derived_example_model_double_add_ref");
-            load_function<example_vector_of_objects_derived_example_model_double_release_function_type>(example_vector_of_objects_derived_example_model_double_release, "example_vector_of_objects_derived_example_model_double_release");
-            load_function<example_vector_of_objects_derived_example_model_double_cast_to_base_function_type>(example_vector_of_objects_derived_example_model_double_cast_to_base, "example_vector_of_objects_derived_example_model_double_cast_to_base");
-            load_function<example_vector_of_objects_example_model_double_cast_to_example_vector_of_objects_derived_example_model_double_function_type>(example_vector_of_objects_example_model_double_cast_to_example_vector_of_objects_derived_example_model_double, "example_vector_of_objects_example_model_double_cast_to_example_vector_of_objects_derived_example_model_double");
-        }
-        ~Initialization()
-        {
-            #ifdef _WIN32
-            FreeLibrary(handle);
-            #else
-            dlclose(handle);
-            #endif
-        }
-    };
-}
+    #ifdef _MSC_VER
+        #if _MSC_VER >= 1900
+            #define EXAMPLE_NOEXCEPT noexcept
+        #else /* _MSC_VER >= 1900 */
+            #define EXAMPLE_NOEXCEPT
+        #endif /* _MSC_VER >= 1900 */
+        #if _MSC_VER >= 1800
+            #define EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+        #endif /* _MSC_VER >= 1800 */
+    #else /* _MSC_VER */
+        #if __cplusplus >= 201103L
+            #define EXAMPLE_NOEXCEPT noexcept
+            #define EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+        #else /* __cplusplus >= 201103L */
+            #define EXAMPLE_NOEXCEPT
+        #endif /* __cplusplus >= 201103L */
+    #endif /* _MSC_VER */
 
 #endif /* __cplusplus */
 
+#ifndef EXAMPLE_CAPI_USE_DYNAMIC_LOADER
+    
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_position_float_default();
+    EXAMPLE_API float EXAMPLE_API_CONVENTION example_position_float_get_x(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_position_float_set_x(void* object_pointer, float x);
+    EXAMPLE_API float EXAMPLE_API_CONVENTION example_position_float_get_y(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_position_float_set_y(void* object_pointer, float y);
+    EXAMPLE_API float EXAMPLE_API_CONVENTION example_position_float_get_z(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_position_float_set_z(void* object_pointer, float z);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_position_float_copy(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_position_float_delete(void* object_pointer);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_position_double_default();
+    EXAMPLE_API double EXAMPLE_API_CONVENTION example_position_double_get_x(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_position_double_set_x(void* object_pointer, double x);
+    EXAMPLE_API double EXAMPLE_API_CONVENTION example_position_double_get_y(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_position_double_set_y(void* object_pointer, double y);
+    EXAMPLE_API double EXAMPLE_API_CONVENTION example_position_double_get_z(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_position_double_set_z(void* object_pointer, double z);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_position_double_copy(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_position_double_delete(void* object_pointer);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_position4_d_float_default();
+    EXAMPLE_API float EXAMPLE_API_CONVENTION example_position4_d_float_get_w(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_position4_d_float_set_w(void* object_pointer, float x);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_position4_d_float_copy(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_position4_d_float_delete(void* object_pointer);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_position4_d_float_cast_to_base(void* object_pointer);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_position4_d_double_default();
+    EXAMPLE_API double EXAMPLE_API_CONVENTION example_position4_d_double_get_w(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_position4_d_double_set_w(void* object_pointer, double x);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_position4_d_double_copy(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_position4_d_double_delete(void* object_pointer);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_position4_d_double_cast_to_base(void* object_pointer);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_model_float_default();
+    EXAMPLE_API const char* EXAMPLE_API_CONVENTION example_model_float_get_name(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_model_float_set_name(void* object_pointer, const char* name);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_model_float_get_position(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_model_float_set_position(void* object_pointer, void* position);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_model_float_add_ref(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_model_float_release(void* object_pointer);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_model_double_default();
+    EXAMPLE_API const char* EXAMPLE_API_CONVENTION example_model_double_get_name(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_model_double_set_name(void* object_pointer, const char* name);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_model_double_get_position(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_model_double_set_position(void* object_pointer, void* position);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_model_double_add_ref(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_model_double_release(void* object_pointer);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_int_default();
+    EXAMPLE_API int EXAMPLE_API_CONVENTION example_vector_of_int_get_size(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_int_clear(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_int_push_back(void* object_pointer, int value);
+    EXAMPLE_API int EXAMPLE_API_CONVENTION example_vector_of_int_get_item(void* object_pointer, int index);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_int_copy(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_int_delete(void* object_pointer);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_double_default();
+    EXAMPLE_API int EXAMPLE_API_CONVENTION example_vector_of_double_get_size(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_double_clear(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_double_push_back(void* object_pointer, double value);
+    EXAMPLE_API double EXAMPLE_API_CONVENTION example_vector_of_double_get_item(void* object_pointer, int index);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_double_copy(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_double_delete(void* object_pointer);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position_float_default();
+    EXAMPLE_API int EXAMPLE_API_CONVENTION example_vector_of_example_position_float_get_size(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_position_float_clear(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_position_float_push_back(void* object_pointer, void* value);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position_float_get_item(void* object_pointer, int index);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position_float_copy(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_position_float_delete(void* object_pointer);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position_double_default();
+    EXAMPLE_API int EXAMPLE_API_CONVENTION example_vector_of_example_position_double_get_size(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_position_double_clear(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_position_double_push_back(void* object_pointer, void* value);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position_double_get_item(void* object_pointer, int index);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position_double_copy(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_position_double_delete(void* object_pointer);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_float_default();
+    EXAMPLE_API int EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_float_get_size(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_float_clear(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_float_push_back(void* object_pointer, void* value);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_float_get_item(void* object_pointer, int index);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_float_copy(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_float_delete(void* object_pointer);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_double_default();
+    EXAMPLE_API int EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_double_get_size(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_double_clear(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_double_push_back(void* object_pointer, void* value);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_double_get_item(void* object_pointer, int index);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_double_copy(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_double_delete(void* object_pointer);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_vector_of_example_position4_d_float_default();
+    EXAMPLE_API int EXAMPLE_API_CONVENTION example_vector_of_example_vector_of_example_position4_d_float_get_size(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_vector_of_example_position4_d_float_clear(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_vector_of_example_position4_d_float_push_back(void* object_pointer, void* value);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_vector_of_example_position4_d_float_get_item(void* object_pointer, int index);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_vector_of_example_position4_d_float_copy(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_vector_of_example_position4_d_float_delete(void* object_pointer);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_float_default();
+    EXAMPLE_API int EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_float_get_size(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_float_clear(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_float_push_back(void* object_pointer, void* value);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_float_get_item(void* object_pointer, int index);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_float_add_ref(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_float_release(void* object_pointer);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_double_default();
+    EXAMPLE_API int EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_double_get_size(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_double_clear(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_double_push_back(void* object_pointer, void* value);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_double_get_item(void* object_pointer, int index);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_double_add_ref(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_double_release(void* object_pointer);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_objects_derived_example_model_float_default();
+    EXAMPLE_API int EXAMPLE_API_CONVENTION example_vector_of_objects_derived_example_model_float_get_a(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_objects_derived_example_model_float_add_ref(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_objects_derived_example_model_float_release(void* object_pointer);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_objects_derived_example_model_float_cast_to_base(void* object_pointer);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_float_cast_to_example_vector_of_objects_derived_example_model_float(void* source_object);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_objects_derived_example_model_double_default();
+    EXAMPLE_API int EXAMPLE_API_CONVENTION example_vector_of_objects_derived_example_model_double_get_a(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_objects_derived_example_model_double_add_ref(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_objects_derived_example_model_double_release(void* object_pointer);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_objects_derived_example_model_double_cast_to_base(void* object_pointer);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_double_cast_to_example_vector_of_objects_derived_example_model_double(void* source_object);
+    
+#else /* EXAMPLE_CAPI_USE_DYNAMIC_LOADER */
+    
+    typedef void* (EXAMPLE_API_CONVENTION *example_position_float_default_function_type)();
+    typedef float (EXAMPLE_API_CONVENTION *example_position_float_get_x_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_position_float_set_x_function_type)(void* object_pointer, float x);
+    typedef float (EXAMPLE_API_CONVENTION *example_position_float_get_y_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_position_float_set_y_function_type)(void* object_pointer, float y);
+    typedef float (EXAMPLE_API_CONVENTION *example_position_float_get_z_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_position_float_set_z_function_type)(void* object_pointer, float z);
+    typedef void* (EXAMPLE_API_CONVENTION *example_position_float_copy_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_position_float_delete_function_type)(void* object_pointer);
+    typedef void* (EXAMPLE_API_CONVENTION *example_position_double_default_function_type)();
+    typedef double (EXAMPLE_API_CONVENTION *example_position_double_get_x_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_position_double_set_x_function_type)(void* object_pointer, double x);
+    typedef double (EXAMPLE_API_CONVENTION *example_position_double_get_y_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_position_double_set_y_function_type)(void* object_pointer, double y);
+    typedef double (EXAMPLE_API_CONVENTION *example_position_double_get_z_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_position_double_set_z_function_type)(void* object_pointer, double z);
+    typedef void* (EXAMPLE_API_CONVENTION *example_position_double_copy_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_position_double_delete_function_type)(void* object_pointer);
+    typedef void* (EXAMPLE_API_CONVENTION *example_position4_d_float_default_function_type)();
+    typedef float (EXAMPLE_API_CONVENTION *example_position4_d_float_get_w_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_position4_d_float_set_w_function_type)(void* object_pointer, float x);
+    typedef void* (EXAMPLE_API_CONVENTION *example_position4_d_float_copy_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_position4_d_float_delete_function_type)(void* object_pointer);
+    typedef void* (EXAMPLE_API_CONVENTION *example_position4_d_float_cast_to_base_function_type)(void* object_pointer);
+    typedef void* (EXAMPLE_API_CONVENTION *example_position4_d_double_default_function_type)();
+    typedef double (EXAMPLE_API_CONVENTION *example_position4_d_double_get_w_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_position4_d_double_set_w_function_type)(void* object_pointer, double x);
+    typedef void* (EXAMPLE_API_CONVENTION *example_position4_d_double_copy_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_position4_d_double_delete_function_type)(void* object_pointer);
+    typedef void* (EXAMPLE_API_CONVENTION *example_position4_d_double_cast_to_base_function_type)(void* object_pointer);
+    typedef void* (EXAMPLE_API_CONVENTION *example_model_float_default_function_type)();
+    typedef const char* (EXAMPLE_API_CONVENTION *example_model_float_get_name_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_model_float_set_name_function_type)(void* object_pointer, const char* name);
+    typedef void* (EXAMPLE_API_CONVENTION *example_model_float_get_position_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_model_float_set_position_function_type)(void* object_pointer, void* position);
+    typedef void (EXAMPLE_API_CONVENTION *example_model_float_add_ref_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_model_float_release_function_type)(void* object_pointer);
+    typedef void* (EXAMPLE_API_CONVENTION *example_model_double_default_function_type)();
+    typedef const char* (EXAMPLE_API_CONVENTION *example_model_double_get_name_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_model_double_set_name_function_type)(void* object_pointer, const char* name);
+    typedef void* (EXAMPLE_API_CONVENTION *example_model_double_get_position_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_model_double_set_position_function_type)(void* object_pointer, void* position);
+    typedef void (EXAMPLE_API_CONVENTION *example_model_double_add_ref_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_model_double_release_function_type)(void* object_pointer);
+    typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_int_default_function_type)();
+    typedef int (EXAMPLE_API_CONVENTION *example_vector_of_int_get_size_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_vector_of_int_clear_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_vector_of_int_push_back_function_type)(void* object_pointer, int value);
+    typedef int (EXAMPLE_API_CONVENTION *example_vector_of_int_get_item_function_type)(void* object_pointer, int index);
+    typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_int_copy_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_vector_of_int_delete_function_type)(void* object_pointer);
+    typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_double_default_function_type)();
+    typedef int (EXAMPLE_API_CONVENTION *example_vector_of_double_get_size_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_vector_of_double_clear_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_vector_of_double_push_back_function_type)(void* object_pointer, double value);
+    typedef double (EXAMPLE_API_CONVENTION *example_vector_of_double_get_item_function_type)(void* object_pointer, int index);
+    typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_double_copy_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_vector_of_double_delete_function_type)(void* object_pointer);
+    typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_example_position_float_default_function_type)();
+    typedef int (EXAMPLE_API_CONVENTION *example_vector_of_example_position_float_get_size_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_vector_of_example_position_float_clear_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_vector_of_example_position_float_push_back_function_type)(void* object_pointer, void* value);
+    typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_example_position_float_get_item_function_type)(void* object_pointer, int index);
+    typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_example_position_float_copy_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_vector_of_example_position_float_delete_function_type)(void* object_pointer);
+    typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_example_position_double_default_function_type)();
+    typedef int (EXAMPLE_API_CONVENTION *example_vector_of_example_position_double_get_size_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_vector_of_example_position_double_clear_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_vector_of_example_position_double_push_back_function_type)(void* object_pointer, void* value);
+    typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_example_position_double_get_item_function_type)(void* object_pointer, int index);
+    typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_example_position_double_copy_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_vector_of_example_position_double_delete_function_type)(void* object_pointer);
+    typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_example_position4_d_float_default_function_type)();
+    typedef int (EXAMPLE_API_CONVENTION *example_vector_of_example_position4_d_float_get_size_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_vector_of_example_position4_d_float_clear_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_vector_of_example_position4_d_float_push_back_function_type)(void* object_pointer, void* value);
+    typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_example_position4_d_float_get_item_function_type)(void* object_pointer, int index);
+    typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_example_position4_d_float_copy_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_vector_of_example_position4_d_float_delete_function_type)(void* object_pointer);
+    typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_example_position4_d_double_default_function_type)();
+    typedef int (EXAMPLE_API_CONVENTION *example_vector_of_example_position4_d_double_get_size_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_vector_of_example_position4_d_double_clear_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_vector_of_example_position4_d_double_push_back_function_type)(void* object_pointer, void* value);
+    typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_example_position4_d_double_get_item_function_type)(void* object_pointer, int index);
+    typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_example_position4_d_double_copy_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_vector_of_example_position4_d_double_delete_function_type)(void* object_pointer);
+    typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_example_vector_of_example_position4_d_float_default_function_type)();
+    typedef int (EXAMPLE_API_CONVENTION *example_vector_of_example_vector_of_example_position4_d_float_get_size_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_vector_of_example_vector_of_example_position4_d_float_clear_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_vector_of_example_vector_of_example_position4_d_float_push_back_function_type)(void* object_pointer, void* value);
+    typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_example_vector_of_example_position4_d_float_get_item_function_type)(void* object_pointer, int index);
+    typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_example_vector_of_example_position4_d_float_copy_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_vector_of_example_vector_of_example_position4_d_float_delete_function_type)(void* object_pointer);
+    typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_objects_example_model_float_default_function_type)();
+    typedef int (EXAMPLE_API_CONVENTION *example_vector_of_objects_example_model_float_get_size_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_vector_of_objects_example_model_float_clear_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_vector_of_objects_example_model_float_push_back_function_type)(void* object_pointer, void* value);
+    typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_objects_example_model_float_get_item_function_type)(void* object_pointer, int index);
+    typedef void (EXAMPLE_API_CONVENTION *example_vector_of_objects_example_model_float_add_ref_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_vector_of_objects_example_model_float_release_function_type)(void* object_pointer);
+    typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_objects_example_model_double_default_function_type)();
+    typedef int (EXAMPLE_API_CONVENTION *example_vector_of_objects_example_model_double_get_size_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_vector_of_objects_example_model_double_clear_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_vector_of_objects_example_model_double_push_back_function_type)(void* object_pointer, void* value);
+    typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_objects_example_model_double_get_item_function_type)(void* object_pointer, int index);
+    typedef void (EXAMPLE_API_CONVENTION *example_vector_of_objects_example_model_double_add_ref_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_vector_of_objects_example_model_double_release_function_type)(void* object_pointer);
+    typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_objects_derived_example_model_float_default_function_type)();
+    typedef int (EXAMPLE_API_CONVENTION *example_vector_of_objects_derived_example_model_float_get_a_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_vector_of_objects_derived_example_model_float_add_ref_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_vector_of_objects_derived_example_model_float_release_function_type)(void* object_pointer);
+    typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_objects_derived_example_model_float_cast_to_base_function_type)(void* object_pointer);
+    typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_objects_example_model_float_cast_to_example_vector_of_objects_derived_example_model_float_function_type)(void* source_object);
+    typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_objects_derived_example_model_double_default_function_type)();
+    typedef int (EXAMPLE_API_CONVENTION *example_vector_of_objects_derived_example_model_double_get_a_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_vector_of_objects_derived_example_model_double_add_ref_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_vector_of_objects_derived_example_model_double_release_function_type)(void* object_pointer);
+    typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_objects_derived_example_model_double_cast_to_base_function_type)(void* object_pointer);
+    typedef void* (EXAMPLE_API_CONVENTION *example_vector_of_objects_example_model_double_cast_to_example_vector_of_objects_derived_example_model_double_function_type)(void* source_object);
+    
+    #ifdef EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS
+        
+        extern example_position_float_default_function_type example_position_float_default = 0;
+        extern example_position_float_get_x_function_type example_position_float_get_x = 0;
+        extern example_position_float_set_x_function_type example_position_float_set_x = 0;
+        extern example_position_float_get_y_function_type example_position_float_get_y = 0;
+        extern example_position_float_set_y_function_type example_position_float_set_y = 0;
+        extern example_position_float_get_z_function_type example_position_float_get_z = 0;
+        extern example_position_float_set_z_function_type example_position_float_set_z = 0;
+        extern example_position_float_copy_function_type example_position_float_copy = 0;
+        extern example_position_float_delete_function_type example_position_float_delete = 0;
+        extern example_position_double_default_function_type example_position_double_default = 0;
+        extern example_position_double_get_x_function_type example_position_double_get_x = 0;
+        extern example_position_double_set_x_function_type example_position_double_set_x = 0;
+        extern example_position_double_get_y_function_type example_position_double_get_y = 0;
+        extern example_position_double_set_y_function_type example_position_double_set_y = 0;
+        extern example_position_double_get_z_function_type example_position_double_get_z = 0;
+        extern example_position_double_set_z_function_type example_position_double_set_z = 0;
+        extern example_position_double_copy_function_type example_position_double_copy = 0;
+        extern example_position_double_delete_function_type example_position_double_delete = 0;
+        extern example_position4_d_float_default_function_type example_position4_d_float_default = 0;
+        extern example_position4_d_float_get_w_function_type example_position4_d_float_get_w = 0;
+        extern example_position4_d_float_set_w_function_type example_position4_d_float_set_w = 0;
+        extern example_position4_d_float_copy_function_type example_position4_d_float_copy = 0;
+        extern example_position4_d_float_delete_function_type example_position4_d_float_delete = 0;
+        extern example_position4_d_float_cast_to_base_function_type example_position4_d_float_cast_to_base = 0;
+        extern example_position4_d_double_default_function_type example_position4_d_double_default = 0;
+        extern example_position4_d_double_get_w_function_type example_position4_d_double_get_w = 0;
+        extern example_position4_d_double_set_w_function_type example_position4_d_double_set_w = 0;
+        extern example_position4_d_double_copy_function_type example_position4_d_double_copy = 0;
+        extern example_position4_d_double_delete_function_type example_position4_d_double_delete = 0;
+        extern example_position4_d_double_cast_to_base_function_type example_position4_d_double_cast_to_base = 0;
+        extern example_model_float_default_function_type example_model_float_default = 0;
+        extern example_model_float_get_name_function_type example_model_float_get_name = 0;
+        extern example_model_float_set_name_function_type example_model_float_set_name = 0;
+        extern example_model_float_get_position_function_type example_model_float_get_position = 0;
+        extern example_model_float_set_position_function_type example_model_float_set_position = 0;
+        extern example_model_float_add_ref_function_type example_model_float_add_ref = 0;
+        extern example_model_float_release_function_type example_model_float_release = 0;
+        extern example_model_double_default_function_type example_model_double_default = 0;
+        extern example_model_double_get_name_function_type example_model_double_get_name = 0;
+        extern example_model_double_set_name_function_type example_model_double_set_name = 0;
+        extern example_model_double_get_position_function_type example_model_double_get_position = 0;
+        extern example_model_double_set_position_function_type example_model_double_set_position = 0;
+        extern example_model_double_add_ref_function_type example_model_double_add_ref = 0;
+        extern example_model_double_release_function_type example_model_double_release = 0;
+        extern example_vector_of_int_default_function_type example_vector_of_int_default = 0;
+        extern example_vector_of_int_get_size_function_type example_vector_of_int_get_size = 0;
+        extern example_vector_of_int_clear_function_type example_vector_of_int_clear = 0;
+        extern example_vector_of_int_push_back_function_type example_vector_of_int_push_back = 0;
+        extern example_vector_of_int_get_item_function_type example_vector_of_int_get_item = 0;
+        extern example_vector_of_int_copy_function_type example_vector_of_int_copy = 0;
+        extern example_vector_of_int_delete_function_type example_vector_of_int_delete = 0;
+        extern example_vector_of_double_default_function_type example_vector_of_double_default = 0;
+        extern example_vector_of_double_get_size_function_type example_vector_of_double_get_size = 0;
+        extern example_vector_of_double_clear_function_type example_vector_of_double_clear = 0;
+        extern example_vector_of_double_push_back_function_type example_vector_of_double_push_back = 0;
+        extern example_vector_of_double_get_item_function_type example_vector_of_double_get_item = 0;
+        extern example_vector_of_double_copy_function_type example_vector_of_double_copy = 0;
+        extern example_vector_of_double_delete_function_type example_vector_of_double_delete = 0;
+        extern example_vector_of_example_position_float_default_function_type example_vector_of_example_position_float_default = 0;
+        extern example_vector_of_example_position_float_get_size_function_type example_vector_of_example_position_float_get_size = 0;
+        extern example_vector_of_example_position_float_clear_function_type example_vector_of_example_position_float_clear = 0;
+        extern example_vector_of_example_position_float_push_back_function_type example_vector_of_example_position_float_push_back = 0;
+        extern example_vector_of_example_position_float_get_item_function_type example_vector_of_example_position_float_get_item = 0;
+        extern example_vector_of_example_position_float_copy_function_type example_vector_of_example_position_float_copy = 0;
+        extern example_vector_of_example_position_float_delete_function_type example_vector_of_example_position_float_delete = 0;
+        extern example_vector_of_example_position_double_default_function_type example_vector_of_example_position_double_default = 0;
+        extern example_vector_of_example_position_double_get_size_function_type example_vector_of_example_position_double_get_size = 0;
+        extern example_vector_of_example_position_double_clear_function_type example_vector_of_example_position_double_clear = 0;
+        extern example_vector_of_example_position_double_push_back_function_type example_vector_of_example_position_double_push_back = 0;
+        extern example_vector_of_example_position_double_get_item_function_type example_vector_of_example_position_double_get_item = 0;
+        extern example_vector_of_example_position_double_copy_function_type example_vector_of_example_position_double_copy = 0;
+        extern example_vector_of_example_position_double_delete_function_type example_vector_of_example_position_double_delete = 0;
+        extern example_vector_of_example_position4_d_float_default_function_type example_vector_of_example_position4_d_float_default = 0;
+        extern example_vector_of_example_position4_d_float_get_size_function_type example_vector_of_example_position4_d_float_get_size = 0;
+        extern example_vector_of_example_position4_d_float_clear_function_type example_vector_of_example_position4_d_float_clear = 0;
+        extern example_vector_of_example_position4_d_float_push_back_function_type example_vector_of_example_position4_d_float_push_back = 0;
+        extern example_vector_of_example_position4_d_float_get_item_function_type example_vector_of_example_position4_d_float_get_item = 0;
+        extern example_vector_of_example_position4_d_float_copy_function_type example_vector_of_example_position4_d_float_copy = 0;
+        extern example_vector_of_example_position4_d_float_delete_function_type example_vector_of_example_position4_d_float_delete = 0;
+        extern example_vector_of_example_position4_d_double_default_function_type example_vector_of_example_position4_d_double_default = 0;
+        extern example_vector_of_example_position4_d_double_get_size_function_type example_vector_of_example_position4_d_double_get_size = 0;
+        extern example_vector_of_example_position4_d_double_clear_function_type example_vector_of_example_position4_d_double_clear = 0;
+        extern example_vector_of_example_position4_d_double_push_back_function_type example_vector_of_example_position4_d_double_push_back = 0;
+        extern example_vector_of_example_position4_d_double_get_item_function_type example_vector_of_example_position4_d_double_get_item = 0;
+        extern example_vector_of_example_position4_d_double_copy_function_type example_vector_of_example_position4_d_double_copy = 0;
+        extern example_vector_of_example_position4_d_double_delete_function_type example_vector_of_example_position4_d_double_delete = 0;
+        extern example_vector_of_example_vector_of_example_position4_d_float_default_function_type example_vector_of_example_vector_of_example_position4_d_float_default = 0;
+        extern example_vector_of_example_vector_of_example_position4_d_float_get_size_function_type example_vector_of_example_vector_of_example_position4_d_float_get_size = 0;
+        extern example_vector_of_example_vector_of_example_position4_d_float_clear_function_type example_vector_of_example_vector_of_example_position4_d_float_clear = 0;
+        extern example_vector_of_example_vector_of_example_position4_d_float_push_back_function_type example_vector_of_example_vector_of_example_position4_d_float_push_back = 0;
+        extern example_vector_of_example_vector_of_example_position4_d_float_get_item_function_type example_vector_of_example_vector_of_example_position4_d_float_get_item = 0;
+        extern example_vector_of_example_vector_of_example_position4_d_float_copy_function_type example_vector_of_example_vector_of_example_position4_d_float_copy = 0;
+        extern example_vector_of_example_vector_of_example_position4_d_float_delete_function_type example_vector_of_example_vector_of_example_position4_d_float_delete = 0;
+        extern example_vector_of_objects_example_model_float_default_function_type example_vector_of_objects_example_model_float_default = 0;
+        extern example_vector_of_objects_example_model_float_get_size_function_type example_vector_of_objects_example_model_float_get_size = 0;
+        extern example_vector_of_objects_example_model_float_clear_function_type example_vector_of_objects_example_model_float_clear = 0;
+        extern example_vector_of_objects_example_model_float_push_back_function_type example_vector_of_objects_example_model_float_push_back = 0;
+        extern example_vector_of_objects_example_model_float_get_item_function_type example_vector_of_objects_example_model_float_get_item = 0;
+        extern example_vector_of_objects_example_model_float_add_ref_function_type example_vector_of_objects_example_model_float_add_ref = 0;
+        extern example_vector_of_objects_example_model_float_release_function_type example_vector_of_objects_example_model_float_release = 0;
+        extern example_vector_of_objects_example_model_double_default_function_type example_vector_of_objects_example_model_double_default = 0;
+        extern example_vector_of_objects_example_model_double_get_size_function_type example_vector_of_objects_example_model_double_get_size = 0;
+        extern example_vector_of_objects_example_model_double_clear_function_type example_vector_of_objects_example_model_double_clear = 0;
+        extern example_vector_of_objects_example_model_double_push_back_function_type example_vector_of_objects_example_model_double_push_back = 0;
+        extern example_vector_of_objects_example_model_double_get_item_function_type example_vector_of_objects_example_model_double_get_item = 0;
+        extern example_vector_of_objects_example_model_double_add_ref_function_type example_vector_of_objects_example_model_double_add_ref = 0;
+        extern example_vector_of_objects_example_model_double_release_function_type example_vector_of_objects_example_model_double_release = 0;
+        extern example_vector_of_objects_derived_example_model_float_default_function_type example_vector_of_objects_derived_example_model_float_default = 0;
+        extern example_vector_of_objects_derived_example_model_float_get_a_function_type example_vector_of_objects_derived_example_model_float_get_a = 0;
+        extern example_vector_of_objects_derived_example_model_float_add_ref_function_type example_vector_of_objects_derived_example_model_float_add_ref = 0;
+        extern example_vector_of_objects_derived_example_model_float_release_function_type example_vector_of_objects_derived_example_model_float_release = 0;
+        extern example_vector_of_objects_derived_example_model_float_cast_to_base_function_type example_vector_of_objects_derived_example_model_float_cast_to_base = 0;
+        extern example_vector_of_objects_example_model_float_cast_to_example_vector_of_objects_derived_example_model_float_function_type example_vector_of_objects_example_model_float_cast_to_example_vector_of_objects_derived_example_model_float = 0;
+        extern example_vector_of_objects_derived_example_model_double_default_function_type example_vector_of_objects_derived_example_model_double_default = 0;
+        extern example_vector_of_objects_derived_example_model_double_get_a_function_type example_vector_of_objects_derived_example_model_double_get_a = 0;
+        extern example_vector_of_objects_derived_example_model_double_add_ref_function_type example_vector_of_objects_derived_example_model_double_add_ref = 0;
+        extern example_vector_of_objects_derived_example_model_double_release_function_type example_vector_of_objects_derived_example_model_double_release = 0;
+        extern example_vector_of_objects_derived_example_model_double_cast_to_base_function_type example_vector_of_objects_derived_example_model_double_cast_to_base = 0;
+        extern example_vector_of_objects_example_model_double_cast_to_example_vector_of_objects_derived_example_model_double_function_type example_vector_of_objects_example_model_double_cast_to_example_vector_of_objects_derived_example_model_double = 0;
+        
+    #else /* EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS */
+        
+        extern example_position_float_default_function_type example_position_float_default;
+        extern example_position_float_get_x_function_type example_position_float_get_x;
+        extern example_position_float_set_x_function_type example_position_float_set_x;
+        extern example_position_float_get_y_function_type example_position_float_get_y;
+        extern example_position_float_set_y_function_type example_position_float_set_y;
+        extern example_position_float_get_z_function_type example_position_float_get_z;
+        extern example_position_float_set_z_function_type example_position_float_set_z;
+        extern example_position_float_copy_function_type example_position_float_copy;
+        extern example_position_float_delete_function_type example_position_float_delete;
+        extern example_position_double_default_function_type example_position_double_default;
+        extern example_position_double_get_x_function_type example_position_double_get_x;
+        extern example_position_double_set_x_function_type example_position_double_set_x;
+        extern example_position_double_get_y_function_type example_position_double_get_y;
+        extern example_position_double_set_y_function_type example_position_double_set_y;
+        extern example_position_double_get_z_function_type example_position_double_get_z;
+        extern example_position_double_set_z_function_type example_position_double_set_z;
+        extern example_position_double_copy_function_type example_position_double_copy;
+        extern example_position_double_delete_function_type example_position_double_delete;
+        extern example_position4_d_float_default_function_type example_position4_d_float_default;
+        extern example_position4_d_float_get_w_function_type example_position4_d_float_get_w;
+        extern example_position4_d_float_set_w_function_type example_position4_d_float_set_w;
+        extern example_position4_d_float_copy_function_type example_position4_d_float_copy;
+        extern example_position4_d_float_delete_function_type example_position4_d_float_delete;
+        extern example_position4_d_float_cast_to_base_function_type example_position4_d_float_cast_to_base;
+        extern example_position4_d_double_default_function_type example_position4_d_double_default;
+        extern example_position4_d_double_get_w_function_type example_position4_d_double_get_w;
+        extern example_position4_d_double_set_w_function_type example_position4_d_double_set_w;
+        extern example_position4_d_double_copy_function_type example_position4_d_double_copy;
+        extern example_position4_d_double_delete_function_type example_position4_d_double_delete;
+        extern example_position4_d_double_cast_to_base_function_type example_position4_d_double_cast_to_base;
+        extern example_model_float_default_function_type example_model_float_default;
+        extern example_model_float_get_name_function_type example_model_float_get_name;
+        extern example_model_float_set_name_function_type example_model_float_set_name;
+        extern example_model_float_get_position_function_type example_model_float_get_position;
+        extern example_model_float_set_position_function_type example_model_float_set_position;
+        extern example_model_float_add_ref_function_type example_model_float_add_ref;
+        extern example_model_float_release_function_type example_model_float_release;
+        extern example_model_double_default_function_type example_model_double_default;
+        extern example_model_double_get_name_function_type example_model_double_get_name;
+        extern example_model_double_set_name_function_type example_model_double_set_name;
+        extern example_model_double_get_position_function_type example_model_double_get_position;
+        extern example_model_double_set_position_function_type example_model_double_set_position;
+        extern example_model_double_add_ref_function_type example_model_double_add_ref;
+        extern example_model_double_release_function_type example_model_double_release;
+        extern example_vector_of_int_default_function_type example_vector_of_int_default;
+        extern example_vector_of_int_get_size_function_type example_vector_of_int_get_size;
+        extern example_vector_of_int_clear_function_type example_vector_of_int_clear;
+        extern example_vector_of_int_push_back_function_type example_vector_of_int_push_back;
+        extern example_vector_of_int_get_item_function_type example_vector_of_int_get_item;
+        extern example_vector_of_int_copy_function_type example_vector_of_int_copy;
+        extern example_vector_of_int_delete_function_type example_vector_of_int_delete;
+        extern example_vector_of_double_default_function_type example_vector_of_double_default;
+        extern example_vector_of_double_get_size_function_type example_vector_of_double_get_size;
+        extern example_vector_of_double_clear_function_type example_vector_of_double_clear;
+        extern example_vector_of_double_push_back_function_type example_vector_of_double_push_back;
+        extern example_vector_of_double_get_item_function_type example_vector_of_double_get_item;
+        extern example_vector_of_double_copy_function_type example_vector_of_double_copy;
+        extern example_vector_of_double_delete_function_type example_vector_of_double_delete;
+        extern example_vector_of_example_position_float_default_function_type example_vector_of_example_position_float_default;
+        extern example_vector_of_example_position_float_get_size_function_type example_vector_of_example_position_float_get_size;
+        extern example_vector_of_example_position_float_clear_function_type example_vector_of_example_position_float_clear;
+        extern example_vector_of_example_position_float_push_back_function_type example_vector_of_example_position_float_push_back;
+        extern example_vector_of_example_position_float_get_item_function_type example_vector_of_example_position_float_get_item;
+        extern example_vector_of_example_position_float_copy_function_type example_vector_of_example_position_float_copy;
+        extern example_vector_of_example_position_float_delete_function_type example_vector_of_example_position_float_delete;
+        extern example_vector_of_example_position_double_default_function_type example_vector_of_example_position_double_default;
+        extern example_vector_of_example_position_double_get_size_function_type example_vector_of_example_position_double_get_size;
+        extern example_vector_of_example_position_double_clear_function_type example_vector_of_example_position_double_clear;
+        extern example_vector_of_example_position_double_push_back_function_type example_vector_of_example_position_double_push_back;
+        extern example_vector_of_example_position_double_get_item_function_type example_vector_of_example_position_double_get_item;
+        extern example_vector_of_example_position_double_copy_function_type example_vector_of_example_position_double_copy;
+        extern example_vector_of_example_position_double_delete_function_type example_vector_of_example_position_double_delete;
+        extern example_vector_of_example_position4_d_float_default_function_type example_vector_of_example_position4_d_float_default;
+        extern example_vector_of_example_position4_d_float_get_size_function_type example_vector_of_example_position4_d_float_get_size;
+        extern example_vector_of_example_position4_d_float_clear_function_type example_vector_of_example_position4_d_float_clear;
+        extern example_vector_of_example_position4_d_float_push_back_function_type example_vector_of_example_position4_d_float_push_back;
+        extern example_vector_of_example_position4_d_float_get_item_function_type example_vector_of_example_position4_d_float_get_item;
+        extern example_vector_of_example_position4_d_float_copy_function_type example_vector_of_example_position4_d_float_copy;
+        extern example_vector_of_example_position4_d_float_delete_function_type example_vector_of_example_position4_d_float_delete;
+        extern example_vector_of_example_position4_d_double_default_function_type example_vector_of_example_position4_d_double_default;
+        extern example_vector_of_example_position4_d_double_get_size_function_type example_vector_of_example_position4_d_double_get_size;
+        extern example_vector_of_example_position4_d_double_clear_function_type example_vector_of_example_position4_d_double_clear;
+        extern example_vector_of_example_position4_d_double_push_back_function_type example_vector_of_example_position4_d_double_push_back;
+        extern example_vector_of_example_position4_d_double_get_item_function_type example_vector_of_example_position4_d_double_get_item;
+        extern example_vector_of_example_position4_d_double_copy_function_type example_vector_of_example_position4_d_double_copy;
+        extern example_vector_of_example_position4_d_double_delete_function_type example_vector_of_example_position4_d_double_delete;
+        extern example_vector_of_example_vector_of_example_position4_d_float_default_function_type example_vector_of_example_vector_of_example_position4_d_float_default;
+        extern example_vector_of_example_vector_of_example_position4_d_float_get_size_function_type example_vector_of_example_vector_of_example_position4_d_float_get_size;
+        extern example_vector_of_example_vector_of_example_position4_d_float_clear_function_type example_vector_of_example_vector_of_example_position4_d_float_clear;
+        extern example_vector_of_example_vector_of_example_position4_d_float_push_back_function_type example_vector_of_example_vector_of_example_position4_d_float_push_back;
+        extern example_vector_of_example_vector_of_example_position4_d_float_get_item_function_type example_vector_of_example_vector_of_example_position4_d_float_get_item;
+        extern example_vector_of_example_vector_of_example_position4_d_float_copy_function_type example_vector_of_example_vector_of_example_position4_d_float_copy;
+        extern example_vector_of_example_vector_of_example_position4_d_float_delete_function_type example_vector_of_example_vector_of_example_position4_d_float_delete;
+        extern example_vector_of_objects_example_model_float_default_function_type example_vector_of_objects_example_model_float_default;
+        extern example_vector_of_objects_example_model_float_get_size_function_type example_vector_of_objects_example_model_float_get_size;
+        extern example_vector_of_objects_example_model_float_clear_function_type example_vector_of_objects_example_model_float_clear;
+        extern example_vector_of_objects_example_model_float_push_back_function_type example_vector_of_objects_example_model_float_push_back;
+        extern example_vector_of_objects_example_model_float_get_item_function_type example_vector_of_objects_example_model_float_get_item;
+        extern example_vector_of_objects_example_model_float_add_ref_function_type example_vector_of_objects_example_model_float_add_ref;
+        extern example_vector_of_objects_example_model_float_release_function_type example_vector_of_objects_example_model_float_release;
+        extern example_vector_of_objects_example_model_double_default_function_type example_vector_of_objects_example_model_double_default;
+        extern example_vector_of_objects_example_model_double_get_size_function_type example_vector_of_objects_example_model_double_get_size;
+        extern example_vector_of_objects_example_model_double_clear_function_type example_vector_of_objects_example_model_double_clear;
+        extern example_vector_of_objects_example_model_double_push_back_function_type example_vector_of_objects_example_model_double_push_back;
+        extern example_vector_of_objects_example_model_double_get_item_function_type example_vector_of_objects_example_model_double_get_item;
+        extern example_vector_of_objects_example_model_double_add_ref_function_type example_vector_of_objects_example_model_double_add_ref;
+        extern example_vector_of_objects_example_model_double_release_function_type example_vector_of_objects_example_model_double_release;
+        extern example_vector_of_objects_derived_example_model_float_default_function_type example_vector_of_objects_derived_example_model_float_default;
+        extern example_vector_of_objects_derived_example_model_float_get_a_function_type example_vector_of_objects_derived_example_model_float_get_a;
+        extern example_vector_of_objects_derived_example_model_float_add_ref_function_type example_vector_of_objects_derived_example_model_float_add_ref;
+        extern example_vector_of_objects_derived_example_model_float_release_function_type example_vector_of_objects_derived_example_model_float_release;
+        extern example_vector_of_objects_derived_example_model_float_cast_to_base_function_type example_vector_of_objects_derived_example_model_float_cast_to_base;
+        extern example_vector_of_objects_example_model_float_cast_to_example_vector_of_objects_derived_example_model_float_function_type example_vector_of_objects_example_model_float_cast_to_example_vector_of_objects_derived_example_model_float;
+        extern example_vector_of_objects_derived_example_model_double_default_function_type example_vector_of_objects_derived_example_model_double_default;
+        extern example_vector_of_objects_derived_example_model_double_get_a_function_type example_vector_of_objects_derived_example_model_double_get_a;
+        extern example_vector_of_objects_derived_example_model_double_add_ref_function_type example_vector_of_objects_derived_example_model_double_add_ref;
+        extern example_vector_of_objects_derived_example_model_double_release_function_type example_vector_of_objects_derived_example_model_double_release;
+        extern example_vector_of_objects_derived_example_model_double_cast_to_base_function_type example_vector_of_objects_derived_example_model_double_cast_to_base;
+        extern example_vector_of_objects_example_model_double_cast_to_example_vector_of_objects_derived_example_model_double_function_type example_vector_of_objects_example_model_double_cast_to_example_vector_of_objects_derived_example_model_double;
+        
+    #endif /* EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS */
+    
+    #ifdef __cplusplus
+    
+    #include <stdexcept>
+    #include <sstream>
+    
+    #ifdef _WIN32
+        #include <Windows.h>
+    #else /* _WIN32 */
+        #include <dlfcn.h>
+    #endif /* _WIN32 */
+    
+    namespace Example
+    {
+        class Initialization
+        {
+            #ifdef _WIN32
+                HINSTANCE handle;
+            #else /* _WIN32 */
+                void* handle;
+            #endif /* _WIN32 */
+            
+            template<class FunctionPointerType>
+            void load_function(FunctionPointerType& to_init, const char* name)
+            {
+                #ifdef _WIN32
+                    to_init = reinterpret_cast<FunctionPointerType>(GetProcAddress(handle, name));
+                #else /* _WIN32 */
+                    to_init = reinterpret_cast<FunctionPointerType>(dlsym(handle, name));
+                #endif /* _WIN32 */
+                if (!to_init)
+                {
+                    std::stringstream error_message;
+                    error_message << "Can't obtain function " << name;
+                    throw std::runtime_error(error_message.str());
+                }
+            }
+            
+            void load_module(const char* shared_library_name)
+            {
+                if (!shared_library_name) throw std::runtime_error("Null library name was passed");
+                #ifdef _WIN32
+                    handle = LoadLibraryA(shared_library_name);
+                #else /* _WIN32 */
+                    handle = dlopen(shared_library_name, RTLD_NOW);
+                #endif /* _WIN32 */
+                if (!handle)
+                {
+                    std::stringstream error_message;
+                    error_message << "Can't load shared library " << shared_library_name;
+                    throw std::runtime_error(error_message.str());
+                }
+                load_function<example_position_float_default_function_type>(example_position_float_default, "example_position_float_default");
+                load_function<example_position_float_get_x_function_type>(example_position_float_get_x, "example_position_float_get_x");
+                load_function<example_position_float_set_x_function_type>(example_position_float_set_x, "example_position_float_set_x");
+                load_function<example_position_float_get_y_function_type>(example_position_float_get_y, "example_position_float_get_y");
+                load_function<example_position_float_set_y_function_type>(example_position_float_set_y, "example_position_float_set_y");
+                load_function<example_position_float_get_z_function_type>(example_position_float_get_z, "example_position_float_get_z");
+                load_function<example_position_float_set_z_function_type>(example_position_float_set_z, "example_position_float_set_z");
+                load_function<example_position_float_copy_function_type>(example_position_float_copy, "example_position_float_copy");
+                load_function<example_position_float_delete_function_type>(example_position_float_delete, "example_position_float_delete");
+                load_function<example_position_double_default_function_type>(example_position_double_default, "example_position_double_default");
+                load_function<example_position_double_get_x_function_type>(example_position_double_get_x, "example_position_double_get_x");
+                load_function<example_position_double_set_x_function_type>(example_position_double_set_x, "example_position_double_set_x");
+                load_function<example_position_double_get_y_function_type>(example_position_double_get_y, "example_position_double_get_y");
+                load_function<example_position_double_set_y_function_type>(example_position_double_set_y, "example_position_double_set_y");
+                load_function<example_position_double_get_z_function_type>(example_position_double_get_z, "example_position_double_get_z");
+                load_function<example_position_double_set_z_function_type>(example_position_double_set_z, "example_position_double_set_z");
+                load_function<example_position_double_copy_function_type>(example_position_double_copy, "example_position_double_copy");
+                load_function<example_position_double_delete_function_type>(example_position_double_delete, "example_position_double_delete");
+                load_function<example_position4_d_float_default_function_type>(example_position4_d_float_default, "example_position4_d_float_default");
+                load_function<example_position4_d_float_get_w_function_type>(example_position4_d_float_get_w, "example_position4_d_float_get_w");
+                load_function<example_position4_d_float_set_w_function_type>(example_position4_d_float_set_w, "example_position4_d_float_set_w");
+                load_function<example_position4_d_float_copy_function_type>(example_position4_d_float_copy, "example_position4_d_float_copy");
+                load_function<example_position4_d_float_delete_function_type>(example_position4_d_float_delete, "example_position4_d_float_delete");
+                load_function<example_position4_d_float_cast_to_base_function_type>(example_position4_d_float_cast_to_base, "example_position4_d_float_cast_to_base");
+                load_function<example_position4_d_double_default_function_type>(example_position4_d_double_default, "example_position4_d_double_default");
+                load_function<example_position4_d_double_get_w_function_type>(example_position4_d_double_get_w, "example_position4_d_double_get_w");
+                load_function<example_position4_d_double_set_w_function_type>(example_position4_d_double_set_w, "example_position4_d_double_set_w");
+                load_function<example_position4_d_double_copy_function_type>(example_position4_d_double_copy, "example_position4_d_double_copy");
+                load_function<example_position4_d_double_delete_function_type>(example_position4_d_double_delete, "example_position4_d_double_delete");
+                load_function<example_position4_d_double_cast_to_base_function_type>(example_position4_d_double_cast_to_base, "example_position4_d_double_cast_to_base");
+                load_function<example_model_float_default_function_type>(example_model_float_default, "example_model_float_default");
+                load_function<example_model_float_get_name_function_type>(example_model_float_get_name, "example_model_float_get_name");
+                load_function<example_model_float_set_name_function_type>(example_model_float_set_name, "example_model_float_set_name");
+                load_function<example_model_float_get_position_function_type>(example_model_float_get_position, "example_model_float_get_position");
+                load_function<example_model_float_set_position_function_type>(example_model_float_set_position, "example_model_float_set_position");
+                load_function<example_model_float_add_ref_function_type>(example_model_float_add_ref, "example_model_float_add_ref");
+                load_function<example_model_float_release_function_type>(example_model_float_release, "example_model_float_release");
+                load_function<example_model_double_default_function_type>(example_model_double_default, "example_model_double_default");
+                load_function<example_model_double_get_name_function_type>(example_model_double_get_name, "example_model_double_get_name");
+                load_function<example_model_double_set_name_function_type>(example_model_double_set_name, "example_model_double_set_name");
+                load_function<example_model_double_get_position_function_type>(example_model_double_get_position, "example_model_double_get_position");
+                load_function<example_model_double_set_position_function_type>(example_model_double_set_position, "example_model_double_set_position");
+                load_function<example_model_double_add_ref_function_type>(example_model_double_add_ref, "example_model_double_add_ref");
+                load_function<example_model_double_release_function_type>(example_model_double_release, "example_model_double_release");
+                load_function<example_vector_of_int_default_function_type>(example_vector_of_int_default, "example_vector_of_int_default");
+                load_function<example_vector_of_int_get_size_function_type>(example_vector_of_int_get_size, "example_vector_of_int_get_size");
+                load_function<example_vector_of_int_clear_function_type>(example_vector_of_int_clear, "example_vector_of_int_clear");
+                load_function<example_vector_of_int_push_back_function_type>(example_vector_of_int_push_back, "example_vector_of_int_push_back");
+                load_function<example_vector_of_int_get_item_function_type>(example_vector_of_int_get_item, "example_vector_of_int_get_item");
+                load_function<example_vector_of_int_copy_function_type>(example_vector_of_int_copy, "example_vector_of_int_copy");
+                load_function<example_vector_of_int_delete_function_type>(example_vector_of_int_delete, "example_vector_of_int_delete");
+                load_function<example_vector_of_double_default_function_type>(example_vector_of_double_default, "example_vector_of_double_default");
+                load_function<example_vector_of_double_get_size_function_type>(example_vector_of_double_get_size, "example_vector_of_double_get_size");
+                load_function<example_vector_of_double_clear_function_type>(example_vector_of_double_clear, "example_vector_of_double_clear");
+                load_function<example_vector_of_double_push_back_function_type>(example_vector_of_double_push_back, "example_vector_of_double_push_back");
+                load_function<example_vector_of_double_get_item_function_type>(example_vector_of_double_get_item, "example_vector_of_double_get_item");
+                load_function<example_vector_of_double_copy_function_type>(example_vector_of_double_copy, "example_vector_of_double_copy");
+                load_function<example_vector_of_double_delete_function_type>(example_vector_of_double_delete, "example_vector_of_double_delete");
+                load_function<example_vector_of_example_position_float_default_function_type>(example_vector_of_example_position_float_default, "example_vector_of_example_position_float_default");
+                load_function<example_vector_of_example_position_float_get_size_function_type>(example_vector_of_example_position_float_get_size, "example_vector_of_example_position_float_get_size");
+                load_function<example_vector_of_example_position_float_clear_function_type>(example_vector_of_example_position_float_clear, "example_vector_of_example_position_float_clear");
+                load_function<example_vector_of_example_position_float_push_back_function_type>(example_vector_of_example_position_float_push_back, "example_vector_of_example_position_float_push_back");
+                load_function<example_vector_of_example_position_float_get_item_function_type>(example_vector_of_example_position_float_get_item, "example_vector_of_example_position_float_get_item");
+                load_function<example_vector_of_example_position_float_copy_function_type>(example_vector_of_example_position_float_copy, "example_vector_of_example_position_float_copy");
+                load_function<example_vector_of_example_position_float_delete_function_type>(example_vector_of_example_position_float_delete, "example_vector_of_example_position_float_delete");
+                load_function<example_vector_of_example_position_double_default_function_type>(example_vector_of_example_position_double_default, "example_vector_of_example_position_double_default");
+                load_function<example_vector_of_example_position_double_get_size_function_type>(example_vector_of_example_position_double_get_size, "example_vector_of_example_position_double_get_size");
+                load_function<example_vector_of_example_position_double_clear_function_type>(example_vector_of_example_position_double_clear, "example_vector_of_example_position_double_clear");
+                load_function<example_vector_of_example_position_double_push_back_function_type>(example_vector_of_example_position_double_push_back, "example_vector_of_example_position_double_push_back");
+                load_function<example_vector_of_example_position_double_get_item_function_type>(example_vector_of_example_position_double_get_item, "example_vector_of_example_position_double_get_item");
+                load_function<example_vector_of_example_position_double_copy_function_type>(example_vector_of_example_position_double_copy, "example_vector_of_example_position_double_copy");
+                load_function<example_vector_of_example_position_double_delete_function_type>(example_vector_of_example_position_double_delete, "example_vector_of_example_position_double_delete");
+                load_function<example_vector_of_example_position4_d_float_default_function_type>(example_vector_of_example_position4_d_float_default, "example_vector_of_example_position4_d_float_default");
+                load_function<example_vector_of_example_position4_d_float_get_size_function_type>(example_vector_of_example_position4_d_float_get_size, "example_vector_of_example_position4_d_float_get_size");
+                load_function<example_vector_of_example_position4_d_float_clear_function_type>(example_vector_of_example_position4_d_float_clear, "example_vector_of_example_position4_d_float_clear");
+                load_function<example_vector_of_example_position4_d_float_push_back_function_type>(example_vector_of_example_position4_d_float_push_back, "example_vector_of_example_position4_d_float_push_back");
+                load_function<example_vector_of_example_position4_d_float_get_item_function_type>(example_vector_of_example_position4_d_float_get_item, "example_vector_of_example_position4_d_float_get_item");
+                load_function<example_vector_of_example_position4_d_float_copy_function_type>(example_vector_of_example_position4_d_float_copy, "example_vector_of_example_position4_d_float_copy");
+                load_function<example_vector_of_example_position4_d_float_delete_function_type>(example_vector_of_example_position4_d_float_delete, "example_vector_of_example_position4_d_float_delete");
+                load_function<example_vector_of_example_position4_d_double_default_function_type>(example_vector_of_example_position4_d_double_default, "example_vector_of_example_position4_d_double_default");
+                load_function<example_vector_of_example_position4_d_double_get_size_function_type>(example_vector_of_example_position4_d_double_get_size, "example_vector_of_example_position4_d_double_get_size");
+                load_function<example_vector_of_example_position4_d_double_clear_function_type>(example_vector_of_example_position4_d_double_clear, "example_vector_of_example_position4_d_double_clear");
+                load_function<example_vector_of_example_position4_d_double_push_back_function_type>(example_vector_of_example_position4_d_double_push_back, "example_vector_of_example_position4_d_double_push_back");
+                load_function<example_vector_of_example_position4_d_double_get_item_function_type>(example_vector_of_example_position4_d_double_get_item, "example_vector_of_example_position4_d_double_get_item");
+                load_function<example_vector_of_example_position4_d_double_copy_function_type>(example_vector_of_example_position4_d_double_copy, "example_vector_of_example_position4_d_double_copy");
+                load_function<example_vector_of_example_position4_d_double_delete_function_type>(example_vector_of_example_position4_d_double_delete, "example_vector_of_example_position4_d_double_delete");
+                load_function<example_vector_of_example_vector_of_example_position4_d_float_default_function_type>(example_vector_of_example_vector_of_example_position4_d_float_default, "example_vector_of_example_vector_of_example_position4_d_float_default");
+                load_function<example_vector_of_example_vector_of_example_position4_d_float_get_size_function_type>(example_vector_of_example_vector_of_example_position4_d_float_get_size, "example_vector_of_example_vector_of_example_position4_d_float_get_size");
+                load_function<example_vector_of_example_vector_of_example_position4_d_float_clear_function_type>(example_vector_of_example_vector_of_example_position4_d_float_clear, "example_vector_of_example_vector_of_example_position4_d_float_clear");
+                load_function<example_vector_of_example_vector_of_example_position4_d_float_push_back_function_type>(example_vector_of_example_vector_of_example_position4_d_float_push_back, "example_vector_of_example_vector_of_example_position4_d_float_push_back");
+                load_function<example_vector_of_example_vector_of_example_position4_d_float_get_item_function_type>(example_vector_of_example_vector_of_example_position4_d_float_get_item, "example_vector_of_example_vector_of_example_position4_d_float_get_item");
+                load_function<example_vector_of_example_vector_of_example_position4_d_float_copy_function_type>(example_vector_of_example_vector_of_example_position4_d_float_copy, "example_vector_of_example_vector_of_example_position4_d_float_copy");
+                load_function<example_vector_of_example_vector_of_example_position4_d_float_delete_function_type>(example_vector_of_example_vector_of_example_position4_d_float_delete, "example_vector_of_example_vector_of_example_position4_d_float_delete");
+                load_function<example_vector_of_objects_example_model_float_default_function_type>(example_vector_of_objects_example_model_float_default, "example_vector_of_objects_example_model_float_default");
+                load_function<example_vector_of_objects_example_model_float_get_size_function_type>(example_vector_of_objects_example_model_float_get_size, "example_vector_of_objects_example_model_float_get_size");
+                load_function<example_vector_of_objects_example_model_float_clear_function_type>(example_vector_of_objects_example_model_float_clear, "example_vector_of_objects_example_model_float_clear");
+                load_function<example_vector_of_objects_example_model_float_push_back_function_type>(example_vector_of_objects_example_model_float_push_back, "example_vector_of_objects_example_model_float_push_back");
+                load_function<example_vector_of_objects_example_model_float_get_item_function_type>(example_vector_of_objects_example_model_float_get_item, "example_vector_of_objects_example_model_float_get_item");
+                load_function<example_vector_of_objects_example_model_float_add_ref_function_type>(example_vector_of_objects_example_model_float_add_ref, "example_vector_of_objects_example_model_float_add_ref");
+                load_function<example_vector_of_objects_example_model_float_release_function_type>(example_vector_of_objects_example_model_float_release, "example_vector_of_objects_example_model_float_release");
+                load_function<example_vector_of_objects_example_model_double_default_function_type>(example_vector_of_objects_example_model_double_default, "example_vector_of_objects_example_model_double_default");
+                load_function<example_vector_of_objects_example_model_double_get_size_function_type>(example_vector_of_objects_example_model_double_get_size, "example_vector_of_objects_example_model_double_get_size");
+                load_function<example_vector_of_objects_example_model_double_clear_function_type>(example_vector_of_objects_example_model_double_clear, "example_vector_of_objects_example_model_double_clear");
+                load_function<example_vector_of_objects_example_model_double_push_back_function_type>(example_vector_of_objects_example_model_double_push_back, "example_vector_of_objects_example_model_double_push_back");
+                load_function<example_vector_of_objects_example_model_double_get_item_function_type>(example_vector_of_objects_example_model_double_get_item, "example_vector_of_objects_example_model_double_get_item");
+                load_function<example_vector_of_objects_example_model_double_add_ref_function_type>(example_vector_of_objects_example_model_double_add_ref, "example_vector_of_objects_example_model_double_add_ref");
+                load_function<example_vector_of_objects_example_model_double_release_function_type>(example_vector_of_objects_example_model_double_release, "example_vector_of_objects_example_model_double_release");
+                load_function<example_vector_of_objects_derived_example_model_float_default_function_type>(example_vector_of_objects_derived_example_model_float_default, "example_vector_of_objects_derived_example_model_float_default");
+                load_function<example_vector_of_objects_derived_example_model_float_get_a_function_type>(example_vector_of_objects_derived_example_model_float_get_a, "example_vector_of_objects_derived_example_model_float_get_a");
+                load_function<example_vector_of_objects_derived_example_model_float_add_ref_function_type>(example_vector_of_objects_derived_example_model_float_add_ref, "example_vector_of_objects_derived_example_model_float_add_ref");
+                load_function<example_vector_of_objects_derived_example_model_float_release_function_type>(example_vector_of_objects_derived_example_model_float_release, "example_vector_of_objects_derived_example_model_float_release");
+                load_function<example_vector_of_objects_derived_example_model_float_cast_to_base_function_type>(example_vector_of_objects_derived_example_model_float_cast_to_base, "example_vector_of_objects_derived_example_model_float_cast_to_base");
+                load_function<example_vector_of_objects_example_model_float_cast_to_example_vector_of_objects_derived_example_model_float_function_type>(example_vector_of_objects_example_model_float_cast_to_example_vector_of_objects_derived_example_model_float, "example_vector_of_objects_example_model_float_cast_to_example_vector_of_objects_derived_example_model_float");
+                load_function<example_vector_of_objects_derived_example_model_double_default_function_type>(example_vector_of_objects_derived_example_model_double_default, "example_vector_of_objects_derived_example_model_double_default");
+                load_function<example_vector_of_objects_derived_example_model_double_get_a_function_type>(example_vector_of_objects_derived_example_model_double_get_a, "example_vector_of_objects_derived_example_model_double_get_a");
+                load_function<example_vector_of_objects_derived_example_model_double_add_ref_function_type>(example_vector_of_objects_derived_example_model_double_add_ref, "example_vector_of_objects_derived_example_model_double_add_ref");
+                load_function<example_vector_of_objects_derived_example_model_double_release_function_type>(example_vector_of_objects_derived_example_model_double_release, "example_vector_of_objects_derived_example_model_double_release");
+                load_function<example_vector_of_objects_derived_example_model_double_cast_to_base_function_type>(example_vector_of_objects_derived_example_model_double_cast_to_base, "example_vector_of_objects_derived_example_model_double_cast_to_base");
+                load_function<example_vector_of_objects_example_model_double_cast_to_example_vector_of_objects_derived_example_model_double_function_type>(example_vector_of_objects_example_model_double_cast_to_example_vector_of_objects_derived_example_model_double, "example_vector_of_objects_example_model_double_cast_to_example_vector_of_objects_derived_example_model_double");
+            }
+            
+            Initialization();
+            Initialization(const Initialization&);
+            #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+                Initialization(Initialization &&) = delete;
+            #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
+        public:
+            Initialization(const char* shared_library_name)
+            {
+                load_module(shared_library_name);
+            }
+            ~Initialization()
+            {
+                #ifdef _WIN32
+                    FreeLibrary(handle);
+                #else /* _WIN32 */
+                    dlclose(handle);
+                #endif /* _WIN32 */
+                example_position_float_default = 0;
+                example_position_float_get_x = 0;
+                example_position_float_set_x = 0;
+                example_position_float_get_y = 0;
+                example_position_float_set_y = 0;
+                example_position_float_get_z = 0;
+                example_position_float_set_z = 0;
+                example_position_float_copy = 0;
+                example_position_float_delete = 0;
+                example_position_double_default = 0;
+                example_position_double_get_x = 0;
+                example_position_double_set_x = 0;
+                example_position_double_get_y = 0;
+                example_position_double_set_y = 0;
+                example_position_double_get_z = 0;
+                example_position_double_set_z = 0;
+                example_position_double_copy = 0;
+                example_position_double_delete = 0;
+                example_position4_d_float_default = 0;
+                example_position4_d_float_get_w = 0;
+                example_position4_d_float_set_w = 0;
+                example_position4_d_float_copy = 0;
+                example_position4_d_float_delete = 0;
+                example_position4_d_float_cast_to_base = 0;
+                example_position4_d_double_default = 0;
+                example_position4_d_double_get_w = 0;
+                example_position4_d_double_set_w = 0;
+                example_position4_d_double_copy = 0;
+                example_position4_d_double_delete = 0;
+                example_position4_d_double_cast_to_base = 0;
+                example_model_float_default = 0;
+                example_model_float_get_name = 0;
+                example_model_float_set_name = 0;
+                example_model_float_get_position = 0;
+                example_model_float_set_position = 0;
+                example_model_float_add_ref = 0;
+                example_model_float_release = 0;
+                example_model_double_default = 0;
+                example_model_double_get_name = 0;
+                example_model_double_set_name = 0;
+                example_model_double_get_position = 0;
+                example_model_double_set_position = 0;
+                example_model_double_add_ref = 0;
+                example_model_double_release = 0;
+                example_vector_of_int_default = 0;
+                example_vector_of_int_get_size = 0;
+                example_vector_of_int_clear = 0;
+                example_vector_of_int_push_back = 0;
+                example_vector_of_int_get_item = 0;
+                example_vector_of_int_copy = 0;
+                example_vector_of_int_delete = 0;
+                example_vector_of_double_default = 0;
+                example_vector_of_double_get_size = 0;
+                example_vector_of_double_clear = 0;
+                example_vector_of_double_push_back = 0;
+                example_vector_of_double_get_item = 0;
+                example_vector_of_double_copy = 0;
+                example_vector_of_double_delete = 0;
+                example_vector_of_example_position_float_default = 0;
+                example_vector_of_example_position_float_get_size = 0;
+                example_vector_of_example_position_float_clear = 0;
+                example_vector_of_example_position_float_push_back = 0;
+                example_vector_of_example_position_float_get_item = 0;
+                example_vector_of_example_position_float_copy = 0;
+                example_vector_of_example_position_float_delete = 0;
+                example_vector_of_example_position_double_default = 0;
+                example_vector_of_example_position_double_get_size = 0;
+                example_vector_of_example_position_double_clear = 0;
+                example_vector_of_example_position_double_push_back = 0;
+                example_vector_of_example_position_double_get_item = 0;
+                example_vector_of_example_position_double_copy = 0;
+                example_vector_of_example_position_double_delete = 0;
+                example_vector_of_example_position4_d_float_default = 0;
+                example_vector_of_example_position4_d_float_get_size = 0;
+                example_vector_of_example_position4_d_float_clear = 0;
+                example_vector_of_example_position4_d_float_push_back = 0;
+                example_vector_of_example_position4_d_float_get_item = 0;
+                example_vector_of_example_position4_d_float_copy = 0;
+                example_vector_of_example_position4_d_float_delete = 0;
+                example_vector_of_example_position4_d_double_default = 0;
+                example_vector_of_example_position4_d_double_get_size = 0;
+                example_vector_of_example_position4_d_double_clear = 0;
+                example_vector_of_example_position4_d_double_push_back = 0;
+                example_vector_of_example_position4_d_double_get_item = 0;
+                example_vector_of_example_position4_d_double_copy = 0;
+                example_vector_of_example_position4_d_double_delete = 0;
+                example_vector_of_example_vector_of_example_position4_d_float_default = 0;
+                example_vector_of_example_vector_of_example_position4_d_float_get_size = 0;
+                example_vector_of_example_vector_of_example_position4_d_float_clear = 0;
+                example_vector_of_example_vector_of_example_position4_d_float_push_back = 0;
+                example_vector_of_example_vector_of_example_position4_d_float_get_item = 0;
+                example_vector_of_example_vector_of_example_position4_d_float_copy = 0;
+                example_vector_of_example_vector_of_example_position4_d_float_delete = 0;
+                example_vector_of_objects_example_model_float_default = 0;
+                example_vector_of_objects_example_model_float_get_size = 0;
+                example_vector_of_objects_example_model_float_clear = 0;
+                example_vector_of_objects_example_model_float_push_back = 0;
+                example_vector_of_objects_example_model_float_get_item = 0;
+                example_vector_of_objects_example_model_float_add_ref = 0;
+                example_vector_of_objects_example_model_float_release = 0;
+                example_vector_of_objects_example_model_double_default = 0;
+                example_vector_of_objects_example_model_double_get_size = 0;
+                example_vector_of_objects_example_model_double_clear = 0;
+                example_vector_of_objects_example_model_double_push_back = 0;
+                example_vector_of_objects_example_model_double_get_item = 0;
+                example_vector_of_objects_example_model_double_add_ref = 0;
+                example_vector_of_objects_example_model_double_release = 0;
+                example_vector_of_objects_derived_example_model_float_default = 0;
+                example_vector_of_objects_derived_example_model_float_get_a = 0;
+                example_vector_of_objects_derived_example_model_float_add_ref = 0;
+                example_vector_of_objects_derived_example_model_float_release = 0;
+                example_vector_of_objects_derived_example_model_float_cast_to_base = 0;
+                example_vector_of_objects_example_model_float_cast_to_example_vector_of_objects_derived_example_model_float = 0;
+                example_vector_of_objects_derived_example_model_double_default = 0;
+                example_vector_of_objects_derived_example_model_double_get_a = 0;
+                example_vector_of_objects_derived_example_model_double_add_ref = 0;
+                example_vector_of_objects_derived_example_model_double_release = 0;
+                example_vector_of_objects_derived_example_model_double_cast_to_base = 0;
+                example_vector_of_objects_example_model_double_cast_to_example_vector_of_objects_derived_example_model_double = 0;
+            }
+        };
+    }
+    
+    #endif /* __cplusplus */
+    
 #endif /* EXAMPLE_CAPI_USE_DYNAMIC_LOADER */
 
 #endif /* EXAMPLE_CAPI_INCLUDED */

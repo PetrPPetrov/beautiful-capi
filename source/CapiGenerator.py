@@ -22,7 +22,9 @@
 
 from collections import OrderedDict
 from ParamsParser import TBeautifulCapiParams
-from FileGenerator import FileGenerator, WatchdogScope, Indent, IndentScope, Unindent, IfDefScope
+from FileGenerator import FileGenerator, WatchdogScope, IfDefScope, Indent, IndentScope, Unindent, UnindentAll
+from FileGenerator import if_then_else, if_def_then_else, if_not_def_then_else
+from DynamicLoaderGenerator import DynamicLoaderGenerator
 from FileCache import FileCache
 from Helpers import if_required_then_add_empty_line
 
@@ -65,11 +67,19 @@ class CapiGenerator(object):
         self.cur_capi_prefix = None
         self.cur_api_convention = None
         self.sorted_by_ns = None
+        self.cur_namespace_name = None
+        self.cur_namespace_info = None
 
     def get_exception_traits(self, no_except: bool):
         if no_except:
             return self.no_handling_exception_traits
         return self.main_exception_traits
+
+    def __generate_posix_i386_attribute(self, out: FileGenerator):
+        out.put_line('#define {0} __attribute__ ((cdecl))'.format(self.cur_api_convention))
+
+    def __generate_posix_non_i386_attribute(self, out: FileGenerator):
+        out.put_line('#define {0}'.format(self.cur_api_convention))
 
     def __put_define_apple_or_linux(self, out: FileGenerator):
         out.put_line('#if defined(__GNUC__) && __GNUC__ >= 4')
@@ -80,13 +90,9 @@ class CapiGenerator(object):
         with Indent(out):
             out.put_line('#define {0} {1}'.format(self.cur_api_define, self.cur_capi_prefix))
         out.put_line('#endif')
-        out.put_line('#if defined __i386__')
-        with Indent(out):
-            out.put_line('#define {0} __attribute__ ((cdecl))'.format(self.cur_api_convention))
-        out.put_line('#else')
-        with Indent(out):
-            out.put_line('#define {0}'.format(self.cur_api_convention))
-        out.put_line('#endif')
+        if_def_then_else(out, '__i386__',
+                         self.__generate_posix_i386_attribute,
+                         self.__generate_posix_non_i386_attribute)
 
     def __put_api_define(self, out: FileGenerator, dll_import_or_export):
         out.put_line('#ifdef _WIN32')
@@ -114,160 +120,63 @@ class CapiGenerator(object):
         out.put_line('#endif')
         out.put_line('')
 
-    def __generate_callback_typedefs(self, namespace_info, out):
-        for c_pointer in namespace_info.c_pointers:
+    def __generate_callback_typedefs(self, out: FileGenerator):
+        for c_pointer in self.cur_namespace_info.c_pointers:
             out.put_line('typedef {return_type} ({convention} *{name})({arguments});'.format(
                 return_type=c_pointer.return_type,
                 convention=self.cur_api_convention,
                 name=c_pointer.name,
                 arguments=c_pointer.arguments))
-        if namespace_info.c_pointers:
+        if self.cur_namespace_info.c_pointers:
             out.put_line('')
 
-    def __generate_callback_implementations(self, output_capi_impl):
+    def __generate_callback_implementations(self, out: FileGenerator):
         if self.callback_implementations:
-            self.main_exception_traits.generate_check_and_throw_exception_for_impl(output_capi_impl)
-            output_capi_impl.put_line('')
+            self.main_exception_traits.generate_check_and_throw_exception_for_impl(out)
+            out.put_line('')
         for callback_implementation in self.callback_implementations:
-            output_capi_impl.put_file(callback_implementation)
-            output_capi_impl.put_line('')
+            out.put_file(callback_implementation)
+            out.put_line('')
 
-    def __generate_capi_defines(self, namespace_name, output_capi):
-        self.cur_api_define = '{0}_API'.format(namespace_name)
-        self.cur_api_convention = '{0}_API_CONVENTION'.format(namespace_name)
-        self.cur_capi_prefix = '{0}_CAPI_PREFIX'.format(namespace_name)
-        output_capi.put_line('#ifdef __cplusplus')
-        with Indent(output_capi):
-            output_capi.put_line('#define {0} extern "C"'.format(self.cur_capi_prefix))
-        output_capi.put_line('#else')
-        with Indent(output_capi):
-            output_capi.put_line('#define {0}'.format(self.cur_capi_prefix))
-        output_capi.put_line('#endif')
-        output_capi.put_line('')
-        self.__put_api_define(output_capi, 'dllimport')
+    def __generate_capi_c_prefix(self, out: FileGenerator):
+        out.put_line('#define {0} extern "C"'.format(self.cur_capi_prefix))
 
-    def __generate_capi_impl_defines(self, namespace_name, output_capi_impl):
-        self.cur_api_define = '{0}_API'.format(namespace_name)
-        self.cur_api_convention = '{0}_API_CONVENTION'.format(namespace_name)
+    def __generate_capi_prefix(self, out: FileGenerator):
+        out.put_line('#define {0}'.format(self.cur_capi_prefix))
+
+    def __generate_capi_defines(self, out: FileGenerator):
+        self.cur_api_define = '{0}_API'.format(self.cur_namespace_name)
+        self.cur_api_convention = '{0}_API_CONVENTION'.format(self.cur_namespace_name)
+        self.cur_capi_prefix = '{0}_CAPI_PREFIX'.format(self.cur_namespace_name)
+        if_def_then_else(out, '__cplusplus',
+                         self.__generate_capi_c_prefix,
+                         self.__generate_capi_prefix)
+        out.put_line('')
+        self.__put_api_define(out, 'dllimport')
+
+    def __generate_capi_impl_defines(self, out: FileGenerator):
+        self.cur_api_define = '{0}_API'.format(self.cur_namespace_name)
+        self.cur_api_convention = '{0}_API_CONVENTION'.format(self.cur_namespace_name)
         self.cur_capi_prefix = 'extern "C"'
-        self.__put_api_define(output_capi_impl, 'dllexport')
+        self.__put_api_define(out, 'dllexport')
 
-    @staticmethod
-    def __generate_function_pointers(namespace_info, output_capi, define: bool):
-        output_capi.put_line('')
-        for c_function in namespace_info.c_functions:
-            output_capi.put_line('extern {name}_function_type {name}{define_to_null_str};'.format(
+    def __generate_function_pointers(self, out: FileGenerator, define: bool):
+        out.put_line('')
+        for c_function in self.cur_namespace_info.c_functions:
+            out.put_line('extern {name}_function_type {name}{define_to_null_str};'.format(
                 name=c_function.name, define_to_null_str=' = 0' if define else ''))
+        out.put_line('')
 
-    @staticmethod
-    def __generate_module_init_members(output_capi):
-        output_capi.put_line('#ifdef _WIN32')
-        output_capi.put_line('HINSTANCE handle;')
-        output_capi.put_line('#else')
-        output_capi.put_line('void* handle;')
-        output_capi.put_line('#endif')
-        output_capi.put_line('')
+    def __generate_function_pointer_definitions(self, out: FileGenerator):
+        self.__generate_function_pointers(out, True)
 
-    @staticmethod
-    def __generate_module_init_load_function(output_capi):
-        output_capi.put_line('template<class FunctionPointerType>')
-        output_capi.put_line('void load_function(FunctionPointerType& to_init, const char* name)')
-        with IndentScope(output_capi):
-            output_capi.put_line('#ifdef _WIN32')
-            output_capi.put_line(
-                'to_init = reinterpret_cast<FunctionPointerType>(GetProcAddress(handle, name));')
-            output_capi.put_line('#else')
-            output_capi.put_line(
-                'to_init = reinterpret_cast<FunctionPointerType>(dlsym(handle, name));')
-            output_capi.put_line('#endif')
-            output_capi.put_line('if (!to_init)')
-            with IndentScope(output_capi):
-                output_capi.put_line('std::stringstream error_message;')
-                output_capi.put_line('error_message << "Can\'t obtain function " << name;')
-                output_capi.put_line('throw std::runtime_error(error_message.str());')
-        output_capi.put_line('')
+    def __generate_function_pointer_declarations(self, out: FileGenerator):
+        self.__generate_function_pointers(out, False)
 
-    @staticmethod
-    def __generate_module_init_load_module(namespace_info, output_capi):
-        output_capi.put_line('void load_module(const char* shared_library_name)')
-        with IndentScope(output_capi):
-            output_capi.put_line('if (!shared_library_name) throw std::runtime_error("Null library name was passed");')
-            output_capi.put_line('#ifdef _WIN32')
-            output_capi.put_line('handle = LoadLibraryA(shared_library_name);')
-            output_capi.put_line('#else')
-            output_capi.put_line('handle = dlopen(shared_library_name, RTLD_NOW);')
-            output_capi.put_line('#endif')
-            output_capi.put_line('if (!handle)')
-            with IndentScope(output_capi):
-                output_capi.put_line('std::stringstream error_message;')
-                output_capi.put_line('error_message << "Can\'t load shared library " << shared_library_name;')
-                output_capi.put_line('throw std::runtime_error(error_message.str());')
-            for c_function in namespace_info.c_functions:
-                output_capi.put_line('load_function<{0}_function_type>({0}, "{0}");'.format(c_function.name))
-        output_capi.put_line('')
-
-    def __generate_module_init_constructor(self, output_capi):
-        output_capi.put_line('Initialization(const char* shared_library_name)')
-        with IndentScope(output_capi):
-            output_capi.put_line('load_module(shared_library_name);')
-        if self.params.shared_library_name:
-            output_capi.put_line('Initialization()')
-            with IndentScope(output_capi):
-                output_capi.put_line('#ifdef _WIN32')
-                output_capi.put_line('load_module("{shared_library_name}.dll");'.format(
-                    shared_library_name=self.params.shared_library_name))
-                output_capi.put_line('#elif __APPLE__')
-                output_capi.put_line('load_module("lib{shared_library_name}.dylib");'.format(
-                    shared_library_name=self.params.shared_library_name))
-                output_capi.put_line('#else')
-                output_capi.put_line('load_module("lib{shared_library_name}.so");'.format(
-                    shared_library_name=self.params.shared_library_name))
-                output_capi.put_line('#endif')
-
-    @staticmethod
-    def __generate_module_init_destructor(output_capi):
-        output_capi.put_line('~Initialization()')
-        with IndentScope(output_capi):
-            output_capi.put_line('#ifdef _WIN32')
-            output_capi.put_line('FreeLibrary(handle);')
-            output_capi.put_line('#else')
-            output_capi.put_line('dlclose(handle);')
-            output_capi.put_line('#endif')
-
-    def __generate_module_init_body(self, namespace_info, output_capi):
-        output_capi.put_line('class Initialization')
-        with IndentScope(output_capi, '};'):
-            self.__generate_module_init_members(output_capi)
-            self.__generate_module_init_load_function(output_capi)
-            self.__generate_module_init_load_module(namespace_info, output_capi)
-            if not self.params.shared_library_name:
-                output_capi.put_line('Initialization();')
-            output_capi.put_line('Initialization(const Initialization&);')
-            with Unindent(output_capi):
-                output_capi.put_line('public:')
-            self.__generate_module_init_constructor(output_capi)
-            self.__generate_module_init_destructor(output_capi)
-
-    def __generate_module_init(self, namespace_info, output_capi):
-        output_capi.put_line('')
-        with IfDefScope(output_capi, '__cplusplus'):
-            output_capi.put_include_files(False)
-            output_capi.include_system_header('stdexcept')
-            output_capi.include_system_header('sstream')
-            output_capi.put_line('#ifdef _WIN32')
-            output_capi.put_line('#include <Windows.h>')
-            output_capi.put_line('#else')
-            output_capi.put_line('#include <dlfcn.h>')
-            output_capi.put_line('#endif')
-            output_capi.put_line('')
-            # We always have at least one element
-            output_capi.put_line('namespace {0}'.format(namespace_info.c_functions[0].path_to_namespace[0]))
-            with IndentScope(output_capi):
-                self.__generate_module_init_body(namespace_info, output_capi)
-
-    def __generate_dynamic_capi(self, namespace_info, namespace_name, output_capi):
-        for c_function in namespace_info.c_functions:
-            namespace_info.c_pointers.append(
+    def __generate_dynamic_capi(self, out: FileGenerator):
+        out.put_line('')
+        for c_function in self.cur_namespace_info.c_functions:
+            self.cur_namespace_info.c_pointers.append(
                 Pointer2CFunction(
                     c_function.path_to_namespace,
                     c_function.return_type,
@@ -275,60 +184,89 @@ class CapiGenerator(object):
                     c_function.arguments
                 )
             )
-        self.__generate_callback_typedefs(namespace_info, output_capi)
-        output_capi.put_line('#ifdef ' + namespace_name + '_CAPI_DEFINE_FUNCTION_POINTERS')
-        self.__generate_function_pointers(namespace_info, output_capi, True)
-        output_capi.put_line('')
-        output_capi.put_line('#else /* ' + namespace_name + '_CAPI_DEFINE_FUNCTION_POINTERS */')
-        self.__generate_function_pointers(namespace_info, output_capi, False)
-        output_capi.put_line('')
-        output_capi.put_line('#endif /* ' + namespace_name + '_CAPI_DEFINE_FUNCTION_POINTERS */')
-        self.__generate_module_init(namespace_info, output_capi)
+        self.__generate_callback_typedefs(out)
+        if_def_then_else(out, self.cur_namespace_name + '_CAPI_DEFINE_FUNCTION_POINTERS',
+                         self.__generate_function_pointer_definitions,
+                         self.__generate_function_pointer_declarations)
 
-    def __generate_static_capi(self, namespace_info, output_capi):
-        self.__generate_callback_typedefs(namespace_info, output_capi)
-        for c_function in namespace_info.c_functions:
-            output_capi.put_line('{api} {return_type} {convention} {name}({arguments});'.format(
+        DynamicLoaderGenerator(self.cur_namespace_name, self.cur_namespace_info, self.params).generate(out)
+        out.put_line('')
+
+    def __generate_static_capi(self, out: FileGenerator):
+        out.put_line('')
+        self.__generate_callback_typedefs(out)
+        for c_function in self.cur_namespace_info.c_functions:
+            out.put_line('{api} {return_type} {convention} {name}({arguments});'.format(
                 api=self.cur_api_define,
                 return_type=c_function.return_type,
                 convention=self.cur_api_convention,
                 name=c_function.name,
                 arguments=c_function.arguments))
+        out.put_line('')
+
+    def __generate_msvc1900_traits(self, out: FileGenerator):
+        out.put_line('#define {ns}_NOEXCEPT noexcept'.format(ns=self.cur_namespace_name))
+
+    def __generate_msvc_non1900_traits(self, out: FileGenerator):
+        out.put_line('#define {ns}_NOEXCEPT'.format(ns=self.cur_namespace_name))
+
+    def __generate_msvc1800_traits(self, out: FileGenerator):
+        out.put_line('#define {ns}_CPP_COMPILER_HAS_RVALUE_REFERENCES'.format(ns=self.cur_namespace_name))
+
+    def __generate_msvc_traits(self, out: FileGenerator):
+        if_then_else(out, '_MSC_VER >= 1900', self.__generate_msvc1900_traits, self.__generate_msvc_non1900_traits)
+        if_then_else(out, '_MSC_VER >= 1800', self.__generate_msvc1800_traits, None)
+
+    def __generate_cpp11_compiler_traits(self, out: FileGenerator):
+        out.put_line('#define {ns}_NOEXCEPT noexcept'.format(ns=self.cur_namespace_name))
+        out.put_line('#define {ns}_CPP_COMPILER_HAS_RVALUE_REFERENCES'.format(ns=self.cur_namespace_name))
+
+    def __generate_non_cpp11_compiler_traits(self, out: FileGenerator):
+        out.put_line('#define {ns}_NOEXCEPT'.format(ns=self.cur_namespace_name))
+
+    def __generate_non_msvc_traits(self, out: FileGenerator):
+        if_then_else(out, '__cplusplus >= 201103L',
+                     self.__generate_cpp11_compiler_traits, self.__generate_non_cpp11_compiler_traits)
+
+    def __generate_compiler_traits(self, out: FileGenerator):
+        with IfDefScope(out, '__cplusplus'):
+            with Indent(out):
+                if_def_then_else(out, '_MSC_VER', self.__generate_msvc_traits, self.__generate_non_msvc_traits)
+        out.put_line('')
 
     def __generate_capi(self, file_cache):
         for namespace_name, namespace_info in self.sorted_by_ns.items():
+            self.cur_namespace_name = namespace_name
+            self.cur_namespace_info = namespace_info
             # We always have at least one element
             output_capi = file_cache.get_file_for_capi(namespace_info.c_functions[0].path_to_namespace)
             output_capi.put_begin_cpp_comments(self.params)
             with WatchdogScope(output_capi, namespace_name + '_CAPI_INCLUDED'):
                 self.main_exception_traits.generate_exception_info(output_capi)
-                self.__generate_capi_defines(namespace_name, output_capi)
+                self.__generate_capi_defines(output_capi)
+                self.__generate_compiler_traits(output_capi)
 
-                output_capi.put_line('#ifndef ' + namespace_name + '_CAPI_USE_DYNAMIC_LOADER')
-                output_capi.put_line('')
-                self.__generate_static_capi(namespace_info, output_capi)
-                output_capi.put_line('')
-                output_capi.put_line('#else /* ' + namespace_name + '_CAPI_USE_DYNAMIC_LOADER */')
-                output_capi.put_line('')
-                self.__generate_dynamic_capi(namespace_info, namespace_name, output_capi)
-                output_capi.put_line('')
-                output_capi.put_line('#endif /* ' + namespace_name + '_CAPI_USE_DYNAMIC_LOADER */')
+                if_not_def_then_else(output_capi, namespace_name + '_CAPI_USE_DYNAMIC_LOADER',
+                                     self.__generate_static_capi,
+                                     self.__generate_dynamic_capi)
 
-    def __generate_capi_impl(self, output_capi_impl):
+    def __generate_capi_impl(self, out: FileGenerator):
         first_namespace = True
         for namespace_name, namespace_info in self.sorted_by_ns.items():
-            first_namespace = if_required_then_add_empty_line(first_namespace, output_capi_impl)
+            self.cur_namespace_name = namespace_name
+            self.cur_namespace_info = namespace_info
+            first_namespace = if_required_then_add_empty_line(first_namespace, out)
             first_function = True
             for c_function in namespace_info.c_functions:
-                first_function = if_required_then_add_empty_line(first_function, output_capi_impl)
+                first_function = if_required_then_add_empty_line(first_function, out)
 
-                output_capi_impl.put_line('{api} {return_type} {convention} {name}({arguments})'.format(
+                out.put_line('{api} {return_type} {convention} {name}({arguments})'.format(
                     api=self.cur_api_define,
                     return_type=c_function.return_type,
                     convention=self.cur_api_convention,
                     name=c_function.name,
                     arguments=c_function.arguments))
-                output_capi_impl.put_file(c_function.body)
+                out.put_file(c_function.body)
 
     def add_c_function(self, path_to_namespace: [str], return_type: str,
                        name: str, arguments: str, body: FileGenerator):
@@ -361,8 +299,10 @@ class CapiGenerator(object):
 
         self.sorted_by_ns = OrderedDict(sorted(self.namespace_name_2_c_functions.items()))
         for namespace_name, namespace_info in self.sorted_by_ns.items():
-            self.__generate_capi_impl_defines(namespace_name, output_capi_impl)
-            self.__generate_callback_typedefs(namespace_info, output_capi_impl)
+            self.cur_namespace_name = namespace_name
+            self.cur_namespace_info = namespace_info
+            self.__generate_capi_impl_defines(output_capi_impl)
+            self.__generate_callback_typedefs(output_capi_impl)
 
         self.__generate_callback_implementations(output_capi_impl)
         self.__generate_capi_impl(output_capi_impl)

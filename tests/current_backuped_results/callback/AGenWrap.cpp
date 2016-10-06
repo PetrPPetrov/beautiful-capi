@@ -69,22 +69,22 @@ enum beautiful_capi_callback_exception_code_t
     #else
         #define EXAMPLE_API extern "C"
     #endif
-    #if defined __i386__
+    #ifdef __i386__
         #define EXAMPLE_API_CONVENTION __attribute__ ((cdecl))
-    #else
+    #else /* __i386__ */
         #define EXAMPLE_API_CONVENTION
-    #endif
+    #endif /* __i386__ */
 #elif __unix__ || __linux__
     #if defined(__GNUC__) && __GNUC__ >= 4
         #define EXAMPLE_API extern "C" __attribute__ ((visibility ("default")))
     #else
         #define EXAMPLE_API extern "C"
     #endif
-    #if defined __i386__
+    #ifdef __i386__
         #define EXAMPLE_API_CONVENTION __attribute__ ((cdecl))
-    #else
+    #else /* __i386__ */
         #define EXAMPLE_API_CONVENTION
-    #endif
+    #endif /* __i386__ */
 #else
     #error "Unknown platform"
 #endif
@@ -110,22 +110,22 @@ typedef int (EXAMPLE_API_CONVENTION *example_printer_get_device_type_callback_ty
     #else
         #define EXCEPTION_API extern "C"
     #endif
-    #if defined __i386__
+    #ifdef __i386__
         #define EXCEPTION_API_CONVENTION __attribute__ ((cdecl))
-    #else
+    #else /* __i386__ */
         #define EXCEPTION_API_CONVENTION
-    #endif
+    #endif /* __i386__ */
 #elif __unix__ || __linux__
     #if defined(__GNUC__) && __GNUC__ >= 4
         #define EXCEPTION_API extern "C" __attribute__ ((visibility ("default")))
     #else
         #define EXCEPTION_API extern "C"
     #endif
-    #if defined __i386__
+    #ifdef __i386__
         #define EXCEPTION_API_CONVENTION __attribute__ ((cdecl))
-    #else
+    #else /* __i386__ */
         #define EXCEPTION_API_CONVENTION
-    #endif
+    #endif /* __i386__ */
 #else
     #error "Unknown platform"
 #endif

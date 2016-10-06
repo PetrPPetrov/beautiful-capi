@@ -1,7 +1,6 @@
 *) place down_cast function to target type namespace
 *) move constructors if target language supports C++ 11
 *) noexcept methods if target language supports C++ 11
-*) add std::nullptr_t constructor if target language supports C++ 11
 *) add runtime check for binary compatibility
 *) add "copy" custom function, external helper function or "class member method"
 *) add "create" custom function, external helper function for creation of new object instances
@@ -18,11 +17,8 @@
 *) c_2_implementation and implementation_2_c customization
 ===
 *) shuffle Capi mode
-*) implement Dynamic traits for Windows
 *) const support for objects (constatant instances of wrapper classes), const arguments, const return values
-*) implement Dynamic traits for Unix
 *) property for Get & Set
-*) implement combined (dynamic & implib) mode
 *) annotative C api (comments for enum types, typedefs for class types, i.e. typedef void* example_printer_t;)
 ===
 *) callbacks support

@@ -29,9 +29,9 @@
 
 #ifdef __cplusplus
     #define EXAMPLE_CAPI_PREFIX extern "C"
-#else
+#else /* __cplusplus */
     #define EXAMPLE_CAPI_PREFIX
-#endif
+#endif /* __cplusplus */
 
 #ifdef _WIN32
     #ifdef __GNUC__
@@ -47,133 +47,168 @@
     #else
         #define EXAMPLE_API EXAMPLE_CAPI_PREFIX
     #endif
-    #if defined __i386__
+    #ifdef __i386__
         #define EXAMPLE_API_CONVENTION __attribute__ ((cdecl))
-    #else
+    #else /* __i386__ */
         #define EXAMPLE_API_CONVENTION
-    #endif
+    #endif /* __i386__ */
 #elif __unix__ || __linux__
     #if defined(__GNUC__) && __GNUC__ >= 4
         #define EXAMPLE_API EXAMPLE_CAPI_PREFIX __attribute__ ((visibility ("default")))
     #else
         #define EXAMPLE_API EXAMPLE_CAPI_PREFIX
     #endif
-    #if defined __i386__
+    #ifdef __i386__
         #define EXAMPLE_API_CONVENTION __attribute__ ((cdecl))
-    #else
+    #else /* __i386__ */
         #define EXAMPLE_API_CONVENTION
-    #endif
+    #endif /* __i386__ */
 #else
     #error "Unknown platform"
 #endif
 
-#ifndef EXAMPLE_CAPI_USE_DYNAMIC_LOADER
-
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_create_triangle();
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_create_rectangle();
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_create_circle();
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_i_shape_show(void* object_pointer);
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_i_shape_delete(void* object_pointer);
-
-#else /* EXAMPLE_CAPI_USE_DYNAMIC_LOADER */
-
-typedef void* (EXAMPLE_API_CONVENTION *example_create_triangle_function_type)();
-typedef void* (EXAMPLE_API_CONVENTION *example_create_rectangle_function_type)();
-typedef void* (EXAMPLE_API_CONVENTION *example_create_circle_function_type)();
-typedef void (EXAMPLE_API_CONVENTION *example_i_shape_show_function_type)(void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_i_shape_delete_function_type)(void* object_pointer);
-
-#ifdef EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS
-
-extern example_create_triangle_function_type example_create_triangle = 0;
-extern example_create_rectangle_function_type example_create_rectangle = 0;
-extern example_create_circle_function_type example_create_circle = 0;
-extern example_i_shape_show_function_type example_i_shape_show = 0;
-extern example_i_shape_delete_function_type example_i_shape_delete = 0;
-
-#else /* EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS */
-
-extern example_create_triangle_function_type example_create_triangle;
-extern example_create_rectangle_function_type example_create_rectangle;
-extern example_create_circle_function_type example_create_circle;
-extern example_i_shape_show_function_type example_i_shape_show;
-extern example_i_shape_delete_function_type example_i_shape_delete;
-
-#endif /* EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS */
-
 #ifdef __cplusplus
 
-#include <stdexcept>
-#include <sstream>
-#ifdef _WIN32
-#include <Windows.h>
-#else
-#include <dlfcn.h>
-#endif
-
-namespace Example
-{
-    class Initialization
-    {
-        #ifdef _WIN32
-        HINSTANCE handle;
-        #else
-        void* handle;
-        #endif
-        
-        template<class FunctionPointerType>
-        void load_function(FunctionPointerType& to_init, const char* name)
-        {
-            #ifdef _WIN32
-            to_init = reinterpret_cast<FunctionPointerType>(GetProcAddress(handle, name));
-            #else
-            to_init = reinterpret_cast<FunctionPointerType>(dlsym(handle, name));
-            #endif
-            if (!to_init)
-            {
-                std::stringstream error_message;
-                error_message << "Can't obtain function " << name;
-                throw std::runtime_error(error_message.str());
-            }
-        }
-        
-        Initialization();
-        Initialization(const Initialization&);
-    public:
-        Initialization(const char* name)
-        {
-            if (!name) throw std::runtime_error("Null library name was passed");
-            #ifdef _WIN32
-            handle = LoadLibraryA(name);
-            #else
-            handle = dlopen(name, RTLD_NOW);
-            #endif
-            if (!handle)
-            {
-                std::stringstream error_message;
-                error_message << "Can't load shared library " << name;
-                throw std::runtime_error(error_message.str());
-            }
-            
-            load_function<example_create_triangle_function_type>(example_create_triangle, "example_create_triangle");
-            load_function<example_create_rectangle_function_type>(example_create_rectangle, "example_create_rectangle");
-            load_function<example_create_circle_function_type>(example_create_circle, "example_create_circle");
-            load_function<example_i_shape_show_function_type>(example_i_shape_show, "example_i_shape_show");
-            load_function<example_i_shape_delete_function_type>(example_i_shape_delete, "example_i_shape_delete");
-        }
-        ~Initialization()
-        {
-            #ifdef _WIN32
-            FreeLibrary(handle);
-            #else
-            dlclose(handle);
-            #endif
-        }
-    };
-}
+    #ifdef _MSC_VER
+        #if _MSC_VER >= 1900
+            #define EXAMPLE_NOEXCEPT noexcept
+        #else /* _MSC_VER >= 1900 */
+            #define EXAMPLE_NOEXCEPT
+        #endif /* _MSC_VER >= 1900 */
+        #if _MSC_VER >= 1800
+            #define EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+        #endif /* _MSC_VER >= 1800 */
+    #else /* _MSC_VER */
+        #if __cplusplus >= 201103L
+            #define EXAMPLE_NOEXCEPT noexcept
+            #define EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+        #else /* __cplusplus >= 201103L */
+            #define EXAMPLE_NOEXCEPT
+        #endif /* __cplusplus >= 201103L */
+    #endif /* _MSC_VER */
 
 #endif /* __cplusplus */
 
+#ifndef EXAMPLE_CAPI_USE_DYNAMIC_LOADER
+    
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_create_triangle();
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_create_rectangle();
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_create_circle();
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_i_shape_show(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_i_shape_delete(void* object_pointer);
+    
+#else /* EXAMPLE_CAPI_USE_DYNAMIC_LOADER */
+    
+    typedef void* (EXAMPLE_API_CONVENTION *example_create_triangle_function_type)();
+    typedef void* (EXAMPLE_API_CONVENTION *example_create_rectangle_function_type)();
+    typedef void* (EXAMPLE_API_CONVENTION *example_create_circle_function_type)();
+    typedef void (EXAMPLE_API_CONVENTION *example_i_shape_show_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_i_shape_delete_function_type)(void* object_pointer);
+    
+    #ifdef EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS
+        
+        extern example_create_triangle_function_type example_create_triangle = 0;
+        extern example_create_rectangle_function_type example_create_rectangle = 0;
+        extern example_create_circle_function_type example_create_circle = 0;
+        extern example_i_shape_show_function_type example_i_shape_show = 0;
+        extern example_i_shape_delete_function_type example_i_shape_delete = 0;
+        
+    #else /* EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS */
+        
+        extern example_create_triangle_function_type example_create_triangle;
+        extern example_create_rectangle_function_type example_create_rectangle;
+        extern example_create_circle_function_type example_create_circle;
+        extern example_i_shape_show_function_type example_i_shape_show;
+        extern example_i_shape_delete_function_type example_i_shape_delete;
+        
+    #endif /* EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS */
+    
+    #ifdef __cplusplus
+    
+    #include <stdexcept>
+    #include <sstream>
+    
+    #ifdef _WIN32
+        #include <Windows.h>
+    #else /* _WIN32 */
+        #include <dlfcn.h>
+    #endif /* _WIN32 */
+    
+    namespace Example
+    {
+        class Initialization
+        {
+            #ifdef _WIN32
+                HINSTANCE handle;
+            #else /* _WIN32 */
+                void* handle;
+            #endif /* _WIN32 */
+            
+            template<class FunctionPointerType>
+            void load_function(FunctionPointerType& to_init, const char* name)
+            {
+                #ifdef _WIN32
+                    to_init = reinterpret_cast<FunctionPointerType>(GetProcAddress(handle, name));
+                #else /* _WIN32 */
+                    to_init = reinterpret_cast<FunctionPointerType>(dlsym(handle, name));
+                #endif /* _WIN32 */
+                if (!to_init)
+                {
+                    std::stringstream error_message;
+                    error_message << "Can't obtain function " << name;
+                    throw std::runtime_error(error_message.str());
+                }
+            }
+            
+            void load_module(const char* shared_library_name)
+            {
+                if (!shared_library_name) throw std::runtime_error("Null library name was passed");
+                #ifdef _WIN32
+                    handle = LoadLibraryA(shared_library_name);
+                #else /* _WIN32 */
+                    handle = dlopen(shared_library_name, RTLD_NOW);
+                #endif /* _WIN32 */
+                if (!handle)
+                {
+                    std::stringstream error_message;
+                    error_message << "Can't load shared library " << shared_library_name;
+                    throw std::runtime_error(error_message.str());
+                }
+                load_function<example_create_triangle_function_type>(example_create_triangle, "example_create_triangle");
+                load_function<example_create_rectangle_function_type>(example_create_rectangle, "example_create_rectangle");
+                load_function<example_create_circle_function_type>(example_create_circle, "example_create_circle");
+                load_function<example_i_shape_show_function_type>(example_i_shape_show, "example_i_shape_show");
+                load_function<example_i_shape_delete_function_type>(example_i_shape_delete, "example_i_shape_delete");
+            }
+            
+            Initialization();
+            Initialization(const Initialization&);
+            #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+                Initialization(Initialization &&) = delete;
+            #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
+        public:
+            Initialization(const char* shared_library_name)
+            {
+                load_module(shared_library_name);
+            }
+            ~Initialization()
+            {
+                #ifdef _WIN32
+                    FreeLibrary(handle);
+                #else /* _WIN32 */
+                    dlclose(handle);
+                #endif /* _WIN32 */
+                example_create_triangle = 0;
+                example_create_rectangle = 0;
+                example_create_circle = 0;
+                example_i_shape_show = 0;
+                example_i_shape_delete = 0;
+            }
+        };
+    }
+    
+    #endif /* __cplusplus */
+    
 #endif /* EXAMPLE_CAPI_USE_DYNAMIC_LOADER */
 
 #endif /* EXAMPLE_CAPI_INCLUDED */

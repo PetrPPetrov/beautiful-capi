@@ -33,8 +33,9 @@ class AtomicString(object):
 
 
 class IncludeHeaders(object):
-    def __init__(self, included_files):
+    def __init__(self, included_files, indent: str):
         self.included_files = included_files
+        self.indent = indent
 
     def get_lines(self):
         result_lines = []
@@ -42,9 +43,9 @@ class IncludeHeaders(object):
         for header_file, is_system in self.included_files:
             if header_file not in already_included_files:
                 if is_system:
-                    result_lines.append('#include <{0}>\n'.format(header_file))
+                    result_lines.append('{0}#include <{1}>\n'.format(self.indent, header_file))
                 else:
-                    result_lines.append('#include "{0}"\n'.format(header_file))
+                    result_lines.append('{0}#include "{1}"\n'.format(self.indent, header_file))
                 already_included_files.update({header_file: is_system})
         return result_lines
 
@@ -129,9 +130,9 @@ class FileGenerator(object):
     def put_file(self, another_file):
         self.lines.append(another_file)
 
-    def put_include_files(self, add_empty_line:bool=True):
+    def put_include_files(self, add_empty_line: bool=True):
         if not self.included_files_were_included:
-            self.lines.append(IncludeHeaders(self.included_files))
+            self.lines.append(IncludeHeaders(self.included_files, self.get_indent_str()))
             self.included_files_were_included = True
         if add_empty_line:
             self.put_line('')
@@ -203,6 +204,19 @@ class Unindent(object):
         self.file_generator.increase_indent()
 
 
+class UnindentAll(object):
+    def __init__(self, file_generator):
+        self.file_generator = file_generator
+        self.previous_indent = 0
+
+    def __enter__(self):
+        self.previous_indent = self.file_generator.cur_indent
+        self.file_generator.cur_indent = 0
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.file_generator.cur_indent = self.previous_indent
+
+
 class IndentScope(Indent):
     def __init__(self, file_generator, ending='}'):
         super().__init__(file_generator)
@@ -234,14 +248,40 @@ class WatchdogScope(object):
 
 
 class IfDefScope(object):
-    def __init__(self, file_generator, condition_string):
+    def __init__(self, file_generator, condition_string, add_empty_lines: bool=True):
         self.file_generator = file_generator
         self.condition_string = condition_string
+        self.add_empty_lines = add_empty_lines
 
     def __enter__(self):
         self.file_generator.put_line('#ifdef {0}'.format(self.condition_string))
-        self.file_generator.put_line('')
+        if self.add_empty_lines:
+            self.file_generator.put_line('')
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        self.file_generator.put_line('')
+        if self.add_empty_lines:
+            self.file_generator.put_line('')
         self.file_generator.put_line('#endif /* {0} */'.format(self.condition_string))
+
+
+def if_then_else_impl(out: FileGenerator, if_string: str, condition_string: str, then_call, else_call):
+    out.put_line('{if_string} {condition_string}'.format(if_string=if_string, condition_string=condition_string))
+    with Indent(out):
+        then_call(out)
+    if else_call:
+        out.put_line('#else /* {condition_string} */'.format(condition_string=condition_string))
+        with Indent(out):
+            else_call(out)
+    out.put_line('#endif /* {condition_string} */'.format(condition_string=condition_string))
+
+
+def if_then_else(out: FileGenerator, condition_string: str, then_call, else_call):
+    if_then_else_impl(out, '#if', condition_string, then_call, else_call)
+
+
+def if_def_then_else(out: FileGenerator, condition_string: str, then_call, else_call):
+    if_then_else_impl(out, '#ifdef', condition_string, then_call, else_call)
+
+
+def if_not_def_then_else(out: FileGenerator, condition_string: str, then_call, else_call):
+    if_then_else_impl(out, '#ifndef', condition_string, then_call, else_call)

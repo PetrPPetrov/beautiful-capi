@@ -43,22 +43,22 @@
     #else
         #define CIRCULAR_API extern "C"
     #endif
-    #if defined __i386__
+    #ifdef __i386__
         #define CIRCULAR_API_CONVENTION __attribute__ ((cdecl))
-    #else
+    #else /* __i386__ */
         #define CIRCULAR_API_CONVENTION
-    #endif
+    #endif /* __i386__ */
 #elif __unix__ || __linux__
     #if defined(__GNUC__) && __GNUC__ >= 4
         #define CIRCULAR_API extern "C" __attribute__ ((visibility ("default")))
     #else
         #define CIRCULAR_API extern "C"
     #endif
-    #if defined __i386__
+    #ifdef __i386__
         #define CIRCULAR_API_CONVENTION __attribute__ ((cdecl))
-    #else
+    #else /* __i386__ */
         #define CIRCULAR_API_CONVENTION
-    #endif
+    #endif /* __i386__ */
 #else
     #error "Unknown platform"
 #endif
