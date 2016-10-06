@@ -1,5 +1,4 @@
 *) place down_cast function to target type namespace
-*) move constructors if target language supports C++ 11
 *) noexcept methods if target language supports C++ 11
 *) add runtime check for binary compatibility
 *) add "copy" custom function, external helper function or "class member method"
