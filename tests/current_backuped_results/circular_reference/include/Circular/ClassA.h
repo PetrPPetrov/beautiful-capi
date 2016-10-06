@@ -52,6 +52,14 @@ inline Circular::ClassARawPtr::ClassARawPtr(const ClassARawPtr& other)
     SetObject(other.mObject);
 }
 
+#ifdef CIRCULAR_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Circular::ClassARawPtr::ClassARawPtr(ClassARawPtr&& other)
+{
+    mObject = other.mObject;
+    other.mObject = 0;
+}
+#endif /* CIRCULAR_CPP_COMPILER_HAS_RVALUE_REFERENCES */
+
 inline Circular::ClassARawPtr::ClassARawPtr(Circular::ClassARawPtr::ECreateFromRawPointer, void *object_pointer, bool)
 {
     SetObject(object_pointer);
@@ -59,7 +67,7 @@ inline Circular::ClassARawPtr::ClassARawPtr(Circular::ClassARawPtr::ECreateFromR
 
 inline void Circular::ClassARawPtr::Delete()
 {
-    if (mObject)
+    if (mObject && Circular::ClassARawPtr::mObject)
     {
         circular_class_a_delete(mObject);
         SetObject(0);
@@ -68,9 +76,24 @@ inline void Circular::ClassARawPtr::Delete()
 
 inline Circular::ClassARawPtr& Circular::ClassARawPtr::operator=(const Circular::ClassARawPtr& other)
 {
-    SetObject(other.mObject);
+    if (this != &other)
+    {
+        SetObject(other.mObject);
+    }
     return *this;
 }
+
+#ifdef CIRCULAR_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Circular::ClassARawPtr& Circular::ClassARawPtr::operator=(Circular::ClassARawPtr&& other)
+{
+    if (this != &other)
+    {
+        mObject = other.mObject;
+        other.mObject = 0;
+    }
+    return *this;
+}
+#endif /* CIRCULAR_CPP_COMPILER_HAS_RVALUE_REFERENCES */
 
 inline Circular::ClassARawPtr Circular::ClassARawPtr::Null()
 {

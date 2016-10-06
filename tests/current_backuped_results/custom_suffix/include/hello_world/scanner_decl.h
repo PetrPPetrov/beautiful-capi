@@ -41,10 +41,16 @@ public:
     inline void scan() const;
     
     inline scanner_raw_ptr(const scanner_raw_ptr& other);
+    #ifdef HELLO_WORLD_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline scanner_raw_ptr(scanner_raw_ptr&& other);
+    #endif /* HELLO_WORLD_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     enum ECreateFromRawPointer { force_creating_from_raw_pointer };
     inline scanner_raw_ptr(ECreateFromRawPointer, void *object_pointer, bool);
     inline void deallocate();
     inline scanner_raw_ptr& operator=(const scanner_raw_ptr& other);
+    #ifdef HELLO_WORLD_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline scanner_raw_ptr& operator=(scanner_raw_ptr&& other);
+    #endif /* HELLO_WORLD_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     static inline scanner_raw_ptr null();
     inline bool is_null() const;
     inline bool is_not_null() const;

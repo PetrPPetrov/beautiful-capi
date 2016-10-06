@@ -46,6 +46,14 @@ inline Example::ISquarePtr::ISquarePtr(const ISquarePtr& other) : Example::IPoly
     }
 }
 
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::ISquarePtr::ISquarePtr(ISquarePtr&& other) : Example::IPolygonPtr(std::move(other))
+{
+    mObject = other.mObject;
+    other.mObject = 0;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
+
 inline Example::ISquarePtr::ISquarePtr(Example::ISquarePtr::ECreateFromRawPointer, void *object_pointer, bool add_ref_object) : Example::IPolygonPtr(Example::IPolygonPtr::force_creating_from_raw_pointer, 0, false)
 {
     SetObject(object_pointer);
@@ -57,7 +65,7 @@ inline Example::ISquarePtr::ISquarePtr(Example::ISquarePtr::ECreateFromRawPointe
 
 inline Example::ISquarePtr::~ISquarePtr()
 {
-    if (mObject)
+    if (mObject && Example::IShapePtr::mObject)
     {
         example_i_square_release(mObject);
         SetObject(0);
@@ -68,7 +76,7 @@ inline Example::ISquarePtr& Example::ISquarePtr::operator=(const Example::ISquar
 {
     if (mObject != other.mObject)
     {
-        if (mObject)
+        if (mObject && Example::IShapePtr::mObject)
         {
             example_i_square_release(mObject);
             SetObject(0);
@@ -81,6 +89,24 @@ inline Example::ISquarePtr& Example::ISquarePtr::operator=(const Example::ISquar
     }
     return *this;
 }
+
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::ISquarePtr& Example::ISquarePtr::operator=(Example::ISquarePtr&& other)
+{
+    if (mObject != other.mObject)
+    {
+        if (mObject && Example::IShapePtr::mObject)
+        {
+            example_i_square_release(mObject);
+            SetObject(0);
+        }
+        Example::IPolygonPtr::operator=(std::move(other));
+        mObject = other.mObject;
+        other.mObject = 0;
+    }
+    return *this;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
 
 inline Example::ISquarePtr Example::ISquarePtr::Null()
 {

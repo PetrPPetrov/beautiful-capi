@@ -42,10 +42,16 @@ public:
     inline const char* GetArgumentName() const;
     
     inline BadArgument(const BadArgument& other);
+    #ifdef EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline BadArgument(BadArgument&& other);
+    #endif /* EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     enum ECreateFromRawPointer { force_creating_from_raw_pointer };
     inline BadArgument(ECreateFromRawPointer, void *object_pointer, bool copy_object);
     inline ~BadArgument();
     inline BadArgument& operator=(const BadArgument& other);
+    #ifdef EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline BadArgument& operator=(BadArgument&& other);
+    #endif /* EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     static inline BadArgument Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;

@@ -130,6 +130,14 @@ inline Example::Person::Person(const Person& other)
     }
 }
 
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::Person::Person(Person&& other)
+{
+    mObject = other.mObject;
+    other.mObject = 0;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
+
 inline Example::Person::Person(Example::Person::ECreateFromRawPointer, void *object_pointer, bool copy_object)
 {
     if (object_pointer && copy_object)
@@ -147,7 +155,7 @@ inline Example::Person::Person(Example::Person::ECreateFromRawPointer, void *obj
 
 inline Example::Person::~Person()
 {
-    if (mObject)
+    if (mObject && Example::Person::mObject)
     {
         example_person_delete(mObject);
         SetObject(0);
@@ -156,9 +164,9 @@ inline Example::Person::~Person()
 
 inline Example::Person& Example::Person::operator=(const Example::Person& other)
 {
-    if (mObject != other.mObject)
+    if (this != &other)
     {
-        if (mObject)
+        if (mObject && Example::Person::mObject)
         {
             example_person_delete(mObject);
             SetObject(0);
@@ -177,6 +185,23 @@ inline Example::Person& Example::Person::operator=(const Example::Person& other)
     }
     return *this;
 }
+
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::Person& Example::Person::operator=(Example::Person&& other)
+{
+    if (this != &other)
+    {
+        if (mObject && Example::Person::mObject)
+        {
+            example_person_delete(mObject);
+            SetObject(0);
+        }
+        mObject = other.mObject;
+        other.mObject = 0;
+    }
+    return *this;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
 
 inline Example::Person Example::Person::Null()
 {

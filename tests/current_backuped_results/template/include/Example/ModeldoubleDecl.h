@@ -45,10 +45,16 @@ public:
     inline void SetPosition(const Example::Position<double>& position);
     
     inline ModelPtr(const ModelPtr<double>& other);
+    #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline ModelPtr(ModelPtr<double>&& other);
+    #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     enum ECreateFromRawPointer { force_creating_from_raw_pointer };
     inline ModelPtr(ECreateFromRawPointer, void *object_pointer, bool add_ref_object);
     inline ~ModelPtr();
     inline ModelPtr<double>& operator=(const ModelPtr<double>& other);
+    #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline ModelPtr<double>& operator=(ModelPtr<double>&& other);
+    #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     static inline ModelPtr<double> Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;

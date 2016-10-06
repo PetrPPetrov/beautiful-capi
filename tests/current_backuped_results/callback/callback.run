@@ -31,8 +31,7 @@ Generic dtor
 NullArgument dtor
 BadArgument dtor
 Generic dtor
-CustomPrinterImplementation ctor
-CustomPrinterImplementation ctor
+CustomPrinterImplementation dtor
 PrinterBase dtor
 Person dtor
 ___std::cerr___

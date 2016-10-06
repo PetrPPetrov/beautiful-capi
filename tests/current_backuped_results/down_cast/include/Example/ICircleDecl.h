@@ -41,10 +41,16 @@ public:
     inline void SetRadius(double radius);
     
     inline ICirclePtr(const ICirclePtr& other);
+    #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline ICirclePtr(ICirclePtr&& other);
+    #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     enum ECreateFromRawPointer { force_creating_from_raw_pointer };
     inline ICirclePtr(ECreateFromRawPointer, void *object_pointer, bool add_ref_object);
     inline ~ICirclePtr();
     inline ICirclePtr& operator=(const ICirclePtr& other);
+    #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline ICirclePtr& operator=(ICirclePtr&& other);
+    #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     static inline ICirclePtr Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;

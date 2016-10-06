@@ -68,25 +68,27 @@
 #endif
 
 #ifdef __cplusplus
-
     #ifdef _MSC_VER
         #if _MSC_VER >= 1900
             #define CIRCULAR_NOEXCEPT noexcept
         #else /* _MSC_VER >= 1900 */
             #define CIRCULAR_NOEXCEPT
         #endif /* _MSC_VER >= 1900 */
-        #if _MSC_VER >= 1800
+        #if _MSC_VER >= 1600
             #define CIRCULAR_CPP_COMPILER_HAS_RVALUE_REFERENCES
+        #endif /* _MSC_VER >= 1600 */
+        #if _MSC_VER >= 1800
+            #define CIRCULAR_CPP_COMPILER_HAS_MOVE_CONSTRUCTOR_DELETE
         #endif /* _MSC_VER >= 1800 */
     #else /* _MSC_VER */
         #if __cplusplus >= 201103L
             #define CIRCULAR_NOEXCEPT noexcept
             #define CIRCULAR_CPP_COMPILER_HAS_RVALUE_REFERENCES
+            #define CIRCULAR_CPP_COMPILER_HAS_MOVE_CONSTRUCTOR_DELETE
         #else /* __cplusplus >= 201103L */
             #define CIRCULAR_NOEXCEPT
         #endif /* __cplusplus >= 201103L */
     #endif /* _MSC_VER */
-
 #endif /* __cplusplus */
 
 #ifndef CIRCULAR_CAPI_USE_DYNAMIC_LOADER
@@ -198,9 +200,9 @@
             
             Initialization();
             Initialization(const Initialization&);
-            #ifdef CIRCULAR_CPP_COMPILER_HAS_RVALUE_REFERENCES
+            #ifdef CIRCULAR_CPP_COMPILER_HAS_MOVE_CONSTRUCTOR_DELETE
                 Initialization(Initialization &&) = delete;
-            #endif /* CIRCULAR_CPP_COMPILER_HAS_RVALUE_REFERENCES */
+            #endif /* CIRCULAR_CPP_COMPILER_HAS_MOVE_CONSTRUCTOR_DELETE */
         public:
             Initialization(const char* shared_library_name)
             {

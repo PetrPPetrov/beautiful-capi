@@ -59,6 +59,14 @@ inline Example::Position4D<float>::Position4D(const Position4D<float>& other) : 
     }
 }
 
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::Position4D<float>::Position4D(Position4D<float>&& other) : Example::Position<float>(std::move(other))
+{
+    mObject = other.mObject;
+    other.mObject = 0;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
+
 inline Example::Position4D<float>::Position4D(Example::Position4D<float>::ECreateFromRawPointer, void *object_pointer, bool copy_object) : Example::Position<float>(Example::Position<float>::force_creating_from_raw_pointer, 0, false)
 {
     if (object_pointer && copy_object)
@@ -73,7 +81,7 @@ inline Example::Position4D<float>::Position4D(Example::Position4D<float>::ECreat
 
 inline Example::Position4D<float>::~Position4D()
 {
-    if (mObject)
+    if (mObject && Example::Position<float>::mObject)
     {
         example_position4_d_float_delete(mObject);
         SetObject(0);
@@ -82,9 +90,9 @@ inline Example::Position4D<float>::~Position4D()
 
 inline Example::Position4D<float>& Example::Position4D<float>::operator=(const Example::Position4D<float>& other)
 {
-    if (mObject != other.mObject)
+    if (this != &other)
     {
-        if (mObject)
+        if (mObject && Example::Position<float>::mObject)
         {
             example_position4_d_float_delete(mObject);
             SetObject(0);
@@ -100,6 +108,24 @@ inline Example::Position4D<float>& Example::Position4D<float>::operator=(const E
     }
     return *this;
 }
+
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::Position4D<float>& Example::Position4D<float>::operator=(Example::Position4D<float>&& other)
+{
+    if (this != &other)
+    {
+        if (mObject && Example::Position<float>::mObject)
+        {
+            example_position4_d_float_delete(mObject);
+            SetObject(0);
+        }
+        Example::Position<float>::operator=(std::move(other));
+        mObject = other.mObject;
+        other.mObject = 0;
+    }
+    return *this;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
 
 inline Example::Position4D<float> Example::Position4D<float>::Null()
 {

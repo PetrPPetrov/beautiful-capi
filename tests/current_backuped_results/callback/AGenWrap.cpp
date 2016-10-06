@@ -89,8 +89,6 @@ enum beautiful_capi_callback_exception_code_t
     #error "Unknown platform"
 #endif
 
-typedef void* (EXAMPLE_API_CONVENTION *example_printer_copy_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_printer_delete_callback_type)(void* object_pointer);
 typedef void (EXAMPLE_API_CONVENTION *example_printer_print_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* text);
 typedef void (EXAMPLE_API_CONVENTION *example_printer_set_printing_quality_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, int quality);
 typedef int (EXAMPLE_API_CONVENTION *example_printer_get_printing_quality_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
@@ -179,16 +177,12 @@ namespace Example {
 class AutoGen_Callback_Callback_PrinterImpl : public Example::PrinterBaseImpl
 {
     void* mObject;
-    example_printer_copy_callback_type copy_callback;
-    example_printer_delete_callback_type delete_callback;
     example_printer_print_callback_type print_callback;
     example_printer_set_printing_quality_callback_type set_printing_quality_callback;
     example_printer_get_printing_quality_callback_type get_printing_quality_callback;
     example_printer_get_device_type_callback_type get_device_type_callback;
 public:
     AutoGen_Callback_Callback_PrinterImpl() :
-        copy_callback(0),
-        delete_callback(0),
         print_callback(0),
         set_printing_quality_callback(0),
         get_printing_quality_callback(0),
@@ -197,51 +191,20 @@ public:
     {
     }
     AutoGen_Callback_Callback_PrinterImpl(const AutoGen_Callback_Callback_PrinterImpl& other) :
-        copy_callback(other.copy_callback),
-        delete_callback(other.delete_callback),
         print_callback(other.print_callback),
         set_printing_quality_callback(other.set_printing_quality_callback),
         get_printing_quality_callback(other.get_printing_quality_callback),
         get_device_type_callback(other.get_device_type_callback),
         mObject(other.mObject)
     {
-        if (mObject && copy_callback)
-        {
-            beautiful_capi_callback_exception_info_t exception_info;
-            void* result(copy_callback(&exception_info, mObject));
-            beautiful_capi_Callback::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
-            mObject = result;
-        }
-    }
-    ~AutoGen_Callback_Callback_PrinterImpl()
-    {
-        if (mObject && delete_callback)
-        {
-            delete_callback(mObject);
-        }
     }
     void SetObjectPointer(void* object_pointer)
     {
         mObject = object_pointer;
-        if (mObject && copy_callback)
-        {
-            beautiful_capi_callback_exception_info_t exception_info;
-            void* result(copy_callback(&exception_info, mObject));
-            beautiful_capi_Callback::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
-            mObject = result;
-        }
     }
     void* GetObjectPointer() const
     {
         return mObject;
-    }
-    void SetCFunctionForCopy(example_printer_copy_callback_type c_function_pointer)
-    {
-        copy_callback = c_function_pointer;
-    }
-    void SetCFunctionForDelete(example_printer_delete_callback_type c_function_pointer)
-    {
-        delete_callback = c_function_pointer;
     }
     void SetCFunctionForPrint(example_printer_print_callback_type c_function_pointer)
     {
@@ -2414,18 +2377,6 @@ EXCEPTION_API void* EXCEPTION_API_CONVENTION example_printer_callback_default(be
         }
     }
     return static_cast<void*>(0);
-}
-
-EXCEPTION_API void EXCEPTION_API_CONVENTION example_printer_callback_set_c_function_for_copy(void* object_pointer, example_printer_copy_callback_type c_function_pointer)
-{
-    Example::AutoGen_Callback_Callback_PrinterImpl* self = static_cast<Example::AutoGen_Callback_Callback_PrinterImpl*>(object_pointer);
-    self->SetCFunctionForCopy(c_function_pointer);
-}
-
-EXCEPTION_API void EXCEPTION_API_CONVENTION example_printer_callback_set_c_function_for_delete(void* object_pointer, example_printer_delete_callback_type c_function_pointer)
-{
-    Example::AutoGen_Callback_Callback_PrinterImpl* self = static_cast<Example::AutoGen_Callback_Callback_PrinterImpl*>(object_pointer);
-    self->SetCFunctionForDelete(c_function_pointer);
 }
 
 EXCEPTION_API void EXCEPTION_API_CONVENTION example_printer_callback_set_object_pointer(void* object_pointer, void* custom_object)

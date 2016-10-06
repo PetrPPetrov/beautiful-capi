@@ -61,6 +61,14 @@ inline Example::DocumentPtr::DocumentPtr(const DocumentPtr& other)
     }
 }
 
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::DocumentPtr::DocumentPtr(DocumentPtr&& other)
+{
+    mObject = other.mObject;
+    other.mObject = 0;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
+
 inline Example::DocumentPtr::DocumentPtr(Example::DocumentPtr::ECreateFromRawPointer, void *object_pointer, bool add_ref_object)
 {
     SetObject(object_pointer);
@@ -72,7 +80,7 @@ inline Example::DocumentPtr::DocumentPtr(Example::DocumentPtr::ECreateFromRawPoi
 
 inline Example::DocumentPtr::~DocumentPtr()
 {
-    if (mObject)
+    if (mObject && Example::DocumentPtr::mObject)
     {
         example_document_release(mObject);
         SetObject(0);
@@ -83,7 +91,7 @@ inline Example::DocumentPtr& Example::DocumentPtr::operator=(const Example::Docu
 {
     if (mObject != other.mObject)
     {
-        if (mObject)
+        if (mObject && Example::DocumentPtr::mObject)
         {
             example_document_release(mObject);
             SetObject(0);
@@ -96,6 +104,23 @@ inline Example::DocumentPtr& Example::DocumentPtr::operator=(const Example::Docu
     }
     return *this;
 }
+
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::DocumentPtr& Example::DocumentPtr::operator=(Example::DocumentPtr&& other)
+{
+    if (mObject != other.mObject)
+    {
+        if (mObject && Example::DocumentPtr::mObject)
+        {
+            example_document_release(mObject);
+            SetObject(0);
+        }
+        mObject = other.mObject;
+        other.mObject = 0;
+    }
+    return *this;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
 
 inline Example::DocumentPtr Example::DocumentPtr::Null()
 {

@@ -33,9 +33,9 @@ def generate_copy_semantic_callback_members(out: FileGenerator, callback_names, 
 
 
 def generate_reference_counted_semantic_callback_members(out: FileGenerator, callback_names, class_generator):
-    out.put_line('{0} add_ref_callback;'.format(class_generator.add_ref_callback_type))
+    out.put_line('{0} add_ref_callback;'.format(class_generator.base_class_generator.add_ref_callback_type))
     callback_names.append('add_ref_callback')
-    out.put_line('{0} release_callback;'.format(class_generator.release_callback_type))
+    out.put_line('{0} release_callback;'.format(class_generator.base_class_generator.release_callback_type))
     callback_names.append('release_callback')
 
 
@@ -119,10 +119,11 @@ def generate_callback_implementation_destructor_body(out: FileGenerator, class_g
 
 
 def generate_callback_implementation_destructor(out: FileGenerator, callback, impl_class_name, class_generator):
-    out.put_line('~{0}()'.format(impl_class_name))
     if callback.lifecycle == TLifecycle.copy_semantic:
+        out.put_line('~{0}()'.format(impl_class_name))
         generate_callback_implementation_destructor_body(out, class_generator, 'delete_callback')
     elif callback.lifecycle == TLifecycle.reference_counted:
+        out.put_line('~{0}()'.format(impl_class_name))
         generate_callback_implementation_destructor_body(out, class_generator, 'release_callback')
 
 

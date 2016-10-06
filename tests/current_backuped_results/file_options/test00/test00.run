@@ -2,8 +2,6 @@
 ___std::cout___
 Body ctor
 Body copy ctor
-Body dtor
-Body copy ctor
 Name: new name
 Name: modified name in object copy
 Body dtor

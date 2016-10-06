@@ -64,6 +64,14 @@ inline Example::Dumper::Dumper(const Dumper& other)
     }
 }
 
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::Dumper::Dumper(Dumper&& other)
+{
+    mObject = other.mObject;
+    other.mObject = 0;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
+
 inline Example::Dumper::Dumper(Example::Dumper::ECreateFromRawPointer, void *object_pointer, bool copy_object)
 {
     if (object_pointer && copy_object)
@@ -78,7 +86,7 @@ inline Example::Dumper::Dumper(Example::Dumper::ECreateFromRawPointer, void *obj
 
 inline Example::Dumper::~Dumper()
 {
-    if (mObject)
+    if (mObject && Example::Dumper::mObject)
     {
         example_dumper_delete(mObject);
         SetObject(0);
@@ -87,9 +95,9 @@ inline Example::Dumper::~Dumper()
 
 inline Example::Dumper& Example::Dumper::operator=(const Example::Dumper& other)
 {
-    if (mObject != other.mObject)
+    if (this != &other)
     {
-        if (mObject)
+        if (mObject && Example::Dumper::mObject)
         {
             example_dumper_delete(mObject);
             SetObject(0);
@@ -105,6 +113,23 @@ inline Example::Dumper& Example::Dumper::operator=(const Example::Dumper& other)
     }
     return *this;
 }
+
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::Dumper& Example::Dumper::operator=(Example::Dumper&& other)
+{
+    if (this != &other)
+    {
+        if (mObject && Example::Dumper::mObject)
+        {
+            example_dumper_delete(mObject);
+            SetObject(0);
+        }
+        mObject = other.mObject;
+        other.mObject = 0;
+    }
+    return *this;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
 
 inline Example::Dumper Example::Dumper::Null()
 {

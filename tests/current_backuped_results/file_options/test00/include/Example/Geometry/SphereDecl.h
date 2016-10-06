@@ -42,10 +42,16 @@ public:
     inline void SetRadius(double value);
     
     inline Sphere(const Sphere& other);
+    #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline Sphere(Sphere&& other);
+    #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     enum ECreateFromRawPointer { force_creating_from_raw_pointer };
     inline Sphere(ECreateFromRawPointer, void *object_pointer, bool copy_object);
     inline ~Sphere();
     inline Sphere& operator=(const Sphere& other);
+    #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline Sphere& operator=(Sphere&& other);
+    #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     static inline Sphere Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;

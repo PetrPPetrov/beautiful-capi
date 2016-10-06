@@ -39,8 +39,6 @@ class PrinterCallbackPtr: public Example::PrinterPtr
 {
 public:
     inline PrinterCallbackPtr();
-    inline void SetCFunctionForCopy(example_printer_copy_callback_type c_function_pointer);
-    inline void SetCFunctionForDelete(example_printer_delete_callback_type c_function_pointer);
     inline void SetObjectPointer(void* custom_object);
     inline void* GetObjectPointer() const;
     inline void SetCFunctionForPrint(example_printer_print_callback_type c_function_pointer);
@@ -49,10 +47,16 @@ public:
     inline void SetCFunctionForGetDeviceType(example_printer_get_device_type_callback_type c_function_pointer);
     
     inline PrinterCallbackPtr(const PrinterCallbackPtr& other);
+    #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline PrinterCallbackPtr(PrinterCallbackPtr&& other);
+    #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     enum ECreateFromRawPointer { force_creating_from_raw_pointer };
     inline PrinterCallbackPtr(ECreateFromRawPointer, void *object_pointer, bool add_ref_object);
     inline ~PrinterCallbackPtr();
     inline PrinterCallbackPtr& operator=(const PrinterCallbackPtr& other);
+    #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline PrinterCallbackPtr& operator=(PrinterCallbackPtr&& other);
+    #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     static inline PrinterCallbackPtr Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;

@@ -41,6 +41,14 @@ inline Example::IShapeRawPtr::IShapeRawPtr(const IShapeRawPtr& other)
     SetObject(other.mObject);
 }
 
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::IShapeRawPtr::IShapeRawPtr(IShapeRawPtr&& other)
+{
+    mObject = other.mObject;
+    other.mObject = 0;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
+
 inline Example::IShapeRawPtr::IShapeRawPtr(Example::IShapeRawPtr::ECreateFromRawPointer, void *object_pointer, bool)
 {
     SetObject(object_pointer);
@@ -48,7 +56,7 @@ inline Example::IShapeRawPtr::IShapeRawPtr(Example::IShapeRawPtr::ECreateFromRaw
 
 inline void Example::IShapeRawPtr::Delete()
 {
-    if (mObject)
+    if (mObject && Example::IShapeRawPtr::mObject)
     {
         example_i_shape_delete(mObject);
         SetObject(0);
@@ -57,9 +65,24 @@ inline void Example::IShapeRawPtr::Delete()
 
 inline Example::IShapeRawPtr& Example::IShapeRawPtr::operator=(const Example::IShapeRawPtr& other)
 {
-    SetObject(other.mObject);
+    if (this != &other)
+    {
+        SetObject(other.mObject);
+    }
     return *this;
 }
+
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::IShapeRawPtr& Example::IShapeRawPtr::operator=(Example::IShapeRawPtr&& other)
+{
+    if (this != &other)
+    {
+        mObject = other.mObject;
+        other.mObject = 0;
+    }
+    return *this;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
 
 inline Example::IShapeRawPtr Example::IShapeRawPtr::Null()
 {

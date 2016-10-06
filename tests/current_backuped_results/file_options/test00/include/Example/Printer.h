@@ -53,6 +53,14 @@ inline Example::Printer::Printer(const Printer& other)
     }
 }
 
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::Printer::Printer(Printer&& other)
+{
+    mObject = other.mObject;
+    other.mObject = 0;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
+
 inline Example::Printer::Printer(Example::Printer::ECreateFromRawPointer, void *object_pointer, bool copy_object)
 {
     if (object_pointer && copy_object)
@@ -67,7 +75,7 @@ inline Example::Printer::Printer(Example::Printer::ECreateFromRawPointer, void *
 
 inline Example::Printer::~Printer()
 {
-    if (mObject)
+    if (mObject && Example::Printer::mObject)
     {
         example_printer_delete(mObject);
         SetObject(0);
@@ -76,9 +84,9 @@ inline Example::Printer::~Printer()
 
 inline Example::Printer& Example::Printer::operator=(const Example::Printer& other)
 {
-    if (mObject != other.mObject)
+    if (this != &other)
     {
-        if (mObject)
+        if (mObject && Example::Printer::mObject)
         {
             example_printer_delete(mObject);
             SetObject(0);
@@ -94,6 +102,23 @@ inline Example::Printer& Example::Printer::operator=(const Example::Printer& oth
     }
     return *this;
 }
+
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::Printer& Example::Printer::operator=(Example::Printer&& other)
+{
+    if (this != &other)
+    {
+        if (mObject && Example::Printer::mObject)
+        {
+            example_printer_delete(mObject);
+            SetObject(0);
+        }
+        mObject = other.mObject;
+        other.mObject = 0;
+    }
+    return *this;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
 
 inline Example::Printer Example::Printer::Null()
 {

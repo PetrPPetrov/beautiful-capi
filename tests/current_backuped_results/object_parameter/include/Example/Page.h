@@ -65,6 +65,14 @@ inline Example::PagePtr::PagePtr(const PagePtr& other)
     }
 }
 
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::PagePtr::PagePtr(PagePtr&& other)
+{
+    mObject = other.mObject;
+    other.mObject = 0;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
+
 inline Example::PagePtr::PagePtr(Example::PagePtr::ECreateFromRawPointer, void *object_pointer, bool add_ref_object)
 {
     SetObject(object_pointer);
@@ -76,7 +84,7 @@ inline Example::PagePtr::PagePtr(Example::PagePtr::ECreateFromRawPointer, void *
 
 inline Example::PagePtr::~PagePtr()
 {
-    if (mObject)
+    if (mObject && Example::PagePtr::mObject)
     {
         example_page_release(mObject);
         SetObject(0);
@@ -87,7 +95,7 @@ inline Example::PagePtr& Example::PagePtr::operator=(const Example::PagePtr& oth
 {
     if (mObject != other.mObject)
     {
-        if (mObject)
+        if (mObject && Example::PagePtr::mObject)
         {
             example_page_release(mObject);
             SetObject(0);
@@ -100,6 +108,23 @@ inline Example::PagePtr& Example::PagePtr::operator=(const Example::PagePtr& oth
     }
     return *this;
 }
+
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::PagePtr& Example::PagePtr::operator=(Example::PagePtr&& other)
+{
+    if (mObject != other.mObject)
+    {
+        if (mObject && Example::PagePtr::mObject)
+        {
+            example_page_release(mObject);
+            SetObject(0);
+        }
+        mObject = other.mObject;
+        other.mObject = 0;
+    }
+    return *this;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
 
 inline Example::PagePtr Example::PagePtr::Null()
 {

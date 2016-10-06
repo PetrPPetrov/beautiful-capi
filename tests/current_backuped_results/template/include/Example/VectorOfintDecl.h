@@ -45,10 +45,16 @@ public:
     inline int GetItem(int index) const;
     
     inline VectorOf(const VectorOf<int>& other);
+    #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline VectorOf(VectorOf<int>&& other);
+    #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     enum ECreateFromRawPointer { force_creating_from_raw_pointer };
     inline VectorOf(ECreateFromRawPointer, void *object_pointer, bool copy_object);
     inline ~VectorOf();
     inline VectorOf<int>& operator=(const VectorOf<int>& other);
+    #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline VectorOf<int>& operator=(VectorOf<int>&& other);
+    #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     static inline VectorOf<int> Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;

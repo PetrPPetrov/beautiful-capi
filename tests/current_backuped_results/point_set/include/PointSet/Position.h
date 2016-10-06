@@ -83,6 +83,14 @@ inline PointSet::Position::Position(const Position& other)
     }
 }
 
+#ifdef POINTSET_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline PointSet::Position::Position(Position&& other)
+{
+    mObject = other.mObject;
+    other.mObject = 0;
+}
+#endif /* POINTSET_CPP_COMPILER_HAS_RVALUE_REFERENCES */
+
 inline PointSet::Position::Position(PointSet::Position::ECreateFromRawPointer, void *object_pointer, bool copy_object)
 {
     if (object_pointer && copy_object)
@@ -97,7 +105,7 @@ inline PointSet::Position::Position(PointSet::Position::ECreateFromRawPointer, v
 
 inline PointSet::Position::~Position()
 {
-    if (mObject)
+    if (mObject && PointSet::Position::mObject)
     {
         point_set_position_delete(mObject);
         SetObject(0);
@@ -106,9 +114,9 @@ inline PointSet::Position::~Position()
 
 inline PointSet::Position& PointSet::Position::operator=(const PointSet::Position& other)
 {
-    if (mObject != other.mObject)
+    if (this != &other)
     {
-        if (mObject)
+        if (mObject && PointSet::Position::mObject)
         {
             point_set_position_delete(mObject);
             SetObject(0);
@@ -124,6 +132,23 @@ inline PointSet::Position& PointSet::Position::operator=(const PointSet::Positio
     }
     return *this;
 }
+
+#ifdef POINTSET_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline PointSet::Position& PointSet::Position::operator=(PointSet::Position&& other)
+{
+    if (this != &other)
+    {
+        if (mObject && PointSet::Position::mObject)
+        {
+            point_set_position_delete(mObject);
+            SetObject(0);
+        }
+        mObject = other.mObject;
+        other.mObject = 0;
+    }
+    return *this;
+}
+#endif /* POINTSET_CPP_COMPILER_HAS_RVALUE_REFERENCES */
 
 inline PointSet::Position PointSet::Position::Null()
 {

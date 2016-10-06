@@ -43,10 +43,16 @@ public:
     inline void SetPage(const Example::PagePtr& value);
     
     inline DocumentPtr(const DocumentPtr& other);
+    #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline DocumentPtr(DocumentPtr&& other);
+    #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     enum ECreateFromRawPointer { force_creating_from_raw_pointer };
     inline DocumentPtr(ECreateFromRawPointer, void *object_pointer, bool add_ref_object);
     inline ~DocumentPtr();
     inline DocumentPtr& operator=(const DocumentPtr& other);
+    #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline DocumentPtr& operator=(DocumentPtr&& other);
+    #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     static inline DocumentPtr Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;

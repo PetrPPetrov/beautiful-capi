@@ -47,10 +47,16 @@ public:
     inline void Clear();
     
     inline PointsPtr(const PointsPtr& other);
+    #ifdef POINTSET_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline PointsPtr(PointsPtr&& other);
+    #endif /* POINTSET_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     enum ECreateFromRawPointer { force_creating_from_raw_pointer };
     inline PointsPtr(ECreateFromRawPointer, void *object_pointer, bool add_ref_object);
     inline ~PointsPtr();
     inline PointsPtr& operator=(const PointsPtr& other);
+    #ifdef POINTSET_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline PointsPtr& operator=(PointsPtr&& other);
+    #endif /* POINTSET_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     static inline PointsPtr Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;

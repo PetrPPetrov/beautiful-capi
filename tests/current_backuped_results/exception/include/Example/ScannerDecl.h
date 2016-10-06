@@ -43,10 +43,16 @@ public:
     inline void PowerOff();
     
     inline ScannerPtr(const ScannerPtr& other);
+    #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline ScannerPtr(ScannerPtr&& other);
+    #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     enum ECreateFromRawPointer { force_creating_from_raw_pointer };
     inline ScannerPtr(ECreateFromRawPointer, void *object_pointer, bool add_ref_object);
     inline ~ScannerPtr();
     inline ScannerPtr& operator=(const ScannerPtr& other);
+    #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline ScannerPtr& operator=(ScannerPtr&& other);
+    #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     static inline ScannerPtr Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;

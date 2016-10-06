@@ -69,6 +69,14 @@ inline Example::ScannerPtr::ScannerPtr(const ScannerPtr& other)
     }
 }
 
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::ScannerPtr::ScannerPtr(ScannerPtr&& other)
+{
+    mObject = other.mObject;
+    other.mObject = 0;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
+
 inline Example::ScannerPtr::ScannerPtr(Example::ScannerPtr::ECreateFromRawPointer, void *object_pointer, bool add_ref_object)
 {
     SetObject(object_pointer);
@@ -80,7 +88,7 @@ inline Example::ScannerPtr::ScannerPtr(Example::ScannerPtr::ECreateFromRawPointe
 
 inline Example::ScannerPtr::~ScannerPtr()
 {
-    if (mObject)
+    if (mObject && Example::ScannerPtr::mObject)
     {
         example_scanner_release(mObject);
         SetObject(0);
@@ -91,7 +99,7 @@ inline Example::ScannerPtr& Example::ScannerPtr::operator=(const Example::Scanne
 {
     if (mObject != other.mObject)
     {
-        if (mObject)
+        if (mObject && Example::ScannerPtr::mObject)
         {
             example_scanner_release(mObject);
             SetObject(0);
@@ -104,6 +112,23 @@ inline Example::ScannerPtr& Example::ScannerPtr::operator=(const Example::Scanne
     }
     return *this;
 }
+
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::ScannerPtr& Example::ScannerPtr::operator=(Example::ScannerPtr&& other)
+{
+    if (mObject != other.mObject)
+    {
+        if (mObject && Example::ScannerPtr::mObject)
+        {
+            example_scanner_release(mObject);
+            SetObject(0);
+        }
+        mObject = other.mObject;
+        other.mObject = 0;
+    }
+    return *this;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
 
 inline Example::ScannerPtr Example::ScannerPtr::Null()
 {

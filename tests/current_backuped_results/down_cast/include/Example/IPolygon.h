@@ -46,6 +46,14 @@ inline Example::IPolygonPtr::IPolygonPtr(const IPolygonPtr& other) : Example::IS
     }
 }
 
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::IPolygonPtr::IPolygonPtr(IPolygonPtr&& other) : Example::IShapePtr(std::move(other))
+{
+    mObject = other.mObject;
+    other.mObject = 0;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
+
 inline Example::IPolygonPtr::IPolygonPtr(Example::IPolygonPtr::ECreateFromRawPointer, void *object_pointer, bool add_ref_object) : Example::IShapePtr(Example::IShapePtr::force_creating_from_raw_pointer, 0, false)
 {
     SetObject(object_pointer);
@@ -57,7 +65,7 @@ inline Example::IPolygonPtr::IPolygonPtr(Example::IPolygonPtr::ECreateFromRawPoi
 
 inline Example::IPolygonPtr::~IPolygonPtr()
 {
-    if (mObject)
+    if (mObject && Example::IShapePtr::mObject)
     {
         example_i_polygon_release(mObject);
         SetObject(0);
@@ -68,7 +76,7 @@ inline Example::IPolygonPtr& Example::IPolygonPtr::operator=(const Example::IPol
 {
     if (mObject != other.mObject)
     {
-        if (mObject)
+        if (mObject && Example::IShapePtr::mObject)
         {
             example_i_polygon_release(mObject);
             SetObject(0);
@@ -81,6 +89,24 @@ inline Example::IPolygonPtr& Example::IPolygonPtr::operator=(const Example::IPol
     }
     return *this;
 }
+
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::IPolygonPtr& Example::IPolygonPtr::operator=(Example::IPolygonPtr&& other)
+{
+    if (mObject != other.mObject)
+    {
+        if (mObject && Example::IShapePtr::mObject)
+        {
+            example_i_polygon_release(mObject);
+            SetObject(0);
+        }
+        Example::IShapePtr::operator=(std::move(other));
+        mObject = other.mObject;
+        other.mObject = 0;
+    }
+    return *this;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
 
 inline Example::IPolygonPtr Example::IPolygonPtr::Null()
 {

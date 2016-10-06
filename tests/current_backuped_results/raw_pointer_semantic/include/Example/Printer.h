@@ -46,6 +46,14 @@ inline Example::PrinterRawPtr::PrinterRawPtr(const PrinterRawPtr& other)
     SetObject(other.mObject);
 }
 
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::PrinterRawPtr::PrinterRawPtr(PrinterRawPtr&& other)
+{
+    mObject = other.mObject;
+    other.mObject = 0;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
+
 inline Example::PrinterRawPtr::PrinterRawPtr(Example::PrinterRawPtr::ECreateFromRawPointer, void *object_pointer, bool)
 {
     SetObject(object_pointer);
@@ -53,7 +61,7 @@ inline Example::PrinterRawPtr::PrinterRawPtr(Example::PrinterRawPtr::ECreateFrom
 
 inline void Example::PrinterRawPtr::Delete()
 {
-    if (mObject)
+    if (mObject && Example::PrinterRawPtr::mObject)
     {
         example_printer_delete(mObject);
         SetObject(0);
@@ -62,9 +70,24 @@ inline void Example::PrinterRawPtr::Delete()
 
 inline Example::PrinterRawPtr& Example::PrinterRawPtr::operator=(const Example::PrinterRawPtr& other)
 {
-    SetObject(other.mObject);
+    if (this != &other)
+    {
+        SetObject(other.mObject);
+    }
     return *this;
 }
+
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::PrinterRawPtr& Example::PrinterRawPtr::operator=(Example::PrinterRawPtr&& other)
+{
+    if (this != &other)
+    {
+        mObject = other.mObject;
+        other.mObject = 0;
+    }
+    return *this;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
 
 inline Example::PrinterRawPtr Example::PrinterRawPtr::Null()
 {

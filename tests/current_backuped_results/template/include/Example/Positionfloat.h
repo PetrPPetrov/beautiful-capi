@@ -78,6 +78,14 @@ inline Example::Position<float>::Position(const Position<float>& other)
     }
 }
 
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::Position<float>::Position(Position<float>&& other)
+{
+    mObject = other.mObject;
+    other.mObject = 0;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
+
 inline Example::Position<float>::Position(Example::Position<float>::ECreateFromRawPointer, void *object_pointer, bool copy_object)
 {
     if (object_pointer && copy_object)
@@ -92,7 +100,7 @@ inline Example::Position<float>::Position(Example::Position<float>::ECreateFromR
 
 inline Example::Position<float>::~Position()
 {
-    if (mObject)
+    if (mObject && Example::Position<float>::mObject)
     {
         example_position_float_delete(mObject);
         SetObject(0);
@@ -101,9 +109,9 @@ inline Example::Position<float>::~Position()
 
 inline Example::Position<float>& Example::Position<float>::operator=(const Example::Position<float>& other)
 {
-    if (mObject != other.mObject)
+    if (this != &other)
     {
-        if (mObject)
+        if (mObject && Example::Position<float>::mObject)
         {
             example_position_float_delete(mObject);
             SetObject(0);
@@ -119,6 +127,23 @@ inline Example::Position<float>& Example::Position<float>::operator=(const Examp
     }
     return *this;
 }
+
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::Position<float>& Example::Position<float>::operator=(Example::Position<float>&& other)
+{
+    if (this != &other)
+    {
+        if (mObject && Example::Position<float>::mObject)
+        {
+            example_position_float_delete(mObject);
+            SetObject(0);
+        }
+        mObject = other.mObject;
+        other.mObject = 0;
+    }
+    return *this;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
 
 inline Example::Position<float> Example::Position<float>::Null()
 {

@@ -51,6 +51,10 @@ class RequiresCastToBase(object):
                         base_class=class_generator.base_class_generator.full_wrap_name))
 
     @staticmethod
+    def generate_object_assignment(out: FileGenerator, class_generator, prefix: str, expression: str):
+        out.put_line('{prefix}mObject = {expression};'.format(prefix=prefix, expression=expression))
+
+    @staticmethod
     def generate_c_functions(class_generator):
         if class_generator.base_class_generator:
             body = FileGenerator(None)
@@ -87,6 +91,11 @@ class SimpleCase(object):
                     base_class=class_generator.base_class_generator.full_wrap_name))
             else:
                 out.put_line('mObject = raw_pointer;')
+
+    @staticmethod
+    def generate_object_assignment(out: FileGenerator, class_generator, prefix: str, expression: str):
+        if not class_generator.base_class_generator:
+            RequiresCastToBase().generate_object_assignment(out, class_generator, prefix, expression)
 
     def generate_c_functions(self, class_generator):
         pass

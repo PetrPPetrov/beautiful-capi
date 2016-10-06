@@ -22,7 +22,7 @@
 
 from Parser import TLifecycle
 from ParamsParser import TBeautifulCapiParams
-from FileGenerator import FileGenerator, IndentScope
+from FileGenerator import FileGenerator, IndentScope, IfDefScope
 from ArgumentGenerator import BuiltinTypeGenerator, ThisArgumentGenerator
 from Helpers import BeautifulCapiException
 
@@ -33,6 +33,17 @@ def get_base_init(class_generator):
             class_generator.base_class_generator.full_wrap_name)
     else:
         return ''
+
+
+def get_base_move_init(class_generator):
+    if class_generator.base_class_generator:
+        return ' : {0}(std::move(other))'.format(class_generator.base_class_generator.full_wrap_name)
+    else:
+        return ''
+
+
+def get_has_rvalue_references(class_generator) -> str:
+    return class_generator.full_name_array[0].upper() + '_CPP_COMPILER_HAS_RVALUE_REFERENCES'
 
 
 class LifecycleTraits(object):
@@ -65,10 +76,21 @@ class LifecycleTraits(object):
             class_short_name=class_generator.wrap_short_name,
             class_name=class_generator.wrap_name))
 
+    def generate_move_constructor_declaration(self, out: FileGenerator, class_generator):
+        if self.params.enable_cpp11_features_in_wrap_code:
+            with IfDefScope(out, get_has_rvalue_references(class_generator), False):
+                out.put_line('inline {class_short_name}({class_name}&& other);'.format(
+                    class_short_name=class_generator.wrap_short_name,
+                    class_name=class_generator.wrap_name))
+
     def generate_std_methods_declarations(self, out: FileGenerator, class_generator):
         self.__create_exception_traits(class_generator)
         out.put_line('inline {class_name}& operator=(const {class_name}& other);'.format(
             class_name=class_generator.wrap_name))
+        if self.params.enable_cpp11_features_in_wrap_code:
+            with IfDefScope(out, get_has_rvalue_references(class_generator), False):
+                out.put_line('inline {class_name}& operator=({class_name}&& other);'.format(
+                    class_name=class_generator.wrap_name))
         out.put_line('static inline {class_name} {null_method}();'.format(
             class_name=class_generator.wrap_name,
             null_method=self.params.null_method_name))
@@ -78,6 +100,21 @@ class LifecycleTraits(object):
         out.put_line('inline void* {detach_method}();'.format(detach_method=self.params.detach_method_name))
         out.put_line('inline void* {get_raw_pointer_method}() const;'.format(
             get_raw_pointer_method=self.params.get_raw_pointer_method_name))
+
+    def generate_move_constructor_definition(self, out: FileGenerator, class_generator):
+        if self.params.enable_cpp11_features_in_wrap_code:
+            with IfDefScope(out, get_has_rvalue_references(class_generator), False):
+                out.put_line('inline {namespace}::{class_short_name}({class_name}&& other){base_init}'.format(
+                    namespace=class_generator.full_wrap_name,
+                    class_short_name=class_generator.wrap_short_name,
+                    class_name=class_generator.wrap_name,
+                    base_init=get_base_move_init(class_generator))
+                )
+                with IndentScope(out):
+                    class_generator.inheritance_traits.generate_object_assignment(
+                        out, class_generator, '', 'other.mObject')
+                    class_generator.inheritance_traits.generate_object_assignment(
+                        out, class_generator, 'other.', '0')
 
     def generate_std_methods_definitions(self, out: FileGenerator, class_generator):
         out.put_line('inline {class_name} {class_name}::{null_method}()'.format(
@@ -156,6 +193,7 @@ class CopySemantic(LifecycleTraits):
 
     def generate_std_methods_declarations(self, out: FileGenerator, class_generator):
         super().generate_copy_constructor_declaration(out, class_generator)
+        super().generate_move_constructor_declaration(out, class_generator)
         out.put_line('enum ECreateFromRawPointer { force_creating_from_raw_pointer };')
         out.put_line('inline {class_name}(ECreateFromRawPointer, void *object_pointer, bool copy_object);'.format(
             class_name=class_generator.wrap_short_name))
@@ -200,29 +238,29 @@ class CopySemantic(LifecycleTraits):
             with IndentScope(out):
                 out.put_line('SetObject(object_pointer);')
 
+    def __generate_deallocate(self, out: FileGenerator, class_generator):
+        out.put_line('if (mObject && {the_most_basic}::mObject)'.format(
+            the_most_basic=class_generator.the_most_basic.full_wrap_name))
+        with IndentScope(out):
+            self.finish_method_exception_traits.generate_c_call(
+                out, BuiltinTypeGenerator('void'), class_generator.delete_method, ['mObject'])
+            out.put_line('SetObject(0);')
+
     def __generate_destructor(self, out: FileGenerator, class_generator):
         out.put_line('inline {namespace}::~{class_name}()'.format(
             namespace=class_generator.full_wrap_name,
             class_name=class_generator.wrap_short_name)
         )
         with IndentScope(out):
-            out.put_line('if (mObject)')
-            with IndentScope(out):
-                self.finish_method_exception_traits.generate_c_call(
-                    out, BuiltinTypeGenerator('void'), class_generator.delete_method, ['mObject'])
-                out.put_line('SetObject(0);')
+            self.__generate_deallocate(out, class_generator)
 
     def __generate_assignment_operator(self, out: FileGenerator, class_generator):
         out.put_line('inline {class_name}& {class_name}::operator=(const {class_name}& other)'.format(
             class_name=class_generator.full_wrap_name))
         with IndentScope(out):
-            out.put_line('if (mObject != other.mObject)')
+            out.put_line('if (this != &other)')
             with IndentScope(out):
-                out.put_line('if (mObject)')
-                with IndentScope(out):
-                    self.finish_method_exception_traits.generate_c_call(
-                        out, BuiltinTypeGenerator('void'), class_generator.delete_method, ['mObject'])
-                    out.put_line('SetObject(0);')
+                self.__generate_deallocate(out, class_generator)
                 out.put_line('if (other.mObject)')
                 with IndentScope(out):
                     copy_result = self.init_method_exception_traits.generate_c_call(
@@ -233,14 +271,36 @@ class CopySemantic(LifecycleTraits):
                     out.put_line('SetObject(0);')
             out.put_line('return *this;')
 
+    def __generate_move_assignment_definition(self, out: FileGenerator, class_generator):
+        if self.params.enable_cpp11_features_in_wrap_code:
+            with IfDefScope(out, get_has_rvalue_references(class_generator), False):
+                out.put_line('inline {class_name}& {class_name}::operator=({class_name}&& other)'.format(
+                    class_name=class_generator.full_wrap_name))
+                with IndentScope(out):
+                    out.put_line('if (this != &other)')
+                    with IndentScope(out):
+                        self.__generate_deallocate(out, class_generator)
+                        if class_generator.base_class_generator:
+                            out.put_line('{0}::operator=(std::move(other));'.format(
+                                class_generator.base_class_generator.full_wrap_name))
+                        class_generator.inheritance_traits.generate_object_assignment(
+                            out, class_generator, '', 'other.mObject')
+                        class_generator.inheritance_traits.generate_object_assignment(
+                            out, class_generator, 'other.', '0')
+                    out.put_line('return *this;')
+
     def generate_std_methods_definitions(self, out: FileGenerator, class_generator):
         self.__generate_copy_constructor_definition(out, class_generator)
+        out.put_line('')
+        super().generate_move_constructor_definition(out, class_generator)
         out.put_line('')
         self.__generate_raw_copy_constructor_definition(out, class_generator)
         out.put_line('')
         self.__generate_destructor(out, class_generator)
         out.put_line('')
         self.__generate_assignment_operator(out, class_generator)
+        out.put_line('')
+        self.__generate_move_assignment_definition(out, class_generator)
         out.put_line('')
         super().generate_std_methods_definitions(out, class_generator)
 
@@ -309,6 +369,7 @@ class RawPointerSemantic(LifecycleTraits):
 
     def generate_std_methods_declarations(self, out: FileGenerator, class_generator):
         super().generate_copy_constructor_declaration(out, class_generator)
+        super().generate_move_constructor_declaration(out, class_generator)
         out.put_line('enum ECreateFromRawPointer { force_creating_from_raw_pointer };')
         out.put_line('inline {class_name}(ECreateFromRawPointer, void *object_pointer, bool);'.format(
             class_name=class_generator.wrap_short_name))
@@ -347,7 +408,8 @@ class RawPointerSemantic(LifecycleTraits):
         out.put_line('inline void {class_name}::{delete_method}()'.format(
             class_name=class_generator.full_wrap_name, delete_method=self.params.delete_method_name))
         with IndentScope(out):
-            out.put_line('if (mObject)')
+            out.put_line('if (mObject && {the_most_basic}::mObject)'.format(
+                the_most_basic=class_generator.the_most_basic.full_wrap_name))
             with IndentScope(out):
                 self.finish_method_exception_traits.generate_c_call(
                     out, BuiltinTypeGenerator('void'), class_generator.delete_method, ['mObject'])
@@ -358,17 +420,40 @@ class RawPointerSemantic(LifecycleTraits):
         out.put_line('inline {class_name}& {class_name}::operator=(const {class_name}& other)'.format(
             class_name=class_generator.full_wrap_name))
         with IndentScope(out):
-            out.put_line('SetObject(other.mObject);')
+            out.put_line('if (this != &other)')
+            with IndentScope(out):
+                out.put_line('SetObject(other.mObject);')
             out.put_line('return *this;')
+
+    def __generate_move_assignment_definition(self, out: FileGenerator, class_generator):
+        if self.params.enable_cpp11_features_in_wrap_code:
+            with IfDefScope(out, get_has_rvalue_references(class_generator), False):
+                out.put_line('inline {class_name}& {class_name}::operator=({class_name}&& other)'.format(
+                    class_name=class_generator.full_wrap_name))
+                with IndentScope(out):
+                    out.put_line('if (this != &other)')
+                    with IndentScope(out):
+                        if class_generator.base_class_generator:
+                            out.put_line('{0}::operator=(std::move(other));'.format(
+                                class_generator.base_class_generator.full_wrap_name))
+                        class_generator.inheritance_traits.generate_object_assignment(
+                            out, class_generator, '', 'other.mObject')
+                        class_generator.inheritance_traits.generate_object_assignment(
+                            out, class_generator, 'other.', '0')
+                    out.put_line('return *this;')
 
     def generate_std_methods_definitions(self, out: FileGenerator, class_generator):
         self.__generate_copy_constructor_definition(out, class_generator)
+        out.put_line('')
+        super().generate_move_constructor_definition(out, class_generator)
         out.put_line('')
         self.__generate_raw_copy_constructor_definition(out, class_generator)
         out.put_line('')
         self.__generate_delete_method(out, class_generator)
         out.put_line('')
         self.__generate_assignment_operator(out, class_generator)
+        out.put_line('')
+        self.__generate_move_assignment_definition(out, class_generator)
         out.put_line('')
         super().generate_std_methods_definitions(out, class_generator)
         out.put_line('')
@@ -430,6 +515,7 @@ class RefCountedSemantic(LifecycleTraits):
 
     def generate_std_methods_declarations(self, out: FileGenerator, class_generator):
         super().generate_copy_constructor_declaration(out, class_generator)
+        super().generate_move_constructor_declaration(out, class_generator)
         out.put_line('enum ECreateFromRawPointer { force_creating_from_raw_pointer };')
         out.put_line('inline {class_name}(ECreateFromRawPointer, void *object_pointer, bool add_ref_object);'.format(
             class_name=class_generator.wrap_short_name))
@@ -470,17 +556,21 @@ class RefCountedSemantic(LifecycleTraits):
                 self.init_method_exception_traits.generate_c_call(
                     out, BuiltinTypeGenerator('void'), class_generator.add_ref_method, ['object_pointer'])
 
+    def __generate_deallocate(self, out: FileGenerator, class_generator):
+        out.put_line('if (mObject && {the_most_basic}::mObject)'.format(
+            the_most_basic=class_generator.the_most_basic.full_wrap_name))
+        with IndentScope(out):
+            self.finish_method_exception_traits.generate_c_call(
+                out, BuiltinTypeGenerator('void'), class_generator.release_method, ['mObject'])
+            out.put_line('SetObject(0);')
+
     def __generate_destructor(self, out: FileGenerator, class_generator):
         out.put_line('inline {namespace}::~{class_name}()'.format(
             namespace=class_generator.full_wrap_name,
             class_name=class_generator.wrap_short_name)
         )
         with IndentScope(out):
-            out.put_line('if (mObject)')
-            with IndentScope(out):
-                self.finish_method_exception_traits.generate_c_call(
-                    out, BuiltinTypeGenerator('void'), class_generator.release_method, ['mObject'])
-                out.put_line('SetObject(0);')
+            self.__generate_deallocate(out, class_generator)
 
     def __generate_assignment_operator(self, out: FileGenerator, class_generator):
         out.put_line('inline {class_name}& {class_name}::operator=(const {class_name}& other)'.format(
@@ -488,11 +578,7 @@ class RefCountedSemantic(LifecycleTraits):
         with IndentScope(out):
             out.put_line('if (mObject != other.mObject)')
             with IndentScope(out):
-                out.put_line('if (mObject)')
-                with IndentScope(out):
-                    self.finish_method_exception_traits.generate_c_call(
-                        out, BuiltinTypeGenerator('void'), class_generator.release_method, ['mObject'])
-                    out.put_line('SetObject(0);')
+                self.__generate_deallocate(out, class_generator)
                 out.put_line('SetObject(other.mObject);')
                 out.put_line('if (other.mObject)')
                 with IndentScope(out):
@@ -500,14 +586,36 @@ class RefCountedSemantic(LifecycleTraits):
                         out, BuiltinTypeGenerator('void'), class_generator.add_ref_method, ['other.mObject'])
             out.put_line('return *this;')
 
+    def __generate_move_assignment_definition(self, out: FileGenerator, class_generator):
+        if self.params.enable_cpp11_features_in_wrap_code:
+            with IfDefScope(out, get_has_rvalue_references(class_generator), False):
+                out.put_line('inline {class_name}& {class_name}::operator=({class_name}&& other)'.format(
+                    class_name=class_generator.full_wrap_name))
+                with IndentScope(out):
+                    out.put_line('if (mObject != other.mObject)')
+                    with IndentScope(out):
+                        self.__generate_deallocate(out, class_generator)
+                        if class_generator.base_class_generator:
+                            out.put_line('{0}::operator=(std::move(other));'.format(
+                                class_generator.base_class_generator.full_wrap_name))
+                        class_generator.inheritance_traits.generate_object_assignment(
+                            out, class_generator, '', 'other.mObject')
+                        class_generator.inheritance_traits.generate_object_assignment(
+                            out, class_generator, 'other.', '0')
+                    out.put_line('return *this;')
+
     def generate_std_methods_definitions(self, out: FileGenerator, class_generator):
         self.__generate_copy_constructor_definition(out, class_generator)
+        out.put_line('')
+        super().generate_move_constructor_definition(out, class_generator)
         out.put_line('')
         self.__generate_raw_copy_constructor_definition(out, class_generator)
         out.put_line('')
         self.__generate_destructor(out, class_generator)
         out.put_line('')
         self.__generate_assignment_operator(out, class_generator)
+        out.put_line('')
+        self.__generate_move_assignment_definition(out, class_generator)
         out.put_line('')
         super().generate_std_methods_definitions(out, class_generator)
         out.put_line('')

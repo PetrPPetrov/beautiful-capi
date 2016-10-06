@@ -41,10 +41,16 @@ public:
     inline void Show(const char* text);
     
     inline PrinterRawPtr(const PrinterRawPtr& other);
+    #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline PrinterRawPtr(PrinterRawPtr&& other);
+    #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     enum ECreateFromRawPointer { force_creating_from_raw_pointer };
     inline PrinterRawPtr(ECreateFromRawPointer, void *object_pointer, bool);
     inline void Delete();
     inline PrinterRawPtr& operator=(const PrinterRawPtr& other);
+    #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline PrinterRawPtr& operator=(PrinterRawPtr&& other);
+    #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     static inline PrinterRawPtr Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;

@@ -46,6 +46,14 @@ inline hello_world::scanner_raw_ptr::scanner_raw_ptr(const scanner_raw_ptr& othe
     SetObject(other.mObject);
 }
 
+#ifdef HELLO_WORLD_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline hello_world::scanner_raw_ptr::scanner_raw_ptr(scanner_raw_ptr&& other)
+{
+    mObject = other.mObject;
+    other.mObject = 0;
+}
+#endif /* HELLO_WORLD_CPP_COMPILER_HAS_RVALUE_REFERENCES */
+
 inline hello_world::scanner_raw_ptr::scanner_raw_ptr(hello_world::scanner_raw_ptr::ECreateFromRawPointer, void *object_pointer, bool)
 {
     SetObject(object_pointer);
@@ -53,7 +61,7 @@ inline hello_world::scanner_raw_ptr::scanner_raw_ptr(hello_world::scanner_raw_pt
 
 inline void hello_world::scanner_raw_ptr::deallocate()
 {
-    if (mObject)
+    if (mObject && hello_world::scanner_raw_ptr::mObject)
     {
         hello_world_scanner_delete(mObject);
         SetObject(0);
@@ -62,9 +70,24 @@ inline void hello_world::scanner_raw_ptr::deallocate()
 
 inline hello_world::scanner_raw_ptr& hello_world::scanner_raw_ptr::operator=(const hello_world::scanner_raw_ptr& other)
 {
-    SetObject(other.mObject);
+    if (this != &other)
+    {
+        SetObject(other.mObject);
+    }
     return *this;
 }
+
+#ifdef HELLO_WORLD_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline hello_world::scanner_raw_ptr& hello_world::scanner_raw_ptr::operator=(hello_world::scanner_raw_ptr&& other)
+{
+    if (this != &other)
+    {
+        mObject = other.mObject;
+        other.mObject = 0;
+    }
+    return *this;
+}
+#endif /* HELLO_WORLD_CPP_COMPILER_HAS_RVALUE_REFERENCES */
 
 inline hello_world::scanner_raw_ptr hello_world::scanner_raw_ptr::null()
 {

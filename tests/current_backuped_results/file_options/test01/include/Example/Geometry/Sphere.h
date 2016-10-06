@@ -58,6 +58,14 @@ inline Example::Geometry::Sphere::Sphere(const Sphere& other)
     }
 }
 
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::Geometry::Sphere::Sphere(Sphere&& other)
+{
+    mObject = other.mObject;
+    other.mObject = 0;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
+
 inline Example::Geometry::Sphere::Sphere(Example::Geometry::Sphere::ECreateFromRawPointer, void *object_pointer, bool copy_object)
 {
     if (object_pointer && copy_object)
@@ -72,7 +80,7 @@ inline Example::Geometry::Sphere::Sphere(Example::Geometry::Sphere::ECreateFromR
 
 inline Example::Geometry::Sphere::~Sphere()
 {
-    if (mObject)
+    if (mObject && Example::Geometry::Sphere::mObject)
     {
         example_geometry_sphere_delete(mObject);
         SetObject(0);
@@ -81,9 +89,9 @@ inline Example::Geometry::Sphere::~Sphere()
 
 inline Example::Geometry::Sphere& Example::Geometry::Sphere::operator=(const Example::Geometry::Sphere& other)
 {
-    if (mObject != other.mObject)
+    if (this != &other)
     {
-        if (mObject)
+        if (mObject && Example::Geometry::Sphere::mObject)
         {
             example_geometry_sphere_delete(mObject);
             SetObject(0);
@@ -99,6 +107,23 @@ inline Example::Geometry::Sphere& Example::Geometry::Sphere::operator=(const Exa
     }
     return *this;
 }
+
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::Geometry::Sphere& Example::Geometry::Sphere::operator=(Example::Geometry::Sphere&& other)
+{
+    if (this != &other)
+    {
+        if (mObject && Example::Geometry::Sphere::mObject)
+        {
+            example_geometry_sphere_delete(mObject);
+            SetObject(0);
+        }
+        mObject = other.mObject;
+        other.mObject = 0;
+    }
+    return *this;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
 
 inline Example::Geometry::Sphere Example::Geometry::Sphere::Null()
 {

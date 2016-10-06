@@ -58,6 +58,14 @@ inline Example::Geometry::Brep::Body::Body(const Body& other)
     }
 }
 
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::Geometry::Brep::Body::Body(Body&& other)
+{
+    mObject = other.mObject;
+    other.mObject = 0;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
+
 inline Example::Geometry::Brep::Body::Body(Example::Geometry::Brep::Body::ECreateFromRawPointer, void *object_pointer, bool copy_object)
 {
     if (object_pointer && copy_object)
@@ -72,7 +80,7 @@ inline Example::Geometry::Brep::Body::Body(Example::Geometry::Brep::Body::ECreat
 
 inline Example::Geometry::Brep::Body::~Body()
 {
-    if (mObject)
+    if (mObject && Example::Geometry::Brep::Body::mObject)
     {
         example_geometry_brep_body_delete(mObject);
         SetObject(0);
@@ -81,9 +89,9 @@ inline Example::Geometry::Brep::Body::~Body()
 
 inline Example::Geometry::Brep::Body& Example::Geometry::Brep::Body::operator=(const Example::Geometry::Brep::Body& other)
 {
-    if (mObject != other.mObject)
+    if (this != &other)
     {
-        if (mObject)
+        if (mObject && Example::Geometry::Brep::Body::mObject)
         {
             example_geometry_brep_body_delete(mObject);
             SetObject(0);
@@ -99,6 +107,23 @@ inline Example::Geometry::Brep::Body& Example::Geometry::Brep::Body::operator=(c
     }
     return *this;
 }
+
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::Geometry::Brep::Body& Example::Geometry::Brep::Body::operator=(Example::Geometry::Brep::Body&& other)
+{
+    if (this != &other)
+    {
+        if (mObject && Example::Geometry::Brep::Body::mObject)
+        {
+            example_geometry_brep_body_delete(mObject);
+            SetObject(0);
+        }
+        mObject = other.mObject;
+        other.mObject = 0;
+    }
+    return *this;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
 
 inline Example::Geometry::Brep::Body Example::Geometry::Brep::Body::Null()
 {

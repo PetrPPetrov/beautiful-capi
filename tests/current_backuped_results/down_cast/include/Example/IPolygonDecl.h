@@ -41,10 +41,16 @@ public:
     inline int GetPointsCount() const;
     
     inline IPolygonPtr(const IPolygonPtr& other);
+    #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline IPolygonPtr(IPolygonPtr&& other);
+    #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     enum ECreateFromRawPointer { force_creating_from_raw_pointer };
     inline IPolygonPtr(ECreateFromRawPointer, void *object_pointer, bool add_ref_object);
     inline ~IPolygonPtr();
     inline IPolygonPtr& operator=(const IPolygonPtr& other);
+    #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline IPolygonPtr& operator=(IPolygonPtr&& other);
+    #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     static inline IPolygonPtr Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;

@@ -50,6 +50,14 @@ inline hello_world::plotter_ptr::plotter_ptr(const plotter_ptr& other)
     }
 }
 
+#ifdef HELLO_WORLD_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline hello_world::plotter_ptr::plotter_ptr(plotter_ptr&& other)
+{
+    mObject = other.mObject;
+    other.mObject = 0;
+}
+#endif /* HELLO_WORLD_CPP_COMPILER_HAS_RVALUE_REFERENCES */
+
 inline hello_world::plotter_ptr::plotter_ptr(hello_world::plotter_ptr::ECreateFromRawPointer, void *object_pointer, bool add_ref_object)
 {
     SetObject(object_pointer);
@@ -61,7 +69,7 @@ inline hello_world::plotter_ptr::plotter_ptr(hello_world::plotter_ptr::ECreateFr
 
 inline hello_world::plotter_ptr::~plotter_ptr()
 {
-    if (mObject)
+    if (mObject && hello_world::plotter_ptr::mObject)
     {
         hello_world_plotter_release(mObject);
         SetObject(0);
@@ -72,7 +80,7 @@ inline hello_world::plotter_ptr& hello_world::plotter_ptr::operator=(const hello
 {
     if (mObject != other.mObject)
     {
-        if (mObject)
+        if (mObject && hello_world::plotter_ptr::mObject)
         {
             hello_world_plotter_release(mObject);
             SetObject(0);
@@ -85,6 +93,23 @@ inline hello_world::plotter_ptr& hello_world::plotter_ptr::operator=(const hello
     }
     return *this;
 }
+
+#ifdef HELLO_WORLD_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline hello_world::plotter_ptr& hello_world::plotter_ptr::operator=(hello_world::plotter_ptr&& other)
+{
+    if (mObject != other.mObject)
+    {
+        if (mObject && hello_world::plotter_ptr::mObject)
+        {
+            hello_world_plotter_release(mObject);
+            SetObject(0);
+        }
+        mObject = other.mObject;
+        other.mObject = 0;
+    }
+    return *this;
+}
+#endif /* HELLO_WORLD_CPP_COMPILER_HAS_RVALUE_REFERENCES */
 
 inline hello_world::plotter_ptr hello_world::plotter_ptr::null()
 {

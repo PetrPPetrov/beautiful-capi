@@ -41,10 +41,16 @@ public:
     inline void Show(const char* text) const;
     
     inline PrinterSharedPtr(const PrinterSharedPtr& other);
+    #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline PrinterSharedPtr(PrinterSharedPtr&& other);
+    #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     enum ECreateFromRawPointer { force_creating_from_raw_pointer };
     inline PrinterSharedPtr(ECreateFromRawPointer, void *object_pointer, bool copy_object);
     inline ~PrinterSharedPtr();
     inline PrinterSharedPtr& operator=(const PrinterSharedPtr& other);
+    #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline PrinterSharedPtr& operator=(PrinterSharedPtr&& other);
+    #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     static inline PrinterSharedPtr Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;

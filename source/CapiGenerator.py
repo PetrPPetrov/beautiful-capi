@@ -210,16 +210,21 @@ class CapiGenerator(object):
     def __generate_msvc_non1900_traits(self, out: FileGenerator):
         out.put_line('#define {ns}_NOEXCEPT'.format(ns=self.cur_namespace_name))
 
-    def __generate_msvc1800_traits(self, out: FileGenerator):
+    def __generate_msvc1600_traits(self, out: FileGenerator):
         out.put_line('#define {ns}_CPP_COMPILER_HAS_RVALUE_REFERENCES'.format(ns=self.cur_namespace_name))
+
+    def __generate_msvc1800_traits(self, out: FileGenerator):
+        out.put_line('#define {ns}_CPP_COMPILER_HAS_MOVE_CONSTRUCTOR_DELETE'.format(ns=self.cur_namespace_name))
 
     def __generate_msvc_traits(self, out: FileGenerator):
         if_then_else(out, '_MSC_VER >= 1900', self.__generate_msvc1900_traits, self.__generate_msvc_non1900_traits)
+        if_then_else(out, '_MSC_VER >= 1600', self.__generate_msvc1600_traits, None)
         if_then_else(out, '_MSC_VER >= 1800', self.__generate_msvc1800_traits, None)
 
     def __generate_cpp11_compiler_traits(self, out: FileGenerator):
         out.put_line('#define {ns}_NOEXCEPT noexcept'.format(ns=self.cur_namespace_name))
         out.put_line('#define {ns}_CPP_COMPILER_HAS_RVALUE_REFERENCES'.format(ns=self.cur_namespace_name))
+        out.put_line('#define {ns}_CPP_COMPILER_HAS_MOVE_CONSTRUCTOR_DELETE'.format(ns=self.cur_namespace_name))
 
     def __generate_non_cpp11_compiler_traits(self, out: FileGenerator):
         out.put_line('#define {ns}_NOEXCEPT'.format(ns=self.cur_namespace_name))
@@ -229,10 +234,11 @@ class CapiGenerator(object):
                      self.__generate_cpp11_compiler_traits, self.__generate_non_cpp11_compiler_traits)
 
     def __generate_compiler_traits(self, out: FileGenerator):
-        with IfDefScope(out, '__cplusplus'):
-            with Indent(out):
-                if_def_then_else(out, '_MSC_VER', self.__generate_msvc_traits, self.__generate_non_msvc_traits)
-        out.put_line('')
+        if self.params.enable_cpp11_features_in_wrap_code:
+            with IfDefScope(out, '__cplusplus', False):
+                with Indent(out):
+                    if_def_then_else(out, '_MSC_VER', self.__generate_msvc_traits, self.__generate_non_msvc_traits)
+            out.put_line('')
 
     def __generate_capi(self, file_cache):
         for namespace_name, namespace_info in self.sorted_by_ns.items():

@@ -68,25 +68,27 @@
 #endif
 
 #ifdef __cplusplus
-
     #ifdef _MSC_VER
         #if _MSC_VER >= 1900
             #define EXAMPLE_NOEXCEPT noexcept
         #else /* _MSC_VER >= 1900 */
             #define EXAMPLE_NOEXCEPT
         #endif /* _MSC_VER >= 1900 */
-        #if _MSC_VER >= 1800
+        #if _MSC_VER >= 1600
             #define EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+        #endif /* _MSC_VER >= 1600 */
+        #if _MSC_VER >= 1800
+            #define EXAMPLE_CPP_COMPILER_HAS_MOVE_CONSTRUCTOR_DELETE
         #endif /* _MSC_VER >= 1800 */
     #else /* _MSC_VER */
         #if __cplusplus >= 201103L
             #define EXAMPLE_NOEXCEPT noexcept
             #define EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+            #define EXAMPLE_CPP_COMPILER_HAS_MOVE_CONSTRUCTOR_DELETE
         #else /* __cplusplus >= 201103L */
             #define EXAMPLE_NOEXCEPT
         #endif /* __cplusplus >= 201103L */
     #endif /* _MSC_VER */
-
 #endif /* __cplusplus */
 
 #ifndef EXAMPLE_CAPI_USE_DYNAMIC_LOADER
@@ -296,24 +298,15 @@
                 load_function<example_i_shape_cast_to_example_i_circle_function_type>(example_i_shape_cast_to_example_i_circle, "example_i_shape_cast_to_example_i_circle");
             }
             
+            Initialization();
             Initialization(const Initialization&);
-            #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+            #ifdef EXAMPLE_CPP_COMPILER_HAS_MOVE_CONSTRUCTOR_DELETE
                 Initialization(Initialization &&) = delete;
-            #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
+            #endif /* EXAMPLE_CPP_COMPILER_HAS_MOVE_CONSTRUCTOR_DELETE */
         public:
             Initialization(const char* shared_library_name)
             {
                 load_module(shared_library_name);
-            }
-            Initialization()
-            {
-                #ifdef _WIN32
-                    load_module("down_cast.dll");
-                #elif __APPLE__
-                    load_module("libdown_cast.dylib");
-                #else
-                    load_module("libdown_cast.so");
-                #endif
             }
             ~Initialization()
             {

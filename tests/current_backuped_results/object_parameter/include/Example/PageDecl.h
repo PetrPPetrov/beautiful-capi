@@ -44,10 +44,16 @@ public:
     inline void SetHeight(size_t value);
     
     inline PagePtr(const PagePtr& other);
+    #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline PagePtr(PagePtr&& other);
+    #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     enum ECreateFromRawPointer { force_creating_from_raw_pointer };
     inline PagePtr(ECreateFromRawPointer, void *object_pointer, bool add_ref_object);
     inline ~PagePtr();
     inline PagePtr& operator=(const PagePtr& other);
+    #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline PagePtr& operator=(PagePtr&& other);
+    #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     static inline PagePtr Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;

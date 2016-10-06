@@ -42,10 +42,16 @@ public:
     inline Circular::ClassBRawPtr GetB() const;
     
     inline ClassARawPtr(const ClassARawPtr& other);
+    #ifdef CIRCULAR_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline ClassARawPtr(ClassARawPtr&& other);
+    #endif /* CIRCULAR_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     enum ECreateFromRawPointer { force_creating_from_raw_pointer };
     inline ClassARawPtr(ECreateFromRawPointer, void *object_pointer, bool);
     inline void Delete();
     inline ClassARawPtr& operator=(const ClassARawPtr& other);
+    #ifdef CIRCULAR_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline ClassARawPtr& operator=(ClassARawPtr&& other);
+    #endif /* CIRCULAR_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     static inline ClassARawPtr Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;

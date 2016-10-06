@@ -43,10 +43,16 @@ public:
     inline int GetA() const;
     
     inline VectorOfObjectsDerivedPtr(const VectorOfObjectsDerivedPtr<Example::ModelPtr<double> >& other);
+    #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline VectorOfObjectsDerivedPtr(VectorOfObjectsDerivedPtr<Example::ModelPtr<double> >&& other);
+    #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     enum ECreateFromRawPointer { force_creating_from_raw_pointer };
     inline VectorOfObjectsDerivedPtr(ECreateFromRawPointer, void *object_pointer, bool add_ref_object);
     inline ~VectorOfObjectsDerivedPtr();
     inline VectorOfObjectsDerivedPtr<Example::ModelPtr<double> >& operator=(const VectorOfObjectsDerivedPtr<Example::ModelPtr<double> >& other);
+    #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline VectorOfObjectsDerivedPtr<Example::ModelPtr<double> >& operator=(VectorOfObjectsDerivedPtr<Example::ModelPtr<double> >&& other);
+    #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     static inline VectorOfObjectsDerivedPtr<Example::ModelPtr<double> > Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;

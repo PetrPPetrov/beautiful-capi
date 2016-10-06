@@ -43,10 +43,16 @@ public:
     inline void Dump() const;
     
     inline Dumper(const Dumper& other);
+    #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline Dumper(Dumper&& other);
+    #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     enum ECreateFromRawPointer { force_creating_from_raw_pointer };
     inline Dumper(ECreateFromRawPointer, void *object_pointer, bool copy_object);
     inline ~Dumper();
     inline Dumper& operator=(const Dumper& other);
+    #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline Dumper& operator=(Dumper&& other);
+    #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     static inline Dumper Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;

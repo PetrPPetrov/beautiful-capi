@@ -140,6 +140,9 @@ class NamespaceGenerator(object):
         forward_declarations.put_begin_cpp_comments(self.params)
         with WatchdogScope(forward_declarations, self.full_name.upper() + '_FWD_INCLUDED'):
             with IfDefScope(forward_declarations, '__cplusplus'):
+                if self.params.enable_cpp11_features_in_wrap_code:
+                    forward_declarations.put_include_files()
+                    forward_declarations.include_system_header('utility')
                 capi_generator.main_exception_traits.generate_check_and_throw_exception_forward_declaration(
                     forward_declarations)
                 self.__generate_forward_declarations_impl(forward_declarations)

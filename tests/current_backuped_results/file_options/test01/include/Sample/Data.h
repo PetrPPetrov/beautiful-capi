@@ -58,6 +58,14 @@ inline Sample::Data::Data(const Data& other)
     }
 }
 
+#ifdef SAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Sample::Data::Data(Data&& other)
+{
+    mObject = other.mObject;
+    other.mObject = 0;
+}
+#endif /* SAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
+
 inline Sample::Data::Data(Sample::Data::ECreateFromRawPointer, void *object_pointer, bool copy_object)
 {
     if (object_pointer && copy_object)
@@ -72,7 +80,7 @@ inline Sample::Data::Data(Sample::Data::ECreateFromRawPointer, void *object_poin
 
 inline Sample::Data::~Data()
 {
-    if (mObject)
+    if (mObject && Sample::Data::mObject)
     {
         sample_data_delete(mObject);
         SetObject(0);
@@ -81,9 +89,9 @@ inline Sample::Data::~Data()
 
 inline Sample::Data& Sample::Data::operator=(const Sample::Data& other)
 {
-    if (mObject != other.mObject)
+    if (this != &other)
     {
-        if (mObject)
+        if (mObject && Sample::Data::mObject)
         {
             sample_data_delete(mObject);
             SetObject(0);
@@ -99,6 +107,23 @@ inline Sample::Data& Sample::Data::operator=(const Sample::Data& other)
     }
     return *this;
 }
+
+#ifdef SAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Sample::Data& Sample::Data::operator=(Sample::Data&& other)
+{
+    if (this != &other)
+    {
+        if (mObject && Sample::Data::mObject)
+        {
+            sample_data_delete(mObject);
+            SetObject(0);
+        }
+        mObject = other.mObject;
+        other.mObject = 0;
+    }
+    return *this;
+}
+#endif /* SAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
 
 inline Sample::Data Sample::Data::Null()
 {

@@ -47,10 +47,16 @@ public:
     inline void SetZ(float z);
     
     inline Position(const Position<float>& other);
+    #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline Position(Position<float>&& other);
+    #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     enum ECreateFromRawPointer { force_creating_from_raw_pointer };
     inline Position(ECreateFromRawPointer, void *object_pointer, bool copy_object);
     inline ~Position();
     inline Position<float>& operator=(const Position<float>& other);
+    #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline Position<float>& operator=(Position<float>&& other);
+    #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     static inline Position<float> Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;

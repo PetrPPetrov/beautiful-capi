@@ -56,6 +56,14 @@ inline Exception::DivisionByZero::DivisionByZero(const DivisionByZero& other) : 
     }
 }
 
+#ifdef EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Exception::DivisionByZero::DivisionByZero(DivisionByZero&& other) : Exception::Generic(std::move(other))
+{
+    mObject = other.mObject;
+    other.mObject = 0;
+}
+#endif /* EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES */
+
 inline Exception::DivisionByZero::DivisionByZero(Exception::DivisionByZero::ECreateFromRawPointer, void *object_pointer, bool copy_object) : Exception::Generic(Exception::Generic::force_creating_from_raw_pointer, 0, false)
 {
     if (object_pointer && copy_object)
@@ -73,7 +81,7 @@ inline Exception::DivisionByZero::DivisionByZero(Exception::DivisionByZero::ECre
 
 inline Exception::DivisionByZero::~DivisionByZero()
 {
-    if (mObject)
+    if (mObject && Exception::Generic::mObject)
     {
         exception_division_by_zero_delete(mObject);
         SetObject(0);
@@ -82,9 +90,9 @@ inline Exception::DivisionByZero::~DivisionByZero()
 
 inline Exception::DivisionByZero& Exception::DivisionByZero::operator=(const Exception::DivisionByZero& other)
 {
-    if (mObject != other.mObject)
+    if (this != &other)
     {
-        if (mObject)
+        if (mObject && Exception::Generic::mObject)
         {
             exception_division_by_zero_delete(mObject);
             SetObject(0);
@@ -103,6 +111,24 @@ inline Exception::DivisionByZero& Exception::DivisionByZero::operator=(const Exc
     }
     return *this;
 }
+
+#ifdef EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Exception::DivisionByZero& Exception::DivisionByZero::operator=(Exception::DivisionByZero&& other)
+{
+    if (this != &other)
+    {
+        if (mObject && Exception::Generic::mObject)
+        {
+            exception_division_by_zero_delete(mObject);
+            SetObject(0);
+        }
+        Exception::Generic::operator=(std::move(other));
+        mObject = other.mObject;
+        other.mObject = 0;
+    }
+    return *this;
+}
+#endif /* EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES */
 
 inline Exception::DivisionByZero Exception::DivisionByZero::Null()
 {

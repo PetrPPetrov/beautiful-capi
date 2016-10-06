@@ -58,6 +58,14 @@ inline Example::Scene::Node::Node(const Node& other)
     }
 }
 
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::Scene::Node::Node(Node&& other)
+{
+    mObject = other.mObject;
+    other.mObject = 0;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
+
 inline Example::Scene::Node::Node(Example::Scene::Node::ECreateFromRawPointer, void *object_pointer, bool copy_object)
 {
     if (object_pointer && copy_object)
@@ -72,7 +80,7 @@ inline Example::Scene::Node::Node(Example::Scene::Node::ECreateFromRawPointer, v
 
 inline Example::Scene::Node::~Node()
 {
-    if (mObject)
+    if (mObject && Example::Scene::Node::mObject)
     {
         example_scene_node_delete(mObject);
         SetObject(0);
@@ -81,9 +89,9 @@ inline Example::Scene::Node::~Node()
 
 inline Example::Scene::Node& Example::Scene::Node::operator=(const Example::Scene::Node& other)
 {
-    if (mObject != other.mObject)
+    if (this != &other)
     {
-        if (mObject)
+        if (mObject && Example::Scene::Node::mObject)
         {
             example_scene_node_delete(mObject);
             SetObject(0);
@@ -99,6 +107,23 @@ inline Example::Scene::Node& Example::Scene::Node::operator=(const Example::Scen
     }
     return *this;
 }
+
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::Scene::Node& Example::Scene::Node::operator=(Example::Scene::Node&& other)
+{
+    if (this != &other)
+    {
+        if (mObject && Example::Scene::Node::mObject)
+        {
+            example_scene_node_delete(mObject);
+            SetObject(0);
+        }
+        mObject = other.mObject;
+        other.mObject = 0;
+    }
+    return *this;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
 
 inline Example::Scene::Node Example::Scene::Node::Null()
 {

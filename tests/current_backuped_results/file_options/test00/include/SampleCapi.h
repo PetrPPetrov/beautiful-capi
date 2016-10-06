@@ -68,25 +68,27 @@
 #endif
 
 #ifdef __cplusplus
-
     #ifdef _MSC_VER
         #if _MSC_VER >= 1900
             #define SAMPLE_NOEXCEPT noexcept
         #else /* _MSC_VER >= 1900 */
             #define SAMPLE_NOEXCEPT
         #endif /* _MSC_VER >= 1900 */
-        #if _MSC_VER >= 1800
+        #if _MSC_VER >= 1600
             #define SAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+        #endif /* _MSC_VER >= 1600 */
+        #if _MSC_VER >= 1800
+            #define SAMPLE_CPP_COMPILER_HAS_MOVE_CONSTRUCTOR_DELETE
         #endif /* _MSC_VER >= 1800 */
     #else /* _MSC_VER */
         #if __cplusplus >= 201103L
             #define SAMPLE_NOEXCEPT noexcept
             #define SAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+            #define SAMPLE_CPP_COMPILER_HAS_MOVE_CONSTRUCTOR_DELETE
         #else /* __cplusplus >= 201103L */
             #define SAMPLE_NOEXCEPT
         #endif /* __cplusplus >= 201103L */
     #endif /* _MSC_VER */
-
 #endif /* __cplusplus */
 
 #ifndef SAMPLE_CAPI_USE_DYNAMIC_LOADER
@@ -183,9 +185,9 @@
             
             Initialization();
             Initialization(const Initialization&);
-            #ifdef SAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+            #ifdef SAMPLE_CPP_COMPILER_HAS_MOVE_CONSTRUCTOR_DELETE
                 Initialization(Initialization &&) = delete;
-            #endif /* SAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
+            #endif /* SAMPLE_CPP_COMPILER_HAS_MOVE_CONSTRUCTOR_DELETE */
         public:
             Initialization(const char* shared_library_name)
             {

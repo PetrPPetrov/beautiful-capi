@@ -45,10 +45,16 @@ public:
     inline Example::ModelPtr<float> GetItem(int index) const;
     
     inline VectorOfObjectsPtr(const VectorOfObjectsPtr<Example::ModelPtr<float> >& other);
+    #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline VectorOfObjectsPtr(VectorOfObjectsPtr<Example::ModelPtr<float> >&& other);
+    #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     enum ECreateFromRawPointer { force_creating_from_raw_pointer };
     inline VectorOfObjectsPtr(ECreateFromRawPointer, void *object_pointer, bool add_ref_object);
     inline ~VectorOfObjectsPtr();
     inline VectorOfObjectsPtr<Example::ModelPtr<float> >& operator=(const VectorOfObjectsPtr<Example::ModelPtr<float> >& other);
+    #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline VectorOfObjectsPtr<Example::ModelPtr<float> >& operator=(VectorOfObjectsPtr<Example::ModelPtr<float> >&& other);
+    #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     static inline VectorOfObjectsPtr<Example::ModelPtr<float> > Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;

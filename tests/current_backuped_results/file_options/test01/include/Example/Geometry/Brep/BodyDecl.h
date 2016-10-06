@@ -42,10 +42,16 @@ public:
     inline void SetName(const char* value);
     
     inline Body(const Body& other);
+    #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline Body(Body&& other);
+    #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     enum ECreateFromRawPointer { force_creating_from_raw_pointer };
     inline Body(ECreateFromRawPointer, void *object_pointer, bool copy_object);
     inline ~Body();
     inline Body& operator=(const Body& other);
+    #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline Body& operator=(Body&& other);
+    #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     static inline Body Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;

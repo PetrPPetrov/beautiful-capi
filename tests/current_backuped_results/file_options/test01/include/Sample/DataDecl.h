@@ -42,10 +42,16 @@ public:
     inline void SetData(int value);
     
     inline Data(const Data& other);
+    #ifdef SAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline Data(Data&& other);
+    #endif /* SAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     enum ECreateFromRawPointer { force_creating_from_raw_pointer };
     inline Data(ECreateFromRawPointer, void *object_pointer, bool copy_object);
     inline ~Data();
     inline Data& operator=(const Data& other);
+    #ifdef SAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline Data& operator=(Data&& other);
+    #endif /* SAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     static inline Data Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;

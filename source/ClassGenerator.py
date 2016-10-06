@@ -68,6 +68,10 @@ class ClassGenerator(object):
         return self.class_object.template_line
 
     @property
+    def the_most_basic(self):
+        return self.base_class_generator.the_most_basic if self.base_class_generator else self
+
+    @property
     def name(self) -> str:
         return self.class_object.name
 

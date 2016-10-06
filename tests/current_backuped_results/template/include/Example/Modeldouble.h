@@ -66,6 +66,14 @@ inline Example::ModelPtr<double>::ModelPtr(const ModelPtr<double>& other)
     }
 }
 
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::ModelPtr<double>::ModelPtr(ModelPtr<double>&& other)
+{
+    mObject = other.mObject;
+    other.mObject = 0;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
+
 inline Example::ModelPtr<double>::ModelPtr(Example::ModelPtr<double>::ECreateFromRawPointer, void *object_pointer, bool add_ref_object)
 {
     SetObject(object_pointer);
@@ -77,7 +85,7 @@ inline Example::ModelPtr<double>::ModelPtr(Example::ModelPtr<double>::ECreateFro
 
 inline Example::ModelPtr<double>::~ModelPtr()
 {
-    if (mObject)
+    if (mObject && Example::ModelPtr<double>::mObject)
     {
         example_model_double_release(mObject);
         SetObject(0);
@@ -88,7 +96,7 @@ inline Example::ModelPtr<double>& Example::ModelPtr<double>::operator=(const Exa
 {
     if (mObject != other.mObject)
     {
-        if (mObject)
+        if (mObject && Example::ModelPtr<double>::mObject)
         {
             example_model_double_release(mObject);
             SetObject(0);
@@ -101,6 +109,23 @@ inline Example::ModelPtr<double>& Example::ModelPtr<double>::operator=(const Exa
     }
     return *this;
 }
+
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::ModelPtr<double>& Example::ModelPtr<double>::operator=(Example::ModelPtr<double>&& other)
+{
+    if (mObject != other.mObject)
+    {
+        if (mObject && Example::ModelPtr<double>::mObject)
+        {
+            example_model_double_release(mObject);
+            SetObject(0);
+        }
+        mObject = other.mObject;
+        other.mObject = 0;
+    }
+    return *this;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
 
 inline Example::ModelPtr<double> Example::ModelPtr<double>::Null()
 {

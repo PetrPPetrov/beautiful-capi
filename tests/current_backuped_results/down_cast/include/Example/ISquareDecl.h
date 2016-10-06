@@ -41,10 +41,16 @@ public:
     inline void SetSize(double size);
     
     inline ISquarePtr(const ISquarePtr& other);
+    #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline ISquarePtr(ISquarePtr&& other);
+    #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     enum ECreateFromRawPointer { force_creating_from_raw_pointer };
     inline ISquarePtr(ECreateFromRawPointer, void *object_pointer, bool add_ref_object);
     inline ~ISquarePtr();
     inline ISquarePtr& operator=(const ISquarePtr& other);
+    #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline ISquarePtr& operator=(ISquarePtr&& other);
+    #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     static inline ISquarePtr Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;

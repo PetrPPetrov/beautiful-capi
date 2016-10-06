@@ -57,10 +57,16 @@ public:
     inline void Print(const Example::PrinterPtr& printer, const char* text) const;
     
     inline Person(const Person& other);
+    #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline Person(Person&& other);
+    #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     enum ECreateFromRawPointer { force_creating_from_raw_pointer };
     inline Person(ECreateFromRawPointer, void *object_pointer, bool copy_object);
     inline ~Person();
     inline Person& operator=(const Person& other);
+    #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline Person& operator=(Person&& other);
+    #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     static inline Person Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;

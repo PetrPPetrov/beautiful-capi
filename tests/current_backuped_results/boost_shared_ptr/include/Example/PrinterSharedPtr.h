@@ -53,6 +53,14 @@ inline Example::PrinterSharedPtr::PrinterSharedPtr(const PrinterSharedPtr& other
     }
 }
 
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::PrinterSharedPtr::PrinterSharedPtr(PrinterSharedPtr&& other)
+{
+    mObject = other.mObject;
+    other.mObject = 0;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
+
 inline Example::PrinterSharedPtr::PrinterSharedPtr(Example::PrinterSharedPtr::ECreateFromRawPointer, void *object_pointer, bool copy_object)
 {
     if (object_pointer && copy_object)
@@ -67,7 +75,7 @@ inline Example::PrinterSharedPtr::PrinterSharedPtr(Example::PrinterSharedPtr::EC
 
 inline Example::PrinterSharedPtr::~PrinterSharedPtr()
 {
-    if (mObject)
+    if (mObject && Example::PrinterSharedPtr::mObject)
     {
         example_printer_shared_ptr_delete(mObject);
         SetObject(0);
@@ -76,9 +84,9 @@ inline Example::PrinterSharedPtr::~PrinterSharedPtr()
 
 inline Example::PrinterSharedPtr& Example::PrinterSharedPtr::operator=(const Example::PrinterSharedPtr& other)
 {
-    if (mObject != other.mObject)
+    if (this != &other)
     {
-        if (mObject)
+        if (mObject && Example::PrinterSharedPtr::mObject)
         {
             example_printer_shared_ptr_delete(mObject);
             SetObject(0);
@@ -94,6 +102,23 @@ inline Example::PrinterSharedPtr& Example::PrinterSharedPtr::operator=(const Exa
     }
     return *this;
 }
+
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::PrinterSharedPtr& Example::PrinterSharedPtr::operator=(Example::PrinterSharedPtr&& other)
+{
+    if (this != &other)
+    {
+        if (mObject && Example::PrinterSharedPtr::mObject)
+        {
+            example_printer_shared_ptr_delete(mObject);
+            SetObject(0);
+        }
+        mObject = other.mObject;
+        other.mObject = 0;
+    }
+    return *this;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
 
 inline Example::PrinterSharedPtr Example::PrinterSharedPtr::Null()
 {

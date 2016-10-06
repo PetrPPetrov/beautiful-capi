@@ -41,10 +41,16 @@ public:
     inline void draw() const;
     
     inline plotter_ptr(const plotter_ptr& other);
+    #ifdef HELLO_WORLD_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline plotter_ptr(plotter_ptr&& other);
+    #endif /* HELLO_WORLD_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     enum ECreateFromRawPointer { force_creating_from_raw_pointer };
     inline plotter_ptr(ECreateFromRawPointer, void *object_pointer, bool add_ref_object);
     inline ~plotter_ptr();
     inline plotter_ptr& operator=(const plotter_ptr& other);
+    #ifdef HELLO_WORLD_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline plotter_ptr& operator=(plotter_ptr&& other);
+    #endif /* HELLO_WORLD_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     static inline plotter_ptr null();
     inline bool is_null() const;
     inline bool is_not_null() const;

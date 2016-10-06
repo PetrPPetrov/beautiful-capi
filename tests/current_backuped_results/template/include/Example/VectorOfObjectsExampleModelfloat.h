@@ -66,6 +66,14 @@ inline Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::VectorOfObjectsPt
     }
 }
 
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::VectorOfObjectsPtr(VectorOfObjectsPtr<Example::ModelPtr<float> >&& other)
+{
+    mObject = other.mObject;
+    other.mObject = 0;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
+
 inline Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::VectorOfObjectsPtr(Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::ECreateFromRawPointer, void *object_pointer, bool add_ref_object)
 {
     SetObject(object_pointer);
@@ -77,7 +85,7 @@ inline Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::VectorOfObjectsPt
 
 inline Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::~VectorOfObjectsPtr()
 {
-    if (mObject)
+    if (mObject && Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::mObject)
     {
         example_vector_of_objects_example_model_float_release(mObject);
         SetObject(0);
@@ -88,7 +96,7 @@ inline Example::VectorOfObjectsPtr<Example::ModelPtr<float> >& Example::VectorOf
 {
     if (mObject != other.mObject)
     {
-        if (mObject)
+        if (mObject && Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::mObject)
         {
             example_vector_of_objects_example_model_float_release(mObject);
             SetObject(0);
@@ -101,6 +109,23 @@ inline Example::VectorOfObjectsPtr<Example::ModelPtr<float> >& Example::VectorOf
     }
     return *this;
 }
+
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::VectorOfObjectsPtr<Example::ModelPtr<float> >& Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::operator=(Example::VectorOfObjectsPtr<Example::ModelPtr<float> >&& other)
+{
+    if (mObject != other.mObject)
+    {
+        if (mObject && Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::mObject)
+        {
+            example_vector_of_objects_example_model_float_release(mObject);
+            SetObject(0);
+        }
+        mObject = other.mObject;
+        other.mObject = 0;
+    }
+    return *this;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
 
 inline Example::VectorOfObjectsPtr<Example::ModelPtr<float> > Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::Null()
 {

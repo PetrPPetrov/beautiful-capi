@@ -41,10 +41,16 @@ public:
     inline void show() const;
     
     inline printer(const printer& other);
+    #ifdef HELLO_WORLD_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline printer(printer&& other);
+    #endif /* HELLO_WORLD_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     enum ECreateFromRawPointer { force_creating_from_raw_pointer };
     inline printer(ECreateFromRawPointer, void *object_pointer, bool copy_object);
     inline ~printer();
     inline printer& operator=(const printer& other);
+    #ifdef HELLO_WORLD_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline printer& operator=(printer&& other);
+    #endif /* HELLO_WORLD_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     static inline printer null();
     inline bool is_null() const;
     inline bool is_not_null() const;

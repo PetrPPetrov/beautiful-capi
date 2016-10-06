@@ -68,6 +68,14 @@ inline Example::VectorOf<int>::VectorOf(const VectorOf<int>& other)
     }
 }
 
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::VectorOf<int>::VectorOf(VectorOf<int>&& other)
+{
+    mObject = other.mObject;
+    other.mObject = 0;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
+
 inline Example::VectorOf<int>::VectorOf(Example::VectorOf<int>::ECreateFromRawPointer, void *object_pointer, bool copy_object)
 {
     if (object_pointer && copy_object)
@@ -82,7 +90,7 @@ inline Example::VectorOf<int>::VectorOf(Example::VectorOf<int>::ECreateFromRawPo
 
 inline Example::VectorOf<int>::~VectorOf()
 {
-    if (mObject)
+    if (mObject && Example::VectorOf<int>::mObject)
     {
         example_vector_of_int_delete(mObject);
         SetObject(0);
@@ -91,9 +99,9 @@ inline Example::VectorOf<int>::~VectorOf()
 
 inline Example::VectorOf<int>& Example::VectorOf<int>::operator=(const Example::VectorOf<int>& other)
 {
-    if (mObject != other.mObject)
+    if (this != &other)
     {
-        if (mObject)
+        if (mObject && Example::VectorOf<int>::mObject)
         {
             example_vector_of_int_delete(mObject);
             SetObject(0);
@@ -109,6 +117,23 @@ inline Example::VectorOf<int>& Example::VectorOf<int>::operator=(const Example::
     }
     return *this;
 }
+
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::VectorOf<int>& Example::VectorOf<int>::operator=(Example::VectorOf<int>&& other)
+{
+    if (this != &other)
+    {
+        if (mObject && Example::VectorOf<int>::mObject)
+        {
+            example_vector_of_int_delete(mObject);
+            SetObject(0);
+        }
+        mObject = other.mObject;
+        other.mObject = 0;
+    }
+    return *this;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
 
 inline Example::VectorOf<int> Example::VectorOf<int>::Null()
 {

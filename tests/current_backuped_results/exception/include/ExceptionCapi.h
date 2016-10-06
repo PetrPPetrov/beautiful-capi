@@ -89,25 +89,27 @@ enum beautiful_capi_exception_exception_code_t
 #endif
 
 #ifdef __cplusplus
-
     #ifdef _MSC_VER
         #if _MSC_VER >= 1900
             #define EXCEPTION_NOEXCEPT noexcept
         #else /* _MSC_VER >= 1900 */
             #define EXCEPTION_NOEXCEPT
         #endif /* _MSC_VER >= 1900 */
-        #if _MSC_VER >= 1800
+        #if _MSC_VER >= 1600
             #define EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES
+        #endif /* _MSC_VER >= 1600 */
+        #if _MSC_VER >= 1800
+            #define EXCEPTION_CPP_COMPILER_HAS_MOVE_CONSTRUCTOR_DELETE
         #endif /* _MSC_VER >= 1800 */
     #else /* _MSC_VER */
         #if __cplusplus >= 201103L
             #define EXCEPTION_NOEXCEPT noexcept
             #define EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES
+            #define EXCEPTION_CPP_COMPILER_HAS_MOVE_CONSTRUCTOR_DELETE
         #else /* __cplusplus >= 201103L */
             #define EXCEPTION_NOEXCEPT
         #endif /* __cplusplus >= 201103L */
     #endif /* _MSC_VER */
-
 #endif /* __cplusplus */
 
 #ifndef EXCEPTION_CAPI_USE_DYNAMIC_LOADER
@@ -264,9 +266,9 @@ enum beautiful_capi_exception_exception_code_t
             
             Initialization();
             Initialization(const Initialization&);
-            #ifdef EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES
+            #ifdef EXCEPTION_CPP_COMPILER_HAS_MOVE_CONSTRUCTOR_DELETE
                 Initialization(Initialization &&) = delete;
-            #endif /* EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES */
+            #endif /* EXCEPTION_CPP_COMPILER_HAS_MOVE_CONSTRUCTOR_DELETE */
         public:
             Initialization(const char* shared_library_name)
             {

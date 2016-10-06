@@ -43,10 +43,16 @@ public:
     inline void PowerOff();
     
     inline Printer(const Printer& other);
+    #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline Printer(Printer&& other);
+    #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     enum ECreateFromRawPointer { force_creating_from_raw_pointer };
     inline Printer(ECreateFromRawPointer, void *object_pointer, bool copy_object);
     inline ~Printer();
     inline Printer& operator=(const Printer& other);
+    #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline Printer& operator=(Printer&& other);
+    #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     static inline Printer Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;

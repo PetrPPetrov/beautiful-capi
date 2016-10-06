@@ -140,9 +140,12 @@ class DynamicLoaderGenerator(object):
             if not self.params.shared_library_name:
                 out.put_line('Initialization();')
             out.put_line('Initialization(const Initialization&);')
-            with IfDefScope(out, '{ns}_CPP_COMPILER_HAS_RVALUE_REFERENCES'.format(ns=self.namespace_name), False):
-                with Indent(out):
-                    out.put_line('Initialization(Initialization &&) = delete;')
+            if self.params.enable_cpp11_features_in_wrap_code:
+                move_constructors_delete_condition = '{ns}_CPP_COMPILER_HAS_MOVE_CONSTRUCTOR_DELETE'.format(
+                    ns=self.namespace_name)
+                with IfDefScope(out, move_constructors_delete_condition, False):
+                    with Indent(out):
+                        out.put_line('Initialization(Initialization &&) = delete;')
             with Unindent(out):
                 out.put_line('public:')
             self.__generate_constructor(out)

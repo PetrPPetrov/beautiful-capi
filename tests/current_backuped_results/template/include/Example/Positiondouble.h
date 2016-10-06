@@ -78,6 +78,14 @@ inline Example::Position<double>::Position(const Position<double>& other)
     }
 }
 
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::Position<double>::Position(Position<double>&& other)
+{
+    mObject = other.mObject;
+    other.mObject = 0;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
+
 inline Example::Position<double>::Position(Example::Position<double>::ECreateFromRawPointer, void *object_pointer, bool copy_object)
 {
     if (object_pointer && copy_object)
@@ -92,7 +100,7 @@ inline Example::Position<double>::Position(Example::Position<double>::ECreateFro
 
 inline Example::Position<double>::~Position()
 {
-    if (mObject)
+    if (mObject && Example::Position<double>::mObject)
     {
         example_position_double_delete(mObject);
         SetObject(0);
@@ -101,9 +109,9 @@ inline Example::Position<double>::~Position()
 
 inline Example::Position<double>& Example::Position<double>::operator=(const Example::Position<double>& other)
 {
-    if (mObject != other.mObject)
+    if (this != &other)
     {
-        if (mObject)
+        if (mObject && Example::Position<double>::mObject)
         {
             example_position_double_delete(mObject);
             SetObject(0);
@@ -119,6 +127,23 @@ inline Example::Position<double>& Example::Position<double>::operator=(const Exa
     }
     return *this;
 }
+
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::Position<double>& Example::Position<double>::operator=(Example::Position<double>&& other)
+{
+    if (this != &other)
+    {
+        if (mObject && Example::Position<double>::mObject)
+        {
+            example_position_double_delete(mObject);
+            SetObject(0);
+        }
+        mObject = other.mObject;
+        other.mObject = 0;
+    }
+    return *this;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
 
 inline Example::Position<double> Example::Position<double>::Null()
 {

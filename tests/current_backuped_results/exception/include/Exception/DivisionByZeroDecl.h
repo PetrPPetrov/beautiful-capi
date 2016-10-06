@@ -41,10 +41,16 @@ public:
     inline DivisionByZero();
     
     inline DivisionByZero(const DivisionByZero& other);
+    #ifdef EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline DivisionByZero(DivisionByZero&& other);
+    #endif /* EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     enum ECreateFromRawPointer { force_creating_from_raw_pointer };
     inline DivisionByZero(ECreateFromRawPointer, void *object_pointer, bool copy_object);
     inline ~DivisionByZero();
     inline DivisionByZero& operator=(const DivisionByZero& other);
+    #ifdef EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline DivisionByZero& operator=(DivisionByZero&& other);
+    #endif /* EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     static inline DivisionByZero Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;

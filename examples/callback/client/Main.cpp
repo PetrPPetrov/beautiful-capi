@@ -40,7 +40,7 @@ public:
     }
     ~CustomPrinterImplementation()
     {
-        std::cout << "CustomPrinterImplementation ctor" << std::endl;
+        std::cout << "CustomPrinterImplementation dtor" << std::endl;
     }
     void Print(const char* text) const // Note that this method is non-virtual
     {

@@ -29,6 +29,8 @@
 
 #ifdef __cplusplus
 
+#include <utility>
+
 namespace Example
 {
     class Printer;

@@ -69,6 +69,14 @@ inline Example::VectorOf<Example::Position<float> >::VectorOf(const VectorOf<Exa
     }
 }
 
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::VectorOf<Example::Position<float> >::VectorOf(VectorOf<Example::Position<float> >&& other)
+{
+    mObject = other.mObject;
+    other.mObject = 0;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
+
 inline Example::VectorOf<Example::Position<float> >::VectorOf(Example::VectorOf<Example::Position<float> >::ECreateFromRawPointer, void *object_pointer, bool copy_object)
 {
     if (object_pointer && copy_object)
@@ -83,7 +91,7 @@ inline Example::VectorOf<Example::Position<float> >::VectorOf(Example::VectorOf<
 
 inline Example::VectorOf<Example::Position<float> >::~VectorOf()
 {
-    if (mObject)
+    if (mObject && Example::VectorOf<Example::Position<float> >::mObject)
     {
         example_vector_of_example_position_float_delete(mObject);
         SetObject(0);
@@ -92,9 +100,9 @@ inline Example::VectorOf<Example::Position<float> >::~VectorOf()
 
 inline Example::VectorOf<Example::Position<float> >& Example::VectorOf<Example::Position<float> >::operator=(const Example::VectorOf<Example::Position<float> >& other)
 {
-    if (mObject != other.mObject)
+    if (this != &other)
     {
-        if (mObject)
+        if (mObject && Example::VectorOf<Example::Position<float> >::mObject)
         {
             example_vector_of_example_position_float_delete(mObject);
             SetObject(0);
@@ -110,6 +118,23 @@ inline Example::VectorOf<Example::Position<float> >& Example::VectorOf<Example::
     }
     return *this;
 }
+
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::VectorOf<Example::Position<float> >& Example::VectorOf<Example::Position<float> >::operator=(Example::VectorOf<Example::Position<float> >&& other)
+{
+    if (this != &other)
+    {
+        if (mObject && Example::VectorOf<Example::Position<float> >::mObject)
+        {
+            example_vector_of_example_position_float_delete(mObject);
+            SetObject(0);
+        }
+        mObject = other.mObject;
+        other.mObject = 0;
+    }
+    return *this;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
 
 inline Example::VectorOf<Example::Position<float> > Example::VectorOf<Example::Position<float> >::Null()
 {

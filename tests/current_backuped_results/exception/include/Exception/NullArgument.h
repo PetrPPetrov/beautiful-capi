@@ -56,6 +56,14 @@ inline Exception::NullArgument::NullArgument(const NullArgument& other) : Except
     }
 }
 
+#ifdef EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Exception::NullArgument::NullArgument(NullArgument&& other) : Exception::BadArgument(std::move(other))
+{
+    mObject = other.mObject;
+    other.mObject = 0;
+}
+#endif /* EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES */
+
 inline Exception::NullArgument::NullArgument(Exception::NullArgument::ECreateFromRawPointer, void *object_pointer, bool copy_object) : Exception::BadArgument(Exception::BadArgument::force_creating_from_raw_pointer, 0, false)
 {
     if (object_pointer && copy_object)
@@ -73,7 +81,7 @@ inline Exception::NullArgument::NullArgument(Exception::NullArgument::ECreateFro
 
 inline Exception::NullArgument::~NullArgument()
 {
-    if (mObject)
+    if (mObject && Exception::Generic::mObject)
     {
         exception_null_argument_delete(mObject);
         SetObject(0);
@@ -82,9 +90,9 @@ inline Exception::NullArgument::~NullArgument()
 
 inline Exception::NullArgument& Exception::NullArgument::operator=(const Exception::NullArgument& other)
 {
-    if (mObject != other.mObject)
+    if (this != &other)
     {
-        if (mObject)
+        if (mObject && Exception::Generic::mObject)
         {
             exception_null_argument_delete(mObject);
             SetObject(0);
@@ -103,6 +111,24 @@ inline Exception::NullArgument& Exception::NullArgument::operator=(const Excepti
     }
     return *this;
 }
+
+#ifdef EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Exception::NullArgument& Exception::NullArgument::operator=(Exception::NullArgument&& other)
+{
+    if (this != &other)
+    {
+        if (mObject && Exception::Generic::mObject)
+        {
+            exception_null_argument_delete(mObject);
+            SetObject(0);
+        }
+        Exception::BadArgument::operator=(std::move(other));
+        mObject = other.mObject;
+        other.mObject = 0;
+    }
+    return *this;
+}
+#endif /* EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES */
 
 inline Exception::NullArgument Exception::NullArgument::Null()
 {

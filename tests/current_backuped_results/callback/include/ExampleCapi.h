@@ -89,31 +89,31 @@ enum beautiful_capi_callback_exception_code_t
 #endif
 
 #ifdef __cplusplus
-
     #ifdef _MSC_VER
         #if _MSC_VER >= 1900
             #define EXAMPLE_NOEXCEPT noexcept
         #else /* _MSC_VER >= 1900 */
             #define EXAMPLE_NOEXCEPT
         #endif /* _MSC_VER >= 1900 */
-        #if _MSC_VER >= 1800
+        #if _MSC_VER >= 1600
             #define EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+        #endif /* _MSC_VER >= 1600 */
+        #if _MSC_VER >= 1800
+            #define EXAMPLE_CPP_COMPILER_HAS_MOVE_CONSTRUCTOR_DELETE
         #endif /* _MSC_VER >= 1800 */
     #else /* _MSC_VER */
         #if __cplusplus >= 201103L
             #define EXAMPLE_NOEXCEPT noexcept
             #define EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+            #define EXAMPLE_CPP_COMPILER_HAS_MOVE_CONSTRUCTOR_DELETE
         #else /* __cplusplus >= 201103L */
             #define EXAMPLE_NOEXCEPT
         #endif /* __cplusplus >= 201103L */
     #endif /* _MSC_VER */
-
 #endif /* __cplusplus */
 
 #ifndef EXAMPLE_CAPI_USE_DYNAMIC_LOADER
     
-    typedef void* (EXAMPLE_API_CONVENTION *example_printer_copy_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
-    typedef void (EXAMPLE_API_CONVENTION *example_printer_delete_callback_type)(void* object_pointer);
     typedef void (EXAMPLE_API_CONVENTION *example_printer_print_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* text);
     typedef void (EXAMPLE_API_CONVENTION *example_printer_set_printing_quality_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, int quality);
     typedef int (EXAMPLE_API_CONVENTION *example_printer_get_printing_quality_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
@@ -140,8 +140,6 @@ enum beautiful_capi_callback_exception_code_t
     EXAMPLE_API void* EXAMPLE_API_CONVENTION example_person_copy(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_person_delete(void* object_pointer);
     EXAMPLE_API void* EXAMPLE_API_CONVENTION example_printer_callback_default(beautiful_capi_callback_exception_info_t* exception_info);
-    EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_callback_set_c_function_for_copy(void* object_pointer, example_printer_copy_callback_type c_function_pointer);
-    EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_callback_set_c_function_for_delete(void* object_pointer, example_printer_delete_callback_type c_function_pointer);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_callback_set_object_pointer(void* object_pointer, void* custom_object);
     EXAMPLE_API void* EXAMPLE_API_CONVENTION example_printer_callback_get_object_pointer(void* object_pointer);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_callback_set_c_function_for_print(void* object_pointer, example_printer_print_callback_type c_function_pointer);
@@ -155,8 +153,6 @@ enum beautiful_capi_callback_exception_code_t
     
 #else /* EXAMPLE_CAPI_USE_DYNAMIC_LOADER */
     
-    typedef void* (EXAMPLE_API_CONVENTION *example_printer_copy_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
-    typedef void (EXAMPLE_API_CONVENTION *example_printer_delete_callback_type)(void* object_pointer);
     typedef void (EXAMPLE_API_CONVENTION *example_printer_print_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* text);
     typedef void (EXAMPLE_API_CONVENTION *example_printer_set_printing_quality_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, int quality);
     typedef int (EXAMPLE_API_CONVENTION *example_printer_get_printing_quality_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
@@ -182,8 +178,6 @@ enum beautiful_capi_callback_exception_code_t
     typedef void* (EXAMPLE_API_CONVENTION *example_person_copy_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
     typedef void (EXAMPLE_API_CONVENTION *example_person_delete_function_type)(void* object_pointer);
     typedef void* (EXAMPLE_API_CONVENTION *example_printer_callback_default_function_type)(beautiful_capi_callback_exception_info_t* exception_info);
-    typedef void (EXAMPLE_API_CONVENTION *example_printer_callback_set_c_function_for_copy_function_type)(void* object_pointer, example_printer_copy_callback_type c_function_pointer);
-    typedef void (EXAMPLE_API_CONVENTION *example_printer_callback_set_c_function_for_delete_function_type)(void* object_pointer, example_printer_delete_callback_type c_function_pointer);
     typedef void (EXAMPLE_API_CONVENTION *example_printer_callback_set_object_pointer_function_type)(void* object_pointer, void* custom_object);
     typedef void* (EXAMPLE_API_CONVENTION *example_printer_callback_get_object_pointer_function_type)(void* object_pointer);
     typedef void (EXAMPLE_API_CONVENTION *example_printer_callback_set_c_function_for_print_function_type)(void* object_pointer, example_printer_print_callback_type c_function_pointer);
@@ -218,8 +212,6 @@ enum beautiful_capi_callback_exception_code_t
         extern example_person_copy_function_type example_person_copy = 0;
         extern example_person_delete_function_type example_person_delete = 0;
         extern example_printer_callback_default_function_type example_printer_callback_default = 0;
-        extern example_printer_callback_set_c_function_for_copy_function_type example_printer_callback_set_c_function_for_copy = 0;
-        extern example_printer_callback_set_c_function_for_delete_function_type example_printer_callback_set_c_function_for_delete = 0;
         extern example_printer_callback_set_object_pointer_function_type example_printer_callback_set_object_pointer = 0;
         extern example_printer_callback_get_object_pointer_function_type example_printer_callback_get_object_pointer = 0;
         extern example_printer_callback_set_c_function_for_print_function_type example_printer_callback_set_c_function_for_print = 0;
@@ -254,8 +246,6 @@ enum beautiful_capi_callback_exception_code_t
         extern example_person_copy_function_type example_person_copy;
         extern example_person_delete_function_type example_person_delete;
         extern example_printer_callback_default_function_type example_printer_callback_default;
-        extern example_printer_callback_set_c_function_for_copy_function_type example_printer_callback_set_c_function_for_copy;
-        extern example_printer_callback_set_c_function_for_delete_function_type example_printer_callback_set_c_function_for_delete;
         extern example_printer_callback_set_object_pointer_function_type example_printer_callback_set_object_pointer;
         extern example_printer_callback_get_object_pointer_function_type example_printer_callback_get_object_pointer;
         extern example_printer_callback_set_c_function_for_print_function_type example_printer_callback_set_c_function_for_print;
@@ -341,8 +331,6 @@ enum beautiful_capi_callback_exception_code_t
                 load_function<example_person_copy_function_type>(example_person_copy, "example_person_copy");
                 load_function<example_person_delete_function_type>(example_person_delete, "example_person_delete");
                 load_function<example_printer_callback_default_function_type>(example_printer_callback_default, "example_printer_callback_default");
-                load_function<example_printer_callback_set_c_function_for_copy_function_type>(example_printer_callback_set_c_function_for_copy, "example_printer_callback_set_c_function_for_copy");
-                load_function<example_printer_callback_set_c_function_for_delete_function_type>(example_printer_callback_set_c_function_for_delete, "example_printer_callback_set_c_function_for_delete");
                 load_function<example_printer_callback_set_object_pointer_function_type>(example_printer_callback_set_object_pointer, "example_printer_callback_set_object_pointer");
                 load_function<example_printer_callback_get_object_pointer_function_type>(example_printer_callback_get_object_pointer, "example_printer_callback_get_object_pointer");
                 load_function<example_printer_callback_set_c_function_for_print_function_type>(example_printer_callback_set_c_function_for_print, "example_printer_callback_set_c_function_for_print");
@@ -357,9 +345,9 @@ enum beautiful_capi_callback_exception_code_t
             
             Initialization();
             Initialization(const Initialization&);
-            #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+            #ifdef EXAMPLE_CPP_COMPILER_HAS_MOVE_CONSTRUCTOR_DELETE
                 Initialization(Initialization &&) = delete;
-            #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
+            #endif /* EXAMPLE_CPP_COMPILER_HAS_MOVE_CONSTRUCTOR_DELETE */
         public:
             Initialization(const char* shared_library_name)
             {
@@ -393,8 +381,6 @@ enum beautiful_capi_callback_exception_code_t
                 example_person_copy = 0;
                 example_person_delete = 0;
                 example_printer_callback_default = 0;
-                example_printer_callback_set_c_function_for_copy = 0;
-                example_printer_callback_set_c_function_for_delete = 0;
                 example_printer_callback_set_object_pointer = 0;
                 example_printer_callback_get_object_pointer = 0;
                 example_printer_callback_set_c_function_for_print = 0;

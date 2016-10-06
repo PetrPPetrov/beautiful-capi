@@ -46,6 +46,14 @@ inline Example::ITrianglePtr::ITrianglePtr(const ITrianglePtr& other) : Example:
     }
 }
 
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::ITrianglePtr::ITrianglePtr(ITrianglePtr&& other) : Example::IPolygonPtr(std::move(other))
+{
+    mObject = other.mObject;
+    other.mObject = 0;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
+
 inline Example::ITrianglePtr::ITrianglePtr(Example::ITrianglePtr::ECreateFromRawPointer, void *object_pointer, bool add_ref_object) : Example::IPolygonPtr(Example::IPolygonPtr::force_creating_from_raw_pointer, 0, false)
 {
     SetObject(object_pointer);
@@ -57,7 +65,7 @@ inline Example::ITrianglePtr::ITrianglePtr(Example::ITrianglePtr::ECreateFromRaw
 
 inline Example::ITrianglePtr::~ITrianglePtr()
 {
-    if (mObject)
+    if (mObject && Example::IShapePtr::mObject)
     {
         example_i_triangle_release(mObject);
         SetObject(0);
@@ -68,7 +76,7 @@ inline Example::ITrianglePtr& Example::ITrianglePtr::operator=(const Example::IT
 {
     if (mObject != other.mObject)
     {
-        if (mObject)
+        if (mObject && Example::IShapePtr::mObject)
         {
             example_i_triangle_release(mObject);
             SetObject(0);
@@ -81,6 +89,24 @@ inline Example::ITrianglePtr& Example::ITrianglePtr::operator=(const Example::IT
     }
     return *this;
 }
+
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::ITrianglePtr& Example::ITrianglePtr::operator=(Example::ITrianglePtr&& other)
+{
+    if (mObject != other.mObject)
+    {
+        if (mObject && Example::IShapePtr::mObject)
+        {
+            example_i_triangle_release(mObject);
+            SetObject(0);
+        }
+        Example::IPolygonPtr::operator=(std::move(other));
+        mObject = other.mObject;
+        other.mObject = 0;
+    }
+    return *this;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
 
 inline Example::ITrianglePtr Example::ITrianglePtr::Null()
 {

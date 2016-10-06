@@ -2,8 +2,6 @@
 ___std::cout___
 Printer ctor
 print text: from create_printer()
-Printer copy ctor
-Printer dtor
 print text: from main()
 Printer copy ctor
 print text: from f1()

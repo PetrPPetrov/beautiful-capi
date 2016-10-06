@@ -46,6 +46,14 @@ inline Example::ICirclePtr::ICirclePtr(const ICirclePtr& other) : Example::IShap
     }
 }
 
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::ICirclePtr::ICirclePtr(ICirclePtr&& other) : Example::IShapePtr(std::move(other))
+{
+    mObject = other.mObject;
+    other.mObject = 0;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
+
 inline Example::ICirclePtr::ICirclePtr(Example::ICirclePtr::ECreateFromRawPointer, void *object_pointer, bool add_ref_object) : Example::IShapePtr(Example::IShapePtr::force_creating_from_raw_pointer, 0, false)
 {
     SetObject(object_pointer);
@@ -57,7 +65,7 @@ inline Example::ICirclePtr::ICirclePtr(Example::ICirclePtr::ECreateFromRawPointe
 
 inline Example::ICirclePtr::~ICirclePtr()
 {
-    if (mObject)
+    if (mObject && Example::IShapePtr::mObject)
     {
         example_i_circle_release(mObject);
         SetObject(0);
@@ -68,7 +76,7 @@ inline Example::ICirclePtr& Example::ICirclePtr::operator=(const Example::ICircl
 {
     if (mObject != other.mObject)
     {
-        if (mObject)
+        if (mObject && Example::IShapePtr::mObject)
         {
             example_i_circle_release(mObject);
             SetObject(0);
@@ -81,6 +89,24 @@ inline Example::ICirclePtr& Example::ICirclePtr::operator=(const Example::ICircl
     }
     return *this;
 }
+
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::ICirclePtr& Example::ICirclePtr::operator=(Example::ICirclePtr&& other)
+{
+    if (mObject != other.mObject)
+    {
+        if (mObject && Example::IShapePtr::mObject)
+        {
+            example_i_circle_release(mObject);
+            SetObject(0);
+        }
+        Example::IShapePtr::operator=(std::move(other));
+        mObject = other.mObject;
+        other.mObject = 0;
+    }
+    return *this;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
 
 inline Example::ICirclePtr Example::ICirclePtr::Null()
 {

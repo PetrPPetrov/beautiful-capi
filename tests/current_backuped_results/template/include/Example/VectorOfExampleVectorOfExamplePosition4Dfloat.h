@@ -69,6 +69,14 @@ inline Example::VectorOf<Example::VectorOf<Example::Position4D<float> > >::Vecto
     }
 }
 
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::VectorOf<Example::VectorOf<Example::Position4D<float> > >::VectorOf(VectorOf<Example::VectorOf<Example::Position4D<float> > >&& other)
+{
+    mObject = other.mObject;
+    other.mObject = 0;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
+
 inline Example::VectorOf<Example::VectorOf<Example::Position4D<float> > >::VectorOf(Example::VectorOf<Example::VectorOf<Example::Position4D<float> > >::ECreateFromRawPointer, void *object_pointer, bool copy_object)
 {
     if (object_pointer && copy_object)
@@ -83,7 +91,7 @@ inline Example::VectorOf<Example::VectorOf<Example::Position4D<float> > >::Vecto
 
 inline Example::VectorOf<Example::VectorOf<Example::Position4D<float> > >::~VectorOf()
 {
-    if (mObject)
+    if (mObject && Example::VectorOf<Example::VectorOf<Example::Position4D<float> > >::mObject)
     {
         example_vector_of_example_vector_of_example_position4_d_float_delete(mObject);
         SetObject(0);
@@ -92,9 +100,9 @@ inline Example::VectorOf<Example::VectorOf<Example::Position4D<float> > >::~Vect
 
 inline Example::VectorOf<Example::VectorOf<Example::Position4D<float> > >& Example::VectorOf<Example::VectorOf<Example::Position4D<float> > >::operator=(const Example::VectorOf<Example::VectorOf<Example::Position4D<float> > >& other)
 {
-    if (mObject != other.mObject)
+    if (this != &other)
     {
-        if (mObject)
+        if (mObject && Example::VectorOf<Example::VectorOf<Example::Position4D<float> > >::mObject)
         {
             example_vector_of_example_vector_of_example_position4_d_float_delete(mObject);
             SetObject(0);
@@ -110,6 +118,23 @@ inline Example::VectorOf<Example::VectorOf<Example::Position4D<float> > >& Examp
     }
     return *this;
 }
+
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::VectorOf<Example::VectorOf<Example::Position4D<float> > >& Example::VectorOf<Example::VectorOf<Example::Position4D<float> > >::operator=(Example::VectorOf<Example::VectorOf<Example::Position4D<float> > >&& other)
+{
+    if (this != &other)
+    {
+        if (mObject && Example::VectorOf<Example::VectorOf<Example::Position4D<float> > >::mObject)
+        {
+            example_vector_of_example_vector_of_example_position4_d_float_delete(mObject);
+            SetObject(0);
+        }
+        mObject = other.mObject;
+        other.mObject = 0;
+    }
+    return *this;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
 
 inline Example::VectorOf<Example::VectorOf<Example::Position4D<float> > > Example::VectorOf<Example::VectorOf<Example::Position4D<float> > >::Null()
 {

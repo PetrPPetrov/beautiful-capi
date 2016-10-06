@@ -44,10 +44,16 @@ public:
     inline void SetPoints(const PointSet::PointsPtr& value);
     
     inline PointSetPtr(const PointSetPtr& other);
+    #ifdef POINTSET_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline PointSetPtr(PointSetPtr&& other);
+    #endif /* POINTSET_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     enum ECreateFromRawPointer { force_creating_from_raw_pointer };
     inline PointSetPtr(ECreateFromRawPointer, void *object_pointer, bool add_ref_object);
     inline ~PointSetPtr();
     inline PointSetPtr& operator=(const PointSetPtr& other);
+    #ifdef POINTSET_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline PointSetPtr& operator=(PointSetPtr&& other);
+    #endif /* POINTSET_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     static inline PointSetPtr Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;

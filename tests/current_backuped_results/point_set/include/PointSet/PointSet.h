@@ -66,6 +66,14 @@ inline PointSet::PointSetPtr::PointSetPtr(const PointSetPtr& other)
     }
 }
 
+#ifdef POINTSET_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline PointSet::PointSetPtr::PointSetPtr(PointSetPtr&& other)
+{
+    mObject = other.mObject;
+    other.mObject = 0;
+}
+#endif /* POINTSET_CPP_COMPILER_HAS_RVALUE_REFERENCES */
+
 inline PointSet::PointSetPtr::PointSetPtr(PointSet::PointSetPtr::ECreateFromRawPointer, void *object_pointer, bool add_ref_object)
 {
     SetObject(object_pointer);
@@ -77,7 +85,7 @@ inline PointSet::PointSetPtr::PointSetPtr(PointSet::PointSetPtr::ECreateFromRawP
 
 inline PointSet::PointSetPtr::~PointSetPtr()
 {
-    if (mObject)
+    if (mObject && PointSet::PointSetPtr::mObject)
     {
         point_set_point_set_release(mObject);
         SetObject(0);
@@ -88,7 +96,7 @@ inline PointSet::PointSetPtr& PointSet::PointSetPtr::operator=(const PointSet::P
 {
     if (mObject != other.mObject)
     {
-        if (mObject)
+        if (mObject && PointSet::PointSetPtr::mObject)
         {
             point_set_point_set_release(mObject);
             SetObject(0);
@@ -101,6 +109,23 @@ inline PointSet::PointSetPtr& PointSet::PointSetPtr::operator=(const PointSet::P
     }
     return *this;
 }
+
+#ifdef POINTSET_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline PointSet::PointSetPtr& PointSet::PointSetPtr::operator=(PointSet::PointSetPtr&& other)
+{
+    if (mObject != other.mObject)
+    {
+        if (mObject && PointSet::PointSetPtr::mObject)
+        {
+            point_set_point_set_release(mObject);
+            SetObject(0);
+        }
+        mObject = other.mObject;
+        other.mObject = 0;
+    }
+    return *this;
+}
+#endif /* POINTSET_CPP_COMPILER_HAS_RVALUE_REFERENCES */
 
 inline PointSet::PointSetPtr PointSet::PointSetPtr::Null()
 {

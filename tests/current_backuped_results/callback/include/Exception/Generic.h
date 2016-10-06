@@ -60,6 +60,14 @@ inline Exception::Generic::Generic(const Generic& other)
     }
 }
 
+#ifdef EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Exception::Generic::Generic(Generic&& other)
+{
+    mObject = other.mObject;
+    other.mObject = 0;
+}
+#endif /* EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES */
+
 inline Exception::Generic::Generic(Exception::Generic::ECreateFromRawPointer, void *object_pointer, bool copy_object)
 {
     if (object_pointer && copy_object)
@@ -77,7 +85,7 @@ inline Exception::Generic::Generic(Exception::Generic::ECreateFromRawPointer, vo
 
 inline Exception::Generic::~Generic()
 {
-    if (mObject)
+    if (mObject && Exception::Generic::mObject)
     {
         exception_generic_delete(mObject);
         SetObject(0);
@@ -86,9 +94,9 @@ inline Exception::Generic::~Generic()
 
 inline Exception::Generic& Exception::Generic::operator=(const Exception::Generic& other)
 {
-    if (mObject != other.mObject)
+    if (this != &other)
     {
-        if (mObject)
+        if (mObject && Exception::Generic::mObject)
         {
             exception_generic_delete(mObject);
             SetObject(0);
@@ -107,6 +115,23 @@ inline Exception::Generic& Exception::Generic::operator=(const Exception::Generi
     }
     return *this;
 }
+
+#ifdef EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Exception::Generic& Exception::Generic::operator=(Exception::Generic&& other)
+{
+    if (this != &other)
+    {
+        if (mObject && Exception::Generic::mObject)
+        {
+            exception_generic_delete(mObject);
+            SetObject(0);
+        }
+        mObject = other.mObject;
+        other.mObject = 0;
+    }
+    return *this;
+}
+#endif /* EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES */
 
 inline Exception::Generic Exception::Generic::Null()
 {

@@ -40,10 +40,16 @@ public:
     inline void Show() const;
     
     inline IShapePtr(const IShapePtr& other);
+    #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline IShapePtr(IShapePtr&& other);
+    #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     enum ECreateFromRawPointer { force_creating_from_raw_pointer };
     inline IShapePtr(ECreateFromRawPointer, void *object_pointer, bool add_ref_object);
     inline ~IShapePtr();
     inline IShapePtr& operator=(const IShapePtr& other);
+    #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline IShapePtr& operator=(IShapePtr&& other);
+    #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     static inline IShapePtr Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;

@@ -41,16 +41,6 @@ inline Example::PrinterCallbackPtr::PrinterCallbackPtr() : Example::PrinterPtr(E
     SetObject(result);
 }
 
-inline void Example::PrinterCallbackPtr::SetCFunctionForCopy(example_printer_copy_callback_type c_function_pointer)
-{
-    example_printer_callback_set_c_function_for_copy(this->GetRawPointer(), c_function_pointer);
-}
-
-inline void Example::PrinterCallbackPtr::SetCFunctionForDelete(example_printer_delete_callback_type c_function_pointer)
-{
-    example_printer_callback_set_c_function_for_delete(this->GetRawPointer(), c_function_pointer);
-}
-
 inline void Example::PrinterCallbackPtr::SetObjectPointer(void* custom_object)
 {
     example_printer_callback_set_object_pointer(this->GetRawPointer(), custom_object);
@@ -90,6 +80,14 @@ inline Example::PrinterCallbackPtr::PrinterCallbackPtr(const PrinterCallbackPtr&
     }
 }
 
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::PrinterCallbackPtr::PrinterCallbackPtr(PrinterCallbackPtr&& other) : Example::PrinterPtr(std::move(other))
+{
+    mObject = other.mObject;
+    other.mObject = 0;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
+
 inline Example::PrinterCallbackPtr::PrinterCallbackPtr(Example::PrinterCallbackPtr::ECreateFromRawPointer, void *object_pointer, bool add_ref_object) : Example::PrinterPtr(Example::PrinterPtr::force_creating_from_raw_pointer, 0, false)
 {
     SetObject(object_pointer);
@@ -101,7 +99,7 @@ inline Example::PrinterCallbackPtr::PrinterCallbackPtr(Example::PrinterCallbackP
 
 inline Example::PrinterCallbackPtr::~PrinterCallbackPtr()
 {
-    if (mObject)
+    if (mObject && Example::PrinterPtr::mObject)
     {
         example_printer_callback_release(mObject);
         SetObject(0);
@@ -112,7 +110,7 @@ inline Example::PrinterCallbackPtr& Example::PrinterCallbackPtr::operator=(const
 {
     if (mObject != other.mObject)
     {
-        if (mObject)
+        if (mObject && Example::PrinterPtr::mObject)
         {
             example_printer_callback_release(mObject);
             SetObject(0);
@@ -125,6 +123,24 @@ inline Example::PrinterCallbackPtr& Example::PrinterCallbackPtr::operator=(const
     }
     return *this;
 }
+
+#ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+inline Example::PrinterCallbackPtr& Example::PrinterCallbackPtr::operator=(Example::PrinterCallbackPtr&& other)
+{
+    if (mObject != other.mObject)
+    {
+        if (mObject && Example::PrinterPtr::mObject)
+        {
+            example_printer_callback_release(mObject);
+            SetObject(0);
+        }
+        Example::PrinterPtr::operator=(std::move(other));
+        mObject = other.mObject;
+        other.mObject = 0;
+    }
+    return *this;
+}
+#endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
 
 inline Example::PrinterCallbackPtr Example::PrinterCallbackPtr::Null()
 {
@@ -194,12 +210,6 @@ inline Example::PrinterCallbackPtr down_cast<Example::PrinterCallbackPtr>(const 
 namespace Example {
 
 template<typename ImplementationClass>
-void* EXAMPLE_API_CONVENTION printer_copy_callback(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
-
-template<typename ImplementationClass>
-void EXAMPLE_API_CONVENTION printer_delete_callback(void* object_pointer);
-
-template<typename ImplementationClass>
 void EXAMPLE_API_CONVENTION printer_print_callback(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* text);
 
 template<typename ImplementationClass>
@@ -215,8 +225,6 @@ template<typename ImplementationClass>
 Example::PrinterCallbackPtr create_callback_for_printer(ImplementationClass* implementation_class)
 {
     Example::PrinterCallbackPtr result;
-    result.SetCFunctionForCopy(printer_copy_callback<ImplementationClass>);
-    result.SetCFunctionForDelete(printer_delete_callback<ImplementationClass>);
     result.SetCFunctionForPrint(printer_print_callback<ImplementationClass>);
     result.SetCFunctionForSetPrintingQuality(printer_set_printing_quality_callback<ImplementationClass>);
     result.SetCFunctionForGetPrintingQuality(printer_get_printing_quality_callback<ImplementationClass>);
@@ -229,68 +237,6 @@ template<typename ImplementationClass>
 inline Example::PrinterCallbackPtr create_callback_for_printer(ImplementationClass& implementation_class)
 {
     return create_callback_for_printer(&implementation_class);
-}
-
-template<typename ImplementationClass>
-void* EXAMPLE_API_CONVENTION printer_copy_callback(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer)
-{
-    try
-    {
-        if (exception_info)
-        {
-            exception_info->code = 0;
-            exception_info->object_pointer = 0;
-        }
-        ImplementationClass* self = static_cast<ImplementationClass*>(object_pointer);
-        return new ImplementationClass(*self);
-    }
-    catch (Exception::NullArgument& exception_object)
-    {
-        if (exception_info)
-        {
-            exception_info->code = 3;
-            exception_info->object_pointer = exception_object.Detach();
-        }
-    }
-    catch (Exception::BadArgument& exception_object)
-    {
-        if (exception_info)
-        {
-            exception_info->code = 2;
-            exception_info->object_pointer = exception_object.Detach();
-        }
-    }
-    catch (Exception::DivisionByZero& exception_object)
-    {
-        if (exception_info)
-        {
-            exception_info->code = 4;
-            exception_info->object_pointer = exception_object.Detach();
-        }
-    }
-    catch (Exception::Generic& exception_object)
-    {
-        if (exception_info)
-        {
-            exception_info->code = 1;
-            exception_info->object_pointer = exception_object.Detach();
-        }
-    }
-    catch (...)
-    {
-        if (exception_info)
-        {
-            exception_info->code = -1;
-        }
-    }
-    return static_cast<void*>(0);
-}
-
-template<typename ImplementationClass>
-void EXAMPLE_API_CONVENTION printer_delete_callback(void* object_pointer)
-{
-    ImplementationClass* self = static_cast<ImplementationClass*>(object_pointer);
-    delete self;
 }
 
 template<typename ImplementationClass>

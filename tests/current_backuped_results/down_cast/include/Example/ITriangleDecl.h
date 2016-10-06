@@ -41,10 +41,16 @@ public:
     inline void SetPoints(double x1, double y1, double x2, double y2, double x3, double y3);
     
     inline ITrianglePtr(const ITrianglePtr& other);
+    #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline ITrianglePtr(ITrianglePtr&& other);
+    #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     enum ECreateFromRawPointer { force_creating_from_raw_pointer };
     inline ITrianglePtr(ECreateFromRawPointer, void *object_pointer, bool add_ref_object);
     inline ~ITrianglePtr();
     inline ITrianglePtr& operator=(const ITrianglePtr& other);
+    #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
+    inline ITrianglePtr& operator=(ITrianglePtr&& other);
+    #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
     static inline ITrianglePtr Null();
     inline bool IsNull() const;
     inline bool IsNotNull() const;
