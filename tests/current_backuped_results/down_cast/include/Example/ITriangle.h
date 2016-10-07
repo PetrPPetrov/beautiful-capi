@@ -34,22 +34,22 @@
 
 inline void Example::ITrianglePtr::SetPoints(double x1, double y1, double x2, double y2, double x3, double y3)
 {
-    example_i_triangle_set_points(this->GetRawPointer(), x1, y1, x2, y2, x3, y3);
+    example_i_triangle_set_points(GetRawPointer(), x1, y1, x2, y2, x3, y3);
 }
 
 inline Example::ITrianglePtr::ITrianglePtr(const ITrianglePtr& other) : Example::IPolygonPtr(Example::IPolygonPtr::force_creating_from_raw_pointer, 0, false)
 {
-    SetObject(other.mObject);
-    if (other.mObject)
+    SetObject(other.GetRawPointer());
+    if (other.GetRawPointer())
     {
-        example_i_triangle_add_ref(other.mObject);
+        example_i_triangle_add_ref(other.GetRawPointer());
     }
 }
 
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::ITrianglePtr::ITrianglePtr(ITrianglePtr&& other) : Example::IPolygonPtr(std::move(other))
 {
-    mObject = other.mObject;
+    mObject = other.GetRawPointer();
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -65,26 +65,26 @@ inline Example::ITrianglePtr::ITrianglePtr(Example::ITrianglePtr::ECreateFromRaw
 
 inline Example::ITrianglePtr::~ITrianglePtr()
 {
-    if (mObject && Example::IShapePtr::mObject)
+    if (GetRawPointer())
     {
-        example_i_triangle_release(mObject);
+        example_i_triangle_release(GetRawPointer());
         SetObject(0);
     }
 }
 
 inline Example::ITrianglePtr& Example::ITrianglePtr::operator=(const Example::ITrianglePtr& other)
 {
-    if (mObject != other.mObject)
+    if (GetRawPointer() != other.GetRawPointer())
     {
-        if (mObject && Example::IShapePtr::mObject)
+        if (GetRawPointer())
         {
-            example_i_triangle_release(mObject);
+            example_i_triangle_release(GetRawPointer());
             SetObject(0);
         }
-        SetObject(other.mObject);
-        if (other.mObject)
+        SetObject(other.GetRawPointer());
+        if (other.GetRawPointer())
         {
-            example_i_triangle_add_ref(other.mObject);
+            example_i_triangle_add_ref(other.GetRawPointer());
         }
     }
     return *this;
@@ -93,15 +93,15 @@ inline Example::ITrianglePtr& Example::ITrianglePtr::operator=(const Example::IT
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::ITrianglePtr& Example::ITrianglePtr::operator=(Example::ITrianglePtr&& other)
 {
-    if (mObject != other.mObject)
+    if (GetRawPointer() != other.GetRawPointer())
     {
-        if (mObject && Example::IShapePtr::mObject)
+        if (GetRawPointer())
         {
-            example_i_triangle_release(mObject);
+            example_i_triangle_release(GetRawPointer());
             SetObject(0);
         }
         Example::IPolygonPtr::operator=(std::move(other));
-        mObject = other.mObject;
+        mObject = other.GetRawPointer();
         other.mObject = 0;
     }
     return *this;
@@ -115,29 +115,29 @@ inline Example::ITrianglePtr Example::ITrianglePtr::Null()
 
 inline bool Example::ITrianglePtr::IsNull() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline bool Example::ITrianglePtr::IsNotNull() const
 {
-    return mObject != 0;
+    return GetRawPointer() != 0;
 }
 
 inline bool Example::ITrianglePtr::operator!() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline void* Example::ITrianglePtr::Detach()
 {
-    void* result = mObject;
+    void* result = GetRawPointer();
     SetObject(0);
     return result;
 }
 
 inline void* Example::ITrianglePtr::GetRawPointer() const
 {
-    return mObject;
+    return Example::IShapePtr::mObject ? mObject: 0;
 }
 
 inline Example::ITrianglePtr* Example::ITrianglePtr::operator->()

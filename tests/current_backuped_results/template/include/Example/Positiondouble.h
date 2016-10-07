@@ -38,39 +38,39 @@ inline Example::Position<double>::Position()
 
 inline double Example::Position<double>::GetX() const
 {
-    return example_position_double_get_x(this->GetRawPointer());
+    return example_position_double_get_x(GetRawPointer());
 }
 
 inline void Example::Position<double>::SetX(double x)
 {
-    example_position_double_set_x(this->GetRawPointer(), x);
+    example_position_double_set_x(GetRawPointer(), x);
 }
 
 inline double Example::Position<double>::GetY() const
 {
-    return example_position_double_get_y(this->GetRawPointer());
+    return example_position_double_get_y(GetRawPointer());
 }
 
 inline void Example::Position<double>::SetY(double y)
 {
-    example_position_double_set_y(this->GetRawPointer(), y);
+    example_position_double_set_y(GetRawPointer(), y);
 }
 
 inline double Example::Position<double>::GetZ() const
 {
-    return example_position_double_get_z(this->GetRawPointer());
+    return example_position_double_get_z(GetRawPointer());
 }
 
 inline void Example::Position<double>::SetZ(double z)
 {
-    example_position_double_set_z(this->GetRawPointer(), z);
+    example_position_double_set_z(GetRawPointer(), z);
 }
 
 inline Example::Position<double>::Position(const Position<double>& other)
 {
-    if (other.mObject)
+    if (other.GetRawPointer())
     {
-        SetObject(example_position_double_copy(other.mObject));
+        SetObject(example_position_double_copy(other.GetRawPointer()));
     }
     else
     {
@@ -81,7 +81,7 @@ inline Example::Position<double>::Position(const Position<double>& other)
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::Position<double>::Position(Position<double>&& other)
 {
-    mObject = other.mObject;
+    mObject = other.GetRawPointer();
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -100,9 +100,9 @@ inline Example::Position<double>::Position(Example::Position<double>::ECreateFro
 
 inline Example::Position<double>::~Position()
 {
-    if (mObject && Example::Position<double>::mObject)
+    if (GetRawPointer())
     {
-        example_position_double_delete(mObject);
+        example_position_double_delete(GetRawPointer());
         SetObject(0);
     }
 }
@@ -111,14 +111,14 @@ inline Example::Position<double>& Example::Position<double>::operator=(const Exa
 {
     if (this != &other)
     {
-        if (mObject && Example::Position<double>::mObject)
+        if (GetRawPointer())
         {
-            example_position_double_delete(mObject);
+            example_position_double_delete(GetRawPointer());
             SetObject(0);
         }
-        if (other.mObject)
+        if (other.GetRawPointer())
         {
-            SetObject(example_position_double_copy(other.mObject));
+            SetObject(example_position_double_copy(other.GetRawPointer()));
         }
         else
         {
@@ -133,12 +133,12 @@ inline Example::Position<double>& Example::Position<double>::operator=(Example::
 {
     if (this != &other)
     {
-        if (mObject && Example::Position<double>::mObject)
+        if (GetRawPointer())
         {
-            example_position_double_delete(mObject);
+            example_position_double_delete(GetRawPointer());
             SetObject(0);
         }
-        mObject = other.mObject;
+        mObject = other.GetRawPointer();
         other.mObject = 0;
     }
     return *this;
@@ -152,29 +152,29 @@ inline Example::Position<double> Example::Position<double>::Null()
 
 inline bool Example::Position<double>::IsNull() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline bool Example::Position<double>::IsNotNull() const
 {
-    return mObject != 0;
+    return GetRawPointer() != 0;
 }
 
 inline bool Example::Position<double>::operator!() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline void* Example::Position<double>::Detach()
 {
-    void* result = mObject;
+    void* result = GetRawPointer();
     SetObject(0);
     return result;
 }
 
 inline void* Example::Position<double>::GetRawPointer() const
 {
-    return mObject;
+    return Example::Position<double>::mObject ? mObject: 0;
 }
 
 inline void Example::Position<double>::SetObject(void* object_pointer)

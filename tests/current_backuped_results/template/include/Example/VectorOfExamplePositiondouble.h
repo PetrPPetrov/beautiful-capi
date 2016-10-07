@@ -39,29 +39,29 @@ inline Example::VectorOf<Example::Position<double> >::VectorOf()
 
 inline int Example::VectorOf<Example::Position<double> >::GetSize() const
 {
-    return example_vector_of_example_position_double_get_size(this->GetRawPointer());
+    return example_vector_of_example_position_double_get_size(GetRawPointer());
 }
 
 inline void Example::VectorOf<Example::Position<double> >::Clear()
 {
-    example_vector_of_example_position_double_clear(this->GetRawPointer());
+    example_vector_of_example_position_double_clear(GetRawPointer());
 }
 
 inline void Example::VectorOf<Example::Position<double> >::PushBack(const Example::Position<double>& value)
 {
-    example_vector_of_example_position_double_push_back(this->GetRawPointer(), value.GetRawPointer());
+    example_vector_of_example_position_double_push_back(GetRawPointer(), value.GetRawPointer());
 }
 
 inline Example::Position<double> Example::VectorOf<Example::Position<double> >::GetItem(int index) const
 {
-    return Example::Position<double>(Example::Position<double>::force_creating_from_raw_pointer, example_vector_of_example_position_double_get_item(this->GetRawPointer(), index), false);
+    return Example::Position<double>(Example::Position<double>::force_creating_from_raw_pointer, example_vector_of_example_position_double_get_item(GetRawPointer(), index), false);
 }
 
 inline Example::VectorOf<Example::Position<double> >::VectorOf(const VectorOf<Example::Position<double> >& other)
 {
-    if (other.mObject)
+    if (other.GetRawPointer())
     {
-        SetObject(example_vector_of_example_position_double_copy(other.mObject));
+        SetObject(example_vector_of_example_position_double_copy(other.GetRawPointer()));
     }
     else
     {
@@ -72,7 +72,7 @@ inline Example::VectorOf<Example::Position<double> >::VectorOf(const VectorOf<Ex
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::VectorOf<Example::Position<double> >::VectorOf(VectorOf<Example::Position<double> >&& other)
 {
-    mObject = other.mObject;
+    mObject = other.GetRawPointer();
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -91,9 +91,9 @@ inline Example::VectorOf<Example::Position<double> >::VectorOf(Example::VectorOf
 
 inline Example::VectorOf<Example::Position<double> >::~VectorOf()
 {
-    if (mObject && Example::VectorOf<Example::Position<double> >::mObject)
+    if (GetRawPointer())
     {
-        example_vector_of_example_position_double_delete(mObject);
+        example_vector_of_example_position_double_delete(GetRawPointer());
         SetObject(0);
     }
 }
@@ -102,14 +102,14 @@ inline Example::VectorOf<Example::Position<double> >& Example::VectorOf<Example:
 {
     if (this != &other)
     {
-        if (mObject && Example::VectorOf<Example::Position<double> >::mObject)
+        if (GetRawPointer())
         {
-            example_vector_of_example_position_double_delete(mObject);
+            example_vector_of_example_position_double_delete(GetRawPointer());
             SetObject(0);
         }
-        if (other.mObject)
+        if (other.GetRawPointer())
         {
-            SetObject(example_vector_of_example_position_double_copy(other.mObject));
+            SetObject(example_vector_of_example_position_double_copy(other.GetRawPointer()));
         }
         else
         {
@@ -124,12 +124,12 @@ inline Example::VectorOf<Example::Position<double> >& Example::VectorOf<Example:
 {
     if (this != &other)
     {
-        if (mObject && Example::VectorOf<Example::Position<double> >::mObject)
+        if (GetRawPointer())
         {
-            example_vector_of_example_position_double_delete(mObject);
+            example_vector_of_example_position_double_delete(GetRawPointer());
             SetObject(0);
         }
-        mObject = other.mObject;
+        mObject = other.GetRawPointer();
         other.mObject = 0;
     }
     return *this;
@@ -143,29 +143,29 @@ inline Example::VectorOf<Example::Position<double> > Example::VectorOf<Example::
 
 inline bool Example::VectorOf<Example::Position<double> >::IsNull() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline bool Example::VectorOf<Example::Position<double> >::IsNotNull() const
 {
-    return mObject != 0;
+    return GetRawPointer() != 0;
 }
 
 inline bool Example::VectorOf<Example::Position<double> >::operator!() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline void* Example::VectorOf<Example::Position<double> >::Detach()
 {
-    void* result = mObject;
+    void* result = GetRawPointer();
     SetObject(0);
     return result;
 }
 
 inline void* Example::VectorOf<Example::Position<double> >::GetRawPointer() const
 {
-    return mObject;
+    return Example::VectorOf<Example::Position<double> >::mObject ? mObject: 0;
 }
 
 inline void Example::VectorOf<Example::Position<double> >::SetObject(void* object_pointer)

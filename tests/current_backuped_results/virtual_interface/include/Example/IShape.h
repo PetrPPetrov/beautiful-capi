@@ -33,18 +33,18 @@
 
 inline void Example::IShapeRawPtr::Show() const
 {
-    example_i_shape_show(this->GetRawPointer());
+    example_i_shape_show(GetRawPointer());
 }
 
 inline Example::IShapeRawPtr::IShapeRawPtr(const IShapeRawPtr& other)
 {
-    SetObject(other.mObject);
+    SetObject(other.GetRawPointer());
 }
 
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::IShapeRawPtr::IShapeRawPtr(IShapeRawPtr&& other)
 {
-    mObject = other.mObject;
+    mObject = other.GetRawPointer();
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -56,9 +56,9 @@ inline Example::IShapeRawPtr::IShapeRawPtr(Example::IShapeRawPtr::ECreateFromRaw
 
 inline void Example::IShapeRawPtr::Delete()
 {
-    if (mObject && Example::IShapeRawPtr::mObject)
+    if (GetRawPointer())
     {
-        example_i_shape_delete(mObject);
+        example_i_shape_delete(GetRawPointer());
         SetObject(0);
     }
 }
@@ -67,7 +67,7 @@ inline Example::IShapeRawPtr& Example::IShapeRawPtr::operator=(const Example::IS
 {
     if (this != &other)
     {
-        SetObject(other.mObject);
+        SetObject(other.GetRawPointer());
     }
     return *this;
 }
@@ -77,7 +77,7 @@ inline Example::IShapeRawPtr& Example::IShapeRawPtr::operator=(Example::IShapeRa
 {
     if (this != &other)
     {
-        mObject = other.mObject;
+        mObject = other.GetRawPointer();
         other.mObject = 0;
     }
     return *this;
@@ -91,29 +91,29 @@ inline Example::IShapeRawPtr Example::IShapeRawPtr::Null()
 
 inline bool Example::IShapeRawPtr::IsNull() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline bool Example::IShapeRawPtr::IsNotNull() const
 {
-    return mObject != 0;
+    return GetRawPointer() != 0;
 }
 
 inline bool Example::IShapeRawPtr::operator!() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline void* Example::IShapeRawPtr::Detach()
 {
-    void* result = mObject;
+    void* result = GetRawPointer();
     SetObject(0);
     return result;
 }
 
 inline void* Example::IShapeRawPtr::GetRawPointer() const
 {
-    return mObject;
+    return Example::IShapeRawPtr::mObject ? mObject: 0;
 }
 
 inline Example::IShapeRawPtr* Example::IShapeRawPtr::operator->()

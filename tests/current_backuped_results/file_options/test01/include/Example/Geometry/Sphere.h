@@ -38,19 +38,19 @@ inline Example::Geometry::Sphere::Sphere()
 
 inline double Example::Geometry::Sphere::GetRadius()
 {
-    return example_geometry_sphere_get_radius(this->GetRawPointer());
+    return example_geometry_sphere_get_radius(GetRawPointer());
 }
 
 inline void Example::Geometry::Sphere::SetRadius(double value)
 {
-    example_geometry_sphere_set_radius(this->GetRawPointer(), value);
+    example_geometry_sphere_set_radius(GetRawPointer(), value);
 }
 
 inline Example::Geometry::Sphere::Sphere(const Sphere& other)
 {
-    if (other.mObject)
+    if (other.GetRawPointer())
     {
-        SetObject(example_geometry_sphere_copy(other.mObject));
+        SetObject(example_geometry_sphere_copy(other.GetRawPointer()));
     }
     else
     {
@@ -61,7 +61,7 @@ inline Example::Geometry::Sphere::Sphere(const Sphere& other)
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::Geometry::Sphere::Sphere(Sphere&& other)
 {
-    mObject = other.mObject;
+    mObject = other.GetRawPointer();
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -80,9 +80,9 @@ inline Example::Geometry::Sphere::Sphere(Example::Geometry::Sphere::ECreateFromR
 
 inline Example::Geometry::Sphere::~Sphere()
 {
-    if (mObject && Example::Geometry::Sphere::mObject)
+    if (GetRawPointer())
     {
-        example_geometry_sphere_delete(mObject);
+        example_geometry_sphere_delete(GetRawPointer());
         SetObject(0);
     }
 }
@@ -91,14 +91,14 @@ inline Example::Geometry::Sphere& Example::Geometry::Sphere::operator=(const Exa
 {
     if (this != &other)
     {
-        if (mObject && Example::Geometry::Sphere::mObject)
+        if (GetRawPointer())
         {
-            example_geometry_sphere_delete(mObject);
+            example_geometry_sphere_delete(GetRawPointer());
             SetObject(0);
         }
-        if (other.mObject)
+        if (other.GetRawPointer())
         {
-            SetObject(example_geometry_sphere_copy(other.mObject));
+            SetObject(example_geometry_sphere_copy(other.GetRawPointer()));
         }
         else
         {
@@ -113,12 +113,12 @@ inline Example::Geometry::Sphere& Example::Geometry::Sphere::operator=(Example::
 {
     if (this != &other)
     {
-        if (mObject && Example::Geometry::Sphere::mObject)
+        if (GetRawPointer())
         {
-            example_geometry_sphere_delete(mObject);
+            example_geometry_sphere_delete(GetRawPointer());
             SetObject(0);
         }
-        mObject = other.mObject;
+        mObject = other.GetRawPointer();
         other.mObject = 0;
     }
     return *this;
@@ -132,29 +132,29 @@ inline Example::Geometry::Sphere Example::Geometry::Sphere::Null()
 
 inline bool Example::Geometry::Sphere::IsNull() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline bool Example::Geometry::Sphere::IsNotNull() const
 {
-    return mObject != 0;
+    return GetRawPointer() != 0;
 }
 
 inline bool Example::Geometry::Sphere::operator!() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline void* Example::Geometry::Sphere::Detach()
 {
-    void* result = mObject;
+    void* result = GetRawPointer();
     SetObject(0);
     return result;
 }
 
 inline void* Example::Geometry::Sphere::GetRawPointer() const
 {
-    return mObject;
+    return Example::Geometry::Sphere::mObject ? mObject: 0;
 }
 
 inline void Example::Geometry::Sphere::SetObject(void* object_pointer)

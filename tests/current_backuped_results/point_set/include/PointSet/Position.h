@@ -43,39 +43,39 @@ inline PointSet::Position::Position(double X, double Y, double Z)
 
 inline double PointSet::Position::GetX() const
 {
-    return point_set_position_get_x(this->GetRawPointer());
+    return point_set_position_get_x(GetRawPointer());
 }
 
 inline void PointSet::Position::SetX(double value)
 {
-    point_set_position_set_x(this->GetRawPointer(), value);
+    point_set_position_set_x(GetRawPointer(), value);
 }
 
 inline double PointSet::Position::GetY() const
 {
-    return point_set_position_get_y(this->GetRawPointer());
+    return point_set_position_get_y(GetRawPointer());
 }
 
 inline void PointSet::Position::SetY(double value)
 {
-    point_set_position_set_y(this->GetRawPointer(), value);
+    point_set_position_set_y(GetRawPointer(), value);
 }
 
 inline double PointSet::Position::GetZ() const
 {
-    return point_set_position_get_z(this->GetRawPointer());
+    return point_set_position_get_z(GetRawPointer());
 }
 
 inline void PointSet::Position::SetZ(double value)
 {
-    point_set_position_set_z(this->GetRawPointer(), value);
+    point_set_position_set_z(GetRawPointer(), value);
 }
 
 inline PointSet::Position::Position(const Position& other)
 {
-    if (other.mObject)
+    if (other.GetRawPointer())
     {
-        SetObject(point_set_position_copy(other.mObject));
+        SetObject(point_set_position_copy(other.GetRawPointer()));
     }
     else
     {
@@ -86,7 +86,7 @@ inline PointSet::Position::Position(const Position& other)
 #ifdef POINTSET_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline PointSet::Position::Position(Position&& other)
 {
-    mObject = other.mObject;
+    mObject = other.GetRawPointer();
     other.mObject = 0;
 }
 #endif /* POINTSET_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -105,9 +105,9 @@ inline PointSet::Position::Position(PointSet::Position::ECreateFromRawPointer, v
 
 inline PointSet::Position::~Position()
 {
-    if (mObject && PointSet::Position::mObject)
+    if (GetRawPointer())
     {
-        point_set_position_delete(mObject);
+        point_set_position_delete(GetRawPointer());
         SetObject(0);
     }
 }
@@ -116,14 +116,14 @@ inline PointSet::Position& PointSet::Position::operator=(const PointSet::Positio
 {
     if (this != &other)
     {
-        if (mObject && PointSet::Position::mObject)
+        if (GetRawPointer())
         {
-            point_set_position_delete(mObject);
+            point_set_position_delete(GetRawPointer());
             SetObject(0);
         }
-        if (other.mObject)
+        if (other.GetRawPointer())
         {
-            SetObject(point_set_position_copy(other.mObject));
+            SetObject(point_set_position_copy(other.GetRawPointer()));
         }
         else
         {
@@ -138,12 +138,12 @@ inline PointSet::Position& PointSet::Position::operator=(PointSet::Position&& ot
 {
     if (this != &other)
     {
-        if (mObject && PointSet::Position::mObject)
+        if (GetRawPointer())
         {
-            point_set_position_delete(mObject);
+            point_set_position_delete(GetRawPointer());
             SetObject(0);
         }
-        mObject = other.mObject;
+        mObject = other.GetRawPointer();
         other.mObject = 0;
     }
     return *this;
@@ -157,29 +157,29 @@ inline PointSet::Position PointSet::Position::Null()
 
 inline bool PointSet::Position::IsNull() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline bool PointSet::Position::IsNotNull() const
 {
-    return mObject != 0;
+    return GetRawPointer() != 0;
 }
 
 inline bool PointSet::Position::operator!() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline void* PointSet::Position::Detach()
 {
-    void* result = mObject;
+    void* result = GetRawPointer();
     SetObject(0);
     return result;
 }
 
 inline void* PointSet::Position::GetRawPointer() const
 {
-    return mObject;
+    return PointSet::Position::mObject ? mObject: 0;
 }
 
 inline void PointSet::Position::SetObject(void* object_pointer)

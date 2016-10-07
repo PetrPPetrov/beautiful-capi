@@ -38,14 +38,14 @@ inline hello_world::printer::printer()
 
 inline void hello_world::printer::show() const
 {
-    hello_world_printer_show(this->get_raw_pointer());
+    hello_world_printer_show(get_raw_pointer());
 }
 
 inline hello_world::printer::printer(const printer& other)
 {
-    if (other.mObject)
+    if (other.get_raw_pointer())
     {
-        SetObject(hello_world_printer_copy(other.mObject));
+        SetObject(hello_world_printer_copy(other.get_raw_pointer()));
     }
     else
     {
@@ -56,7 +56,7 @@ inline hello_world::printer::printer(const printer& other)
 #ifdef HELLO_WORLD_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline hello_world::printer::printer(printer&& other)
 {
-    mObject = other.mObject;
+    mObject = other.get_raw_pointer();
     other.mObject = 0;
 }
 #endif /* HELLO_WORLD_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -75,9 +75,9 @@ inline hello_world::printer::printer(hello_world::printer::ECreateFromRawPointer
 
 inline hello_world::printer::~printer()
 {
-    if (mObject && hello_world::printer::mObject)
+    if (get_raw_pointer())
     {
-        hello_world_printer_delete(mObject);
+        hello_world_printer_delete(get_raw_pointer());
         SetObject(0);
     }
 }
@@ -86,14 +86,14 @@ inline hello_world::printer& hello_world::printer::operator=(const hello_world::
 {
     if (this != &other)
     {
-        if (mObject && hello_world::printer::mObject)
+        if (get_raw_pointer())
         {
-            hello_world_printer_delete(mObject);
+            hello_world_printer_delete(get_raw_pointer());
             SetObject(0);
         }
-        if (other.mObject)
+        if (other.get_raw_pointer())
         {
-            SetObject(hello_world_printer_copy(other.mObject));
+            SetObject(hello_world_printer_copy(other.get_raw_pointer()));
         }
         else
         {
@@ -108,12 +108,12 @@ inline hello_world::printer& hello_world::printer::operator=(hello_world::printe
 {
     if (this != &other)
     {
-        if (mObject && hello_world::printer::mObject)
+        if (get_raw_pointer())
         {
-            hello_world_printer_delete(mObject);
+            hello_world_printer_delete(get_raw_pointer());
             SetObject(0);
         }
-        mObject = other.mObject;
+        mObject = other.get_raw_pointer();
         other.mObject = 0;
     }
     return *this;
@@ -127,29 +127,29 @@ inline hello_world::printer hello_world::printer::null()
 
 inline bool hello_world::printer::is_null() const
 {
-    return !mObject;
+    return !get_raw_pointer();
 }
 
 inline bool hello_world::printer::is_not_null() const
 {
-    return mObject != 0;
+    return get_raw_pointer() != 0;
 }
 
 inline bool hello_world::printer::operator!() const
 {
-    return !mObject;
+    return !get_raw_pointer();
 }
 
 inline void* hello_world::printer::detach()
 {
-    void* result = mObject;
+    void* result = get_raw_pointer();
     SetObject(0);
     return result;
 }
 
 inline void* hello_world::printer::get_raw_pointer() const
 {
-    return mObject;
+    return hello_world::printer::mObject ? mObject: 0;
 }
 
 inline void hello_world::printer::SetObject(void* object_pointer)

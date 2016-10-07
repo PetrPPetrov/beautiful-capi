@@ -43,7 +43,7 @@ inline Example::ScannerPtr::ScannerPtr()
 inline const char* Example::ScannerPtr::ScanText()
 {
     beautiful_capi_exception_exception_info_t exception_info;
-    const char* result(example_scanner_scan_text(&exception_info, this->GetRawPointer()));
+    const char* result(example_scanner_scan_text(&exception_info, GetRawPointer()));
     beautiful_capi_Exception::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
     return result;
 }
@@ -51,28 +51,28 @@ inline const char* Example::ScannerPtr::ScanText()
 inline void Example::ScannerPtr::PowerOn()
 {
     beautiful_capi_exception_exception_info_t exception_info;
-    example_scanner_power_on(&exception_info, this->GetRawPointer());
+    example_scanner_power_on(&exception_info, GetRawPointer());
     beautiful_capi_Exception::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
 }
 
 inline void Example::ScannerPtr::PowerOff()
 {
-    example_scanner_power_off(this->GetRawPointer());
+    example_scanner_power_off(GetRawPointer());
 }
 
 inline Example::ScannerPtr::ScannerPtr(const ScannerPtr& other)
 {
-    SetObject(other.mObject);
-    if (other.mObject)
+    SetObject(other.GetRawPointer());
+    if (other.GetRawPointer())
     {
-        example_scanner_add_ref(other.mObject);
+        example_scanner_add_ref(other.GetRawPointer());
     }
 }
 
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::ScannerPtr::ScannerPtr(ScannerPtr&& other)
 {
-    mObject = other.mObject;
+    mObject = other.GetRawPointer();
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -88,26 +88,26 @@ inline Example::ScannerPtr::ScannerPtr(Example::ScannerPtr::ECreateFromRawPointe
 
 inline Example::ScannerPtr::~ScannerPtr()
 {
-    if (mObject && Example::ScannerPtr::mObject)
+    if (GetRawPointer())
     {
-        example_scanner_release(mObject);
+        example_scanner_release(GetRawPointer());
         SetObject(0);
     }
 }
 
 inline Example::ScannerPtr& Example::ScannerPtr::operator=(const Example::ScannerPtr& other)
 {
-    if (mObject != other.mObject)
+    if (GetRawPointer() != other.GetRawPointer())
     {
-        if (mObject && Example::ScannerPtr::mObject)
+        if (GetRawPointer())
         {
-            example_scanner_release(mObject);
+            example_scanner_release(GetRawPointer());
             SetObject(0);
         }
-        SetObject(other.mObject);
-        if (other.mObject)
+        SetObject(other.GetRawPointer());
+        if (other.GetRawPointer())
         {
-            example_scanner_add_ref(other.mObject);
+            example_scanner_add_ref(other.GetRawPointer());
         }
     }
     return *this;
@@ -116,14 +116,14 @@ inline Example::ScannerPtr& Example::ScannerPtr::operator=(const Example::Scanne
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::ScannerPtr& Example::ScannerPtr::operator=(Example::ScannerPtr&& other)
 {
-    if (mObject != other.mObject)
+    if (GetRawPointer() != other.GetRawPointer())
     {
-        if (mObject && Example::ScannerPtr::mObject)
+        if (GetRawPointer())
         {
-            example_scanner_release(mObject);
+            example_scanner_release(GetRawPointer());
             SetObject(0);
         }
-        mObject = other.mObject;
+        mObject = other.GetRawPointer();
         other.mObject = 0;
     }
     return *this;
@@ -137,29 +137,29 @@ inline Example::ScannerPtr Example::ScannerPtr::Null()
 
 inline bool Example::ScannerPtr::IsNull() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline bool Example::ScannerPtr::IsNotNull() const
 {
-    return mObject != 0;
+    return GetRawPointer() != 0;
 }
 
 inline bool Example::ScannerPtr::operator!() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline void* Example::ScannerPtr::Detach()
 {
-    void* result = mObject;
+    void* result = GetRawPointer();
     SetObject(0);
     return result;
 }
 
 inline void* Example::ScannerPtr::GetRawPointer() const
 {
-    return mObject;
+    return Example::ScannerPtr::mObject ? mObject: 0;
 }
 
 inline Example::ScannerPtr* Example::ScannerPtr::operator->()

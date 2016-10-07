@@ -39,37 +39,37 @@ inline PointSet::PointSetPtr::PointSetPtr()
 
 inline const char* PointSet::PointSetPtr::GetName() const
 {
-    return point_set_point_set_get_name(this->GetRawPointer());
+    return point_set_point_set_get_name(GetRawPointer());
 }
 
 inline void PointSet::PointSetPtr::SetName(const char* name)
 {
-    point_set_point_set_set_name(this->GetRawPointer(), name);
+    point_set_point_set_set_name(GetRawPointer(), name);
 }
 
 inline PointSet::PointsPtr PointSet::PointSetPtr::GetPoints() const
 {
-    return PointSet::PointsPtr(PointSet::PointsPtr::force_creating_from_raw_pointer, point_set_point_set_get_points(this->GetRawPointer()), true);
+    return PointSet::PointsPtr(PointSet::PointsPtr::force_creating_from_raw_pointer, point_set_point_set_get_points(GetRawPointer()), true);
 }
 
 inline void PointSet::PointSetPtr::SetPoints(const PointSet::PointsPtr& value)
 {
-    point_set_point_set_set_points(this->GetRawPointer(), value.GetRawPointer());
+    point_set_point_set_set_points(GetRawPointer(), value.GetRawPointer());
 }
 
 inline PointSet::PointSetPtr::PointSetPtr(const PointSetPtr& other)
 {
-    SetObject(other.mObject);
-    if (other.mObject)
+    SetObject(other.GetRawPointer());
+    if (other.GetRawPointer())
     {
-        point_set_point_set_add_ref(other.mObject);
+        point_set_point_set_add_ref(other.GetRawPointer());
     }
 }
 
 #ifdef POINTSET_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline PointSet::PointSetPtr::PointSetPtr(PointSetPtr&& other)
 {
-    mObject = other.mObject;
+    mObject = other.GetRawPointer();
     other.mObject = 0;
 }
 #endif /* POINTSET_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -85,26 +85,26 @@ inline PointSet::PointSetPtr::PointSetPtr(PointSet::PointSetPtr::ECreateFromRawP
 
 inline PointSet::PointSetPtr::~PointSetPtr()
 {
-    if (mObject && PointSet::PointSetPtr::mObject)
+    if (GetRawPointer())
     {
-        point_set_point_set_release(mObject);
+        point_set_point_set_release(GetRawPointer());
         SetObject(0);
     }
 }
 
 inline PointSet::PointSetPtr& PointSet::PointSetPtr::operator=(const PointSet::PointSetPtr& other)
 {
-    if (mObject != other.mObject)
+    if (GetRawPointer() != other.GetRawPointer())
     {
-        if (mObject && PointSet::PointSetPtr::mObject)
+        if (GetRawPointer())
         {
-            point_set_point_set_release(mObject);
+            point_set_point_set_release(GetRawPointer());
             SetObject(0);
         }
-        SetObject(other.mObject);
-        if (other.mObject)
+        SetObject(other.GetRawPointer());
+        if (other.GetRawPointer())
         {
-            point_set_point_set_add_ref(other.mObject);
+            point_set_point_set_add_ref(other.GetRawPointer());
         }
     }
     return *this;
@@ -113,14 +113,14 @@ inline PointSet::PointSetPtr& PointSet::PointSetPtr::operator=(const PointSet::P
 #ifdef POINTSET_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline PointSet::PointSetPtr& PointSet::PointSetPtr::operator=(PointSet::PointSetPtr&& other)
 {
-    if (mObject != other.mObject)
+    if (GetRawPointer() != other.GetRawPointer())
     {
-        if (mObject && PointSet::PointSetPtr::mObject)
+        if (GetRawPointer())
         {
-            point_set_point_set_release(mObject);
+            point_set_point_set_release(GetRawPointer());
             SetObject(0);
         }
-        mObject = other.mObject;
+        mObject = other.GetRawPointer();
         other.mObject = 0;
     }
     return *this;
@@ -134,29 +134,29 @@ inline PointSet::PointSetPtr PointSet::PointSetPtr::Null()
 
 inline bool PointSet::PointSetPtr::IsNull() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline bool PointSet::PointSetPtr::IsNotNull() const
 {
-    return mObject != 0;
+    return GetRawPointer() != 0;
 }
 
 inline bool PointSet::PointSetPtr::operator!() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline void* PointSet::PointSetPtr::Detach()
 {
-    void* result = mObject;
+    void* result = GetRawPointer();
     SetObject(0);
     return result;
 }
 
 inline void* PointSet::PointSetPtr::GetRawPointer() const
 {
-    return mObject;
+    return PointSet::PointSetPtr::mObject ? mObject: 0;
 }
 
 inline PointSet::PointSetPtr* PointSet::PointSetPtr::operator->()

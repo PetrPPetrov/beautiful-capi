@@ -39,19 +39,19 @@ inline Example::Position4D<float>::Position4D() : Example::Position<float>(Examp
 
 inline float Example::Position4D<float>::GetW() const
 {
-    return example_position4_d_float_get_w(this->GetRawPointer());
+    return example_position4_d_float_get_w(GetRawPointer());
 }
 
 inline void Example::Position4D<float>::SetW(float x)
 {
-    example_position4_d_float_set_w(this->GetRawPointer(), x);
+    example_position4_d_float_set_w(GetRawPointer(), x);
 }
 
 inline Example::Position4D<float>::Position4D(const Position4D<float>& other) : Example::Position<float>(Example::Position<float>::force_creating_from_raw_pointer, 0, false)
 {
-    if (other.mObject)
+    if (other.GetRawPointer())
     {
-        SetObject(example_position4_d_float_copy(other.mObject));
+        SetObject(example_position4_d_float_copy(other.GetRawPointer()));
     }
     else
     {
@@ -62,7 +62,7 @@ inline Example::Position4D<float>::Position4D(const Position4D<float>& other) : 
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::Position4D<float>::Position4D(Position4D<float>&& other) : Example::Position<float>(std::move(other))
 {
-    mObject = other.mObject;
+    mObject = other.GetRawPointer();
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -81,9 +81,9 @@ inline Example::Position4D<float>::Position4D(Example::Position4D<float>::ECreat
 
 inline Example::Position4D<float>::~Position4D()
 {
-    if (mObject && Example::Position<float>::mObject)
+    if (GetRawPointer())
     {
-        example_position4_d_float_delete(mObject);
+        example_position4_d_float_delete(GetRawPointer());
         SetObject(0);
     }
 }
@@ -92,14 +92,14 @@ inline Example::Position4D<float>& Example::Position4D<float>::operator=(const E
 {
     if (this != &other)
     {
-        if (mObject && Example::Position<float>::mObject)
+        if (GetRawPointer())
         {
-            example_position4_d_float_delete(mObject);
+            example_position4_d_float_delete(GetRawPointer());
             SetObject(0);
         }
-        if (other.mObject)
+        if (other.GetRawPointer())
         {
-            SetObject(example_position4_d_float_copy(other.mObject));
+            SetObject(example_position4_d_float_copy(other.GetRawPointer()));
         }
         else
         {
@@ -114,13 +114,13 @@ inline Example::Position4D<float>& Example::Position4D<float>::operator=(Example
 {
     if (this != &other)
     {
-        if (mObject && Example::Position<float>::mObject)
+        if (GetRawPointer())
         {
-            example_position4_d_float_delete(mObject);
+            example_position4_d_float_delete(GetRawPointer());
             SetObject(0);
         }
         Example::Position<float>::operator=(std::move(other));
-        mObject = other.mObject;
+        mObject = other.GetRawPointer();
         other.mObject = 0;
     }
     return *this;
@@ -134,29 +134,29 @@ inline Example::Position4D<float> Example::Position4D<float>::Null()
 
 inline bool Example::Position4D<float>::IsNull() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline bool Example::Position4D<float>::IsNotNull() const
 {
-    return mObject != 0;
+    return GetRawPointer() != 0;
 }
 
 inline bool Example::Position4D<float>::operator!() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline void* Example::Position4D<float>::Detach()
 {
-    void* result = mObject;
+    void* result = GetRawPointer();
     SetObject(0);
     return result;
 }
 
 inline void* Example::Position4D<float>::GetRawPointer() const
 {
-    return mObject;
+    return Example::Position<float>::mObject ? mObject: 0;
 }
 
 inline void Example::Position4D<float>::SetObject(void* object_pointer)

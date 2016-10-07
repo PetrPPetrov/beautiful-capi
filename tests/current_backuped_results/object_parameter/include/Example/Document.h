@@ -39,32 +39,32 @@ inline Example::DocumentPtr::DocumentPtr()
 
 inline void Example::DocumentPtr::Show() const
 {
-    example_document_show(this->GetRawPointer());
+    example_document_show(GetRawPointer());
 }
 
 inline Example::PagePtr Example::DocumentPtr::GetPage() const
 {
-    return Example::PagePtr(Example::PagePtr::force_creating_from_raw_pointer, example_document_get_page(this->GetRawPointer()), true);
+    return Example::PagePtr(Example::PagePtr::force_creating_from_raw_pointer, example_document_get_page(GetRawPointer()), true);
 }
 
 inline void Example::DocumentPtr::SetPage(const Example::PagePtr& value)
 {
-    example_document_set_page(this->GetRawPointer(), value.GetRawPointer());
+    example_document_set_page(GetRawPointer(), value.GetRawPointer());
 }
 
 inline Example::DocumentPtr::DocumentPtr(const DocumentPtr& other)
 {
-    SetObject(other.mObject);
-    if (other.mObject)
+    SetObject(other.GetRawPointer());
+    if (other.GetRawPointer())
     {
-        example_document_add_ref(other.mObject);
+        example_document_add_ref(other.GetRawPointer());
     }
 }
 
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::DocumentPtr::DocumentPtr(DocumentPtr&& other)
 {
-    mObject = other.mObject;
+    mObject = other.GetRawPointer();
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -80,26 +80,26 @@ inline Example::DocumentPtr::DocumentPtr(Example::DocumentPtr::ECreateFromRawPoi
 
 inline Example::DocumentPtr::~DocumentPtr()
 {
-    if (mObject && Example::DocumentPtr::mObject)
+    if (GetRawPointer())
     {
-        example_document_release(mObject);
+        example_document_release(GetRawPointer());
         SetObject(0);
     }
 }
 
 inline Example::DocumentPtr& Example::DocumentPtr::operator=(const Example::DocumentPtr& other)
 {
-    if (mObject != other.mObject)
+    if (GetRawPointer() != other.GetRawPointer())
     {
-        if (mObject && Example::DocumentPtr::mObject)
+        if (GetRawPointer())
         {
-            example_document_release(mObject);
+            example_document_release(GetRawPointer());
             SetObject(0);
         }
-        SetObject(other.mObject);
-        if (other.mObject)
+        SetObject(other.GetRawPointer());
+        if (other.GetRawPointer())
         {
-            example_document_add_ref(other.mObject);
+            example_document_add_ref(other.GetRawPointer());
         }
     }
     return *this;
@@ -108,14 +108,14 @@ inline Example::DocumentPtr& Example::DocumentPtr::operator=(const Example::Docu
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::DocumentPtr& Example::DocumentPtr::operator=(Example::DocumentPtr&& other)
 {
-    if (mObject != other.mObject)
+    if (GetRawPointer() != other.GetRawPointer())
     {
-        if (mObject && Example::DocumentPtr::mObject)
+        if (GetRawPointer())
         {
-            example_document_release(mObject);
+            example_document_release(GetRawPointer());
             SetObject(0);
         }
-        mObject = other.mObject;
+        mObject = other.GetRawPointer();
         other.mObject = 0;
     }
     return *this;
@@ -129,29 +129,29 @@ inline Example::DocumentPtr Example::DocumentPtr::Null()
 
 inline bool Example::DocumentPtr::IsNull() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline bool Example::DocumentPtr::IsNotNull() const
 {
-    return mObject != 0;
+    return GetRawPointer() != 0;
 }
 
 inline bool Example::DocumentPtr::operator!() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline void* Example::DocumentPtr::Detach()
 {
-    void* result = mObject;
+    void* result = GetRawPointer();
     SetObject(0);
     return result;
 }
 
 inline void* Example::DocumentPtr::GetRawPointer() const
 {
-    return mObject;
+    return Example::DocumentPtr::mObject ? mObject: 0;
 }
 
 inline Example::DocumentPtr* Example::DocumentPtr::operator->()

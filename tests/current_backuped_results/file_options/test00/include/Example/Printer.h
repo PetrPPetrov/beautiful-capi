@@ -38,14 +38,14 @@ inline Example::Printer::Printer()
 
 inline void Example::Printer::Show(const char* text)
 {
-    example_printer_show(this->GetRawPointer(), text);
+    example_printer_show(GetRawPointer(), text);
 }
 
 inline Example::Printer::Printer(const Printer& other)
 {
-    if (other.mObject)
+    if (other.GetRawPointer())
     {
-        SetObject(example_printer_copy(other.mObject));
+        SetObject(example_printer_copy(other.GetRawPointer()));
     }
     else
     {
@@ -56,7 +56,7 @@ inline Example::Printer::Printer(const Printer& other)
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::Printer::Printer(Printer&& other)
 {
-    mObject = other.mObject;
+    mObject = other.GetRawPointer();
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -75,9 +75,9 @@ inline Example::Printer::Printer(Example::Printer::ECreateFromRawPointer, void *
 
 inline Example::Printer::~Printer()
 {
-    if (mObject && Example::Printer::mObject)
+    if (GetRawPointer())
     {
-        example_printer_delete(mObject);
+        example_printer_delete(GetRawPointer());
         SetObject(0);
     }
 }
@@ -86,14 +86,14 @@ inline Example::Printer& Example::Printer::operator=(const Example::Printer& oth
 {
     if (this != &other)
     {
-        if (mObject && Example::Printer::mObject)
+        if (GetRawPointer())
         {
-            example_printer_delete(mObject);
+            example_printer_delete(GetRawPointer());
             SetObject(0);
         }
-        if (other.mObject)
+        if (other.GetRawPointer())
         {
-            SetObject(example_printer_copy(other.mObject));
+            SetObject(example_printer_copy(other.GetRawPointer()));
         }
         else
         {
@@ -108,12 +108,12 @@ inline Example::Printer& Example::Printer::operator=(Example::Printer&& other)
 {
     if (this != &other)
     {
-        if (mObject && Example::Printer::mObject)
+        if (GetRawPointer())
         {
-            example_printer_delete(mObject);
+            example_printer_delete(GetRawPointer());
             SetObject(0);
         }
-        mObject = other.mObject;
+        mObject = other.GetRawPointer();
         other.mObject = 0;
     }
     return *this;
@@ -127,29 +127,29 @@ inline Example::Printer Example::Printer::Null()
 
 inline bool Example::Printer::IsNull() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline bool Example::Printer::IsNotNull() const
 {
-    return mObject != 0;
+    return GetRawPointer() != 0;
 }
 
 inline bool Example::Printer::operator!() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline void* Example::Printer::Detach()
 {
-    void* result = mObject;
+    void* result = GetRawPointer();
     SetObject(0);
     return result;
 }
 
 inline void* Example::Printer::GetRawPointer() const
 {
-    return mObject;
+    return Example::Printer::mObject ? mObject: 0;
 }
 
 inline void Example::Printer::SetObject(void* object_pointer)

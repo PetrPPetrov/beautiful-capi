@@ -38,22 +38,22 @@ inline hello_world::plotter_ptr::plotter_ptr()
 
 inline void hello_world::plotter_ptr::draw() const
 {
-    hello_world_plotter_draw(this->get_raw_pointer());
+    hello_world_plotter_draw(get_raw_pointer());
 }
 
 inline hello_world::plotter_ptr::plotter_ptr(const plotter_ptr& other)
 {
-    SetObject(other.mObject);
-    if (other.mObject)
+    SetObject(other.get_raw_pointer());
+    if (other.get_raw_pointer())
     {
-        hello_world_plotter_add_ref(other.mObject);
+        hello_world_plotter_add_ref(other.get_raw_pointer());
     }
 }
 
 #ifdef HELLO_WORLD_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline hello_world::plotter_ptr::plotter_ptr(plotter_ptr&& other)
 {
-    mObject = other.mObject;
+    mObject = other.get_raw_pointer();
     other.mObject = 0;
 }
 #endif /* HELLO_WORLD_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -69,26 +69,26 @@ inline hello_world::plotter_ptr::plotter_ptr(hello_world::plotter_ptr::ECreateFr
 
 inline hello_world::plotter_ptr::~plotter_ptr()
 {
-    if (mObject && hello_world::plotter_ptr::mObject)
+    if (get_raw_pointer())
     {
-        hello_world_plotter_release(mObject);
+        hello_world_plotter_release(get_raw_pointer());
         SetObject(0);
     }
 }
 
 inline hello_world::plotter_ptr& hello_world::plotter_ptr::operator=(const hello_world::plotter_ptr& other)
 {
-    if (mObject != other.mObject)
+    if (get_raw_pointer() != other.get_raw_pointer())
     {
-        if (mObject && hello_world::plotter_ptr::mObject)
+        if (get_raw_pointer())
         {
-            hello_world_plotter_release(mObject);
+            hello_world_plotter_release(get_raw_pointer());
             SetObject(0);
         }
-        SetObject(other.mObject);
-        if (other.mObject)
+        SetObject(other.get_raw_pointer());
+        if (other.get_raw_pointer())
         {
-            hello_world_plotter_add_ref(other.mObject);
+            hello_world_plotter_add_ref(other.get_raw_pointer());
         }
     }
     return *this;
@@ -97,14 +97,14 @@ inline hello_world::plotter_ptr& hello_world::plotter_ptr::operator=(const hello
 #ifdef HELLO_WORLD_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline hello_world::plotter_ptr& hello_world::plotter_ptr::operator=(hello_world::plotter_ptr&& other)
 {
-    if (mObject != other.mObject)
+    if (get_raw_pointer() != other.get_raw_pointer())
     {
-        if (mObject && hello_world::plotter_ptr::mObject)
+        if (get_raw_pointer())
         {
-            hello_world_plotter_release(mObject);
+            hello_world_plotter_release(get_raw_pointer());
             SetObject(0);
         }
-        mObject = other.mObject;
+        mObject = other.get_raw_pointer();
         other.mObject = 0;
     }
     return *this;
@@ -118,29 +118,29 @@ inline hello_world::plotter_ptr hello_world::plotter_ptr::null()
 
 inline bool hello_world::plotter_ptr::is_null() const
 {
-    return !mObject;
+    return !get_raw_pointer();
 }
 
 inline bool hello_world::plotter_ptr::is_not_null() const
 {
-    return mObject != 0;
+    return get_raw_pointer() != 0;
 }
 
 inline bool hello_world::plotter_ptr::operator!() const
 {
-    return !mObject;
+    return !get_raw_pointer();
 }
 
 inline void* hello_world::plotter_ptr::detach()
 {
-    void* result = mObject;
+    void* result = get_raw_pointer();
     SetObject(0);
     return result;
 }
 
 inline void* hello_world::plotter_ptr::get_raw_pointer() const
 {
-    return mObject;
+    return hello_world::plotter_ptr::mObject ? mObject: 0;
 }
 
 inline hello_world::plotter_ptr* hello_world::plotter_ptr::operator->()

@@ -43,15 +43,15 @@ inline Exception::BadArgument::BadArgument() : Exception::Generic(Exception::Gen
 
 inline const char* Exception::BadArgument::GetArgumentName() const
 {
-    return exception_bad_argument_get_argument_name(this->GetRawPointer());
+    return exception_bad_argument_get_argument_name(GetRawPointer());
 }
 
 inline Exception::BadArgument::BadArgument(const BadArgument& other) : Exception::Generic(Exception::Generic::force_creating_from_raw_pointer, 0, false)
 {
-    if (other.mObject)
+    if (other.GetRawPointer())
     {
         beautiful_capi_exception_exception_info_t exception_info;
-        void* result(exception_bad_argument_copy(&exception_info, other.mObject));
+        void* result(exception_bad_argument_copy(&exception_info, other.GetRawPointer()));
         beautiful_capi_Exception::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
         SetObject(result);
     }
@@ -64,7 +64,7 @@ inline Exception::BadArgument::BadArgument(const BadArgument& other) : Exception
 #ifdef EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Exception::BadArgument::BadArgument(BadArgument&& other) : Exception::Generic(std::move(other))
 {
-    mObject = other.mObject;
+    mObject = other.GetRawPointer();
     other.mObject = 0;
 }
 #endif /* EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -86,9 +86,9 @@ inline Exception::BadArgument::BadArgument(Exception::BadArgument::ECreateFromRa
 
 inline Exception::BadArgument::~BadArgument()
 {
-    if (mObject && Exception::Generic::mObject)
+    if (GetRawPointer())
     {
-        exception_bad_argument_delete(mObject);
+        exception_bad_argument_delete(GetRawPointer());
         SetObject(0);
     }
 }
@@ -97,15 +97,15 @@ inline Exception::BadArgument& Exception::BadArgument::operator=(const Exception
 {
     if (this != &other)
     {
-        if (mObject && Exception::Generic::mObject)
+        if (GetRawPointer())
         {
-            exception_bad_argument_delete(mObject);
+            exception_bad_argument_delete(GetRawPointer());
             SetObject(0);
         }
-        if (other.mObject)
+        if (other.GetRawPointer())
         {
             beautiful_capi_exception_exception_info_t exception_info;
-            void* result(exception_bad_argument_copy(&exception_info, other.mObject));
+            void* result(exception_bad_argument_copy(&exception_info, other.GetRawPointer()));
             beautiful_capi_Exception::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
             SetObject(result);
         }
@@ -122,13 +122,13 @@ inline Exception::BadArgument& Exception::BadArgument::operator=(Exception::BadA
 {
     if (this != &other)
     {
-        if (mObject && Exception::Generic::mObject)
+        if (GetRawPointer())
         {
-            exception_bad_argument_delete(mObject);
+            exception_bad_argument_delete(GetRawPointer());
             SetObject(0);
         }
         Exception::Generic::operator=(std::move(other));
-        mObject = other.mObject;
+        mObject = other.GetRawPointer();
         other.mObject = 0;
     }
     return *this;
@@ -142,29 +142,29 @@ inline Exception::BadArgument Exception::BadArgument::Null()
 
 inline bool Exception::BadArgument::IsNull() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline bool Exception::BadArgument::IsNotNull() const
 {
-    return mObject != 0;
+    return GetRawPointer() != 0;
 }
 
 inline bool Exception::BadArgument::operator!() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline void* Exception::BadArgument::Detach()
 {
-    void* result = mObject;
+    void* result = GetRawPointer();
     SetObject(0);
     return result;
 }
 
 inline void* Exception::BadArgument::GetRawPointer() const
 {
-    return mObject;
+    return Exception::Generic::mObject ? mObject: 0;
 }
 
 inline void Exception::BadArgument::SetObject(void* object_pointer)

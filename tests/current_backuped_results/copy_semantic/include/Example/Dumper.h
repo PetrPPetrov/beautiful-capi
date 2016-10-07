@@ -39,24 +39,24 @@ inline Example::Dumper::Dumper()
 
 inline Example::Printer Example::Dumper::GetPrinter() const
 {
-    return Example::Printer(Example::Printer::force_creating_from_raw_pointer, example_dumper_get_printer(this->GetRawPointer()), false);
+    return Example::Printer(Example::Printer::force_creating_from_raw_pointer, example_dumper_get_printer(GetRawPointer()), false);
 }
 
 inline void Example::Dumper::SetPrinter(const Example::Printer& printer)
 {
-    example_dumper_set_printer(this->GetRawPointer(), printer.GetRawPointer());
+    example_dumper_set_printer(GetRawPointer(), printer.GetRawPointer());
 }
 
 inline void Example::Dumper::Dump()
 {
-    example_dumper_dump(this->GetRawPointer());
+    example_dumper_dump(GetRawPointer());
 }
 
 inline Example::Dumper::Dumper(const Dumper& other)
 {
-    if (other.mObject)
+    if (other.GetRawPointer())
     {
-        SetObject(example_dumper_copy(other.mObject));
+        SetObject(example_dumper_copy(other.GetRawPointer()));
     }
     else
     {
@@ -67,7 +67,7 @@ inline Example::Dumper::Dumper(const Dumper& other)
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::Dumper::Dumper(Dumper&& other)
 {
-    mObject = other.mObject;
+    mObject = other.GetRawPointer();
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -86,9 +86,9 @@ inline Example::Dumper::Dumper(Example::Dumper::ECreateFromRawPointer, void *obj
 
 inline Example::Dumper::~Dumper()
 {
-    if (mObject && Example::Dumper::mObject)
+    if (GetRawPointer())
     {
-        example_dumper_delete(mObject);
+        example_dumper_delete(GetRawPointer());
         SetObject(0);
     }
 }
@@ -97,14 +97,14 @@ inline Example::Dumper& Example::Dumper::operator=(const Example::Dumper& other)
 {
     if (this != &other)
     {
-        if (mObject && Example::Dumper::mObject)
+        if (GetRawPointer())
         {
-            example_dumper_delete(mObject);
+            example_dumper_delete(GetRawPointer());
             SetObject(0);
         }
-        if (other.mObject)
+        if (other.GetRawPointer())
         {
-            SetObject(example_dumper_copy(other.mObject));
+            SetObject(example_dumper_copy(other.GetRawPointer()));
         }
         else
         {
@@ -119,12 +119,12 @@ inline Example::Dumper& Example::Dumper::operator=(Example::Dumper&& other)
 {
     if (this != &other)
     {
-        if (mObject && Example::Dumper::mObject)
+        if (GetRawPointer())
         {
-            example_dumper_delete(mObject);
+            example_dumper_delete(GetRawPointer());
             SetObject(0);
         }
-        mObject = other.mObject;
+        mObject = other.GetRawPointer();
         other.mObject = 0;
     }
     return *this;
@@ -138,29 +138,29 @@ inline Example::Dumper Example::Dumper::Null()
 
 inline bool Example::Dumper::IsNull() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline bool Example::Dumper::IsNotNull() const
 {
-    return mObject != 0;
+    return GetRawPointer() != 0;
 }
 
 inline bool Example::Dumper::operator!() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline void* Example::Dumper::Detach()
 {
-    void* result = mObject;
+    void* result = GetRawPointer();
     SetObject(0);
     return result;
 }
 
 inline void* Example::Dumper::GetRawPointer() const
 {
-    return mObject;
+    return Example::Dumper::mObject ? mObject: 0;
 }
 
 inline void Example::Dumper::SetObject(void* object_pointer)

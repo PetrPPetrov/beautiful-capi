@@ -34,22 +34,22 @@
 
 inline int Example::IPolygonPtr::GetPointsCount() const
 {
-    return example_i_polygon_get_points_count(this->GetRawPointer());
+    return example_i_polygon_get_points_count(GetRawPointer());
 }
 
 inline Example::IPolygonPtr::IPolygonPtr(const IPolygonPtr& other) : Example::IShapePtr(Example::IShapePtr::force_creating_from_raw_pointer, 0, false)
 {
-    SetObject(other.mObject);
-    if (other.mObject)
+    SetObject(other.GetRawPointer());
+    if (other.GetRawPointer())
     {
-        example_i_polygon_add_ref(other.mObject);
+        example_i_polygon_add_ref(other.GetRawPointer());
     }
 }
 
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::IPolygonPtr::IPolygonPtr(IPolygonPtr&& other) : Example::IShapePtr(std::move(other))
 {
-    mObject = other.mObject;
+    mObject = other.GetRawPointer();
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -65,26 +65,26 @@ inline Example::IPolygonPtr::IPolygonPtr(Example::IPolygonPtr::ECreateFromRawPoi
 
 inline Example::IPolygonPtr::~IPolygonPtr()
 {
-    if (mObject && Example::IShapePtr::mObject)
+    if (GetRawPointer())
     {
-        example_i_polygon_release(mObject);
+        example_i_polygon_release(GetRawPointer());
         SetObject(0);
     }
 }
 
 inline Example::IPolygonPtr& Example::IPolygonPtr::operator=(const Example::IPolygonPtr& other)
 {
-    if (mObject != other.mObject)
+    if (GetRawPointer() != other.GetRawPointer())
     {
-        if (mObject && Example::IShapePtr::mObject)
+        if (GetRawPointer())
         {
-            example_i_polygon_release(mObject);
+            example_i_polygon_release(GetRawPointer());
             SetObject(0);
         }
-        SetObject(other.mObject);
-        if (other.mObject)
+        SetObject(other.GetRawPointer());
+        if (other.GetRawPointer())
         {
-            example_i_polygon_add_ref(other.mObject);
+            example_i_polygon_add_ref(other.GetRawPointer());
         }
     }
     return *this;
@@ -93,15 +93,15 @@ inline Example::IPolygonPtr& Example::IPolygonPtr::operator=(const Example::IPol
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::IPolygonPtr& Example::IPolygonPtr::operator=(Example::IPolygonPtr&& other)
 {
-    if (mObject != other.mObject)
+    if (GetRawPointer() != other.GetRawPointer())
     {
-        if (mObject && Example::IShapePtr::mObject)
+        if (GetRawPointer())
         {
-            example_i_polygon_release(mObject);
+            example_i_polygon_release(GetRawPointer());
             SetObject(0);
         }
         Example::IShapePtr::operator=(std::move(other));
-        mObject = other.mObject;
+        mObject = other.GetRawPointer();
         other.mObject = 0;
     }
     return *this;
@@ -115,29 +115,29 @@ inline Example::IPolygonPtr Example::IPolygonPtr::Null()
 
 inline bool Example::IPolygonPtr::IsNull() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline bool Example::IPolygonPtr::IsNotNull() const
 {
-    return mObject != 0;
+    return GetRawPointer() != 0;
 }
 
 inline bool Example::IPolygonPtr::operator!() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline void* Example::IPolygonPtr::Detach()
 {
-    void* result = mObject;
+    void* result = GetRawPointer();
     SetObject(0);
     return result;
 }
 
 inline void* Example::IPolygonPtr::GetRawPointer() const
 {
-    return mObject;
+    return Example::IShapePtr::mObject ? mObject: 0;
 }
 
 inline Example::IPolygonPtr* Example::IPolygonPtr::operator->()

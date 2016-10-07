@@ -38,14 +38,14 @@ inline HelloWorld::Printer::Printer()
 
 inline void HelloWorld::Printer::Show() const
 {
-    hello_world_printer_show(this->GetRawPointer());
+    hello_world_printer_show(GetRawPointer());
 }
 
 inline HelloWorld::Printer::Printer(const Printer& other)
 {
-    if (other.mObject)
+    if (other.GetRawPointer())
     {
-        SetObject(hello_world_printer_copy(other.mObject));
+        SetObject(hello_world_printer_copy(other.GetRawPointer()));
     }
     else
     {
@@ -56,7 +56,7 @@ inline HelloWorld::Printer::Printer(const Printer& other)
 #ifdef HELLOWORLD_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline HelloWorld::Printer::Printer(Printer&& other)
 {
-    mObject = other.mObject;
+    mObject = other.GetRawPointer();
     other.mObject = 0;
 }
 #endif /* HELLOWORLD_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -75,9 +75,9 @@ inline HelloWorld::Printer::Printer(HelloWorld::Printer::ECreateFromRawPointer, 
 
 inline HelloWorld::Printer::~Printer()
 {
-    if (mObject && HelloWorld::Printer::mObject)
+    if (GetRawPointer())
     {
-        hello_world_printer_delete(mObject);
+        hello_world_printer_delete(GetRawPointer());
         SetObject(0);
     }
 }
@@ -86,14 +86,14 @@ inline HelloWorld::Printer& HelloWorld::Printer::operator=(const HelloWorld::Pri
 {
     if (this != &other)
     {
-        if (mObject && HelloWorld::Printer::mObject)
+        if (GetRawPointer())
         {
-            hello_world_printer_delete(mObject);
+            hello_world_printer_delete(GetRawPointer());
             SetObject(0);
         }
-        if (other.mObject)
+        if (other.GetRawPointer())
         {
-            SetObject(hello_world_printer_copy(other.mObject));
+            SetObject(hello_world_printer_copy(other.GetRawPointer()));
         }
         else
         {
@@ -108,12 +108,12 @@ inline HelloWorld::Printer& HelloWorld::Printer::operator=(HelloWorld::Printer&&
 {
     if (this != &other)
     {
-        if (mObject && HelloWorld::Printer::mObject)
+        if (GetRawPointer())
         {
-            hello_world_printer_delete(mObject);
+            hello_world_printer_delete(GetRawPointer());
             SetObject(0);
         }
-        mObject = other.mObject;
+        mObject = other.GetRawPointer();
         other.mObject = 0;
     }
     return *this;
@@ -127,29 +127,29 @@ inline HelloWorld::Printer HelloWorld::Printer::Null()
 
 inline bool HelloWorld::Printer::IsNull() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline bool HelloWorld::Printer::IsNotNull() const
 {
-    return mObject != 0;
+    return GetRawPointer() != 0;
 }
 
 inline bool HelloWorld::Printer::operator!() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline void* HelloWorld::Printer::Detach()
 {
-    void* result = mObject;
+    void* result = GetRawPointer();
     SetObject(0);
     return result;
 }
 
 inline void* HelloWorld::Printer::GetRawPointer() const
 {
-    return mObject;
+    return HelloWorld::Printer::mObject ? mObject: 0;
 }
 
 inline void HelloWorld::Printer::SetObject(void* object_pointer)

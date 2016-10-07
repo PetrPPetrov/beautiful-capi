@@ -38,39 +38,39 @@ inline Example::Position<float>::Position()
 
 inline float Example::Position<float>::GetX() const
 {
-    return example_position_float_get_x(this->GetRawPointer());
+    return example_position_float_get_x(GetRawPointer());
 }
 
 inline void Example::Position<float>::SetX(float x)
 {
-    example_position_float_set_x(this->GetRawPointer(), x);
+    example_position_float_set_x(GetRawPointer(), x);
 }
 
 inline float Example::Position<float>::GetY() const
 {
-    return example_position_float_get_y(this->GetRawPointer());
+    return example_position_float_get_y(GetRawPointer());
 }
 
 inline void Example::Position<float>::SetY(float y)
 {
-    example_position_float_set_y(this->GetRawPointer(), y);
+    example_position_float_set_y(GetRawPointer(), y);
 }
 
 inline float Example::Position<float>::GetZ() const
 {
-    return example_position_float_get_z(this->GetRawPointer());
+    return example_position_float_get_z(GetRawPointer());
 }
 
 inline void Example::Position<float>::SetZ(float z)
 {
-    example_position_float_set_z(this->GetRawPointer(), z);
+    example_position_float_set_z(GetRawPointer(), z);
 }
 
 inline Example::Position<float>::Position(const Position<float>& other)
 {
-    if (other.mObject)
+    if (other.GetRawPointer())
     {
-        SetObject(example_position_float_copy(other.mObject));
+        SetObject(example_position_float_copy(other.GetRawPointer()));
     }
     else
     {
@@ -81,7 +81,7 @@ inline Example::Position<float>::Position(const Position<float>& other)
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::Position<float>::Position(Position<float>&& other)
 {
-    mObject = other.mObject;
+    mObject = other.GetRawPointer();
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -100,9 +100,9 @@ inline Example::Position<float>::Position(Example::Position<float>::ECreateFromR
 
 inline Example::Position<float>::~Position()
 {
-    if (mObject && Example::Position<float>::mObject)
+    if (GetRawPointer())
     {
-        example_position_float_delete(mObject);
+        example_position_float_delete(GetRawPointer());
         SetObject(0);
     }
 }
@@ -111,14 +111,14 @@ inline Example::Position<float>& Example::Position<float>::operator=(const Examp
 {
     if (this != &other)
     {
-        if (mObject && Example::Position<float>::mObject)
+        if (GetRawPointer())
         {
-            example_position_float_delete(mObject);
+            example_position_float_delete(GetRawPointer());
             SetObject(0);
         }
-        if (other.mObject)
+        if (other.GetRawPointer())
         {
-            SetObject(example_position_float_copy(other.mObject));
+            SetObject(example_position_float_copy(other.GetRawPointer()));
         }
         else
         {
@@ -133,12 +133,12 @@ inline Example::Position<float>& Example::Position<float>::operator=(Example::Po
 {
     if (this != &other)
     {
-        if (mObject && Example::Position<float>::mObject)
+        if (GetRawPointer())
         {
-            example_position_float_delete(mObject);
+            example_position_float_delete(GetRawPointer());
             SetObject(0);
         }
-        mObject = other.mObject;
+        mObject = other.GetRawPointer();
         other.mObject = 0;
     }
     return *this;
@@ -152,29 +152,29 @@ inline Example::Position<float> Example::Position<float>::Null()
 
 inline bool Example::Position<float>::IsNull() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline bool Example::Position<float>::IsNotNull() const
 {
-    return mObject != 0;
+    return GetRawPointer() != 0;
 }
 
 inline bool Example::Position<float>::operator!() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline void* Example::Position<float>::Detach()
 {
-    void* result = mObject;
+    void* result = GetRawPointer();
     SetObject(0);
     return result;
 }
 
 inline void* Example::Position<float>::GetRawPointer() const
 {
-    return mObject;
+    return Example::Position<float>::mObject ? mObject: 0;
 }
 
 inline void Example::Position<float>::SetObject(void* object_pointer)

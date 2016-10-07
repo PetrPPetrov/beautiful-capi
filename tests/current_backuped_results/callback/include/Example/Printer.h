@@ -35,21 +35,21 @@
 inline void Example::PrinterPtr::Print(const char* text) const
 {
     beautiful_capi_callback_exception_info_t exception_info;
-    example_printer_print(&exception_info, this->GetRawPointer(), text);
+    example_printer_print(&exception_info, GetRawPointer(), text);
     beautiful_capi_Callback::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
 }
 
 inline void Example::PrinterPtr::SetPrintingQuality(Example::PrinterPtr::EQuality quality)
 {
     beautiful_capi_callback_exception_info_t exception_info;
-    example_printer_set_printing_quality(&exception_info, this->GetRawPointer(), static_cast<int>(quality));
+    example_printer_set_printing_quality(&exception_info, GetRawPointer(), static_cast<int>(quality));
     beautiful_capi_Callback::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
 }
 
 inline Example::PrinterPtr::EQuality Example::PrinterPtr::GetPrintingQuality() const
 {
     beautiful_capi_callback_exception_info_t exception_info;
-    Example::PrinterPtr::EQuality result(static_cast<Example::PrinterPtr::EQuality>(example_printer_get_printing_quality(&exception_info, this->GetRawPointer())));
+    Example::PrinterPtr::EQuality result(static_cast<Example::PrinterPtr::EQuality>(example_printer_get_printing_quality(&exception_info, GetRawPointer())));
     beautiful_capi_Callback::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
     return result;
 }
@@ -57,24 +57,24 @@ inline Example::PrinterPtr::EQuality Example::PrinterPtr::GetPrintingQuality() c
 inline Example::EPrintingDevice Example::PrinterPtr::GetDeviceType() const
 {
     beautiful_capi_callback_exception_info_t exception_info;
-    Example::EPrintingDevice result(static_cast<Example::EPrintingDevice>(example_printer_get_device_type(&exception_info, this->GetRawPointer())));
+    Example::EPrintingDevice result(static_cast<Example::EPrintingDevice>(example_printer_get_device_type(&exception_info, GetRawPointer())));
     beautiful_capi_Callback::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
     return result;
 }
 
 inline Example::PrinterPtr::PrinterPtr(const PrinterPtr& other)
 {
-    SetObject(other.mObject);
-    if (other.mObject)
+    SetObject(other.GetRawPointer());
+    if (other.GetRawPointer())
     {
-        example_printer_add_ref(other.mObject);
+        example_printer_add_ref(other.GetRawPointer());
     }
 }
 
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::PrinterPtr::PrinterPtr(PrinterPtr&& other)
 {
-    mObject = other.mObject;
+    mObject = other.GetRawPointer();
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -90,26 +90,26 @@ inline Example::PrinterPtr::PrinterPtr(Example::PrinterPtr::ECreateFromRawPointe
 
 inline Example::PrinterPtr::~PrinterPtr()
 {
-    if (mObject && Example::PrinterPtr::mObject)
+    if (GetRawPointer())
     {
-        example_printer_release(mObject);
+        example_printer_release(GetRawPointer());
         SetObject(0);
     }
 }
 
 inline Example::PrinterPtr& Example::PrinterPtr::operator=(const Example::PrinterPtr& other)
 {
-    if (mObject != other.mObject)
+    if (GetRawPointer() != other.GetRawPointer())
     {
-        if (mObject && Example::PrinterPtr::mObject)
+        if (GetRawPointer())
         {
-            example_printer_release(mObject);
+            example_printer_release(GetRawPointer());
             SetObject(0);
         }
-        SetObject(other.mObject);
-        if (other.mObject)
+        SetObject(other.GetRawPointer());
+        if (other.GetRawPointer())
         {
-            example_printer_add_ref(other.mObject);
+            example_printer_add_ref(other.GetRawPointer());
         }
     }
     return *this;
@@ -118,14 +118,14 @@ inline Example::PrinterPtr& Example::PrinterPtr::operator=(const Example::Printe
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::PrinterPtr& Example::PrinterPtr::operator=(Example::PrinterPtr&& other)
 {
-    if (mObject != other.mObject)
+    if (GetRawPointer() != other.GetRawPointer())
     {
-        if (mObject && Example::PrinterPtr::mObject)
+        if (GetRawPointer())
         {
-            example_printer_release(mObject);
+            example_printer_release(GetRawPointer());
             SetObject(0);
         }
-        mObject = other.mObject;
+        mObject = other.GetRawPointer();
         other.mObject = 0;
     }
     return *this;
@@ -139,29 +139,29 @@ inline Example::PrinterPtr Example::PrinterPtr::Null()
 
 inline bool Example::PrinterPtr::IsNull() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline bool Example::PrinterPtr::IsNotNull() const
 {
-    return mObject != 0;
+    return GetRawPointer() != 0;
 }
 
 inline bool Example::PrinterPtr::operator!() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline void* Example::PrinterPtr::Detach()
 {
-    void* result = mObject;
+    void* result = GetRawPointer();
     SetObject(0);
     return result;
 }
 
 inline void* Example::PrinterPtr::GetRawPointer() const
 {
-    return mObject;
+    return Example::PrinterPtr::mObject ? mObject: 0;
 }
 
 inline Example::PrinterPtr* Example::PrinterPtr::operator->()

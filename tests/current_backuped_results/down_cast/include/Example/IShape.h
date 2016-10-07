@@ -33,22 +33,22 @@
 
 inline void Example::IShapePtr::Show() const
 {
-    example_i_shape_show(this->GetRawPointer());
+    example_i_shape_show(GetRawPointer());
 }
 
 inline Example::IShapePtr::IShapePtr(const IShapePtr& other)
 {
-    SetObject(other.mObject);
-    if (other.mObject)
+    SetObject(other.GetRawPointer());
+    if (other.GetRawPointer())
     {
-        example_i_shape_add_ref(other.mObject);
+        example_i_shape_add_ref(other.GetRawPointer());
     }
 }
 
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::IShapePtr::IShapePtr(IShapePtr&& other)
 {
-    mObject = other.mObject;
+    mObject = other.GetRawPointer();
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -64,26 +64,26 @@ inline Example::IShapePtr::IShapePtr(Example::IShapePtr::ECreateFromRawPointer, 
 
 inline Example::IShapePtr::~IShapePtr()
 {
-    if (mObject && Example::IShapePtr::mObject)
+    if (GetRawPointer())
     {
-        example_i_shape_release(mObject);
+        example_i_shape_release(GetRawPointer());
         SetObject(0);
     }
 }
 
 inline Example::IShapePtr& Example::IShapePtr::operator=(const Example::IShapePtr& other)
 {
-    if (mObject != other.mObject)
+    if (GetRawPointer() != other.GetRawPointer())
     {
-        if (mObject && Example::IShapePtr::mObject)
+        if (GetRawPointer())
         {
-            example_i_shape_release(mObject);
+            example_i_shape_release(GetRawPointer());
             SetObject(0);
         }
-        SetObject(other.mObject);
-        if (other.mObject)
+        SetObject(other.GetRawPointer());
+        if (other.GetRawPointer())
         {
-            example_i_shape_add_ref(other.mObject);
+            example_i_shape_add_ref(other.GetRawPointer());
         }
     }
     return *this;
@@ -92,14 +92,14 @@ inline Example::IShapePtr& Example::IShapePtr::operator=(const Example::IShapePt
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::IShapePtr& Example::IShapePtr::operator=(Example::IShapePtr&& other)
 {
-    if (mObject != other.mObject)
+    if (GetRawPointer() != other.GetRawPointer())
     {
-        if (mObject && Example::IShapePtr::mObject)
+        if (GetRawPointer())
         {
-            example_i_shape_release(mObject);
+            example_i_shape_release(GetRawPointer());
             SetObject(0);
         }
-        mObject = other.mObject;
+        mObject = other.GetRawPointer();
         other.mObject = 0;
     }
     return *this;
@@ -113,29 +113,29 @@ inline Example::IShapePtr Example::IShapePtr::Null()
 
 inline bool Example::IShapePtr::IsNull() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline bool Example::IShapePtr::IsNotNull() const
 {
-    return mObject != 0;
+    return GetRawPointer() != 0;
 }
 
 inline bool Example::IShapePtr::operator!() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline void* Example::IShapePtr::Detach()
 {
-    void* result = mObject;
+    void* result = GetRawPointer();
     SetObject(0);
     return result;
 }
 
 inline void* Example::IShapePtr::GetRawPointer() const
 {
-    return mObject;
+    return Example::IShapePtr::mObject ? mObject: 0;
 }
 
 inline Example::IShapePtr* Example::IShapePtr::operator->()

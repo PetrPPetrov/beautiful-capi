@@ -42,15 +42,15 @@ inline Exception::Generic::Generic()
 
 inline const char* Exception::Generic::GetErrorText() const
 {
-    return exception_generic_get_error_text(this->GetRawPointer());
+    return exception_generic_get_error_text(GetRawPointer());
 }
 
 inline Exception::Generic::Generic(const Generic& other)
 {
-    if (other.mObject)
+    if (other.GetRawPointer())
     {
         beautiful_capi_callback_exception_info_t exception_info;
-        void* result(exception_generic_copy(&exception_info, other.mObject));
+        void* result(exception_generic_copy(&exception_info, other.GetRawPointer()));
         beautiful_capi_Callback::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
         SetObject(result);
     }
@@ -63,7 +63,7 @@ inline Exception::Generic::Generic(const Generic& other)
 #ifdef EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Exception::Generic::Generic(Generic&& other)
 {
-    mObject = other.mObject;
+    mObject = other.GetRawPointer();
     other.mObject = 0;
 }
 #endif /* EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -85,9 +85,9 @@ inline Exception::Generic::Generic(Exception::Generic::ECreateFromRawPointer, vo
 
 inline Exception::Generic::~Generic()
 {
-    if (mObject && Exception::Generic::mObject)
+    if (GetRawPointer())
     {
-        exception_generic_delete(mObject);
+        exception_generic_delete(GetRawPointer());
         SetObject(0);
     }
 }
@@ -96,15 +96,15 @@ inline Exception::Generic& Exception::Generic::operator=(const Exception::Generi
 {
     if (this != &other)
     {
-        if (mObject && Exception::Generic::mObject)
+        if (GetRawPointer())
         {
-            exception_generic_delete(mObject);
+            exception_generic_delete(GetRawPointer());
             SetObject(0);
         }
-        if (other.mObject)
+        if (other.GetRawPointer())
         {
             beautiful_capi_callback_exception_info_t exception_info;
-            void* result(exception_generic_copy(&exception_info, other.mObject));
+            void* result(exception_generic_copy(&exception_info, other.GetRawPointer()));
             beautiful_capi_Callback::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
             SetObject(result);
         }
@@ -121,12 +121,12 @@ inline Exception::Generic& Exception::Generic::operator=(Exception::Generic&& ot
 {
     if (this != &other)
     {
-        if (mObject && Exception::Generic::mObject)
+        if (GetRawPointer())
         {
-            exception_generic_delete(mObject);
+            exception_generic_delete(GetRawPointer());
             SetObject(0);
         }
-        mObject = other.mObject;
+        mObject = other.GetRawPointer();
         other.mObject = 0;
     }
     return *this;
@@ -140,29 +140,29 @@ inline Exception::Generic Exception::Generic::Null()
 
 inline bool Exception::Generic::IsNull() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline bool Exception::Generic::IsNotNull() const
 {
-    return mObject != 0;
+    return GetRawPointer() != 0;
 }
 
 inline bool Exception::Generic::operator!() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline void* Exception::Generic::Detach()
 {
-    void* result = mObject;
+    void* result = GetRawPointer();
     SetObject(0);
     return result;
 }
 
 inline void* Exception::Generic::GetRawPointer() const
 {
-    return mObject;
+    return Exception::Generic::mObject ? mObject: 0;
 }
 
 inline void Exception::Generic::SetObject(void* object_pointer)

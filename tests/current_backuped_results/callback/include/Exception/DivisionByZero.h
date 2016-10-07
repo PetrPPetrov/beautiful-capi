@@ -43,10 +43,10 @@ inline Exception::DivisionByZero::DivisionByZero() : Exception::Generic(Exceptio
 
 inline Exception::DivisionByZero::DivisionByZero(const DivisionByZero& other) : Exception::Generic(Exception::Generic::force_creating_from_raw_pointer, 0, false)
 {
-    if (other.mObject)
+    if (other.GetRawPointer())
     {
         beautiful_capi_callback_exception_info_t exception_info;
-        void* result(exception_division_by_zero_copy(&exception_info, other.mObject));
+        void* result(exception_division_by_zero_copy(&exception_info, other.GetRawPointer()));
         beautiful_capi_Callback::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
         SetObject(result);
     }
@@ -59,7 +59,7 @@ inline Exception::DivisionByZero::DivisionByZero(const DivisionByZero& other) : 
 #ifdef EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Exception::DivisionByZero::DivisionByZero(DivisionByZero&& other) : Exception::Generic(std::move(other))
 {
-    mObject = other.mObject;
+    mObject = other.GetRawPointer();
     other.mObject = 0;
 }
 #endif /* EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -81,9 +81,9 @@ inline Exception::DivisionByZero::DivisionByZero(Exception::DivisionByZero::ECre
 
 inline Exception::DivisionByZero::~DivisionByZero()
 {
-    if (mObject && Exception::Generic::mObject)
+    if (GetRawPointer())
     {
-        exception_division_by_zero_delete(mObject);
+        exception_division_by_zero_delete(GetRawPointer());
         SetObject(0);
     }
 }
@@ -92,15 +92,15 @@ inline Exception::DivisionByZero& Exception::DivisionByZero::operator=(const Exc
 {
     if (this != &other)
     {
-        if (mObject && Exception::Generic::mObject)
+        if (GetRawPointer())
         {
-            exception_division_by_zero_delete(mObject);
+            exception_division_by_zero_delete(GetRawPointer());
             SetObject(0);
         }
-        if (other.mObject)
+        if (other.GetRawPointer())
         {
             beautiful_capi_callback_exception_info_t exception_info;
-            void* result(exception_division_by_zero_copy(&exception_info, other.mObject));
+            void* result(exception_division_by_zero_copy(&exception_info, other.GetRawPointer()));
             beautiful_capi_Callback::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
             SetObject(result);
         }
@@ -117,13 +117,13 @@ inline Exception::DivisionByZero& Exception::DivisionByZero::operator=(Exception
 {
     if (this != &other)
     {
-        if (mObject && Exception::Generic::mObject)
+        if (GetRawPointer())
         {
-            exception_division_by_zero_delete(mObject);
+            exception_division_by_zero_delete(GetRawPointer());
             SetObject(0);
         }
         Exception::Generic::operator=(std::move(other));
-        mObject = other.mObject;
+        mObject = other.GetRawPointer();
         other.mObject = 0;
     }
     return *this;
@@ -137,29 +137,29 @@ inline Exception::DivisionByZero Exception::DivisionByZero::Null()
 
 inline bool Exception::DivisionByZero::IsNull() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline bool Exception::DivisionByZero::IsNotNull() const
 {
-    return mObject != 0;
+    return GetRawPointer() != 0;
 }
 
 inline bool Exception::DivisionByZero::operator!() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline void* Exception::DivisionByZero::Detach()
 {
-    void* result = mObject;
+    void* result = GetRawPointer();
     SetObject(0);
     return result;
 }
 
 inline void* Exception::DivisionByZero::GetRawPointer() const
 {
-    return mObject;
+    return Exception::Generic::mObject ? mObject: 0;
 }
 
 inline void Exception::DivisionByZero::SetObject(void* object_pointer)

@@ -39,23 +39,23 @@ inline Circular::ClassARawPtr::ClassARawPtr()
 
 inline void Circular::ClassARawPtr::SetB(const Circular::ClassBRawPtr& value)
 {
-    circular_class_a_set_b(this->GetRawPointer(), value.GetRawPointer());
+    circular_class_a_set_b(GetRawPointer(), value.GetRawPointer());
 }
 
 inline Circular::ClassBRawPtr Circular::ClassARawPtr::GetB() const
 {
-    return Circular::ClassBRawPtr(Circular::ClassBRawPtr::force_creating_from_raw_pointer, circular_class_a_get_b(this->GetRawPointer()), false);
+    return Circular::ClassBRawPtr(Circular::ClassBRawPtr::force_creating_from_raw_pointer, circular_class_a_get_b(GetRawPointer()), false);
 }
 
 inline Circular::ClassARawPtr::ClassARawPtr(const ClassARawPtr& other)
 {
-    SetObject(other.mObject);
+    SetObject(other.GetRawPointer());
 }
 
 #ifdef CIRCULAR_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Circular::ClassARawPtr::ClassARawPtr(ClassARawPtr&& other)
 {
-    mObject = other.mObject;
+    mObject = other.GetRawPointer();
     other.mObject = 0;
 }
 #endif /* CIRCULAR_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -67,9 +67,9 @@ inline Circular::ClassARawPtr::ClassARawPtr(Circular::ClassARawPtr::ECreateFromR
 
 inline void Circular::ClassARawPtr::Delete()
 {
-    if (mObject && Circular::ClassARawPtr::mObject)
+    if (GetRawPointer())
     {
-        circular_class_a_delete(mObject);
+        circular_class_a_delete(GetRawPointer());
         SetObject(0);
     }
 }
@@ -78,7 +78,7 @@ inline Circular::ClassARawPtr& Circular::ClassARawPtr::operator=(const Circular:
 {
     if (this != &other)
     {
-        SetObject(other.mObject);
+        SetObject(other.GetRawPointer());
     }
     return *this;
 }
@@ -88,7 +88,7 @@ inline Circular::ClassARawPtr& Circular::ClassARawPtr::operator=(Circular::Class
 {
     if (this != &other)
     {
-        mObject = other.mObject;
+        mObject = other.GetRawPointer();
         other.mObject = 0;
     }
     return *this;
@@ -102,29 +102,29 @@ inline Circular::ClassARawPtr Circular::ClassARawPtr::Null()
 
 inline bool Circular::ClassARawPtr::IsNull() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline bool Circular::ClassARawPtr::IsNotNull() const
 {
-    return mObject != 0;
+    return GetRawPointer() != 0;
 }
 
 inline bool Circular::ClassARawPtr::operator!() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline void* Circular::ClassARawPtr::Detach()
 {
-    void* result = mObject;
+    void* result = GetRawPointer();
     SetObject(0);
     return result;
 }
 
 inline void* Circular::ClassARawPtr::GetRawPointer() const
 {
-    return mObject;
+    return Circular::ClassARawPtr::mObject ? mObject: 0;
 }
 
 inline Circular::ClassARawPtr* Circular::ClassARawPtr::operator->()

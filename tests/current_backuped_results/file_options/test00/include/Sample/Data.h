@@ -38,19 +38,19 @@ inline Sample::Data::Data()
 
 inline int Sample::Data::GetData()
 {
-    return sample_data_get_data(this->GetRawPointer());
+    return sample_data_get_data(GetRawPointer());
 }
 
 inline void Sample::Data::SetData(int value)
 {
-    sample_data_set_data(this->GetRawPointer(), value);
+    sample_data_set_data(GetRawPointer(), value);
 }
 
 inline Sample::Data::Data(const Data& other)
 {
-    if (other.mObject)
+    if (other.GetRawPointer())
     {
-        SetObject(sample_data_copy(other.mObject));
+        SetObject(sample_data_copy(other.GetRawPointer()));
     }
     else
     {
@@ -61,7 +61,7 @@ inline Sample::Data::Data(const Data& other)
 #ifdef SAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Sample::Data::Data(Data&& other)
 {
-    mObject = other.mObject;
+    mObject = other.GetRawPointer();
     other.mObject = 0;
 }
 #endif /* SAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -80,9 +80,9 @@ inline Sample::Data::Data(Sample::Data::ECreateFromRawPointer, void *object_poin
 
 inline Sample::Data::~Data()
 {
-    if (mObject && Sample::Data::mObject)
+    if (GetRawPointer())
     {
-        sample_data_delete(mObject);
+        sample_data_delete(GetRawPointer());
         SetObject(0);
     }
 }
@@ -91,14 +91,14 @@ inline Sample::Data& Sample::Data::operator=(const Sample::Data& other)
 {
     if (this != &other)
     {
-        if (mObject && Sample::Data::mObject)
+        if (GetRawPointer())
         {
-            sample_data_delete(mObject);
+            sample_data_delete(GetRawPointer());
             SetObject(0);
         }
-        if (other.mObject)
+        if (other.GetRawPointer())
         {
-            SetObject(sample_data_copy(other.mObject));
+            SetObject(sample_data_copy(other.GetRawPointer()));
         }
         else
         {
@@ -113,12 +113,12 @@ inline Sample::Data& Sample::Data::operator=(Sample::Data&& other)
 {
     if (this != &other)
     {
-        if (mObject && Sample::Data::mObject)
+        if (GetRawPointer())
         {
-            sample_data_delete(mObject);
+            sample_data_delete(GetRawPointer());
             SetObject(0);
         }
-        mObject = other.mObject;
+        mObject = other.GetRawPointer();
         other.mObject = 0;
     }
     return *this;
@@ -132,29 +132,29 @@ inline Sample::Data Sample::Data::Null()
 
 inline bool Sample::Data::IsNull() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline bool Sample::Data::IsNotNull() const
 {
-    return mObject != 0;
+    return GetRawPointer() != 0;
 }
 
 inline bool Sample::Data::operator!() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline void* Sample::Data::Detach()
 {
-    void* result = mObject;
+    void* result = GetRawPointer();
     SetObject(0);
     return result;
 }
 
 inline void* Sample::Data::GetRawPointer() const
 {
-    return mObject;
+    return Sample::Data::mObject ? mObject: 0;
 }
 
 inline void Sample::Data::SetObject(void* object_pointer)

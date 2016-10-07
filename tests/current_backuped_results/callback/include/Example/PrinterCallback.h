@@ -43,47 +43,47 @@ inline Example::PrinterCallbackPtr::PrinterCallbackPtr() : Example::PrinterPtr(E
 
 inline void Example::PrinterCallbackPtr::SetObjectPointer(void* custom_object)
 {
-    example_printer_callback_set_object_pointer(this->GetRawPointer(), custom_object);
+    example_printer_callback_set_object_pointer(GetRawPointer(), custom_object);
 }
 
 inline void* Example::PrinterCallbackPtr::GetObjectPointer() const
 {
-    return example_printer_callback_get_object_pointer(this->GetRawPointer());
+    return example_printer_callback_get_object_pointer(GetRawPointer());
 }
 
 inline void Example::PrinterCallbackPtr::SetCFunctionForPrint(example_printer_print_callback_type c_function_pointer)
 {
-    example_printer_callback_set_c_function_for_print(this->GetRawPointer(), c_function_pointer);
+    example_printer_callback_set_c_function_for_print(GetRawPointer(), c_function_pointer);
 }
 
 inline void Example::PrinterCallbackPtr::SetCFunctionForSetPrintingQuality(example_printer_set_printing_quality_callback_type c_function_pointer)
 {
-    example_printer_callback_set_c_function_for_set_printing_quality(this->GetRawPointer(), c_function_pointer);
+    example_printer_callback_set_c_function_for_set_printing_quality(GetRawPointer(), c_function_pointer);
 }
 
 inline void Example::PrinterCallbackPtr::SetCFunctionForGetPrintingQuality(example_printer_get_printing_quality_callback_type c_function_pointer)
 {
-    example_printer_callback_set_c_function_for_get_printing_quality(this->GetRawPointer(), c_function_pointer);
+    example_printer_callback_set_c_function_for_get_printing_quality(GetRawPointer(), c_function_pointer);
 }
 
 inline void Example::PrinterCallbackPtr::SetCFunctionForGetDeviceType(example_printer_get_device_type_callback_type c_function_pointer)
 {
-    example_printer_callback_set_c_function_for_get_device_type(this->GetRawPointer(), c_function_pointer);
+    example_printer_callback_set_c_function_for_get_device_type(GetRawPointer(), c_function_pointer);
 }
 
 inline Example::PrinterCallbackPtr::PrinterCallbackPtr(const PrinterCallbackPtr& other) : Example::PrinterPtr(Example::PrinterPtr::force_creating_from_raw_pointer, 0, false)
 {
-    SetObject(other.mObject);
-    if (other.mObject)
+    SetObject(other.GetRawPointer());
+    if (other.GetRawPointer())
     {
-        example_printer_callback_add_ref(other.mObject);
+        example_printer_callback_add_ref(other.GetRawPointer());
     }
 }
 
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::PrinterCallbackPtr::PrinterCallbackPtr(PrinterCallbackPtr&& other) : Example::PrinterPtr(std::move(other))
 {
-    mObject = other.mObject;
+    mObject = other.GetRawPointer();
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -99,26 +99,26 @@ inline Example::PrinterCallbackPtr::PrinterCallbackPtr(Example::PrinterCallbackP
 
 inline Example::PrinterCallbackPtr::~PrinterCallbackPtr()
 {
-    if (mObject && Example::PrinterPtr::mObject)
+    if (GetRawPointer())
     {
-        example_printer_callback_release(mObject);
+        example_printer_callback_release(GetRawPointer());
         SetObject(0);
     }
 }
 
 inline Example::PrinterCallbackPtr& Example::PrinterCallbackPtr::operator=(const Example::PrinterCallbackPtr& other)
 {
-    if (mObject != other.mObject)
+    if (GetRawPointer() != other.GetRawPointer())
     {
-        if (mObject && Example::PrinterPtr::mObject)
+        if (GetRawPointer())
         {
-            example_printer_callback_release(mObject);
+            example_printer_callback_release(GetRawPointer());
             SetObject(0);
         }
-        SetObject(other.mObject);
-        if (other.mObject)
+        SetObject(other.GetRawPointer());
+        if (other.GetRawPointer())
         {
-            example_printer_callback_add_ref(other.mObject);
+            example_printer_callback_add_ref(other.GetRawPointer());
         }
     }
     return *this;
@@ -127,15 +127,15 @@ inline Example::PrinterCallbackPtr& Example::PrinterCallbackPtr::operator=(const
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::PrinterCallbackPtr& Example::PrinterCallbackPtr::operator=(Example::PrinterCallbackPtr&& other)
 {
-    if (mObject != other.mObject)
+    if (GetRawPointer() != other.GetRawPointer())
     {
-        if (mObject && Example::PrinterPtr::mObject)
+        if (GetRawPointer())
         {
-            example_printer_callback_release(mObject);
+            example_printer_callback_release(GetRawPointer());
             SetObject(0);
         }
         Example::PrinterPtr::operator=(std::move(other));
-        mObject = other.mObject;
+        mObject = other.GetRawPointer();
         other.mObject = 0;
     }
     return *this;
@@ -149,29 +149,29 @@ inline Example::PrinterCallbackPtr Example::PrinterCallbackPtr::Null()
 
 inline bool Example::PrinterCallbackPtr::IsNull() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline bool Example::PrinterCallbackPtr::IsNotNull() const
 {
-    return mObject != 0;
+    return GetRawPointer() != 0;
 }
 
 inline bool Example::PrinterCallbackPtr::operator!() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline void* Example::PrinterCallbackPtr::Detach()
 {
-    void* result = mObject;
+    void* result = GetRawPointer();
     SetObject(0);
     return result;
 }
 
 inline void* Example::PrinterCallbackPtr::GetRawPointer() const
 {
-    return mObject;
+    return Example::PrinterPtr::mObject ? mObject: 0;
 }
 
 inline Example::PrinterCallbackPtr* Example::PrinterCallbackPtr::operator->()

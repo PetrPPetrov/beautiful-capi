@@ -39,37 +39,37 @@ inline Example::ModelPtr<double>::ModelPtr()
 
 inline const char* Example::ModelPtr<double>::GetName() const
 {
-    return example_model_double_get_name(this->GetRawPointer());
+    return example_model_double_get_name(GetRawPointer());
 }
 
 inline void Example::ModelPtr<double>::SetName(const char* name)
 {
-    example_model_double_set_name(this->GetRawPointer(), name);
+    example_model_double_set_name(GetRawPointer(), name);
 }
 
 inline Example::Position<double> Example::ModelPtr<double>::GetPosition() const
 {
-    return Example::Position<double>(Example::Position<double>::force_creating_from_raw_pointer, example_model_double_get_position(this->GetRawPointer()), false);
+    return Example::Position<double>(Example::Position<double>::force_creating_from_raw_pointer, example_model_double_get_position(GetRawPointer()), false);
 }
 
 inline void Example::ModelPtr<double>::SetPosition(const Example::Position<double>& position)
 {
-    example_model_double_set_position(this->GetRawPointer(), position.GetRawPointer());
+    example_model_double_set_position(GetRawPointer(), position.GetRawPointer());
 }
 
 inline Example::ModelPtr<double>::ModelPtr(const ModelPtr<double>& other)
 {
-    SetObject(other.mObject);
-    if (other.mObject)
+    SetObject(other.GetRawPointer());
+    if (other.GetRawPointer())
     {
-        example_model_double_add_ref(other.mObject);
+        example_model_double_add_ref(other.GetRawPointer());
     }
 }
 
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::ModelPtr<double>::ModelPtr(ModelPtr<double>&& other)
 {
-    mObject = other.mObject;
+    mObject = other.GetRawPointer();
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -85,26 +85,26 @@ inline Example::ModelPtr<double>::ModelPtr(Example::ModelPtr<double>::ECreateFro
 
 inline Example::ModelPtr<double>::~ModelPtr()
 {
-    if (mObject && Example::ModelPtr<double>::mObject)
+    if (GetRawPointer())
     {
-        example_model_double_release(mObject);
+        example_model_double_release(GetRawPointer());
         SetObject(0);
     }
 }
 
 inline Example::ModelPtr<double>& Example::ModelPtr<double>::operator=(const Example::ModelPtr<double>& other)
 {
-    if (mObject != other.mObject)
+    if (GetRawPointer() != other.GetRawPointer())
     {
-        if (mObject && Example::ModelPtr<double>::mObject)
+        if (GetRawPointer())
         {
-            example_model_double_release(mObject);
+            example_model_double_release(GetRawPointer());
             SetObject(0);
         }
-        SetObject(other.mObject);
-        if (other.mObject)
+        SetObject(other.GetRawPointer());
+        if (other.GetRawPointer())
         {
-            example_model_double_add_ref(other.mObject);
+            example_model_double_add_ref(other.GetRawPointer());
         }
     }
     return *this;
@@ -113,14 +113,14 @@ inline Example::ModelPtr<double>& Example::ModelPtr<double>::operator=(const Exa
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::ModelPtr<double>& Example::ModelPtr<double>::operator=(Example::ModelPtr<double>&& other)
 {
-    if (mObject != other.mObject)
+    if (GetRawPointer() != other.GetRawPointer())
     {
-        if (mObject && Example::ModelPtr<double>::mObject)
+        if (GetRawPointer())
         {
-            example_model_double_release(mObject);
+            example_model_double_release(GetRawPointer());
             SetObject(0);
         }
-        mObject = other.mObject;
+        mObject = other.GetRawPointer();
         other.mObject = 0;
     }
     return *this;
@@ -134,29 +134,29 @@ inline Example::ModelPtr<double> Example::ModelPtr<double>::Null()
 
 inline bool Example::ModelPtr<double>::IsNull() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline bool Example::ModelPtr<double>::IsNotNull() const
 {
-    return mObject != 0;
+    return GetRawPointer() != 0;
 }
 
 inline bool Example::ModelPtr<double>::operator!() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline void* Example::ModelPtr<double>::Detach()
 {
-    void* result = mObject;
+    void* result = GetRawPointer();
     SetObject(0);
     return result;
 }
 
 inline void* Example::ModelPtr<double>::GetRawPointer() const
 {
-    return mObject;
+    return Example::ModelPtr<double>::mObject ? mObject: 0;
 }
 
 inline Example::ModelPtr<double>* Example::ModelPtr<double>::operator->()

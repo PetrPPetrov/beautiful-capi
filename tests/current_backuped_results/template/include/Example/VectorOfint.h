@@ -38,29 +38,29 @@ inline Example::VectorOf<int>::VectorOf()
 
 inline int Example::VectorOf<int>::GetSize() const
 {
-    return example_vector_of_int_get_size(this->GetRawPointer());
+    return example_vector_of_int_get_size(GetRawPointer());
 }
 
 inline void Example::VectorOf<int>::Clear()
 {
-    example_vector_of_int_clear(this->GetRawPointer());
+    example_vector_of_int_clear(GetRawPointer());
 }
 
 inline void Example::VectorOf<int>::PushBack(int value)
 {
-    example_vector_of_int_push_back(this->GetRawPointer(), value);
+    example_vector_of_int_push_back(GetRawPointer(), value);
 }
 
 inline int Example::VectorOf<int>::GetItem(int index) const
 {
-    return example_vector_of_int_get_item(this->GetRawPointer(), index);
+    return example_vector_of_int_get_item(GetRawPointer(), index);
 }
 
 inline Example::VectorOf<int>::VectorOf(const VectorOf<int>& other)
 {
-    if (other.mObject)
+    if (other.GetRawPointer())
     {
-        SetObject(example_vector_of_int_copy(other.mObject));
+        SetObject(example_vector_of_int_copy(other.GetRawPointer()));
     }
     else
     {
@@ -71,7 +71,7 @@ inline Example::VectorOf<int>::VectorOf(const VectorOf<int>& other)
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::VectorOf<int>::VectorOf(VectorOf<int>&& other)
 {
-    mObject = other.mObject;
+    mObject = other.GetRawPointer();
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -90,9 +90,9 @@ inline Example::VectorOf<int>::VectorOf(Example::VectorOf<int>::ECreateFromRawPo
 
 inline Example::VectorOf<int>::~VectorOf()
 {
-    if (mObject && Example::VectorOf<int>::mObject)
+    if (GetRawPointer())
     {
-        example_vector_of_int_delete(mObject);
+        example_vector_of_int_delete(GetRawPointer());
         SetObject(0);
     }
 }
@@ -101,14 +101,14 @@ inline Example::VectorOf<int>& Example::VectorOf<int>::operator=(const Example::
 {
     if (this != &other)
     {
-        if (mObject && Example::VectorOf<int>::mObject)
+        if (GetRawPointer())
         {
-            example_vector_of_int_delete(mObject);
+            example_vector_of_int_delete(GetRawPointer());
             SetObject(0);
         }
-        if (other.mObject)
+        if (other.GetRawPointer())
         {
-            SetObject(example_vector_of_int_copy(other.mObject));
+            SetObject(example_vector_of_int_copy(other.GetRawPointer()));
         }
         else
         {
@@ -123,12 +123,12 @@ inline Example::VectorOf<int>& Example::VectorOf<int>::operator=(Example::Vector
 {
     if (this != &other)
     {
-        if (mObject && Example::VectorOf<int>::mObject)
+        if (GetRawPointer())
         {
-            example_vector_of_int_delete(mObject);
+            example_vector_of_int_delete(GetRawPointer());
             SetObject(0);
         }
-        mObject = other.mObject;
+        mObject = other.GetRawPointer();
         other.mObject = 0;
     }
     return *this;
@@ -142,29 +142,29 @@ inline Example::VectorOf<int> Example::VectorOf<int>::Null()
 
 inline bool Example::VectorOf<int>::IsNull() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline bool Example::VectorOf<int>::IsNotNull() const
 {
-    return mObject != 0;
+    return GetRawPointer() != 0;
 }
 
 inline bool Example::VectorOf<int>::operator!() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline void* Example::VectorOf<int>::Detach()
 {
-    void* result = mObject;
+    void* result = GetRawPointer();
     SetObject(0);
     return result;
 }
 
 inline void* Example::VectorOf<int>::GetRawPointer() const
 {
-    return mObject;
+    return Example::VectorOf<int>::mObject ? mObject: 0;
 }
 
 inline void Example::VectorOf<int>::SetObject(void* object_pointer)

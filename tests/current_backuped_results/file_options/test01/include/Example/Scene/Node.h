@@ -38,19 +38,19 @@ inline Example::Scene::Node::Node()
 
 inline const char* Example::Scene::Node::GetName()
 {
-    return example_scene_node_get_name(this->GetRawPointer());
+    return example_scene_node_get_name(GetRawPointer());
 }
 
 inline void Example::Scene::Node::SetName(const char* value)
 {
-    example_scene_node_set_name(this->GetRawPointer(), value);
+    example_scene_node_set_name(GetRawPointer(), value);
 }
 
 inline Example::Scene::Node::Node(const Node& other)
 {
-    if (other.mObject)
+    if (other.GetRawPointer())
     {
-        SetObject(example_scene_node_copy(other.mObject));
+        SetObject(example_scene_node_copy(other.GetRawPointer()));
     }
     else
     {
@@ -61,7 +61,7 @@ inline Example::Scene::Node::Node(const Node& other)
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::Scene::Node::Node(Node&& other)
 {
-    mObject = other.mObject;
+    mObject = other.GetRawPointer();
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -80,9 +80,9 @@ inline Example::Scene::Node::Node(Example::Scene::Node::ECreateFromRawPointer, v
 
 inline Example::Scene::Node::~Node()
 {
-    if (mObject && Example::Scene::Node::mObject)
+    if (GetRawPointer())
     {
-        example_scene_node_delete(mObject);
+        example_scene_node_delete(GetRawPointer());
         SetObject(0);
     }
 }
@@ -91,14 +91,14 @@ inline Example::Scene::Node& Example::Scene::Node::operator=(const Example::Scen
 {
     if (this != &other)
     {
-        if (mObject && Example::Scene::Node::mObject)
+        if (GetRawPointer())
         {
-            example_scene_node_delete(mObject);
+            example_scene_node_delete(GetRawPointer());
             SetObject(0);
         }
-        if (other.mObject)
+        if (other.GetRawPointer())
         {
-            SetObject(example_scene_node_copy(other.mObject));
+            SetObject(example_scene_node_copy(other.GetRawPointer()));
         }
         else
         {
@@ -113,12 +113,12 @@ inline Example::Scene::Node& Example::Scene::Node::operator=(Example::Scene::Nod
 {
     if (this != &other)
     {
-        if (mObject && Example::Scene::Node::mObject)
+        if (GetRawPointer())
         {
-            example_scene_node_delete(mObject);
+            example_scene_node_delete(GetRawPointer());
             SetObject(0);
         }
-        mObject = other.mObject;
+        mObject = other.GetRawPointer();
         other.mObject = 0;
     }
     return *this;
@@ -132,29 +132,29 @@ inline Example::Scene::Node Example::Scene::Node::Null()
 
 inline bool Example::Scene::Node::IsNull() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline bool Example::Scene::Node::IsNotNull() const
 {
-    return mObject != 0;
+    return GetRawPointer() != 0;
 }
 
 inline bool Example::Scene::Node::operator!() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline void* Example::Scene::Node::Detach()
 {
-    void* result = mObject;
+    void* result = GetRawPointer();
     SetObject(0);
     return result;
 }
 
 inline void* Example::Scene::Node::GetRawPointer() const
 {
-    return mObject;
+    return Example::Scene::Node::mObject ? mObject: 0;
 }
 
 inline void Example::Scene::Node::SetObject(void* object_pointer)

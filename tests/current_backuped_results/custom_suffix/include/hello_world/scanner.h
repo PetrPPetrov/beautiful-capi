@@ -38,18 +38,18 @@ inline hello_world::scanner_raw_ptr::scanner_raw_ptr()
 
 inline void hello_world::scanner_raw_ptr::scan() const
 {
-    hello_world_scanner_scan(this->get_raw_pointer());
+    hello_world_scanner_scan(get_raw_pointer());
 }
 
 inline hello_world::scanner_raw_ptr::scanner_raw_ptr(const scanner_raw_ptr& other)
 {
-    SetObject(other.mObject);
+    SetObject(other.get_raw_pointer());
 }
 
 #ifdef HELLO_WORLD_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline hello_world::scanner_raw_ptr::scanner_raw_ptr(scanner_raw_ptr&& other)
 {
-    mObject = other.mObject;
+    mObject = other.get_raw_pointer();
     other.mObject = 0;
 }
 #endif /* HELLO_WORLD_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -61,9 +61,9 @@ inline hello_world::scanner_raw_ptr::scanner_raw_ptr(hello_world::scanner_raw_pt
 
 inline void hello_world::scanner_raw_ptr::deallocate()
 {
-    if (mObject && hello_world::scanner_raw_ptr::mObject)
+    if (get_raw_pointer())
     {
-        hello_world_scanner_delete(mObject);
+        hello_world_scanner_delete(get_raw_pointer());
         SetObject(0);
     }
 }
@@ -72,7 +72,7 @@ inline hello_world::scanner_raw_ptr& hello_world::scanner_raw_ptr::operator=(con
 {
     if (this != &other)
     {
-        SetObject(other.mObject);
+        SetObject(other.get_raw_pointer());
     }
     return *this;
 }
@@ -82,7 +82,7 @@ inline hello_world::scanner_raw_ptr& hello_world::scanner_raw_ptr::operator=(hel
 {
     if (this != &other)
     {
-        mObject = other.mObject;
+        mObject = other.get_raw_pointer();
         other.mObject = 0;
     }
     return *this;
@@ -96,29 +96,29 @@ inline hello_world::scanner_raw_ptr hello_world::scanner_raw_ptr::null()
 
 inline bool hello_world::scanner_raw_ptr::is_null() const
 {
-    return !mObject;
+    return !get_raw_pointer();
 }
 
 inline bool hello_world::scanner_raw_ptr::is_not_null() const
 {
-    return mObject != 0;
+    return get_raw_pointer() != 0;
 }
 
 inline bool hello_world::scanner_raw_ptr::operator!() const
 {
-    return !mObject;
+    return !get_raw_pointer();
 }
 
 inline void* hello_world::scanner_raw_ptr::detach()
 {
-    void* result = mObject;
+    void* result = get_raw_pointer();
     SetObject(0);
     return result;
 }
 
 inline void* hello_world::scanner_raw_ptr::get_raw_pointer() const
 {
-    return mObject;
+    return hello_world::scanner_raw_ptr::mObject ? mObject: 0;
 }
 
 inline hello_world::scanner_raw_ptr* hello_world::scanner_raw_ptr::operator->()

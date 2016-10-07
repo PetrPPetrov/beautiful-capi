@@ -39,37 +39,37 @@ inline Example::VectorOfObjectsPtr<Example::ModelPtr<double> >::VectorOfObjectsP
 
 inline int Example::VectorOfObjectsPtr<Example::ModelPtr<double> >::GetSize() const
 {
-    return example_vector_of_objects_example_model_double_get_size(this->GetRawPointer());
+    return example_vector_of_objects_example_model_double_get_size(GetRawPointer());
 }
 
 inline void Example::VectorOfObjectsPtr<Example::ModelPtr<double> >::Clear()
 {
-    example_vector_of_objects_example_model_double_clear(this->GetRawPointer());
+    example_vector_of_objects_example_model_double_clear(GetRawPointer());
 }
 
 inline void Example::VectorOfObjectsPtr<Example::ModelPtr<double> >::PushBack(const Example::ModelPtr<double>& value)
 {
-    example_vector_of_objects_example_model_double_push_back(this->GetRawPointer(), value.GetRawPointer());
+    example_vector_of_objects_example_model_double_push_back(GetRawPointer(), value.GetRawPointer());
 }
 
 inline Example::ModelPtr<double> Example::VectorOfObjectsPtr<Example::ModelPtr<double> >::GetItem(int index) const
 {
-    return Example::ModelPtr<double>(Example::ModelPtr<double>::force_creating_from_raw_pointer, example_vector_of_objects_example_model_double_get_item(this->GetRawPointer(), index), true);
+    return Example::ModelPtr<double>(Example::ModelPtr<double>::force_creating_from_raw_pointer, example_vector_of_objects_example_model_double_get_item(GetRawPointer(), index), true);
 }
 
 inline Example::VectorOfObjectsPtr<Example::ModelPtr<double> >::VectorOfObjectsPtr(const VectorOfObjectsPtr<Example::ModelPtr<double> >& other)
 {
-    SetObject(other.mObject);
-    if (other.mObject)
+    SetObject(other.GetRawPointer());
+    if (other.GetRawPointer())
     {
-        example_vector_of_objects_example_model_double_add_ref(other.mObject);
+        example_vector_of_objects_example_model_double_add_ref(other.GetRawPointer());
     }
 }
 
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::VectorOfObjectsPtr<Example::ModelPtr<double> >::VectorOfObjectsPtr(VectorOfObjectsPtr<Example::ModelPtr<double> >&& other)
 {
-    mObject = other.mObject;
+    mObject = other.GetRawPointer();
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -85,26 +85,26 @@ inline Example::VectorOfObjectsPtr<Example::ModelPtr<double> >::VectorOfObjectsP
 
 inline Example::VectorOfObjectsPtr<Example::ModelPtr<double> >::~VectorOfObjectsPtr()
 {
-    if (mObject && Example::VectorOfObjectsPtr<Example::ModelPtr<double> >::mObject)
+    if (GetRawPointer())
     {
-        example_vector_of_objects_example_model_double_release(mObject);
+        example_vector_of_objects_example_model_double_release(GetRawPointer());
         SetObject(0);
     }
 }
 
 inline Example::VectorOfObjectsPtr<Example::ModelPtr<double> >& Example::VectorOfObjectsPtr<Example::ModelPtr<double> >::operator=(const Example::VectorOfObjectsPtr<Example::ModelPtr<double> >& other)
 {
-    if (mObject != other.mObject)
+    if (GetRawPointer() != other.GetRawPointer())
     {
-        if (mObject && Example::VectorOfObjectsPtr<Example::ModelPtr<double> >::mObject)
+        if (GetRawPointer())
         {
-            example_vector_of_objects_example_model_double_release(mObject);
+            example_vector_of_objects_example_model_double_release(GetRawPointer());
             SetObject(0);
         }
-        SetObject(other.mObject);
-        if (other.mObject)
+        SetObject(other.GetRawPointer());
+        if (other.GetRawPointer())
         {
-            example_vector_of_objects_example_model_double_add_ref(other.mObject);
+            example_vector_of_objects_example_model_double_add_ref(other.GetRawPointer());
         }
     }
     return *this;
@@ -113,14 +113,14 @@ inline Example::VectorOfObjectsPtr<Example::ModelPtr<double> >& Example::VectorO
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::VectorOfObjectsPtr<Example::ModelPtr<double> >& Example::VectorOfObjectsPtr<Example::ModelPtr<double> >::operator=(Example::VectorOfObjectsPtr<Example::ModelPtr<double> >&& other)
 {
-    if (mObject != other.mObject)
+    if (GetRawPointer() != other.GetRawPointer())
     {
-        if (mObject && Example::VectorOfObjectsPtr<Example::ModelPtr<double> >::mObject)
+        if (GetRawPointer())
         {
-            example_vector_of_objects_example_model_double_release(mObject);
+            example_vector_of_objects_example_model_double_release(GetRawPointer());
             SetObject(0);
         }
-        mObject = other.mObject;
+        mObject = other.GetRawPointer();
         other.mObject = 0;
     }
     return *this;
@@ -134,29 +134,29 @@ inline Example::VectorOfObjectsPtr<Example::ModelPtr<double> > Example::VectorOf
 
 inline bool Example::VectorOfObjectsPtr<Example::ModelPtr<double> >::IsNull() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline bool Example::VectorOfObjectsPtr<Example::ModelPtr<double> >::IsNotNull() const
 {
-    return mObject != 0;
+    return GetRawPointer() != 0;
 }
 
 inline bool Example::VectorOfObjectsPtr<Example::ModelPtr<double> >::operator!() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline void* Example::VectorOfObjectsPtr<Example::ModelPtr<double> >::Detach()
 {
-    void* result = mObject;
+    void* result = GetRawPointer();
     SetObject(0);
     return result;
 }
 
 inline void* Example::VectorOfObjectsPtr<Example::ModelPtr<double> >::GetRawPointer() const
 {
-    return mObject;
+    return Example::VectorOfObjectsPtr<Example::ModelPtr<double> >::mObject ? mObject: 0;
 }
 
 inline Example::VectorOfObjectsPtr<Example::ModelPtr<double> >* Example::VectorOfObjectsPtr<Example::ModelPtr<double> >::operator->()

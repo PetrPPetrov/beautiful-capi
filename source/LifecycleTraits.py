@@ -112,7 +112,8 @@ class LifecycleTraits(object):
                 )
                 with IndentScope(out):
                     class_generator.inheritance_traits.generate_object_assignment(
-                        out, class_generator, '', 'other.mObject')
+                        out, class_generator, '', 'other.{get_raw}()'.format(
+                            get_raw=self.params.get_raw_pointer_method_name))
                     class_generator.inheritance_traits.generate_object_assignment(
                         out, class_generator, 'other.', '0')
 
@@ -128,29 +129,30 @@ class LifecycleTraits(object):
             namespace=class_generator.full_wrap_name,
             is_null_method=self.params.is_null_method_name))
         with IndentScope(out):
-            out.put_line('return !mObject;')
+            out.put_line('return !{get_raw}();'.format(get_raw=self.params.get_raw_pointer_method_name))
         out.put_line('')
         out.put_line('inline bool {namespace}::{is_not_null_method}() const'.format(
             namespace=class_generator.full_wrap_name,
             is_not_null_method=self.params.is_not_null_method_name))
         with IndentScope(out):
-            out.put_line('return mObject != 0;')
+            out.put_line('return {get_raw}() != 0;'.format(get_raw=self.params.get_raw_pointer_method_name))
         out.put_line('')
         out.put_line('inline bool {namespace}::operator!() const'.format(namespace=class_generator.full_wrap_name))
         with IndentScope(out):
-            out.put_line('return !mObject;')
+            out.put_line('return !{get_raw}();'.format(get_raw=self.params.get_raw_pointer_method_name))
         out.put_line('')
         out.put_line('inline void* {namespace}::{detach_method}()'.format(
             namespace=class_generator.full_wrap_name, detach_method=self.params.detach_method_name))
         with IndentScope(out):
-            out.put_line('void* result = mObject;')
+            out.put_line('void* result = {get_raw}();'.format(get_raw=self.params.get_raw_pointer_method_name))
             out.put_line('SetObject(0);')
             out.put_line('return result;')
         out.put_line('')
         out.put_line('inline void* {namespace}::{get_raw_pointer_method}() const'.format(
             namespace=class_generator.full_wrap_name, get_raw_pointer_method=self.params.get_raw_pointer_method_name))
         with IndentScope(out):
-            out.put_line('return mObject;')
+            out.put_line('return {the_most_basic}::mObject ? mObject: 0;'.format(
+                the_most_basic=class_generator.the_most_basic.full_wrap_name))
 
 
 class CopySemantic(LifecycleTraits):
@@ -209,10 +211,11 @@ class CopySemantic(LifecycleTraits):
             base_init=get_base_init(class_generator))
         )
         with IndentScope(out):
-            out.put_line('if (other.mObject)')
+            out.put_line('if (other.{get_raw}())'.format(get_raw=self.params.get_raw_pointer_method_name))
             with IndentScope(out):
                 copy_result = self.init_method_exception_traits.generate_c_call(
-                    out, BuiltinTypeGenerator('void*'), class_generator.copy_method, ['other.mObject'])
+                    out, BuiltinTypeGenerator('void*'), class_generator.copy_method,
+                    ['other.{get_raw}()'.format(get_raw=self.params.get_raw_pointer_method_name)])
                 out.put_line('SetObject({copy_result});'.format(copy_result=copy_result))
             out.put_line('else')
             with IndentScope(out):
@@ -239,11 +242,12 @@ class CopySemantic(LifecycleTraits):
                 out.put_line('SetObject(object_pointer);')
 
     def __generate_deallocate(self, out: FileGenerator, class_generator):
-        out.put_line('if (mObject && {the_most_basic}::mObject)'.format(
-            the_most_basic=class_generator.the_most_basic.full_wrap_name))
+        out.put_line('if ({get_raw}())'.format(
+            get_raw=self.params.get_raw_pointer_method_name))
         with IndentScope(out):
             self.finish_method_exception_traits.generate_c_call(
-                out, BuiltinTypeGenerator('void'), class_generator.delete_method, ['mObject'])
+                out, BuiltinTypeGenerator('void'), class_generator.delete_method,
+                ['{get_raw}()'.format(get_raw=self.params.get_raw_pointer_method_name)])
             out.put_line('SetObject(0);')
 
     def __generate_destructor(self, out: FileGenerator, class_generator):
@@ -261,10 +265,11 @@ class CopySemantic(LifecycleTraits):
             out.put_line('if (this != &other)')
             with IndentScope(out):
                 self.__generate_deallocate(out, class_generator)
-                out.put_line('if (other.mObject)')
+                out.put_line('if (other.{get_raw}())'.format(get_raw=self.params.get_raw_pointer_method_name))
                 with IndentScope(out):
                     copy_result = self.init_method_exception_traits.generate_c_call(
-                        out, BuiltinTypeGenerator('void*'), class_generator.copy_method, ['other.mObject'])
+                        out, BuiltinTypeGenerator('void*'), class_generator.copy_method,
+                        ['other.{get_raw}()'.format(get_raw=self.params.get_raw_pointer_method_name)])
                     out.put_line('SetObject({copy_result});'.format(copy_result=copy_result))
                 out.put_line('else')
                 with IndentScope(out):
@@ -284,7 +289,8 @@ class CopySemantic(LifecycleTraits):
                             out.put_line('{0}::operator=(std::move(other));'.format(
                                 class_generator.base_class_generator.full_wrap_name))
                         class_generator.inheritance_traits.generate_object_assignment(
-                            out, class_generator, '', 'other.mObject')
+                            out, class_generator, '', 'other.{get_raw}()'.format(
+                                get_raw=self.params.get_raw_pointer_method_name))
                         class_generator.inheritance_traits.generate_object_assignment(
                             out, class_generator, 'other.', '0')
                     out.put_line('return *this;')
@@ -379,8 +385,7 @@ class RawPointerSemantic(LifecycleTraits):
         out.put_line('inline {class_name}* operator->();'.format(class_name=class_generator.wrap_name))
         out.put_line('inline const {class_name}* operator->() const;'.format(class_name=class_generator.wrap_name))
 
-    @staticmethod
-    def __generate_copy_constructor_definition(out: FileGenerator, class_generator):
+    def __generate_copy_constructor_definition(self, out: FileGenerator, class_generator):
         out.put_line('inline {namespace}::{class_short_name}(const {class_name}& other){base_init}'.format(
             namespace=class_generator.full_wrap_name,
             class_short_name=class_generator.wrap_short_name,
@@ -388,7 +393,7 @@ class RawPointerSemantic(LifecycleTraits):
             base_init=get_base_init(class_generator))
         )
         with IndentScope(out):
-            out.put_line('SetObject(other.mObject);')
+            out.put_line('SetObject(other.{get_raw}());'.format(get_raw=self.params.get_raw_pointer_method_name))
 
     @staticmethod
     def __generate_raw_copy_constructor_definition(out: FileGenerator, class_generator):
@@ -408,21 +413,21 @@ class RawPointerSemantic(LifecycleTraits):
         out.put_line('inline void {class_name}::{delete_method}()'.format(
             class_name=class_generator.full_wrap_name, delete_method=self.params.delete_method_name))
         with IndentScope(out):
-            out.put_line('if (mObject && {the_most_basic}::mObject)'.format(
-                the_most_basic=class_generator.the_most_basic.full_wrap_name))
+            out.put_line('if ({get_raw}())'.format(
+                get_raw=self.params.get_raw_pointer_method_name))
             with IndentScope(out):
                 self.finish_method_exception_traits.generate_c_call(
-                    out, BuiltinTypeGenerator('void'), class_generator.delete_method, ['mObject'])
+                    out, BuiltinTypeGenerator('void'), class_generator.delete_method,
+                    ['{get_raw}()'.format(get_raw=self.params.get_raw_pointer_method_name)])
                 out.put_line('SetObject(0);')
 
-    @staticmethod
-    def __generate_assignment_operator(out: FileGenerator, class_generator):
+    def __generate_assignment_operator(self, out: FileGenerator, class_generator):
         out.put_line('inline {class_name}& {class_name}::operator=(const {class_name}& other)'.format(
             class_name=class_generator.full_wrap_name))
         with IndentScope(out):
             out.put_line('if (this != &other)')
             with IndentScope(out):
-                out.put_line('SetObject(other.mObject);')
+                out.put_line('SetObject(other.{get_raw}());'.format(get_raw=self.params.get_raw_pointer_method_name))
             out.put_line('return *this;')
 
     def __generate_move_assignment_definition(self, out: FileGenerator, class_generator):
@@ -437,7 +442,8 @@ class RawPointerSemantic(LifecycleTraits):
                             out.put_line('{0}::operator=(std::move(other));'.format(
                                 class_generator.base_class_generator.full_wrap_name))
                         class_generator.inheritance_traits.generate_object_assignment(
-                            out, class_generator, '', 'other.mObject')
+                            out, class_generator, '', 'other.{get_raw}()'.format(
+                                get_raw=self.params.get_raw_pointer_method_name))
                         class_generator.inheritance_traits.generate_object_assignment(
                             out, class_generator, 'other.', '0')
                     out.put_line('return *this;')
@@ -533,11 +539,12 @@ class RefCountedSemantic(LifecycleTraits):
             base_init=get_base_init(class_generator))
         )
         with IndentScope(out):
-            out.put_line('SetObject(other.mObject);')
-            out.put_line('if (other.mObject)')
+            out.put_line('SetObject(other.{get_raw}());'.format(get_raw=self.params.get_raw_pointer_method_name))
+            out.put_line('if (other.{get_raw}())'.format(get_raw=self.params.get_raw_pointer_method_name))
             with IndentScope(out):
                 self.init_method_exception_traits.generate_c_call(
-                    out, BuiltinTypeGenerator('void'), class_generator.add_ref_method, ['other.mObject'])
+                    out, BuiltinTypeGenerator('void'), class_generator.add_ref_method,
+                    ['other.{get_raw}()'.format(get_raw=self.params.get_raw_pointer_method_name)])
 
     def __generate_raw_copy_constructor_definition(self, out: FileGenerator, class_generator):
         constructor_arguments = '{class_name}::ECreateFromRawPointer, void *object_pointer, bool add_ref_object'.format(
@@ -557,11 +564,12 @@ class RefCountedSemantic(LifecycleTraits):
                     out, BuiltinTypeGenerator('void'), class_generator.add_ref_method, ['object_pointer'])
 
     def __generate_deallocate(self, out: FileGenerator, class_generator):
-        out.put_line('if (mObject && {the_most_basic}::mObject)'.format(
-            the_most_basic=class_generator.the_most_basic.full_wrap_name))
+        out.put_line('if ({get_raw}())'.format(
+            get_raw=self.params.get_raw_pointer_method_name))
         with IndentScope(out):
             self.finish_method_exception_traits.generate_c_call(
-                out, BuiltinTypeGenerator('void'), class_generator.release_method, ['mObject'])
+                out, BuiltinTypeGenerator('void'), class_generator.release_method,
+                ['{get_raw}()'.format(get_raw=self.params.get_raw_pointer_method_name)])
             out.put_line('SetObject(0);')
 
     def __generate_destructor(self, out: FileGenerator, class_generator):
@@ -576,14 +584,16 @@ class RefCountedSemantic(LifecycleTraits):
         out.put_line('inline {class_name}& {class_name}::operator=(const {class_name}& other)'.format(
             class_name=class_generator.full_wrap_name))
         with IndentScope(out):
-            out.put_line('if (mObject != other.mObject)')
+            out.put_line('if ({get_raw}() != other.{get_raw}())'.format(
+                get_raw=self.params.get_raw_pointer_method_name))
             with IndentScope(out):
                 self.__generate_deallocate(out, class_generator)
-                out.put_line('SetObject(other.mObject);')
-                out.put_line('if (other.mObject)')
+                out.put_line('SetObject(other.{get_raw}());'.format(get_raw=self.params.get_raw_pointer_method_name))
+                out.put_line('if (other.{get_raw}())'.format(get_raw=self.params.get_raw_pointer_method_name))
                 with IndentScope(out):
                     self.init_method_exception_traits.generate_c_call(
-                        out, BuiltinTypeGenerator('void'), class_generator.add_ref_method, ['other.mObject'])
+                        out, BuiltinTypeGenerator('void'), class_generator.add_ref_method,
+                        ['other.{get_raw}()'.format(get_raw=self.params.get_raw_pointer_method_name)])
             out.put_line('return *this;')
 
     def __generate_move_assignment_definition(self, out: FileGenerator, class_generator):
@@ -592,14 +602,16 @@ class RefCountedSemantic(LifecycleTraits):
                 out.put_line('inline {class_name}& {class_name}::operator=({class_name}&& other)'.format(
                     class_name=class_generator.full_wrap_name))
                 with IndentScope(out):
-                    out.put_line('if (mObject != other.mObject)')
+                    out.put_line('if ({get_raw}() != other.{get_raw}())'.format(
+                        get_raw=self.params.get_raw_pointer_method_name))
                     with IndentScope(out):
                         self.__generate_deallocate(out, class_generator)
                         if class_generator.base_class_generator:
                             out.put_line('{0}::operator=(std::move(other));'.format(
                                 class_generator.base_class_generator.full_wrap_name))
                         class_generator.inheritance_traits.generate_object_assignment(
-                            out, class_generator, '', 'other.mObject')
+                            out, class_generator, '', 'other.{get_raw}()'.format(
+                                get_raw=self.params.get_raw_pointer_method_name))
                         class_generator.inheritance_traits.generate_object_assignment(
                             out, class_generator, 'other.', '0')
                     out.put_line('return *this;')

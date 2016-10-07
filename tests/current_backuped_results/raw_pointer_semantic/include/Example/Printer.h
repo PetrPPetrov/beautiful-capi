@@ -38,18 +38,18 @@ inline Example::PrinterRawPtr::PrinterRawPtr()
 
 inline void Example::PrinterRawPtr::Show(const char* text)
 {
-    example_printer_show(this->GetRawPointer(), text);
+    example_printer_show(GetRawPointer(), text);
 }
 
 inline Example::PrinterRawPtr::PrinterRawPtr(const PrinterRawPtr& other)
 {
-    SetObject(other.mObject);
+    SetObject(other.GetRawPointer());
 }
 
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::PrinterRawPtr::PrinterRawPtr(PrinterRawPtr&& other)
 {
-    mObject = other.mObject;
+    mObject = other.GetRawPointer();
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -61,9 +61,9 @@ inline Example::PrinterRawPtr::PrinterRawPtr(Example::PrinterRawPtr::ECreateFrom
 
 inline void Example::PrinterRawPtr::Delete()
 {
-    if (mObject && Example::PrinterRawPtr::mObject)
+    if (GetRawPointer())
     {
-        example_printer_delete(mObject);
+        example_printer_delete(GetRawPointer());
         SetObject(0);
     }
 }
@@ -72,7 +72,7 @@ inline Example::PrinterRawPtr& Example::PrinterRawPtr::operator=(const Example::
 {
     if (this != &other)
     {
-        SetObject(other.mObject);
+        SetObject(other.GetRawPointer());
     }
     return *this;
 }
@@ -82,7 +82,7 @@ inline Example::PrinterRawPtr& Example::PrinterRawPtr::operator=(Example::Printe
 {
     if (this != &other)
     {
-        mObject = other.mObject;
+        mObject = other.GetRawPointer();
         other.mObject = 0;
     }
     return *this;
@@ -96,29 +96,29 @@ inline Example::PrinterRawPtr Example::PrinterRawPtr::Null()
 
 inline bool Example::PrinterRawPtr::IsNull() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline bool Example::PrinterRawPtr::IsNotNull() const
 {
-    return mObject != 0;
+    return GetRawPointer() != 0;
 }
 
 inline bool Example::PrinterRawPtr::operator!() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline void* Example::PrinterRawPtr::Detach()
 {
-    void* result = mObject;
+    void* result = GetRawPointer();
     SetObject(0);
     return result;
 }
 
 inline void* Example::PrinterRawPtr::GetRawPointer() const
 {
-    return mObject;
+    return Example::PrinterRawPtr::mObject ? mObject: 0;
 }
 
 inline Example::PrinterRawPtr* Example::PrinterRawPtr::operator->()

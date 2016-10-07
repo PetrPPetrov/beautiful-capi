@@ -38,19 +38,19 @@ inline Example::Geometry::Brep::Body::Body()
 
 inline const char* Example::Geometry::Brep::Body::GetName()
 {
-    return example_geometry_brep_body_get_name(this->GetRawPointer());
+    return example_geometry_brep_body_get_name(GetRawPointer());
 }
 
 inline void Example::Geometry::Brep::Body::SetName(const char* value)
 {
-    example_geometry_brep_body_set_name(this->GetRawPointer(), value);
+    example_geometry_brep_body_set_name(GetRawPointer(), value);
 }
 
 inline Example::Geometry::Brep::Body::Body(const Body& other)
 {
-    if (other.mObject)
+    if (other.GetRawPointer())
     {
-        SetObject(example_geometry_brep_body_copy(other.mObject));
+        SetObject(example_geometry_brep_body_copy(other.GetRawPointer()));
     }
     else
     {
@@ -61,7 +61,7 @@ inline Example::Geometry::Brep::Body::Body(const Body& other)
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::Geometry::Brep::Body::Body(Body&& other)
 {
-    mObject = other.mObject;
+    mObject = other.GetRawPointer();
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -80,9 +80,9 @@ inline Example::Geometry::Brep::Body::Body(Example::Geometry::Brep::Body::ECreat
 
 inline Example::Geometry::Brep::Body::~Body()
 {
-    if (mObject && Example::Geometry::Brep::Body::mObject)
+    if (GetRawPointer())
     {
-        example_geometry_brep_body_delete(mObject);
+        example_geometry_brep_body_delete(GetRawPointer());
         SetObject(0);
     }
 }
@@ -91,14 +91,14 @@ inline Example::Geometry::Brep::Body& Example::Geometry::Brep::Body::operator=(c
 {
     if (this != &other)
     {
-        if (mObject && Example::Geometry::Brep::Body::mObject)
+        if (GetRawPointer())
         {
-            example_geometry_brep_body_delete(mObject);
+            example_geometry_brep_body_delete(GetRawPointer());
             SetObject(0);
         }
-        if (other.mObject)
+        if (other.GetRawPointer())
         {
-            SetObject(example_geometry_brep_body_copy(other.mObject));
+            SetObject(example_geometry_brep_body_copy(other.GetRawPointer()));
         }
         else
         {
@@ -113,12 +113,12 @@ inline Example::Geometry::Brep::Body& Example::Geometry::Brep::Body::operator=(E
 {
     if (this != &other)
     {
-        if (mObject && Example::Geometry::Brep::Body::mObject)
+        if (GetRawPointer())
         {
-            example_geometry_brep_body_delete(mObject);
+            example_geometry_brep_body_delete(GetRawPointer());
             SetObject(0);
         }
-        mObject = other.mObject;
+        mObject = other.GetRawPointer();
         other.mObject = 0;
     }
     return *this;
@@ -132,29 +132,29 @@ inline Example::Geometry::Brep::Body Example::Geometry::Brep::Body::Null()
 
 inline bool Example::Geometry::Brep::Body::IsNull() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline bool Example::Geometry::Brep::Body::IsNotNull() const
 {
-    return mObject != 0;
+    return GetRawPointer() != 0;
 }
 
 inline bool Example::Geometry::Brep::Body::operator!() const
 {
-    return !mObject;
+    return !GetRawPointer();
 }
 
 inline void* Example::Geometry::Brep::Body::Detach()
 {
-    void* result = mObject;
+    void* result = GetRawPointer();
     SetObject(0);
     return result;
 }
 
 inline void* Example::Geometry::Brep::Body::GetRawPointer() const
 {
-    return mObject;
+    return Example::Geometry::Brep::Body::mObject ? mObject: 0;
 }
 
 inline void Example::Geometry::Brep::Body::SetObject(void* object_pointer)

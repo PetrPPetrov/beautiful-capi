@@ -87,10 +87,10 @@ class SimpleCase(object):
             namespace=class_generator.full_wrap_name))
         with IndentScope(out):
             if class_generator.base_class_generator:
-                out.put_line('{base_class}::SetObject(raw_pointer);'.format(
+                out.put_line('{base_class}::SetObject(object_pointer);'.format(
                     base_class=class_generator.base_class_generator.full_wrap_name))
             else:
-                out.put_line('mObject = raw_pointer;')
+                out.put_line('mObject = object_pointer;')
 
     @staticmethod
     def generate_object_assignment(out: FileGenerator, class_generator, prefix: str, expression: str):
