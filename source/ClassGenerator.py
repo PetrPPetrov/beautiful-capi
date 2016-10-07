@@ -113,7 +113,8 @@ class ClassGenerator(object):
 
     @property
     def snippet_implementation_declaration(self) -> str:
-        return self.lifecycle_traits.snippet_implementation_usage.format(implementation_name=self.implementation_name)
+        return format_type(
+            self.lifecycle_traits.snippet_implementation_usage.format(implementation_name=self.implementation_name))
 
     @property
     def method_copy_or_add_ref_default_value(self) -> bool:
