@@ -20,11 +20,15 @@
 #
 
 
+import copy
 from collections import OrderedDict
+from Parser import TBeautifulCapiRoot
 from ParamsParser import TBeautifulCapiParams
-from FileGenerator import FileGenerator, WatchdogScope, IfDefScope, Indent, IndentScope, Unindent, UnindentAll
+from FileGenerator import FileGenerator, WatchdogScope, IfDefScope, Indent
 from FileGenerator import if_then_else, if_def_then_else, if_not_def_then_else
 from DynamicLoaderGenerator import DynamicLoaderGenerator
+from StaticLoaderGenerator import StaticLoaderGenerator
+from CheckBinaryCompatibilityGenerator import generate_get_version_functions
 from FileCache import FileCache
 from Helpers import if_required_then_add_empty_line
 
@@ -48,14 +52,17 @@ class Pointer2CFunction(object):
 
 class NamespaceInfo(object):
     def __init__(self):
+        self.namespace_name_array = []
         self.c_functions = []
         self.c_pointers = []
 
 
 class CapiGenerator(object):
-    def __init__(self, main_exception_traits, no_handling_exception_traits, params: TBeautifulCapiParams):
+    def __init__(self, main_exception_traits, no_handling_exception_traits,
+                 params: TBeautifulCapiParams, api_root: TBeautifulCapiRoot):
         self.params = params
-        self.namespace_name_2_c_functions = {}
+        self.api_root = api_root
+        self.namespace_name_2_info = {}
         self.main_exception_traits = main_exception_traits
         self.no_handling_exception_traits = no_handling_exception_traits
         self.additional_includes = FileGenerator(None)
@@ -202,6 +209,7 @@ class CapiGenerator(object):
                 convention=self.cur_api_convention,
                 name=c_function.name,
                 arguments=c_function.arguments))
+        StaticLoaderGenerator(self.cur_namespace_name, self.cur_namespace_info, self.params).generate(out)
         out.put_line('')
 
     def __generate_msvc1900_traits(self, out: FileGenerator):
@@ -240,6 +248,17 @@ class CapiGenerator(object):
                     if_def_then_else(out, '_MSC_VER', self.__generate_msvc_traits, self.__generate_non_msvc_traits)
             out.put_line('')
 
+    @staticmethod
+    def __generate_version_define(out: FileGenerator, namespace_name: str, name: str, value):
+        out.put_line('#define {ns}_{name}_VERSION {value}'.format(
+            ns=namespace_name, name=name.upper(), value=value))
+
+    def __generate_version_defines(self, out: FileGenerator, namespace_name: str):
+        self.__generate_version_define(out, namespace_name, 'Major', self.api_root.major_version)
+        self.__generate_version_define(out, namespace_name, 'Minor', self.api_root.minor_version)
+        self.__generate_version_define(out, namespace_name, 'Patch', self.api_root.patch_version)
+        out.put_line('')
+
     def __generate_capi(self, file_cache):
         for namespace_name, namespace_info in self.sorted_by_ns.items():
             self.cur_namespace_name = namespace_name
@@ -250,6 +269,7 @@ class CapiGenerator(object):
             with WatchdogScope(output_capi, namespace_name + '_CAPI_INCLUDED'):
                 self.main_exception_traits.generate_exception_info(output_capi)
                 self.__generate_capi_defines(output_capi)
+                self.__generate_version_defines(output_capi, namespace_name)
                 self.__generate_compiler_traits(output_capi)
 
                 if_not_def_then_else(output_capi, namespace_name + '_CAPI_USE_DYNAMIC_LOADER',
@@ -278,22 +298,24 @@ class CapiGenerator(object):
                        name: str, arguments: str, body: FileGenerator):
         new_c_function = CFunction(path_to_namespace, return_type, name, arguments, body)
         namespace_name = path_to_namespace[0].upper()  # We always have at least one element
-        if namespace_name not in self.namespace_name_2_c_functions:
+        if namespace_name not in self.namespace_name_2_info:
             new_namespace_info = NamespaceInfo()
+            new_namespace_info.namespace_name_array = copy.deepcopy(path_to_namespace)
             new_namespace_info.c_functions.append(new_c_function)
-            self.namespace_name_2_c_functions.update({namespace_name: new_namespace_info})
+            self.namespace_name_2_info.update({namespace_name: new_namespace_info})
         else:
-            self.namespace_name_2_c_functions[namespace_name].c_functions.append(new_c_function)
+            self.namespace_name_2_info[namespace_name].c_functions.append(new_c_function)
 
     def add_c_function_pointer(self, path_to_namespace: [str], return_type: str, name: str, arguments: str):
         new_c_pointer = Pointer2CFunction(path_to_namespace, return_type, name, arguments)
         namespace_name = path_to_namespace[0].upper()  # We always have at least one element
-        if namespace_name not in self.namespace_name_2_c_functions:
+        if namespace_name not in self.namespace_name_2_info:
             new_namespace_info = NamespaceInfo()
+            new_namespace_info.namespace_name_array = copy.deepcopy(path_to_namespace)
             new_namespace_info.c_pointers.append(new_c_pointer)
-            self.namespace_name_2_c_functions.update({namespace_name: new_namespace_info})
+            self.namespace_name_2_info.update({namespace_name: new_namespace_info})
         else:
-            self.namespace_name_2_c_functions[namespace_name].c_pointers.append(new_c_pointer)
+            self.namespace_name_2_info[namespace_name].c_pointers.append(new_c_pointer)
 
     def generate(self, file_cache: FileCache):
         self.main_exception_traits.generate_check_and_throw_exception(file_cache)
@@ -303,12 +325,14 @@ class CapiGenerator(object):
         output_capi_impl.put_file(self.additional_includes)
         self.main_exception_traits.generate_exception_info(output_capi_impl)
 
-        self.sorted_by_ns = OrderedDict(sorted(self.namespace_name_2_c_functions.items()))
+        self.sorted_by_ns = OrderedDict(sorted(self.namespace_name_2_info.items()))
         for namespace_name, namespace_info in self.sorted_by_ns.items():
             self.cur_namespace_name = namespace_name
             self.cur_namespace_info = namespace_info
             self.__generate_capi_impl_defines(output_capi_impl)
             self.__generate_callback_typedefs(output_capi_impl)
+            generate_get_version_functions(
+                output_capi_impl, namespace_info.namespace_name_array[0], self.params, self.api_root)
 
         self.__generate_callback_implementations(output_capi_impl)
         self.__generate_capi_impl(output_capi_impl)

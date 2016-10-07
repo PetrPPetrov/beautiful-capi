@@ -70,32 +70,41 @@ int main()
 #if defined(_WIN32) && defined(_DEBUG)
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
+
+    try
+    {
 #ifdef _WIN32
-    Example::Initialization module_init("down_cast.dll");
+        Example::Initialization module_init("down_cast.dll");
 #elif __APPLE__
-    Example::Initialization module_init("libdown_cast.dylib");
+        Example::Initialization module_init("libdown_cast.dylib");
 #else
-    Example::Initialization module_init("libdown_cast.so");
+        Example::Initialization module_init("libdown_cast.so");
 #endif
 
-    Example::IShapePtr null_shape = Example::IShapePtr::Null();
-    Example::IShapePtr triangle = Example::CreateTriangle();
-    Example::IShapePtr shape0(Example::CreateCircle());
-    Example::IShapePtr shape1(Example::CreateSquare());
+        Example::IShapePtr null_shape = Example::IShapePtr::Null();
+        Example::IShapePtr triangle = Example::CreateTriangle();
+        Example::IShapePtr shape0(Example::CreateCircle());
+        Example::IShapePtr shape1(Example::CreateSquare());
 
-    std::cout << std::endl << "Null shape." << std::endl;
-    show(null_shape);
+        std::cout << std::endl << "Null shape." << std::endl;
+        show(null_shape);
 
-    std::cout << std::endl << "The first pass." << std::endl;
-    show(triangle);
-    show(shape0);
-    show(shape1);
+        std::cout << std::endl << "The first pass." << std::endl;
+        show(triangle);
+        show(shape0);
+        show(shape1);
 
-    std::cout << std::endl << "The second pass." << std::endl;
-    show(triangle);
-    show(shape0);
-    show(shape1);
+        std::cout << std::endl << "The second pass." << std::endl;
+        show(triangle);
+        show(shape0);
+        show(shape1);
 
-    std::cout << std::endl;
+        std::cout << std::endl;
+
+    }
+    catch (const std::exception& exception)
+    {
+        std::cout << "Exception: " << exception.what() << std::endl;
+    }
     return EXIT_SUCCESS;
 }

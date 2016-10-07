@@ -67,6 +67,10 @@
     #error "Unknown platform"
 #endif
 
+#define POINTSET_MAJOR_VERSION 1
+#define POINTSET_MINOR_VERSION 0
+#define POINTSET_PATCH_VERSION 0
+
 #ifdef __cplusplus
     #ifdef _MSC_VER
         #if _MSC_VER >= 1900
@@ -93,6 +97,9 @@
 
 #ifndef POINTSET_CAPI_USE_DYNAMIC_LOADER
     
+    POINTSET_API int POINTSET_API_CONVENTION point_set_get_major_version();
+    POINTSET_API int POINTSET_API_CONVENTION point_set_get_minor_version();
+    POINTSET_API int POINTSET_API_CONVENTION point_set_get_patch_version();
     POINTSET_API void* POINTSET_API_CONVENTION point_set_position_default();
     POINTSET_API void* POINTSET_API_CONVENTION point_set_position_initialized(double X, double Y, double Z);
     POINTSET_API double POINTSET_API_CONVENTION point_set_position_get_x(void* object_pointer);
@@ -121,8 +128,40 @@
     POINTSET_API void POINTSET_API_CONVENTION point_set_point_set_add_ref(void* object_pointer);
     POINTSET_API void POINTSET_API_CONVENTION point_set_point_set_release(void* object_pointer);
     
+    #ifdef __cplusplus
+    
+    #include <stdexcept>
+    #include <sstream>
+    
+    namespace PointSet
+    {
+        class Initialization
+        {
+        public:
+            Initialization()
+            {
+                const int major_version = point_set_get_major_version();
+                const int minor_version = point_set_get_minor_version();
+                const int patch_version = point_set_get_patch_version();
+                if (major_version != POINTSET_MAJOR_VERSION || minor_version != POINTSET_MINOR_VERSION || patch_version != POINTSET_PATCH_VERSION)
+                {
+                    std::stringstream error_message;
+                    error_message << "Incorrect version of library. ";
+                    error_message << "Expected version is " << POINTSET_MAJOR_VERSION << "." << POINTSET_MINOR_VERSION << "." << POINTSET_PATCH_VERSION << ". ";
+                    error_message << "Found version is " << major_version << "." << minor_version << "." << patch_version << ".";
+                    throw std::runtime_error(error_message.str());
+                }
+            }
+        };
+    }
+    
+    #endif /* __cplusplus */
+    
 #else /* POINTSET_CAPI_USE_DYNAMIC_LOADER */
     
+    typedef int (POINTSET_API_CONVENTION *point_set_get_major_version_function_type)();
+    typedef int (POINTSET_API_CONVENTION *point_set_get_minor_version_function_type)();
+    typedef int (POINTSET_API_CONVENTION *point_set_get_patch_version_function_type)();
     typedef void* (POINTSET_API_CONVENTION *point_set_position_default_function_type)();
     typedef void* (POINTSET_API_CONVENTION *point_set_position_initialized_function_type)(double X, double Y, double Z);
     typedef double (POINTSET_API_CONVENTION *point_set_position_get_x_function_type)(void* object_pointer);
@@ -153,6 +192,9 @@
     
     #ifdef POINTSET_CAPI_DEFINE_FUNCTION_POINTERS
         
+        extern point_set_get_major_version_function_type point_set_get_major_version = 0;
+        extern point_set_get_minor_version_function_type point_set_get_minor_version = 0;
+        extern point_set_get_patch_version_function_type point_set_get_patch_version = 0;
         extern point_set_position_default_function_type point_set_position_default = 0;
         extern point_set_position_initialized_function_type point_set_position_initialized = 0;
         extern point_set_position_get_x_function_type point_set_position_get_x = 0;
@@ -183,6 +225,9 @@
         
     #else /* POINTSET_CAPI_DEFINE_FUNCTION_POINTERS */
         
+        extern point_set_get_major_version_function_type point_set_get_major_version;
+        extern point_set_get_minor_version_function_type point_set_get_minor_version;
+        extern point_set_get_patch_version_function_type point_set_get_patch_version;
         extern point_set_position_default_function_type point_set_position_default;
         extern point_set_position_initialized_function_type point_set_position_initialized;
         extern point_set_position_get_x_function_type point_set_position_get_x;
@@ -264,6 +309,9 @@
                     error_message << "Can't load shared library " << shared_library_name;
                     throw std::runtime_error(error_message.str());
                 }
+                load_function<point_set_get_major_version_function_type>(point_set_get_major_version, "point_set_get_major_version");
+                load_function<point_set_get_minor_version_function_type>(point_set_get_minor_version, "point_set_get_minor_version");
+                load_function<point_set_get_patch_version_function_type>(point_set_get_patch_version, "point_set_get_patch_version");
                 load_function<point_set_position_default_function_type>(point_set_position_default, "point_set_position_default");
                 load_function<point_set_position_initialized_function_type>(point_set_position_initialized, "point_set_position_initialized");
                 load_function<point_set_position_get_x_function_type>(point_set_position_get_x, "point_set_position_get_x");
@@ -291,6 +339,17 @@
                 load_function<point_set_point_set_set_points_function_type>(point_set_point_set_set_points, "point_set_point_set_set_points");
                 load_function<point_set_point_set_add_ref_function_type>(point_set_point_set_add_ref, "point_set_point_set_add_ref");
                 load_function<point_set_point_set_release_function_type>(point_set_point_set_release, "point_set_point_set_release");
+                const int major_version = point_set_get_major_version();
+                const int minor_version = point_set_get_minor_version();
+                const int patch_version = point_set_get_patch_version();
+                if (major_version != POINTSET_MAJOR_VERSION || minor_version != POINTSET_MINOR_VERSION || patch_version != POINTSET_PATCH_VERSION)
+                {
+                    std::stringstream error_message;
+                    error_message << "Incorrect version of " << shared_library_name << " library. ";
+                    error_message << "Expected version is " << POINTSET_MAJOR_VERSION << "." << POINTSET_MINOR_VERSION << "." << POINTSET_PATCH_VERSION << ". ";
+                    error_message << "Found version is " << major_version << "." << minor_version << "." << patch_version << ".";
+                    throw std::runtime_error(error_message.str());
+                }
             }
             
             Initialization();
@@ -310,6 +369,9 @@
                 #else /* _WIN32 */
                     dlclose(handle);
                 #endif /* _WIN32 */
+                point_set_get_major_version = 0;
+                point_set_get_minor_version = 0;
+                point_set_get_patch_version = 0;
                 point_set_position_default = 0;
                 point_set_position_initialized = 0;
                 point_set_position_get_x = 0;

@@ -67,6 +67,10 @@
     #error "Unknown platform"
 #endif
 
+#define HELLO_WORLD_MAJOR_VERSION 1
+#define HELLO_WORLD_MINOR_VERSION 0
+#define HELLO_WORLD_PATCH_VERSION 0
+
 #ifdef __cplusplus
     #ifdef _MSC_VER
         #if _MSC_VER >= 1900
@@ -93,6 +97,9 @@
 
 #ifndef HELLO_WORLD_CAPI_USE_DYNAMIC_LOADER
     
+    HELLO_WORLD_API int HELLO_WORLD_API_CONVENTION hello_world_get_major_version();
+    HELLO_WORLD_API int HELLO_WORLD_API_CONVENTION hello_world_get_minor_version();
+    HELLO_WORLD_API int HELLO_WORLD_API_CONVENTION hello_world_get_patch_version();
     HELLO_WORLD_API void* HELLO_WORLD_API_CONVENTION hello_world_printer_default();
     HELLO_WORLD_API void HELLO_WORLD_API_CONVENTION hello_world_printer_show(void* object_pointer);
     HELLO_WORLD_API void* HELLO_WORLD_API_CONVENTION hello_world_printer_copy(void* object_pointer);
@@ -105,8 +112,40 @@
     HELLO_WORLD_API void HELLO_WORLD_API_CONVENTION hello_world_plotter_add_ref(void* object_pointer);
     HELLO_WORLD_API void HELLO_WORLD_API_CONVENTION hello_world_plotter_release(void* object_pointer);
     
+    #ifdef __cplusplus
+    
+    #include <stdexcept>
+    #include <sstream>
+    
+    namespace hello_world
+    {
+        class Initialization
+        {
+        public:
+            Initialization()
+            {
+                const int major_version = hello_world_get_major_version();
+                const int minor_version = hello_world_get_minor_version();
+                const int patch_version = hello_world_get_patch_version();
+                if (major_version != HELLO_WORLD_MAJOR_VERSION || minor_version != HELLO_WORLD_MINOR_VERSION || patch_version != HELLO_WORLD_PATCH_VERSION)
+                {
+                    std::stringstream error_message;
+                    error_message << "Incorrect version of library. ";
+                    error_message << "Expected version is " << HELLO_WORLD_MAJOR_VERSION << "." << HELLO_WORLD_MINOR_VERSION << "." << HELLO_WORLD_PATCH_VERSION << ". ";
+                    error_message << "Found version is " << major_version << "." << minor_version << "." << patch_version << ".";
+                    throw std::runtime_error(error_message.str());
+                }
+            }
+        };
+    }
+    
+    #endif /* __cplusplus */
+    
 #else /* HELLO_WORLD_CAPI_USE_DYNAMIC_LOADER */
     
+    typedef int (HELLO_WORLD_API_CONVENTION *hello_world_get_major_version_function_type)();
+    typedef int (HELLO_WORLD_API_CONVENTION *hello_world_get_minor_version_function_type)();
+    typedef int (HELLO_WORLD_API_CONVENTION *hello_world_get_patch_version_function_type)();
     typedef void* (HELLO_WORLD_API_CONVENTION *hello_world_printer_default_function_type)();
     typedef void (HELLO_WORLD_API_CONVENTION *hello_world_printer_show_function_type)(void* object_pointer);
     typedef void* (HELLO_WORLD_API_CONVENTION *hello_world_printer_copy_function_type)(void* object_pointer);
@@ -121,6 +160,9 @@
     
     #ifdef HELLO_WORLD_CAPI_DEFINE_FUNCTION_POINTERS
         
+        extern hello_world_get_major_version_function_type hello_world_get_major_version = 0;
+        extern hello_world_get_minor_version_function_type hello_world_get_minor_version = 0;
+        extern hello_world_get_patch_version_function_type hello_world_get_patch_version = 0;
         extern hello_world_printer_default_function_type hello_world_printer_default = 0;
         extern hello_world_printer_show_function_type hello_world_printer_show = 0;
         extern hello_world_printer_copy_function_type hello_world_printer_copy = 0;
@@ -135,6 +177,9 @@
         
     #else /* HELLO_WORLD_CAPI_DEFINE_FUNCTION_POINTERS */
         
+        extern hello_world_get_major_version_function_type hello_world_get_major_version;
+        extern hello_world_get_minor_version_function_type hello_world_get_minor_version;
+        extern hello_world_get_patch_version_function_type hello_world_get_patch_version;
         extern hello_world_printer_default_function_type hello_world_printer_default;
         extern hello_world_printer_show_function_type hello_world_printer_show;
         extern hello_world_printer_copy_function_type hello_world_printer_copy;
@@ -200,6 +245,9 @@
                     error_message << "Can't load shared library " << shared_library_name;
                     throw std::runtime_error(error_message.str());
                 }
+                load_function<hello_world_get_major_version_function_type>(hello_world_get_major_version, "hello_world_get_major_version");
+                load_function<hello_world_get_minor_version_function_type>(hello_world_get_minor_version, "hello_world_get_minor_version");
+                load_function<hello_world_get_patch_version_function_type>(hello_world_get_patch_version, "hello_world_get_patch_version");
                 load_function<hello_world_printer_default_function_type>(hello_world_printer_default, "hello_world_printer_default");
                 load_function<hello_world_printer_show_function_type>(hello_world_printer_show, "hello_world_printer_show");
                 load_function<hello_world_printer_copy_function_type>(hello_world_printer_copy, "hello_world_printer_copy");
@@ -211,6 +259,17 @@
                 load_function<hello_world_plotter_draw_function_type>(hello_world_plotter_draw, "hello_world_plotter_draw");
                 load_function<hello_world_plotter_add_ref_function_type>(hello_world_plotter_add_ref, "hello_world_plotter_add_ref");
                 load_function<hello_world_plotter_release_function_type>(hello_world_plotter_release, "hello_world_plotter_release");
+                const int major_version = hello_world_get_major_version();
+                const int minor_version = hello_world_get_minor_version();
+                const int patch_version = hello_world_get_patch_version();
+                if (major_version != HELLO_WORLD_MAJOR_VERSION || minor_version != HELLO_WORLD_MINOR_VERSION || patch_version != HELLO_WORLD_PATCH_VERSION)
+                {
+                    std::stringstream error_message;
+                    error_message << "Incorrect version of " << shared_library_name << " library. ";
+                    error_message << "Expected version is " << HELLO_WORLD_MAJOR_VERSION << "." << HELLO_WORLD_MINOR_VERSION << "." << HELLO_WORLD_PATCH_VERSION << ". ";
+                    error_message << "Found version is " << major_version << "." << minor_version << "." << patch_version << ".";
+                    throw std::runtime_error(error_message.str());
+                }
             }
             
             Initialization();
@@ -230,6 +289,9 @@
                 #else /* _WIN32 */
                     dlclose(handle);
                 #endif /* _WIN32 */
+                hello_world_get_major_version = 0;
+                hello_world_get_minor_version = 0;
+                hello_world_get_patch_version = 0;
                 hello_world_printer_default = 0;
                 hello_world_printer_show = 0;
                 hello_world_printer_copy = 0;

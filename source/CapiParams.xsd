@@ -35,7 +35,7 @@
     <xs:attribute name="exception_handling_mode" type="TExceptionHandlingMode" use="optional" default="no_handling"/>
     <xs:attribute name="check_and_throw_exception_filename" type="xs:string" use="optional" default="{project_name}/common/check_and_throw_exception.h"/>
     <xs:attribute name="beautiful_capi_namespace" type="xs:string" use="optional" default="beautiful_capi_{project_name}"/>
-    <xs:attribute name="autogen_prefix_for_internal_callback_implementation" type="xs:string" use="optional" default="AutoGen_Callback_{project_name}_"/>
+    <xs:attribute name="autogen_prefix_for_internal_implementation" type="xs:string" use="optional" default="AutoGen_Internal_{project_name}_"/>
     <xs:attribute name="root_header" type="xs:string" use="optional" default=""/>
     <xs:attribute name="root_header_namespace" type="xs:string" use="optional" default=""/>
     <xs:attribute name="root_header_initializer" type="xs:string" use="optional" default=""/>

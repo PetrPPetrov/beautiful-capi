@@ -64,6 +64,36 @@
     #error "Unknown platform"
 #endif
 
+int AutoGen_Internal_custom_suffix_hello_worldGetMajorVersionImpl()
+{
+    return 1;
+}
+
+int AutoGen_Internal_custom_suffix_hello_worldGetMinorVersionImpl()
+{
+    return 0;
+}
+
+int AutoGen_Internal_custom_suffix_hello_worldGetPatchVersionImpl()
+{
+    return 0;
+}
+
+HELLO_WORLD_API int HELLO_WORLD_API_CONVENTION hello_world_get_major_version()
+{
+    return AutoGen_Internal_custom_suffix_hello_worldGetMajorVersionImpl();
+}
+
+HELLO_WORLD_API int HELLO_WORLD_API_CONVENTION hello_world_get_minor_version()
+{
+    return AutoGen_Internal_custom_suffix_hello_worldGetMinorVersionImpl();
+}
+
+HELLO_WORLD_API int HELLO_WORLD_API_CONVENTION hello_world_get_patch_version()
+{
+    return AutoGen_Internal_custom_suffix_hello_worldGetPatchVersionImpl();
+}
+
 HELLO_WORLD_API void* HELLO_WORLD_API_CONVENTION hello_world_printer_default()
 {
     return new hello_world::printer_impl();

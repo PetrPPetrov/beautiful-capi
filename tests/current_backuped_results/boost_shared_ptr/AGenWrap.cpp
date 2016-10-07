@@ -62,6 +62,36 @@
     #error "Unknown platform"
 #endif
 
+int AutoGen_Internal_boost_shared_ptr_ExampleGetMajorVersionImpl()
+{
+    return 1;
+}
+
+int AutoGen_Internal_boost_shared_ptr_ExampleGetMinorVersionImpl()
+{
+    return 0;
+}
+
+int AutoGen_Internal_boost_shared_ptr_ExampleGetPatchVersionImpl()
+{
+    return 0;
+}
+
+EXAMPLE_API int EXAMPLE_API_CONVENTION example_get_major_version()
+{
+    return AutoGen_Internal_boost_shared_ptr_ExampleGetMajorVersionImpl();
+}
+
+EXAMPLE_API int EXAMPLE_API_CONVENTION example_get_minor_version()
+{
+    return AutoGen_Internal_boost_shared_ptr_ExampleGetMinorVersionImpl();
+}
+
+EXAMPLE_API int EXAMPLE_API_CONVENTION example_get_patch_version()
+{
+    return AutoGen_Internal_boost_shared_ptr_ExampleGetPatchVersionImpl();
+}
+
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_printer_shared_ptr_default()
 {
     return new Example::PrinterSharedPtr();

@@ -67,6 +67,10 @@
     #error "Unknown platform"
 #endif
 
+#define EXAMPLE_MAJOR_VERSION 1
+#define EXAMPLE_MINOR_VERSION 0
+#define EXAMPLE_PATCH_VERSION 0
+
 #ifdef __cplusplus
     #ifdef _MSC_VER
         #if _MSC_VER >= 1900
@@ -93,6 +97,9 @@
 
 #ifndef EXAMPLE_CAPI_USE_DYNAMIC_LOADER
     
+    EXAMPLE_API int EXAMPLE_API_CONVENTION example_get_major_version();
+    EXAMPLE_API int EXAMPLE_API_CONVENTION example_get_minor_version();
+    EXAMPLE_API int EXAMPLE_API_CONVENTION example_get_patch_version();
     EXAMPLE_API void* EXAMPLE_API_CONVENTION example_printer_new();
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_show(void* object_pointer, const char* text);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_add_ref(void* object_pointer);
@@ -104,8 +111,40 @@
     EXAMPLE_API void* EXAMPLE_API_CONVENTION example_dumper_copy(void* object_pointer);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_dumper_delete(void* object_pointer);
     
+    #ifdef __cplusplus
+    
+    #include <stdexcept>
+    #include <sstream>
+    
+    namespace Example
+    {
+        class Initialization
+        {
+        public:
+            Initialization()
+            {
+                const int major_version = example_get_major_version();
+                const int minor_version = example_get_minor_version();
+                const int patch_version = example_get_patch_version();
+                if (major_version != EXAMPLE_MAJOR_VERSION || minor_version != EXAMPLE_MINOR_VERSION || patch_version != EXAMPLE_PATCH_VERSION)
+                {
+                    std::stringstream error_message;
+                    error_message << "Incorrect version of library. ";
+                    error_message << "Expected version is " << EXAMPLE_MAJOR_VERSION << "." << EXAMPLE_MINOR_VERSION << "." << EXAMPLE_PATCH_VERSION << ". ";
+                    error_message << "Found version is " << major_version << "." << minor_version << "." << patch_version << ".";
+                    throw std::runtime_error(error_message.str());
+                }
+            }
+        };
+    }
+    
+    #endif /* __cplusplus */
+    
 #else /* EXAMPLE_CAPI_USE_DYNAMIC_LOADER */
     
+    typedef int (EXAMPLE_API_CONVENTION *example_get_major_version_function_type)();
+    typedef int (EXAMPLE_API_CONVENTION *example_get_minor_version_function_type)();
+    typedef int (EXAMPLE_API_CONVENTION *example_get_patch_version_function_type)();
     typedef void* (EXAMPLE_API_CONVENTION *example_printer_new_function_type)();
     typedef void (EXAMPLE_API_CONVENTION *example_printer_show_function_type)(void* object_pointer, const char* text);
     typedef void (EXAMPLE_API_CONVENTION *example_printer_add_ref_function_type)(void* object_pointer);
@@ -119,6 +158,9 @@
     
     #ifdef EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS
         
+        extern example_get_major_version_function_type example_get_major_version = 0;
+        extern example_get_minor_version_function_type example_get_minor_version = 0;
+        extern example_get_patch_version_function_type example_get_patch_version = 0;
         extern example_printer_new_function_type example_printer_new = 0;
         extern example_printer_show_function_type example_printer_show = 0;
         extern example_printer_add_ref_function_type example_printer_add_ref = 0;
@@ -132,6 +174,9 @@
         
     #else /* EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS */
         
+        extern example_get_major_version_function_type example_get_major_version;
+        extern example_get_minor_version_function_type example_get_minor_version;
+        extern example_get_patch_version_function_type example_get_patch_version;
         extern example_printer_new_function_type example_printer_new;
         extern example_printer_show_function_type example_printer_show;
         extern example_printer_add_ref_function_type example_printer_add_ref;
@@ -196,6 +241,9 @@
                     error_message << "Can't load shared library " << shared_library_name;
                     throw std::runtime_error(error_message.str());
                 }
+                load_function<example_get_major_version_function_type>(example_get_major_version, "example_get_major_version");
+                load_function<example_get_minor_version_function_type>(example_get_minor_version, "example_get_minor_version");
+                load_function<example_get_patch_version_function_type>(example_get_patch_version, "example_get_patch_version");
                 load_function<example_printer_new_function_type>(example_printer_new, "example_printer_new");
                 load_function<example_printer_show_function_type>(example_printer_show, "example_printer_show");
                 load_function<example_printer_add_ref_function_type>(example_printer_add_ref, "example_printer_add_ref");
@@ -206,6 +254,17 @@
                 load_function<example_dumper_dump_function_type>(example_dumper_dump, "example_dumper_dump");
                 load_function<example_dumper_copy_function_type>(example_dumper_copy, "example_dumper_copy");
                 load_function<example_dumper_delete_function_type>(example_dumper_delete, "example_dumper_delete");
+                const int major_version = example_get_major_version();
+                const int minor_version = example_get_minor_version();
+                const int patch_version = example_get_patch_version();
+                if (major_version != EXAMPLE_MAJOR_VERSION || minor_version != EXAMPLE_MINOR_VERSION || patch_version != EXAMPLE_PATCH_VERSION)
+                {
+                    std::stringstream error_message;
+                    error_message << "Incorrect version of " << shared_library_name << " library. ";
+                    error_message << "Expected version is " << EXAMPLE_MAJOR_VERSION << "." << EXAMPLE_MINOR_VERSION << "." << EXAMPLE_PATCH_VERSION << ". ";
+                    error_message << "Found version is " << major_version << "." << minor_version << "." << patch_version << ".";
+                    throw std::runtime_error(error_message.str());
+                }
             }
             
             Initialization();
@@ -225,6 +284,9 @@
                 #else /* _WIN32 */
                     dlclose(handle);
                 #endif /* _WIN32 */
+                example_get_major_version = 0;
+                example_get_minor_version = 0;
+                example_get_patch_version = 0;
                 example_printer_new = 0;
                 example_printer_show = 0;
                 example_printer_add_ref = 0;

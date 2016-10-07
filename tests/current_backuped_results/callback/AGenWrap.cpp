@@ -94,6 +94,21 @@ typedef void (EXAMPLE_API_CONVENTION *example_printer_set_printing_quality_callb
 typedef int (EXAMPLE_API_CONVENTION *example_printer_get_printing_quality_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
 typedef int (EXAMPLE_API_CONVENTION *example_printer_get_device_type_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
 
+int AutoGen_Internal_Callback_ExampleGetMajorVersionImpl()
+{
+    return 1;
+}
+
+int AutoGen_Internal_Callback_ExampleGetMinorVersionImpl()
+{
+    return 0;
+}
+
+int AutoGen_Internal_Callback_ExampleGetPatchVersionImpl()
+{
+    return 0;
+}
+
 #ifdef _WIN32
     #ifdef __GNUC__
         #define EXCEPTION_API extern "C" __attribute__ ((dllexport))
@@ -127,6 +142,21 @@ typedef int (EXAMPLE_API_CONVENTION *example_printer_get_device_type_callback_ty
 #else
     #error "Unknown platform"
 #endif
+
+int AutoGen_Internal_Callback_ExceptionGetMajorVersionImpl()
+{
+    return 1;
+}
+
+int AutoGen_Internal_Callback_ExceptionGetMinorVersionImpl()
+{
+    return 0;
+}
+
+int AutoGen_Internal_Callback_ExceptionGetPatchVersionImpl()
+{
+    return 0;
+}
 
 namespace beautiful_capi_Callback
 {
@@ -174,7 +204,7 @@ namespace beautiful_capi_Callback
 
 namespace Example {
 
-class AutoGen_Callback_Callback_PrinterImpl : public Example::PrinterBaseImpl
+class AutoGen_Internal_Callback_PrinterImpl : public Example::PrinterBaseImpl
 {
     void* mObject;
     example_printer_print_callback_type print_callback;
@@ -182,7 +212,7 @@ class AutoGen_Callback_Callback_PrinterImpl : public Example::PrinterBaseImpl
     example_printer_get_printing_quality_callback_type get_printing_quality_callback;
     example_printer_get_device_type_callback_type get_device_type_callback;
 public:
-    AutoGen_Callback_Callback_PrinterImpl() :
+    AutoGen_Internal_Callback_PrinterImpl() :
         print_callback(0),
         set_printing_quality_callback(0),
         get_printing_quality_callback(0),
@@ -190,7 +220,7 @@ public:
         mObject(0)
     {
     }
-    AutoGen_Callback_Callback_PrinterImpl(const AutoGen_Callback_Callback_PrinterImpl& other) :
+    AutoGen_Internal_Callback_PrinterImpl(const AutoGen_Internal_Callback_PrinterImpl& other) :
         print_callback(other.print_callback),
         set_printing_quality_callback(other.set_printing_quality_callback),
         get_printing_quality_callback(other.get_printing_quality_callback),
@@ -367,6 +397,21 @@ EXCEPTION_API void* EXCEPTION_API_CONVENTION example_create_default_printer(beau
         }
     }
     return static_cast<void*>(0);
+}
+
+EXCEPTION_API int EXCEPTION_API_CONVENTION example_get_major_version()
+{
+    return AutoGen_Internal_Callback_ExampleGetMajorVersionImpl();
+}
+
+EXCEPTION_API int EXCEPTION_API_CONVENTION example_get_minor_version()
+{
+    return AutoGen_Internal_Callback_ExampleGetMinorVersionImpl();
+}
+
+EXCEPTION_API int EXCEPTION_API_CONVENTION example_get_patch_version()
+{
+    return AutoGen_Internal_Callback_ExampleGetPatchVersionImpl();
 }
 
 EXCEPTION_API void EXCEPTION_API_CONVENTION example_printer_print(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* text)
@@ -2271,7 +2316,7 @@ EXCEPTION_API void* EXCEPTION_API_CONVENTION example_printer_callback_default(be
             exception_info->code = 0;
             exception_info->object_pointer = 0;
         }
-        return new Example::AutoGen_Callback_Callback_PrinterImpl();
+        return new Example::AutoGen_Internal_Callback_PrinterImpl();
     }
     catch (Exception::NullArgumentImpl& exception_object)
     {
@@ -2381,65 +2426,80 @@ EXCEPTION_API void* EXCEPTION_API_CONVENTION example_printer_callback_default(be
 
 EXCEPTION_API void EXCEPTION_API_CONVENTION example_printer_callback_set_object_pointer(void* object_pointer, void* custom_object)
 {
-    Example::AutoGen_Callback_Callback_PrinterImpl* self = static_cast<Example::AutoGen_Callback_Callback_PrinterImpl*>(object_pointer);
+    Example::AutoGen_Internal_Callback_PrinterImpl* self = static_cast<Example::AutoGen_Internal_Callback_PrinterImpl*>(object_pointer);
     self->SetObjectPointer(custom_object);
 }
 
 EXCEPTION_API void* EXCEPTION_API_CONVENTION example_printer_callback_get_object_pointer(void* object_pointer)
 {
-    const Example::AutoGen_Callback_Callback_PrinterImpl* self = static_cast<Example::AutoGen_Callback_Callback_PrinterImpl*>(object_pointer);
+    const Example::AutoGen_Internal_Callback_PrinterImpl* self = static_cast<Example::AutoGen_Internal_Callback_PrinterImpl*>(object_pointer);
     return self->GetObjectPointer();
 }
 
 EXCEPTION_API void EXCEPTION_API_CONVENTION example_printer_callback_set_c_function_for_print(void* object_pointer, example_printer_print_callback_type c_function_pointer)
 {
-    Example::AutoGen_Callback_Callback_PrinterImpl* self = static_cast<Example::AutoGen_Callback_Callback_PrinterImpl*>(object_pointer);
+    Example::AutoGen_Internal_Callback_PrinterImpl* self = static_cast<Example::AutoGen_Internal_Callback_PrinterImpl*>(object_pointer);
     self->SetCFunctionForPrint(c_function_pointer);
 }
 
 EXCEPTION_API void EXCEPTION_API_CONVENTION example_printer_callback_set_c_function_for_set_printing_quality(void* object_pointer, example_printer_set_printing_quality_callback_type c_function_pointer)
 {
-    Example::AutoGen_Callback_Callback_PrinterImpl* self = static_cast<Example::AutoGen_Callback_Callback_PrinterImpl*>(object_pointer);
+    Example::AutoGen_Internal_Callback_PrinterImpl* self = static_cast<Example::AutoGen_Internal_Callback_PrinterImpl*>(object_pointer);
     self->SetCFunctionForSetPrintingQuality(c_function_pointer);
 }
 
 EXCEPTION_API void EXCEPTION_API_CONVENTION example_printer_callback_set_c_function_for_get_printing_quality(void* object_pointer, example_printer_get_printing_quality_callback_type c_function_pointer)
 {
-    Example::AutoGen_Callback_Callback_PrinterImpl* self = static_cast<Example::AutoGen_Callback_Callback_PrinterImpl*>(object_pointer);
+    Example::AutoGen_Internal_Callback_PrinterImpl* self = static_cast<Example::AutoGen_Internal_Callback_PrinterImpl*>(object_pointer);
     self->SetCFunctionForGetPrintingQuality(c_function_pointer);
 }
 
 EXCEPTION_API void EXCEPTION_API_CONVENTION example_printer_callback_set_c_function_for_get_device_type(void* object_pointer, example_printer_get_device_type_callback_type c_function_pointer)
 {
-    Example::AutoGen_Callback_Callback_PrinterImpl* self = static_cast<Example::AutoGen_Callback_Callback_PrinterImpl*>(object_pointer);
+    Example::AutoGen_Internal_Callback_PrinterImpl* self = static_cast<Example::AutoGen_Internal_Callback_PrinterImpl*>(object_pointer);
     self->SetCFunctionForGetDeviceType(c_function_pointer);
 }
 
 EXCEPTION_API void EXCEPTION_API_CONVENTION example_printer_callback_add_ref(void* object_pointer)
 {
-    intrusive_ptr_add_ref(static_cast<Example::AutoGen_Callback_Callback_PrinterImpl*>(object_pointer));
+    intrusive_ptr_add_ref(static_cast<Example::AutoGen_Internal_Callback_PrinterImpl*>(object_pointer));
 }
 
 EXCEPTION_API void EXCEPTION_API_CONVENTION example_printer_callback_release(void* object_pointer)
 {
-    intrusive_ptr_release(static_cast<Example::AutoGen_Callback_Callback_PrinterImpl*>(object_pointer));
+    intrusive_ptr_release(static_cast<Example::AutoGen_Internal_Callback_PrinterImpl*>(object_pointer));
 }
 
 EXCEPTION_API void* EXCEPTION_API_CONVENTION example_printer_callback_cast_to_base(void* object_pointer)
 {
-    return static_cast<Example::IPrinter*>(static_cast<Example::AutoGen_Callback_Callback_PrinterImpl*>(object_pointer));
+    return static_cast<Example::IPrinter*>(static_cast<Example::AutoGen_Internal_Callback_PrinterImpl*>(object_pointer));
 }
 
 EXCEPTION_API void* EXCEPTION_API_CONVENTION example_printer_cast_to_example_printer_callback(void* source_object)
 {
     if (source_object)
     {
-        return dynamic_cast<Example::AutoGen_Callback_Callback_PrinterImpl*>(static_cast<Example::IPrinter*>(source_object));
+        return dynamic_cast<Example::AutoGen_Internal_Callback_PrinterImpl*>(static_cast<Example::IPrinter*>(source_object));
     }
     else
     {
         return 0;
     }
+}
+
+EXCEPTION_API int EXCEPTION_API_CONVENTION exception_get_major_version()
+{
+    return AutoGen_Internal_Callback_ExceptionGetMajorVersionImpl();
+}
+
+EXCEPTION_API int EXCEPTION_API_CONVENTION exception_get_minor_version()
+{
+    return AutoGen_Internal_Callback_ExceptionGetMinorVersionImpl();
+}
+
+EXCEPTION_API int EXCEPTION_API_CONVENTION exception_get_patch_version()
+{
+    return AutoGen_Internal_Callback_ExceptionGetPatchVersionImpl();
 }
 
 EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_generic_new(beautiful_capi_callback_exception_info_t* exception_info)

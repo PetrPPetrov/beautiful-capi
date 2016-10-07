@@ -34,6 +34,26 @@
 #include "Exception/NullArgument.h"
 #include "Exception/DivisionByZero.h"
 
+#ifdef __cplusplus
+
+namespace Exception {
+
+inline int GetMajorVersion()
+{
+    return exception_get_major_version();
+}
+inline int GetMinorVersion()
+{
+    return exception_get_minor_version();
+}
+inline int GetPatchVersion()
+{
+    return exception_get_patch_version();
+}
+
+}
+
+#endif /* __cplusplus */
 
 #endif /* EXCEPTION_INCLUDED */
 

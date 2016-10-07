@@ -33,6 +33,26 @@
 #include "hello_world/scanner.h"
 #include "hello_world/plotter.h"
 
+#ifdef __cplusplus
+
+namespace hello_world {
+
+inline int GetMajorVersion()
+{
+    return hello_world_get_major_version();
+}
+inline int GetMinorVersion()
+{
+    return hello_world_get_minor_version();
+}
+inline int GetPatchVersion()
+{
+    return hello_world_get_patch_version();
+}
+
+}
+
+#endif /* __cplusplus */
 
 #endif /* HELLO_WORLD_INCLUDED */
 

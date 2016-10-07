@@ -88,6 +88,10 @@ enum beautiful_capi_exception_exception_code_t
     #error "Unknown platform"
 #endif
 
+#define EXCEPTION_MAJOR_VERSION 1
+#define EXCEPTION_MINOR_VERSION 0
+#define EXCEPTION_PATCH_VERSION 0
+
 #ifdef __cplusplus
     #ifdef _MSC_VER
         #if _MSC_VER >= 1900
@@ -114,6 +118,9 @@ enum beautiful_capi_exception_exception_code_t
 
 #ifndef EXCEPTION_CAPI_USE_DYNAMIC_LOADER
     
+    EXCEPTION_API int EXCEPTION_API_CONVENTION exception_get_major_version();
+    EXCEPTION_API int EXCEPTION_API_CONVENTION exception_get_minor_version();
+    EXCEPTION_API int EXCEPTION_API_CONVENTION exception_get_patch_version();
     EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_generic_new(beautiful_capi_exception_exception_info_t* exception_info);
     EXCEPTION_API const char* EXCEPTION_API_CONVENTION exception_generic_get_error_text(void* object_pointer);
     EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_generic_copy(beautiful_capi_exception_exception_info_t* exception_info, void* object_pointer);
@@ -132,8 +139,40 @@ enum beautiful_capi_exception_exception_code_t
     EXCEPTION_API void EXCEPTION_API_CONVENTION exception_division_by_zero_delete(void* object_pointer);
     EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_division_by_zero_cast_to_base(void* object_pointer);
     
+    #ifdef __cplusplus
+    
+    #include <stdexcept>
+    #include <sstream>
+    
+    namespace Exception
+    {
+        class Initialization
+        {
+        public:
+            Initialization()
+            {
+                const int major_version = exception_get_major_version();
+                const int minor_version = exception_get_minor_version();
+                const int patch_version = exception_get_patch_version();
+                if (major_version != EXCEPTION_MAJOR_VERSION || minor_version != EXCEPTION_MINOR_VERSION || patch_version != EXCEPTION_PATCH_VERSION)
+                {
+                    std::stringstream error_message;
+                    error_message << "Incorrect version of library. ";
+                    error_message << "Expected version is " << EXCEPTION_MAJOR_VERSION << "." << EXCEPTION_MINOR_VERSION << "." << EXCEPTION_PATCH_VERSION << ". ";
+                    error_message << "Found version is " << major_version << "." << minor_version << "." << patch_version << ".";
+                    throw std::runtime_error(error_message.str());
+                }
+            }
+        };
+    }
+    
+    #endif /* __cplusplus */
+    
 #else /* EXCEPTION_CAPI_USE_DYNAMIC_LOADER */
     
+    typedef int (EXCEPTION_API_CONVENTION *exception_get_major_version_function_type)();
+    typedef int (EXCEPTION_API_CONVENTION *exception_get_minor_version_function_type)();
+    typedef int (EXCEPTION_API_CONVENTION *exception_get_patch_version_function_type)();
     typedef void* (EXCEPTION_API_CONVENTION *exception_generic_new_function_type)(beautiful_capi_exception_exception_info_t* exception_info);
     typedef const char* (EXCEPTION_API_CONVENTION *exception_generic_get_error_text_function_type)(void* object_pointer);
     typedef void* (EXCEPTION_API_CONVENTION *exception_generic_copy_function_type)(beautiful_capi_exception_exception_info_t* exception_info, void* object_pointer);
@@ -154,6 +193,9 @@ enum beautiful_capi_exception_exception_code_t
     
     #ifdef EXCEPTION_CAPI_DEFINE_FUNCTION_POINTERS
         
+        extern exception_get_major_version_function_type exception_get_major_version = 0;
+        extern exception_get_minor_version_function_type exception_get_minor_version = 0;
+        extern exception_get_patch_version_function_type exception_get_patch_version = 0;
         extern exception_generic_new_function_type exception_generic_new = 0;
         extern exception_generic_get_error_text_function_type exception_generic_get_error_text = 0;
         extern exception_generic_copy_function_type exception_generic_copy = 0;
@@ -174,6 +216,9 @@ enum beautiful_capi_exception_exception_code_t
         
     #else /* EXCEPTION_CAPI_DEFINE_FUNCTION_POINTERS */
         
+        extern exception_get_major_version_function_type exception_get_major_version;
+        extern exception_get_minor_version_function_type exception_get_minor_version;
+        extern exception_get_patch_version_function_type exception_get_patch_version;
         extern exception_generic_new_function_type exception_generic_new;
         extern exception_generic_get_error_text_function_type exception_generic_get_error_text;
         extern exception_generic_copy_function_type exception_generic_copy;
@@ -245,6 +290,9 @@ enum beautiful_capi_exception_exception_code_t
                     error_message << "Can't load shared library " << shared_library_name;
                     throw std::runtime_error(error_message.str());
                 }
+                load_function<exception_get_major_version_function_type>(exception_get_major_version, "exception_get_major_version");
+                load_function<exception_get_minor_version_function_type>(exception_get_minor_version, "exception_get_minor_version");
+                load_function<exception_get_patch_version_function_type>(exception_get_patch_version, "exception_get_patch_version");
                 load_function<exception_generic_new_function_type>(exception_generic_new, "exception_generic_new");
                 load_function<exception_generic_get_error_text_function_type>(exception_generic_get_error_text, "exception_generic_get_error_text");
                 load_function<exception_generic_copy_function_type>(exception_generic_copy, "exception_generic_copy");
@@ -262,6 +310,17 @@ enum beautiful_capi_exception_exception_code_t
                 load_function<exception_division_by_zero_copy_function_type>(exception_division_by_zero_copy, "exception_division_by_zero_copy");
                 load_function<exception_division_by_zero_delete_function_type>(exception_division_by_zero_delete, "exception_division_by_zero_delete");
                 load_function<exception_division_by_zero_cast_to_base_function_type>(exception_division_by_zero_cast_to_base, "exception_division_by_zero_cast_to_base");
+                const int major_version = exception_get_major_version();
+                const int minor_version = exception_get_minor_version();
+                const int patch_version = exception_get_patch_version();
+                if (major_version != EXCEPTION_MAJOR_VERSION || minor_version != EXCEPTION_MINOR_VERSION || patch_version != EXCEPTION_PATCH_VERSION)
+                {
+                    std::stringstream error_message;
+                    error_message << "Incorrect version of " << shared_library_name << " library. ";
+                    error_message << "Expected version is " << EXCEPTION_MAJOR_VERSION << "." << EXCEPTION_MINOR_VERSION << "." << EXCEPTION_PATCH_VERSION << ". ";
+                    error_message << "Found version is " << major_version << "." << minor_version << "." << patch_version << ".";
+                    throw std::runtime_error(error_message.str());
+                }
             }
             
             Initialization();
@@ -281,6 +340,9 @@ enum beautiful_capi_exception_exception_code_t
                 #else /* _WIN32 */
                     dlclose(handle);
                 #endif /* _WIN32 */
+                exception_get_major_version = 0;
+                exception_get_minor_version = 0;
+                exception_get_patch_version = 0;
                 exception_generic_new = 0;
                 exception_generic_get_error_text = 0;
                 exception_generic_copy = 0;

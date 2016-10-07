@@ -31,6 +31,26 @@
 #include "Sample/SampleFwd.h"
 #include "Sample/Data.h"
 
+#ifdef __cplusplus
+
+namespace Sample {
+
+inline int GetMajorVersion()
+{
+    return sample_get_major_version();
+}
+inline int GetMinorVersion()
+{
+    return sample_get_minor_version();
+}
+inline int GetPatchVersion()
+{
+    return sample_get_patch_version();
+}
+
+}
+
+#endif /* __cplusplus */
 
 #endif /* SAMPLE_INCLUDED */
 

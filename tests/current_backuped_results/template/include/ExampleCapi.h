@@ -67,6 +67,10 @@
     #error "Unknown platform"
 #endif
 
+#define EXAMPLE_MAJOR_VERSION 1
+#define EXAMPLE_MINOR_VERSION 0
+#define EXAMPLE_PATCH_VERSION 0
+
 #ifdef __cplusplus
     #ifdef _MSC_VER
         #if _MSC_VER >= 1900
@@ -93,6 +97,9 @@
 
 #ifndef EXAMPLE_CAPI_USE_DYNAMIC_LOADER
     
+    EXAMPLE_API int EXAMPLE_API_CONVENTION example_get_major_version();
+    EXAMPLE_API int EXAMPLE_API_CONVENTION example_get_minor_version();
+    EXAMPLE_API int EXAMPLE_API_CONVENTION example_get_patch_version();
     EXAMPLE_API void* EXAMPLE_API_CONVENTION example_position_float_default();
     EXAMPLE_API float EXAMPLE_API_CONVENTION example_position_float_get_x(void* object_pointer);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_position_float_set_x(void* object_pointer, float x);
@@ -213,8 +220,40 @@
     EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_objects_derived_example_model_double_cast_to_base(void* object_pointer);
     EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_double_cast_to_example_vector_of_objects_derived_example_model_double(void* source_object);
     
+    #ifdef __cplusplus
+    
+    #include <stdexcept>
+    #include <sstream>
+    
+    namespace Example
+    {
+        class Initialization
+        {
+        public:
+            Initialization()
+            {
+                const int major_version = example_get_major_version();
+                const int minor_version = example_get_minor_version();
+                const int patch_version = example_get_patch_version();
+                if (major_version != EXAMPLE_MAJOR_VERSION || minor_version != EXAMPLE_MINOR_VERSION || patch_version != EXAMPLE_PATCH_VERSION)
+                {
+                    std::stringstream error_message;
+                    error_message << "Incorrect version of library. ";
+                    error_message << "Expected version is " << EXAMPLE_MAJOR_VERSION << "." << EXAMPLE_MINOR_VERSION << "." << EXAMPLE_PATCH_VERSION << ". ";
+                    error_message << "Found version is " << major_version << "." << minor_version << "." << patch_version << ".";
+                    throw std::runtime_error(error_message.str());
+                }
+            }
+        };
+    }
+    
+    #endif /* __cplusplus */
+    
 #else /* EXAMPLE_CAPI_USE_DYNAMIC_LOADER */
     
+    typedef int (EXAMPLE_API_CONVENTION *example_get_major_version_function_type)();
+    typedef int (EXAMPLE_API_CONVENTION *example_get_minor_version_function_type)();
+    typedef int (EXAMPLE_API_CONVENTION *example_get_patch_version_function_type)();
     typedef void* (EXAMPLE_API_CONVENTION *example_position_float_default_function_type)();
     typedef float (EXAMPLE_API_CONVENTION *example_position_float_get_x_function_type)(void* object_pointer);
     typedef void (EXAMPLE_API_CONVENTION *example_position_float_set_x_function_type)(void* object_pointer, float x);
@@ -337,6 +376,9 @@
     
     #ifdef EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS
         
+        extern example_get_major_version_function_type example_get_major_version = 0;
+        extern example_get_minor_version_function_type example_get_minor_version = 0;
+        extern example_get_patch_version_function_type example_get_patch_version = 0;
         extern example_position_float_default_function_type example_position_float_default = 0;
         extern example_position_float_get_x_function_type example_position_float_get_x = 0;
         extern example_position_float_set_x_function_type example_position_float_set_x = 0;
@@ -459,6 +501,9 @@
         
     #else /* EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS */
         
+        extern example_get_major_version_function_type example_get_major_version;
+        extern example_get_minor_version_function_type example_get_minor_version;
+        extern example_get_patch_version_function_type example_get_patch_version;
         extern example_position_float_default_function_type example_position_float_default;
         extern example_position_float_get_x_function_type example_position_float_get_x;
         extern example_position_float_set_x_function_type example_position_float_set_x;
@@ -632,6 +677,9 @@
                     error_message << "Can't load shared library " << shared_library_name;
                     throw std::runtime_error(error_message.str());
                 }
+                load_function<example_get_major_version_function_type>(example_get_major_version, "example_get_major_version");
+                load_function<example_get_minor_version_function_type>(example_get_minor_version, "example_get_minor_version");
+                load_function<example_get_patch_version_function_type>(example_get_patch_version, "example_get_patch_version");
                 load_function<example_position_float_default_function_type>(example_position_float_default, "example_position_float_default");
                 load_function<example_position_float_get_x_function_type>(example_position_float_get_x, "example_position_float_get_x");
                 load_function<example_position_float_set_x_function_type>(example_position_float_set_x, "example_position_float_set_x");
@@ -751,6 +799,17 @@
                 load_function<example_vector_of_objects_derived_example_model_double_release_function_type>(example_vector_of_objects_derived_example_model_double_release, "example_vector_of_objects_derived_example_model_double_release");
                 load_function<example_vector_of_objects_derived_example_model_double_cast_to_base_function_type>(example_vector_of_objects_derived_example_model_double_cast_to_base, "example_vector_of_objects_derived_example_model_double_cast_to_base");
                 load_function<example_vector_of_objects_example_model_double_cast_to_example_vector_of_objects_derived_example_model_double_function_type>(example_vector_of_objects_example_model_double_cast_to_example_vector_of_objects_derived_example_model_double, "example_vector_of_objects_example_model_double_cast_to_example_vector_of_objects_derived_example_model_double");
+                const int major_version = example_get_major_version();
+                const int minor_version = example_get_minor_version();
+                const int patch_version = example_get_patch_version();
+                if (major_version != EXAMPLE_MAJOR_VERSION || minor_version != EXAMPLE_MINOR_VERSION || patch_version != EXAMPLE_PATCH_VERSION)
+                {
+                    std::stringstream error_message;
+                    error_message << "Incorrect version of " << shared_library_name << " library. ";
+                    error_message << "Expected version is " << EXAMPLE_MAJOR_VERSION << "." << EXAMPLE_MINOR_VERSION << "." << EXAMPLE_PATCH_VERSION << ". ";
+                    error_message << "Found version is " << major_version << "." << minor_version << "." << patch_version << ".";
+                    throw std::runtime_error(error_message.str());
+                }
             }
             
             Initialization();
@@ -770,6 +829,9 @@
                 #else /* _WIN32 */
                     dlclose(handle);
                 #endif /* _WIN32 */
+                example_get_major_version = 0;
+                example_get_minor_version = 0;
+                example_get_patch_version = 0;
                 example_position_float_default = 0;
                 example_position_float_get_x = 0;
                 example_position_float_set_x = 0;

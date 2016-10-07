@@ -32,6 +32,26 @@
 #include "Circular/ClassA.h"
 #include "Circular/ClassB.h"
 
+#ifdef __cplusplus
+
+namespace Circular {
+
+inline int GetMajorVersion()
+{
+    return circular_get_major_version();
+}
+inline int GetMinorVersion()
+{
+    return circular_get_minor_version();
+}
+inline int GetPatchVersion()
+{
+    return circular_get_patch_version();
+}
+
+}
+
+#endif /* __cplusplus */
 
 #endif /* CIRCULAR_INCLUDED */
 

@@ -98,8 +98,8 @@ class TBeautifulCapiParams(object):
         self.check_and_throw_exception_filename_filled = False
         self.beautiful_capi_namespace = "beautiful_capi_{project_name}"
         self.beautiful_capi_namespace_filled = False
-        self.autogen_prefix_for_internal_callback_implementation = "AutoGen_Callback_{project_name}_"
-        self.autogen_prefix_for_internal_callback_implementation_filled = False
+        self.autogen_prefix_for_internal_implementation = "AutoGen_Internal_{project_name}_"
+        self.autogen_prefix_for_internal_implementation_filled = False
         self.root_header = ""
         self.root_header_filled = False
         self.root_header_namespace = ""
@@ -212,10 +212,10 @@ class TBeautifulCapiParams(object):
             cur_attr = dom_node.getAttribute("beautiful_capi_namespace")
             self.beautiful_capi_namespace = cur_attr
             self.beautiful_capi_namespace_filled = True
-        if dom_node.hasAttribute("autogen_prefix_for_internal_callback_implementation"):
-            cur_attr = dom_node.getAttribute("autogen_prefix_for_internal_callback_implementation")
-            self.autogen_prefix_for_internal_callback_implementation = cur_attr
-            self.autogen_prefix_for_internal_callback_implementation_filled = True
+        if dom_node.hasAttribute("autogen_prefix_for_internal_implementation"):
+            cur_attr = dom_node.getAttribute("autogen_prefix_for_internal_implementation")
+            self.autogen_prefix_for_internal_implementation = cur_attr
+            self.autogen_prefix_for_internal_implementation_filled = True
         if dom_node.hasAttribute("root_header"):
             cur_attr = dom_node.getAttribute("root_header")
             self.root_header = cur_attr

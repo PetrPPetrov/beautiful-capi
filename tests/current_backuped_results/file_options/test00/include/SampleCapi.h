@@ -67,6 +67,10 @@
     #error "Unknown platform"
 #endif
 
+#define SAMPLE_MAJOR_VERSION 1
+#define SAMPLE_MINOR_VERSION 0
+#define SAMPLE_PATCH_VERSION 0
+
 #ifdef __cplusplus
     #ifdef _MSC_VER
         #if _MSC_VER >= 1900
@@ -93,14 +97,49 @@
 
 #ifndef SAMPLE_CAPI_USE_DYNAMIC_LOADER
     
+    SAMPLE_API int SAMPLE_API_CONVENTION sample_get_major_version();
+    SAMPLE_API int SAMPLE_API_CONVENTION sample_get_minor_version();
+    SAMPLE_API int SAMPLE_API_CONVENTION sample_get_patch_version();
     SAMPLE_API void* SAMPLE_API_CONVENTION sample_data_new();
     SAMPLE_API int SAMPLE_API_CONVENTION sample_data_get_data(void* object_pointer);
     SAMPLE_API void SAMPLE_API_CONVENTION sample_data_set_data(void* object_pointer, int value);
     SAMPLE_API void* SAMPLE_API_CONVENTION sample_data_copy(void* object_pointer);
     SAMPLE_API void SAMPLE_API_CONVENTION sample_data_delete(void* object_pointer);
     
+    #ifdef __cplusplus
+    
+    #include <stdexcept>
+    #include <sstream>
+    
+    namespace Sample
+    {
+        class Initialization
+        {
+        public:
+            Initialization()
+            {
+                const int major_version = sample_get_major_version();
+                const int minor_version = sample_get_minor_version();
+                const int patch_version = sample_get_patch_version();
+                if (major_version != SAMPLE_MAJOR_VERSION || minor_version != SAMPLE_MINOR_VERSION || patch_version != SAMPLE_PATCH_VERSION)
+                {
+                    std::stringstream error_message;
+                    error_message << "Incorrect version of library. ";
+                    error_message << "Expected version is " << SAMPLE_MAJOR_VERSION << "." << SAMPLE_MINOR_VERSION << "." << SAMPLE_PATCH_VERSION << ". ";
+                    error_message << "Found version is " << major_version << "." << minor_version << "." << patch_version << ".";
+                    throw std::runtime_error(error_message.str());
+                }
+            }
+        };
+    }
+    
+    #endif /* __cplusplus */
+    
 #else /* SAMPLE_CAPI_USE_DYNAMIC_LOADER */
     
+    typedef int (SAMPLE_API_CONVENTION *sample_get_major_version_function_type)();
+    typedef int (SAMPLE_API_CONVENTION *sample_get_minor_version_function_type)();
+    typedef int (SAMPLE_API_CONVENTION *sample_get_patch_version_function_type)();
     typedef void* (SAMPLE_API_CONVENTION *sample_data_new_function_type)();
     typedef int (SAMPLE_API_CONVENTION *sample_data_get_data_function_type)(void* object_pointer);
     typedef void (SAMPLE_API_CONVENTION *sample_data_set_data_function_type)(void* object_pointer, int value);
@@ -109,6 +148,9 @@
     
     #ifdef SAMPLE_CAPI_DEFINE_FUNCTION_POINTERS
         
+        extern sample_get_major_version_function_type sample_get_major_version = 0;
+        extern sample_get_minor_version_function_type sample_get_minor_version = 0;
+        extern sample_get_patch_version_function_type sample_get_patch_version = 0;
         extern sample_data_new_function_type sample_data_new = 0;
         extern sample_data_get_data_function_type sample_data_get_data = 0;
         extern sample_data_set_data_function_type sample_data_set_data = 0;
@@ -117,6 +159,9 @@
         
     #else /* SAMPLE_CAPI_DEFINE_FUNCTION_POINTERS */
         
+        extern sample_get_major_version_function_type sample_get_major_version;
+        extern sample_get_minor_version_function_type sample_get_minor_version;
+        extern sample_get_patch_version_function_type sample_get_patch_version;
         extern sample_data_new_function_type sample_data_new;
         extern sample_data_get_data_function_type sample_data_get_data;
         extern sample_data_set_data_function_type sample_data_set_data;
@@ -176,11 +221,25 @@
                     error_message << "Can't load shared library " << shared_library_name;
                     throw std::runtime_error(error_message.str());
                 }
+                load_function<sample_get_major_version_function_type>(sample_get_major_version, "sample_get_major_version");
+                load_function<sample_get_minor_version_function_type>(sample_get_minor_version, "sample_get_minor_version");
+                load_function<sample_get_patch_version_function_type>(sample_get_patch_version, "sample_get_patch_version");
                 load_function<sample_data_new_function_type>(sample_data_new, "sample_data_new");
                 load_function<sample_data_get_data_function_type>(sample_data_get_data, "sample_data_get_data");
                 load_function<sample_data_set_data_function_type>(sample_data_set_data, "sample_data_set_data");
                 load_function<sample_data_copy_function_type>(sample_data_copy, "sample_data_copy");
                 load_function<sample_data_delete_function_type>(sample_data_delete, "sample_data_delete");
+                const int major_version = sample_get_major_version();
+                const int minor_version = sample_get_minor_version();
+                const int patch_version = sample_get_patch_version();
+                if (major_version != SAMPLE_MAJOR_VERSION || minor_version != SAMPLE_MINOR_VERSION || patch_version != SAMPLE_PATCH_VERSION)
+                {
+                    std::stringstream error_message;
+                    error_message << "Incorrect version of " << shared_library_name << " library. ";
+                    error_message << "Expected version is " << SAMPLE_MAJOR_VERSION << "." << SAMPLE_MINOR_VERSION << "." << SAMPLE_PATCH_VERSION << ". ";
+                    error_message << "Found version is " << major_version << "." << minor_version << "." << patch_version << ".";
+                    throw std::runtime_error(error_message.str());
+                }
             }
             
             Initialization();
@@ -200,6 +259,9 @@
                 #else /* _WIN32 */
                     dlclose(handle);
                 #endif /* _WIN32 */
+                sample_get_major_version = 0;
+                sample_get_minor_version = 0;
+                sample_get_patch_version = 0;
                 sample_data_new = 0;
                 sample_data_get_data = 0;
                 sample_data_set_data = 0;

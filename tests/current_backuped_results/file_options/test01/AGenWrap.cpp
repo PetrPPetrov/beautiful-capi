@@ -66,6 +66,21 @@
     #error "Unknown platform"
 #endif
 
+int AutoGen_Internal_Test_ExampleGetMajorVersionImpl()
+{
+    return 1;
+}
+
+int AutoGen_Internal_Test_ExampleGetMinorVersionImpl()
+{
+    return 0;
+}
+
+int AutoGen_Internal_Test_ExampleGetPatchVersionImpl()
+{
+    return 0;
+}
+
 #ifdef _WIN32
     #ifdef __GNUC__
         #define SAMPLE_API extern "C" __attribute__ ((dllexport))
@@ -99,6 +114,36 @@
 #else
     #error "Unknown platform"
 #endif
+
+int AutoGen_Internal_Test_SampleGetMajorVersionImpl()
+{
+    return 1;
+}
+
+int AutoGen_Internal_Test_SampleGetMinorVersionImpl()
+{
+    return 0;
+}
+
+int AutoGen_Internal_Test_SampleGetPatchVersionImpl()
+{
+    return 0;
+}
+
+SAMPLE_API int SAMPLE_API_CONVENTION example_get_major_version()
+{
+    return AutoGen_Internal_Test_ExampleGetMajorVersionImpl();
+}
+
+SAMPLE_API int SAMPLE_API_CONVENTION example_get_minor_version()
+{
+    return AutoGen_Internal_Test_ExampleGetMinorVersionImpl();
+}
+
+SAMPLE_API int SAMPLE_API_CONVENTION example_get_patch_version()
+{
+    return AutoGen_Internal_Test_ExampleGetPatchVersionImpl();
+}
 
 SAMPLE_API void* SAMPLE_API_CONVENTION example_geometry_brep_body_new()
 {
@@ -200,6 +245,21 @@ SAMPLE_API void* SAMPLE_API_CONVENTION example_printer_copy(void* object_pointer
 SAMPLE_API void SAMPLE_API_CONVENTION example_printer_delete(void* object_pointer)
 {
     delete static_cast<Example::PrinterImpl*>(object_pointer);
+}
+
+SAMPLE_API int SAMPLE_API_CONVENTION sample_get_major_version()
+{
+    return AutoGen_Internal_Test_SampleGetMajorVersionImpl();
+}
+
+SAMPLE_API int SAMPLE_API_CONVENTION sample_get_minor_version()
+{
+    return AutoGen_Internal_Test_SampleGetMinorVersionImpl();
+}
+
+SAMPLE_API int SAMPLE_API_CONVENTION sample_get_patch_version()
+{
+    return AutoGen_Internal_Test_SampleGetPatchVersionImpl();
 }
 
 SAMPLE_API void* SAMPLE_API_CONVENTION sample_data_new()

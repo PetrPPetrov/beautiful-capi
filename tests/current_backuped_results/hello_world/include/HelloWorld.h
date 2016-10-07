@@ -31,6 +31,26 @@
 #include "HelloWorldFwd.h"
 #include "HelloWorld/Printer.h"
 
+#ifdef __cplusplus
+
+namespace HelloWorld {
+
+inline int GetMajorVersion()
+{
+    return hello_world_get_major_version();
+}
+inline int GetMinorVersion()
+{
+    return hello_world_get_minor_version();
+}
+inline int GetPatchVersion()
+{
+    return hello_world_get_patch_version();
+}
+
+}
+
+#endif /* __cplusplus */
 
 #endif /* HELLOWORLD_INCLUDED */
 

@@ -21,8 +21,9 @@
 
 
 from ParamsParser import TBeautifulCapiParams
-from FileGenerator import FileGenerator, IfDefScope, IndentScope, Indent, Unindent, UnindentAll
+from FileGenerator import FileGenerator, IfDefScope, IndentScope, Indent, Unindent
 from FileGenerator import if_def_then_else
+from CheckBinaryCompatibilityGenerator import generate_check_version
 
 
 class DynamicLoaderGenerator(object):
@@ -91,6 +92,7 @@ class DynamicLoaderGenerator(object):
                 out.put_line('throw std::runtime_error(error_message.str());')
             for c_function in self.namespace_info.c_functions:
                 out.put_line('load_function<{0}_function_type>({0}, "{0}");'.format(c_function.name))
+            generate_check_version(out, self.namespace_info.namespace_name_array[0], 'shared_library_name')
         out.put_line('')
 
     def __generate_constructor(self, out: FileGenerator):
@@ -162,12 +164,12 @@ class DynamicLoaderGenerator(object):
     def generate(self, out: FileGenerator):
         out.put_line('')
         with IfDefScope(out, '__cplusplus'):
-            out.put_include_files()
-            out.include_system_header('stdexcept')
-            out.include_system_header('sstream')
+            out.put_line('#include <stdexcept>')
+            out.put_line('#include <sstream>')
+            out.put_line('')
             if_def_then_else(out, '_WIN32', self.__generate_windows_includes, self.__generate_posix_includes)
             out.put_line('')
             # We always have at least one element
-            out.put_line('namespace {0}'.format(self.namespace_info.c_functions[0].path_to_namespace[0]))
+            out.put_line('namespace {0}'.format(self.namespace_info.namespace_name_array[0]))
             with IndentScope(out):
                 self.__generate_body(out)

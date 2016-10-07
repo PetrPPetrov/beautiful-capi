@@ -63,6 +63,36 @@
     #error "Unknown platform"
 #endif
 
+int AutoGen_Internal_CircularReference_CircularGetMajorVersionImpl()
+{
+    return 1;
+}
+
+int AutoGen_Internal_CircularReference_CircularGetMinorVersionImpl()
+{
+    return 0;
+}
+
+int AutoGen_Internal_CircularReference_CircularGetPatchVersionImpl()
+{
+    return 0;
+}
+
+CIRCULAR_API int CIRCULAR_API_CONVENTION circular_get_major_version()
+{
+    return AutoGen_Internal_CircularReference_CircularGetMajorVersionImpl();
+}
+
+CIRCULAR_API int CIRCULAR_API_CONVENTION circular_get_minor_version()
+{
+    return AutoGen_Internal_CircularReference_CircularGetMinorVersionImpl();
+}
+
+CIRCULAR_API int CIRCULAR_API_CONVENTION circular_get_patch_version()
+{
+    return AutoGen_Internal_CircularReference_CircularGetPatchVersionImpl();
+}
+
 CIRCULAR_API void* CIRCULAR_API_CONVENTION circular_class_a_default()
 {
     return new Circular::ClassAImpl();

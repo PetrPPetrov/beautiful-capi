@@ -64,6 +64,36 @@
     #error "Unknown platform"
 #endif
 
+int AutoGen_Internal_Template_ExampleGetMajorVersionImpl()
+{
+    return 1;
+}
+
+int AutoGen_Internal_Template_ExampleGetMinorVersionImpl()
+{
+    return 0;
+}
+
+int AutoGen_Internal_Template_ExampleGetPatchVersionImpl()
+{
+    return 0;
+}
+
+EXAMPLE_API int EXAMPLE_API_CONVENTION example_get_major_version()
+{
+    return AutoGen_Internal_Template_ExampleGetMajorVersionImpl();
+}
+
+EXAMPLE_API int EXAMPLE_API_CONVENTION example_get_minor_version()
+{
+    return AutoGen_Internal_Template_ExampleGetMinorVersionImpl();
+}
+
+EXAMPLE_API int EXAMPLE_API_CONVENTION example_get_patch_version()
+{
+    return AutoGen_Internal_Template_ExampleGetPatchVersionImpl();
+}
+
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_position_float_default()
 {
     return new Example::PositionImpl<float>();

@@ -26,7 +26,7 @@ from NamespaceGenerator import NamespaceGenerator
 
 def get_callback_impl_name(class_generator) -> str:
     return '{prefix}{name}Impl'.format(
-        prefix=class_generator.params.autogen_prefix_for_internal_callback_implementation,
+        prefix=class_generator.params.autogen_prefix_for_internal_implementation,
         name=class_generator.name)
 
 

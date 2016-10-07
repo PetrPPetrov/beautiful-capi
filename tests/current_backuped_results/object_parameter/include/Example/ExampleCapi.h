@@ -67,6 +67,10 @@
     #error "Unknown platform"
 #endif
 
+#define EXAMPLE_MAJOR_VERSION 1
+#define EXAMPLE_MINOR_VERSION 0
+#define EXAMPLE_PATCH_VERSION 0
+
 #ifdef __cplusplus
     #ifdef _MSC_VER
         #if _MSC_VER >= 1900
@@ -93,6 +97,9 @@
 
 #ifndef EXAMPLE_CAPI_USE_DYNAMIC_LOADER
     
+    EXAMPLE_API int EXAMPLE_API_CONVENTION example_get_major_version();
+    EXAMPLE_API int EXAMPLE_API_CONVENTION example_get_minor_version();
+    EXAMPLE_API int EXAMPLE_API_CONVENTION example_get_patch_version();
     EXAMPLE_API void* EXAMPLE_API_CONVENTION example_page_default();
     EXAMPLE_API size_t EXAMPLE_API_CONVENTION example_page_get_width(void* object_pointer);
     EXAMPLE_API size_t EXAMPLE_API_CONVENTION example_page_get_height(void* object_pointer);
@@ -107,8 +114,40 @@
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_document_add_ref(void* object_pointer);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_document_release(void* object_pointer);
     
+    #ifdef __cplusplus
+    
+    #include <stdexcept>
+    #include <sstream>
+    
+    namespace Example
+    {
+        class Initialization
+        {
+        public:
+            Initialization()
+            {
+                const int major_version = example_get_major_version();
+                const int minor_version = example_get_minor_version();
+                const int patch_version = example_get_patch_version();
+                if (major_version != EXAMPLE_MAJOR_VERSION || minor_version != EXAMPLE_MINOR_VERSION || patch_version != EXAMPLE_PATCH_VERSION)
+                {
+                    std::stringstream error_message;
+                    error_message << "Incorrect version of library. ";
+                    error_message << "Expected version is " << EXAMPLE_MAJOR_VERSION << "." << EXAMPLE_MINOR_VERSION << "." << EXAMPLE_PATCH_VERSION << ". ";
+                    error_message << "Found version is " << major_version << "." << minor_version << "." << patch_version << ".";
+                    throw std::runtime_error(error_message.str());
+                }
+            }
+        };
+    }
+    
+    #endif /* __cplusplus */
+    
 #else /* EXAMPLE_CAPI_USE_DYNAMIC_LOADER */
     
+    typedef int (EXAMPLE_API_CONVENTION *example_get_major_version_function_type)();
+    typedef int (EXAMPLE_API_CONVENTION *example_get_minor_version_function_type)();
+    typedef int (EXAMPLE_API_CONVENTION *example_get_patch_version_function_type)();
     typedef void* (EXAMPLE_API_CONVENTION *example_page_default_function_type)();
     typedef size_t (EXAMPLE_API_CONVENTION *example_page_get_width_function_type)(void* object_pointer);
     typedef size_t (EXAMPLE_API_CONVENTION *example_page_get_height_function_type)(void* object_pointer);
@@ -125,6 +164,9 @@
     
     #ifdef EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS
         
+        extern example_get_major_version_function_type example_get_major_version = 0;
+        extern example_get_minor_version_function_type example_get_minor_version = 0;
+        extern example_get_patch_version_function_type example_get_patch_version = 0;
         extern example_page_default_function_type example_page_default = 0;
         extern example_page_get_width_function_type example_page_get_width = 0;
         extern example_page_get_height_function_type example_page_get_height = 0;
@@ -141,6 +183,9 @@
         
     #else /* EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS */
         
+        extern example_get_major_version_function_type example_get_major_version;
+        extern example_get_minor_version_function_type example_get_minor_version;
+        extern example_get_patch_version_function_type example_get_patch_version;
         extern example_page_default_function_type example_page_default;
         extern example_page_get_width_function_type example_page_get_width;
         extern example_page_get_height_function_type example_page_get_height;
@@ -208,6 +253,9 @@
                     error_message << "Can't load shared library " << shared_library_name;
                     throw std::runtime_error(error_message.str());
                 }
+                load_function<example_get_major_version_function_type>(example_get_major_version, "example_get_major_version");
+                load_function<example_get_minor_version_function_type>(example_get_minor_version, "example_get_minor_version");
+                load_function<example_get_patch_version_function_type>(example_get_patch_version, "example_get_patch_version");
                 load_function<example_page_default_function_type>(example_page_default, "example_page_default");
                 load_function<example_page_get_width_function_type>(example_page_get_width, "example_page_get_width");
                 load_function<example_page_get_height_function_type>(example_page_get_height, "example_page_get_height");
@@ -221,6 +269,17 @@
                 load_function<example_document_set_page_function_type>(example_document_set_page, "example_document_set_page");
                 load_function<example_document_add_ref_function_type>(example_document_add_ref, "example_document_add_ref");
                 load_function<example_document_release_function_type>(example_document_release, "example_document_release");
+                const int major_version = example_get_major_version();
+                const int minor_version = example_get_minor_version();
+                const int patch_version = example_get_patch_version();
+                if (major_version != EXAMPLE_MAJOR_VERSION || minor_version != EXAMPLE_MINOR_VERSION || patch_version != EXAMPLE_PATCH_VERSION)
+                {
+                    std::stringstream error_message;
+                    error_message << "Incorrect version of " << shared_library_name << " library. ";
+                    error_message << "Expected version is " << EXAMPLE_MAJOR_VERSION << "." << EXAMPLE_MINOR_VERSION << "." << EXAMPLE_PATCH_VERSION << ". ";
+                    error_message << "Found version is " << major_version << "." << minor_version << "." << patch_version << ".";
+                    throw std::runtime_error(error_message.str());
+                }
             }
             
             Initialization();
@@ -240,6 +299,9 @@
                 #else /* _WIN32 */
                     dlclose(handle);
                 #endif /* _WIN32 */
+                example_get_major_version = 0;
+                example_get_minor_version = 0;
+                example_get_patch_version = 0;
                 example_page_default = 0;
                 example_page_get_width = 0;
                 example_page_get_height = 0;

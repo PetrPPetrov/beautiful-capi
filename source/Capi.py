@@ -31,6 +31,7 @@ from CapiGenerator import CapiGenerator
 from FileGenerator import FileGenerator, Indent, IndentScope, Unindent, WatchdogScope, IfDefScope
 from Templates import process as process_templates
 from Callbacks import process as process_callbacks
+from CheckBinaryCompatibilityGenerator import process as process_check_binary_compatibility
 from ParamsParser import TBeautifulCapiParams, TExceptionHandlingMode, load
 from ParseRoot import parse_root
 
@@ -64,8 +65,8 @@ class Capi(object):
         )
         params.beautiful_capi_namespace = params.beautiful_capi_namespace.format(
             project_name=self.api_description.project_name)
-        autogen_prefix_template = params.autogen_prefix_for_internal_callback_implementation
-        params.autogen_prefix_for_internal_callback_implementation = autogen_prefix_template.format(
+        autogen_prefix_template = params.autogen_prefix_for_internal_implementation
+        params.autogen_prefix_for_internal_implementation = autogen_prefix_template.format(
             project_name=self.api_description.project_name)
         params.root_header = params.root_header.format(
             project_name=self.api_description.project_name)
@@ -136,6 +137,7 @@ class Capi(object):
                             self.__generate_root_initializer(root_header, namespace_generators)
 
     def __generate(self):
+        process_check_binary_compatibility(self.api_description, self.params_description)
         process_templates(self.api_description)
         first_namespace_generators = create_namespace_generators(
             self.api_description, self.params_description)
@@ -149,7 +151,8 @@ class Capi(object):
             main_exception_traits = by_first_argument_exception_traits
         else:
             main_exception_traits = no_handling_exception_traits
-        capi_generator = CapiGenerator(main_exception_traits, no_handling_exception_traits, self.params_description)
+        capi_generator = CapiGenerator(main_exception_traits, no_handling_exception_traits,
+                                       self.params_description, self.api_description)
         file_cache = FileCache(self.params_description)
         for namespace_generator in namespace_generators:
             namespace_generator.generate(file_cache, capi_generator)
@@ -194,7 +197,7 @@ def main():
         '-s', '--internal-snippets-folder', nargs=None, default='./internal_snippets', metavar='OUTPUT_SNIPPETS',
         help='specifies output folder for generated library snippets')
     parser.add_argument(
-        '-c', '--clean', nargs=None, default=True, metavar='CLEAN',
+        '-c', '--clean', nargs=None, default=False, metavar='CLEAN',
         help='specifies whether if clean input and snippets directories'
     )
 

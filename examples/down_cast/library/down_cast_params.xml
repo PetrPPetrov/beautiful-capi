@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <params:params xmlns:params="http://gkmsoft.ru/beautifulcapi-params"
-               root_header="DownCast.h">
+               root_header="DownCast.h" shared_library_name="down_cast">
   <copyright_header>/*
  * Beautiful Capi generates beautiful C API wrappers for your C++ classes
  * Copyright (C) 2015 Petr Petrovich Petrov

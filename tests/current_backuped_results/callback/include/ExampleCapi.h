@@ -88,6 +88,10 @@ enum beautiful_capi_callback_exception_code_t
     #error "Unknown platform"
 #endif
 
+#define EXAMPLE_MAJOR_VERSION 1
+#define EXAMPLE_MINOR_VERSION 0
+#define EXAMPLE_PATCH_VERSION 0
+
 #ifdef __cplusplus
     #ifdef _MSC_VER
         #if _MSC_VER >= 1900
@@ -120,6 +124,9 @@ enum beautiful_capi_callback_exception_code_t
     typedef int (EXAMPLE_API_CONVENTION *example_printer_get_device_type_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
     
     EXAMPLE_API void* EXAMPLE_API_CONVENTION example_create_default_printer(beautiful_capi_callback_exception_info_t* exception_info, int printing_device);
+    EXAMPLE_API int EXAMPLE_API_CONVENTION example_get_major_version();
+    EXAMPLE_API int EXAMPLE_API_CONVENTION example_get_minor_version();
+    EXAMPLE_API int EXAMPLE_API_CONVENTION example_get_patch_version();
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_print(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* text);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_set_printing_quality(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, int quality);
     EXAMPLE_API int EXAMPLE_API_CONVENTION example_printer_get_printing_quality(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
@@ -151,6 +158,35 @@ enum beautiful_capi_callback_exception_code_t
     EXAMPLE_API void* EXAMPLE_API_CONVENTION example_printer_callback_cast_to_base(void* object_pointer);
     EXAMPLE_API void* EXAMPLE_API_CONVENTION example_printer_cast_to_example_printer_callback(void* source_object);
     
+    #ifdef __cplusplus
+    
+    #include <stdexcept>
+    #include <sstream>
+    
+    namespace Example
+    {
+        class Initialization
+        {
+        public:
+            Initialization()
+            {
+                const int major_version = example_get_major_version();
+                const int minor_version = example_get_minor_version();
+                const int patch_version = example_get_patch_version();
+                if (major_version != EXAMPLE_MAJOR_VERSION || minor_version != EXAMPLE_MINOR_VERSION || patch_version != EXAMPLE_PATCH_VERSION)
+                {
+                    std::stringstream error_message;
+                    error_message << "Incorrect version of library. ";
+                    error_message << "Expected version is " << EXAMPLE_MAJOR_VERSION << "." << EXAMPLE_MINOR_VERSION << "." << EXAMPLE_PATCH_VERSION << ". ";
+                    error_message << "Found version is " << major_version << "." << minor_version << "." << patch_version << ".";
+                    throw std::runtime_error(error_message.str());
+                }
+            }
+        };
+    }
+    
+    #endif /* __cplusplus */
+    
 #else /* EXAMPLE_CAPI_USE_DYNAMIC_LOADER */
     
     typedef void (EXAMPLE_API_CONVENTION *example_printer_print_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* text);
@@ -158,6 +194,9 @@ enum beautiful_capi_callback_exception_code_t
     typedef int (EXAMPLE_API_CONVENTION *example_printer_get_printing_quality_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
     typedef int (EXAMPLE_API_CONVENTION *example_printer_get_device_type_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
     typedef void* (EXAMPLE_API_CONVENTION *example_create_default_printer_function_type)(beautiful_capi_callback_exception_info_t* exception_info, int printing_device);
+    typedef int (EXAMPLE_API_CONVENTION *example_get_major_version_function_type)();
+    typedef int (EXAMPLE_API_CONVENTION *example_get_minor_version_function_type)();
+    typedef int (EXAMPLE_API_CONVENTION *example_get_patch_version_function_type)();
     typedef void (EXAMPLE_API_CONVENTION *example_printer_print_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* text);
     typedef void (EXAMPLE_API_CONVENTION *example_printer_set_printing_quality_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, int quality);
     typedef int (EXAMPLE_API_CONVENTION *example_printer_get_printing_quality_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
@@ -192,6 +231,9 @@ enum beautiful_capi_callback_exception_code_t
     #ifdef EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS
         
         extern example_create_default_printer_function_type example_create_default_printer = 0;
+        extern example_get_major_version_function_type example_get_major_version = 0;
+        extern example_get_minor_version_function_type example_get_minor_version = 0;
+        extern example_get_patch_version_function_type example_get_patch_version = 0;
         extern example_printer_print_function_type example_printer_print = 0;
         extern example_printer_set_printing_quality_function_type example_printer_set_printing_quality = 0;
         extern example_printer_get_printing_quality_function_type example_printer_get_printing_quality = 0;
@@ -226,6 +268,9 @@ enum beautiful_capi_callback_exception_code_t
     #else /* EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS */
         
         extern example_create_default_printer_function_type example_create_default_printer;
+        extern example_get_major_version_function_type example_get_major_version;
+        extern example_get_minor_version_function_type example_get_minor_version;
+        extern example_get_patch_version_function_type example_get_patch_version;
         extern example_printer_print_function_type example_printer_print;
         extern example_printer_set_printing_quality_function_type example_printer_set_printing_quality;
         extern example_printer_get_printing_quality_function_type example_printer_get_printing_quality;
@@ -311,6 +356,9 @@ enum beautiful_capi_callback_exception_code_t
                     throw std::runtime_error(error_message.str());
                 }
                 load_function<example_create_default_printer_function_type>(example_create_default_printer, "example_create_default_printer");
+                load_function<example_get_major_version_function_type>(example_get_major_version, "example_get_major_version");
+                load_function<example_get_minor_version_function_type>(example_get_minor_version, "example_get_minor_version");
+                load_function<example_get_patch_version_function_type>(example_get_patch_version, "example_get_patch_version");
                 load_function<example_printer_print_function_type>(example_printer_print, "example_printer_print");
                 load_function<example_printer_set_printing_quality_function_type>(example_printer_set_printing_quality, "example_printer_set_printing_quality");
                 load_function<example_printer_get_printing_quality_function_type>(example_printer_get_printing_quality, "example_printer_get_printing_quality");
@@ -341,6 +389,17 @@ enum beautiful_capi_callback_exception_code_t
                 load_function<example_printer_callback_release_function_type>(example_printer_callback_release, "example_printer_callback_release");
                 load_function<example_printer_callback_cast_to_base_function_type>(example_printer_callback_cast_to_base, "example_printer_callback_cast_to_base");
                 load_function<example_printer_cast_to_example_printer_callback_function_type>(example_printer_cast_to_example_printer_callback, "example_printer_cast_to_example_printer_callback");
+                const int major_version = example_get_major_version();
+                const int minor_version = example_get_minor_version();
+                const int patch_version = example_get_patch_version();
+                if (major_version != EXAMPLE_MAJOR_VERSION || minor_version != EXAMPLE_MINOR_VERSION || patch_version != EXAMPLE_PATCH_VERSION)
+                {
+                    std::stringstream error_message;
+                    error_message << "Incorrect version of " << shared_library_name << " library. ";
+                    error_message << "Expected version is " << EXAMPLE_MAJOR_VERSION << "." << EXAMPLE_MINOR_VERSION << "." << EXAMPLE_PATCH_VERSION << ". ";
+                    error_message << "Found version is " << major_version << "." << minor_version << "." << patch_version << ".";
+                    throw std::runtime_error(error_message.str());
+                }
             }
             
             Initialization();
@@ -361,6 +420,9 @@ enum beautiful_capi_callback_exception_code_t
                     dlclose(handle);
                 #endif /* _WIN32 */
                 example_create_default_printer = 0;
+                example_get_major_version = 0;
+                example_get_minor_version = 0;
+                example_get_patch_version = 0;
                 example_printer_print = 0;
                 example_printer_set_printing_quality = 0;
                 example_printer_get_printing_quality = 0;

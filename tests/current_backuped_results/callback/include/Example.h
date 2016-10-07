@@ -59,6 +59,18 @@ inline Example::PrinterPtr CreateDefaultPrinter(Example::EPrintingDevice printin
     beautiful_capi_Callback::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
     return result;
 }
+inline int GetMajorVersion()
+{
+    return example_get_major_version();
+}
+inline int GetMinorVersion()
+{
+    return example_get_minor_version();
+}
+inline int GetPatchVersion()
+{
+    return example_get_patch_version();
+}
 
 }
 

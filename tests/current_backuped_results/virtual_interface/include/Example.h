@@ -47,6 +47,18 @@ inline Example::IShapeRawPtr CreateCircle()
 {
     return Example::IShapeRawPtr(Example::IShapeRawPtr::force_creating_from_raw_pointer, example_create_circle(), false);
 }
+inline int GetMajorVersion()
+{
+    return example_get_major_version();
+}
+inline int GetMinorVersion()
+{
+    return example_get_minor_version();
+}
+inline int GetPatchVersion()
+{
+    return example_get_patch_version();
+}
 
 }
 

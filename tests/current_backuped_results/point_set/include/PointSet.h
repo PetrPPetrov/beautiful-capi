@@ -33,6 +33,26 @@
 #include "PointSet/Points.h"
 #include "PointSet/PointSet.h"
 
+#ifdef __cplusplus
+
+namespace PointSet {
+
+inline int GetMajorVersion()
+{
+    return point_set_get_major_version();
+}
+inline int GetMinorVersion()
+{
+    return point_set_get_minor_version();
+}
+inline int GetPatchVersion()
+{
+    return point_set_get_patch_version();
+}
+
+}
+
+#endif /* __cplusplus */
 
 #endif /* POINTSET_INCLUDED */
 

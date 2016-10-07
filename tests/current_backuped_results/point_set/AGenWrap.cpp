@@ -64,6 +64,36 @@
     #error "Unknown platform"
 #endif
 
+int AutoGen_Internal_PointSet_PointSetGetMajorVersionImpl()
+{
+    return 1;
+}
+
+int AutoGen_Internal_PointSet_PointSetGetMinorVersionImpl()
+{
+    return 0;
+}
+
+int AutoGen_Internal_PointSet_PointSetGetPatchVersionImpl()
+{
+    return 0;
+}
+
+POINTSET_API int POINTSET_API_CONVENTION point_set_get_major_version()
+{
+    return AutoGen_Internal_PointSet_PointSetGetMajorVersionImpl();
+}
+
+POINTSET_API int POINTSET_API_CONVENTION point_set_get_minor_version()
+{
+    return AutoGen_Internal_PointSet_PointSetGetMinorVersionImpl();
+}
+
+POINTSET_API int POINTSET_API_CONVENTION point_set_get_patch_version()
+{
+    return AutoGen_Internal_PointSet_PointSetGetPatchVersionImpl();
+}
+
 POINTSET_API void* POINTSET_API_CONVENTION point_set_position_default()
 {
     return new PointSet::PositionImpl();

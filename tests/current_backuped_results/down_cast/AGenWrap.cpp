@@ -69,6 +69,21 @@
     #error "Unknown platform"
 #endif
 
+int AutoGen_Internal_DownCast_ExampleGetMajorVersionImpl()
+{
+    return 1;
+}
+
+int AutoGen_Internal_DownCast_ExampleGetMinorVersionImpl()
+{
+    return 0;
+}
+
+int AutoGen_Internal_DownCast_ExampleGetPatchVersionImpl()
+{
+    return 0;
+}
+
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_create_triangle()
 {
     return Example::CreateTriangle();
@@ -82,6 +97,21 @@ EXAMPLE_API void* EXAMPLE_API_CONVENTION example_create_square()
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_create_circle()
 {
     return Example::CreateCircle();
+}
+
+EXAMPLE_API int EXAMPLE_API_CONVENTION example_get_major_version()
+{
+    return AutoGen_Internal_DownCast_ExampleGetMajorVersionImpl();
+}
+
+EXAMPLE_API int EXAMPLE_API_CONVENTION example_get_minor_version()
+{
+    return AutoGen_Internal_DownCast_ExampleGetMinorVersionImpl();
+}
+
+EXAMPLE_API int EXAMPLE_API_CONVENTION example_get_patch_version()
+{
+    return AutoGen_Internal_DownCast_ExampleGetPatchVersionImpl();
 }
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_i_shape_show(void* object_pointer)

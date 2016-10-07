@@ -67,6 +67,10 @@
     #error "Unknown platform"
 #endif
 
+#define CIRCULAR_MAJOR_VERSION 1
+#define CIRCULAR_MINOR_VERSION 0
+#define CIRCULAR_PATCH_VERSION 0
+
 #ifdef __cplusplus
     #ifdef _MSC_VER
         #if _MSC_VER >= 1900
@@ -93,6 +97,9 @@
 
 #ifndef CIRCULAR_CAPI_USE_DYNAMIC_LOADER
     
+    CIRCULAR_API int CIRCULAR_API_CONVENTION circular_get_major_version();
+    CIRCULAR_API int CIRCULAR_API_CONVENTION circular_get_minor_version();
+    CIRCULAR_API int CIRCULAR_API_CONVENTION circular_get_patch_version();
     CIRCULAR_API void* CIRCULAR_API_CONVENTION circular_class_a_default();
     CIRCULAR_API void CIRCULAR_API_CONVENTION circular_class_a_set_b(void* object_pointer, void* value);
     CIRCULAR_API void* CIRCULAR_API_CONVENTION circular_class_a_get_b(void* object_pointer);
@@ -102,8 +109,40 @@
     CIRCULAR_API void* CIRCULAR_API_CONVENTION circular_class_b_get_a(void* object_pointer);
     CIRCULAR_API void CIRCULAR_API_CONVENTION circular_class_b_delete(void* object_pointer);
     
+    #ifdef __cplusplus
+    
+    #include <stdexcept>
+    #include <sstream>
+    
+    namespace Circular
+    {
+        class Initialization
+        {
+        public:
+            Initialization()
+            {
+                const int major_version = circular_get_major_version();
+                const int minor_version = circular_get_minor_version();
+                const int patch_version = circular_get_patch_version();
+                if (major_version != CIRCULAR_MAJOR_VERSION || minor_version != CIRCULAR_MINOR_VERSION || patch_version != CIRCULAR_PATCH_VERSION)
+                {
+                    std::stringstream error_message;
+                    error_message << "Incorrect version of library. ";
+                    error_message << "Expected version is " << CIRCULAR_MAJOR_VERSION << "." << CIRCULAR_MINOR_VERSION << "." << CIRCULAR_PATCH_VERSION << ". ";
+                    error_message << "Found version is " << major_version << "." << minor_version << "." << patch_version << ".";
+                    throw std::runtime_error(error_message.str());
+                }
+            }
+        };
+    }
+    
+    #endif /* __cplusplus */
+    
 #else /* CIRCULAR_CAPI_USE_DYNAMIC_LOADER */
     
+    typedef int (CIRCULAR_API_CONVENTION *circular_get_major_version_function_type)();
+    typedef int (CIRCULAR_API_CONVENTION *circular_get_minor_version_function_type)();
+    typedef int (CIRCULAR_API_CONVENTION *circular_get_patch_version_function_type)();
     typedef void* (CIRCULAR_API_CONVENTION *circular_class_a_default_function_type)();
     typedef void (CIRCULAR_API_CONVENTION *circular_class_a_set_b_function_type)(void* object_pointer, void* value);
     typedef void* (CIRCULAR_API_CONVENTION *circular_class_a_get_b_function_type)(void* object_pointer);
@@ -115,6 +154,9 @@
     
     #ifdef CIRCULAR_CAPI_DEFINE_FUNCTION_POINTERS
         
+        extern circular_get_major_version_function_type circular_get_major_version = 0;
+        extern circular_get_minor_version_function_type circular_get_minor_version = 0;
+        extern circular_get_patch_version_function_type circular_get_patch_version = 0;
         extern circular_class_a_default_function_type circular_class_a_default = 0;
         extern circular_class_a_set_b_function_type circular_class_a_set_b = 0;
         extern circular_class_a_get_b_function_type circular_class_a_get_b = 0;
@@ -126,6 +168,9 @@
         
     #else /* CIRCULAR_CAPI_DEFINE_FUNCTION_POINTERS */
         
+        extern circular_get_major_version_function_type circular_get_major_version;
+        extern circular_get_minor_version_function_type circular_get_minor_version;
+        extern circular_get_patch_version_function_type circular_get_patch_version;
         extern circular_class_a_default_function_type circular_class_a_default;
         extern circular_class_a_set_b_function_type circular_class_a_set_b;
         extern circular_class_a_get_b_function_type circular_class_a_get_b;
@@ -188,6 +233,9 @@
                     error_message << "Can't load shared library " << shared_library_name;
                     throw std::runtime_error(error_message.str());
                 }
+                load_function<circular_get_major_version_function_type>(circular_get_major_version, "circular_get_major_version");
+                load_function<circular_get_minor_version_function_type>(circular_get_minor_version, "circular_get_minor_version");
+                load_function<circular_get_patch_version_function_type>(circular_get_patch_version, "circular_get_patch_version");
                 load_function<circular_class_a_default_function_type>(circular_class_a_default, "circular_class_a_default");
                 load_function<circular_class_a_set_b_function_type>(circular_class_a_set_b, "circular_class_a_set_b");
                 load_function<circular_class_a_get_b_function_type>(circular_class_a_get_b, "circular_class_a_get_b");
@@ -196,6 +244,17 @@
                 load_function<circular_class_b_set_a_function_type>(circular_class_b_set_a, "circular_class_b_set_a");
                 load_function<circular_class_b_get_a_function_type>(circular_class_b_get_a, "circular_class_b_get_a");
                 load_function<circular_class_b_delete_function_type>(circular_class_b_delete, "circular_class_b_delete");
+                const int major_version = circular_get_major_version();
+                const int minor_version = circular_get_minor_version();
+                const int patch_version = circular_get_patch_version();
+                if (major_version != CIRCULAR_MAJOR_VERSION || minor_version != CIRCULAR_MINOR_VERSION || patch_version != CIRCULAR_PATCH_VERSION)
+                {
+                    std::stringstream error_message;
+                    error_message << "Incorrect version of " << shared_library_name << " library. ";
+                    error_message << "Expected version is " << CIRCULAR_MAJOR_VERSION << "." << CIRCULAR_MINOR_VERSION << "." << CIRCULAR_PATCH_VERSION << ". ";
+                    error_message << "Found version is " << major_version << "." << minor_version << "." << patch_version << ".";
+                    throw std::runtime_error(error_message.str());
+                }
             }
             
             Initialization();
@@ -215,6 +274,9 @@
                 #else /* _WIN32 */
                     dlclose(handle);
                 #endif /* _WIN32 */
+                circular_get_major_version = 0;
+                circular_get_minor_version = 0;
+                circular_get_patch_version = 0;
                 circular_class_a_default = 0;
                 circular_class_a_set_b = 0;
                 circular_class_a_get_b = 0;

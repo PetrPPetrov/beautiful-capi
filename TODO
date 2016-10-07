@@ -1,6 +1,6 @@
 *) place down_cast function to target type namespace
-*) noexcept methods if target language supports C++ 11
 *) add runtime check for binary compatibility
+*) noexcept methods if target language supports C++ 11
 *) add "copy" custom function, external helper function or "class member method"
 *) add "create" custom function, external helper function for creation of new object instances
 *) flat type maps

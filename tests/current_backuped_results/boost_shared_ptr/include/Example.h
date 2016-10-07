@@ -31,6 +31,26 @@
 #include "ExampleFwd.h"
 #include "Example/PrinterSharedPtr.h"
 
+#ifdef __cplusplus
+
+namespace Example {
+
+inline int GetMajorVersion()
+{
+    return example_get_major_version();
+}
+inline int GetMinorVersion()
+{
+    return example_get_minor_version();
+}
+inline int GetPatchVersion()
+{
+    return example_get_patch_version();
+}
+
+}
+
+#endif /* __cplusplus */
 
 #endif /* EXAMPLE_INCLUDED */
 

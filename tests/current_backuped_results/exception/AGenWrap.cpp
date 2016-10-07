@@ -88,6 +88,21 @@ enum beautiful_capi_exception_exception_code_t
     #error "Unknown platform"
 #endif
 
+int AutoGen_Internal_Exception_ExampleGetMajorVersionImpl()
+{
+    return 1;
+}
+
+int AutoGen_Internal_Exception_ExampleGetMinorVersionImpl()
+{
+    return 0;
+}
+
+int AutoGen_Internal_Exception_ExampleGetPatchVersionImpl()
+{
+    return 0;
+}
+
 #ifdef _WIN32
     #ifdef __GNUC__
         #define EXCEPTION_API extern "C" __attribute__ ((dllexport))
@@ -121,6 +136,36 @@ enum beautiful_capi_exception_exception_code_t
 #else
     #error "Unknown platform"
 #endif
+
+int AutoGen_Internal_Exception_ExceptionGetMajorVersionImpl()
+{
+    return 1;
+}
+
+int AutoGen_Internal_Exception_ExceptionGetMinorVersionImpl()
+{
+    return 0;
+}
+
+int AutoGen_Internal_Exception_ExceptionGetPatchVersionImpl()
+{
+    return 0;
+}
+
+EXCEPTION_API int EXCEPTION_API_CONVENTION example_get_major_version()
+{
+    return AutoGen_Internal_Exception_ExampleGetMajorVersionImpl();
+}
+
+EXCEPTION_API int EXCEPTION_API_CONVENTION example_get_minor_version()
+{
+    return AutoGen_Internal_Exception_ExampleGetMinorVersionImpl();
+}
+
+EXCEPTION_API int EXCEPTION_API_CONVENTION example_get_patch_version()
+{
+    return AutoGen_Internal_Exception_ExampleGetPatchVersionImpl();
+}
 
 EXCEPTION_API void* EXCEPTION_API_CONVENTION example_printer_new(beautiful_capi_exception_exception_info_t* exception_info)
 {
@@ -968,6 +1013,21 @@ EXCEPTION_API void EXCEPTION_API_CONVENTION example_scanner_add_ref(void* object
 EXCEPTION_API void EXCEPTION_API_CONVENTION example_scanner_release(void* object_pointer)
 {
     intrusive_ptr_release(static_cast<Example::ScannerImpl*>(object_pointer));
+}
+
+EXCEPTION_API int EXCEPTION_API_CONVENTION exception_get_major_version()
+{
+    return AutoGen_Internal_Exception_ExceptionGetMajorVersionImpl();
+}
+
+EXCEPTION_API int EXCEPTION_API_CONVENTION exception_get_minor_version()
+{
+    return AutoGen_Internal_Exception_ExceptionGetMinorVersionImpl();
+}
+
+EXCEPTION_API int EXCEPTION_API_CONVENTION exception_get_patch_version()
+{
+    return AutoGen_Internal_Exception_ExceptionGetPatchVersionImpl();
 }
 
 EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_generic_new(beautiful_capi_exception_exception_info_t* exception_info)
