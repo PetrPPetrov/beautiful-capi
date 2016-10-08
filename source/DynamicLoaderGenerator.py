@@ -80,7 +80,7 @@ class DynamicLoaderGenerator(object):
         out.put_line('handle = dlopen(shared_library_name, RTLD_NOW);')
 
     def __generate_secure_load(self, out: FileGenerator):
-        out.put_line('load_function<{0}_function_type>({0}, {0}_str);'.format(self.cur_c_function_name))
+        out.put_line('{0}_load_function_call'.format(self.cur_c_function_name))
 
     def __generate_open_load(self, out: FileGenerator):
         out.put_line('load_function<{0}_function_type>({0}, "{0}");'.format(self.cur_c_function_name))
@@ -99,7 +99,7 @@ class DynamicLoaderGenerator(object):
                 out.put_line('throw std::runtime_error(error_message.str());')
             for c_function in self.namespace_info.c_functions:
                 self.cur_c_function_name = c_function.name
-                if_def_then_else(out, "{0}_str".format(c_function.name),
+                if_def_then_else(out, "{0}_load_function_call".format(c_function.name),
                                  self.__generate_secure_load,
                                  self.__generate_open_load)
             generate_check_version(out, self.namespace_info.namespace_name_array[0], 'shared_library_name')
@@ -134,6 +134,12 @@ class DynamicLoaderGenerator(object):
     def __generate_destructor_posix(out: FileGenerator):
         out.put_line('dlclose(handle);')
 
+    def __generate_secure_zero(self, out: FileGenerator):
+        out.put_line('{0}_zero_function_pointer'.format(self.cur_c_function_name))
+
+    def __generate_open_zero(self, out: FileGenerator):
+        out.put_line('{0} = 0;'.format(self.cur_c_function_name))
+
     def __generate_destructor(self, out: FileGenerator):
         out.put_line('~Initialization()')
         with IndentScope(out):
@@ -141,7 +147,10 @@ class DynamicLoaderGenerator(object):
                              DynamicLoaderGenerator.__generate_destructor_windows,
                              DynamicLoaderGenerator.__generate_destructor_posix)
             for c_function in self.namespace_info.c_functions:
-                out.put_line('{0} = 0;'.format(c_function.name))
+                self.cur_c_function_name = c_function.name
+                if_def_then_else(out, '{0}_zero_function_pointer'.format(c_function.name),
+                                 self.__generate_secure_zero,
+                                 self.__generate_open_zero)
 
     def __generate_body(self, out: FileGenerator):
         out.put_line('class Initialization')

@@ -174,8 +174,17 @@ class CapiGenerator(object):
     def __generate_function_pointers(self, out: FileGenerator, define: bool):
         out.put_line('')
         for c_function in self.cur_namespace_info.c_functions:
-            out.put_line('extern {name}_function_type {name}{define_to_null_str};'.format(
-                name=c_function.name, define_to_null_str=' = 0' if define else ''))
+            if define:
+                out.put_line('#ifdef {name}_define_function_pointer_var'.format(name=c_function.name))
+                with Indent(out):
+                    out.put_line('{name}_define_function_pointer_var'.format(name=c_function.name))
+                out.put_line('#else')
+                with Indent(out):
+                    out.put_line('extern {name}_function_type {name} = 0;'.format(
+                        name=c_function.name, define_to_null_str=' = 0' if define else ''))
+                out.put_line('#endif')
+            else:
+                out.put_line('extern {name}_function_type {name};'.format(name=c_function.name))
         out.put_line('')
 
     def __generate_function_pointer_definitions(self, out: FileGenerator):
@@ -281,13 +290,45 @@ class CapiGenerator(object):
                     keys.put_begin_cpp_comments(self.params)
                     namespace_2_keys.update({namespace_name: keys})
             for namespace_name, namespace_info in self.sorted_by_ns.items():
-                for opened_name, closed_name in self.api_keys[namespace_name].items():
-                    namespace_2_keys[namespace_name].put_line('#define {opened_name} {closed_name}'.format(
-                        opened_name=opened_name, closed_name=closed_name
-                    ))
-                    namespace_2_keys[namespace_name].put_line('#define {opened_name}_str "{closed_name}"'.format(
-                        opened_name=opened_name, closed_name=closed_name
-                    ))
+                self.__generate_keys_for_namespace(namespace_2_keys[namespace_name], namespace_name)
+
+    def __generate_keys_for_namespace(self, out: FileGenerator, namespace_name):
+        sorted_by_open_name = OrderedDict(sorted(self.api_keys[namespace_name].items()))
+        key_order_list = [
+            (opened_name, closed_name) for opened_name, closed_name in sorted_by_open_name.items()]
+        random.shuffle(key_order_list)
+        define_order_list = [opened_name for opened_name, closed_name in key_order_list]
+        random.shuffle(define_order_list)
+        define_order_list_to_substitute = copy.deepcopy(define_order_list)
+        random.shuffle(define_order_list_to_substitute)
+        load_order_list = copy.deepcopy(define_order_list_to_substitute)
+        random.shuffle(load_order_list)
+        load_order_list_to_substitute = copy.deepcopy(load_order_list)
+        random.shuffle(load_order_list_to_substitute)
+        zero_order_list = copy.deepcopy(load_order_list_to_substitute)
+        random.shuffle(zero_order_list)
+        zero_order_list_to_substitute = copy.deepcopy(zero_order_list)
+        random.shuffle(zero_order_list_to_substitute)
+        for opened_name, closed_name in key_order_list:
+            out.put_line('#define {opened_name} {closed_name}'.format(
+                opened_name=opened_name, closed_name=closed_name
+            ))
+            out.put_line('#define {opened_name}_closed_name "{closed_name}"'.format(
+                opened_name=opened_name, closed_name=closed_name
+            ))
+        define_order = zip(define_order_list, define_order_list_to_substitute)
+        for opened_name, opened_name_to_substitute in define_order:
+            out.put_line('#define {0}_define_function_pointer_var extern {1}_function_type {1} = 0;'.format(
+                opened_name, opened_name_to_substitute
+            ))
+        load_order = zip(load_order_list, load_order_list_to_substitute)
+        for opened_name, opened_name_to_substitute in load_order:
+            out.put_line(
+                '#define {0}_load_function_call load_function<{1}_function_type>({1}, {1}_closed_name);'.format(
+                    opened_name, opened_name_to_substitute))
+        zero_order = zip(zero_order_list, zero_order_list_to_substitute)
+        for opened_name, opened_name_to_substitute in zero_order:
+            out.put_line('#define {0}_zero_function_pointer {1} = 0;'.format(opened_name, opened_name_to_substitute))
 
     def __generate_capi(self, file_cache):
         for namespace_name, namespace_info in self.sorted_by_ns.items():
