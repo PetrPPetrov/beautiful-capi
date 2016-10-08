@@ -313,37 +313,161 @@
                     error_message << "Can't load shared library " << shared_library_name;
                     throw std::runtime_error(error_message.str());
                 }
-                load_function<example_create_triangle_function_type>(example_create_triangle, "example_create_triangle");
-                load_function<example_create_square_function_type>(example_create_square, "example_create_square");
-                load_function<example_create_circle_function_type>(example_create_circle, "example_create_circle");
-                load_function<example_get_major_version_function_type>(example_get_major_version, "example_get_major_version");
-                load_function<example_get_minor_version_function_type>(example_get_minor_version, "example_get_minor_version");
-                load_function<example_get_patch_version_function_type>(example_get_patch_version, "example_get_patch_version");
-                load_function<example_i_shape_show_function_type>(example_i_shape_show, "example_i_shape_show");
-                load_function<example_i_shape_add_ref_function_type>(example_i_shape_add_ref, "example_i_shape_add_ref");
-                load_function<example_i_shape_release_function_type>(example_i_shape_release, "example_i_shape_release");
-                load_function<example_i_polygon_get_points_count_function_type>(example_i_polygon_get_points_count, "example_i_polygon_get_points_count");
-                load_function<example_i_polygon_add_ref_function_type>(example_i_polygon_add_ref, "example_i_polygon_add_ref");
-                load_function<example_i_polygon_release_function_type>(example_i_polygon_release, "example_i_polygon_release");
-                load_function<example_i_polygon_cast_to_base_function_type>(example_i_polygon_cast_to_base, "example_i_polygon_cast_to_base");
-                load_function<example_i_shape_cast_to_example_i_polygon_function_type>(example_i_shape_cast_to_example_i_polygon, "example_i_shape_cast_to_example_i_polygon");
-                load_function<example_i_triangle_set_points_function_type>(example_i_triangle_set_points, "example_i_triangle_set_points");
-                load_function<example_i_triangle_add_ref_function_type>(example_i_triangle_add_ref, "example_i_triangle_add_ref");
-                load_function<example_i_triangle_release_function_type>(example_i_triangle_release, "example_i_triangle_release");
-                load_function<example_i_triangle_cast_to_base_function_type>(example_i_triangle_cast_to_base, "example_i_triangle_cast_to_base");
-                load_function<example_i_shape_cast_to_example_i_triangle_function_type>(example_i_shape_cast_to_example_i_triangle, "example_i_shape_cast_to_example_i_triangle");
-                load_function<example_i_polygon_cast_to_example_i_triangle_function_type>(example_i_polygon_cast_to_example_i_triangle, "example_i_polygon_cast_to_example_i_triangle");
-                load_function<example_i_square_set_size_function_type>(example_i_square_set_size, "example_i_square_set_size");
-                load_function<example_i_square_add_ref_function_type>(example_i_square_add_ref, "example_i_square_add_ref");
-                load_function<example_i_square_release_function_type>(example_i_square_release, "example_i_square_release");
-                load_function<example_i_square_cast_to_base_function_type>(example_i_square_cast_to_base, "example_i_square_cast_to_base");
-                load_function<example_i_shape_cast_to_example_i_square_function_type>(example_i_shape_cast_to_example_i_square, "example_i_shape_cast_to_example_i_square");
-                load_function<example_i_polygon_cast_to_example_i_square_function_type>(example_i_polygon_cast_to_example_i_square, "example_i_polygon_cast_to_example_i_square");
-                load_function<example_i_circle_set_radius_function_type>(example_i_circle_set_radius, "example_i_circle_set_radius");
-                load_function<example_i_circle_add_ref_function_type>(example_i_circle_add_ref, "example_i_circle_add_ref");
-                load_function<example_i_circle_release_function_type>(example_i_circle_release, "example_i_circle_release");
-                load_function<example_i_circle_cast_to_base_function_type>(example_i_circle_cast_to_base, "example_i_circle_cast_to_base");
-                load_function<example_i_shape_cast_to_example_i_circle_function_type>(example_i_shape_cast_to_example_i_circle, "example_i_shape_cast_to_example_i_circle");
+                #ifdef example_create_triangle_str
+                    load_function<example_create_triangle_function_type>(example_create_triangle, example_create_triangle_str);
+                #else /* example_create_triangle_str */
+                    load_function<example_create_triangle_function_type>(example_create_triangle, "example_create_triangle");
+                #endif /* example_create_triangle_str */
+                #ifdef example_create_square_str
+                    load_function<example_create_square_function_type>(example_create_square, example_create_square_str);
+                #else /* example_create_square_str */
+                    load_function<example_create_square_function_type>(example_create_square, "example_create_square");
+                #endif /* example_create_square_str */
+                #ifdef example_create_circle_str
+                    load_function<example_create_circle_function_type>(example_create_circle, example_create_circle_str);
+                #else /* example_create_circle_str */
+                    load_function<example_create_circle_function_type>(example_create_circle, "example_create_circle");
+                #endif /* example_create_circle_str */
+                #ifdef example_get_major_version_str
+                    load_function<example_get_major_version_function_type>(example_get_major_version, example_get_major_version_str);
+                #else /* example_get_major_version_str */
+                    load_function<example_get_major_version_function_type>(example_get_major_version, "example_get_major_version");
+                #endif /* example_get_major_version_str */
+                #ifdef example_get_minor_version_str
+                    load_function<example_get_minor_version_function_type>(example_get_minor_version, example_get_minor_version_str);
+                #else /* example_get_minor_version_str */
+                    load_function<example_get_minor_version_function_type>(example_get_minor_version, "example_get_minor_version");
+                #endif /* example_get_minor_version_str */
+                #ifdef example_get_patch_version_str
+                    load_function<example_get_patch_version_function_type>(example_get_patch_version, example_get_patch_version_str);
+                #else /* example_get_patch_version_str */
+                    load_function<example_get_patch_version_function_type>(example_get_patch_version, "example_get_patch_version");
+                #endif /* example_get_patch_version_str */
+                #ifdef example_i_shape_show_str
+                    load_function<example_i_shape_show_function_type>(example_i_shape_show, example_i_shape_show_str);
+                #else /* example_i_shape_show_str */
+                    load_function<example_i_shape_show_function_type>(example_i_shape_show, "example_i_shape_show");
+                #endif /* example_i_shape_show_str */
+                #ifdef example_i_shape_add_ref_str
+                    load_function<example_i_shape_add_ref_function_type>(example_i_shape_add_ref, example_i_shape_add_ref_str);
+                #else /* example_i_shape_add_ref_str */
+                    load_function<example_i_shape_add_ref_function_type>(example_i_shape_add_ref, "example_i_shape_add_ref");
+                #endif /* example_i_shape_add_ref_str */
+                #ifdef example_i_shape_release_str
+                    load_function<example_i_shape_release_function_type>(example_i_shape_release, example_i_shape_release_str);
+                #else /* example_i_shape_release_str */
+                    load_function<example_i_shape_release_function_type>(example_i_shape_release, "example_i_shape_release");
+                #endif /* example_i_shape_release_str */
+                #ifdef example_i_polygon_get_points_count_str
+                    load_function<example_i_polygon_get_points_count_function_type>(example_i_polygon_get_points_count, example_i_polygon_get_points_count_str);
+                #else /* example_i_polygon_get_points_count_str */
+                    load_function<example_i_polygon_get_points_count_function_type>(example_i_polygon_get_points_count, "example_i_polygon_get_points_count");
+                #endif /* example_i_polygon_get_points_count_str */
+                #ifdef example_i_polygon_add_ref_str
+                    load_function<example_i_polygon_add_ref_function_type>(example_i_polygon_add_ref, example_i_polygon_add_ref_str);
+                #else /* example_i_polygon_add_ref_str */
+                    load_function<example_i_polygon_add_ref_function_type>(example_i_polygon_add_ref, "example_i_polygon_add_ref");
+                #endif /* example_i_polygon_add_ref_str */
+                #ifdef example_i_polygon_release_str
+                    load_function<example_i_polygon_release_function_type>(example_i_polygon_release, example_i_polygon_release_str);
+                #else /* example_i_polygon_release_str */
+                    load_function<example_i_polygon_release_function_type>(example_i_polygon_release, "example_i_polygon_release");
+                #endif /* example_i_polygon_release_str */
+                #ifdef example_i_polygon_cast_to_base_str
+                    load_function<example_i_polygon_cast_to_base_function_type>(example_i_polygon_cast_to_base, example_i_polygon_cast_to_base_str);
+                #else /* example_i_polygon_cast_to_base_str */
+                    load_function<example_i_polygon_cast_to_base_function_type>(example_i_polygon_cast_to_base, "example_i_polygon_cast_to_base");
+                #endif /* example_i_polygon_cast_to_base_str */
+                #ifdef example_i_shape_cast_to_example_i_polygon_str
+                    load_function<example_i_shape_cast_to_example_i_polygon_function_type>(example_i_shape_cast_to_example_i_polygon, example_i_shape_cast_to_example_i_polygon_str);
+                #else /* example_i_shape_cast_to_example_i_polygon_str */
+                    load_function<example_i_shape_cast_to_example_i_polygon_function_type>(example_i_shape_cast_to_example_i_polygon, "example_i_shape_cast_to_example_i_polygon");
+                #endif /* example_i_shape_cast_to_example_i_polygon_str */
+                #ifdef example_i_triangle_set_points_str
+                    load_function<example_i_triangle_set_points_function_type>(example_i_triangle_set_points, example_i_triangle_set_points_str);
+                #else /* example_i_triangle_set_points_str */
+                    load_function<example_i_triangle_set_points_function_type>(example_i_triangle_set_points, "example_i_triangle_set_points");
+                #endif /* example_i_triangle_set_points_str */
+                #ifdef example_i_triangle_add_ref_str
+                    load_function<example_i_triangle_add_ref_function_type>(example_i_triangle_add_ref, example_i_triangle_add_ref_str);
+                #else /* example_i_triangle_add_ref_str */
+                    load_function<example_i_triangle_add_ref_function_type>(example_i_triangle_add_ref, "example_i_triangle_add_ref");
+                #endif /* example_i_triangle_add_ref_str */
+                #ifdef example_i_triangle_release_str
+                    load_function<example_i_triangle_release_function_type>(example_i_triangle_release, example_i_triangle_release_str);
+                #else /* example_i_triangle_release_str */
+                    load_function<example_i_triangle_release_function_type>(example_i_triangle_release, "example_i_triangle_release");
+                #endif /* example_i_triangle_release_str */
+                #ifdef example_i_triangle_cast_to_base_str
+                    load_function<example_i_triangle_cast_to_base_function_type>(example_i_triangle_cast_to_base, example_i_triangle_cast_to_base_str);
+                #else /* example_i_triangle_cast_to_base_str */
+                    load_function<example_i_triangle_cast_to_base_function_type>(example_i_triangle_cast_to_base, "example_i_triangle_cast_to_base");
+                #endif /* example_i_triangle_cast_to_base_str */
+                #ifdef example_i_shape_cast_to_example_i_triangle_str
+                    load_function<example_i_shape_cast_to_example_i_triangle_function_type>(example_i_shape_cast_to_example_i_triangle, example_i_shape_cast_to_example_i_triangle_str);
+                #else /* example_i_shape_cast_to_example_i_triangle_str */
+                    load_function<example_i_shape_cast_to_example_i_triangle_function_type>(example_i_shape_cast_to_example_i_triangle, "example_i_shape_cast_to_example_i_triangle");
+                #endif /* example_i_shape_cast_to_example_i_triangle_str */
+                #ifdef example_i_polygon_cast_to_example_i_triangle_str
+                    load_function<example_i_polygon_cast_to_example_i_triangle_function_type>(example_i_polygon_cast_to_example_i_triangle, example_i_polygon_cast_to_example_i_triangle_str);
+                #else /* example_i_polygon_cast_to_example_i_triangle_str */
+                    load_function<example_i_polygon_cast_to_example_i_triangle_function_type>(example_i_polygon_cast_to_example_i_triangle, "example_i_polygon_cast_to_example_i_triangle");
+                #endif /* example_i_polygon_cast_to_example_i_triangle_str */
+                #ifdef example_i_square_set_size_str
+                    load_function<example_i_square_set_size_function_type>(example_i_square_set_size, example_i_square_set_size_str);
+                #else /* example_i_square_set_size_str */
+                    load_function<example_i_square_set_size_function_type>(example_i_square_set_size, "example_i_square_set_size");
+                #endif /* example_i_square_set_size_str */
+                #ifdef example_i_square_add_ref_str
+                    load_function<example_i_square_add_ref_function_type>(example_i_square_add_ref, example_i_square_add_ref_str);
+                #else /* example_i_square_add_ref_str */
+                    load_function<example_i_square_add_ref_function_type>(example_i_square_add_ref, "example_i_square_add_ref");
+                #endif /* example_i_square_add_ref_str */
+                #ifdef example_i_square_release_str
+                    load_function<example_i_square_release_function_type>(example_i_square_release, example_i_square_release_str);
+                #else /* example_i_square_release_str */
+                    load_function<example_i_square_release_function_type>(example_i_square_release, "example_i_square_release");
+                #endif /* example_i_square_release_str */
+                #ifdef example_i_square_cast_to_base_str
+                    load_function<example_i_square_cast_to_base_function_type>(example_i_square_cast_to_base, example_i_square_cast_to_base_str);
+                #else /* example_i_square_cast_to_base_str */
+                    load_function<example_i_square_cast_to_base_function_type>(example_i_square_cast_to_base, "example_i_square_cast_to_base");
+                #endif /* example_i_square_cast_to_base_str */
+                #ifdef example_i_shape_cast_to_example_i_square_str
+                    load_function<example_i_shape_cast_to_example_i_square_function_type>(example_i_shape_cast_to_example_i_square, example_i_shape_cast_to_example_i_square_str);
+                #else /* example_i_shape_cast_to_example_i_square_str */
+                    load_function<example_i_shape_cast_to_example_i_square_function_type>(example_i_shape_cast_to_example_i_square, "example_i_shape_cast_to_example_i_square");
+                #endif /* example_i_shape_cast_to_example_i_square_str */
+                #ifdef example_i_polygon_cast_to_example_i_square_str
+                    load_function<example_i_polygon_cast_to_example_i_square_function_type>(example_i_polygon_cast_to_example_i_square, example_i_polygon_cast_to_example_i_square_str);
+                #else /* example_i_polygon_cast_to_example_i_square_str */
+                    load_function<example_i_polygon_cast_to_example_i_square_function_type>(example_i_polygon_cast_to_example_i_square, "example_i_polygon_cast_to_example_i_square");
+                #endif /* example_i_polygon_cast_to_example_i_square_str */
+                #ifdef example_i_circle_set_radius_str
+                    load_function<example_i_circle_set_radius_function_type>(example_i_circle_set_radius, example_i_circle_set_radius_str);
+                #else /* example_i_circle_set_radius_str */
+                    load_function<example_i_circle_set_radius_function_type>(example_i_circle_set_radius, "example_i_circle_set_radius");
+                #endif /* example_i_circle_set_radius_str */
+                #ifdef example_i_circle_add_ref_str
+                    load_function<example_i_circle_add_ref_function_type>(example_i_circle_add_ref, example_i_circle_add_ref_str);
+                #else /* example_i_circle_add_ref_str */
+                    load_function<example_i_circle_add_ref_function_type>(example_i_circle_add_ref, "example_i_circle_add_ref");
+                #endif /* example_i_circle_add_ref_str */
+                #ifdef example_i_circle_release_str
+                    load_function<example_i_circle_release_function_type>(example_i_circle_release, example_i_circle_release_str);
+                #else /* example_i_circle_release_str */
+                    load_function<example_i_circle_release_function_type>(example_i_circle_release, "example_i_circle_release");
+                #endif /* example_i_circle_release_str */
+                #ifdef example_i_circle_cast_to_base_str
+                    load_function<example_i_circle_cast_to_base_function_type>(example_i_circle_cast_to_base, example_i_circle_cast_to_base_str);
+                #else /* example_i_circle_cast_to_base_str */
+                    load_function<example_i_circle_cast_to_base_function_type>(example_i_circle_cast_to_base, "example_i_circle_cast_to_base");
+                #endif /* example_i_circle_cast_to_base_str */
+                #ifdef example_i_shape_cast_to_example_i_circle_str
+                    load_function<example_i_shape_cast_to_example_i_circle_function_type>(example_i_shape_cast_to_example_i_circle, example_i_shape_cast_to_example_i_circle_str);
+                #else /* example_i_shape_cast_to_example_i_circle_str */
+                    load_function<example_i_shape_cast_to_example_i_circle_function_type>(example_i_shape_cast_to_example_i_circle, "example_i_shape_cast_to_example_i_circle");
+                #endif /* example_i_shape_cast_to_example_i_circle_str */
                 const int major_version = example_get_major_version();
                 const int minor_version = example_get_minor_version();
                 const int patch_version = example_get_patch_version();

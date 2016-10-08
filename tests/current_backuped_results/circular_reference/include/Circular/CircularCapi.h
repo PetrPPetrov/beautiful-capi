@@ -233,17 +233,61 @@
                     error_message << "Can't load shared library " << shared_library_name;
                     throw std::runtime_error(error_message.str());
                 }
-                load_function<circular_get_major_version_function_type>(circular_get_major_version, "circular_get_major_version");
-                load_function<circular_get_minor_version_function_type>(circular_get_minor_version, "circular_get_minor_version");
-                load_function<circular_get_patch_version_function_type>(circular_get_patch_version, "circular_get_patch_version");
-                load_function<circular_class_a_default_function_type>(circular_class_a_default, "circular_class_a_default");
-                load_function<circular_class_a_set_b_function_type>(circular_class_a_set_b, "circular_class_a_set_b");
-                load_function<circular_class_a_get_b_function_type>(circular_class_a_get_b, "circular_class_a_get_b");
-                load_function<circular_class_a_delete_function_type>(circular_class_a_delete, "circular_class_a_delete");
-                load_function<circular_class_b_default_function_type>(circular_class_b_default, "circular_class_b_default");
-                load_function<circular_class_b_set_a_function_type>(circular_class_b_set_a, "circular_class_b_set_a");
-                load_function<circular_class_b_get_a_function_type>(circular_class_b_get_a, "circular_class_b_get_a");
-                load_function<circular_class_b_delete_function_type>(circular_class_b_delete, "circular_class_b_delete");
+                #ifdef circular_get_major_version_str
+                    load_function<circular_get_major_version_function_type>(circular_get_major_version, circular_get_major_version_str);
+                #else /* circular_get_major_version_str */
+                    load_function<circular_get_major_version_function_type>(circular_get_major_version, "circular_get_major_version");
+                #endif /* circular_get_major_version_str */
+                #ifdef circular_get_minor_version_str
+                    load_function<circular_get_minor_version_function_type>(circular_get_minor_version, circular_get_minor_version_str);
+                #else /* circular_get_minor_version_str */
+                    load_function<circular_get_minor_version_function_type>(circular_get_minor_version, "circular_get_minor_version");
+                #endif /* circular_get_minor_version_str */
+                #ifdef circular_get_patch_version_str
+                    load_function<circular_get_patch_version_function_type>(circular_get_patch_version, circular_get_patch_version_str);
+                #else /* circular_get_patch_version_str */
+                    load_function<circular_get_patch_version_function_type>(circular_get_patch_version, "circular_get_patch_version");
+                #endif /* circular_get_patch_version_str */
+                #ifdef circular_class_a_default_str
+                    load_function<circular_class_a_default_function_type>(circular_class_a_default, circular_class_a_default_str);
+                #else /* circular_class_a_default_str */
+                    load_function<circular_class_a_default_function_type>(circular_class_a_default, "circular_class_a_default");
+                #endif /* circular_class_a_default_str */
+                #ifdef circular_class_a_set_b_str
+                    load_function<circular_class_a_set_b_function_type>(circular_class_a_set_b, circular_class_a_set_b_str);
+                #else /* circular_class_a_set_b_str */
+                    load_function<circular_class_a_set_b_function_type>(circular_class_a_set_b, "circular_class_a_set_b");
+                #endif /* circular_class_a_set_b_str */
+                #ifdef circular_class_a_get_b_str
+                    load_function<circular_class_a_get_b_function_type>(circular_class_a_get_b, circular_class_a_get_b_str);
+                #else /* circular_class_a_get_b_str */
+                    load_function<circular_class_a_get_b_function_type>(circular_class_a_get_b, "circular_class_a_get_b");
+                #endif /* circular_class_a_get_b_str */
+                #ifdef circular_class_a_delete_str
+                    load_function<circular_class_a_delete_function_type>(circular_class_a_delete, circular_class_a_delete_str);
+                #else /* circular_class_a_delete_str */
+                    load_function<circular_class_a_delete_function_type>(circular_class_a_delete, "circular_class_a_delete");
+                #endif /* circular_class_a_delete_str */
+                #ifdef circular_class_b_default_str
+                    load_function<circular_class_b_default_function_type>(circular_class_b_default, circular_class_b_default_str);
+                #else /* circular_class_b_default_str */
+                    load_function<circular_class_b_default_function_type>(circular_class_b_default, "circular_class_b_default");
+                #endif /* circular_class_b_default_str */
+                #ifdef circular_class_b_set_a_str
+                    load_function<circular_class_b_set_a_function_type>(circular_class_b_set_a, circular_class_b_set_a_str);
+                #else /* circular_class_b_set_a_str */
+                    load_function<circular_class_b_set_a_function_type>(circular_class_b_set_a, "circular_class_b_set_a");
+                #endif /* circular_class_b_set_a_str */
+                #ifdef circular_class_b_get_a_str
+                    load_function<circular_class_b_get_a_function_type>(circular_class_b_get_a, circular_class_b_get_a_str);
+                #else /* circular_class_b_get_a_str */
+                    load_function<circular_class_b_get_a_function_type>(circular_class_b_get_a, "circular_class_b_get_a");
+                #endif /* circular_class_b_get_a_str */
+                #ifdef circular_class_b_delete_str
+                    load_function<circular_class_b_delete_function_type>(circular_class_b_delete, circular_class_b_delete_str);
+                #else /* circular_class_b_delete_str */
+                    load_function<circular_class_b_delete_function_type>(circular_class_b_delete, "circular_class_b_delete");
+                #endif /* circular_class_b_delete_str */
                 const int major_version = circular_get_major_version();
                 const int minor_version = circular_get_minor_version();
                 const int patch_version = circular_get_patch_version();

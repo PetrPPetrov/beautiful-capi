@@ -221,14 +221,46 @@
                     error_message << "Can't load shared library " << shared_library_name;
                     throw std::runtime_error(error_message.str());
                 }
-                load_function<sample_get_major_version_function_type>(sample_get_major_version, "sample_get_major_version");
-                load_function<sample_get_minor_version_function_type>(sample_get_minor_version, "sample_get_minor_version");
-                load_function<sample_get_patch_version_function_type>(sample_get_patch_version, "sample_get_patch_version");
-                load_function<sample_data_new_function_type>(sample_data_new, "sample_data_new");
-                load_function<sample_data_get_data_function_type>(sample_data_get_data, "sample_data_get_data");
-                load_function<sample_data_set_data_function_type>(sample_data_set_data, "sample_data_set_data");
-                load_function<sample_data_copy_function_type>(sample_data_copy, "sample_data_copy");
-                load_function<sample_data_delete_function_type>(sample_data_delete, "sample_data_delete");
+                #ifdef sample_get_major_version_str
+                    load_function<sample_get_major_version_function_type>(sample_get_major_version, sample_get_major_version_str);
+                #else /* sample_get_major_version_str */
+                    load_function<sample_get_major_version_function_type>(sample_get_major_version, "sample_get_major_version");
+                #endif /* sample_get_major_version_str */
+                #ifdef sample_get_minor_version_str
+                    load_function<sample_get_minor_version_function_type>(sample_get_minor_version, sample_get_minor_version_str);
+                #else /* sample_get_minor_version_str */
+                    load_function<sample_get_minor_version_function_type>(sample_get_minor_version, "sample_get_minor_version");
+                #endif /* sample_get_minor_version_str */
+                #ifdef sample_get_patch_version_str
+                    load_function<sample_get_patch_version_function_type>(sample_get_patch_version, sample_get_patch_version_str);
+                #else /* sample_get_patch_version_str */
+                    load_function<sample_get_patch_version_function_type>(sample_get_patch_version, "sample_get_patch_version");
+                #endif /* sample_get_patch_version_str */
+                #ifdef sample_data_new_str
+                    load_function<sample_data_new_function_type>(sample_data_new, sample_data_new_str);
+                #else /* sample_data_new_str */
+                    load_function<sample_data_new_function_type>(sample_data_new, "sample_data_new");
+                #endif /* sample_data_new_str */
+                #ifdef sample_data_get_data_str
+                    load_function<sample_data_get_data_function_type>(sample_data_get_data, sample_data_get_data_str);
+                #else /* sample_data_get_data_str */
+                    load_function<sample_data_get_data_function_type>(sample_data_get_data, "sample_data_get_data");
+                #endif /* sample_data_get_data_str */
+                #ifdef sample_data_set_data_str
+                    load_function<sample_data_set_data_function_type>(sample_data_set_data, sample_data_set_data_str);
+                #else /* sample_data_set_data_str */
+                    load_function<sample_data_set_data_function_type>(sample_data_set_data, "sample_data_set_data");
+                #endif /* sample_data_set_data_str */
+                #ifdef sample_data_copy_str
+                    load_function<sample_data_copy_function_type>(sample_data_copy, sample_data_copy_str);
+                #else /* sample_data_copy_str */
+                    load_function<sample_data_copy_function_type>(sample_data_copy, "sample_data_copy");
+                #endif /* sample_data_copy_str */
+                #ifdef sample_data_delete_str
+                    load_function<sample_data_delete_function_type>(sample_data_delete, sample_data_delete_str);
+                #else /* sample_data_delete_str */
+                    load_function<sample_data_delete_function_type>(sample_data_delete, "sample_data_delete");
+                #endif /* sample_data_delete_str */
                 const int major_version = sample_get_major_version();
                 const int minor_version = sample_get_minor_version();
                 const int patch_version = sample_get_patch_version();

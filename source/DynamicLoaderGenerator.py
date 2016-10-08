@@ -31,6 +31,7 @@ class DynamicLoaderGenerator(object):
         self.namespace_name = namespace_name
         self.namespace_info = namespace_info
         self.params = params
+        self.cur_c_function_name = None
 
     @staticmethod
     def __generate_windows_members(out: FileGenerator):
@@ -78,6 +79,12 @@ class DynamicLoaderGenerator(object):
     def __generate_load_module_posix(out: FileGenerator):
         out.put_line('handle = dlopen(shared_library_name, RTLD_NOW);')
 
+    def __generate_secure_load(self, out: FileGenerator):
+        out.put_line('load_function<{0}_function_type>({0}, {0}_str);'.format(self.cur_c_function_name))
+
+    def __generate_open_load(self, out: FileGenerator):
+        out.put_line('load_function<{0}_function_type>({0}, "{0}");'.format(self.cur_c_function_name))
+
     def __generate_load_module(self, out: FileGenerator):
         out.put_line('void load_module(const char* shared_library_name)')
         with IndentScope(out):
@@ -91,7 +98,10 @@ class DynamicLoaderGenerator(object):
                 out.put_line('error_message << "Can\'t load shared library " << shared_library_name;')
                 out.put_line('throw std::runtime_error(error_message.str());')
             for c_function in self.namespace_info.c_functions:
-                out.put_line('load_function<{0}_function_type>({0}, "{0}");'.format(c_function.name))
+                self.cur_c_function_name = c_function.name
+                if_def_then_else(out, "{0}_str".format(c_function.name),
+                                 self.__generate_secure_load,
+                                 self.__generate_open_load)
             generate_check_version(out, self.namespace_info.namespace_name_array[0], 'shared_library_name')
         out.put_line('')
 

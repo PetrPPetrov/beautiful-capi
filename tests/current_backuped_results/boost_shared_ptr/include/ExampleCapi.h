@@ -217,13 +217,41 @@
                     error_message << "Can't load shared library " << shared_library_name;
                     throw std::runtime_error(error_message.str());
                 }
-                load_function<example_get_major_version_function_type>(example_get_major_version, "example_get_major_version");
-                load_function<example_get_minor_version_function_type>(example_get_minor_version, "example_get_minor_version");
-                load_function<example_get_patch_version_function_type>(example_get_patch_version, "example_get_patch_version");
-                load_function<example_printer_shared_ptr_default_function_type>(example_printer_shared_ptr_default, "example_printer_shared_ptr_default");
-                load_function<example_printer_shared_ptr_show_function_type>(example_printer_shared_ptr_show, "example_printer_shared_ptr_show");
-                load_function<example_printer_shared_ptr_copy_function_type>(example_printer_shared_ptr_copy, "example_printer_shared_ptr_copy");
-                load_function<example_printer_shared_ptr_delete_function_type>(example_printer_shared_ptr_delete, "example_printer_shared_ptr_delete");
+                #ifdef example_get_major_version_str
+                    load_function<example_get_major_version_function_type>(example_get_major_version, example_get_major_version_str);
+                #else /* example_get_major_version_str */
+                    load_function<example_get_major_version_function_type>(example_get_major_version, "example_get_major_version");
+                #endif /* example_get_major_version_str */
+                #ifdef example_get_minor_version_str
+                    load_function<example_get_minor_version_function_type>(example_get_minor_version, example_get_minor_version_str);
+                #else /* example_get_minor_version_str */
+                    load_function<example_get_minor_version_function_type>(example_get_minor_version, "example_get_minor_version");
+                #endif /* example_get_minor_version_str */
+                #ifdef example_get_patch_version_str
+                    load_function<example_get_patch_version_function_type>(example_get_patch_version, example_get_patch_version_str);
+                #else /* example_get_patch_version_str */
+                    load_function<example_get_patch_version_function_type>(example_get_patch_version, "example_get_patch_version");
+                #endif /* example_get_patch_version_str */
+                #ifdef example_printer_shared_ptr_default_str
+                    load_function<example_printer_shared_ptr_default_function_type>(example_printer_shared_ptr_default, example_printer_shared_ptr_default_str);
+                #else /* example_printer_shared_ptr_default_str */
+                    load_function<example_printer_shared_ptr_default_function_type>(example_printer_shared_ptr_default, "example_printer_shared_ptr_default");
+                #endif /* example_printer_shared_ptr_default_str */
+                #ifdef example_printer_shared_ptr_show_str
+                    load_function<example_printer_shared_ptr_show_function_type>(example_printer_shared_ptr_show, example_printer_shared_ptr_show_str);
+                #else /* example_printer_shared_ptr_show_str */
+                    load_function<example_printer_shared_ptr_show_function_type>(example_printer_shared_ptr_show, "example_printer_shared_ptr_show");
+                #endif /* example_printer_shared_ptr_show_str */
+                #ifdef example_printer_shared_ptr_copy_str
+                    load_function<example_printer_shared_ptr_copy_function_type>(example_printer_shared_ptr_copy, example_printer_shared_ptr_copy_str);
+                #else /* example_printer_shared_ptr_copy_str */
+                    load_function<example_printer_shared_ptr_copy_function_type>(example_printer_shared_ptr_copy, "example_printer_shared_ptr_copy");
+                #endif /* example_printer_shared_ptr_copy_str */
+                #ifdef example_printer_shared_ptr_delete_str
+                    load_function<example_printer_shared_ptr_delete_function_type>(example_printer_shared_ptr_delete, example_printer_shared_ptr_delete_str);
+                #else /* example_printer_shared_ptr_delete_str */
+                    load_function<example_printer_shared_ptr_delete_function_type>(example_printer_shared_ptr_delete, "example_printer_shared_ptr_delete");
+                #endif /* example_printer_shared_ptr_delete_str */
                 const int major_version = example_get_major_version();
                 const int minor_version = example_get_minor_version();
                 const int patch_version = example_get_patch_version();

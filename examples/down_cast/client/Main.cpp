@@ -100,7 +100,6 @@ int main()
         show(shape1);
 
         std::cout << std::endl;
-
     }
     catch (const std::exception& exception)
     {

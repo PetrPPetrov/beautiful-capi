@@ -20,7 +20,10 @@
 #
 
 
+import os
 import copy
+import random
+import uuid
 from collections import OrderedDict
 from Parser import TBeautifulCapiRoot
 from ParamsParser import TBeautifulCapiParams
@@ -30,7 +33,7 @@ from DynamicLoaderGenerator import DynamicLoaderGenerator
 from StaticLoaderGenerator import StaticLoaderGenerator
 from CheckBinaryCompatibilityGenerator import generate_get_version_functions
 from FileCache import FileCache
-from Helpers import if_required_then_add_empty_line
+from Helpers import if_required_then_add_empty_line, get_c_name
 
 
 class CFunction(object):
@@ -76,6 +79,7 @@ class CapiGenerator(object):
         self.sorted_by_ns = None
         self.cur_namespace_name = None
         self.cur_namespace_info = None
+        self.api_keys = {}
 
     def get_exception_traits(self, no_except: bool):
         if no_except:
@@ -259,6 +263,32 @@ class CapiGenerator(object):
         self.__generate_version_define(out, namespace_name, 'Patch', self.api_root.patch_version)
         out.put_line('')
 
+    def __generate_keys(self):
+        if not self.params.open_api:
+            namespace_2_keys = {}
+            if self.params.root_header:
+                root_keys = FileGenerator(os.path.join(
+                    self.params.api_keys_folder,
+                    os.path.splitext(self.params.root_header)[0] + self.params.key_header_suffix + '.h'))
+                root_keys.put_begin_cpp_comments(self.params)
+                for namespace_name, namespace_info in self.sorted_by_ns.items():
+                    namespace_2_keys.update({namespace_name: root_keys})
+            else:
+                for namespace_name, namespace_info in self.sorted_by_ns.items():
+                    keys = FileGenerator(os.path.join(
+                        self.params.api_keys_folder,
+                        namespace_info.namespace_name_array[0] + self.params.key_header_suffix + '.h'))
+                    keys.put_begin_cpp_comments(self.params)
+                    namespace_2_keys.update({namespace_name: keys})
+            for namespace_name, namespace_info in self.sorted_by_ns.items():
+                for opened_name, closed_name in self.api_keys[namespace_name].items():
+                    namespace_2_keys[namespace_name].put_line('#define {opened_name} {closed_name}'.format(
+                        opened_name=opened_name, closed_name=closed_name
+                    ))
+                    namespace_2_keys[namespace_name].put_line('#define {opened_name}_str "{closed_name}"'.format(
+                        opened_name=opened_name, closed_name=closed_name
+                    ))
+
     def __generate_capi(self, file_cache):
         for namespace_name, namespace_info in self.sorted_by_ns.items():
             self.cur_namespace_name = namespace_name
@@ -275,24 +305,33 @@ class CapiGenerator(object):
                 if_not_def_then_else(output_capi, namespace_name + '_CAPI_USE_DYNAMIC_LOADER',
                                      self.__generate_static_capi,
                                      self.__generate_dynamic_capi)
+        self.__generate_keys()
 
     def __generate_capi_impl(self, out: FileGenerator):
-        first_namespace = True
+        plain_functions_list = []
         for namespace_name, namespace_info in self.sorted_by_ns.items():
+            for c_function in namespace_info.c_functions:
+                plain_functions_list.append((namespace_name, namespace_info, c_function))
+        if not self.params.open_api:
+            random.shuffle(plain_functions_list)
+        first_function = True
+        for namespace_name, namespace_info, c_function in plain_functions_list:
             self.cur_namespace_name = namespace_name
             self.cur_namespace_info = namespace_info
-            first_namespace = if_required_then_add_empty_line(first_namespace, out)
-            first_function = True
-            for c_function in namespace_info.c_functions:
-                first_function = if_required_then_add_empty_line(first_function, out)
-
-                out.put_line('{api} {return_type} {convention} {name}({arguments})'.format(
-                    api=self.cur_api_define,
-                    return_type=c_function.return_type,
-                    convention=self.cur_api_convention,
-                    name=c_function.name,
-                    arguments=c_function.arguments))
-                out.put_file(c_function.body)
+            first_function = if_required_then_add_empty_line(first_function, out)
+            generated_name = c_function.name
+            if not self.params.open_api:
+                generated_name = get_c_name('fx' + str(uuid.uuid4()))
+                if namespace_name not in self.api_keys:
+                    self.api_keys.update({namespace_name: {}})
+                self.api_keys[namespace_name][c_function.name] = generated_name
+            out.put_line('{api} {return_type} {convention} {name}({arguments})'.format(
+                api=self.cur_api_define,
+                return_type=c_function.return_type,
+                convention=self.cur_api_convention,
+                name=generated_name,
+                arguments=c_function.arguments))
+            out.put_file(c_function.body)
 
     def add_c_function(self, path_to_namespace: [str], return_type: str,
                        name: str, arguments: str, body: FileGenerator):

@@ -54,10 +54,12 @@ class TBeautifulCapiParams(object):
     def __init__(self):
         self.output_folder = ""
         self.output_folder_filled = False
-        self.internal_snippets_folder = ""
-        self.internal_snippets_folder_filled = False
         self.output_wrap_file_name = ""
         self.output_wrap_file_name_filled = False
+        self.internal_snippets_folder = ""
+        self.internal_snippets_folder_filled = False
+        self.api_keys_folder = ""
+        self.api_keys_folder_filled = False
         self.namespace_header_at_parent_folder = True
         self.namespace_header_at_parent_folder_filled = False
         self.capi_header_suffix = "Capi"
@@ -66,6 +68,10 @@ class TBeautifulCapiParams(object):
         self.fwd_header_suffix_filled = False
         self.decl_header_suffix = "Decl"
         self.decl_header_suffix_filled = False
+        self.key_header_suffix = "Keys"
+        self.key_header_suffix_filled = False
+        self.open_api = True
+        self.open_api_filled = False
         self.copy_semantic_wrapper_class_suffix = ""
         self.copy_semantic_wrapper_class_suffix_filled = False
         self.reference_counted_wrapper_class_suffix = "Ptr"
@@ -124,14 +130,18 @@ class TBeautifulCapiParams(object):
             cur_attr = dom_node.getAttribute("output_folder")
             self.output_folder = cur_attr
             self.output_folder_filled = True
-        if dom_node.hasAttribute("internal_snippets_folder"):
-            cur_attr = dom_node.getAttribute("internal_snippets_folder")
-            self.internal_snippets_folder = cur_attr
-            self.internal_snippets_folder_filled = True
         if dom_node.hasAttribute("output_wrap_file_name"):
             cur_attr = dom_node.getAttribute("output_wrap_file_name")
             self.output_wrap_file_name = cur_attr
             self.output_wrap_file_name_filled = True
+        if dom_node.hasAttribute("internal_snippets_folder"):
+            cur_attr = dom_node.getAttribute("internal_snippets_folder")
+            self.internal_snippets_folder = cur_attr
+            self.internal_snippets_folder_filled = True
+        if dom_node.hasAttribute("api_keys_folder"):
+            cur_attr = dom_node.getAttribute("api_keys_folder")
+            self.api_keys_folder = cur_attr
+            self.api_keys_folder_filled = True
         if dom_node.hasAttribute("namespace_header_at_parent_folder"):
             cur_attr = dom_node.getAttribute("namespace_header_at_parent_folder")
             self.namespace_header_at_parent_folder = string_to_bool(cur_attr)
@@ -148,6 +158,14 @@ class TBeautifulCapiParams(object):
             cur_attr = dom_node.getAttribute("decl_header_suffix")
             self.decl_header_suffix = cur_attr
             self.decl_header_suffix_filled = True
+        if dom_node.hasAttribute("key_header_suffix"):
+            cur_attr = dom_node.getAttribute("key_header_suffix")
+            self.key_header_suffix = cur_attr
+            self.key_header_suffix_filled = True
+        if dom_node.hasAttribute("open_api"):
+            cur_attr = dom_node.getAttribute("open_api")
+            self.open_api = string_to_bool(cur_attr)
+            self.open_api_filled = True
         if dom_node.hasAttribute("copy_semantic_wrapper_class_suffix"):
             cur_attr = dom_node.getAttribute("copy_semantic_wrapper_class_suffix")
             self.copy_semantic_wrapper_class_suffix = cur_attr

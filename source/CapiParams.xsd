@@ -13,12 +13,15 @@
       <xs:element name="automatic_generated_warning" type="xs:string" minOccurs="0" maxOccurs="1"/>
     </xs:sequence>
     <xs:attribute name="output_folder" type="xs:string" use="optional" default=""/>
-    <xs:attribute name="internal_snippets_folder" type="xs:string" use="optional" default=""/>
     <xs:attribute name="output_wrap_file_name" type="xs:string" use="optional" default=""/>
+    <xs:attribute name="internal_snippets_folder" type="xs:string" use="optional" default=""/>
+    <xs:attribute name="api_keys_folder" type="xs:string" use="optional" default=""/>
     <xs:attribute name="namespace_header_at_parent_folder" type="xs:boolean" use="optional" default="true"/>
     <xs:attribute name="capi_header_suffix" type="xs:string" use="optional" default="Capi"/>
     <xs:attribute name="fwd_header_suffix" type="xs:string" use="optional" default="Fwd"/>
     <xs:attribute name="decl_header_suffix" type="xs:string" use="optional" default="Decl"/>
+    <xs:attribute name="key_header_suffix" type="xs:string" use="optional" default="Keys"/>
+    <xs:attribute name="open_api" type="xs:boolean" use="optional" default="true"/>
     <xs:attribute name="copy_semantic_wrapper_class_suffix" type="xs:string" use="optional" default=""/>
     <xs:attribute name="reference_counted_wrapper_class_suffix" type="xs:string" use="optional" default="Ptr"/>
     <xs:attribute name="raw_pointer_wrapper_class_suffix" type="xs:string" use="optional" default="RawPtr"/>

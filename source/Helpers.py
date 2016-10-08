@@ -22,7 +22,7 @@
 
 def fix_name(name: str) -> str:
     return name.replace('<', '_').replace('>', '').replace('::', '_').\
-        replace('*', 'p').replace(' ', '').replace(',', '_')
+        replace('*', 'p').replace(' ', '').replace(',', '_').replace('-', '')
 
 
 def remove_double_underscore(text: str) -> str:

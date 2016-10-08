@@ -221,14 +221,46 @@
                     error_message << "Can't load shared library " << shared_library_name;
                     throw std::runtime_error(error_message.str());
                 }
-                load_function<example_create_triangle_function_type>(example_create_triangle, "example_create_triangle");
-                load_function<example_create_rectangle_function_type>(example_create_rectangle, "example_create_rectangle");
-                load_function<example_create_circle_function_type>(example_create_circle, "example_create_circle");
-                load_function<example_get_major_version_function_type>(example_get_major_version, "example_get_major_version");
-                load_function<example_get_minor_version_function_type>(example_get_minor_version, "example_get_minor_version");
-                load_function<example_get_patch_version_function_type>(example_get_patch_version, "example_get_patch_version");
-                load_function<example_i_shape_show_function_type>(example_i_shape_show, "example_i_shape_show");
-                load_function<example_i_shape_delete_function_type>(example_i_shape_delete, "example_i_shape_delete");
+                #ifdef example_create_triangle_str
+                    load_function<example_create_triangle_function_type>(example_create_triangle, example_create_triangle_str);
+                #else /* example_create_triangle_str */
+                    load_function<example_create_triangle_function_type>(example_create_triangle, "example_create_triangle");
+                #endif /* example_create_triangle_str */
+                #ifdef example_create_rectangle_str
+                    load_function<example_create_rectangle_function_type>(example_create_rectangle, example_create_rectangle_str);
+                #else /* example_create_rectangle_str */
+                    load_function<example_create_rectangle_function_type>(example_create_rectangle, "example_create_rectangle");
+                #endif /* example_create_rectangle_str */
+                #ifdef example_create_circle_str
+                    load_function<example_create_circle_function_type>(example_create_circle, example_create_circle_str);
+                #else /* example_create_circle_str */
+                    load_function<example_create_circle_function_type>(example_create_circle, "example_create_circle");
+                #endif /* example_create_circle_str */
+                #ifdef example_get_major_version_str
+                    load_function<example_get_major_version_function_type>(example_get_major_version, example_get_major_version_str);
+                #else /* example_get_major_version_str */
+                    load_function<example_get_major_version_function_type>(example_get_major_version, "example_get_major_version");
+                #endif /* example_get_major_version_str */
+                #ifdef example_get_minor_version_str
+                    load_function<example_get_minor_version_function_type>(example_get_minor_version, example_get_minor_version_str);
+                #else /* example_get_minor_version_str */
+                    load_function<example_get_minor_version_function_type>(example_get_minor_version, "example_get_minor_version");
+                #endif /* example_get_minor_version_str */
+                #ifdef example_get_patch_version_str
+                    load_function<example_get_patch_version_function_type>(example_get_patch_version, example_get_patch_version_str);
+                #else /* example_get_patch_version_str */
+                    load_function<example_get_patch_version_function_type>(example_get_patch_version, "example_get_patch_version");
+                #endif /* example_get_patch_version_str */
+                #ifdef example_i_shape_show_str
+                    load_function<example_i_shape_show_function_type>(example_i_shape_show, example_i_shape_show_str);
+                #else /* example_i_shape_show_str */
+                    load_function<example_i_shape_show_function_type>(example_i_shape_show, "example_i_shape_show");
+                #endif /* example_i_shape_show_str */
+                #ifdef example_i_shape_delete_str
+                    load_function<example_i_shape_delete_function_type>(example_i_shape_delete, example_i_shape_delete_str);
+                #else /* example_i_shape_delete_str */
+                    load_function<example_i_shape_delete_function_type>(example_i_shape_delete, "example_i_shape_delete");
+                #endif /* example_i_shape_delete_str */
                 const int major_version = example_get_major_version();
                 const int minor_version = example_get_minor_version();
                 const int patch_version = example_get_patch_version();

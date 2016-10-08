@@ -237,18 +237,66 @@
                     error_message << "Can't load shared library " << shared_library_name;
                     throw std::runtime_error(error_message.str());
                 }
-                load_function<example_get_major_version_function_type>(example_get_major_version, "example_get_major_version");
-                load_function<example_get_minor_version_function_type>(example_get_minor_version, "example_get_minor_version");
-                load_function<example_get_patch_version_function_type>(example_get_patch_version, "example_get_patch_version");
-                load_function<example_printer_new_function_type>(example_printer_new, "example_printer_new");
-                load_function<example_printer_show_function_type>(example_printer_show, "example_printer_show");
-                load_function<example_printer_delete_function_type>(example_printer_delete, "example_printer_delete");
-                load_function<example_dumper_new_function_type>(example_dumper_new, "example_dumper_new");
-                load_function<example_dumper_get_printer_function_type>(example_dumper_get_printer, "example_dumper_get_printer");
-                load_function<example_dumper_set_printer_function_type>(example_dumper_set_printer, "example_dumper_set_printer");
-                load_function<example_dumper_dump_function_type>(example_dumper_dump, "example_dumper_dump");
-                load_function<example_dumper_copy_function_type>(example_dumper_copy, "example_dumper_copy");
-                load_function<example_dumper_delete_function_type>(example_dumper_delete, "example_dumper_delete");
+                #ifdef example_get_major_version_str
+                    load_function<example_get_major_version_function_type>(example_get_major_version, example_get_major_version_str);
+                #else /* example_get_major_version_str */
+                    load_function<example_get_major_version_function_type>(example_get_major_version, "example_get_major_version");
+                #endif /* example_get_major_version_str */
+                #ifdef example_get_minor_version_str
+                    load_function<example_get_minor_version_function_type>(example_get_minor_version, example_get_minor_version_str);
+                #else /* example_get_minor_version_str */
+                    load_function<example_get_minor_version_function_type>(example_get_minor_version, "example_get_minor_version");
+                #endif /* example_get_minor_version_str */
+                #ifdef example_get_patch_version_str
+                    load_function<example_get_patch_version_function_type>(example_get_patch_version, example_get_patch_version_str);
+                #else /* example_get_patch_version_str */
+                    load_function<example_get_patch_version_function_type>(example_get_patch_version, "example_get_patch_version");
+                #endif /* example_get_patch_version_str */
+                #ifdef example_printer_new_str
+                    load_function<example_printer_new_function_type>(example_printer_new, example_printer_new_str);
+                #else /* example_printer_new_str */
+                    load_function<example_printer_new_function_type>(example_printer_new, "example_printer_new");
+                #endif /* example_printer_new_str */
+                #ifdef example_printer_show_str
+                    load_function<example_printer_show_function_type>(example_printer_show, example_printer_show_str);
+                #else /* example_printer_show_str */
+                    load_function<example_printer_show_function_type>(example_printer_show, "example_printer_show");
+                #endif /* example_printer_show_str */
+                #ifdef example_printer_delete_str
+                    load_function<example_printer_delete_function_type>(example_printer_delete, example_printer_delete_str);
+                #else /* example_printer_delete_str */
+                    load_function<example_printer_delete_function_type>(example_printer_delete, "example_printer_delete");
+                #endif /* example_printer_delete_str */
+                #ifdef example_dumper_new_str
+                    load_function<example_dumper_new_function_type>(example_dumper_new, example_dumper_new_str);
+                #else /* example_dumper_new_str */
+                    load_function<example_dumper_new_function_type>(example_dumper_new, "example_dumper_new");
+                #endif /* example_dumper_new_str */
+                #ifdef example_dumper_get_printer_str
+                    load_function<example_dumper_get_printer_function_type>(example_dumper_get_printer, example_dumper_get_printer_str);
+                #else /* example_dumper_get_printer_str */
+                    load_function<example_dumper_get_printer_function_type>(example_dumper_get_printer, "example_dumper_get_printer");
+                #endif /* example_dumper_get_printer_str */
+                #ifdef example_dumper_set_printer_str
+                    load_function<example_dumper_set_printer_function_type>(example_dumper_set_printer, example_dumper_set_printer_str);
+                #else /* example_dumper_set_printer_str */
+                    load_function<example_dumper_set_printer_function_type>(example_dumper_set_printer, "example_dumper_set_printer");
+                #endif /* example_dumper_set_printer_str */
+                #ifdef example_dumper_dump_str
+                    load_function<example_dumper_dump_function_type>(example_dumper_dump, example_dumper_dump_str);
+                #else /* example_dumper_dump_str */
+                    load_function<example_dumper_dump_function_type>(example_dumper_dump, "example_dumper_dump");
+                #endif /* example_dumper_dump_str */
+                #ifdef example_dumper_copy_str
+                    load_function<example_dumper_copy_function_type>(example_dumper_copy, example_dumper_copy_str);
+                #else /* example_dumper_copy_str */
+                    load_function<example_dumper_copy_function_type>(example_dumper_copy, "example_dumper_copy");
+                #endif /* example_dumper_copy_str */
+                #ifdef example_dumper_delete_str
+                    load_function<example_dumper_delete_function_type>(example_dumper_delete, example_dumper_delete_str);
+                #else /* example_dumper_delete_str */
+                    load_function<example_dumper_delete_function_type>(example_dumper_delete, "example_dumper_delete");
+                #endif /* example_dumper_delete_str */
                 const int major_version = example_get_major_version();
                 const int minor_version = example_get_minor_version();
                 const int patch_version = example_get_patch_version();

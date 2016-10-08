@@ -43,12 +43,14 @@ class Capi(object):
                  output_folder,
                  output_wrap_file_name,
                  internal_snippets_folder,
+                 api_keys_folder,
                  clean):
         self.input_xml = input_filename
         self.input_params = parse(input_params_filename)
         self.output_folder = output_folder
         self.output_wrap_file_name = output_wrap_file_name
         self.internal_snippets_folder = internal_snippets_folder
+        self.api_keys_folder = api_keys_folder
         self.api_description = None
         self.params_description = None
         if clean:
@@ -87,14 +89,16 @@ class Capi(object):
             with Unindent(out):
                 out.put_line('public:')
             if member_names:
-                out.put_line('{0}(const char* shared_library_name) :'.format(
-                    self.params_description.root_header_initializer))
-                with Indent(out):
-                    for member_name in member_names[:-1]:
-                        out.put_line('{member_name}(shared_library_name),'.format(member_name=member_name))
-                    out.put_line('{member_name}(shared_library_name)'.format(member_name=member_names[-1]))
-                with IndentScope(out):
-                    pass
+                with IfDefScope(out, '{0}_LIBRARY_USE_DYNAMIC_LOADER'.format(
+                        self.api_description.project_name.upper()), False):
+                    out.put_line('{0}(const char* shared_library_name) :'.format(
+                        self.params_description.root_header_initializer))
+                    with Indent(out):
+                        for member_name in member_names[:-1]:
+                            out.put_line('{member_name}(shared_library_name),'.format(member_name=member_name))
+                        out.put_line('{member_name}(shared_library_name)'.format(member_name=member_names[-1]))
+                    with IndentScope(out):
+                        pass
                 if self.params_description.shared_library_name:
                     out.put_line('{0}()'.format(self.params_description.root_header_initializer))
                     with IndentScope(out):
@@ -105,22 +109,18 @@ class Capi(object):
             root_header = FileGenerator(os.path.join(self.output_folder, self.params_description.root_header))
             root_header.put_begin_cpp_comments(self.params_description)
             with WatchdogScope(root_header, self.api_description.project_name.upper() + '_LIBRARY_ROOT_INCLUDED'):
-                root_header.put_line('#ifdef {0}_LIBRARY_USE_DYNAMIC_LOADER'.format(
-                    self.api_description.project_name.upper()))
-                for namespace_generator in namespace_generators:
-                    root_header.put_line('#define {0}_CAPI_USE_DYNAMIC_LOADER'.format(
-                        namespace_generator.wrap_name.upper()))
-                root_header.put_line('#endif /* {0}_LIBRARY_USE_DYNAMIC_LOADER */'.format(
-                    self.api_description.project_name.upper()))
+                with IfDefScope(root_header, '{0}_LIBRARY_USE_DYNAMIC_LOADER'.format(
+                        self.api_description.project_name.upper()), False):
+                    for namespace_generator in namespace_generators:
+                        root_header.put_line('#define {0}_CAPI_USE_DYNAMIC_LOADER'.format(
+                            namespace_generator.wrap_name.upper()))
                 root_header.put_line('')
 
-                root_header.put_line('#ifdef {0}_LIBRARY_DEFINE_FUNCTION_POINTERS'.format(
-                    self.api_description.project_name.upper()))
-                for namespace_generator in namespace_generators:
-                    root_header.put_line('#define {0}_CAPI_DEFINE_FUNCTION_POINTERS'.format(
-                        namespace_generator.wrap_name.upper()))
-                root_header.put_line('#endif /* {0}_LIBRARY_DEFINE_FUNCTION_POINTERS */'.format(
-                    self.api_description.project_name.upper()))
+                with IfDefScope(root_header, '{0}_LIBRARY_DEFINE_FUNCTION_POINTERS'.format(
+                        self.api_description.project_name.upper()), False):
+                    for namespace_generator in namespace_generators:
+                        root_header.put_line('#define {0}_CAPI_DEFINE_FUNCTION_POINTERS'.format(
+                            namespace_generator.wrap_name.upper()))
                 root_header.put_line('')
 
                 root_header.put_include_files(False)
@@ -163,6 +163,7 @@ class Capi(object):
         self.params_description = load(self.input_params)
         self.params_description.output_folder = self.output_folder
         self.params_description.internal_snippets_folder = self.internal_snippets_folder
+        self.params_description.api_keys_folder = self.api_keys_folder
         self.params_description.output_wrap_file_name = self.output_wrap_file_name
         self.api_description = parse_root(self.input_xml)
         self.__substitute_project_name(self.params_description)
@@ -197,7 +198,10 @@ def main():
         '-s', '--internal-snippets-folder', nargs=None, default='./internal_snippets', metavar='OUTPUT_SNIPPETS',
         help='specifies output folder for generated library snippets')
     parser.add_argument(
-        '-c', '--clean', nargs=None, default=False, metavar='CLEAN',
+        '-k', '--api-keys-folder', nargs=None, default='./keys', metavar='API_KEYS_FOLDER',
+        help='specifies output folder for generated API keys')
+    parser.add_argument(
+        '-c', '--clean', nargs=None, default=True, metavar='CLEAN',
         help='specifies whether if clean input and snippets directories'
     )
 
@@ -209,6 +213,7 @@ def main():
         args.output_folder,
         args.output_wrap_file_name,
         args.internal_snippets_folder,
+        args.api_keys_folder,
         args.clean
     )
     capi.generate()

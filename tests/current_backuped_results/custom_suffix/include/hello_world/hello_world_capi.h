@@ -245,20 +245,76 @@
                     error_message << "Can't load shared library " << shared_library_name;
                     throw std::runtime_error(error_message.str());
                 }
-                load_function<hello_world_get_major_version_function_type>(hello_world_get_major_version, "hello_world_get_major_version");
-                load_function<hello_world_get_minor_version_function_type>(hello_world_get_minor_version, "hello_world_get_minor_version");
-                load_function<hello_world_get_patch_version_function_type>(hello_world_get_patch_version, "hello_world_get_patch_version");
-                load_function<hello_world_printer_default_function_type>(hello_world_printer_default, "hello_world_printer_default");
-                load_function<hello_world_printer_show_function_type>(hello_world_printer_show, "hello_world_printer_show");
-                load_function<hello_world_printer_copy_function_type>(hello_world_printer_copy, "hello_world_printer_copy");
-                load_function<hello_world_printer_delete_function_type>(hello_world_printer_delete, "hello_world_printer_delete");
-                load_function<hello_world_scanner_default_function_type>(hello_world_scanner_default, "hello_world_scanner_default");
-                load_function<hello_world_scanner_scan_function_type>(hello_world_scanner_scan, "hello_world_scanner_scan");
-                load_function<hello_world_scanner_delete_function_type>(hello_world_scanner_delete, "hello_world_scanner_delete");
-                load_function<hello_world_plotter_default_function_type>(hello_world_plotter_default, "hello_world_plotter_default");
-                load_function<hello_world_plotter_draw_function_type>(hello_world_plotter_draw, "hello_world_plotter_draw");
-                load_function<hello_world_plotter_add_ref_function_type>(hello_world_plotter_add_ref, "hello_world_plotter_add_ref");
-                load_function<hello_world_plotter_release_function_type>(hello_world_plotter_release, "hello_world_plotter_release");
+                #ifdef hello_world_get_major_version_str
+                    load_function<hello_world_get_major_version_function_type>(hello_world_get_major_version, hello_world_get_major_version_str);
+                #else /* hello_world_get_major_version_str */
+                    load_function<hello_world_get_major_version_function_type>(hello_world_get_major_version, "hello_world_get_major_version");
+                #endif /* hello_world_get_major_version_str */
+                #ifdef hello_world_get_minor_version_str
+                    load_function<hello_world_get_minor_version_function_type>(hello_world_get_minor_version, hello_world_get_minor_version_str);
+                #else /* hello_world_get_minor_version_str */
+                    load_function<hello_world_get_minor_version_function_type>(hello_world_get_minor_version, "hello_world_get_minor_version");
+                #endif /* hello_world_get_minor_version_str */
+                #ifdef hello_world_get_patch_version_str
+                    load_function<hello_world_get_patch_version_function_type>(hello_world_get_patch_version, hello_world_get_patch_version_str);
+                #else /* hello_world_get_patch_version_str */
+                    load_function<hello_world_get_patch_version_function_type>(hello_world_get_patch_version, "hello_world_get_patch_version");
+                #endif /* hello_world_get_patch_version_str */
+                #ifdef hello_world_printer_default_str
+                    load_function<hello_world_printer_default_function_type>(hello_world_printer_default, hello_world_printer_default_str);
+                #else /* hello_world_printer_default_str */
+                    load_function<hello_world_printer_default_function_type>(hello_world_printer_default, "hello_world_printer_default");
+                #endif /* hello_world_printer_default_str */
+                #ifdef hello_world_printer_show_str
+                    load_function<hello_world_printer_show_function_type>(hello_world_printer_show, hello_world_printer_show_str);
+                #else /* hello_world_printer_show_str */
+                    load_function<hello_world_printer_show_function_type>(hello_world_printer_show, "hello_world_printer_show");
+                #endif /* hello_world_printer_show_str */
+                #ifdef hello_world_printer_copy_str
+                    load_function<hello_world_printer_copy_function_type>(hello_world_printer_copy, hello_world_printer_copy_str);
+                #else /* hello_world_printer_copy_str */
+                    load_function<hello_world_printer_copy_function_type>(hello_world_printer_copy, "hello_world_printer_copy");
+                #endif /* hello_world_printer_copy_str */
+                #ifdef hello_world_printer_delete_str
+                    load_function<hello_world_printer_delete_function_type>(hello_world_printer_delete, hello_world_printer_delete_str);
+                #else /* hello_world_printer_delete_str */
+                    load_function<hello_world_printer_delete_function_type>(hello_world_printer_delete, "hello_world_printer_delete");
+                #endif /* hello_world_printer_delete_str */
+                #ifdef hello_world_scanner_default_str
+                    load_function<hello_world_scanner_default_function_type>(hello_world_scanner_default, hello_world_scanner_default_str);
+                #else /* hello_world_scanner_default_str */
+                    load_function<hello_world_scanner_default_function_type>(hello_world_scanner_default, "hello_world_scanner_default");
+                #endif /* hello_world_scanner_default_str */
+                #ifdef hello_world_scanner_scan_str
+                    load_function<hello_world_scanner_scan_function_type>(hello_world_scanner_scan, hello_world_scanner_scan_str);
+                #else /* hello_world_scanner_scan_str */
+                    load_function<hello_world_scanner_scan_function_type>(hello_world_scanner_scan, "hello_world_scanner_scan");
+                #endif /* hello_world_scanner_scan_str */
+                #ifdef hello_world_scanner_delete_str
+                    load_function<hello_world_scanner_delete_function_type>(hello_world_scanner_delete, hello_world_scanner_delete_str);
+                #else /* hello_world_scanner_delete_str */
+                    load_function<hello_world_scanner_delete_function_type>(hello_world_scanner_delete, "hello_world_scanner_delete");
+                #endif /* hello_world_scanner_delete_str */
+                #ifdef hello_world_plotter_default_str
+                    load_function<hello_world_plotter_default_function_type>(hello_world_plotter_default, hello_world_plotter_default_str);
+                #else /* hello_world_plotter_default_str */
+                    load_function<hello_world_plotter_default_function_type>(hello_world_plotter_default, "hello_world_plotter_default");
+                #endif /* hello_world_plotter_default_str */
+                #ifdef hello_world_plotter_draw_str
+                    load_function<hello_world_plotter_draw_function_type>(hello_world_plotter_draw, hello_world_plotter_draw_str);
+                #else /* hello_world_plotter_draw_str */
+                    load_function<hello_world_plotter_draw_function_type>(hello_world_plotter_draw, "hello_world_plotter_draw");
+                #endif /* hello_world_plotter_draw_str */
+                #ifdef hello_world_plotter_add_ref_str
+                    load_function<hello_world_plotter_add_ref_function_type>(hello_world_plotter_add_ref, hello_world_plotter_add_ref_str);
+                #else /* hello_world_plotter_add_ref_str */
+                    load_function<hello_world_plotter_add_ref_function_type>(hello_world_plotter_add_ref, "hello_world_plotter_add_ref");
+                #endif /* hello_world_plotter_add_ref_str */
+                #ifdef hello_world_plotter_release_str
+                    load_function<hello_world_plotter_release_function_type>(hello_world_plotter_release, hello_world_plotter_release_str);
+                #else /* hello_world_plotter_release_str */
+                    load_function<hello_world_plotter_release_function_type>(hello_world_plotter_release, "hello_world_plotter_release");
+                #endif /* hello_world_plotter_release_str */
                 const int major_version = hello_world_get_major_version();
                 const int minor_version = hello_world_get_minor_version();
                 const int patch_version = hello_world_get_patch_version();
