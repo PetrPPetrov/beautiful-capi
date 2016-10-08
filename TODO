@@ -1,5 +1,4 @@
 *) place down_cast function to target type namespace
-*) add runtime check for binary compatibility
 *) noexcept methods if target language supports C++ 11
 *) add "copy" custom function, external helper function or "class member method"
 *) add "create" custom function, external helper function for creation of new object instances
@@ -15,9 +14,7 @@
 *) clash with argument names ("object_pointer", "self", "result")
 *) c_2_implementation and implementation_2_c customization
 ===
-*) shuffle Capi mode
 *) const support for objects (constatant instances of wrapper classes), const arguments, const return values
-*) property for Get & Set
 *) annotative C api (comments for enum types, typedefs for class types, i.e. typedef void* example_printer_t;)
 ===
 *) callbacks support
