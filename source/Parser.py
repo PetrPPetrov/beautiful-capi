@@ -113,6 +113,9 @@ class TNamespace(object):
         self.classes = []
         self.functions = []
         self.templates = []
+        self.property_set_prefixes = []
+        self.property_get_prefixes = []
+        self.property_get_consts = []
     
     def load(self, dom_node):
         for element in [node for node in dom_node.childNodes if node.nodeName == "include"]:
@@ -143,6 +146,18 @@ class TNamespace(object):
             new_element = TTemplate()
             new_element.load(element)
             self.templates.append(new_element)
+        for element in [node for node in dom_node.childNodes if node.nodeName == "property_set_prefix"]:
+            new_element = TPropertySetPrefix()
+            new_element.load(element)
+            self.property_set_prefixes.append(new_element)
+        for element in [node for node in dom_node.childNodes if node.nodeName == "property_get_prefix"]:
+            new_element = TPropertyGetPrefix()
+            new_element.load(element)
+            self.property_get_prefixes.append(new_element)
+        for element in [node for node in dom_node.childNodes if node.nodeName == "property_get_const"]:
+            new_element = TPropertyGetConst()
+            new_element.load(element)
+            self.property_get_consts.append(new_element)
         if dom_node.hasAttribute("name"):
             cur_attr = dom_node.getAttribute("name")
             self.name = cur_attr
@@ -281,6 +296,7 @@ class TClass(object):
         self.include_headers = []
         self.enumerations = []
         self.constructors = []
+        self.properties = []
         self.methods = []
         self.callbacks = []
     
@@ -297,6 +313,10 @@ class TClass(object):
             new_element = TConstructor()
             new_element.load(element)
             self.constructors.append(new_element)
+        for element in [node for node in dom_node.childNodes if node.nodeName == "property"]:
+            new_element = TProperty()
+            new_element.load(element)
+            self.properties.append(new_element)
         for element in [node for node in dom_node.childNodes if node.nodeName == "method"]:
             new_element = TMethod()
             new_element.load(element)
@@ -498,6 +518,78 @@ class THeaderInclude(object):
             cur_attr = dom_node.getAttribute("system")
             self.system = string_to_bool(cur_attr)
             self.system_filled = True
+    
+
+class TProperty(object):
+    def __init__(self):
+        self.name = ""
+        self.name_filled = False
+        self.type_name = ""
+        self.type_name_filled = False
+        self.set_prefix = "Set"
+        self.set_prefix_filled = False
+        self.get_prefix = "Get"
+        self.get_prefix_filled = False
+        self.get_const = True
+        self.get_const_filled = False
+    
+    def load(self, dom_node):
+        if dom_node.hasAttribute("name"):
+            cur_attr = dom_node.getAttribute("name")
+            self.name = cur_attr
+            self.name_filled = True
+        if dom_node.hasAttribute("type"):
+            cur_attr = dom_node.getAttribute("type")
+            self.type_name = cur_attr
+            self.type_name_filled = True
+        if dom_node.hasAttribute("set_prefix"):
+            cur_attr = dom_node.getAttribute("set_prefix")
+            self.set_prefix = cur_attr
+            self.set_prefix_filled = True
+        if dom_node.hasAttribute("get_prefix"):
+            cur_attr = dom_node.getAttribute("get_prefix")
+            self.get_prefix = cur_attr
+            self.get_prefix_filled = True
+        if dom_node.hasAttribute("get_const"):
+            cur_attr = dom_node.getAttribute("get_const")
+            self.get_const = string_to_bool(cur_attr)
+            self.get_const_filled = True
+    
+
+class TPropertySetPrefix(object):
+    def __init__(self):
+        self.value = "Set"
+        self.value_filled = False
+    
+    def load(self, dom_node):
+        if dom_node.hasAttribute("value"):
+            cur_attr = dom_node.getAttribute("value")
+            self.value = cur_attr
+            self.value_filled = True
+    
+
+class TPropertyGetPrefix(object):
+    def __init__(self):
+        self.value = "Get"
+        self.value_filled = False
+    
+    def load(self, dom_node):
+        if dom_node.hasAttribute("value"):
+            cur_attr = dom_node.getAttribute("value")
+            self.value = cur_attr
+            self.value_filled = True
+    
+
+class TPropertyGetConst(object):
+    def __init__(self):
+        self.value = True
+        self.value_filled = False
+    
+    def load(self, dom_node):
+        if dom_node.hasAttribute("value"):
+            cur_attr = dom_node.getAttribute("value")
+            self.value = string_to_bool(cur_attr)
+            self.value_filled = True
     
 
 def load(dom_node):

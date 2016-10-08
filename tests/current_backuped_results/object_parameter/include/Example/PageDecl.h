@@ -39,8 +39,8 @@ class PagePtr
 public:
     inline PagePtr();
     inline size_t GetWidth() const;
-    inline size_t GetHeight() const;
     inline void SetWidth(size_t value);
+    inline size_t GetHeight() const;
     inline void SetHeight(size_t value);
     
     inline PagePtr(const PagePtr& other);

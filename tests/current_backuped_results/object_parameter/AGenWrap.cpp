@@ -104,16 +104,16 @@ EXAMPLE_API size_t EXAMPLE_API_CONVENTION example_page_get_width(void* object_po
     return self->GetWidth();
 }
 
-EXAMPLE_API size_t EXAMPLE_API_CONVENTION example_page_get_height(void* object_pointer)
-{
-    const Example::PageImpl* self = static_cast<Example::PageImpl*>(object_pointer);
-    return self->GetHeight();
-}
-
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_page_set_width(void* object_pointer, size_t value)
 {
     Example::PageImpl* self = static_cast<Example::PageImpl*>(object_pointer);
     self->SetWidth(value);
+}
+
+EXAMPLE_API size_t EXAMPLE_API_CONVENTION example_page_get_height(void* object_pointer)
+{
+    const Example::PageImpl* self = static_cast<Example::PageImpl*>(object_pointer);
+    return self->GetHeight();
 }
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_page_set_height(void* object_pointer, size_t value)

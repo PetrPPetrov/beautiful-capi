@@ -41,14 +41,14 @@ inline size_t Example::PagePtr::GetWidth() const
     return example_page_get_width(GetRawPointer());
 }
 
-inline size_t Example::PagePtr::GetHeight() const
-{
-    return example_page_get_height(GetRawPointer());
-}
-
 inline void Example::PagePtr::SetWidth(size_t value)
 {
     example_page_set_width(GetRawPointer(), value);
+}
+
+inline size_t Example::PagePtr::GetHeight() const
+{
+    return example_page_get_height(GetRawPointer());
 }
 
 inline void Example::PagePtr::SetHeight(size_t value)

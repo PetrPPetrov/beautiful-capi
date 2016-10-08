@@ -23,6 +23,9 @@
         <xs:element name="class" minOccurs="0" maxOccurs="unbounded" type="TClass"/>
         <xs:element name="function" minOccurs="0" maxOccurs="unbounded" type="TFunction"/>
         <xs:element name="template" minOccurs="0" maxOccurs="unbounded" type="TTemplate"/>
+        <xs:element name="property_set_prefix" minOccurs="0" maxOccurs="1" type="TPropertySetPrefix"/>
+        <xs:element name="property_get_prefix" minOccurs="0" maxOccurs="1" type="TPropertyGetPrefix"/>
+        <xs:element name="property_get_const" minOccurs="0" maxOccurs="1" type="TPropertyGetConst"/>
       </xs:choice>
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required"/>
@@ -61,6 +64,7 @@
       <xs:element name="include_header" minOccurs="0" maxOccurs="unbounded" type="THeaderInclude"/>
       <xs:element name="enumeration" minOccurs="0" maxOccurs="unbounded" type="TEnumeration"/>
       <xs:element name="constructor" minOccurs="0" maxOccurs="unbounded" type="TConstructor"/>
+      <xs:element name="property" minOccurs="0" maxOccurs="unbounded" type="TProperty"/>
       <xs:element name="method" minOccurs="0" maxOccurs="unbounded" type="TMethod"/>
       <xs:element name="callback" minOccurs="0" maxOccurs="1" type="TCallback"/>
     </xs:sequence>
@@ -123,5 +127,21 @@
   <xs:complexType name="THeaderInclude">
     <xs:attribute name="file" type="xs:string" use="required"/>
     <xs:attribute name="system" type="xs:boolean" use="optional" default="false"/>
+  </xs:complexType>
+  <xs:complexType name="TProperty">
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="type" type="xs:string" use="required"/>
+    <xs:attribute name="set_prefix" type="xs:string" use="optional" default="Set"/>
+    <xs:attribute name="get_prefix" type="xs:string" use="optional" default="Get"/>
+    <xs:attribute name="get_const" type="xs:boolean" use="optional" default="true"/>
+  </xs:complexType>
+  <xs:complexType name="TPropertySetPrefix">
+    <xs:attribute name="value" type="xs:string" use="optional" default="Set"/>
+  </xs:complexType>
+  <xs:complexType name="TPropertyGetPrefix">
+    <xs:attribute name="value" type="xs:string" use="optional" default="Get"/>
+  </xs:complexType>
+  <xs:complexType name="TPropertyGetConst">
+    <xs:attribute name="value" type="xs:boolean" use="optional" default="true"/>
   </xs:complexType>
 </xs:schema>

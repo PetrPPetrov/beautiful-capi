@@ -31,6 +31,7 @@ from CapiGenerator import CapiGenerator
 from FileGenerator import FileGenerator, Indent, IndentScope, Unindent, WatchdogScope, IfDefScope
 from Templates import process as process_templates
 from Callbacks import process as process_callbacks
+from Properties import process as process_properties
 from CheckBinaryCompatibilityGenerator import process as process_check_binary_compatibility
 from ParamsParser import TBeautifulCapiParams, TExceptionHandlingMode, load
 from ParseRoot import parse_root
@@ -138,6 +139,7 @@ class Capi(object):
 
     def __generate(self):
         process_check_binary_compatibility(self.api_description, self.params_description)
+        process_properties(self.api_description)
         process_templates(self.api_description)
         first_namespace_generators = create_namespace_generators(
             self.api_description, self.params_description)

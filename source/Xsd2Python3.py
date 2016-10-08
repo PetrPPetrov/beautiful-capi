@@ -138,7 +138,14 @@ class SchemaGenerator(object):
 
     @staticmethod
     def __get_array_name(name):
-        return '{0}{1}'.format(name, 'es' if name[-1] == 's' else 's')
+        suffix = 's'
+        prefix = name
+        if name[-1] == 's' or name[-1] == 'x':
+            suffix = 'es'
+        elif name[-1] == 'y':
+            suffix = 'ies'
+            prefix = name[:-1]
+        return '{0}{1}'.format(prefix, suffix)
 
     @staticmethod
     def __get_attribute_default_value(attribute):

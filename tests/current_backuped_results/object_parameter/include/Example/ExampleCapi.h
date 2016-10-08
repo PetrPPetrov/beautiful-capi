@@ -102,8 +102,8 @@
     EXAMPLE_API int EXAMPLE_API_CONVENTION example_get_patch_version();
     EXAMPLE_API void* EXAMPLE_API_CONVENTION example_page_default();
     EXAMPLE_API size_t EXAMPLE_API_CONVENTION example_page_get_width(void* object_pointer);
-    EXAMPLE_API size_t EXAMPLE_API_CONVENTION example_page_get_height(void* object_pointer);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_page_set_width(void* object_pointer, size_t value);
+    EXAMPLE_API size_t EXAMPLE_API_CONVENTION example_page_get_height(void* object_pointer);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_page_set_height(void* object_pointer, size_t value);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_page_add_ref(void* object_pointer);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_page_release(void* object_pointer);
@@ -150,8 +150,8 @@
     typedef int (EXAMPLE_API_CONVENTION *example_get_patch_version_function_type)();
     typedef void* (EXAMPLE_API_CONVENTION *example_page_default_function_type)();
     typedef size_t (EXAMPLE_API_CONVENTION *example_page_get_width_function_type)(void* object_pointer);
-    typedef size_t (EXAMPLE_API_CONVENTION *example_page_get_height_function_type)(void* object_pointer);
     typedef void (EXAMPLE_API_CONVENTION *example_page_set_width_function_type)(void* object_pointer, size_t value);
+    typedef size_t (EXAMPLE_API_CONVENTION *example_page_get_height_function_type)(void* object_pointer);
     typedef void (EXAMPLE_API_CONVENTION *example_page_set_height_function_type)(void* object_pointer, size_t value);
     typedef void (EXAMPLE_API_CONVENTION *example_page_add_ref_function_type)(void* object_pointer);
     typedef void (EXAMPLE_API_CONVENTION *example_page_release_function_type)(void* object_pointer);
@@ -169,8 +169,8 @@
         extern example_get_patch_version_function_type example_get_patch_version = 0;
         extern example_page_default_function_type example_page_default = 0;
         extern example_page_get_width_function_type example_page_get_width = 0;
-        extern example_page_get_height_function_type example_page_get_height = 0;
         extern example_page_set_width_function_type example_page_set_width = 0;
+        extern example_page_get_height_function_type example_page_get_height = 0;
         extern example_page_set_height_function_type example_page_set_height = 0;
         extern example_page_add_ref_function_type example_page_add_ref = 0;
         extern example_page_release_function_type example_page_release = 0;
@@ -188,8 +188,8 @@
         extern example_get_patch_version_function_type example_get_patch_version;
         extern example_page_default_function_type example_page_default;
         extern example_page_get_width_function_type example_page_get_width;
-        extern example_page_get_height_function_type example_page_get_height;
         extern example_page_set_width_function_type example_page_set_width;
+        extern example_page_get_height_function_type example_page_get_height;
         extern example_page_set_height_function_type example_page_set_height;
         extern example_page_add_ref_function_type example_page_add_ref;
         extern example_page_release_function_type example_page_release;
@@ -278,16 +278,16 @@
                 #else /* example_page_get_width_str */
                     load_function<example_page_get_width_function_type>(example_page_get_width, "example_page_get_width");
                 #endif /* example_page_get_width_str */
-                #ifdef example_page_get_height_str
-                    load_function<example_page_get_height_function_type>(example_page_get_height, example_page_get_height_str);
-                #else /* example_page_get_height_str */
-                    load_function<example_page_get_height_function_type>(example_page_get_height, "example_page_get_height");
-                #endif /* example_page_get_height_str */
                 #ifdef example_page_set_width_str
                     load_function<example_page_set_width_function_type>(example_page_set_width, example_page_set_width_str);
                 #else /* example_page_set_width_str */
                     load_function<example_page_set_width_function_type>(example_page_set_width, "example_page_set_width");
                 #endif /* example_page_set_width_str */
+                #ifdef example_page_get_height_str
+                    load_function<example_page_get_height_function_type>(example_page_get_height, example_page_get_height_str);
+                #else /* example_page_get_height_str */
+                    load_function<example_page_get_height_function_type>(example_page_get_height, "example_page_get_height");
+                #endif /* example_page_get_height_str */
                 #ifdef example_page_set_height_str
                     load_function<example_page_set_height_function_type>(example_page_set_height, example_page_set_height_str);
                 #else /* example_page_set_height_str */
@@ -368,8 +368,8 @@
                 example_get_patch_version = 0;
                 example_page_default = 0;
                 example_page_get_width = 0;
-                example_page_get_height = 0;
                 example_page_set_width = 0;
+                example_page_get_height = 0;
                 example_page_set_height = 0;
                 example_page_add_ref = 0;
                 example_page_release = 0;
