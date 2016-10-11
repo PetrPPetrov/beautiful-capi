@@ -78,7 +78,7 @@ namespace Example
         {
             std::cout << "Position4D ctor" << std::endl;
         }
-        Position4DImpl(const Position4DImpl& other) : PositionImpl(other), mW(other.mW)
+        Position4DImpl(const Position4DImpl& other) : PositionImpl<WorkType>(other), mW(other.mW)
         {
             std::cout << "Position4D copy ctor" << std::endl;
         }

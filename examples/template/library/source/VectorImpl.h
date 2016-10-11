@@ -71,7 +71,7 @@ namespace Example
         }
         operator void*()
         {
-            return get();
+            return this->get();
         }
     };
 
@@ -136,7 +136,7 @@ namespace Example
             std::cout << "VectorOfObjectsDerivedImpl ctor" << std::endl;
         }
         // By default newly created objects implies to have value 1 of reference counter
-        VectorOfObjectsDerivedImpl(const VectorOfObjectsDerivedImpl& other) : VectorOfObjectsImpl(other)
+        VectorOfObjectsDerivedImpl(const VectorOfObjectsDerivedImpl& other) : VectorOfObjectsImpl<T>(other)
         {
             std::cout << "VectorOfObjectsDerivedImpl copy ctor! (should be never called)" << std::endl;
         }
