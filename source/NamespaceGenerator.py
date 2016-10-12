@@ -106,18 +106,25 @@ class NamespaceGenerator(object):
                 namespace_header.put_line('')
                 namespace_header.put_line(self.one_line_namespace_end)
 
-    def __generate_namespace_headers(self, file_cache: FileCache, capi_generator: CapiGenerator):
+    def __generate_enums_header(self, file_cache: FileCache):
+        if self.enum_generators:
+            enums_header = file_cache.get_file_for_enums(self.full_name_array)
+            enums_header.put_begin_cpp_comments(self.params)
+            with WatchdogScope(enums_header, self.full_name.upper() + '_ENUMS_INCLUDED'):
+                self.__generate_namespace_enumerators(enums_header)
+
+    def __generate_namespace_header(self, file_cache: FileCache, capi_generator: CapiGenerator):
         namespace_header = file_cache.get_file_for_namespace(self.full_name_array)
         namespace_header.put_begin_cpp_comments(self.params)
         with WatchdogScope(namespace_header, self.full_name.upper() + '_INCLUDED'):
-            self.__generate_namespace_enumerators(namespace_header)
             namespace_header.put_include_files()
             namespace_header.include_user_header(file_cache.capi_header(self.full_name_array))
             namespace_header.include_user_header(file_cache.fwd_header(self.full_name_array))
+            if self.enum_generators:
+                namespace_header.include_user_header(file_cache.enums_header(self.full_name_array))
             for nested_namespace_generator in self.nested_namespaces:
                 namespace_header.include_user_header(
                     file_cache.namespace_header(nested_namespace_generator.full_name_array))
-                nested_namespace_generator.__generate_namespace_headers(file_cache, capi_generator)
             for class_generator in self.classes:
                 namespace_header.include_user_header(
                     file_cache.class_header(class_generator.full_name_array))
@@ -156,7 +163,8 @@ class NamespaceGenerator(object):
                 enum_generator.generate_enum_definition(snippet_file)
 
     def __generate(self, file_cache: FileCache, capi_generator: CapiGenerator):
-        self.__generate_namespace_headers(file_cache, capi_generator)
+        self.__generate_namespace_header(file_cache, capi_generator)
+        self.__generate_enums_header(file_cache)
         for nested_namespace in self.nested_namespaces:
             nested_namespace.__generate(file_cache, capi_generator)
         for class_generator in self.classes:

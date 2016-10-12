@@ -21,6 +21,7 @@
     <xs:attribute name="fwd_header_suffix" type="xs:string" use="optional" default="Fwd"/>
     <xs:attribute name="decl_header_suffix" type="xs:string" use="optional" default="Decl"/>
     <xs:attribute name="key_header_suffix" type="xs:string" use="optional" default="Keys"/>
+    <xs:attribute name="enums_header_suffix" type="xs:string" use="optional" default="Enums"/>
     <xs:attribute name="open_api" type="xs:boolean" use="optional" default="true"/>
     <xs:attribute name="copy_semantic_wrapper_class_suffix" type="xs:string" use="optional" default=""/>
     <xs:attribute name="reference_counted_wrapper_class_suffix" type="xs:string" use="optional" default="Ptr"/>

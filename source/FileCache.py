@@ -95,6 +95,12 @@ class FileCache(object):
             namespace_path[-1] + '.h'
         )
 
+    def __get_file_name_for_enums(self, namespace_path: [str], join_traits: PosixJoin or OsJoin) -> str:
+        return join_traits.join(
+            self.__get_file_name_base_for_namespace(namespace_path, join_traits),
+            namespace_path[-1] + self.params.enums_header_suffix + '.h'
+        )
+
     def __get_file_name_for_class_decl(self, namespace_path: [str], join_traits: PosixJoin or OsJoin) -> str:
         return join_traits.join(
             self.__get_file_name_base_for_namespace_common(namespace_path[:-1], join_traits),
@@ -134,6 +140,10 @@ class FileCache(object):
         output_file_name = self.__get_file_name_for_namespace(path_to_namespace, OsJoin(self.base_path))
         return self.__get_cached_generator(output_file_name)
 
+    def get_file_for_enums(self, path_to_namespace: [str]) -> FileGenerator:
+        output_file_name = self.__get_file_name_for_enums(path_to_namespace, OsJoin(self.base_path))
+        return self.__get_cached_generator(output_file_name)
+
     def get_file_for_class_decl(self, path_to_class: [str]) -> FileGenerator:
         output_file_name = self.__get_file_name_for_class_decl(path_to_class, OsJoin(self.base_path))
         return self.__get_cached_generator(output_file_name)
@@ -155,6 +165,9 @@ class FileCache(object):
 
     def namespace_header(self, path_to_namespace: [str]) -> str:
         return self.__get_file_name_for_namespace(path_to_namespace, PosixJoin())
+
+    def enums_header(self, path_to_namespace: [str]) -> str:
+        return self.__get_file_name_for_enums(path_to_namespace, PosixJoin())
 
     def class_header_decl(self, path_to_class: [str]) -> str:
         return self.__get_file_name_for_class_decl(path_to_class, PosixJoin())

@@ -192,7 +192,7 @@ class EnumTypeGenerator(object):
     def include_dependent_declaration_headers(self, file_generator: FileGenerator, file_cache: FileCache):
         parent_generator = self.enum_argument_generator.parent_generator
         if type(parent_generator) is NamespaceGenerator:
-            header_to_include = file_cache.namespace_header(parent_generator.full_name_array)
+            header_to_include = file_cache.enums_header(parent_generator.full_name_array)
         else:
             header_to_include = file_cache.class_header_decl(parent_generator.full_name_array)
         file_generator.include_user_header(header_to_include)

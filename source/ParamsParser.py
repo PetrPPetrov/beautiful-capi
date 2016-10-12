@@ -70,6 +70,8 @@ class TBeautifulCapiParams(object):
         self.decl_header_suffix_filled = False
         self.key_header_suffix = "Keys"
         self.key_header_suffix_filled = False
+        self.enums_header_suffix = "Enums"
+        self.enums_header_suffix_filled = False
         self.open_api = True
         self.open_api_filled = False
         self.copy_semantic_wrapper_class_suffix = ""
@@ -162,6 +164,10 @@ class TBeautifulCapiParams(object):
             cur_attr = dom_node.getAttribute("key_header_suffix")
             self.key_header_suffix = cur_attr
             self.key_header_suffix_filled = True
+        if dom_node.hasAttribute("enums_header_suffix"):
+            cur_attr = dom_node.getAttribute("enums_header_suffix")
+            self.enums_header_suffix = cur_attr
+            self.enums_header_suffix_filled = True
         if dom_node.hasAttribute("open_api"):
             cur_attr = dom_node.getAttribute("open_api")
             self.open_api = string_to_bool(cur_attr)
