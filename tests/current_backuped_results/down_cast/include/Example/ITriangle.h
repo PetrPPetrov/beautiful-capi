@@ -49,7 +49,7 @@ inline Example::ITrianglePtr::ITrianglePtr(const ITrianglePtr& other) : Example:
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::ITrianglePtr::ITrianglePtr(ITrianglePtr&& other) : Example::IPolygonPtr(std::move(other))
 {
-    mObject = other.GetRawPointer();
+    mObject = other.mObject;
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -101,7 +101,7 @@ inline Example::ITrianglePtr& Example::ITrianglePtr::operator=(Example::ITriangl
             SetObject(0);
         }
         Example::IPolygonPtr::operator=(std::move(other));
-        mObject = other.GetRawPointer();
+        mObject = other.mObject;
         other.mObject = 0;
     }
     return *this;

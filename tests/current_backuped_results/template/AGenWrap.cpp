@@ -644,7 +644,7 @@ EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_float_get_item(void* object_pointer, int index)
 {
     const Example::VectorOfObjectsImpl<Example::ModelImpl<float>>* self = static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<float>>*>(object_pointer);
-    return self->GetItem(index);
+    return self->GetItem(index).detach();
 }
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_float_add_ref(void* object_pointer)
@@ -683,7 +683,7 @@ EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_double_get_item(void* object_pointer, int index)
 {
     const Example::VectorOfObjectsImpl<Example::ModelImpl<double>>* self = static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<double>>*>(object_pointer);
-    return self->GetItem(index);
+    return self->GetItem(index).detach();
 }
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_double_add_ref(void* object_pointer)

@@ -81,7 +81,7 @@ inline Example::Position<double>::Position(const Position<double>& other)
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::Position<double>::Position(Position<double>&& other)
 {
-    mObject = other.GetRawPointer();
+    mObject = other.mObject;
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -118,7 +118,7 @@ inline Example::Position<double>& Example::Position<double>::operator=(const Exa
         }
         if (other.GetRawPointer())
         {
-            SetObject(example_position_double_copy(other.GetRawPointer()));
+            SetObject(example_position_double_copy(other.mObject));
         }
         else
         {
@@ -138,7 +138,7 @@ inline Example::Position<double>& Example::Position<double>::operator=(Example::
             example_position_double_delete(GetRawPointer());
             SetObject(0);
         }
-        mObject = other.GetRawPointer();
+        mObject = other.mObject;
         other.mObject = 0;
     }
     return *this;

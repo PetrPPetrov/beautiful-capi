@@ -163,8 +163,8 @@ class CopySemantic(LifecycleTraits):
         return self.params.snippet_implementation_value_usage
 
     @property
-    def method_copy_or_add_ref_default_value(self) -> str:
-        return False
+    def implementation_2_c(self) -> str:
+        return self.params.value_implementation_2_c
 
     @staticmethod
     def implementation_result_instructions(class_generator, result_var: str, expression: str) -> ([str], str):
@@ -349,11 +349,11 @@ class RawPointerSemantic(LifecycleTraits):
 
     @property
     def snippet_implementation_usage(self) -> str:
-        return self.params.snippet_implementation_pointer_usage
+        return self.params.snippet_implementation_raw_usage
 
     @property
-    def method_copy_or_add_ref_default_value(self) -> str:
-        return False
+    def implementation_2_c(self) -> str:
+        return self.params.raw_implementation_2_c
 
     @staticmethod
     def implementation_result_instructions(class_generator, result_var: str, expression: str) -> ([str], str):
@@ -494,11 +494,11 @@ class RefCountedSemantic(LifecycleTraits):
 
     @property
     def snippet_implementation_usage(self) -> str:
-        return self.params.snippet_implementation_pointer_usage
+        return self.params.snippet_implementation_reference_counted_usage
 
     @property
-    def method_copy_or_add_ref_default_value(self) -> str:
-        return True
+    def implementation_2_c(self) -> str:
+        return self.params.reference_counted_implementation_2_c
 
     @staticmethod
     def implementation_result_instructions(class_generator, result_var: str, expression: str) -> ([str], str):

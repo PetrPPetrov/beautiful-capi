@@ -69,7 +69,7 @@ inline Example::ModelPtr<double>::ModelPtr(const ModelPtr<double>& other)
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::ModelPtr<double>::ModelPtr(ModelPtr<double>&& other)
 {
-    mObject = other.GetRawPointer();
+    mObject = other.mObject;
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -120,7 +120,7 @@ inline Example::ModelPtr<double>& Example::ModelPtr<double>::operator=(Example::
             example_model_double_release(GetRawPointer());
             SetObject(0);
         }
-        mObject = other.GetRawPointer();
+        mObject = other.mObject;
         other.mObject = 0;
     }
     return *this;

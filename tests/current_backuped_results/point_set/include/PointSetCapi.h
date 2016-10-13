@@ -192,36 +192,156 @@
     
     #ifdef POINTSET_CAPI_DEFINE_FUNCTION_POINTERS
         
-        extern point_set_get_major_version_function_type point_set_get_major_version = 0;
-        extern point_set_get_minor_version_function_type point_set_get_minor_version = 0;
-        extern point_set_get_patch_version_function_type point_set_get_patch_version = 0;
-        extern point_set_position_default_function_type point_set_position_default = 0;
-        extern point_set_position_initialized_function_type point_set_position_initialized = 0;
-        extern point_set_position_get_x_function_type point_set_position_get_x = 0;
-        extern point_set_position_set_x_function_type point_set_position_set_x = 0;
-        extern point_set_position_get_y_function_type point_set_position_get_y = 0;
-        extern point_set_position_set_y_function_type point_set_position_set_y = 0;
-        extern point_set_position_get_z_function_type point_set_position_get_z = 0;
-        extern point_set_position_set_z_function_type point_set_position_set_z = 0;
-        extern point_set_position_copy_function_type point_set_position_copy = 0;
-        extern point_set_position_delete_function_type point_set_position_delete = 0;
-        extern point_set_points_default_function_type point_set_points_default = 0;
-        extern point_set_points_size_function_type point_set_points_size = 0;
-        extern point_set_points_reserve_function_type point_set_points_reserve = 0;
-        extern point_set_points_resize_function_type point_set_points_resize = 0;
-        extern point_set_points_get_element_function_type point_set_points_get_element = 0;
-        extern point_set_points_set_element_function_type point_set_points_set_element = 0;
-        extern point_set_points_push_back_function_type point_set_points_push_back = 0;
-        extern point_set_points_clear_function_type point_set_points_clear = 0;
-        extern point_set_points_add_ref_function_type point_set_points_add_ref = 0;
-        extern point_set_points_release_function_type point_set_points_release = 0;
-        extern point_set_point_set_default_function_type point_set_point_set_default = 0;
-        extern point_set_point_set_get_name_function_type point_set_point_set_get_name = 0;
-        extern point_set_point_set_set_name_function_type point_set_point_set_set_name = 0;
-        extern point_set_point_set_get_points_function_type point_set_point_set_get_points = 0;
-        extern point_set_point_set_set_points_function_type point_set_point_set_set_points = 0;
-        extern point_set_point_set_add_ref_function_type point_set_point_set_add_ref = 0;
-        extern point_set_point_set_release_function_type point_set_point_set_release = 0;
+        #ifdef point_set_get_major_version_define_function_pointer_var
+            point_set_get_major_version_define_function_pointer_var
+        #else
+            extern point_set_get_major_version_function_type point_set_get_major_version = 0;
+        #endif
+        #ifdef point_set_get_minor_version_define_function_pointer_var
+            point_set_get_minor_version_define_function_pointer_var
+        #else
+            extern point_set_get_minor_version_function_type point_set_get_minor_version = 0;
+        #endif
+        #ifdef point_set_get_patch_version_define_function_pointer_var
+            point_set_get_patch_version_define_function_pointer_var
+        #else
+            extern point_set_get_patch_version_function_type point_set_get_patch_version = 0;
+        #endif
+        #ifdef point_set_position_default_define_function_pointer_var
+            point_set_position_default_define_function_pointer_var
+        #else
+            extern point_set_position_default_function_type point_set_position_default = 0;
+        #endif
+        #ifdef point_set_position_initialized_define_function_pointer_var
+            point_set_position_initialized_define_function_pointer_var
+        #else
+            extern point_set_position_initialized_function_type point_set_position_initialized = 0;
+        #endif
+        #ifdef point_set_position_get_x_define_function_pointer_var
+            point_set_position_get_x_define_function_pointer_var
+        #else
+            extern point_set_position_get_x_function_type point_set_position_get_x = 0;
+        #endif
+        #ifdef point_set_position_set_x_define_function_pointer_var
+            point_set_position_set_x_define_function_pointer_var
+        #else
+            extern point_set_position_set_x_function_type point_set_position_set_x = 0;
+        #endif
+        #ifdef point_set_position_get_y_define_function_pointer_var
+            point_set_position_get_y_define_function_pointer_var
+        #else
+            extern point_set_position_get_y_function_type point_set_position_get_y = 0;
+        #endif
+        #ifdef point_set_position_set_y_define_function_pointer_var
+            point_set_position_set_y_define_function_pointer_var
+        #else
+            extern point_set_position_set_y_function_type point_set_position_set_y = 0;
+        #endif
+        #ifdef point_set_position_get_z_define_function_pointer_var
+            point_set_position_get_z_define_function_pointer_var
+        #else
+            extern point_set_position_get_z_function_type point_set_position_get_z = 0;
+        #endif
+        #ifdef point_set_position_set_z_define_function_pointer_var
+            point_set_position_set_z_define_function_pointer_var
+        #else
+            extern point_set_position_set_z_function_type point_set_position_set_z = 0;
+        #endif
+        #ifdef point_set_position_copy_define_function_pointer_var
+            point_set_position_copy_define_function_pointer_var
+        #else
+            extern point_set_position_copy_function_type point_set_position_copy = 0;
+        #endif
+        #ifdef point_set_position_delete_define_function_pointer_var
+            point_set_position_delete_define_function_pointer_var
+        #else
+            extern point_set_position_delete_function_type point_set_position_delete = 0;
+        #endif
+        #ifdef point_set_points_default_define_function_pointer_var
+            point_set_points_default_define_function_pointer_var
+        #else
+            extern point_set_points_default_function_type point_set_points_default = 0;
+        #endif
+        #ifdef point_set_points_size_define_function_pointer_var
+            point_set_points_size_define_function_pointer_var
+        #else
+            extern point_set_points_size_function_type point_set_points_size = 0;
+        #endif
+        #ifdef point_set_points_reserve_define_function_pointer_var
+            point_set_points_reserve_define_function_pointer_var
+        #else
+            extern point_set_points_reserve_function_type point_set_points_reserve = 0;
+        #endif
+        #ifdef point_set_points_resize_define_function_pointer_var
+            point_set_points_resize_define_function_pointer_var
+        #else
+            extern point_set_points_resize_function_type point_set_points_resize = 0;
+        #endif
+        #ifdef point_set_points_get_element_define_function_pointer_var
+            point_set_points_get_element_define_function_pointer_var
+        #else
+            extern point_set_points_get_element_function_type point_set_points_get_element = 0;
+        #endif
+        #ifdef point_set_points_set_element_define_function_pointer_var
+            point_set_points_set_element_define_function_pointer_var
+        #else
+            extern point_set_points_set_element_function_type point_set_points_set_element = 0;
+        #endif
+        #ifdef point_set_points_push_back_define_function_pointer_var
+            point_set_points_push_back_define_function_pointer_var
+        #else
+            extern point_set_points_push_back_function_type point_set_points_push_back = 0;
+        #endif
+        #ifdef point_set_points_clear_define_function_pointer_var
+            point_set_points_clear_define_function_pointer_var
+        #else
+            extern point_set_points_clear_function_type point_set_points_clear = 0;
+        #endif
+        #ifdef point_set_points_add_ref_define_function_pointer_var
+            point_set_points_add_ref_define_function_pointer_var
+        #else
+            extern point_set_points_add_ref_function_type point_set_points_add_ref = 0;
+        #endif
+        #ifdef point_set_points_release_define_function_pointer_var
+            point_set_points_release_define_function_pointer_var
+        #else
+            extern point_set_points_release_function_type point_set_points_release = 0;
+        #endif
+        #ifdef point_set_point_set_default_define_function_pointer_var
+            point_set_point_set_default_define_function_pointer_var
+        #else
+            extern point_set_point_set_default_function_type point_set_point_set_default = 0;
+        #endif
+        #ifdef point_set_point_set_get_name_define_function_pointer_var
+            point_set_point_set_get_name_define_function_pointer_var
+        #else
+            extern point_set_point_set_get_name_function_type point_set_point_set_get_name = 0;
+        #endif
+        #ifdef point_set_point_set_set_name_define_function_pointer_var
+            point_set_point_set_set_name_define_function_pointer_var
+        #else
+            extern point_set_point_set_set_name_function_type point_set_point_set_set_name = 0;
+        #endif
+        #ifdef point_set_point_set_get_points_define_function_pointer_var
+            point_set_point_set_get_points_define_function_pointer_var
+        #else
+            extern point_set_point_set_get_points_function_type point_set_point_set_get_points = 0;
+        #endif
+        #ifdef point_set_point_set_set_points_define_function_pointer_var
+            point_set_point_set_set_points_define_function_pointer_var
+        #else
+            extern point_set_point_set_set_points_function_type point_set_point_set_set_points = 0;
+        #endif
+        #ifdef point_set_point_set_add_ref_define_function_pointer_var
+            point_set_point_set_add_ref_define_function_pointer_var
+        #else
+            extern point_set_point_set_add_ref_function_type point_set_point_set_add_ref = 0;
+        #endif
+        #ifdef point_set_point_set_release_define_function_pointer_var
+            point_set_point_set_release_define_function_pointer_var
+        #else
+            extern point_set_point_set_release_function_type point_set_point_set_release = 0;
+        #endif
         
     #else /* POINTSET_CAPI_DEFINE_FUNCTION_POINTERS */
         
@@ -309,156 +429,156 @@
                     error_message << "Can't load shared library " << shared_library_name;
                     throw std::runtime_error(error_message.str());
                 }
-                #ifdef point_set_get_major_version_str
-                    load_function<point_set_get_major_version_function_type>(point_set_get_major_version, point_set_get_major_version_str);
-                #else /* point_set_get_major_version_str */
+                #ifdef point_set_get_major_version_load_function_call
+                    point_set_get_major_version_load_function_call
+                #else /* point_set_get_major_version_load_function_call */
                     load_function<point_set_get_major_version_function_type>(point_set_get_major_version, "point_set_get_major_version");
-                #endif /* point_set_get_major_version_str */
-                #ifdef point_set_get_minor_version_str
-                    load_function<point_set_get_minor_version_function_type>(point_set_get_minor_version, point_set_get_minor_version_str);
-                #else /* point_set_get_minor_version_str */
+                #endif /* point_set_get_major_version_load_function_call */
+                #ifdef point_set_get_minor_version_load_function_call
+                    point_set_get_minor_version_load_function_call
+                #else /* point_set_get_minor_version_load_function_call */
                     load_function<point_set_get_minor_version_function_type>(point_set_get_minor_version, "point_set_get_minor_version");
-                #endif /* point_set_get_minor_version_str */
-                #ifdef point_set_get_patch_version_str
-                    load_function<point_set_get_patch_version_function_type>(point_set_get_patch_version, point_set_get_patch_version_str);
-                #else /* point_set_get_patch_version_str */
+                #endif /* point_set_get_minor_version_load_function_call */
+                #ifdef point_set_get_patch_version_load_function_call
+                    point_set_get_patch_version_load_function_call
+                #else /* point_set_get_patch_version_load_function_call */
                     load_function<point_set_get_patch_version_function_type>(point_set_get_patch_version, "point_set_get_patch_version");
-                #endif /* point_set_get_patch_version_str */
-                #ifdef point_set_position_default_str
-                    load_function<point_set_position_default_function_type>(point_set_position_default, point_set_position_default_str);
-                #else /* point_set_position_default_str */
+                #endif /* point_set_get_patch_version_load_function_call */
+                #ifdef point_set_position_default_load_function_call
+                    point_set_position_default_load_function_call
+                #else /* point_set_position_default_load_function_call */
                     load_function<point_set_position_default_function_type>(point_set_position_default, "point_set_position_default");
-                #endif /* point_set_position_default_str */
-                #ifdef point_set_position_initialized_str
-                    load_function<point_set_position_initialized_function_type>(point_set_position_initialized, point_set_position_initialized_str);
-                #else /* point_set_position_initialized_str */
+                #endif /* point_set_position_default_load_function_call */
+                #ifdef point_set_position_initialized_load_function_call
+                    point_set_position_initialized_load_function_call
+                #else /* point_set_position_initialized_load_function_call */
                     load_function<point_set_position_initialized_function_type>(point_set_position_initialized, "point_set_position_initialized");
-                #endif /* point_set_position_initialized_str */
-                #ifdef point_set_position_get_x_str
-                    load_function<point_set_position_get_x_function_type>(point_set_position_get_x, point_set_position_get_x_str);
-                #else /* point_set_position_get_x_str */
+                #endif /* point_set_position_initialized_load_function_call */
+                #ifdef point_set_position_get_x_load_function_call
+                    point_set_position_get_x_load_function_call
+                #else /* point_set_position_get_x_load_function_call */
                     load_function<point_set_position_get_x_function_type>(point_set_position_get_x, "point_set_position_get_x");
-                #endif /* point_set_position_get_x_str */
-                #ifdef point_set_position_set_x_str
-                    load_function<point_set_position_set_x_function_type>(point_set_position_set_x, point_set_position_set_x_str);
-                #else /* point_set_position_set_x_str */
+                #endif /* point_set_position_get_x_load_function_call */
+                #ifdef point_set_position_set_x_load_function_call
+                    point_set_position_set_x_load_function_call
+                #else /* point_set_position_set_x_load_function_call */
                     load_function<point_set_position_set_x_function_type>(point_set_position_set_x, "point_set_position_set_x");
-                #endif /* point_set_position_set_x_str */
-                #ifdef point_set_position_get_y_str
-                    load_function<point_set_position_get_y_function_type>(point_set_position_get_y, point_set_position_get_y_str);
-                #else /* point_set_position_get_y_str */
+                #endif /* point_set_position_set_x_load_function_call */
+                #ifdef point_set_position_get_y_load_function_call
+                    point_set_position_get_y_load_function_call
+                #else /* point_set_position_get_y_load_function_call */
                     load_function<point_set_position_get_y_function_type>(point_set_position_get_y, "point_set_position_get_y");
-                #endif /* point_set_position_get_y_str */
-                #ifdef point_set_position_set_y_str
-                    load_function<point_set_position_set_y_function_type>(point_set_position_set_y, point_set_position_set_y_str);
-                #else /* point_set_position_set_y_str */
+                #endif /* point_set_position_get_y_load_function_call */
+                #ifdef point_set_position_set_y_load_function_call
+                    point_set_position_set_y_load_function_call
+                #else /* point_set_position_set_y_load_function_call */
                     load_function<point_set_position_set_y_function_type>(point_set_position_set_y, "point_set_position_set_y");
-                #endif /* point_set_position_set_y_str */
-                #ifdef point_set_position_get_z_str
-                    load_function<point_set_position_get_z_function_type>(point_set_position_get_z, point_set_position_get_z_str);
-                #else /* point_set_position_get_z_str */
+                #endif /* point_set_position_set_y_load_function_call */
+                #ifdef point_set_position_get_z_load_function_call
+                    point_set_position_get_z_load_function_call
+                #else /* point_set_position_get_z_load_function_call */
                     load_function<point_set_position_get_z_function_type>(point_set_position_get_z, "point_set_position_get_z");
-                #endif /* point_set_position_get_z_str */
-                #ifdef point_set_position_set_z_str
-                    load_function<point_set_position_set_z_function_type>(point_set_position_set_z, point_set_position_set_z_str);
-                #else /* point_set_position_set_z_str */
+                #endif /* point_set_position_get_z_load_function_call */
+                #ifdef point_set_position_set_z_load_function_call
+                    point_set_position_set_z_load_function_call
+                #else /* point_set_position_set_z_load_function_call */
                     load_function<point_set_position_set_z_function_type>(point_set_position_set_z, "point_set_position_set_z");
-                #endif /* point_set_position_set_z_str */
-                #ifdef point_set_position_copy_str
-                    load_function<point_set_position_copy_function_type>(point_set_position_copy, point_set_position_copy_str);
-                #else /* point_set_position_copy_str */
+                #endif /* point_set_position_set_z_load_function_call */
+                #ifdef point_set_position_copy_load_function_call
+                    point_set_position_copy_load_function_call
+                #else /* point_set_position_copy_load_function_call */
                     load_function<point_set_position_copy_function_type>(point_set_position_copy, "point_set_position_copy");
-                #endif /* point_set_position_copy_str */
-                #ifdef point_set_position_delete_str
-                    load_function<point_set_position_delete_function_type>(point_set_position_delete, point_set_position_delete_str);
-                #else /* point_set_position_delete_str */
+                #endif /* point_set_position_copy_load_function_call */
+                #ifdef point_set_position_delete_load_function_call
+                    point_set_position_delete_load_function_call
+                #else /* point_set_position_delete_load_function_call */
                     load_function<point_set_position_delete_function_type>(point_set_position_delete, "point_set_position_delete");
-                #endif /* point_set_position_delete_str */
-                #ifdef point_set_points_default_str
-                    load_function<point_set_points_default_function_type>(point_set_points_default, point_set_points_default_str);
-                #else /* point_set_points_default_str */
+                #endif /* point_set_position_delete_load_function_call */
+                #ifdef point_set_points_default_load_function_call
+                    point_set_points_default_load_function_call
+                #else /* point_set_points_default_load_function_call */
                     load_function<point_set_points_default_function_type>(point_set_points_default, "point_set_points_default");
-                #endif /* point_set_points_default_str */
-                #ifdef point_set_points_size_str
-                    load_function<point_set_points_size_function_type>(point_set_points_size, point_set_points_size_str);
-                #else /* point_set_points_size_str */
+                #endif /* point_set_points_default_load_function_call */
+                #ifdef point_set_points_size_load_function_call
+                    point_set_points_size_load_function_call
+                #else /* point_set_points_size_load_function_call */
                     load_function<point_set_points_size_function_type>(point_set_points_size, "point_set_points_size");
-                #endif /* point_set_points_size_str */
-                #ifdef point_set_points_reserve_str
-                    load_function<point_set_points_reserve_function_type>(point_set_points_reserve, point_set_points_reserve_str);
-                #else /* point_set_points_reserve_str */
+                #endif /* point_set_points_size_load_function_call */
+                #ifdef point_set_points_reserve_load_function_call
+                    point_set_points_reserve_load_function_call
+                #else /* point_set_points_reserve_load_function_call */
                     load_function<point_set_points_reserve_function_type>(point_set_points_reserve, "point_set_points_reserve");
-                #endif /* point_set_points_reserve_str */
-                #ifdef point_set_points_resize_str
-                    load_function<point_set_points_resize_function_type>(point_set_points_resize, point_set_points_resize_str);
-                #else /* point_set_points_resize_str */
+                #endif /* point_set_points_reserve_load_function_call */
+                #ifdef point_set_points_resize_load_function_call
+                    point_set_points_resize_load_function_call
+                #else /* point_set_points_resize_load_function_call */
                     load_function<point_set_points_resize_function_type>(point_set_points_resize, "point_set_points_resize");
-                #endif /* point_set_points_resize_str */
-                #ifdef point_set_points_get_element_str
-                    load_function<point_set_points_get_element_function_type>(point_set_points_get_element, point_set_points_get_element_str);
-                #else /* point_set_points_get_element_str */
+                #endif /* point_set_points_resize_load_function_call */
+                #ifdef point_set_points_get_element_load_function_call
+                    point_set_points_get_element_load_function_call
+                #else /* point_set_points_get_element_load_function_call */
                     load_function<point_set_points_get_element_function_type>(point_set_points_get_element, "point_set_points_get_element");
-                #endif /* point_set_points_get_element_str */
-                #ifdef point_set_points_set_element_str
-                    load_function<point_set_points_set_element_function_type>(point_set_points_set_element, point_set_points_set_element_str);
-                #else /* point_set_points_set_element_str */
+                #endif /* point_set_points_get_element_load_function_call */
+                #ifdef point_set_points_set_element_load_function_call
+                    point_set_points_set_element_load_function_call
+                #else /* point_set_points_set_element_load_function_call */
                     load_function<point_set_points_set_element_function_type>(point_set_points_set_element, "point_set_points_set_element");
-                #endif /* point_set_points_set_element_str */
-                #ifdef point_set_points_push_back_str
-                    load_function<point_set_points_push_back_function_type>(point_set_points_push_back, point_set_points_push_back_str);
-                #else /* point_set_points_push_back_str */
+                #endif /* point_set_points_set_element_load_function_call */
+                #ifdef point_set_points_push_back_load_function_call
+                    point_set_points_push_back_load_function_call
+                #else /* point_set_points_push_back_load_function_call */
                     load_function<point_set_points_push_back_function_type>(point_set_points_push_back, "point_set_points_push_back");
-                #endif /* point_set_points_push_back_str */
-                #ifdef point_set_points_clear_str
-                    load_function<point_set_points_clear_function_type>(point_set_points_clear, point_set_points_clear_str);
-                #else /* point_set_points_clear_str */
+                #endif /* point_set_points_push_back_load_function_call */
+                #ifdef point_set_points_clear_load_function_call
+                    point_set_points_clear_load_function_call
+                #else /* point_set_points_clear_load_function_call */
                     load_function<point_set_points_clear_function_type>(point_set_points_clear, "point_set_points_clear");
-                #endif /* point_set_points_clear_str */
-                #ifdef point_set_points_add_ref_str
-                    load_function<point_set_points_add_ref_function_type>(point_set_points_add_ref, point_set_points_add_ref_str);
-                #else /* point_set_points_add_ref_str */
+                #endif /* point_set_points_clear_load_function_call */
+                #ifdef point_set_points_add_ref_load_function_call
+                    point_set_points_add_ref_load_function_call
+                #else /* point_set_points_add_ref_load_function_call */
                     load_function<point_set_points_add_ref_function_type>(point_set_points_add_ref, "point_set_points_add_ref");
-                #endif /* point_set_points_add_ref_str */
-                #ifdef point_set_points_release_str
-                    load_function<point_set_points_release_function_type>(point_set_points_release, point_set_points_release_str);
-                #else /* point_set_points_release_str */
+                #endif /* point_set_points_add_ref_load_function_call */
+                #ifdef point_set_points_release_load_function_call
+                    point_set_points_release_load_function_call
+                #else /* point_set_points_release_load_function_call */
                     load_function<point_set_points_release_function_type>(point_set_points_release, "point_set_points_release");
-                #endif /* point_set_points_release_str */
-                #ifdef point_set_point_set_default_str
-                    load_function<point_set_point_set_default_function_type>(point_set_point_set_default, point_set_point_set_default_str);
-                #else /* point_set_point_set_default_str */
+                #endif /* point_set_points_release_load_function_call */
+                #ifdef point_set_point_set_default_load_function_call
+                    point_set_point_set_default_load_function_call
+                #else /* point_set_point_set_default_load_function_call */
                     load_function<point_set_point_set_default_function_type>(point_set_point_set_default, "point_set_point_set_default");
-                #endif /* point_set_point_set_default_str */
-                #ifdef point_set_point_set_get_name_str
-                    load_function<point_set_point_set_get_name_function_type>(point_set_point_set_get_name, point_set_point_set_get_name_str);
-                #else /* point_set_point_set_get_name_str */
+                #endif /* point_set_point_set_default_load_function_call */
+                #ifdef point_set_point_set_get_name_load_function_call
+                    point_set_point_set_get_name_load_function_call
+                #else /* point_set_point_set_get_name_load_function_call */
                     load_function<point_set_point_set_get_name_function_type>(point_set_point_set_get_name, "point_set_point_set_get_name");
-                #endif /* point_set_point_set_get_name_str */
-                #ifdef point_set_point_set_set_name_str
-                    load_function<point_set_point_set_set_name_function_type>(point_set_point_set_set_name, point_set_point_set_set_name_str);
-                #else /* point_set_point_set_set_name_str */
+                #endif /* point_set_point_set_get_name_load_function_call */
+                #ifdef point_set_point_set_set_name_load_function_call
+                    point_set_point_set_set_name_load_function_call
+                #else /* point_set_point_set_set_name_load_function_call */
                     load_function<point_set_point_set_set_name_function_type>(point_set_point_set_set_name, "point_set_point_set_set_name");
-                #endif /* point_set_point_set_set_name_str */
-                #ifdef point_set_point_set_get_points_str
-                    load_function<point_set_point_set_get_points_function_type>(point_set_point_set_get_points, point_set_point_set_get_points_str);
-                #else /* point_set_point_set_get_points_str */
+                #endif /* point_set_point_set_set_name_load_function_call */
+                #ifdef point_set_point_set_get_points_load_function_call
+                    point_set_point_set_get_points_load_function_call
+                #else /* point_set_point_set_get_points_load_function_call */
                     load_function<point_set_point_set_get_points_function_type>(point_set_point_set_get_points, "point_set_point_set_get_points");
-                #endif /* point_set_point_set_get_points_str */
-                #ifdef point_set_point_set_set_points_str
-                    load_function<point_set_point_set_set_points_function_type>(point_set_point_set_set_points, point_set_point_set_set_points_str);
-                #else /* point_set_point_set_set_points_str */
+                #endif /* point_set_point_set_get_points_load_function_call */
+                #ifdef point_set_point_set_set_points_load_function_call
+                    point_set_point_set_set_points_load_function_call
+                #else /* point_set_point_set_set_points_load_function_call */
                     load_function<point_set_point_set_set_points_function_type>(point_set_point_set_set_points, "point_set_point_set_set_points");
-                #endif /* point_set_point_set_set_points_str */
-                #ifdef point_set_point_set_add_ref_str
-                    load_function<point_set_point_set_add_ref_function_type>(point_set_point_set_add_ref, point_set_point_set_add_ref_str);
-                #else /* point_set_point_set_add_ref_str */
+                #endif /* point_set_point_set_set_points_load_function_call */
+                #ifdef point_set_point_set_add_ref_load_function_call
+                    point_set_point_set_add_ref_load_function_call
+                #else /* point_set_point_set_add_ref_load_function_call */
                     load_function<point_set_point_set_add_ref_function_type>(point_set_point_set_add_ref, "point_set_point_set_add_ref");
-                #endif /* point_set_point_set_add_ref_str */
-                #ifdef point_set_point_set_release_str
-                    load_function<point_set_point_set_release_function_type>(point_set_point_set_release, point_set_point_set_release_str);
-                #else /* point_set_point_set_release_str */
+                #endif /* point_set_point_set_add_ref_load_function_call */
+                #ifdef point_set_point_set_release_load_function_call
+                    point_set_point_set_release_load_function_call
+                #else /* point_set_point_set_release_load_function_call */
                     load_function<point_set_point_set_release_function_type>(point_set_point_set_release, "point_set_point_set_release");
-                #endif /* point_set_point_set_release_str */
+                #endif /* point_set_point_set_release_load_function_call */
                 const int major_version = point_set_get_major_version();
                 const int minor_version = point_set_get_minor_version();
                 const int patch_version = point_set_get_patch_version();
@@ -489,36 +609,156 @@
                 #else /* _WIN32 */
                     dlclose(handle);
                 #endif /* _WIN32 */
-                point_set_get_major_version = 0;
-                point_set_get_minor_version = 0;
-                point_set_get_patch_version = 0;
-                point_set_position_default = 0;
-                point_set_position_initialized = 0;
-                point_set_position_get_x = 0;
-                point_set_position_set_x = 0;
-                point_set_position_get_y = 0;
-                point_set_position_set_y = 0;
-                point_set_position_get_z = 0;
-                point_set_position_set_z = 0;
-                point_set_position_copy = 0;
-                point_set_position_delete = 0;
-                point_set_points_default = 0;
-                point_set_points_size = 0;
-                point_set_points_reserve = 0;
-                point_set_points_resize = 0;
-                point_set_points_get_element = 0;
-                point_set_points_set_element = 0;
-                point_set_points_push_back = 0;
-                point_set_points_clear = 0;
-                point_set_points_add_ref = 0;
-                point_set_points_release = 0;
-                point_set_point_set_default = 0;
-                point_set_point_set_get_name = 0;
-                point_set_point_set_set_name = 0;
-                point_set_point_set_get_points = 0;
-                point_set_point_set_set_points = 0;
-                point_set_point_set_add_ref = 0;
-                point_set_point_set_release = 0;
+                #ifdef point_set_get_major_version_zero_function_pointer
+                    point_set_get_major_version_zero_function_pointer
+                #else /* point_set_get_major_version_zero_function_pointer */
+                    point_set_get_major_version = 0;
+                #endif /* point_set_get_major_version_zero_function_pointer */
+                #ifdef point_set_get_minor_version_zero_function_pointer
+                    point_set_get_minor_version_zero_function_pointer
+                #else /* point_set_get_minor_version_zero_function_pointer */
+                    point_set_get_minor_version = 0;
+                #endif /* point_set_get_minor_version_zero_function_pointer */
+                #ifdef point_set_get_patch_version_zero_function_pointer
+                    point_set_get_patch_version_zero_function_pointer
+                #else /* point_set_get_patch_version_zero_function_pointer */
+                    point_set_get_patch_version = 0;
+                #endif /* point_set_get_patch_version_zero_function_pointer */
+                #ifdef point_set_position_default_zero_function_pointer
+                    point_set_position_default_zero_function_pointer
+                #else /* point_set_position_default_zero_function_pointer */
+                    point_set_position_default = 0;
+                #endif /* point_set_position_default_zero_function_pointer */
+                #ifdef point_set_position_initialized_zero_function_pointer
+                    point_set_position_initialized_zero_function_pointer
+                #else /* point_set_position_initialized_zero_function_pointer */
+                    point_set_position_initialized = 0;
+                #endif /* point_set_position_initialized_zero_function_pointer */
+                #ifdef point_set_position_get_x_zero_function_pointer
+                    point_set_position_get_x_zero_function_pointer
+                #else /* point_set_position_get_x_zero_function_pointer */
+                    point_set_position_get_x = 0;
+                #endif /* point_set_position_get_x_zero_function_pointer */
+                #ifdef point_set_position_set_x_zero_function_pointer
+                    point_set_position_set_x_zero_function_pointer
+                #else /* point_set_position_set_x_zero_function_pointer */
+                    point_set_position_set_x = 0;
+                #endif /* point_set_position_set_x_zero_function_pointer */
+                #ifdef point_set_position_get_y_zero_function_pointer
+                    point_set_position_get_y_zero_function_pointer
+                #else /* point_set_position_get_y_zero_function_pointer */
+                    point_set_position_get_y = 0;
+                #endif /* point_set_position_get_y_zero_function_pointer */
+                #ifdef point_set_position_set_y_zero_function_pointer
+                    point_set_position_set_y_zero_function_pointer
+                #else /* point_set_position_set_y_zero_function_pointer */
+                    point_set_position_set_y = 0;
+                #endif /* point_set_position_set_y_zero_function_pointer */
+                #ifdef point_set_position_get_z_zero_function_pointer
+                    point_set_position_get_z_zero_function_pointer
+                #else /* point_set_position_get_z_zero_function_pointer */
+                    point_set_position_get_z = 0;
+                #endif /* point_set_position_get_z_zero_function_pointer */
+                #ifdef point_set_position_set_z_zero_function_pointer
+                    point_set_position_set_z_zero_function_pointer
+                #else /* point_set_position_set_z_zero_function_pointer */
+                    point_set_position_set_z = 0;
+                #endif /* point_set_position_set_z_zero_function_pointer */
+                #ifdef point_set_position_copy_zero_function_pointer
+                    point_set_position_copy_zero_function_pointer
+                #else /* point_set_position_copy_zero_function_pointer */
+                    point_set_position_copy = 0;
+                #endif /* point_set_position_copy_zero_function_pointer */
+                #ifdef point_set_position_delete_zero_function_pointer
+                    point_set_position_delete_zero_function_pointer
+                #else /* point_set_position_delete_zero_function_pointer */
+                    point_set_position_delete = 0;
+                #endif /* point_set_position_delete_zero_function_pointer */
+                #ifdef point_set_points_default_zero_function_pointer
+                    point_set_points_default_zero_function_pointer
+                #else /* point_set_points_default_zero_function_pointer */
+                    point_set_points_default = 0;
+                #endif /* point_set_points_default_zero_function_pointer */
+                #ifdef point_set_points_size_zero_function_pointer
+                    point_set_points_size_zero_function_pointer
+                #else /* point_set_points_size_zero_function_pointer */
+                    point_set_points_size = 0;
+                #endif /* point_set_points_size_zero_function_pointer */
+                #ifdef point_set_points_reserve_zero_function_pointer
+                    point_set_points_reserve_zero_function_pointer
+                #else /* point_set_points_reserve_zero_function_pointer */
+                    point_set_points_reserve = 0;
+                #endif /* point_set_points_reserve_zero_function_pointer */
+                #ifdef point_set_points_resize_zero_function_pointer
+                    point_set_points_resize_zero_function_pointer
+                #else /* point_set_points_resize_zero_function_pointer */
+                    point_set_points_resize = 0;
+                #endif /* point_set_points_resize_zero_function_pointer */
+                #ifdef point_set_points_get_element_zero_function_pointer
+                    point_set_points_get_element_zero_function_pointer
+                #else /* point_set_points_get_element_zero_function_pointer */
+                    point_set_points_get_element = 0;
+                #endif /* point_set_points_get_element_zero_function_pointer */
+                #ifdef point_set_points_set_element_zero_function_pointer
+                    point_set_points_set_element_zero_function_pointer
+                #else /* point_set_points_set_element_zero_function_pointer */
+                    point_set_points_set_element = 0;
+                #endif /* point_set_points_set_element_zero_function_pointer */
+                #ifdef point_set_points_push_back_zero_function_pointer
+                    point_set_points_push_back_zero_function_pointer
+                #else /* point_set_points_push_back_zero_function_pointer */
+                    point_set_points_push_back = 0;
+                #endif /* point_set_points_push_back_zero_function_pointer */
+                #ifdef point_set_points_clear_zero_function_pointer
+                    point_set_points_clear_zero_function_pointer
+                #else /* point_set_points_clear_zero_function_pointer */
+                    point_set_points_clear = 0;
+                #endif /* point_set_points_clear_zero_function_pointer */
+                #ifdef point_set_points_add_ref_zero_function_pointer
+                    point_set_points_add_ref_zero_function_pointer
+                #else /* point_set_points_add_ref_zero_function_pointer */
+                    point_set_points_add_ref = 0;
+                #endif /* point_set_points_add_ref_zero_function_pointer */
+                #ifdef point_set_points_release_zero_function_pointer
+                    point_set_points_release_zero_function_pointer
+                #else /* point_set_points_release_zero_function_pointer */
+                    point_set_points_release = 0;
+                #endif /* point_set_points_release_zero_function_pointer */
+                #ifdef point_set_point_set_default_zero_function_pointer
+                    point_set_point_set_default_zero_function_pointer
+                #else /* point_set_point_set_default_zero_function_pointer */
+                    point_set_point_set_default = 0;
+                #endif /* point_set_point_set_default_zero_function_pointer */
+                #ifdef point_set_point_set_get_name_zero_function_pointer
+                    point_set_point_set_get_name_zero_function_pointer
+                #else /* point_set_point_set_get_name_zero_function_pointer */
+                    point_set_point_set_get_name = 0;
+                #endif /* point_set_point_set_get_name_zero_function_pointer */
+                #ifdef point_set_point_set_set_name_zero_function_pointer
+                    point_set_point_set_set_name_zero_function_pointer
+                #else /* point_set_point_set_set_name_zero_function_pointer */
+                    point_set_point_set_set_name = 0;
+                #endif /* point_set_point_set_set_name_zero_function_pointer */
+                #ifdef point_set_point_set_get_points_zero_function_pointer
+                    point_set_point_set_get_points_zero_function_pointer
+                #else /* point_set_point_set_get_points_zero_function_pointer */
+                    point_set_point_set_get_points = 0;
+                #endif /* point_set_point_set_get_points_zero_function_pointer */
+                #ifdef point_set_point_set_set_points_zero_function_pointer
+                    point_set_point_set_set_points_zero_function_pointer
+                #else /* point_set_point_set_set_points_zero_function_pointer */
+                    point_set_point_set_set_points = 0;
+                #endif /* point_set_point_set_set_points_zero_function_pointer */
+                #ifdef point_set_point_set_add_ref_zero_function_pointer
+                    point_set_point_set_add_ref_zero_function_pointer
+                #else /* point_set_point_set_add_ref_zero_function_pointer */
+                    point_set_point_set_add_ref = 0;
+                #endif /* point_set_point_set_add_ref_zero_function_pointer */
+                #ifdef point_set_point_set_release_zero_function_pointer
+                    point_set_point_set_release_zero_function_pointer
+                #else /* point_set_point_set_release_zero_function_pointer */
+                    point_set_point_set_release = 0;
+                #endif /* point_set_point_set_release_zero_function_pointer */
             }
         };
     }

@@ -84,7 +84,7 @@ inline PointSet::PointsPtr::PointsPtr(const PointsPtr& other)
 #ifdef POINTSET_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline PointSet::PointsPtr::PointsPtr(PointsPtr&& other)
 {
-    mObject = other.GetRawPointer();
+    mObject = other.mObject;
     other.mObject = 0;
 }
 #endif /* POINTSET_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -135,7 +135,7 @@ inline PointSet::PointsPtr& PointSet::PointsPtr::operator=(PointSet::PointsPtr&&
             point_set_points_release(GetRawPointer());
             SetObject(0);
         }
-        mObject = other.GetRawPointer();
+        mObject = other.mObject;
         other.mObject = 0;
     }
     return *this;

@@ -81,7 +81,7 @@ inline Example::Position<float>::Position(const Position<float>& other)
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::Position<float>::Position(Position<float>&& other)
 {
-    mObject = other.GetRawPointer();
+    mObject = other.mObject;
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -118,7 +118,7 @@ inline Example::Position<float>& Example::Position<float>::operator=(const Examp
         }
         if (other.GetRawPointer())
         {
-            SetObject(example_position_float_copy(other.GetRawPointer()));
+            SetObject(example_position_float_copy(other.mObject));
         }
         else
         {
@@ -138,7 +138,7 @@ inline Example::Position<float>& Example::Position<float>::operator=(Example::Po
             example_position_float_delete(GetRawPointer());
             SetObject(0);
         }
-        mObject = other.GetRawPointer();
+        mObject = other.mObject;
         other.mObject = 0;
     }
     return *this;

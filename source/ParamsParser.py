@@ -96,10 +96,18 @@ class TBeautifulCapiParams(object):
         self.delete_method_name_filled = False
         self.exception_info_argument_name = "exception_info"
         self.exception_info_argument_name_filled = False
-        self.snippet_implementation_pointer_usage = "{implementation_name}*"
-        self.snippet_implementation_pointer_usage_filled = False
+        self.snippet_implementation_reference_counted_usage = "{implementation_name}*"
+        self.snippet_implementation_reference_counted_usage_filled = False
+        self.snippet_implementation_raw_usage = "{implementation_name}*"
+        self.snippet_implementation_raw_usage_filled = False
         self.snippet_implementation_value_usage = "{implementation_name}"
         self.snippet_implementation_value_usage_filled = False
+        self.reference_counted_implementation_2_c = "{implementation_expression}"
+        self.reference_counted_implementation_2_c_filled = False
+        self.raw_implementation_2_c = "{implementation_expression}"
+        self.raw_implementation_2_c_filled = False
+        self.value_implementation_2_c = "{implementation_expression}"
+        self.value_implementation_2_c_filled = False
         self.exception_handling_mode = TExceptionHandlingMode.no_handling
         self.exception_handling_mode_filled = False
         self.check_and_throw_exception_filename = "{project_name}/common/check_and_throw_exception.h"
@@ -216,14 +224,30 @@ class TBeautifulCapiParams(object):
             cur_attr = dom_node.getAttribute("exception_info_argument_name")
             self.exception_info_argument_name = cur_attr
             self.exception_info_argument_name_filled = True
-        if dom_node.hasAttribute("snippet_implementation_pointer_usage"):
-            cur_attr = dom_node.getAttribute("snippet_implementation_pointer_usage")
-            self.snippet_implementation_pointer_usage = cur_attr
-            self.snippet_implementation_pointer_usage_filled = True
+        if dom_node.hasAttribute("snippet_implementation_reference_counted_usage"):
+            cur_attr = dom_node.getAttribute("snippet_implementation_reference_counted_usage")
+            self.snippet_implementation_reference_counted_usage = cur_attr
+            self.snippet_implementation_reference_counted_usage_filled = True
+        if dom_node.hasAttribute("snippet_implementation_raw_usage"):
+            cur_attr = dom_node.getAttribute("snippet_implementation_raw_usage")
+            self.snippet_implementation_raw_usage = cur_attr
+            self.snippet_implementation_raw_usage_filled = True
         if dom_node.hasAttribute("snippet_implementation_value_usage"):
             cur_attr = dom_node.getAttribute("snippet_implementation_value_usage")
             self.snippet_implementation_value_usage = cur_attr
             self.snippet_implementation_value_usage_filled = True
+        if dom_node.hasAttribute("reference_counted_implementation_2_c"):
+            cur_attr = dom_node.getAttribute("reference_counted_implementation_2_c")
+            self.reference_counted_implementation_2_c = cur_attr
+            self.reference_counted_implementation_2_c_filled = True
+        if dom_node.hasAttribute("raw_implementation_2_c"):
+            cur_attr = dom_node.getAttribute("raw_implementation_2_c")
+            self.raw_implementation_2_c = cur_attr
+            self.raw_implementation_2_c_filled = True
+        if dom_node.hasAttribute("value_implementation_2_c"):
+            cur_attr = dom_node.getAttribute("value_implementation_2_c")
+            self.value_implementation_2_c = cur_attr
+            self.value_implementation_2_c_filled = True
         if dom_node.hasAttribute("exception_handling_mode"):
             cur_attr = dom_node.getAttribute("exception_handling_mode")
             self.exception_handling_mode = TExceptionHandlingMode.load(cur_attr)

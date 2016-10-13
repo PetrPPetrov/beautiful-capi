@@ -63,7 +63,7 @@ inline Exception::Generic::Generic(const Generic& other)
 #ifdef EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Exception::Generic::Generic(Generic&& other)
 {
-    mObject = other.GetRawPointer();
+    mObject = other.mObject;
     other.mObject = 0;
 }
 #endif /* EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -104,7 +104,7 @@ inline Exception::Generic& Exception::Generic::operator=(const Exception::Generi
         if (other.GetRawPointer())
         {
             beautiful_capi_callback_exception_info_t exception_info;
-            void* result(exception_generic_copy(&exception_info, other.GetRawPointer()));
+            void* result(exception_generic_copy(&exception_info, other.mObject));
             beautiful_capi_Callback::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
             SetObject(result);
         }
@@ -126,7 +126,7 @@ inline Exception::Generic& Exception::Generic::operator=(Exception::Generic&& ot
             exception_generic_delete(GetRawPointer());
             SetObject(0);
         }
-        mObject = other.GetRawPointer();
+        mObject = other.mObject;
         other.mObject = 0;
     }
     return *this;

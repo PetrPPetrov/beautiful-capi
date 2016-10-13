@@ -49,7 +49,7 @@ inline Example::ICirclePtr::ICirclePtr(const ICirclePtr& other) : Example::IShap
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::ICirclePtr::ICirclePtr(ICirclePtr&& other) : Example::IShapePtr(std::move(other))
 {
-    mObject = other.GetRawPointer();
+    mObject = other.mObject;
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -101,7 +101,7 @@ inline Example::ICirclePtr& Example::ICirclePtr::operator=(Example::ICirclePtr&&
             SetObject(0);
         }
         Example::IShapePtr::operator=(std::move(other));
-        mObject = other.GetRawPointer();
+        mObject = other.mObject;
         other.mObject = 0;
     }
     return *this;

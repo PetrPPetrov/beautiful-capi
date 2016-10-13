@@ -72,7 +72,7 @@ inline Example::ScannerPtr::ScannerPtr(const ScannerPtr& other)
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::ScannerPtr::ScannerPtr(ScannerPtr&& other)
 {
-    mObject = other.GetRawPointer();
+    mObject = other.mObject;
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -123,7 +123,7 @@ inline Example::ScannerPtr& Example::ScannerPtr::operator=(Example::ScannerPtr&&
             example_scanner_release(GetRawPointer());
             SetObject(0);
         }
-        mObject = other.GetRawPointer();
+        mObject = other.mObject;
         other.mObject = 0;
     }
     return *this;

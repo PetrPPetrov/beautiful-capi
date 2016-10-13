@@ -49,7 +49,7 @@ inline Example::ISquarePtr::ISquarePtr(const ISquarePtr& other) : Example::IPoly
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::ISquarePtr::ISquarePtr(ISquarePtr&& other) : Example::IPolygonPtr(std::move(other))
 {
-    mObject = other.GetRawPointer();
+    mObject = other.mObject;
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -101,7 +101,7 @@ inline Example::ISquarePtr& Example::ISquarePtr::operator=(Example::ISquarePtr&&
             SetObject(0);
         }
         Example::IPolygonPtr::operator=(std::move(other));
-        mObject = other.GetRawPointer();
+        mObject = other.mObject;
         other.mObject = 0;
     }
     return *this;

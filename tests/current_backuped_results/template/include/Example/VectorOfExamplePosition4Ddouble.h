@@ -72,7 +72,7 @@ inline Example::VectorOf<Example::Position4D<double> >::VectorOf(const VectorOf<
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::VectorOf<Example::Position4D<double> >::VectorOf(VectorOf<Example::Position4D<double> >&& other)
 {
-    mObject = other.GetRawPointer();
+    mObject = other.mObject;
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -109,7 +109,7 @@ inline Example::VectorOf<Example::Position4D<double> >& Example::VectorOf<Exampl
         }
         if (other.GetRawPointer())
         {
-            SetObject(example_vector_of_example_position4_d_double_copy(other.GetRawPointer()));
+            SetObject(example_vector_of_example_position4_d_double_copy(other.mObject));
         }
         else
         {
@@ -129,7 +129,7 @@ inline Example::VectorOf<Example::Position4D<double> >& Example::VectorOf<Exampl
             example_vector_of_example_position4_d_double_delete(GetRawPointer());
             SetObject(0);
         }
-        mObject = other.GetRawPointer();
+        mObject = other.mObject;
         other.mObject = 0;
     }
     return *this;

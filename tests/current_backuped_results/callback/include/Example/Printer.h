@@ -74,7 +74,7 @@ inline Example::PrinterPtr::PrinterPtr(const PrinterPtr& other)
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::PrinterPtr::PrinterPtr(PrinterPtr&& other)
 {
-    mObject = other.GetRawPointer();
+    mObject = other.mObject;
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -125,7 +125,7 @@ inline Example::PrinterPtr& Example::PrinterPtr::operator=(Example::PrinterPtr&&
             example_printer_release(GetRawPointer());
             SetObject(0);
         }
-        mObject = other.GetRawPointer();
+        mObject = other.mObject;
         other.mObject = 0;
     }
     return *this;

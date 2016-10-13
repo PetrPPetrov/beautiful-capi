@@ -54,7 +54,11 @@ namespace PointSet
         const char* GetName() const { return mName.c_str(); }
         void SetName(const char* name) { mName = name; }
 
-        PointsImpl* GetPoints() const { return mPoints.get(); }
+        PointsImpl* GetPoints() const
+        {
+            mPoints->AddRef(); // We return a raw pointer, so, we need to call AddRef() here
+            return mPoints.get();
+        }
         void SetPoints(PointsImpl* points) { mPoints = points; }
 
         void AddRef() { if (this) ++mRefCount; }

@@ -230,40 +230,176 @@ enum beautiful_capi_callback_exception_code_t
     
     #ifdef EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS
         
-        extern example_create_default_printer_function_type example_create_default_printer = 0;
-        extern example_get_major_version_function_type example_get_major_version = 0;
-        extern example_get_minor_version_function_type example_get_minor_version = 0;
-        extern example_get_patch_version_function_type example_get_patch_version = 0;
-        extern example_printer_print_function_type example_printer_print = 0;
-        extern example_printer_set_printing_quality_function_type example_printer_set_printing_quality = 0;
-        extern example_printer_get_printing_quality_function_type example_printer_get_printing_quality = 0;
-        extern example_printer_get_device_type_function_type example_printer_get_device_type = 0;
-        extern example_printer_add_ref_function_type example_printer_add_ref = 0;
-        extern example_printer_release_function_type example_printer_release = 0;
-        extern example_person_default_function_type example_person_default = 0;
-        extern example_person_set_first_name_function_type example_person_set_first_name = 0;
-        extern example_person_get_first_name_function_type example_person_get_first_name = 0;
-        extern example_person_set_second_name_function_type example_person_set_second_name = 0;
-        extern example_person_get_second_name_function_type example_person_get_second_name = 0;
-        extern example_person_set_age_function_type example_person_set_age = 0;
-        extern example_person_get_age_function_type example_person_get_age = 0;
-        extern example_person_set_sex_function_type example_person_set_sex = 0;
-        extern example_person_get_sex_function_type example_person_get_sex = 0;
-        extern example_person_dump_function_type example_person_dump = 0;
-        extern example_person_print_function_type example_person_print = 0;
-        extern example_person_copy_function_type example_person_copy = 0;
-        extern example_person_delete_function_type example_person_delete = 0;
-        extern example_printer_callback_default_function_type example_printer_callback_default = 0;
-        extern example_printer_callback_set_object_pointer_function_type example_printer_callback_set_object_pointer = 0;
-        extern example_printer_callback_get_object_pointer_function_type example_printer_callback_get_object_pointer = 0;
-        extern example_printer_callback_set_c_function_for_print_function_type example_printer_callback_set_c_function_for_print = 0;
-        extern example_printer_callback_set_c_function_for_set_printing_quality_function_type example_printer_callback_set_c_function_for_set_printing_quality = 0;
-        extern example_printer_callback_set_c_function_for_get_printing_quality_function_type example_printer_callback_set_c_function_for_get_printing_quality = 0;
-        extern example_printer_callback_set_c_function_for_get_device_type_function_type example_printer_callback_set_c_function_for_get_device_type = 0;
-        extern example_printer_callback_add_ref_function_type example_printer_callback_add_ref = 0;
-        extern example_printer_callback_release_function_type example_printer_callback_release = 0;
-        extern example_printer_callback_cast_to_base_function_type example_printer_callback_cast_to_base = 0;
-        extern example_printer_cast_to_example_printer_callback_function_type example_printer_cast_to_example_printer_callback = 0;
+        #ifdef example_create_default_printer_define_function_pointer_var
+            example_create_default_printer_define_function_pointer_var
+        #else
+            extern example_create_default_printer_function_type example_create_default_printer = 0;
+        #endif
+        #ifdef example_get_major_version_define_function_pointer_var
+            example_get_major_version_define_function_pointer_var
+        #else
+            extern example_get_major_version_function_type example_get_major_version = 0;
+        #endif
+        #ifdef example_get_minor_version_define_function_pointer_var
+            example_get_minor_version_define_function_pointer_var
+        #else
+            extern example_get_minor_version_function_type example_get_minor_version = 0;
+        #endif
+        #ifdef example_get_patch_version_define_function_pointer_var
+            example_get_patch_version_define_function_pointer_var
+        #else
+            extern example_get_patch_version_function_type example_get_patch_version = 0;
+        #endif
+        #ifdef example_printer_print_define_function_pointer_var
+            example_printer_print_define_function_pointer_var
+        #else
+            extern example_printer_print_function_type example_printer_print = 0;
+        #endif
+        #ifdef example_printer_set_printing_quality_define_function_pointer_var
+            example_printer_set_printing_quality_define_function_pointer_var
+        #else
+            extern example_printer_set_printing_quality_function_type example_printer_set_printing_quality = 0;
+        #endif
+        #ifdef example_printer_get_printing_quality_define_function_pointer_var
+            example_printer_get_printing_quality_define_function_pointer_var
+        #else
+            extern example_printer_get_printing_quality_function_type example_printer_get_printing_quality = 0;
+        #endif
+        #ifdef example_printer_get_device_type_define_function_pointer_var
+            example_printer_get_device_type_define_function_pointer_var
+        #else
+            extern example_printer_get_device_type_function_type example_printer_get_device_type = 0;
+        #endif
+        #ifdef example_printer_add_ref_define_function_pointer_var
+            example_printer_add_ref_define_function_pointer_var
+        #else
+            extern example_printer_add_ref_function_type example_printer_add_ref = 0;
+        #endif
+        #ifdef example_printer_release_define_function_pointer_var
+            example_printer_release_define_function_pointer_var
+        #else
+            extern example_printer_release_function_type example_printer_release = 0;
+        #endif
+        #ifdef example_person_default_define_function_pointer_var
+            example_person_default_define_function_pointer_var
+        #else
+            extern example_person_default_function_type example_person_default = 0;
+        #endif
+        #ifdef example_person_set_first_name_define_function_pointer_var
+            example_person_set_first_name_define_function_pointer_var
+        #else
+            extern example_person_set_first_name_function_type example_person_set_first_name = 0;
+        #endif
+        #ifdef example_person_get_first_name_define_function_pointer_var
+            example_person_get_first_name_define_function_pointer_var
+        #else
+            extern example_person_get_first_name_function_type example_person_get_first_name = 0;
+        #endif
+        #ifdef example_person_set_second_name_define_function_pointer_var
+            example_person_set_second_name_define_function_pointer_var
+        #else
+            extern example_person_set_second_name_function_type example_person_set_second_name = 0;
+        #endif
+        #ifdef example_person_get_second_name_define_function_pointer_var
+            example_person_get_second_name_define_function_pointer_var
+        #else
+            extern example_person_get_second_name_function_type example_person_get_second_name = 0;
+        #endif
+        #ifdef example_person_set_age_define_function_pointer_var
+            example_person_set_age_define_function_pointer_var
+        #else
+            extern example_person_set_age_function_type example_person_set_age = 0;
+        #endif
+        #ifdef example_person_get_age_define_function_pointer_var
+            example_person_get_age_define_function_pointer_var
+        #else
+            extern example_person_get_age_function_type example_person_get_age = 0;
+        #endif
+        #ifdef example_person_set_sex_define_function_pointer_var
+            example_person_set_sex_define_function_pointer_var
+        #else
+            extern example_person_set_sex_function_type example_person_set_sex = 0;
+        #endif
+        #ifdef example_person_get_sex_define_function_pointer_var
+            example_person_get_sex_define_function_pointer_var
+        #else
+            extern example_person_get_sex_function_type example_person_get_sex = 0;
+        #endif
+        #ifdef example_person_dump_define_function_pointer_var
+            example_person_dump_define_function_pointer_var
+        #else
+            extern example_person_dump_function_type example_person_dump = 0;
+        #endif
+        #ifdef example_person_print_define_function_pointer_var
+            example_person_print_define_function_pointer_var
+        #else
+            extern example_person_print_function_type example_person_print = 0;
+        #endif
+        #ifdef example_person_copy_define_function_pointer_var
+            example_person_copy_define_function_pointer_var
+        #else
+            extern example_person_copy_function_type example_person_copy = 0;
+        #endif
+        #ifdef example_person_delete_define_function_pointer_var
+            example_person_delete_define_function_pointer_var
+        #else
+            extern example_person_delete_function_type example_person_delete = 0;
+        #endif
+        #ifdef example_printer_callback_default_define_function_pointer_var
+            example_printer_callback_default_define_function_pointer_var
+        #else
+            extern example_printer_callback_default_function_type example_printer_callback_default = 0;
+        #endif
+        #ifdef example_printer_callback_set_object_pointer_define_function_pointer_var
+            example_printer_callback_set_object_pointer_define_function_pointer_var
+        #else
+            extern example_printer_callback_set_object_pointer_function_type example_printer_callback_set_object_pointer = 0;
+        #endif
+        #ifdef example_printer_callback_get_object_pointer_define_function_pointer_var
+            example_printer_callback_get_object_pointer_define_function_pointer_var
+        #else
+            extern example_printer_callback_get_object_pointer_function_type example_printer_callback_get_object_pointer = 0;
+        #endif
+        #ifdef example_printer_callback_set_c_function_for_print_define_function_pointer_var
+            example_printer_callback_set_c_function_for_print_define_function_pointer_var
+        #else
+            extern example_printer_callback_set_c_function_for_print_function_type example_printer_callback_set_c_function_for_print = 0;
+        #endif
+        #ifdef example_printer_callback_set_c_function_for_set_printing_quality_define_function_pointer_var
+            example_printer_callback_set_c_function_for_set_printing_quality_define_function_pointer_var
+        #else
+            extern example_printer_callback_set_c_function_for_set_printing_quality_function_type example_printer_callback_set_c_function_for_set_printing_quality = 0;
+        #endif
+        #ifdef example_printer_callback_set_c_function_for_get_printing_quality_define_function_pointer_var
+            example_printer_callback_set_c_function_for_get_printing_quality_define_function_pointer_var
+        #else
+            extern example_printer_callback_set_c_function_for_get_printing_quality_function_type example_printer_callback_set_c_function_for_get_printing_quality = 0;
+        #endif
+        #ifdef example_printer_callback_set_c_function_for_get_device_type_define_function_pointer_var
+            example_printer_callback_set_c_function_for_get_device_type_define_function_pointer_var
+        #else
+            extern example_printer_callback_set_c_function_for_get_device_type_function_type example_printer_callback_set_c_function_for_get_device_type = 0;
+        #endif
+        #ifdef example_printer_callback_add_ref_define_function_pointer_var
+            example_printer_callback_add_ref_define_function_pointer_var
+        #else
+            extern example_printer_callback_add_ref_function_type example_printer_callback_add_ref = 0;
+        #endif
+        #ifdef example_printer_callback_release_define_function_pointer_var
+            example_printer_callback_release_define_function_pointer_var
+        #else
+            extern example_printer_callback_release_function_type example_printer_callback_release = 0;
+        #endif
+        #ifdef example_printer_callback_cast_to_base_define_function_pointer_var
+            example_printer_callback_cast_to_base_define_function_pointer_var
+        #else
+            extern example_printer_callback_cast_to_base_function_type example_printer_callback_cast_to_base = 0;
+        #endif
+        #ifdef example_printer_cast_to_example_printer_callback_define_function_pointer_var
+            example_printer_cast_to_example_printer_callback_define_function_pointer_var
+        #else
+            extern example_printer_cast_to_example_printer_callback_function_type example_printer_cast_to_example_printer_callback = 0;
+        #endif
         
     #else /* EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS */
         
@@ -355,176 +491,176 @@ enum beautiful_capi_callback_exception_code_t
                     error_message << "Can't load shared library " << shared_library_name;
                     throw std::runtime_error(error_message.str());
                 }
-                #ifdef example_create_default_printer_str
-                    load_function<example_create_default_printer_function_type>(example_create_default_printer, example_create_default_printer_str);
-                #else /* example_create_default_printer_str */
+                #ifdef example_create_default_printer_load_function_call
+                    example_create_default_printer_load_function_call
+                #else /* example_create_default_printer_load_function_call */
                     load_function<example_create_default_printer_function_type>(example_create_default_printer, "example_create_default_printer");
-                #endif /* example_create_default_printer_str */
-                #ifdef example_get_major_version_str
-                    load_function<example_get_major_version_function_type>(example_get_major_version, example_get_major_version_str);
-                #else /* example_get_major_version_str */
+                #endif /* example_create_default_printer_load_function_call */
+                #ifdef example_get_major_version_load_function_call
+                    example_get_major_version_load_function_call
+                #else /* example_get_major_version_load_function_call */
                     load_function<example_get_major_version_function_type>(example_get_major_version, "example_get_major_version");
-                #endif /* example_get_major_version_str */
-                #ifdef example_get_minor_version_str
-                    load_function<example_get_minor_version_function_type>(example_get_minor_version, example_get_minor_version_str);
-                #else /* example_get_minor_version_str */
+                #endif /* example_get_major_version_load_function_call */
+                #ifdef example_get_minor_version_load_function_call
+                    example_get_minor_version_load_function_call
+                #else /* example_get_minor_version_load_function_call */
                     load_function<example_get_minor_version_function_type>(example_get_minor_version, "example_get_minor_version");
-                #endif /* example_get_minor_version_str */
-                #ifdef example_get_patch_version_str
-                    load_function<example_get_patch_version_function_type>(example_get_patch_version, example_get_patch_version_str);
-                #else /* example_get_patch_version_str */
+                #endif /* example_get_minor_version_load_function_call */
+                #ifdef example_get_patch_version_load_function_call
+                    example_get_patch_version_load_function_call
+                #else /* example_get_patch_version_load_function_call */
                     load_function<example_get_patch_version_function_type>(example_get_patch_version, "example_get_patch_version");
-                #endif /* example_get_patch_version_str */
-                #ifdef example_printer_print_str
-                    load_function<example_printer_print_function_type>(example_printer_print, example_printer_print_str);
-                #else /* example_printer_print_str */
+                #endif /* example_get_patch_version_load_function_call */
+                #ifdef example_printer_print_load_function_call
+                    example_printer_print_load_function_call
+                #else /* example_printer_print_load_function_call */
                     load_function<example_printer_print_function_type>(example_printer_print, "example_printer_print");
-                #endif /* example_printer_print_str */
-                #ifdef example_printer_set_printing_quality_str
-                    load_function<example_printer_set_printing_quality_function_type>(example_printer_set_printing_quality, example_printer_set_printing_quality_str);
-                #else /* example_printer_set_printing_quality_str */
+                #endif /* example_printer_print_load_function_call */
+                #ifdef example_printer_set_printing_quality_load_function_call
+                    example_printer_set_printing_quality_load_function_call
+                #else /* example_printer_set_printing_quality_load_function_call */
                     load_function<example_printer_set_printing_quality_function_type>(example_printer_set_printing_quality, "example_printer_set_printing_quality");
-                #endif /* example_printer_set_printing_quality_str */
-                #ifdef example_printer_get_printing_quality_str
-                    load_function<example_printer_get_printing_quality_function_type>(example_printer_get_printing_quality, example_printer_get_printing_quality_str);
-                #else /* example_printer_get_printing_quality_str */
+                #endif /* example_printer_set_printing_quality_load_function_call */
+                #ifdef example_printer_get_printing_quality_load_function_call
+                    example_printer_get_printing_quality_load_function_call
+                #else /* example_printer_get_printing_quality_load_function_call */
                     load_function<example_printer_get_printing_quality_function_type>(example_printer_get_printing_quality, "example_printer_get_printing_quality");
-                #endif /* example_printer_get_printing_quality_str */
-                #ifdef example_printer_get_device_type_str
-                    load_function<example_printer_get_device_type_function_type>(example_printer_get_device_type, example_printer_get_device_type_str);
-                #else /* example_printer_get_device_type_str */
+                #endif /* example_printer_get_printing_quality_load_function_call */
+                #ifdef example_printer_get_device_type_load_function_call
+                    example_printer_get_device_type_load_function_call
+                #else /* example_printer_get_device_type_load_function_call */
                     load_function<example_printer_get_device_type_function_type>(example_printer_get_device_type, "example_printer_get_device_type");
-                #endif /* example_printer_get_device_type_str */
-                #ifdef example_printer_add_ref_str
-                    load_function<example_printer_add_ref_function_type>(example_printer_add_ref, example_printer_add_ref_str);
-                #else /* example_printer_add_ref_str */
+                #endif /* example_printer_get_device_type_load_function_call */
+                #ifdef example_printer_add_ref_load_function_call
+                    example_printer_add_ref_load_function_call
+                #else /* example_printer_add_ref_load_function_call */
                     load_function<example_printer_add_ref_function_type>(example_printer_add_ref, "example_printer_add_ref");
-                #endif /* example_printer_add_ref_str */
-                #ifdef example_printer_release_str
-                    load_function<example_printer_release_function_type>(example_printer_release, example_printer_release_str);
-                #else /* example_printer_release_str */
+                #endif /* example_printer_add_ref_load_function_call */
+                #ifdef example_printer_release_load_function_call
+                    example_printer_release_load_function_call
+                #else /* example_printer_release_load_function_call */
                     load_function<example_printer_release_function_type>(example_printer_release, "example_printer_release");
-                #endif /* example_printer_release_str */
-                #ifdef example_person_default_str
-                    load_function<example_person_default_function_type>(example_person_default, example_person_default_str);
-                #else /* example_person_default_str */
+                #endif /* example_printer_release_load_function_call */
+                #ifdef example_person_default_load_function_call
+                    example_person_default_load_function_call
+                #else /* example_person_default_load_function_call */
                     load_function<example_person_default_function_type>(example_person_default, "example_person_default");
-                #endif /* example_person_default_str */
-                #ifdef example_person_set_first_name_str
-                    load_function<example_person_set_first_name_function_type>(example_person_set_first_name, example_person_set_first_name_str);
-                #else /* example_person_set_first_name_str */
+                #endif /* example_person_default_load_function_call */
+                #ifdef example_person_set_first_name_load_function_call
+                    example_person_set_first_name_load_function_call
+                #else /* example_person_set_first_name_load_function_call */
                     load_function<example_person_set_first_name_function_type>(example_person_set_first_name, "example_person_set_first_name");
-                #endif /* example_person_set_first_name_str */
-                #ifdef example_person_get_first_name_str
-                    load_function<example_person_get_first_name_function_type>(example_person_get_first_name, example_person_get_first_name_str);
-                #else /* example_person_get_first_name_str */
+                #endif /* example_person_set_first_name_load_function_call */
+                #ifdef example_person_get_first_name_load_function_call
+                    example_person_get_first_name_load_function_call
+                #else /* example_person_get_first_name_load_function_call */
                     load_function<example_person_get_first_name_function_type>(example_person_get_first_name, "example_person_get_first_name");
-                #endif /* example_person_get_first_name_str */
-                #ifdef example_person_set_second_name_str
-                    load_function<example_person_set_second_name_function_type>(example_person_set_second_name, example_person_set_second_name_str);
-                #else /* example_person_set_second_name_str */
+                #endif /* example_person_get_first_name_load_function_call */
+                #ifdef example_person_set_second_name_load_function_call
+                    example_person_set_second_name_load_function_call
+                #else /* example_person_set_second_name_load_function_call */
                     load_function<example_person_set_second_name_function_type>(example_person_set_second_name, "example_person_set_second_name");
-                #endif /* example_person_set_second_name_str */
-                #ifdef example_person_get_second_name_str
-                    load_function<example_person_get_second_name_function_type>(example_person_get_second_name, example_person_get_second_name_str);
-                #else /* example_person_get_second_name_str */
+                #endif /* example_person_set_second_name_load_function_call */
+                #ifdef example_person_get_second_name_load_function_call
+                    example_person_get_second_name_load_function_call
+                #else /* example_person_get_second_name_load_function_call */
                     load_function<example_person_get_second_name_function_type>(example_person_get_second_name, "example_person_get_second_name");
-                #endif /* example_person_get_second_name_str */
-                #ifdef example_person_set_age_str
-                    load_function<example_person_set_age_function_type>(example_person_set_age, example_person_set_age_str);
-                #else /* example_person_set_age_str */
+                #endif /* example_person_get_second_name_load_function_call */
+                #ifdef example_person_set_age_load_function_call
+                    example_person_set_age_load_function_call
+                #else /* example_person_set_age_load_function_call */
                     load_function<example_person_set_age_function_type>(example_person_set_age, "example_person_set_age");
-                #endif /* example_person_set_age_str */
-                #ifdef example_person_get_age_str
-                    load_function<example_person_get_age_function_type>(example_person_get_age, example_person_get_age_str);
-                #else /* example_person_get_age_str */
+                #endif /* example_person_set_age_load_function_call */
+                #ifdef example_person_get_age_load_function_call
+                    example_person_get_age_load_function_call
+                #else /* example_person_get_age_load_function_call */
                     load_function<example_person_get_age_function_type>(example_person_get_age, "example_person_get_age");
-                #endif /* example_person_get_age_str */
-                #ifdef example_person_set_sex_str
-                    load_function<example_person_set_sex_function_type>(example_person_set_sex, example_person_set_sex_str);
-                #else /* example_person_set_sex_str */
+                #endif /* example_person_get_age_load_function_call */
+                #ifdef example_person_set_sex_load_function_call
+                    example_person_set_sex_load_function_call
+                #else /* example_person_set_sex_load_function_call */
                     load_function<example_person_set_sex_function_type>(example_person_set_sex, "example_person_set_sex");
-                #endif /* example_person_set_sex_str */
-                #ifdef example_person_get_sex_str
-                    load_function<example_person_get_sex_function_type>(example_person_get_sex, example_person_get_sex_str);
-                #else /* example_person_get_sex_str */
+                #endif /* example_person_set_sex_load_function_call */
+                #ifdef example_person_get_sex_load_function_call
+                    example_person_get_sex_load_function_call
+                #else /* example_person_get_sex_load_function_call */
                     load_function<example_person_get_sex_function_type>(example_person_get_sex, "example_person_get_sex");
-                #endif /* example_person_get_sex_str */
-                #ifdef example_person_dump_str
-                    load_function<example_person_dump_function_type>(example_person_dump, example_person_dump_str);
-                #else /* example_person_dump_str */
+                #endif /* example_person_get_sex_load_function_call */
+                #ifdef example_person_dump_load_function_call
+                    example_person_dump_load_function_call
+                #else /* example_person_dump_load_function_call */
                     load_function<example_person_dump_function_type>(example_person_dump, "example_person_dump");
-                #endif /* example_person_dump_str */
-                #ifdef example_person_print_str
-                    load_function<example_person_print_function_type>(example_person_print, example_person_print_str);
-                #else /* example_person_print_str */
+                #endif /* example_person_dump_load_function_call */
+                #ifdef example_person_print_load_function_call
+                    example_person_print_load_function_call
+                #else /* example_person_print_load_function_call */
                     load_function<example_person_print_function_type>(example_person_print, "example_person_print");
-                #endif /* example_person_print_str */
-                #ifdef example_person_copy_str
-                    load_function<example_person_copy_function_type>(example_person_copy, example_person_copy_str);
-                #else /* example_person_copy_str */
+                #endif /* example_person_print_load_function_call */
+                #ifdef example_person_copy_load_function_call
+                    example_person_copy_load_function_call
+                #else /* example_person_copy_load_function_call */
                     load_function<example_person_copy_function_type>(example_person_copy, "example_person_copy");
-                #endif /* example_person_copy_str */
-                #ifdef example_person_delete_str
-                    load_function<example_person_delete_function_type>(example_person_delete, example_person_delete_str);
-                #else /* example_person_delete_str */
+                #endif /* example_person_copy_load_function_call */
+                #ifdef example_person_delete_load_function_call
+                    example_person_delete_load_function_call
+                #else /* example_person_delete_load_function_call */
                     load_function<example_person_delete_function_type>(example_person_delete, "example_person_delete");
-                #endif /* example_person_delete_str */
-                #ifdef example_printer_callback_default_str
-                    load_function<example_printer_callback_default_function_type>(example_printer_callback_default, example_printer_callback_default_str);
-                #else /* example_printer_callback_default_str */
+                #endif /* example_person_delete_load_function_call */
+                #ifdef example_printer_callback_default_load_function_call
+                    example_printer_callback_default_load_function_call
+                #else /* example_printer_callback_default_load_function_call */
                     load_function<example_printer_callback_default_function_type>(example_printer_callback_default, "example_printer_callback_default");
-                #endif /* example_printer_callback_default_str */
-                #ifdef example_printer_callback_set_object_pointer_str
-                    load_function<example_printer_callback_set_object_pointer_function_type>(example_printer_callback_set_object_pointer, example_printer_callback_set_object_pointer_str);
-                #else /* example_printer_callback_set_object_pointer_str */
+                #endif /* example_printer_callback_default_load_function_call */
+                #ifdef example_printer_callback_set_object_pointer_load_function_call
+                    example_printer_callback_set_object_pointer_load_function_call
+                #else /* example_printer_callback_set_object_pointer_load_function_call */
                     load_function<example_printer_callback_set_object_pointer_function_type>(example_printer_callback_set_object_pointer, "example_printer_callback_set_object_pointer");
-                #endif /* example_printer_callback_set_object_pointer_str */
-                #ifdef example_printer_callback_get_object_pointer_str
-                    load_function<example_printer_callback_get_object_pointer_function_type>(example_printer_callback_get_object_pointer, example_printer_callback_get_object_pointer_str);
-                #else /* example_printer_callback_get_object_pointer_str */
+                #endif /* example_printer_callback_set_object_pointer_load_function_call */
+                #ifdef example_printer_callback_get_object_pointer_load_function_call
+                    example_printer_callback_get_object_pointer_load_function_call
+                #else /* example_printer_callback_get_object_pointer_load_function_call */
                     load_function<example_printer_callback_get_object_pointer_function_type>(example_printer_callback_get_object_pointer, "example_printer_callback_get_object_pointer");
-                #endif /* example_printer_callback_get_object_pointer_str */
-                #ifdef example_printer_callback_set_c_function_for_print_str
-                    load_function<example_printer_callback_set_c_function_for_print_function_type>(example_printer_callback_set_c_function_for_print, example_printer_callback_set_c_function_for_print_str);
-                #else /* example_printer_callback_set_c_function_for_print_str */
+                #endif /* example_printer_callback_get_object_pointer_load_function_call */
+                #ifdef example_printer_callback_set_c_function_for_print_load_function_call
+                    example_printer_callback_set_c_function_for_print_load_function_call
+                #else /* example_printer_callback_set_c_function_for_print_load_function_call */
                     load_function<example_printer_callback_set_c_function_for_print_function_type>(example_printer_callback_set_c_function_for_print, "example_printer_callback_set_c_function_for_print");
-                #endif /* example_printer_callback_set_c_function_for_print_str */
-                #ifdef example_printer_callback_set_c_function_for_set_printing_quality_str
-                    load_function<example_printer_callback_set_c_function_for_set_printing_quality_function_type>(example_printer_callback_set_c_function_for_set_printing_quality, example_printer_callback_set_c_function_for_set_printing_quality_str);
-                #else /* example_printer_callback_set_c_function_for_set_printing_quality_str */
+                #endif /* example_printer_callback_set_c_function_for_print_load_function_call */
+                #ifdef example_printer_callback_set_c_function_for_set_printing_quality_load_function_call
+                    example_printer_callback_set_c_function_for_set_printing_quality_load_function_call
+                #else /* example_printer_callback_set_c_function_for_set_printing_quality_load_function_call */
                     load_function<example_printer_callback_set_c_function_for_set_printing_quality_function_type>(example_printer_callback_set_c_function_for_set_printing_quality, "example_printer_callback_set_c_function_for_set_printing_quality");
-                #endif /* example_printer_callback_set_c_function_for_set_printing_quality_str */
-                #ifdef example_printer_callback_set_c_function_for_get_printing_quality_str
-                    load_function<example_printer_callback_set_c_function_for_get_printing_quality_function_type>(example_printer_callback_set_c_function_for_get_printing_quality, example_printer_callback_set_c_function_for_get_printing_quality_str);
-                #else /* example_printer_callback_set_c_function_for_get_printing_quality_str */
+                #endif /* example_printer_callback_set_c_function_for_set_printing_quality_load_function_call */
+                #ifdef example_printer_callback_set_c_function_for_get_printing_quality_load_function_call
+                    example_printer_callback_set_c_function_for_get_printing_quality_load_function_call
+                #else /* example_printer_callback_set_c_function_for_get_printing_quality_load_function_call */
                     load_function<example_printer_callback_set_c_function_for_get_printing_quality_function_type>(example_printer_callback_set_c_function_for_get_printing_quality, "example_printer_callback_set_c_function_for_get_printing_quality");
-                #endif /* example_printer_callback_set_c_function_for_get_printing_quality_str */
-                #ifdef example_printer_callback_set_c_function_for_get_device_type_str
-                    load_function<example_printer_callback_set_c_function_for_get_device_type_function_type>(example_printer_callback_set_c_function_for_get_device_type, example_printer_callback_set_c_function_for_get_device_type_str);
-                #else /* example_printer_callback_set_c_function_for_get_device_type_str */
+                #endif /* example_printer_callback_set_c_function_for_get_printing_quality_load_function_call */
+                #ifdef example_printer_callback_set_c_function_for_get_device_type_load_function_call
+                    example_printer_callback_set_c_function_for_get_device_type_load_function_call
+                #else /* example_printer_callback_set_c_function_for_get_device_type_load_function_call */
                     load_function<example_printer_callback_set_c_function_for_get_device_type_function_type>(example_printer_callback_set_c_function_for_get_device_type, "example_printer_callback_set_c_function_for_get_device_type");
-                #endif /* example_printer_callback_set_c_function_for_get_device_type_str */
-                #ifdef example_printer_callback_add_ref_str
-                    load_function<example_printer_callback_add_ref_function_type>(example_printer_callback_add_ref, example_printer_callback_add_ref_str);
-                #else /* example_printer_callback_add_ref_str */
+                #endif /* example_printer_callback_set_c_function_for_get_device_type_load_function_call */
+                #ifdef example_printer_callback_add_ref_load_function_call
+                    example_printer_callback_add_ref_load_function_call
+                #else /* example_printer_callback_add_ref_load_function_call */
                     load_function<example_printer_callback_add_ref_function_type>(example_printer_callback_add_ref, "example_printer_callback_add_ref");
-                #endif /* example_printer_callback_add_ref_str */
-                #ifdef example_printer_callback_release_str
-                    load_function<example_printer_callback_release_function_type>(example_printer_callback_release, example_printer_callback_release_str);
-                #else /* example_printer_callback_release_str */
+                #endif /* example_printer_callback_add_ref_load_function_call */
+                #ifdef example_printer_callback_release_load_function_call
+                    example_printer_callback_release_load_function_call
+                #else /* example_printer_callback_release_load_function_call */
                     load_function<example_printer_callback_release_function_type>(example_printer_callback_release, "example_printer_callback_release");
-                #endif /* example_printer_callback_release_str */
-                #ifdef example_printer_callback_cast_to_base_str
-                    load_function<example_printer_callback_cast_to_base_function_type>(example_printer_callback_cast_to_base, example_printer_callback_cast_to_base_str);
-                #else /* example_printer_callback_cast_to_base_str */
+                #endif /* example_printer_callback_release_load_function_call */
+                #ifdef example_printer_callback_cast_to_base_load_function_call
+                    example_printer_callback_cast_to_base_load_function_call
+                #else /* example_printer_callback_cast_to_base_load_function_call */
                     load_function<example_printer_callback_cast_to_base_function_type>(example_printer_callback_cast_to_base, "example_printer_callback_cast_to_base");
-                #endif /* example_printer_callback_cast_to_base_str */
-                #ifdef example_printer_cast_to_example_printer_callback_str
-                    load_function<example_printer_cast_to_example_printer_callback_function_type>(example_printer_cast_to_example_printer_callback, example_printer_cast_to_example_printer_callback_str);
-                #else /* example_printer_cast_to_example_printer_callback_str */
+                #endif /* example_printer_callback_cast_to_base_load_function_call */
+                #ifdef example_printer_cast_to_example_printer_callback_load_function_call
+                    example_printer_cast_to_example_printer_callback_load_function_call
+                #else /* example_printer_cast_to_example_printer_callback_load_function_call */
                     load_function<example_printer_cast_to_example_printer_callback_function_type>(example_printer_cast_to_example_printer_callback, "example_printer_cast_to_example_printer_callback");
-                #endif /* example_printer_cast_to_example_printer_callback_str */
+                #endif /* example_printer_cast_to_example_printer_callback_load_function_call */
                 const int major_version = example_get_major_version();
                 const int minor_version = example_get_minor_version();
                 const int patch_version = example_get_patch_version();
@@ -555,40 +691,176 @@ enum beautiful_capi_callback_exception_code_t
                 #else /* _WIN32 */
                     dlclose(handle);
                 #endif /* _WIN32 */
-                example_create_default_printer = 0;
-                example_get_major_version = 0;
-                example_get_minor_version = 0;
-                example_get_patch_version = 0;
-                example_printer_print = 0;
-                example_printer_set_printing_quality = 0;
-                example_printer_get_printing_quality = 0;
-                example_printer_get_device_type = 0;
-                example_printer_add_ref = 0;
-                example_printer_release = 0;
-                example_person_default = 0;
-                example_person_set_first_name = 0;
-                example_person_get_first_name = 0;
-                example_person_set_second_name = 0;
-                example_person_get_second_name = 0;
-                example_person_set_age = 0;
-                example_person_get_age = 0;
-                example_person_set_sex = 0;
-                example_person_get_sex = 0;
-                example_person_dump = 0;
-                example_person_print = 0;
-                example_person_copy = 0;
-                example_person_delete = 0;
-                example_printer_callback_default = 0;
-                example_printer_callback_set_object_pointer = 0;
-                example_printer_callback_get_object_pointer = 0;
-                example_printer_callback_set_c_function_for_print = 0;
-                example_printer_callback_set_c_function_for_set_printing_quality = 0;
-                example_printer_callback_set_c_function_for_get_printing_quality = 0;
-                example_printer_callback_set_c_function_for_get_device_type = 0;
-                example_printer_callback_add_ref = 0;
-                example_printer_callback_release = 0;
-                example_printer_callback_cast_to_base = 0;
-                example_printer_cast_to_example_printer_callback = 0;
+                #ifdef example_create_default_printer_zero_function_pointer
+                    example_create_default_printer_zero_function_pointer
+                #else /* example_create_default_printer_zero_function_pointer */
+                    example_create_default_printer = 0;
+                #endif /* example_create_default_printer_zero_function_pointer */
+                #ifdef example_get_major_version_zero_function_pointer
+                    example_get_major_version_zero_function_pointer
+                #else /* example_get_major_version_zero_function_pointer */
+                    example_get_major_version = 0;
+                #endif /* example_get_major_version_zero_function_pointer */
+                #ifdef example_get_minor_version_zero_function_pointer
+                    example_get_minor_version_zero_function_pointer
+                #else /* example_get_minor_version_zero_function_pointer */
+                    example_get_minor_version = 0;
+                #endif /* example_get_minor_version_zero_function_pointer */
+                #ifdef example_get_patch_version_zero_function_pointer
+                    example_get_patch_version_zero_function_pointer
+                #else /* example_get_patch_version_zero_function_pointer */
+                    example_get_patch_version = 0;
+                #endif /* example_get_patch_version_zero_function_pointer */
+                #ifdef example_printer_print_zero_function_pointer
+                    example_printer_print_zero_function_pointer
+                #else /* example_printer_print_zero_function_pointer */
+                    example_printer_print = 0;
+                #endif /* example_printer_print_zero_function_pointer */
+                #ifdef example_printer_set_printing_quality_zero_function_pointer
+                    example_printer_set_printing_quality_zero_function_pointer
+                #else /* example_printer_set_printing_quality_zero_function_pointer */
+                    example_printer_set_printing_quality = 0;
+                #endif /* example_printer_set_printing_quality_zero_function_pointer */
+                #ifdef example_printer_get_printing_quality_zero_function_pointer
+                    example_printer_get_printing_quality_zero_function_pointer
+                #else /* example_printer_get_printing_quality_zero_function_pointer */
+                    example_printer_get_printing_quality = 0;
+                #endif /* example_printer_get_printing_quality_zero_function_pointer */
+                #ifdef example_printer_get_device_type_zero_function_pointer
+                    example_printer_get_device_type_zero_function_pointer
+                #else /* example_printer_get_device_type_zero_function_pointer */
+                    example_printer_get_device_type = 0;
+                #endif /* example_printer_get_device_type_zero_function_pointer */
+                #ifdef example_printer_add_ref_zero_function_pointer
+                    example_printer_add_ref_zero_function_pointer
+                #else /* example_printer_add_ref_zero_function_pointer */
+                    example_printer_add_ref = 0;
+                #endif /* example_printer_add_ref_zero_function_pointer */
+                #ifdef example_printer_release_zero_function_pointer
+                    example_printer_release_zero_function_pointer
+                #else /* example_printer_release_zero_function_pointer */
+                    example_printer_release = 0;
+                #endif /* example_printer_release_zero_function_pointer */
+                #ifdef example_person_default_zero_function_pointer
+                    example_person_default_zero_function_pointer
+                #else /* example_person_default_zero_function_pointer */
+                    example_person_default = 0;
+                #endif /* example_person_default_zero_function_pointer */
+                #ifdef example_person_set_first_name_zero_function_pointer
+                    example_person_set_first_name_zero_function_pointer
+                #else /* example_person_set_first_name_zero_function_pointer */
+                    example_person_set_first_name = 0;
+                #endif /* example_person_set_first_name_zero_function_pointer */
+                #ifdef example_person_get_first_name_zero_function_pointer
+                    example_person_get_first_name_zero_function_pointer
+                #else /* example_person_get_first_name_zero_function_pointer */
+                    example_person_get_first_name = 0;
+                #endif /* example_person_get_first_name_zero_function_pointer */
+                #ifdef example_person_set_second_name_zero_function_pointer
+                    example_person_set_second_name_zero_function_pointer
+                #else /* example_person_set_second_name_zero_function_pointer */
+                    example_person_set_second_name = 0;
+                #endif /* example_person_set_second_name_zero_function_pointer */
+                #ifdef example_person_get_second_name_zero_function_pointer
+                    example_person_get_second_name_zero_function_pointer
+                #else /* example_person_get_second_name_zero_function_pointer */
+                    example_person_get_second_name = 0;
+                #endif /* example_person_get_second_name_zero_function_pointer */
+                #ifdef example_person_set_age_zero_function_pointer
+                    example_person_set_age_zero_function_pointer
+                #else /* example_person_set_age_zero_function_pointer */
+                    example_person_set_age = 0;
+                #endif /* example_person_set_age_zero_function_pointer */
+                #ifdef example_person_get_age_zero_function_pointer
+                    example_person_get_age_zero_function_pointer
+                #else /* example_person_get_age_zero_function_pointer */
+                    example_person_get_age = 0;
+                #endif /* example_person_get_age_zero_function_pointer */
+                #ifdef example_person_set_sex_zero_function_pointer
+                    example_person_set_sex_zero_function_pointer
+                #else /* example_person_set_sex_zero_function_pointer */
+                    example_person_set_sex = 0;
+                #endif /* example_person_set_sex_zero_function_pointer */
+                #ifdef example_person_get_sex_zero_function_pointer
+                    example_person_get_sex_zero_function_pointer
+                #else /* example_person_get_sex_zero_function_pointer */
+                    example_person_get_sex = 0;
+                #endif /* example_person_get_sex_zero_function_pointer */
+                #ifdef example_person_dump_zero_function_pointer
+                    example_person_dump_zero_function_pointer
+                #else /* example_person_dump_zero_function_pointer */
+                    example_person_dump = 0;
+                #endif /* example_person_dump_zero_function_pointer */
+                #ifdef example_person_print_zero_function_pointer
+                    example_person_print_zero_function_pointer
+                #else /* example_person_print_zero_function_pointer */
+                    example_person_print = 0;
+                #endif /* example_person_print_zero_function_pointer */
+                #ifdef example_person_copy_zero_function_pointer
+                    example_person_copy_zero_function_pointer
+                #else /* example_person_copy_zero_function_pointer */
+                    example_person_copy = 0;
+                #endif /* example_person_copy_zero_function_pointer */
+                #ifdef example_person_delete_zero_function_pointer
+                    example_person_delete_zero_function_pointer
+                #else /* example_person_delete_zero_function_pointer */
+                    example_person_delete = 0;
+                #endif /* example_person_delete_zero_function_pointer */
+                #ifdef example_printer_callback_default_zero_function_pointer
+                    example_printer_callback_default_zero_function_pointer
+                #else /* example_printer_callback_default_zero_function_pointer */
+                    example_printer_callback_default = 0;
+                #endif /* example_printer_callback_default_zero_function_pointer */
+                #ifdef example_printer_callback_set_object_pointer_zero_function_pointer
+                    example_printer_callback_set_object_pointer_zero_function_pointer
+                #else /* example_printer_callback_set_object_pointer_zero_function_pointer */
+                    example_printer_callback_set_object_pointer = 0;
+                #endif /* example_printer_callback_set_object_pointer_zero_function_pointer */
+                #ifdef example_printer_callback_get_object_pointer_zero_function_pointer
+                    example_printer_callback_get_object_pointer_zero_function_pointer
+                #else /* example_printer_callback_get_object_pointer_zero_function_pointer */
+                    example_printer_callback_get_object_pointer = 0;
+                #endif /* example_printer_callback_get_object_pointer_zero_function_pointer */
+                #ifdef example_printer_callback_set_c_function_for_print_zero_function_pointer
+                    example_printer_callback_set_c_function_for_print_zero_function_pointer
+                #else /* example_printer_callback_set_c_function_for_print_zero_function_pointer */
+                    example_printer_callback_set_c_function_for_print = 0;
+                #endif /* example_printer_callback_set_c_function_for_print_zero_function_pointer */
+                #ifdef example_printer_callback_set_c_function_for_set_printing_quality_zero_function_pointer
+                    example_printer_callback_set_c_function_for_set_printing_quality_zero_function_pointer
+                #else /* example_printer_callback_set_c_function_for_set_printing_quality_zero_function_pointer */
+                    example_printer_callback_set_c_function_for_set_printing_quality = 0;
+                #endif /* example_printer_callback_set_c_function_for_set_printing_quality_zero_function_pointer */
+                #ifdef example_printer_callback_set_c_function_for_get_printing_quality_zero_function_pointer
+                    example_printer_callback_set_c_function_for_get_printing_quality_zero_function_pointer
+                #else /* example_printer_callback_set_c_function_for_get_printing_quality_zero_function_pointer */
+                    example_printer_callback_set_c_function_for_get_printing_quality = 0;
+                #endif /* example_printer_callback_set_c_function_for_get_printing_quality_zero_function_pointer */
+                #ifdef example_printer_callback_set_c_function_for_get_device_type_zero_function_pointer
+                    example_printer_callback_set_c_function_for_get_device_type_zero_function_pointer
+                #else /* example_printer_callback_set_c_function_for_get_device_type_zero_function_pointer */
+                    example_printer_callback_set_c_function_for_get_device_type = 0;
+                #endif /* example_printer_callback_set_c_function_for_get_device_type_zero_function_pointer */
+                #ifdef example_printer_callback_add_ref_zero_function_pointer
+                    example_printer_callback_add_ref_zero_function_pointer
+                #else /* example_printer_callback_add_ref_zero_function_pointer */
+                    example_printer_callback_add_ref = 0;
+                #endif /* example_printer_callback_add_ref_zero_function_pointer */
+                #ifdef example_printer_callback_release_zero_function_pointer
+                    example_printer_callback_release_zero_function_pointer
+                #else /* example_printer_callback_release_zero_function_pointer */
+                    example_printer_callback_release = 0;
+                #endif /* example_printer_callback_release_zero_function_pointer */
+                #ifdef example_printer_callback_cast_to_base_zero_function_pointer
+                    example_printer_callback_cast_to_base_zero_function_pointer
+                #else /* example_printer_callback_cast_to_base_zero_function_pointer */
+                    example_printer_callback_cast_to_base = 0;
+                #endif /* example_printer_callback_cast_to_base_zero_function_pointer */
+                #ifdef example_printer_cast_to_example_printer_callback_zero_function_pointer
+                    example_printer_cast_to_example_printer_callback_zero_function_pointer
+                #else /* example_printer_cast_to_example_printer_callback_zero_function_pointer */
+                    example_printer_cast_to_example_printer_callback = 0;
+                #endif /* example_printer_cast_to_example_printer_callback_zero_function_pointer */
             }
         };
     }

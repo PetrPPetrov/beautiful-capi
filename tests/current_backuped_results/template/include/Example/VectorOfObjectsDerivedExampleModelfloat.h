@@ -54,7 +54,7 @@ inline Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<float> >::VectorOfOb
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<float> >::VectorOfObjectsDerivedPtr(VectorOfObjectsDerivedPtr<Example::ModelPtr<float> >&& other) : Example::VectorOfObjectsPtr<Example::ModelPtr<float> >(std::move(other))
 {
-    mObject = other.GetRawPointer();
+    mObject = other.mObject;
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -106,7 +106,7 @@ inline Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<float> >& Example::V
             SetObject(0);
         }
         Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::operator=(std::move(other));
-        mObject = other.GetRawPointer();
+        mObject = other.mObject;
         other.mObject = 0;
     }
     return *this;

@@ -53,7 +53,7 @@ inline hello_world::plotter_ptr::plotter_ptr(const plotter_ptr& other)
 #ifdef HELLO_WORLD_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline hello_world::plotter_ptr::plotter_ptr(plotter_ptr&& other)
 {
-    mObject = other.get_raw_pointer();
+    mObject = other.mObject;
     other.mObject = 0;
 }
 #endif /* HELLO_WORLD_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -104,7 +104,7 @@ inline hello_world::plotter_ptr& hello_world::plotter_ptr::operator=(hello_world
             hello_world_plotter_release(get_raw_pointer());
             SetObject(0);
         }
-        mObject = other.get_raw_pointer();
+        mObject = other.mObject;
         other.mObject = 0;
     }
     return *this;

@@ -71,7 +71,7 @@ inline Example::VectorOf<int>::VectorOf(const VectorOf<int>& other)
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::VectorOf<int>::VectorOf(VectorOf<int>&& other)
 {
-    mObject = other.GetRawPointer();
+    mObject = other.mObject;
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -108,7 +108,7 @@ inline Example::VectorOf<int>& Example::VectorOf<int>::operator=(const Example::
         }
         if (other.GetRawPointer())
         {
-            SetObject(example_vector_of_int_copy(other.GetRawPointer()));
+            SetObject(example_vector_of_int_copy(other.mObject));
         }
         else
         {
@@ -128,7 +128,7 @@ inline Example::VectorOf<int>& Example::VectorOf<int>::operator=(Example::Vector
             example_vector_of_int_delete(GetRawPointer());
             SetObject(0);
         }
-        mObject = other.GetRawPointer();
+        mObject = other.mObject;
         other.mObject = 0;
     }
     return *this;

@@ -48,7 +48,7 @@ inline Example::IShapePtr::IShapePtr(const IShapePtr& other)
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::IShapePtr::IShapePtr(IShapePtr&& other)
 {
-    mObject = other.GetRawPointer();
+    mObject = other.mObject;
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -99,7 +99,7 @@ inline Example::IShapePtr& Example::IShapePtr::operator=(Example::IShapePtr&& ot
             example_i_shape_release(GetRawPointer());
             SetObject(0);
         }
-        mObject = other.GetRawPointer();
+        mObject = other.mObject;
         other.mObject = 0;
     }
     return *this;

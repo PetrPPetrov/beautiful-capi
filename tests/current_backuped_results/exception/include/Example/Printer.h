@@ -78,7 +78,7 @@ inline Example::Printer::Printer(const Printer& other)
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::Printer::Printer(Printer&& other)
 {
-    mObject = other.GetRawPointer();
+    mObject = other.mObject;
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -119,7 +119,7 @@ inline Example::Printer& Example::Printer::operator=(const Example::Printer& oth
         if (other.GetRawPointer())
         {
             beautiful_capi_exception_exception_info_t exception_info;
-            void* result(example_printer_copy(&exception_info, other.GetRawPointer()));
+            void* result(example_printer_copy(&exception_info, other.mObject));
             beautiful_capi_Exception::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
             SetObject(result);
         }
@@ -141,7 +141,7 @@ inline Example::Printer& Example::Printer::operator=(Example::Printer&& other)
             example_printer_delete(GetRawPointer());
             SetObject(0);
         }
-        mObject = other.GetRawPointer();
+        mObject = other.mObject;
         other.mObject = 0;
     }
     return *this;

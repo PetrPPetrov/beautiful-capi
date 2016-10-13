@@ -64,7 +64,7 @@ inline Exception::BadArgument::BadArgument(const BadArgument& other) : Exception
 #ifdef EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Exception::BadArgument::BadArgument(BadArgument&& other) : Exception::Generic(std::move(other))
 {
-    mObject = other.GetRawPointer();
+    mObject = other.mObject;
     other.mObject = 0;
 }
 #endif /* EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -105,7 +105,7 @@ inline Exception::BadArgument& Exception::BadArgument::operator=(const Exception
         if (other.GetRawPointer())
         {
             beautiful_capi_callback_exception_info_t exception_info;
-            void* result(exception_bad_argument_copy(&exception_info, other.GetRawPointer()));
+            void* result(exception_bad_argument_copy(&exception_info, other.mObject));
             beautiful_capi_Callback::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
             SetObject(result);
         }
@@ -128,7 +128,7 @@ inline Exception::BadArgument& Exception::BadArgument::operator=(Exception::BadA
             SetObject(0);
         }
         Exception::Generic::operator=(std::move(other));
-        mObject = other.GetRawPointer();
+        mObject = other.mObject;
         other.mObject = 0;
     }
     return *this;

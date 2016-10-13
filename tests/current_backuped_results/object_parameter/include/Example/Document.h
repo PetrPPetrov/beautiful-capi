@@ -44,7 +44,7 @@ inline void Example::DocumentPtr::Show() const
 
 inline Example::PagePtr Example::DocumentPtr::GetPage() const
 {
-    return Example::PagePtr(Example::PagePtr::force_creating_from_raw_pointer, example_document_get_page(GetRawPointer()), true);
+    return Example::PagePtr(Example::PagePtr::force_creating_from_raw_pointer, example_document_get_page(GetRawPointer()), false);
 }
 
 inline void Example::DocumentPtr::SetPage(const Example::PagePtr& value)
@@ -64,7 +64,7 @@ inline Example::DocumentPtr::DocumentPtr(const DocumentPtr& other)
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::DocumentPtr::DocumentPtr(DocumentPtr&& other)
 {
-    mObject = other.GetRawPointer();
+    mObject = other.mObject;
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -115,7 +115,7 @@ inline Example::DocumentPtr& Example::DocumentPtr::operator=(Example::DocumentPt
             example_document_release(GetRawPointer());
             SetObject(0);
         }
-        mObject = other.GetRawPointer();
+        mObject = other.mObject;
         other.mObject = 0;
     }
     return *this;

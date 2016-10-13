@@ -59,7 +59,7 @@ inline Exception::DivisionByZero::DivisionByZero(const DivisionByZero& other) : 
 #ifdef EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Exception::DivisionByZero::DivisionByZero(DivisionByZero&& other) : Exception::Generic(std::move(other))
 {
-    mObject = other.GetRawPointer();
+    mObject = other.mObject;
     other.mObject = 0;
 }
 #endif /* EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -100,7 +100,7 @@ inline Exception::DivisionByZero& Exception::DivisionByZero::operator=(const Exc
         if (other.GetRawPointer())
         {
             beautiful_capi_exception_exception_info_t exception_info;
-            void* result(exception_division_by_zero_copy(&exception_info, other.GetRawPointer()));
+            void* result(exception_division_by_zero_copy(&exception_info, other.mObject));
             beautiful_capi_Exception::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
             SetObject(result);
         }
@@ -123,7 +123,7 @@ inline Exception::DivisionByZero& Exception::DivisionByZero::operator=(Exception
             SetObject(0);
         }
         Exception::Generic::operator=(std::move(other));
-        mObject = other.GetRawPointer();
+        mObject = other.mObject;
         other.mObject = 0;
     }
     return *this;

@@ -55,7 +55,7 @@ inline Circular::ClassARawPtr::ClassARawPtr(const ClassARawPtr& other)
 #ifdef CIRCULAR_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Circular::ClassARawPtr::ClassARawPtr(ClassARawPtr&& other)
 {
-    mObject = other.GetRawPointer();
+    mObject = other.mObject;
     other.mObject = 0;
 }
 #endif /* CIRCULAR_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -88,7 +88,7 @@ inline Circular::ClassARawPtr& Circular::ClassARawPtr::operator=(Circular::Class
 {
     if (this != &other)
     {
-        mObject = other.GetRawPointer();
+        mObject = other.mObject;
         other.mObject = 0;
     }
     return *this;

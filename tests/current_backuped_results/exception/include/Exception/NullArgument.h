@@ -59,7 +59,7 @@ inline Exception::NullArgument::NullArgument(const NullArgument& other) : Except
 #ifdef EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Exception::NullArgument::NullArgument(NullArgument&& other) : Exception::BadArgument(std::move(other))
 {
-    mObject = other.GetRawPointer();
+    mObject = other.mObject;
     other.mObject = 0;
 }
 #endif /* EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -100,7 +100,7 @@ inline Exception::NullArgument& Exception::NullArgument::operator=(const Excepti
         if (other.GetRawPointer())
         {
             beautiful_capi_exception_exception_info_t exception_info;
-            void* result(exception_null_argument_copy(&exception_info, other.GetRawPointer()));
+            void* result(exception_null_argument_copy(&exception_info, other.mObject));
             beautiful_capi_Exception::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
             SetObject(result);
         }
@@ -123,7 +123,7 @@ inline Exception::NullArgument& Exception::NullArgument::operator=(Exception::Nu
             SetObject(0);
         }
         Exception::BadArgument::operator=(std::move(other));
-        mObject = other.GetRawPointer();
+        mObject = other.mObject;
         other.mObject = 0;
     }
     return *this;

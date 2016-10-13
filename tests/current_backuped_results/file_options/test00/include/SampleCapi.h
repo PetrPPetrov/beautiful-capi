@@ -148,14 +148,46 @@
     
     #ifdef SAMPLE_CAPI_DEFINE_FUNCTION_POINTERS
         
-        extern sample_get_major_version_function_type sample_get_major_version = 0;
-        extern sample_get_minor_version_function_type sample_get_minor_version = 0;
-        extern sample_get_patch_version_function_type sample_get_patch_version = 0;
-        extern sample_data_new_function_type sample_data_new = 0;
-        extern sample_data_get_data_function_type sample_data_get_data = 0;
-        extern sample_data_set_data_function_type sample_data_set_data = 0;
-        extern sample_data_copy_function_type sample_data_copy = 0;
-        extern sample_data_delete_function_type sample_data_delete = 0;
+        #ifdef sample_get_major_version_define_function_pointer_var
+            sample_get_major_version_define_function_pointer_var
+        #else
+            extern sample_get_major_version_function_type sample_get_major_version = 0;
+        #endif
+        #ifdef sample_get_minor_version_define_function_pointer_var
+            sample_get_minor_version_define_function_pointer_var
+        #else
+            extern sample_get_minor_version_function_type sample_get_minor_version = 0;
+        #endif
+        #ifdef sample_get_patch_version_define_function_pointer_var
+            sample_get_patch_version_define_function_pointer_var
+        #else
+            extern sample_get_patch_version_function_type sample_get_patch_version = 0;
+        #endif
+        #ifdef sample_data_new_define_function_pointer_var
+            sample_data_new_define_function_pointer_var
+        #else
+            extern sample_data_new_function_type sample_data_new = 0;
+        #endif
+        #ifdef sample_data_get_data_define_function_pointer_var
+            sample_data_get_data_define_function_pointer_var
+        #else
+            extern sample_data_get_data_function_type sample_data_get_data = 0;
+        #endif
+        #ifdef sample_data_set_data_define_function_pointer_var
+            sample_data_set_data_define_function_pointer_var
+        #else
+            extern sample_data_set_data_function_type sample_data_set_data = 0;
+        #endif
+        #ifdef sample_data_copy_define_function_pointer_var
+            sample_data_copy_define_function_pointer_var
+        #else
+            extern sample_data_copy_function_type sample_data_copy = 0;
+        #endif
+        #ifdef sample_data_delete_define_function_pointer_var
+            sample_data_delete_define_function_pointer_var
+        #else
+            extern sample_data_delete_function_type sample_data_delete = 0;
+        #endif
         
     #else /* SAMPLE_CAPI_DEFINE_FUNCTION_POINTERS */
         
@@ -221,46 +253,46 @@
                     error_message << "Can't load shared library " << shared_library_name;
                     throw std::runtime_error(error_message.str());
                 }
-                #ifdef sample_get_major_version_str
-                    load_function<sample_get_major_version_function_type>(sample_get_major_version, sample_get_major_version_str);
-                #else /* sample_get_major_version_str */
+                #ifdef sample_get_major_version_load_function_call
+                    sample_get_major_version_load_function_call
+                #else /* sample_get_major_version_load_function_call */
                     load_function<sample_get_major_version_function_type>(sample_get_major_version, "sample_get_major_version");
-                #endif /* sample_get_major_version_str */
-                #ifdef sample_get_minor_version_str
-                    load_function<sample_get_minor_version_function_type>(sample_get_minor_version, sample_get_minor_version_str);
-                #else /* sample_get_minor_version_str */
+                #endif /* sample_get_major_version_load_function_call */
+                #ifdef sample_get_minor_version_load_function_call
+                    sample_get_minor_version_load_function_call
+                #else /* sample_get_minor_version_load_function_call */
                     load_function<sample_get_minor_version_function_type>(sample_get_minor_version, "sample_get_minor_version");
-                #endif /* sample_get_minor_version_str */
-                #ifdef sample_get_patch_version_str
-                    load_function<sample_get_patch_version_function_type>(sample_get_patch_version, sample_get_patch_version_str);
-                #else /* sample_get_patch_version_str */
+                #endif /* sample_get_minor_version_load_function_call */
+                #ifdef sample_get_patch_version_load_function_call
+                    sample_get_patch_version_load_function_call
+                #else /* sample_get_patch_version_load_function_call */
                     load_function<sample_get_patch_version_function_type>(sample_get_patch_version, "sample_get_patch_version");
-                #endif /* sample_get_patch_version_str */
-                #ifdef sample_data_new_str
-                    load_function<sample_data_new_function_type>(sample_data_new, sample_data_new_str);
-                #else /* sample_data_new_str */
+                #endif /* sample_get_patch_version_load_function_call */
+                #ifdef sample_data_new_load_function_call
+                    sample_data_new_load_function_call
+                #else /* sample_data_new_load_function_call */
                     load_function<sample_data_new_function_type>(sample_data_new, "sample_data_new");
-                #endif /* sample_data_new_str */
-                #ifdef sample_data_get_data_str
-                    load_function<sample_data_get_data_function_type>(sample_data_get_data, sample_data_get_data_str);
-                #else /* sample_data_get_data_str */
+                #endif /* sample_data_new_load_function_call */
+                #ifdef sample_data_get_data_load_function_call
+                    sample_data_get_data_load_function_call
+                #else /* sample_data_get_data_load_function_call */
                     load_function<sample_data_get_data_function_type>(sample_data_get_data, "sample_data_get_data");
-                #endif /* sample_data_get_data_str */
-                #ifdef sample_data_set_data_str
-                    load_function<sample_data_set_data_function_type>(sample_data_set_data, sample_data_set_data_str);
-                #else /* sample_data_set_data_str */
+                #endif /* sample_data_get_data_load_function_call */
+                #ifdef sample_data_set_data_load_function_call
+                    sample_data_set_data_load_function_call
+                #else /* sample_data_set_data_load_function_call */
                     load_function<sample_data_set_data_function_type>(sample_data_set_data, "sample_data_set_data");
-                #endif /* sample_data_set_data_str */
-                #ifdef sample_data_copy_str
-                    load_function<sample_data_copy_function_type>(sample_data_copy, sample_data_copy_str);
-                #else /* sample_data_copy_str */
+                #endif /* sample_data_set_data_load_function_call */
+                #ifdef sample_data_copy_load_function_call
+                    sample_data_copy_load_function_call
+                #else /* sample_data_copy_load_function_call */
                     load_function<sample_data_copy_function_type>(sample_data_copy, "sample_data_copy");
-                #endif /* sample_data_copy_str */
-                #ifdef sample_data_delete_str
-                    load_function<sample_data_delete_function_type>(sample_data_delete, sample_data_delete_str);
-                #else /* sample_data_delete_str */
+                #endif /* sample_data_copy_load_function_call */
+                #ifdef sample_data_delete_load_function_call
+                    sample_data_delete_load_function_call
+                #else /* sample_data_delete_load_function_call */
                     load_function<sample_data_delete_function_type>(sample_data_delete, "sample_data_delete");
-                #endif /* sample_data_delete_str */
+                #endif /* sample_data_delete_load_function_call */
                 const int major_version = sample_get_major_version();
                 const int minor_version = sample_get_minor_version();
                 const int patch_version = sample_get_patch_version();
@@ -291,14 +323,46 @@
                 #else /* _WIN32 */
                     dlclose(handle);
                 #endif /* _WIN32 */
-                sample_get_major_version = 0;
-                sample_get_minor_version = 0;
-                sample_get_patch_version = 0;
-                sample_data_new = 0;
-                sample_data_get_data = 0;
-                sample_data_set_data = 0;
-                sample_data_copy = 0;
-                sample_data_delete = 0;
+                #ifdef sample_get_major_version_zero_function_pointer
+                    sample_get_major_version_zero_function_pointer
+                #else /* sample_get_major_version_zero_function_pointer */
+                    sample_get_major_version = 0;
+                #endif /* sample_get_major_version_zero_function_pointer */
+                #ifdef sample_get_minor_version_zero_function_pointer
+                    sample_get_minor_version_zero_function_pointer
+                #else /* sample_get_minor_version_zero_function_pointer */
+                    sample_get_minor_version = 0;
+                #endif /* sample_get_minor_version_zero_function_pointer */
+                #ifdef sample_get_patch_version_zero_function_pointer
+                    sample_get_patch_version_zero_function_pointer
+                #else /* sample_get_patch_version_zero_function_pointer */
+                    sample_get_patch_version = 0;
+                #endif /* sample_get_patch_version_zero_function_pointer */
+                #ifdef sample_data_new_zero_function_pointer
+                    sample_data_new_zero_function_pointer
+                #else /* sample_data_new_zero_function_pointer */
+                    sample_data_new = 0;
+                #endif /* sample_data_new_zero_function_pointer */
+                #ifdef sample_data_get_data_zero_function_pointer
+                    sample_data_get_data_zero_function_pointer
+                #else /* sample_data_get_data_zero_function_pointer */
+                    sample_data_get_data = 0;
+                #endif /* sample_data_get_data_zero_function_pointer */
+                #ifdef sample_data_set_data_zero_function_pointer
+                    sample_data_set_data_zero_function_pointer
+                #else /* sample_data_set_data_zero_function_pointer */
+                    sample_data_set_data = 0;
+                #endif /* sample_data_set_data_zero_function_pointer */
+                #ifdef sample_data_copy_zero_function_pointer
+                    sample_data_copy_zero_function_pointer
+                #else /* sample_data_copy_zero_function_pointer */
+                    sample_data_copy = 0;
+                #endif /* sample_data_copy_zero_function_pointer */
+                #ifdef sample_data_delete_zero_function_pointer
+                    sample_data_delete_zero_function_pointer
+                #else /* sample_data_delete_zero_function_pointer */
+                    sample_data_delete = 0;
+                #endif /* sample_data_delete_zero_function_pointer */
             }
         };
     }

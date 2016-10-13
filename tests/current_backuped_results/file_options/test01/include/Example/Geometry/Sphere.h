@@ -61,7 +61,7 @@ inline Example::Geometry::Sphere::Sphere(const Sphere& other)
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::Geometry::Sphere::Sphere(Sphere&& other)
 {
-    mObject = other.GetRawPointer();
+    mObject = other.mObject;
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -98,7 +98,7 @@ inline Example::Geometry::Sphere& Example::Geometry::Sphere::operator=(const Exa
         }
         if (other.GetRawPointer())
         {
-            SetObject(example_geometry_sphere_copy(other.GetRawPointer()));
+            SetObject(example_geometry_sphere_copy(other.mObject));
         }
         else
         {
@@ -118,7 +118,7 @@ inline Example::Geometry::Sphere& Example::Geometry::Sphere::operator=(Example::
             example_geometry_sphere_delete(GetRawPointer());
             SetObject(0);
         }
-        mObject = other.GetRawPointer();
+        mObject = other.mObject;
         other.mObject = 0;
     }
     return *this;

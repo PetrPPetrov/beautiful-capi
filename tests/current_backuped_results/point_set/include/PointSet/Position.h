@@ -86,7 +86,7 @@ inline PointSet::Position::Position(const Position& other)
 #ifdef POINTSET_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline PointSet::Position::Position(Position&& other)
 {
-    mObject = other.GetRawPointer();
+    mObject = other.mObject;
     other.mObject = 0;
 }
 #endif /* POINTSET_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -123,7 +123,7 @@ inline PointSet::Position& PointSet::Position::operator=(const PointSet::Positio
         }
         if (other.GetRawPointer())
         {
-            SetObject(point_set_position_copy(other.GetRawPointer()));
+            SetObject(point_set_position_copy(other.mObject));
         }
         else
         {
@@ -143,7 +143,7 @@ inline PointSet::Position& PointSet::Position::operator=(PointSet::Position&& ot
             point_set_position_delete(GetRawPointer());
             SetObject(0);
         }
-        mObject = other.GetRawPointer();
+        mObject = other.mObject;
         other.mObject = 0;
     }
     return *this;

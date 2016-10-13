@@ -69,7 +69,7 @@ inline Example::ModelPtr<float>::ModelPtr(const ModelPtr<float>& other)
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::ModelPtr<float>::ModelPtr(ModelPtr<float>&& other)
 {
-    mObject = other.GetRawPointer();
+    mObject = other.mObject;
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -120,7 +120,7 @@ inline Example::ModelPtr<float>& Example::ModelPtr<float>::operator=(Example::Mo
             example_model_float_release(GetRawPointer());
             SetObject(0);
         }
-        mObject = other.GetRawPointer();
+        mObject = other.mObject;
         other.mObject = 0;
     }
     return *this;

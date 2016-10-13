@@ -49,7 +49,7 @@ inline Example::IPolygonPtr::IPolygonPtr(const IPolygonPtr& other) : Example::IS
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::IPolygonPtr::IPolygonPtr(IPolygonPtr&& other) : Example::IShapePtr(std::move(other))
 {
-    mObject = other.GetRawPointer();
+    mObject = other.mObject;
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -101,7 +101,7 @@ inline Example::IPolygonPtr& Example::IPolygonPtr::operator=(Example::IPolygonPt
             SetObject(0);
         }
         Example::IShapePtr::operator=(std::move(other));
-        mObject = other.GetRawPointer();
+        mObject = other.mObject;
         other.mObject = 0;
     }
     return *this;

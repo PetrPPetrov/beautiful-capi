@@ -54,7 +54,7 @@ inline void Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::PushBack(con
 
 inline Example::ModelPtr<float> Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::GetItem(int index) const
 {
-    return Example::ModelPtr<float>(Example::ModelPtr<float>::force_creating_from_raw_pointer, example_vector_of_objects_example_model_float_get_item(GetRawPointer(), index), true);
+    return Example::ModelPtr<float>(Example::ModelPtr<float>::force_creating_from_raw_pointer, example_vector_of_objects_example_model_float_get_item(GetRawPointer(), index), false);
 }
 
 inline Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::VectorOfObjectsPtr(const VectorOfObjectsPtr<Example::ModelPtr<float> >& other)
@@ -69,7 +69,7 @@ inline Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::VectorOfObjectsPt
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::VectorOfObjectsPtr(VectorOfObjectsPtr<Example::ModelPtr<float> >&& other)
 {
-    mObject = other.GetRawPointer();
+    mObject = other.mObject;
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -120,7 +120,7 @@ inline Example::VectorOfObjectsPtr<Example::ModelPtr<float> >& Example::VectorOf
             example_vector_of_objects_example_model_float_release(GetRawPointer());
             SetObject(0);
         }
-        mObject = other.GetRawPointer();
+        mObject = other.mObject;
         other.mObject = 0;
     }
     return *this;

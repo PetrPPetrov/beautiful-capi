@@ -61,7 +61,7 @@ inline Sample::Data::Data(const Data& other)
 #ifdef SAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Sample::Data::Data(Data&& other)
 {
-    mObject = other.GetRawPointer();
+    mObject = other.mObject;
     other.mObject = 0;
 }
 #endif /* SAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -98,7 +98,7 @@ inline Sample::Data& Sample::Data::operator=(const Sample::Data& other)
         }
         if (other.GetRawPointer())
         {
-            SetObject(sample_data_copy(other.GetRawPointer()));
+            SetObject(sample_data_copy(other.mObject));
         }
         else
         {
@@ -118,7 +118,7 @@ inline Sample::Data& Sample::Data::operator=(Sample::Data&& other)
             sample_data_delete(GetRawPointer());
             SetObject(0);
         }
-        mObject = other.GetRawPointer();
+        mObject = other.mObject;
         other.mObject = 0;
     }
     return *this;

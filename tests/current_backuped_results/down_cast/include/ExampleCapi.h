@@ -194,37 +194,161 @@
     
     #ifdef EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS
         
-        extern example_create_triangle_function_type example_create_triangle = 0;
-        extern example_create_square_function_type example_create_square = 0;
-        extern example_create_circle_function_type example_create_circle = 0;
-        extern example_get_major_version_function_type example_get_major_version = 0;
-        extern example_get_minor_version_function_type example_get_minor_version = 0;
-        extern example_get_patch_version_function_type example_get_patch_version = 0;
-        extern example_i_shape_show_function_type example_i_shape_show = 0;
-        extern example_i_shape_add_ref_function_type example_i_shape_add_ref = 0;
-        extern example_i_shape_release_function_type example_i_shape_release = 0;
-        extern example_i_polygon_get_points_count_function_type example_i_polygon_get_points_count = 0;
-        extern example_i_polygon_add_ref_function_type example_i_polygon_add_ref = 0;
-        extern example_i_polygon_release_function_type example_i_polygon_release = 0;
-        extern example_i_polygon_cast_to_base_function_type example_i_polygon_cast_to_base = 0;
-        extern example_i_shape_cast_to_example_i_polygon_function_type example_i_shape_cast_to_example_i_polygon = 0;
-        extern example_i_triangle_set_points_function_type example_i_triangle_set_points = 0;
-        extern example_i_triangle_add_ref_function_type example_i_triangle_add_ref = 0;
-        extern example_i_triangle_release_function_type example_i_triangle_release = 0;
-        extern example_i_triangle_cast_to_base_function_type example_i_triangle_cast_to_base = 0;
-        extern example_i_shape_cast_to_example_i_triangle_function_type example_i_shape_cast_to_example_i_triangle = 0;
-        extern example_i_polygon_cast_to_example_i_triangle_function_type example_i_polygon_cast_to_example_i_triangle = 0;
-        extern example_i_square_set_size_function_type example_i_square_set_size = 0;
-        extern example_i_square_add_ref_function_type example_i_square_add_ref = 0;
-        extern example_i_square_release_function_type example_i_square_release = 0;
-        extern example_i_square_cast_to_base_function_type example_i_square_cast_to_base = 0;
-        extern example_i_shape_cast_to_example_i_square_function_type example_i_shape_cast_to_example_i_square = 0;
-        extern example_i_polygon_cast_to_example_i_square_function_type example_i_polygon_cast_to_example_i_square = 0;
-        extern example_i_circle_set_radius_function_type example_i_circle_set_radius = 0;
-        extern example_i_circle_add_ref_function_type example_i_circle_add_ref = 0;
-        extern example_i_circle_release_function_type example_i_circle_release = 0;
-        extern example_i_circle_cast_to_base_function_type example_i_circle_cast_to_base = 0;
-        extern example_i_shape_cast_to_example_i_circle_function_type example_i_shape_cast_to_example_i_circle = 0;
+        #ifdef example_create_triangle_define_function_pointer_var
+            example_create_triangle_define_function_pointer_var
+        #else
+            extern example_create_triangle_function_type example_create_triangle = 0;
+        #endif
+        #ifdef example_create_square_define_function_pointer_var
+            example_create_square_define_function_pointer_var
+        #else
+            extern example_create_square_function_type example_create_square = 0;
+        #endif
+        #ifdef example_create_circle_define_function_pointer_var
+            example_create_circle_define_function_pointer_var
+        #else
+            extern example_create_circle_function_type example_create_circle = 0;
+        #endif
+        #ifdef example_get_major_version_define_function_pointer_var
+            example_get_major_version_define_function_pointer_var
+        #else
+            extern example_get_major_version_function_type example_get_major_version = 0;
+        #endif
+        #ifdef example_get_minor_version_define_function_pointer_var
+            example_get_minor_version_define_function_pointer_var
+        #else
+            extern example_get_minor_version_function_type example_get_minor_version = 0;
+        #endif
+        #ifdef example_get_patch_version_define_function_pointer_var
+            example_get_patch_version_define_function_pointer_var
+        #else
+            extern example_get_patch_version_function_type example_get_patch_version = 0;
+        #endif
+        #ifdef example_i_shape_show_define_function_pointer_var
+            example_i_shape_show_define_function_pointer_var
+        #else
+            extern example_i_shape_show_function_type example_i_shape_show = 0;
+        #endif
+        #ifdef example_i_shape_add_ref_define_function_pointer_var
+            example_i_shape_add_ref_define_function_pointer_var
+        #else
+            extern example_i_shape_add_ref_function_type example_i_shape_add_ref = 0;
+        #endif
+        #ifdef example_i_shape_release_define_function_pointer_var
+            example_i_shape_release_define_function_pointer_var
+        #else
+            extern example_i_shape_release_function_type example_i_shape_release = 0;
+        #endif
+        #ifdef example_i_polygon_get_points_count_define_function_pointer_var
+            example_i_polygon_get_points_count_define_function_pointer_var
+        #else
+            extern example_i_polygon_get_points_count_function_type example_i_polygon_get_points_count = 0;
+        #endif
+        #ifdef example_i_polygon_add_ref_define_function_pointer_var
+            example_i_polygon_add_ref_define_function_pointer_var
+        #else
+            extern example_i_polygon_add_ref_function_type example_i_polygon_add_ref = 0;
+        #endif
+        #ifdef example_i_polygon_release_define_function_pointer_var
+            example_i_polygon_release_define_function_pointer_var
+        #else
+            extern example_i_polygon_release_function_type example_i_polygon_release = 0;
+        #endif
+        #ifdef example_i_polygon_cast_to_base_define_function_pointer_var
+            example_i_polygon_cast_to_base_define_function_pointer_var
+        #else
+            extern example_i_polygon_cast_to_base_function_type example_i_polygon_cast_to_base = 0;
+        #endif
+        #ifdef example_i_shape_cast_to_example_i_polygon_define_function_pointer_var
+            example_i_shape_cast_to_example_i_polygon_define_function_pointer_var
+        #else
+            extern example_i_shape_cast_to_example_i_polygon_function_type example_i_shape_cast_to_example_i_polygon = 0;
+        #endif
+        #ifdef example_i_triangle_set_points_define_function_pointer_var
+            example_i_triangle_set_points_define_function_pointer_var
+        #else
+            extern example_i_triangle_set_points_function_type example_i_triangle_set_points = 0;
+        #endif
+        #ifdef example_i_triangle_add_ref_define_function_pointer_var
+            example_i_triangle_add_ref_define_function_pointer_var
+        #else
+            extern example_i_triangle_add_ref_function_type example_i_triangle_add_ref = 0;
+        #endif
+        #ifdef example_i_triangle_release_define_function_pointer_var
+            example_i_triangle_release_define_function_pointer_var
+        #else
+            extern example_i_triangle_release_function_type example_i_triangle_release = 0;
+        #endif
+        #ifdef example_i_triangle_cast_to_base_define_function_pointer_var
+            example_i_triangle_cast_to_base_define_function_pointer_var
+        #else
+            extern example_i_triangle_cast_to_base_function_type example_i_triangle_cast_to_base = 0;
+        #endif
+        #ifdef example_i_shape_cast_to_example_i_triangle_define_function_pointer_var
+            example_i_shape_cast_to_example_i_triangle_define_function_pointer_var
+        #else
+            extern example_i_shape_cast_to_example_i_triangle_function_type example_i_shape_cast_to_example_i_triangle = 0;
+        #endif
+        #ifdef example_i_polygon_cast_to_example_i_triangle_define_function_pointer_var
+            example_i_polygon_cast_to_example_i_triangle_define_function_pointer_var
+        #else
+            extern example_i_polygon_cast_to_example_i_triangle_function_type example_i_polygon_cast_to_example_i_triangle = 0;
+        #endif
+        #ifdef example_i_square_set_size_define_function_pointer_var
+            example_i_square_set_size_define_function_pointer_var
+        #else
+            extern example_i_square_set_size_function_type example_i_square_set_size = 0;
+        #endif
+        #ifdef example_i_square_add_ref_define_function_pointer_var
+            example_i_square_add_ref_define_function_pointer_var
+        #else
+            extern example_i_square_add_ref_function_type example_i_square_add_ref = 0;
+        #endif
+        #ifdef example_i_square_release_define_function_pointer_var
+            example_i_square_release_define_function_pointer_var
+        #else
+            extern example_i_square_release_function_type example_i_square_release = 0;
+        #endif
+        #ifdef example_i_square_cast_to_base_define_function_pointer_var
+            example_i_square_cast_to_base_define_function_pointer_var
+        #else
+            extern example_i_square_cast_to_base_function_type example_i_square_cast_to_base = 0;
+        #endif
+        #ifdef example_i_shape_cast_to_example_i_square_define_function_pointer_var
+            example_i_shape_cast_to_example_i_square_define_function_pointer_var
+        #else
+            extern example_i_shape_cast_to_example_i_square_function_type example_i_shape_cast_to_example_i_square = 0;
+        #endif
+        #ifdef example_i_polygon_cast_to_example_i_square_define_function_pointer_var
+            example_i_polygon_cast_to_example_i_square_define_function_pointer_var
+        #else
+            extern example_i_polygon_cast_to_example_i_square_function_type example_i_polygon_cast_to_example_i_square = 0;
+        #endif
+        #ifdef example_i_circle_set_radius_define_function_pointer_var
+            example_i_circle_set_radius_define_function_pointer_var
+        #else
+            extern example_i_circle_set_radius_function_type example_i_circle_set_radius = 0;
+        #endif
+        #ifdef example_i_circle_add_ref_define_function_pointer_var
+            example_i_circle_add_ref_define_function_pointer_var
+        #else
+            extern example_i_circle_add_ref_function_type example_i_circle_add_ref = 0;
+        #endif
+        #ifdef example_i_circle_release_define_function_pointer_var
+            example_i_circle_release_define_function_pointer_var
+        #else
+            extern example_i_circle_release_function_type example_i_circle_release = 0;
+        #endif
+        #ifdef example_i_circle_cast_to_base_define_function_pointer_var
+            example_i_circle_cast_to_base_define_function_pointer_var
+        #else
+            extern example_i_circle_cast_to_base_function_type example_i_circle_cast_to_base = 0;
+        #endif
+        #ifdef example_i_shape_cast_to_example_i_circle_define_function_pointer_var
+            example_i_shape_cast_to_example_i_circle_define_function_pointer_var
+        #else
+            extern example_i_shape_cast_to_example_i_circle_function_type example_i_shape_cast_to_example_i_circle = 0;
+        #endif
         
     #else /* EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS */
         
@@ -313,161 +437,161 @@
                     error_message << "Can't load shared library " << shared_library_name;
                     throw std::runtime_error(error_message.str());
                 }
-                #ifdef example_create_triangle_str
-                    load_function<example_create_triangle_function_type>(example_create_triangle, example_create_triangle_str);
-                #else /* example_create_triangle_str */
+                #ifdef example_create_triangle_load_function_call
+                    example_create_triangle_load_function_call
+                #else /* example_create_triangle_load_function_call */
                     load_function<example_create_triangle_function_type>(example_create_triangle, "example_create_triangle");
-                #endif /* example_create_triangle_str */
-                #ifdef example_create_square_str
-                    load_function<example_create_square_function_type>(example_create_square, example_create_square_str);
-                #else /* example_create_square_str */
+                #endif /* example_create_triangle_load_function_call */
+                #ifdef example_create_square_load_function_call
+                    example_create_square_load_function_call
+                #else /* example_create_square_load_function_call */
                     load_function<example_create_square_function_type>(example_create_square, "example_create_square");
-                #endif /* example_create_square_str */
-                #ifdef example_create_circle_str
-                    load_function<example_create_circle_function_type>(example_create_circle, example_create_circle_str);
-                #else /* example_create_circle_str */
+                #endif /* example_create_square_load_function_call */
+                #ifdef example_create_circle_load_function_call
+                    example_create_circle_load_function_call
+                #else /* example_create_circle_load_function_call */
                     load_function<example_create_circle_function_type>(example_create_circle, "example_create_circle");
-                #endif /* example_create_circle_str */
-                #ifdef example_get_major_version_str
-                    load_function<example_get_major_version_function_type>(example_get_major_version, example_get_major_version_str);
-                #else /* example_get_major_version_str */
+                #endif /* example_create_circle_load_function_call */
+                #ifdef example_get_major_version_load_function_call
+                    example_get_major_version_load_function_call
+                #else /* example_get_major_version_load_function_call */
                     load_function<example_get_major_version_function_type>(example_get_major_version, "example_get_major_version");
-                #endif /* example_get_major_version_str */
-                #ifdef example_get_minor_version_str
-                    load_function<example_get_minor_version_function_type>(example_get_minor_version, example_get_minor_version_str);
-                #else /* example_get_minor_version_str */
+                #endif /* example_get_major_version_load_function_call */
+                #ifdef example_get_minor_version_load_function_call
+                    example_get_minor_version_load_function_call
+                #else /* example_get_minor_version_load_function_call */
                     load_function<example_get_minor_version_function_type>(example_get_minor_version, "example_get_minor_version");
-                #endif /* example_get_minor_version_str */
-                #ifdef example_get_patch_version_str
-                    load_function<example_get_patch_version_function_type>(example_get_patch_version, example_get_patch_version_str);
-                #else /* example_get_patch_version_str */
+                #endif /* example_get_minor_version_load_function_call */
+                #ifdef example_get_patch_version_load_function_call
+                    example_get_patch_version_load_function_call
+                #else /* example_get_patch_version_load_function_call */
                     load_function<example_get_patch_version_function_type>(example_get_patch_version, "example_get_patch_version");
-                #endif /* example_get_patch_version_str */
-                #ifdef example_i_shape_show_str
-                    load_function<example_i_shape_show_function_type>(example_i_shape_show, example_i_shape_show_str);
-                #else /* example_i_shape_show_str */
+                #endif /* example_get_patch_version_load_function_call */
+                #ifdef example_i_shape_show_load_function_call
+                    example_i_shape_show_load_function_call
+                #else /* example_i_shape_show_load_function_call */
                     load_function<example_i_shape_show_function_type>(example_i_shape_show, "example_i_shape_show");
-                #endif /* example_i_shape_show_str */
-                #ifdef example_i_shape_add_ref_str
-                    load_function<example_i_shape_add_ref_function_type>(example_i_shape_add_ref, example_i_shape_add_ref_str);
-                #else /* example_i_shape_add_ref_str */
+                #endif /* example_i_shape_show_load_function_call */
+                #ifdef example_i_shape_add_ref_load_function_call
+                    example_i_shape_add_ref_load_function_call
+                #else /* example_i_shape_add_ref_load_function_call */
                     load_function<example_i_shape_add_ref_function_type>(example_i_shape_add_ref, "example_i_shape_add_ref");
-                #endif /* example_i_shape_add_ref_str */
-                #ifdef example_i_shape_release_str
-                    load_function<example_i_shape_release_function_type>(example_i_shape_release, example_i_shape_release_str);
-                #else /* example_i_shape_release_str */
+                #endif /* example_i_shape_add_ref_load_function_call */
+                #ifdef example_i_shape_release_load_function_call
+                    example_i_shape_release_load_function_call
+                #else /* example_i_shape_release_load_function_call */
                     load_function<example_i_shape_release_function_type>(example_i_shape_release, "example_i_shape_release");
-                #endif /* example_i_shape_release_str */
-                #ifdef example_i_polygon_get_points_count_str
-                    load_function<example_i_polygon_get_points_count_function_type>(example_i_polygon_get_points_count, example_i_polygon_get_points_count_str);
-                #else /* example_i_polygon_get_points_count_str */
+                #endif /* example_i_shape_release_load_function_call */
+                #ifdef example_i_polygon_get_points_count_load_function_call
+                    example_i_polygon_get_points_count_load_function_call
+                #else /* example_i_polygon_get_points_count_load_function_call */
                     load_function<example_i_polygon_get_points_count_function_type>(example_i_polygon_get_points_count, "example_i_polygon_get_points_count");
-                #endif /* example_i_polygon_get_points_count_str */
-                #ifdef example_i_polygon_add_ref_str
-                    load_function<example_i_polygon_add_ref_function_type>(example_i_polygon_add_ref, example_i_polygon_add_ref_str);
-                #else /* example_i_polygon_add_ref_str */
+                #endif /* example_i_polygon_get_points_count_load_function_call */
+                #ifdef example_i_polygon_add_ref_load_function_call
+                    example_i_polygon_add_ref_load_function_call
+                #else /* example_i_polygon_add_ref_load_function_call */
                     load_function<example_i_polygon_add_ref_function_type>(example_i_polygon_add_ref, "example_i_polygon_add_ref");
-                #endif /* example_i_polygon_add_ref_str */
-                #ifdef example_i_polygon_release_str
-                    load_function<example_i_polygon_release_function_type>(example_i_polygon_release, example_i_polygon_release_str);
-                #else /* example_i_polygon_release_str */
+                #endif /* example_i_polygon_add_ref_load_function_call */
+                #ifdef example_i_polygon_release_load_function_call
+                    example_i_polygon_release_load_function_call
+                #else /* example_i_polygon_release_load_function_call */
                     load_function<example_i_polygon_release_function_type>(example_i_polygon_release, "example_i_polygon_release");
-                #endif /* example_i_polygon_release_str */
-                #ifdef example_i_polygon_cast_to_base_str
-                    load_function<example_i_polygon_cast_to_base_function_type>(example_i_polygon_cast_to_base, example_i_polygon_cast_to_base_str);
-                #else /* example_i_polygon_cast_to_base_str */
+                #endif /* example_i_polygon_release_load_function_call */
+                #ifdef example_i_polygon_cast_to_base_load_function_call
+                    example_i_polygon_cast_to_base_load_function_call
+                #else /* example_i_polygon_cast_to_base_load_function_call */
                     load_function<example_i_polygon_cast_to_base_function_type>(example_i_polygon_cast_to_base, "example_i_polygon_cast_to_base");
-                #endif /* example_i_polygon_cast_to_base_str */
-                #ifdef example_i_shape_cast_to_example_i_polygon_str
-                    load_function<example_i_shape_cast_to_example_i_polygon_function_type>(example_i_shape_cast_to_example_i_polygon, example_i_shape_cast_to_example_i_polygon_str);
-                #else /* example_i_shape_cast_to_example_i_polygon_str */
+                #endif /* example_i_polygon_cast_to_base_load_function_call */
+                #ifdef example_i_shape_cast_to_example_i_polygon_load_function_call
+                    example_i_shape_cast_to_example_i_polygon_load_function_call
+                #else /* example_i_shape_cast_to_example_i_polygon_load_function_call */
                     load_function<example_i_shape_cast_to_example_i_polygon_function_type>(example_i_shape_cast_to_example_i_polygon, "example_i_shape_cast_to_example_i_polygon");
-                #endif /* example_i_shape_cast_to_example_i_polygon_str */
-                #ifdef example_i_triangle_set_points_str
-                    load_function<example_i_triangle_set_points_function_type>(example_i_triangle_set_points, example_i_triangle_set_points_str);
-                #else /* example_i_triangle_set_points_str */
+                #endif /* example_i_shape_cast_to_example_i_polygon_load_function_call */
+                #ifdef example_i_triangle_set_points_load_function_call
+                    example_i_triangle_set_points_load_function_call
+                #else /* example_i_triangle_set_points_load_function_call */
                     load_function<example_i_triangle_set_points_function_type>(example_i_triangle_set_points, "example_i_triangle_set_points");
-                #endif /* example_i_triangle_set_points_str */
-                #ifdef example_i_triangle_add_ref_str
-                    load_function<example_i_triangle_add_ref_function_type>(example_i_triangle_add_ref, example_i_triangle_add_ref_str);
-                #else /* example_i_triangle_add_ref_str */
+                #endif /* example_i_triangle_set_points_load_function_call */
+                #ifdef example_i_triangle_add_ref_load_function_call
+                    example_i_triangle_add_ref_load_function_call
+                #else /* example_i_triangle_add_ref_load_function_call */
                     load_function<example_i_triangle_add_ref_function_type>(example_i_triangle_add_ref, "example_i_triangle_add_ref");
-                #endif /* example_i_triangle_add_ref_str */
-                #ifdef example_i_triangle_release_str
-                    load_function<example_i_triangle_release_function_type>(example_i_triangle_release, example_i_triangle_release_str);
-                #else /* example_i_triangle_release_str */
+                #endif /* example_i_triangle_add_ref_load_function_call */
+                #ifdef example_i_triangle_release_load_function_call
+                    example_i_triangle_release_load_function_call
+                #else /* example_i_triangle_release_load_function_call */
                     load_function<example_i_triangle_release_function_type>(example_i_triangle_release, "example_i_triangle_release");
-                #endif /* example_i_triangle_release_str */
-                #ifdef example_i_triangle_cast_to_base_str
-                    load_function<example_i_triangle_cast_to_base_function_type>(example_i_triangle_cast_to_base, example_i_triangle_cast_to_base_str);
-                #else /* example_i_triangle_cast_to_base_str */
+                #endif /* example_i_triangle_release_load_function_call */
+                #ifdef example_i_triangle_cast_to_base_load_function_call
+                    example_i_triangle_cast_to_base_load_function_call
+                #else /* example_i_triangle_cast_to_base_load_function_call */
                     load_function<example_i_triangle_cast_to_base_function_type>(example_i_triangle_cast_to_base, "example_i_triangle_cast_to_base");
-                #endif /* example_i_triangle_cast_to_base_str */
-                #ifdef example_i_shape_cast_to_example_i_triangle_str
-                    load_function<example_i_shape_cast_to_example_i_triangle_function_type>(example_i_shape_cast_to_example_i_triangle, example_i_shape_cast_to_example_i_triangle_str);
-                #else /* example_i_shape_cast_to_example_i_triangle_str */
+                #endif /* example_i_triangle_cast_to_base_load_function_call */
+                #ifdef example_i_shape_cast_to_example_i_triangle_load_function_call
+                    example_i_shape_cast_to_example_i_triangle_load_function_call
+                #else /* example_i_shape_cast_to_example_i_triangle_load_function_call */
                     load_function<example_i_shape_cast_to_example_i_triangle_function_type>(example_i_shape_cast_to_example_i_triangle, "example_i_shape_cast_to_example_i_triangle");
-                #endif /* example_i_shape_cast_to_example_i_triangle_str */
-                #ifdef example_i_polygon_cast_to_example_i_triangle_str
-                    load_function<example_i_polygon_cast_to_example_i_triangle_function_type>(example_i_polygon_cast_to_example_i_triangle, example_i_polygon_cast_to_example_i_triangle_str);
-                #else /* example_i_polygon_cast_to_example_i_triangle_str */
+                #endif /* example_i_shape_cast_to_example_i_triangle_load_function_call */
+                #ifdef example_i_polygon_cast_to_example_i_triangle_load_function_call
+                    example_i_polygon_cast_to_example_i_triangle_load_function_call
+                #else /* example_i_polygon_cast_to_example_i_triangle_load_function_call */
                     load_function<example_i_polygon_cast_to_example_i_triangle_function_type>(example_i_polygon_cast_to_example_i_triangle, "example_i_polygon_cast_to_example_i_triangle");
-                #endif /* example_i_polygon_cast_to_example_i_triangle_str */
-                #ifdef example_i_square_set_size_str
-                    load_function<example_i_square_set_size_function_type>(example_i_square_set_size, example_i_square_set_size_str);
-                #else /* example_i_square_set_size_str */
+                #endif /* example_i_polygon_cast_to_example_i_triangle_load_function_call */
+                #ifdef example_i_square_set_size_load_function_call
+                    example_i_square_set_size_load_function_call
+                #else /* example_i_square_set_size_load_function_call */
                     load_function<example_i_square_set_size_function_type>(example_i_square_set_size, "example_i_square_set_size");
-                #endif /* example_i_square_set_size_str */
-                #ifdef example_i_square_add_ref_str
-                    load_function<example_i_square_add_ref_function_type>(example_i_square_add_ref, example_i_square_add_ref_str);
-                #else /* example_i_square_add_ref_str */
+                #endif /* example_i_square_set_size_load_function_call */
+                #ifdef example_i_square_add_ref_load_function_call
+                    example_i_square_add_ref_load_function_call
+                #else /* example_i_square_add_ref_load_function_call */
                     load_function<example_i_square_add_ref_function_type>(example_i_square_add_ref, "example_i_square_add_ref");
-                #endif /* example_i_square_add_ref_str */
-                #ifdef example_i_square_release_str
-                    load_function<example_i_square_release_function_type>(example_i_square_release, example_i_square_release_str);
-                #else /* example_i_square_release_str */
+                #endif /* example_i_square_add_ref_load_function_call */
+                #ifdef example_i_square_release_load_function_call
+                    example_i_square_release_load_function_call
+                #else /* example_i_square_release_load_function_call */
                     load_function<example_i_square_release_function_type>(example_i_square_release, "example_i_square_release");
-                #endif /* example_i_square_release_str */
-                #ifdef example_i_square_cast_to_base_str
-                    load_function<example_i_square_cast_to_base_function_type>(example_i_square_cast_to_base, example_i_square_cast_to_base_str);
-                #else /* example_i_square_cast_to_base_str */
+                #endif /* example_i_square_release_load_function_call */
+                #ifdef example_i_square_cast_to_base_load_function_call
+                    example_i_square_cast_to_base_load_function_call
+                #else /* example_i_square_cast_to_base_load_function_call */
                     load_function<example_i_square_cast_to_base_function_type>(example_i_square_cast_to_base, "example_i_square_cast_to_base");
-                #endif /* example_i_square_cast_to_base_str */
-                #ifdef example_i_shape_cast_to_example_i_square_str
-                    load_function<example_i_shape_cast_to_example_i_square_function_type>(example_i_shape_cast_to_example_i_square, example_i_shape_cast_to_example_i_square_str);
-                #else /* example_i_shape_cast_to_example_i_square_str */
+                #endif /* example_i_square_cast_to_base_load_function_call */
+                #ifdef example_i_shape_cast_to_example_i_square_load_function_call
+                    example_i_shape_cast_to_example_i_square_load_function_call
+                #else /* example_i_shape_cast_to_example_i_square_load_function_call */
                     load_function<example_i_shape_cast_to_example_i_square_function_type>(example_i_shape_cast_to_example_i_square, "example_i_shape_cast_to_example_i_square");
-                #endif /* example_i_shape_cast_to_example_i_square_str */
-                #ifdef example_i_polygon_cast_to_example_i_square_str
-                    load_function<example_i_polygon_cast_to_example_i_square_function_type>(example_i_polygon_cast_to_example_i_square, example_i_polygon_cast_to_example_i_square_str);
-                #else /* example_i_polygon_cast_to_example_i_square_str */
+                #endif /* example_i_shape_cast_to_example_i_square_load_function_call */
+                #ifdef example_i_polygon_cast_to_example_i_square_load_function_call
+                    example_i_polygon_cast_to_example_i_square_load_function_call
+                #else /* example_i_polygon_cast_to_example_i_square_load_function_call */
                     load_function<example_i_polygon_cast_to_example_i_square_function_type>(example_i_polygon_cast_to_example_i_square, "example_i_polygon_cast_to_example_i_square");
-                #endif /* example_i_polygon_cast_to_example_i_square_str */
-                #ifdef example_i_circle_set_radius_str
-                    load_function<example_i_circle_set_radius_function_type>(example_i_circle_set_radius, example_i_circle_set_radius_str);
-                #else /* example_i_circle_set_radius_str */
+                #endif /* example_i_polygon_cast_to_example_i_square_load_function_call */
+                #ifdef example_i_circle_set_radius_load_function_call
+                    example_i_circle_set_radius_load_function_call
+                #else /* example_i_circle_set_radius_load_function_call */
                     load_function<example_i_circle_set_radius_function_type>(example_i_circle_set_radius, "example_i_circle_set_radius");
-                #endif /* example_i_circle_set_radius_str */
-                #ifdef example_i_circle_add_ref_str
-                    load_function<example_i_circle_add_ref_function_type>(example_i_circle_add_ref, example_i_circle_add_ref_str);
-                #else /* example_i_circle_add_ref_str */
+                #endif /* example_i_circle_set_radius_load_function_call */
+                #ifdef example_i_circle_add_ref_load_function_call
+                    example_i_circle_add_ref_load_function_call
+                #else /* example_i_circle_add_ref_load_function_call */
                     load_function<example_i_circle_add_ref_function_type>(example_i_circle_add_ref, "example_i_circle_add_ref");
-                #endif /* example_i_circle_add_ref_str */
-                #ifdef example_i_circle_release_str
-                    load_function<example_i_circle_release_function_type>(example_i_circle_release, example_i_circle_release_str);
-                #else /* example_i_circle_release_str */
+                #endif /* example_i_circle_add_ref_load_function_call */
+                #ifdef example_i_circle_release_load_function_call
+                    example_i_circle_release_load_function_call
+                #else /* example_i_circle_release_load_function_call */
                     load_function<example_i_circle_release_function_type>(example_i_circle_release, "example_i_circle_release");
-                #endif /* example_i_circle_release_str */
-                #ifdef example_i_circle_cast_to_base_str
-                    load_function<example_i_circle_cast_to_base_function_type>(example_i_circle_cast_to_base, example_i_circle_cast_to_base_str);
-                #else /* example_i_circle_cast_to_base_str */
+                #endif /* example_i_circle_release_load_function_call */
+                #ifdef example_i_circle_cast_to_base_load_function_call
+                    example_i_circle_cast_to_base_load_function_call
+                #else /* example_i_circle_cast_to_base_load_function_call */
                     load_function<example_i_circle_cast_to_base_function_type>(example_i_circle_cast_to_base, "example_i_circle_cast_to_base");
-                #endif /* example_i_circle_cast_to_base_str */
-                #ifdef example_i_shape_cast_to_example_i_circle_str
-                    load_function<example_i_shape_cast_to_example_i_circle_function_type>(example_i_shape_cast_to_example_i_circle, example_i_shape_cast_to_example_i_circle_str);
-                #else /* example_i_shape_cast_to_example_i_circle_str */
+                #endif /* example_i_circle_cast_to_base_load_function_call */
+                #ifdef example_i_shape_cast_to_example_i_circle_load_function_call
+                    example_i_shape_cast_to_example_i_circle_load_function_call
+                #else /* example_i_shape_cast_to_example_i_circle_load_function_call */
                     load_function<example_i_shape_cast_to_example_i_circle_function_type>(example_i_shape_cast_to_example_i_circle, "example_i_shape_cast_to_example_i_circle");
-                #endif /* example_i_shape_cast_to_example_i_circle_str */
+                #endif /* example_i_shape_cast_to_example_i_circle_load_function_call */
                 const int major_version = example_get_major_version();
                 const int minor_version = example_get_minor_version();
                 const int patch_version = example_get_patch_version();
@@ -507,37 +631,161 @@
                 #else /* _WIN32 */
                     dlclose(handle);
                 #endif /* _WIN32 */
-                example_create_triangle = 0;
-                example_create_square = 0;
-                example_create_circle = 0;
-                example_get_major_version = 0;
-                example_get_minor_version = 0;
-                example_get_patch_version = 0;
-                example_i_shape_show = 0;
-                example_i_shape_add_ref = 0;
-                example_i_shape_release = 0;
-                example_i_polygon_get_points_count = 0;
-                example_i_polygon_add_ref = 0;
-                example_i_polygon_release = 0;
-                example_i_polygon_cast_to_base = 0;
-                example_i_shape_cast_to_example_i_polygon = 0;
-                example_i_triangle_set_points = 0;
-                example_i_triangle_add_ref = 0;
-                example_i_triangle_release = 0;
-                example_i_triangle_cast_to_base = 0;
-                example_i_shape_cast_to_example_i_triangle = 0;
-                example_i_polygon_cast_to_example_i_triangle = 0;
-                example_i_square_set_size = 0;
-                example_i_square_add_ref = 0;
-                example_i_square_release = 0;
-                example_i_square_cast_to_base = 0;
-                example_i_shape_cast_to_example_i_square = 0;
-                example_i_polygon_cast_to_example_i_square = 0;
-                example_i_circle_set_radius = 0;
-                example_i_circle_add_ref = 0;
-                example_i_circle_release = 0;
-                example_i_circle_cast_to_base = 0;
-                example_i_shape_cast_to_example_i_circle = 0;
+                #ifdef example_create_triangle_zero_function_pointer
+                    example_create_triangle_zero_function_pointer
+                #else /* example_create_triangle_zero_function_pointer */
+                    example_create_triangle = 0;
+                #endif /* example_create_triangle_zero_function_pointer */
+                #ifdef example_create_square_zero_function_pointer
+                    example_create_square_zero_function_pointer
+                #else /* example_create_square_zero_function_pointer */
+                    example_create_square = 0;
+                #endif /* example_create_square_zero_function_pointer */
+                #ifdef example_create_circle_zero_function_pointer
+                    example_create_circle_zero_function_pointer
+                #else /* example_create_circle_zero_function_pointer */
+                    example_create_circle = 0;
+                #endif /* example_create_circle_zero_function_pointer */
+                #ifdef example_get_major_version_zero_function_pointer
+                    example_get_major_version_zero_function_pointer
+                #else /* example_get_major_version_zero_function_pointer */
+                    example_get_major_version = 0;
+                #endif /* example_get_major_version_zero_function_pointer */
+                #ifdef example_get_minor_version_zero_function_pointer
+                    example_get_minor_version_zero_function_pointer
+                #else /* example_get_minor_version_zero_function_pointer */
+                    example_get_minor_version = 0;
+                #endif /* example_get_minor_version_zero_function_pointer */
+                #ifdef example_get_patch_version_zero_function_pointer
+                    example_get_patch_version_zero_function_pointer
+                #else /* example_get_patch_version_zero_function_pointer */
+                    example_get_patch_version = 0;
+                #endif /* example_get_patch_version_zero_function_pointer */
+                #ifdef example_i_shape_show_zero_function_pointer
+                    example_i_shape_show_zero_function_pointer
+                #else /* example_i_shape_show_zero_function_pointer */
+                    example_i_shape_show = 0;
+                #endif /* example_i_shape_show_zero_function_pointer */
+                #ifdef example_i_shape_add_ref_zero_function_pointer
+                    example_i_shape_add_ref_zero_function_pointer
+                #else /* example_i_shape_add_ref_zero_function_pointer */
+                    example_i_shape_add_ref = 0;
+                #endif /* example_i_shape_add_ref_zero_function_pointer */
+                #ifdef example_i_shape_release_zero_function_pointer
+                    example_i_shape_release_zero_function_pointer
+                #else /* example_i_shape_release_zero_function_pointer */
+                    example_i_shape_release = 0;
+                #endif /* example_i_shape_release_zero_function_pointer */
+                #ifdef example_i_polygon_get_points_count_zero_function_pointer
+                    example_i_polygon_get_points_count_zero_function_pointer
+                #else /* example_i_polygon_get_points_count_zero_function_pointer */
+                    example_i_polygon_get_points_count = 0;
+                #endif /* example_i_polygon_get_points_count_zero_function_pointer */
+                #ifdef example_i_polygon_add_ref_zero_function_pointer
+                    example_i_polygon_add_ref_zero_function_pointer
+                #else /* example_i_polygon_add_ref_zero_function_pointer */
+                    example_i_polygon_add_ref = 0;
+                #endif /* example_i_polygon_add_ref_zero_function_pointer */
+                #ifdef example_i_polygon_release_zero_function_pointer
+                    example_i_polygon_release_zero_function_pointer
+                #else /* example_i_polygon_release_zero_function_pointer */
+                    example_i_polygon_release = 0;
+                #endif /* example_i_polygon_release_zero_function_pointer */
+                #ifdef example_i_polygon_cast_to_base_zero_function_pointer
+                    example_i_polygon_cast_to_base_zero_function_pointer
+                #else /* example_i_polygon_cast_to_base_zero_function_pointer */
+                    example_i_polygon_cast_to_base = 0;
+                #endif /* example_i_polygon_cast_to_base_zero_function_pointer */
+                #ifdef example_i_shape_cast_to_example_i_polygon_zero_function_pointer
+                    example_i_shape_cast_to_example_i_polygon_zero_function_pointer
+                #else /* example_i_shape_cast_to_example_i_polygon_zero_function_pointer */
+                    example_i_shape_cast_to_example_i_polygon = 0;
+                #endif /* example_i_shape_cast_to_example_i_polygon_zero_function_pointer */
+                #ifdef example_i_triangle_set_points_zero_function_pointer
+                    example_i_triangle_set_points_zero_function_pointer
+                #else /* example_i_triangle_set_points_zero_function_pointer */
+                    example_i_triangle_set_points = 0;
+                #endif /* example_i_triangle_set_points_zero_function_pointer */
+                #ifdef example_i_triangle_add_ref_zero_function_pointer
+                    example_i_triangle_add_ref_zero_function_pointer
+                #else /* example_i_triangle_add_ref_zero_function_pointer */
+                    example_i_triangle_add_ref = 0;
+                #endif /* example_i_triangle_add_ref_zero_function_pointer */
+                #ifdef example_i_triangle_release_zero_function_pointer
+                    example_i_triangle_release_zero_function_pointer
+                #else /* example_i_triangle_release_zero_function_pointer */
+                    example_i_triangle_release = 0;
+                #endif /* example_i_triangle_release_zero_function_pointer */
+                #ifdef example_i_triangle_cast_to_base_zero_function_pointer
+                    example_i_triangle_cast_to_base_zero_function_pointer
+                #else /* example_i_triangle_cast_to_base_zero_function_pointer */
+                    example_i_triangle_cast_to_base = 0;
+                #endif /* example_i_triangle_cast_to_base_zero_function_pointer */
+                #ifdef example_i_shape_cast_to_example_i_triangle_zero_function_pointer
+                    example_i_shape_cast_to_example_i_triangle_zero_function_pointer
+                #else /* example_i_shape_cast_to_example_i_triangle_zero_function_pointer */
+                    example_i_shape_cast_to_example_i_triangle = 0;
+                #endif /* example_i_shape_cast_to_example_i_triangle_zero_function_pointer */
+                #ifdef example_i_polygon_cast_to_example_i_triangle_zero_function_pointer
+                    example_i_polygon_cast_to_example_i_triangle_zero_function_pointer
+                #else /* example_i_polygon_cast_to_example_i_triangle_zero_function_pointer */
+                    example_i_polygon_cast_to_example_i_triangle = 0;
+                #endif /* example_i_polygon_cast_to_example_i_triangle_zero_function_pointer */
+                #ifdef example_i_square_set_size_zero_function_pointer
+                    example_i_square_set_size_zero_function_pointer
+                #else /* example_i_square_set_size_zero_function_pointer */
+                    example_i_square_set_size = 0;
+                #endif /* example_i_square_set_size_zero_function_pointer */
+                #ifdef example_i_square_add_ref_zero_function_pointer
+                    example_i_square_add_ref_zero_function_pointer
+                #else /* example_i_square_add_ref_zero_function_pointer */
+                    example_i_square_add_ref = 0;
+                #endif /* example_i_square_add_ref_zero_function_pointer */
+                #ifdef example_i_square_release_zero_function_pointer
+                    example_i_square_release_zero_function_pointer
+                #else /* example_i_square_release_zero_function_pointer */
+                    example_i_square_release = 0;
+                #endif /* example_i_square_release_zero_function_pointer */
+                #ifdef example_i_square_cast_to_base_zero_function_pointer
+                    example_i_square_cast_to_base_zero_function_pointer
+                #else /* example_i_square_cast_to_base_zero_function_pointer */
+                    example_i_square_cast_to_base = 0;
+                #endif /* example_i_square_cast_to_base_zero_function_pointer */
+                #ifdef example_i_shape_cast_to_example_i_square_zero_function_pointer
+                    example_i_shape_cast_to_example_i_square_zero_function_pointer
+                #else /* example_i_shape_cast_to_example_i_square_zero_function_pointer */
+                    example_i_shape_cast_to_example_i_square = 0;
+                #endif /* example_i_shape_cast_to_example_i_square_zero_function_pointer */
+                #ifdef example_i_polygon_cast_to_example_i_square_zero_function_pointer
+                    example_i_polygon_cast_to_example_i_square_zero_function_pointer
+                #else /* example_i_polygon_cast_to_example_i_square_zero_function_pointer */
+                    example_i_polygon_cast_to_example_i_square = 0;
+                #endif /* example_i_polygon_cast_to_example_i_square_zero_function_pointer */
+                #ifdef example_i_circle_set_radius_zero_function_pointer
+                    example_i_circle_set_radius_zero_function_pointer
+                #else /* example_i_circle_set_radius_zero_function_pointer */
+                    example_i_circle_set_radius = 0;
+                #endif /* example_i_circle_set_radius_zero_function_pointer */
+                #ifdef example_i_circle_add_ref_zero_function_pointer
+                    example_i_circle_add_ref_zero_function_pointer
+                #else /* example_i_circle_add_ref_zero_function_pointer */
+                    example_i_circle_add_ref = 0;
+                #endif /* example_i_circle_add_ref_zero_function_pointer */
+                #ifdef example_i_circle_release_zero_function_pointer
+                    example_i_circle_release_zero_function_pointer
+                #else /* example_i_circle_release_zero_function_pointer */
+                    example_i_circle_release = 0;
+                #endif /* example_i_circle_release_zero_function_pointer */
+                #ifdef example_i_circle_cast_to_base_zero_function_pointer
+                    example_i_circle_cast_to_base_zero_function_pointer
+                #else /* example_i_circle_cast_to_base_zero_function_pointer */
+                    example_i_circle_cast_to_base = 0;
+                #endif /* example_i_circle_cast_to_base_zero_function_pointer */
+                #ifdef example_i_shape_cast_to_example_i_circle_zero_function_pointer
+                    example_i_shape_cast_to_example_i_circle_zero_function_pointer
+                #else /* example_i_shape_cast_to_example_i_circle_zero_function_pointer */
+                    example_i_shape_cast_to_example_i_circle = 0;
+                #endif /* example_i_shape_cast_to_example_i_circle_zero_function_pointer */
             }
         };
     }

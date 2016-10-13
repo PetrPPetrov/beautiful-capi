@@ -160,20 +160,76 @@
     
     #ifdef HELLO_WORLD_CAPI_DEFINE_FUNCTION_POINTERS
         
-        extern hello_world_get_major_version_function_type hello_world_get_major_version = 0;
-        extern hello_world_get_minor_version_function_type hello_world_get_minor_version = 0;
-        extern hello_world_get_patch_version_function_type hello_world_get_patch_version = 0;
-        extern hello_world_printer_default_function_type hello_world_printer_default = 0;
-        extern hello_world_printer_show_function_type hello_world_printer_show = 0;
-        extern hello_world_printer_copy_function_type hello_world_printer_copy = 0;
-        extern hello_world_printer_delete_function_type hello_world_printer_delete = 0;
-        extern hello_world_scanner_default_function_type hello_world_scanner_default = 0;
-        extern hello_world_scanner_scan_function_type hello_world_scanner_scan = 0;
-        extern hello_world_scanner_delete_function_type hello_world_scanner_delete = 0;
-        extern hello_world_plotter_default_function_type hello_world_plotter_default = 0;
-        extern hello_world_plotter_draw_function_type hello_world_plotter_draw = 0;
-        extern hello_world_plotter_add_ref_function_type hello_world_plotter_add_ref = 0;
-        extern hello_world_plotter_release_function_type hello_world_plotter_release = 0;
+        #ifdef hello_world_get_major_version_define_function_pointer_var
+            hello_world_get_major_version_define_function_pointer_var
+        #else
+            extern hello_world_get_major_version_function_type hello_world_get_major_version = 0;
+        #endif
+        #ifdef hello_world_get_minor_version_define_function_pointer_var
+            hello_world_get_minor_version_define_function_pointer_var
+        #else
+            extern hello_world_get_minor_version_function_type hello_world_get_minor_version = 0;
+        #endif
+        #ifdef hello_world_get_patch_version_define_function_pointer_var
+            hello_world_get_patch_version_define_function_pointer_var
+        #else
+            extern hello_world_get_patch_version_function_type hello_world_get_patch_version = 0;
+        #endif
+        #ifdef hello_world_printer_default_define_function_pointer_var
+            hello_world_printer_default_define_function_pointer_var
+        #else
+            extern hello_world_printer_default_function_type hello_world_printer_default = 0;
+        #endif
+        #ifdef hello_world_printer_show_define_function_pointer_var
+            hello_world_printer_show_define_function_pointer_var
+        #else
+            extern hello_world_printer_show_function_type hello_world_printer_show = 0;
+        #endif
+        #ifdef hello_world_printer_copy_define_function_pointer_var
+            hello_world_printer_copy_define_function_pointer_var
+        #else
+            extern hello_world_printer_copy_function_type hello_world_printer_copy = 0;
+        #endif
+        #ifdef hello_world_printer_delete_define_function_pointer_var
+            hello_world_printer_delete_define_function_pointer_var
+        #else
+            extern hello_world_printer_delete_function_type hello_world_printer_delete = 0;
+        #endif
+        #ifdef hello_world_scanner_default_define_function_pointer_var
+            hello_world_scanner_default_define_function_pointer_var
+        #else
+            extern hello_world_scanner_default_function_type hello_world_scanner_default = 0;
+        #endif
+        #ifdef hello_world_scanner_scan_define_function_pointer_var
+            hello_world_scanner_scan_define_function_pointer_var
+        #else
+            extern hello_world_scanner_scan_function_type hello_world_scanner_scan = 0;
+        #endif
+        #ifdef hello_world_scanner_delete_define_function_pointer_var
+            hello_world_scanner_delete_define_function_pointer_var
+        #else
+            extern hello_world_scanner_delete_function_type hello_world_scanner_delete = 0;
+        #endif
+        #ifdef hello_world_plotter_default_define_function_pointer_var
+            hello_world_plotter_default_define_function_pointer_var
+        #else
+            extern hello_world_plotter_default_function_type hello_world_plotter_default = 0;
+        #endif
+        #ifdef hello_world_plotter_draw_define_function_pointer_var
+            hello_world_plotter_draw_define_function_pointer_var
+        #else
+            extern hello_world_plotter_draw_function_type hello_world_plotter_draw = 0;
+        #endif
+        #ifdef hello_world_plotter_add_ref_define_function_pointer_var
+            hello_world_plotter_add_ref_define_function_pointer_var
+        #else
+            extern hello_world_plotter_add_ref_function_type hello_world_plotter_add_ref = 0;
+        #endif
+        #ifdef hello_world_plotter_release_define_function_pointer_var
+            hello_world_plotter_release_define_function_pointer_var
+        #else
+            extern hello_world_plotter_release_function_type hello_world_plotter_release = 0;
+        #endif
         
     #else /* HELLO_WORLD_CAPI_DEFINE_FUNCTION_POINTERS */
         
@@ -245,76 +301,76 @@
                     error_message << "Can't load shared library " << shared_library_name;
                     throw std::runtime_error(error_message.str());
                 }
-                #ifdef hello_world_get_major_version_str
-                    load_function<hello_world_get_major_version_function_type>(hello_world_get_major_version, hello_world_get_major_version_str);
-                #else /* hello_world_get_major_version_str */
+                #ifdef hello_world_get_major_version_load_function_call
+                    hello_world_get_major_version_load_function_call
+                #else /* hello_world_get_major_version_load_function_call */
                     load_function<hello_world_get_major_version_function_type>(hello_world_get_major_version, "hello_world_get_major_version");
-                #endif /* hello_world_get_major_version_str */
-                #ifdef hello_world_get_minor_version_str
-                    load_function<hello_world_get_minor_version_function_type>(hello_world_get_minor_version, hello_world_get_minor_version_str);
-                #else /* hello_world_get_minor_version_str */
+                #endif /* hello_world_get_major_version_load_function_call */
+                #ifdef hello_world_get_minor_version_load_function_call
+                    hello_world_get_minor_version_load_function_call
+                #else /* hello_world_get_minor_version_load_function_call */
                     load_function<hello_world_get_minor_version_function_type>(hello_world_get_minor_version, "hello_world_get_minor_version");
-                #endif /* hello_world_get_minor_version_str */
-                #ifdef hello_world_get_patch_version_str
-                    load_function<hello_world_get_patch_version_function_type>(hello_world_get_patch_version, hello_world_get_patch_version_str);
-                #else /* hello_world_get_patch_version_str */
+                #endif /* hello_world_get_minor_version_load_function_call */
+                #ifdef hello_world_get_patch_version_load_function_call
+                    hello_world_get_patch_version_load_function_call
+                #else /* hello_world_get_patch_version_load_function_call */
                     load_function<hello_world_get_patch_version_function_type>(hello_world_get_patch_version, "hello_world_get_patch_version");
-                #endif /* hello_world_get_patch_version_str */
-                #ifdef hello_world_printer_default_str
-                    load_function<hello_world_printer_default_function_type>(hello_world_printer_default, hello_world_printer_default_str);
-                #else /* hello_world_printer_default_str */
+                #endif /* hello_world_get_patch_version_load_function_call */
+                #ifdef hello_world_printer_default_load_function_call
+                    hello_world_printer_default_load_function_call
+                #else /* hello_world_printer_default_load_function_call */
                     load_function<hello_world_printer_default_function_type>(hello_world_printer_default, "hello_world_printer_default");
-                #endif /* hello_world_printer_default_str */
-                #ifdef hello_world_printer_show_str
-                    load_function<hello_world_printer_show_function_type>(hello_world_printer_show, hello_world_printer_show_str);
-                #else /* hello_world_printer_show_str */
+                #endif /* hello_world_printer_default_load_function_call */
+                #ifdef hello_world_printer_show_load_function_call
+                    hello_world_printer_show_load_function_call
+                #else /* hello_world_printer_show_load_function_call */
                     load_function<hello_world_printer_show_function_type>(hello_world_printer_show, "hello_world_printer_show");
-                #endif /* hello_world_printer_show_str */
-                #ifdef hello_world_printer_copy_str
-                    load_function<hello_world_printer_copy_function_type>(hello_world_printer_copy, hello_world_printer_copy_str);
-                #else /* hello_world_printer_copy_str */
+                #endif /* hello_world_printer_show_load_function_call */
+                #ifdef hello_world_printer_copy_load_function_call
+                    hello_world_printer_copy_load_function_call
+                #else /* hello_world_printer_copy_load_function_call */
                     load_function<hello_world_printer_copy_function_type>(hello_world_printer_copy, "hello_world_printer_copy");
-                #endif /* hello_world_printer_copy_str */
-                #ifdef hello_world_printer_delete_str
-                    load_function<hello_world_printer_delete_function_type>(hello_world_printer_delete, hello_world_printer_delete_str);
-                #else /* hello_world_printer_delete_str */
+                #endif /* hello_world_printer_copy_load_function_call */
+                #ifdef hello_world_printer_delete_load_function_call
+                    hello_world_printer_delete_load_function_call
+                #else /* hello_world_printer_delete_load_function_call */
                     load_function<hello_world_printer_delete_function_type>(hello_world_printer_delete, "hello_world_printer_delete");
-                #endif /* hello_world_printer_delete_str */
-                #ifdef hello_world_scanner_default_str
-                    load_function<hello_world_scanner_default_function_type>(hello_world_scanner_default, hello_world_scanner_default_str);
-                #else /* hello_world_scanner_default_str */
+                #endif /* hello_world_printer_delete_load_function_call */
+                #ifdef hello_world_scanner_default_load_function_call
+                    hello_world_scanner_default_load_function_call
+                #else /* hello_world_scanner_default_load_function_call */
                     load_function<hello_world_scanner_default_function_type>(hello_world_scanner_default, "hello_world_scanner_default");
-                #endif /* hello_world_scanner_default_str */
-                #ifdef hello_world_scanner_scan_str
-                    load_function<hello_world_scanner_scan_function_type>(hello_world_scanner_scan, hello_world_scanner_scan_str);
-                #else /* hello_world_scanner_scan_str */
+                #endif /* hello_world_scanner_default_load_function_call */
+                #ifdef hello_world_scanner_scan_load_function_call
+                    hello_world_scanner_scan_load_function_call
+                #else /* hello_world_scanner_scan_load_function_call */
                     load_function<hello_world_scanner_scan_function_type>(hello_world_scanner_scan, "hello_world_scanner_scan");
-                #endif /* hello_world_scanner_scan_str */
-                #ifdef hello_world_scanner_delete_str
-                    load_function<hello_world_scanner_delete_function_type>(hello_world_scanner_delete, hello_world_scanner_delete_str);
-                #else /* hello_world_scanner_delete_str */
+                #endif /* hello_world_scanner_scan_load_function_call */
+                #ifdef hello_world_scanner_delete_load_function_call
+                    hello_world_scanner_delete_load_function_call
+                #else /* hello_world_scanner_delete_load_function_call */
                     load_function<hello_world_scanner_delete_function_type>(hello_world_scanner_delete, "hello_world_scanner_delete");
-                #endif /* hello_world_scanner_delete_str */
-                #ifdef hello_world_plotter_default_str
-                    load_function<hello_world_plotter_default_function_type>(hello_world_plotter_default, hello_world_plotter_default_str);
-                #else /* hello_world_plotter_default_str */
+                #endif /* hello_world_scanner_delete_load_function_call */
+                #ifdef hello_world_plotter_default_load_function_call
+                    hello_world_plotter_default_load_function_call
+                #else /* hello_world_plotter_default_load_function_call */
                     load_function<hello_world_plotter_default_function_type>(hello_world_plotter_default, "hello_world_plotter_default");
-                #endif /* hello_world_plotter_default_str */
-                #ifdef hello_world_plotter_draw_str
-                    load_function<hello_world_plotter_draw_function_type>(hello_world_plotter_draw, hello_world_plotter_draw_str);
-                #else /* hello_world_plotter_draw_str */
+                #endif /* hello_world_plotter_default_load_function_call */
+                #ifdef hello_world_plotter_draw_load_function_call
+                    hello_world_plotter_draw_load_function_call
+                #else /* hello_world_plotter_draw_load_function_call */
                     load_function<hello_world_plotter_draw_function_type>(hello_world_plotter_draw, "hello_world_plotter_draw");
-                #endif /* hello_world_plotter_draw_str */
-                #ifdef hello_world_plotter_add_ref_str
-                    load_function<hello_world_plotter_add_ref_function_type>(hello_world_plotter_add_ref, hello_world_plotter_add_ref_str);
-                #else /* hello_world_plotter_add_ref_str */
+                #endif /* hello_world_plotter_draw_load_function_call */
+                #ifdef hello_world_plotter_add_ref_load_function_call
+                    hello_world_plotter_add_ref_load_function_call
+                #else /* hello_world_plotter_add_ref_load_function_call */
                     load_function<hello_world_plotter_add_ref_function_type>(hello_world_plotter_add_ref, "hello_world_plotter_add_ref");
-                #endif /* hello_world_plotter_add_ref_str */
-                #ifdef hello_world_plotter_release_str
-                    load_function<hello_world_plotter_release_function_type>(hello_world_plotter_release, hello_world_plotter_release_str);
-                #else /* hello_world_plotter_release_str */
+                #endif /* hello_world_plotter_add_ref_load_function_call */
+                #ifdef hello_world_plotter_release_load_function_call
+                    hello_world_plotter_release_load_function_call
+                #else /* hello_world_plotter_release_load_function_call */
                     load_function<hello_world_plotter_release_function_type>(hello_world_plotter_release, "hello_world_plotter_release");
-                #endif /* hello_world_plotter_release_str */
+                #endif /* hello_world_plotter_release_load_function_call */
                 const int major_version = hello_world_get_major_version();
                 const int minor_version = hello_world_get_minor_version();
                 const int patch_version = hello_world_get_patch_version();
@@ -345,20 +401,76 @@
                 #else /* _WIN32 */
                     dlclose(handle);
                 #endif /* _WIN32 */
-                hello_world_get_major_version = 0;
-                hello_world_get_minor_version = 0;
-                hello_world_get_patch_version = 0;
-                hello_world_printer_default = 0;
-                hello_world_printer_show = 0;
-                hello_world_printer_copy = 0;
-                hello_world_printer_delete = 0;
-                hello_world_scanner_default = 0;
-                hello_world_scanner_scan = 0;
-                hello_world_scanner_delete = 0;
-                hello_world_plotter_default = 0;
-                hello_world_plotter_draw = 0;
-                hello_world_plotter_add_ref = 0;
-                hello_world_plotter_release = 0;
+                #ifdef hello_world_get_major_version_zero_function_pointer
+                    hello_world_get_major_version_zero_function_pointer
+                #else /* hello_world_get_major_version_zero_function_pointer */
+                    hello_world_get_major_version = 0;
+                #endif /* hello_world_get_major_version_zero_function_pointer */
+                #ifdef hello_world_get_minor_version_zero_function_pointer
+                    hello_world_get_minor_version_zero_function_pointer
+                #else /* hello_world_get_minor_version_zero_function_pointer */
+                    hello_world_get_minor_version = 0;
+                #endif /* hello_world_get_minor_version_zero_function_pointer */
+                #ifdef hello_world_get_patch_version_zero_function_pointer
+                    hello_world_get_patch_version_zero_function_pointer
+                #else /* hello_world_get_patch_version_zero_function_pointer */
+                    hello_world_get_patch_version = 0;
+                #endif /* hello_world_get_patch_version_zero_function_pointer */
+                #ifdef hello_world_printer_default_zero_function_pointer
+                    hello_world_printer_default_zero_function_pointer
+                #else /* hello_world_printer_default_zero_function_pointer */
+                    hello_world_printer_default = 0;
+                #endif /* hello_world_printer_default_zero_function_pointer */
+                #ifdef hello_world_printer_show_zero_function_pointer
+                    hello_world_printer_show_zero_function_pointer
+                #else /* hello_world_printer_show_zero_function_pointer */
+                    hello_world_printer_show = 0;
+                #endif /* hello_world_printer_show_zero_function_pointer */
+                #ifdef hello_world_printer_copy_zero_function_pointer
+                    hello_world_printer_copy_zero_function_pointer
+                #else /* hello_world_printer_copy_zero_function_pointer */
+                    hello_world_printer_copy = 0;
+                #endif /* hello_world_printer_copy_zero_function_pointer */
+                #ifdef hello_world_printer_delete_zero_function_pointer
+                    hello_world_printer_delete_zero_function_pointer
+                #else /* hello_world_printer_delete_zero_function_pointer */
+                    hello_world_printer_delete = 0;
+                #endif /* hello_world_printer_delete_zero_function_pointer */
+                #ifdef hello_world_scanner_default_zero_function_pointer
+                    hello_world_scanner_default_zero_function_pointer
+                #else /* hello_world_scanner_default_zero_function_pointer */
+                    hello_world_scanner_default = 0;
+                #endif /* hello_world_scanner_default_zero_function_pointer */
+                #ifdef hello_world_scanner_scan_zero_function_pointer
+                    hello_world_scanner_scan_zero_function_pointer
+                #else /* hello_world_scanner_scan_zero_function_pointer */
+                    hello_world_scanner_scan = 0;
+                #endif /* hello_world_scanner_scan_zero_function_pointer */
+                #ifdef hello_world_scanner_delete_zero_function_pointer
+                    hello_world_scanner_delete_zero_function_pointer
+                #else /* hello_world_scanner_delete_zero_function_pointer */
+                    hello_world_scanner_delete = 0;
+                #endif /* hello_world_scanner_delete_zero_function_pointer */
+                #ifdef hello_world_plotter_default_zero_function_pointer
+                    hello_world_plotter_default_zero_function_pointer
+                #else /* hello_world_plotter_default_zero_function_pointer */
+                    hello_world_plotter_default = 0;
+                #endif /* hello_world_plotter_default_zero_function_pointer */
+                #ifdef hello_world_plotter_draw_zero_function_pointer
+                    hello_world_plotter_draw_zero_function_pointer
+                #else /* hello_world_plotter_draw_zero_function_pointer */
+                    hello_world_plotter_draw = 0;
+                #endif /* hello_world_plotter_draw_zero_function_pointer */
+                #ifdef hello_world_plotter_add_ref_zero_function_pointer
+                    hello_world_plotter_add_ref_zero_function_pointer
+                #else /* hello_world_plotter_add_ref_zero_function_pointer */
+                    hello_world_plotter_add_ref = 0;
+                #endif /* hello_world_plotter_add_ref_zero_function_pointer */
+                #ifdef hello_world_plotter_release_zero_function_pointer
+                    hello_world_plotter_release_zero_function_pointer
+                #else /* hello_world_plotter_release_zero_function_pointer */
+                    hello_world_plotter_release = 0;
+                #endif /* hello_world_plotter_release_zero_function_pointer */
             }
         };
     }

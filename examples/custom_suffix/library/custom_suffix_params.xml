@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <params:params xmlns:params="http://gkmsoft.ru/beautifulcapi-params"
                namespace_header_at_parent_folder="false"
-               capi_header_suffix="_capi" fwd_header_suffix="_fwd_ptr" decl_header_suffix="_decl" forward_typedef_suffix="_fwd_ptr"
+               capi_header_suffix="_capi" fwd_header_suffix="_fwd_ptr" decl_header_suffix="_decl" forward_typedef_suffix="_fwd_ptr" key_header_suffix="_keys" enums_header_suffix="_enums"
                copy_semantic_wrapper_class_suffix=""
                reference_counted_wrapper_class_suffix="_ptr"
                raw_pointer_wrapper_class_suffix="_raw_ptr"

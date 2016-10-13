@@ -34,8 +34,12 @@
     <xs:attribute name="get_raw_pointer_method_name" type="xs:string" use="optional" default="GetRawPointer"/>
     <xs:attribute name="delete_method_name" type="xs:string" use="optional" default="Delete"/>
     <xs:attribute name="exception_info_argument_name" type="xs:string" use="optional" default="exception_info"/>
-    <xs:attribute name="snippet_implementation_pointer_usage" type="xs:string" use="optional" default="{implementation_name}*"/>
+    <xs:attribute name="snippet_implementation_reference_counted_usage" type="xs:string" use="optional" default="{implementation_name}*"/>
+    <xs:attribute name="snippet_implementation_raw_usage" type="xs:string" use="optional" default="{implementation_name}*"/>
     <xs:attribute name="snippet_implementation_value_usage" type="xs:string" use="optional" default="{implementation_name}"/>
+    <xs:attribute name="reference_counted_implementation_2_c" type="xs:string" use="optional" default="{implementation_expression}"/>
+    <xs:attribute name="raw_implementation_2_c" type="xs:string" use="optional" default="{implementation_expression}"/>
+    <xs:attribute name="value_implementation_2_c" type="xs:string" use="optional" default="{implementation_expression}"/>
     <xs:attribute name="exception_handling_mode" type="TExceptionHandlingMode" use="optional" default="no_handling"/>
     <xs:attribute name="check_and_throw_exception_filename" type="xs:string" use="optional" default="{project_name}/common/check_and_throw_exception.h"/>
     <xs:attribute name="beautiful_capi_namespace" type="xs:string" use="optional" default="beautiful_capi_{project_name}"/>

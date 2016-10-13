@@ -68,7 +68,7 @@ inline Example::PagePtr::PagePtr(const PagePtr& other)
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::PagePtr::PagePtr(PagePtr&& other)
 {
-    mObject = other.GetRawPointer();
+    mObject = other.mObject;
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -119,7 +119,7 @@ inline Example::PagePtr& Example::PagePtr::operator=(Example::PagePtr&& other)
             example_page_release(GetRawPointer());
             SetObject(0);
         }
-        mObject = other.GetRawPointer();
+        mObject = other.mObject;
         other.mObject = 0;
     }
     return *this;

@@ -56,7 +56,7 @@ inline Example::PrinterSharedPtr::PrinterSharedPtr(const PrinterSharedPtr& other
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::PrinterSharedPtr::PrinterSharedPtr(PrinterSharedPtr&& other)
 {
-    mObject = other.GetRawPointer();
+    mObject = other.mObject;
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -93,7 +93,7 @@ inline Example::PrinterSharedPtr& Example::PrinterSharedPtr::operator=(const Exa
         }
         if (other.GetRawPointer())
         {
-            SetObject(example_printer_shared_ptr_copy(other.GetRawPointer()));
+            SetObject(example_printer_shared_ptr_copy(other.mObject));
         }
         else
         {
@@ -113,7 +113,7 @@ inline Example::PrinterSharedPtr& Example::PrinterSharedPtr::operator=(Example::
             example_printer_shared_ptr_delete(GetRawPointer());
             SetObject(0);
         }
-        mObject = other.GetRawPointer();
+        mObject = other.mObject;
         other.mObject = 0;
     }
     return *this;

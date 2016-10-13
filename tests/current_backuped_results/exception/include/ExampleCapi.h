@@ -183,21 +183,81 @@ enum beautiful_capi_exception_exception_code_t
     
     #ifdef EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS
         
-        extern example_get_major_version_function_type example_get_major_version = 0;
-        extern example_get_minor_version_function_type example_get_minor_version = 0;
-        extern example_get_patch_version_function_type example_get_patch_version = 0;
-        extern example_printer_new_function_type example_printer_new = 0;
-        extern example_printer_show_function_type example_printer_show = 0;
-        extern example_printer_power_on_function_type example_printer_power_on = 0;
-        extern example_printer_power_off_function_type example_printer_power_off = 0;
-        extern example_printer_copy_function_type example_printer_copy = 0;
-        extern example_printer_delete_function_type example_printer_delete = 0;
-        extern example_scanner_new_function_type example_scanner_new = 0;
-        extern example_scanner_scan_text_function_type example_scanner_scan_text = 0;
-        extern example_scanner_power_on_function_type example_scanner_power_on = 0;
-        extern example_scanner_power_off_function_type example_scanner_power_off = 0;
-        extern example_scanner_add_ref_function_type example_scanner_add_ref = 0;
-        extern example_scanner_release_function_type example_scanner_release = 0;
+        #ifdef example_get_major_version_define_function_pointer_var
+            example_get_major_version_define_function_pointer_var
+        #else
+            extern example_get_major_version_function_type example_get_major_version = 0;
+        #endif
+        #ifdef example_get_minor_version_define_function_pointer_var
+            example_get_minor_version_define_function_pointer_var
+        #else
+            extern example_get_minor_version_function_type example_get_minor_version = 0;
+        #endif
+        #ifdef example_get_patch_version_define_function_pointer_var
+            example_get_patch_version_define_function_pointer_var
+        #else
+            extern example_get_patch_version_function_type example_get_patch_version = 0;
+        #endif
+        #ifdef example_printer_new_define_function_pointer_var
+            example_printer_new_define_function_pointer_var
+        #else
+            extern example_printer_new_function_type example_printer_new = 0;
+        #endif
+        #ifdef example_printer_show_define_function_pointer_var
+            example_printer_show_define_function_pointer_var
+        #else
+            extern example_printer_show_function_type example_printer_show = 0;
+        #endif
+        #ifdef example_printer_power_on_define_function_pointer_var
+            example_printer_power_on_define_function_pointer_var
+        #else
+            extern example_printer_power_on_function_type example_printer_power_on = 0;
+        #endif
+        #ifdef example_printer_power_off_define_function_pointer_var
+            example_printer_power_off_define_function_pointer_var
+        #else
+            extern example_printer_power_off_function_type example_printer_power_off = 0;
+        #endif
+        #ifdef example_printer_copy_define_function_pointer_var
+            example_printer_copy_define_function_pointer_var
+        #else
+            extern example_printer_copy_function_type example_printer_copy = 0;
+        #endif
+        #ifdef example_printer_delete_define_function_pointer_var
+            example_printer_delete_define_function_pointer_var
+        #else
+            extern example_printer_delete_function_type example_printer_delete = 0;
+        #endif
+        #ifdef example_scanner_new_define_function_pointer_var
+            example_scanner_new_define_function_pointer_var
+        #else
+            extern example_scanner_new_function_type example_scanner_new = 0;
+        #endif
+        #ifdef example_scanner_scan_text_define_function_pointer_var
+            example_scanner_scan_text_define_function_pointer_var
+        #else
+            extern example_scanner_scan_text_function_type example_scanner_scan_text = 0;
+        #endif
+        #ifdef example_scanner_power_on_define_function_pointer_var
+            example_scanner_power_on_define_function_pointer_var
+        #else
+            extern example_scanner_power_on_function_type example_scanner_power_on = 0;
+        #endif
+        #ifdef example_scanner_power_off_define_function_pointer_var
+            example_scanner_power_off_define_function_pointer_var
+        #else
+            extern example_scanner_power_off_function_type example_scanner_power_off = 0;
+        #endif
+        #ifdef example_scanner_add_ref_define_function_pointer_var
+            example_scanner_add_ref_define_function_pointer_var
+        #else
+            extern example_scanner_add_ref_function_type example_scanner_add_ref = 0;
+        #endif
+        #ifdef example_scanner_release_define_function_pointer_var
+            example_scanner_release_define_function_pointer_var
+        #else
+            extern example_scanner_release_function_type example_scanner_release = 0;
+        #endif
         
     #else /* EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS */
         
@@ -270,81 +330,81 @@ enum beautiful_capi_exception_exception_code_t
                     error_message << "Can't load shared library " << shared_library_name;
                     throw std::runtime_error(error_message.str());
                 }
-                #ifdef example_get_major_version_str
-                    load_function<example_get_major_version_function_type>(example_get_major_version, example_get_major_version_str);
-                #else /* example_get_major_version_str */
+                #ifdef example_get_major_version_load_function_call
+                    example_get_major_version_load_function_call
+                #else /* example_get_major_version_load_function_call */
                     load_function<example_get_major_version_function_type>(example_get_major_version, "example_get_major_version");
-                #endif /* example_get_major_version_str */
-                #ifdef example_get_minor_version_str
-                    load_function<example_get_minor_version_function_type>(example_get_minor_version, example_get_minor_version_str);
-                #else /* example_get_minor_version_str */
+                #endif /* example_get_major_version_load_function_call */
+                #ifdef example_get_minor_version_load_function_call
+                    example_get_minor_version_load_function_call
+                #else /* example_get_minor_version_load_function_call */
                     load_function<example_get_minor_version_function_type>(example_get_minor_version, "example_get_minor_version");
-                #endif /* example_get_minor_version_str */
-                #ifdef example_get_patch_version_str
-                    load_function<example_get_patch_version_function_type>(example_get_patch_version, example_get_patch_version_str);
-                #else /* example_get_patch_version_str */
+                #endif /* example_get_minor_version_load_function_call */
+                #ifdef example_get_patch_version_load_function_call
+                    example_get_patch_version_load_function_call
+                #else /* example_get_patch_version_load_function_call */
                     load_function<example_get_patch_version_function_type>(example_get_patch_version, "example_get_patch_version");
-                #endif /* example_get_patch_version_str */
-                #ifdef example_printer_new_str
-                    load_function<example_printer_new_function_type>(example_printer_new, example_printer_new_str);
-                #else /* example_printer_new_str */
+                #endif /* example_get_patch_version_load_function_call */
+                #ifdef example_printer_new_load_function_call
+                    example_printer_new_load_function_call
+                #else /* example_printer_new_load_function_call */
                     load_function<example_printer_new_function_type>(example_printer_new, "example_printer_new");
-                #endif /* example_printer_new_str */
-                #ifdef example_printer_show_str
-                    load_function<example_printer_show_function_type>(example_printer_show, example_printer_show_str);
-                #else /* example_printer_show_str */
+                #endif /* example_printer_new_load_function_call */
+                #ifdef example_printer_show_load_function_call
+                    example_printer_show_load_function_call
+                #else /* example_printer_show_load_function_call */
                     load_function<example_printer_show_function_type>(example_printer_show, "example_printer_show");
-                #endif /* example_printer_show_str */
-                #ifdef example_printer_power_on_str
-                    load_function<example_printer_power_on_function_type>(example_printer_power_on, example_printer_power_on_str);
-                #else /* example_printer_power_on_str */
+                #endif /* example_printer_show_load_function_call */
+                #ifdef example_printer_power_on_load_function_call
+                    example_printer_power_on_load_function_call
+                #else /* example_printer_power_on_load_function_call */
                     load_function<example_printer_power_on_function_type>(example_printer_power_on, "example_printer_power_on");
-                #endif /* example_printer_power_on_str */
-                #ifdef example_printer_power_off_str
-                    load_function<example_printer_power_off_function_type>(example_printer_power_off, example_printer_power_off_str);
-                #else /* example_printer_power_off_str */
+                #endif /* example_printer_power_on_load_function_call */
+                #ifdef example_printer_power_off_load_function_call
+                    example_printer_power_off_load_function_call
+                #else /* example_printer_power_off_load_function_call */
                     load_function<example_printer_power_off_function_type>(example_printer_power_off, "example_printer_power_off");
-                #endif /* example_printer_power_off_str */
-                #ifdef example_printer_copy_str
-                    load_function<example_printer_copy_function_type>(example_printer_copy, example_printer_copy_str);
-                #else /* example_printer_copy_str */
+                #endif /* example_printer_power_off_load_function_call */
+                #ifdef example_printer_copy_load_function_call
+                    example_printer_copy_load_function_call
+                #else /* example_printer_copy_load_function_call */
                     load_function<example_printer_copy_function_type>(example_printer_copy, "example_printer_copy");
-                #endif /* example_printer_copy_str */
-                #ifdef example_printer_delete_str
-                    load_function<example_printer_delete_function_type>(example_printer_delete, example_printer_delete_str);
-                #else /* example_printer_delete_str */
+                #endif /* example_printer_copy_load_function_call */
+                #ifdef example_printer_delete_load_function_call
+                    example_printer_delete_load_function_call
+                #else /* example_printer_delete_load_function_call */
                     load_function<example_printer_delete_function_type>(example_printer_delete, "example_printer_delete");
-                #endif /* example_printer_delete_str */
-                #ifdef example_scanner_new_str
-                    load_function<example_scanner_new_function_type>(example_scanner_new, example_scanner_new_str);
-                #else /* example_scanner_new_str */
+                #endif /* example_printer_delete_load_function_call */
+                #ifdef example_scanner_new_load_function_call
+                    example_scanner_new_load_function_call
+                #else /* example_scanner_new_load_function_call */
                     load_function<example_scanner_new_function_type>(example_scanner_new, "example_scanner_new");
-                #endif /* example_scanner_new_str */
-                #ifdef example_scanner_scan_text_str
-                    load_function<example_scanner_scan_text_function_type>(example_scanner_scan_text, example_scanner_scan_text_str);
-                #else /* example_scanner_scan_text_str */
+                #endif /* example_scanner_new_load_function_call */
+                #ifdef example_scanner_scan_text_load_function_call
+                    example_scanner_scan_text_load_function_call
+                #else /* example_scanner_scan_text_load_function_call */
                     load_function<example_scanner_scan_text_function_type>(example_scanner_scan_text, "example_scanner_scan_text");
-                #endif /* example_scanner_scan_text_str */
-                #ifdef example_scanner_power_on_str
-                    load_function<example_scanner_power_on_function_type>(example_scanner_power_on, example_scanner_power_on_str);
-                #else /* example_scanner_power_on_str */
+                #endif /* example_scanner_scan_text_load_function_call */
+                #ifdef example_scanner_power_on_load_function_call
+                    example_scanner_power_on_load_function_call
+                #else /* example_scanner_power_on_load_function_call */
                     load_function<example_scanner_power_on_function_type>(example_scanner_power_on, "example_scanner_power_on");
-                #endif /* example_scanner_power_on_str */
-                #ifdef example_scanner_power_off_str
-                    load_function<example_scanner_power_off_function_type>(example_scanner_power_off, example_scanner_power_off_str);
-                #else /* example_scanner_power_off_str */
+                #endif /* example_scanner_power_on_load_function_call */
+                #ifdef example_scanner_power_off_load_function_call
+                    example_scanner_power_off_load_function_call
+                #else /* example_scanner_power_off_load_function_call */
                     load_function<example_scanner_power_off_function_type>(example_scanner_power_off, "example_scanner_power_off");
-                #endif /* example_scanner_power_off_str */
-                #ifdef example_scanner_add_ref_str
-                    load_function<example_scanner_add_ref_function_type>(example_scanner_add_ref, example_scanner_add_ref_str);
-                #else /* example_scanner_add_ref_str */
+                #endif /* example_scanner_power_off_load_function_call */
+                #ifdef example_scanner_add_ref_load_function_call
+                    example_scanner_add_ref_load_function_call
+                #else /* example_scanner_add_ref_load_function_call */
                     load_function<example_scanner_add_ref_function_type>(example_scanner_add_ref, "example_scanner_add_ref");
-                #endif /* example_scanner_add_ref_str */
-                #ifdef example_scanner_release_str
-                    load_function<example_scanner_release_function_type>(example_scanner_release, example_scanner_release_str);
-                #else /* example_scanner_release_str */
+                #endif /* example_scanner_add_ref_load_function_call */
+                #ifdef example_scanner_release_load_function_call
+                    example_scanner_release_load_function_call
+                #else /* example_scanner_release_load_function_call */
                     load_function<example_scanner_release_function_type>(example_scanner_release, "example_scanner_release");
-                #endif /* example_scanner_release_str */
+                #endif /* example_scanner_release_load_function_call */
                 const int major_version = example_get_major_version();
                 const int minor_version = example_get_minor_version();
                 const int patch_version = example_get_patch_version();
@@ -375,21 +435,81 @@ enum beautiful_capi_exception_exception_code_t
                 #else /* _WIN32 */
                     dlclose(handle);
                 #endif /* _WIN32 */
-                example_get_major_version = 0;
-                example_get_minor_version = 0;
-                example_get_patch_version = 0;
-                example_printer_new = 0;
-                example_printer_show = 0;
-                example_printer_power_on = 0;
-                example_printer_power_off = 0;
-                example_printer_copy = 0;
-                example_printer_delete = 0;
-                example_scanner_new = 0;
-                example_scanner_scan_text = 0;
-                example_scanner_power_on = 0;
-                example_scanner_power_off = 0;
-                example_scanner_add_ref = 0;
-                example_scanner_release = 0;
+                #ifdef example_get_major_version_zero_function_pointer
+                    example_get_major_version_zero_function_pointer
+                #else /* example_get_major_version_zero_function_pointer */
+                    example_get_major_version = 0;
+                #endif /* example_get_major_version_zero_function_pointer */
+                #ifdef example_get_minor_version_zero_function_pointer
+                    example_get_minor_version_zero_function_pointer
+                #else /* example_get_minor_version_zero_function_pointer */
+                    example_get_minor_version = 0;
+                #endif /* example_get_minor_version_zero_function_pointer */
+                #ifdef example_get_patch_version_zero_function_pointer
+                    example_get_patch_version_zero_function_pointer
+                #else /* example_get_patch_version_zero_function_pointer */
+                    example_get_patch_version = 0;
+                #endif /* example_get_patch_version_zero_function_pointer */
+                #ifdef example_printer_new_zero_function_pointer
+                    example_printer_new_zero_function_pointer
+                #else /* example_printer_new_zero_function_pointer */
+                    example_printer_new = 0;
+                #endif /* example_printer_new_zero_function_pointer */
+                #ifdef example_printer_show_zero_function_pointer
+                    example_printer_show_zero_function_pointer
+                #else /* example_printer_show_zero_function_pointer */
+                    example_printer_show = 0;
+                #endif /* example_printer_show_zero_function_pointer */
+                #ifdef example_printer_power_on_zero_function_pointer
+                    example_printer_power_on_zero_function_pointer
+                #else /* example_printer_power_on_zero_function_pointer */
+                    example_printer_power_on = 0;
+                #endif /* example_printer_power_on_zero_function_pointer */
+                #ifdef example_printer_power_off_zero_function_pointer
+                    example_printer_power_off_zero_function_pointer
+                #else /* example_printer_power_off_zero_function_pointer */
+                    example_printer_power_off = 0;
+                #endif /* example_printer_power_off_zero_function_pointer */
+                #ifdef example_printer_copy_zero_function_pointer
+                    example_printer_copy_zero_function_pointer
+                #else /* example_printer_copy_zero_function_pointer */
+                    example_printer_copy = 0;
+                #endif /* example_printer_copy_zero_function_pointer */
+                #ifdef example_printer_delete_zero_function_pointer
+                    example_printer_delete_zero_function_pointer
+                #else /* example_printer_delete_zero_function_pointer */
+                    example_printer_delete = 0;
+                #endif /* example_printer_delete_zero_function_pointer */
+                #ifdef example_scanner_new_zero_function_pointer
+                    example_scanner_new_zero_function_pointer
+                #else /* example_scanner_new_zero_function_pointer */
+                    example_scanner_new = 0;
+                #endif /* example_scanner_new_zero_function_pointer */
+                #ifdef example_scanner_scan_text_zero_function_pointer
+                    example_scanner_scan_text_zero_function_pointer
+                #else /* example_scanner_scan_text_zero_function_pointer */
+                    example_scanner_scan_text = 0;
+                #endif /* example_scanner_scan_text_zero_function_pointer */
+                #ifdef example_scanner_power_on_zero_function_pointer
+                    example_scanner_power_on_zero_function_pointer
+                #else /* example_scanner_power_on_zero_function_pointer */
+                    example_scanner_power_on = 0;
+                #endif /* example_scanner_power_on_zero_function_pointer */
+                #ifdef example_scanner_power_off_zero_function_pointer
+                    example_scanner_power_off_zero_function_pointer
+                #else /* example_scanner_power_off_zero_function_pointer */
+                    example_scanner_power_off = 0;
+                #endif /* example_scanner_power_off_zero_function_pointer */
+                #ifdef example_scanner_add_ref_zero_function_pointer
+                    example_scanner_add_ref_zero_function_pointer
+                #else /* example_scanner_add_ref_zero_function_pointer */
+                    example_scanner_add_ref = 0;
+                #endif /* example_scanner_add_ref_zero_function_pointer */
+                #ifdef example_scanner_release_zero_function_pointer
+                    example_scanner_release_zero_function_pointer
+                #else /* example_scanner_release_zero_function_pointer */
+                    example_scanner_release = 0;
+                #endif /* example_scanner_release_zero_function_pointer */
             }
         };
     }

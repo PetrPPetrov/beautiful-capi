@@ -49,7 +49,7 @@ inline void PointSet::PointSetPtr::SetName(const char* name)
 
 inline PointSet::PointsPtr PointSet::PointSetPtr::GetPoints() const
 {
-    return PointSet::PointsPtr(PointSet::PointsPtr::force_creating_from_raw_pointer, point_set_point_set_get_points(GetRawPointer()), true);
+    return PointSet::PointsPtr(PointSet::PointsPtr::force_creating_from_raw_pointer, point_set_point_set_get_points(GetRawPointer()), false);
 }
 
 inline void PointSet::PointSetPtr::SetPoints(const PointSet::PointsPtr& value)
@@ -69,7 +69,7 @@ inline PointSet::PointSetPtr::PointSetPtr(const PointSetPtr& other)
 #ifdef POINTSET_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline PointSet::PointSetPtr::PointSetPtr(PointSetPtr&& other)
 {
-    mObject = other.GetRawPointer();
+    mObject = other.mObject;
     other.mObject = 0;
 }
 #endif /* POINTSET_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -120,7 +120,7 @@ inline PointSet::PointSetPtr& PointSet::PointSetPtr::operator=(PointSet::PointSe
             point_set_point_set_release(GetRawPointer());
             SetObject(0);
         }
-        mObject = other.GetRawPointer();
+        mObject = other.mObject;
         other.mObject = 0;
     }
     return *this;

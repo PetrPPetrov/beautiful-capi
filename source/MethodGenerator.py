@@ -40,9 +40,7 @@ class ConstructorGenerator(object):
         self.parent_class_generator = parent_class_generator
         self.parent_class_as_argument_type = ClassTypeGenerator(parent_class_generator)
         class_as_argument = self.parent_class_as_argument_type
-        class_as_argument.copy_or_add_ref_when_c_2_wrap = False
-        if self.constructor_object.return_copy_or_add_ref_filled:
-            class_as_argument.copy_or_add_ref_when_c_2_wrap = self.constructor_object.return_copy_or_add_ref
+        class_as_argument.copy_or_add_ref_when_c_2_wrap = self.constructor_object.return_copy_or_add_ref
         self.argument_generators = []
         self.params = params
         self.exception_traits = None
@@ -170,10 +168,7 @@ class MethodGenerator(object):
             const=' const' if self.method_object.const else ''
         ))
         with IndentScope(out):
-            self.return_type_generator.init_copy_or_add_ref_default_value_for_return()
-            if self.method_object.return_copy_or_add_ref_filled:
-                self.return_type_generator.copy_or_add_ref_when_c_2_wrap = self.method_object.return_copy_or_add_ref
-
+            self.return_type_generator.copy_or_add_ref_when_c_2_wrap = self.method_object.return_copy_or_add_ref
             return_expression = self.exception_traits.generate_c_call(
                 out, self.return_type_generator, self.full_c_name, arguments_call)
             out.put_return_cpp_statement(return_expression)
@@ -271,10 +266,7 @@ class FunctionGenerator(object):
             arguments=arguments
         ))
         with IndentScope(out):
-            self.return_type_generator.init_copy_or_add_ref_default_value_for_return()
-            if self.function_object.return_copy_or_add_ref_filled:
-                self.return_type_generator.copy_or_add_ref_when_c_2_wrap = self.function_object.return_copy_or_add_ref
-
+            self.return_type_generator.copy_or_add_ref_when_c_2_wrap = self.function_object.return_copy_or_add_ref
             return_expression = self.exception_traits.generate_c_call(
                 out, self.return_type_generator, self.full_c_name, arguments_call)
             out.put_return_cpp_statement(return_expression)

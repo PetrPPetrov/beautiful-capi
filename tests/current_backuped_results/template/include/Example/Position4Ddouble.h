@@ -62,7 +62,7 @@ inline Example::Position4D<double>::Position4D(const Position4D<double>& other) 
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::Position4D<double>::Position4D(Position4D<double>&& other) : Example::Position<double>(std::move(other))
 {
-    mObject = other.GetRawPointer();
+    mObject = other.mObject;
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -99,7 +99,7 @@ inline Example::Position4D<double>& Example::Position4D<double>::operator=(const
         }
         if (other.GetRawPointer())
         {
-            SetObject(example_position4_d_double_copy(other.GetRawPointer()));
+            SetObject(example_position4_d_double_copy(other.mObject));
         }
         else
         {
@@ -120,7 +120,7 @@ inline Example::Position4D<double>& Example::Position4D<double>::operator=(Examp
             SetObject(0);
         }
         Example::Position<double>::operator=(std::move(other));
-        mObject = other.GetRawPointer();
+        mObject = other.mObject;
         other.mObject = 0;
     }
     return *this;

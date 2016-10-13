@@ -69,10 +69,6 @@ namespace Example
         smart_ptr(T* smart_object) : boost::intrusive_ptr<T>(smart_object)
         {
         }
-        operator void*()
-        {
-            return this->get();
-        }
     };
 
     template<typename T>

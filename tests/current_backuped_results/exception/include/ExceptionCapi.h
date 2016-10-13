@@ -193,26 +193,106 @@ enum beautiful_capi_exception_exception_code_t
     
     #ifdef EXCEPTION_CAPI_DEFINE_FUNCTION_POINTERS
         
-        extern exception_get_major_version_function_type exception_get_major_version = 0;
-        extern exception_get_minor_version_function_type exception_get_minor_version = 0;
-        extern exception_get_patch_version_function_type exception_get_patch_version = 0;
-        extern exception_generic_new_function_type exception_generic_new = 0;
-        extern exception_generic_get_error_text_function_type exception_generic_get_error_text = 0;
-        extern exception_generic_copy_function_type exception_generic_copy = 0;
-        extern exception_generic_delete_function_type exception_generic_delete = 0;
-        extern exception_bad_argument_new_function_type exception_bad_argument_new = 0;
-        extern exception_bad_argument_get_argument_name_function_type exception_bad_argument_get_argument_name = 0;
-        extern exception_bad_argument_copy_function_type exception_bad_argument_copy = 0;
-        extern exception_bad_argument_delete_function_type exception_bad_argument_delete = 0;
-        extern exception_bad_argument_cast_to_base_function_type exception_bad_argument_cast_to_base = 0;
-        extern exception_null_argument_new_function_type exception_null_argument_new = 0;
-        extern exception_null_argument_copy_function_type exception_null_argument_copy = 0;
-        extern exception_null_argument_delete_function_type exception_null_argument_delete = 0;
-        extern exception_null_argument_cast_to_base_function_type exception_null_argument_cast_to_base = 0;
-        extern exception_division_by_zero_new_function_type exception_division_by_zero_new = 0;
-        extern exception_division_by_zero_copy_function_type exception_division_by_zero_copy = 0;
-        extern exception_division_by_zero_delete_function_type exception_division_by_zero_delete = 0;
-        extern exception_division_by_zero_cast_to_base_function_type exception_division_by_zero_cast_to_base = 0;
+        #ifdef exception_get_major_version_define_function_pointer_var
+            exception_get_major_version_define_function_pointer_var
+        #else
+            extern exception_get_major_version_function_type exception_get_major_version = 0;
+        #endif
+        #ifdef exception_get_minor_version_define_function_pointer_var
+            exception_get_minor_version_define_function_pointer_var
+        #else
+            extern exception_get_minor_version_function_type exception_get_minor_version = 0;
+        #endif
+        #ifdef exception_get_patch_version_define_function_pointer_var
+            exception_get_patch_version_define_function_pointer_var
+        #else
+            extern exception_get_patch_version_function_type exception_get_patch_version = 0;
+        #endif
+        #ifdef exception_generic_new_define_function_pointer_var
+            exception_generic_new_define_function_pointer_var
+        #else
+            extern exception_generic_new_function_type exception_generic_new = 0;
+        #endif
+        #ifdef exception_generic_get_error_text_define_function_pointer_var
+            exception_generic_get_error_text_define_function_pointer_var
+        #else
+            extern exception_generic_get_error_text_function_type exception_generic_get_error_text = 0;
+        #endif
+        #ifdef exception_generic_copy_define_function_pointer_var
+            exception_generic_copy_define_function_pointer_var
+        #else
+            extern exception_generic_copy_function_type exception_generic_copy = 0;
+        #endif
+        #ifdef exception_generic_delete_define_function_pointer_var
+            exception_generic_delete_define_function_pointer_var
+        #else
+            extern exception_generic_delete_function_type exception_generic_delete = 0;
+        #endif
+        #ifdef exception_bad_argument_new_define_function_pointer_var
+            exception_bad_argument_new_define_function_pointer_var
+        #else
+            extern exception_bad_argument_new_function_type exception_bad_argument_new = 0;
+        #endif
+        #ifdef exception_bad_argument_get_argument_name_define_function_pointer_var
+            exception_bad_argument_get_argument_name_define_function_pointer_var
+        #else
+            extern exception_bad_argument_get_argument_name_function_type exception_bad_argument_get_argument_name = 0;
+        #endif
+        #ifdef exception_bad_argument_copy_define_function_pointer_var
+            exception_bad_argument_copy_define_function_pointer_var
+        #else
+            extern exception_bad_argument_copy_function_type exception_bad_argument_copy = 0;
+        #endif
+        #ifdef exception_bad_argument_delete_define_function_pointer_var
+            exception_bad_argument_delete_define_function_pointer_var
+        #else
+            extern exception_bad_argument_delete_function_type exception_bad_argument_delete = 0;
+        #endif
+        #ifdef exception_bad_argument_cast_to_base_define_function_pointer_var
+            exception_bad_argument_cast_to_base_define_function_pointer_var
+        #else
+            extern exception_bad_argument_cast_to_base_function_type exception_bad_argument_cast_to_base = 0;
+        #endif
+        #ifdef exception_null_argument_new_define_function_pointer_var
+            exception_null_argument_new_define_function_pointer_var
+        #else
+            extern exception_null_argument_new_function_type exception_null_argument_new = 0;
+        #endif
+        #ifdef exception_null_argument_copy_define_function_pointer_var
+            exception_null_argument_copy_define_function_pointer_var
+        #else
+            extern exception_null_argument_copy_function_type exception_null_argument_copy = 0;
+        #endif
+        #ifdef exception_null_argument_delete_define_function_pointer_var
+            exception_null_argument_delete_define_function_pointer_var
+        #else
+            extern exception_null_argument_delete_function_type exception_null_argument_delete = 0;
+        #endif
+        #ifdef exception_null_argument_cast_to_base_define_function_pointer_var
+            exception_null_argument_cast_to_base_define_function_pointer_var
+        #else
+            extern exception_null_argument_cast_to_base_function_type exception_null_argument_cast_to_base = 0;
+        #endif
+        #ifdef exception_division_by_zero_new_define_function_pointer_var
+            exception_division_by_zero_new_define_function_pointer_var
+        #else
+            extern exception_division_by_zero_new_function_type exception_division_by_zero_new = 0;
+        #endif
+        #ifdef exception_division_by_zero_copy_define_function_pointer_var
+            exception_division_by_zero_copy_define_function_pointer_var
+        #else
+            extern exception_division_by_zero_copy_function_type exception_division_by_zero_copy = 0;
+        #endif
+        #ifdef exception_division_by_zero_delete_define_function_pointer_var
+            exception_division_by_zero_delete_define_function_pointer_var
+        #else
+            extern exception_division_by_zero_delete_function_type exception_division_by_zero_delete = 0;
+        #endif
+        #ifdef exception_division_by_zero_cast_to_base_define_function_pointer_var
+            exception_division_by_zero_cast_to_base_define_function_pointer_var
+        #else
+            extern exception_division_by_zero_cast_to_base_function_type exception_division_by_zero_cast_to_base = 0;
+        #endif
         
     #else /* EXCEPTION_CAPI_DEFINE_FUNCTION_POINTERS */
         
@@ -290,106 +370,106 @@ enum beautiful_capi_exception_exception_code_t
                     error_message << "Can't load shared library " << shared_library_name;
                     throw std::runtime_error(error_message.str());
                 }
-                #ifdef exception_get_major_version_str
-                    load_function<exception_get_major_version_function_type>(exception_get_major_version, exception_get_major_version_str);
-                #else /* exception_get_major_version_str */
+                #ifdef exception_get_major_version_load_function_call
+                    exception_get_major_version_load_function_call
+                #else /* exception_get_major_version_load_function_call */
                     load_function<exception_get_major_version_function_type>(exception_get_major_version, "exception_get_major_version");
-                #endif /* exception_get_major_version_str */
-                #ifdef exception_get_minor_version_str
-                    load_function<exception_get_minor_version_function_type>(exception_get_minor_version, exception_get_minor_version_str);
-                #else /* exception_get_minor_version_str */
+                #endif /* exception_get_major_version_load_function_call */
+                #ifdef exception_get_minor_version_load_function_call
+                    exception_get_minor_version_load_function_call
+                #else /* exception_get_minor_version_load_function_call */
                     load_function<exception_get_minor_version_function_type>(exception_get_minor_version, "exception_get_minor_version");
-                #endif /* exception_get_minor_version_str */
-                #ifdef exception_get_patch_version_str
-                    load_function<exception_get_patch_version_function_type>(exception_get_patch_version, exception_get_patch_version_str);
-                #else /* exception_get_patch_version_str */
+                #endif /* exception_get_minor_version_load_function_call */
+                #ifdef exception_get_patch_version_load_function_call
+                    exception_get_patch_version_load_function_call
+                #else /* exception_get_patch_version_load_function_call */
                     load_function<exception_get_patch_version_function_type>(exception_get_patch_version, "exception_get_patch_version");
-                #endif /* exception_get_patch_version_str */
-                #ifdef exception_generic_new_str
-                    load_function<exception_generic_new_function_type>(exception_generic_new, exception_generic_new_str);
-                #else /* exception_generic_new_str */
+                #endif /* exception_get_patch_version_load_function_call */
+                #ifdef exception_generic_new_load_function_call
+                    exception_generic_new_load_function_call
+                #else /* exception_generic_new_load_function_call */
                     load_function<exception_generic_new_function_type>(exception_generic_new, "exception_generic_new");
-                #endif /* exception_generic_new_str */
-                #ifdef exception_generic_get_error_text_str
-                    load_function<exception_generic_get_error_text_function_type>(exception_generic_get_error_text, exception_generic_get_error_text_str);
-                #else /* exception_generic_get_error_text_str */
+                #endif /* exception_generic_new_load_function_call */
+                #ifdef exception_generic_get_error_text_load_function_call
+                    exception_generic_get_error_text_load_function_call
+                #else /* exception_generic_get_error_text_load_function_call */
                     load_function<exception_generic_get_error_text_function_type>(exception_generic_get_error_text, "exception_generic_get_error_text");
-                #endif /* exception_generic_get_error_text_str */
-                #ifdef exception_generic_copy_str
-                    load_function<exception_generic_copy_function_type>(exception_generic_copy, exception_generic_copy_str);
-                #else /* exception_generic_copy_str */
+                #endif /* exception_generic_get_error_text_load_function_call */
+                #ifdef exception_generic_copy_load_function_call
+                    exception_generic_copy_load_function_call
+                #else /* exception_generic_copy_load_function_call */
                     load_function<exception_generic_copy_function_type>(exception_generic_copy, "exception_generic_copy");
-                #endif /* exception_generic_copy_str */
-                #ifdef exception_generic_delete_str
-                    load_function<exception_generic_delete_function_type>(exception_generic_delete, exception_generic_delete_str);
-                #else /* exception_generic_delete_str */
+                #endif /* exception_generic_copy_load_function_call */
+                #ifdef exception_generic_delete_load_function_call
+                    exception_generic_delete_load_function_call
+                #else /* exception_generic_delete_load_function_call */
                     load_function<exception_generic_delete_function_type>(exception_generic_delete, "exception_generic_delete");
-                #endif /* exception_generic_delete_str */
-                #ifdef exception_bad_argument_new_str
-                    load_function<exception_bad_argument_new_function_type>(exception_bad_argument_new, exception_bad_argument_new_str);
-                #else /* exception_bad_argument_new_str */
+                #endif /* exception_generic_delete_load_function_call */
+                #ifdef exception_bad_argument_new_load_function_call
+                    exception_bad_argument_new_load_function_call
+                #else /* exception_bad_argument_new_load_function_call */
                     load_function<exception_bad_argument_new_function_type>(exception_bad_argument_new, "exception_bad_argument_new");
-                #endif /* exception_bad_argument_new_str */
-                #ifdef exception_bad_argument_get_argument_name_str
-                    load_function<exception_bad_argument_get_argument_name_function_type>(exception_bad_argument_get_argument_name, exception_bad_argument_get_argument_name_str);
-                #else /* exception_bad_argument_get_argument_name_str */
+                #endif /* exception_bad_argument_new_load_function_call */
+                #ifdef exception_bad_argument_get_argument_name_load_function_call
+                    exception_bad_argument_get_argument_name_load_function_call
+                #else /* exception_bad_argument_get_argument_name_load_function_call */
                     load_function<exception_bad_argument_get_argument_name_function_type>(exception_bad_argument_get_argument_name, "exception_bad_argument_get_argument_name");
-                #endif /* exception_bad_argument_get_argument_name_str */
-                #ifdef exception_bad_argument_copy_str
-                    load_function<exception_bad_argument_copy_function_type>(exception_bad_argument_copy, exception_bad_argument_copy_str);
-                #else /* exception_bad_argument_copy_str */
+                #endif /* exception_bad_argument_get_argument_name_load_function_call */
+                #ifdef exception_bad_argument_copy_load_function_call
+                    exception_bad_argument_copy_load_function_call
+                #else /* exception_bad_argument_copy_load_function_call */
                     load_function<exception_bad_argument_copy_function_type>(exception_bad_argument_copy, "exception_bad_argument_copy");
-                #endif /* exception_bad_argument_copy_str */
-                #ifdef exception_bad_argument_delete_str
-                    load_function<exception_bad_argument_delete_function_type>(exception_bad_argument_delete, exception_bad_argument_delete_str);
-                #else /* exception_bad_argument_delete_str */
+                #endif /* exception_bad_argument_copy_load_function_call */
+                #ifdef exception_bad_argument_delete_load_function_call
+                    exception_bad_argument_delete_load_function_call
+                #else /* exception_bad_argument_delete_load_function_call */
                     load_function<exception_bad_argument_delete_function_type>(exception_bad_argument_delete, "exception_bad_argument_delete");
-                #endif /* exception_bad_argument_delete_str */
-                #ifdef exception_bad_argument_cast_to_base_str
-                    load_function<exception_bad_argument_cast_to_base_function_type>(exception_bad_argument_cast_to_base, exception_bad_argument_cast_to_base_str);
-                #else /* exception_bad_argument_cast_to_base_str */
+                #endif /* exception_bad_argument_delete_load_function_call */
+                #ifdef exception_bad_argument_cast_to_base_load_function_call
+                    exception_bad_argument_cast_to_base_load_function_call
+                #else /* exception_bad_argument_cast_to_base_load_function_call */
                     load_function<exception_bad_argument_cast_to_base_function_type>(exception_bad_argument_cast_to_base, "exception_bad_argument_cast_to_base");
-                #endif /* exception_bad_argument_cast_to_base_str */
-                #ifdef exception_null_argument_new_str
-                    load_function<exception_null_argument_new_function_type>(exception_null_argument_new, exception_null_argument_new_str);
-                #else /* exception_null_argument_new_str */
+                #endif /* exception_bad_argument_cast_to_base_load_function_call */
+                #ifdef exception_null_argument_new_load_function_call
+                    exception_null_argument_new_load_function_call
+                #else /* exception_null_argument_new_load_function_call */
                     load_function<exception_null_argument_new_function_type>(exception_null_argument_new, "exception_null_argument_new");
-                #endif /* exception_null_argument_new_str */
-                #ifdef exception_null_argument_copy_str
-                    load_function<exception_null_argument_copy_function_type>(exception_null_argument_copy, exception_null_argument_copy_str);
-                #else /* exception_null_argument_copy_str */
+                #endif /* exception_null_argument_new_load_function_call */
+                #ifdef exception_null_argument_copy_load_function_call
+                    exception_null_argument_copy_load_function_call
+                #else /* exception_null_argument_copy_load_function_call */
                     load_function<exception_null_argument_copy_function_type>(exception_null_argument_copy, "exception_null_argument_copy");
-                #endif /* exception_null_argument_copy_str */
-                #ifdef exception_null_argument_delete_str
-                    load_function<exception_null_argument_delete_function_type>(exception_null_argument_delete, exception_null_argument_delete_str);
-                #else /* exception_null_argument_delete_str */
+                #endif /* exception_null_argument_copy_load_function_call */
+                #ifdef exception_null_argument_delete_load_function_call
+                    exception_null_argument_delete_load_function_call
+                #else /* exception_null_argument_delete_load_function_call */
                     load_function<exception_null_argument_delete_function_type>(exception_null_argument_delete, "exception_null_argument_delete");
-                #endif /* exception_null_argument_delete_str */
-                #ifdef exception_null_argument_cast_to_base_str
-                    load_function<exception_null_argument_cast_to_base_function_type>(exception_null_argument_cast_to_base, exception_null_argument_cast_to_base_str);
-                #else /* exception_null_argument_cast_to_base_str */
+                #endif /* exception_null_argument_delete_load_function_call */
+                #ifdef exception_null_argument_cast_to_base_load_function_call
+                    exception_null_argument_cast_to_base_load_function_call
+                #else /* exception_null_argument_cast_to_base_load_function_call */
                     load_function<exception_null_argument_cast_to_base_function_type>(exception_null_argument_cast_to_base, "exception_null_argument_cast_to_base");
-                #endif /* exception_null_argument_cast_to_base_str */
-                #ifdef exception_division_by_zero_new_str
-                    load_function<exception_division_by_zero_new_function_type>(exception_division_by_zero_new, exception_division_by_zero_new_str);
-                #else /* exception_division_by_zero_new_str */
+                #endif /* exception_null_argument_cast_to_base_load_function_call */
+                #ifdef exception_division_by_zero_new_load_function_call
+                    exception_division_by_zero_new_load_function_call
+                #else /* exception_division_by_zero_new_load_function_call */
                     load_function<exception_division_by_zero_new_function_type>(exception_division_by_zero_new, "exception_division_by_zero_new");
-                #endif /* exception_division_by_zero_new_str */
-                #ifdef exception_division_by_zero_copy_str
-                    load_function<exception_division_by_zero_copy_function_type>(exception_division_by_zero_copy, exception_division_by_zero_copy_str);
-                #else /* exception_division_by_zero_copy_str */
+                #endif /* exception_division_by_zero_new_load_function_call */
+                #ifdef exception_division_by_zero_copy_load_function_call
+                    exception_division_by_zero_copy_load_function_call
+                #else /* exception_division_by_zero_copy_load_function_call */
                     load_function<exception_division_by_zero_copy_function_type>(exception_division_by_zero_copy, "exception_division_by_zero_copy");
-                #endif /* exception_division_by_zero_copy_str */
-                #ifdef exception_division_by_zero_delete_str
-                    load_function<exception_division_by_zero_delete_function_type>(exception_division_by_zero_delete, exception_division_by_zero_delete_str);
-                #else /* exception_division_by_zero_delete_str */
+                #endif /* exception_division_by_zero_copy_load_function_call */
+                #ifdef exception_division_by_zero_delete_load_function_call
+                    exception_division_by_zero_delete_load_function_call
+                #else /* exception_division_by_zero_delete_load_function_call */
                     load_function<exception_division_by_zero_delete_function_type>(exception_division_by_zero_delete, "exception_division_by_zero_delete");
-                #endif /* exception_division_by_zero_delete_str */
-                #ifdef exception_division_by_zero_cast_to_base_str
-                    load_function<exception_division_by_zero_cast_to_base_function_type>(exception_division_by_zero_cast_to_base, exception_division_by_zero_cast_to_base_str);
-                #else /* exception_division_by_zero_cast_to_base_str */
+                #endif /* exception_division_by_zero_delete_load_function_call */
+                #ifdef exception_division_by_zero_cast_to_base_load_function_call
+                    exception_division_by_zero_cast_to_base_load_function_call
+                #else /* exception_division_by_zero_cast_to_base_load_function_call */
                     load_function<exception_division_by_zero_cast_to_base_function_type>(exception_division_by_zero_cast_to_base, "exception_division_by_zero_cast_to_base");
-                #endif /* exception_division_by_zero_cast_to_base_str */
+                #endif /* exception_division_by_zero_cast_to_base_load_function_call */
                 const int major_version = exception_get_major_version();
                 const int minor_version = exception_get_minor_version();
                 const int patch_version = exception_get_patch_version();
@@ -420,26 +500,106 @@ enum beautiful_capi_exception_exception_code_t
                 #else /* _WIN32 */
                     dlclose(handle);
                 #endif /* _WIN32 */
-                exception_get_major_version = 0;
-                exception_get_minor_version = 0;
-                exception_get_patch_version = 0;
-                exception_generic_new = 0;
-                exception_generic_get_error_text = 0;
-                exception_generic_copy = 0;
-                exception_generic_delete = 0;
-                exception_bad_argument_new = 0;
-                exception_bad_argument_get_argument_name = 0;
-                exception_bad_argument_copy = 0;
-                exception_bad_argument_delete = 0;
-                exception_bad_argument_cast_to_base = 0;
-                exception_null_argument_new = 0;
-                exception_null_argument_copy = 0;
-                exception_null_argument_delete = 0;
-                exception_null_argument_cast_to_base = 0;
-                exception_division_by_zero_new = 0;
-                exception_division_by_zero_copy = 0;
-                exception_division_by_zero_delete = 0;
-                exception_division_by_zero_cast_to_base = 0;
+                #ifdef exception_get_major_version_zero_function_pointer
+                    exception_get_major_version_zero_function_pointer
+                #else /* exception_get_major_version_zero_function_pointer */
+                    exception_get_major_version = 0;
+                #endif /* exception_get_major_version_zero_function_pointer */
+                #ifdef exception_get_minor_version_zero_function_pointer
+                    exception_get_minor_version_zero_function_pointer
+                #else /* exception_get_minor_version_zero_function_pointer */
+                    exception_get_minor_version = 0;
+                #endif /* exception_get_minor_version_zero_function_pointer */
+                #ifdef exception_get_patch_version_zero_function_pointer
+                    exception_get_patch_version_zero_function_pointer
+                #else /* exception_get_patch_version_zero_function_pointer */
+                    exception_get_patch_version = 0;
+                #endif /* exception_get_patch_version_zero_function_pointer */
+                #ifdef exception_generic_new_zero_function_pointer
+                    exception_generic_new_zero_function_pointer
+                #else /* exception_generic_new_zero_function_pointer */
+                    exception_generic_new = 0;
+                #endif /* exception_generic_new_zero_function_pointer */
+                #ifdef exception_generic_get_error_text_zero_function_pointer
+                    exception_generic_get_error_text_zero_function_pointer
+                #else /* exception_generic_get_error_text_zero_function_pointer */
+                    exception_generic_get_error_text = 0;
+                #endif /* exception_generic_get_error_text_zero_function_pointer */
+                #ifdef exception_generic_copy_zero_function_pointer
+                    exception_generic_copy_zero_function_pointer
+                #else /* exception_generic_copy_zero_function_pointer */
+                    exception_generic_copy = 0;
+                #endif /* exception_generic_copy_zero_function_pointer */
+                #ifdef exception_generic_delete_zero_function_pointer
+                    exception_generic_delete_zero_function_pointer
+                #else /* exception_generic_delete_zero_function_pointer */
+                    exception_generic_delete = 0;
+                #endif /* exception_generic_delete_zero_function_pointer */
+                #ifdef exception_bad_argument_new_zero_function_pointer
+                    exception_bad_argument_new_zero_function_pointer
+                #else /* exception_bad_argument_new_zero_function_pointer */
+                    exception_bad_argument_new = 0;
+                #endif /* exception_bad_argument_new_zero_function_pointer */
+                #ifdef exception_bad_argument_get_argument_name_zero_function_pointer
+                    exception_bad_argument_get_argument_name_zero_function_pointer
+                #else /* exception_bad_argument_get_argument_name_zero_function_pointer */
+                    exception_bad_argument_get_argument_name = 0;
+                #endif /* exception_bad_argument_get_argument_name_zero_function_pointer */
+                #ifdef exception_bad_argument_copy_zero_function_pointer
+                    exception_bad_argument_copy_zero_function_pointer
+                #else /* exception_bad_argument_copy_zero_function_pointer */
+                    exception_bad_argument_copy = 0;
+                #endif /* exception_bad_argument_copy_zero_function_pointer */
+                #ifdef exception_bad_argument_delete_zero_function_pointer
+                    exception_bad_argument_delete_zero_function_pointer
+                #else /* exception_bad_argument_delete_zero_function_pointer */
+                    exception_bad_argument_delete = 0;
+                #endif /* exception_bad_argument_delete_zero_function_pointer */
+                #ifdef exception_bad_argument_cast_to_base_zero_function_pointer
+                    exception_bad_argument_cast_to_base_zero_function_pointer
+                #else /* exception_bad_argument_cast_to_base_zero_function_pointer */
+                    exception_bad_argument_cast_to_base = 0;
+                #endif /* exception_bad_argument_cast_to_base_zero_function_pointer */
+                #ifdef exception_null_argument_new_zero_function_pointer
+                    exception_null_argument_new_zero_function_pointer
+                #else /* exception_null_argument_new_zero_function_pointer */
+                    exception_null_argument_new = 0;
+                #endif /* exception_null_argument_new_zero_function_pointer */
+                #ifdef exception_null_argument_copy_zero_function_pointer
+                    exception_null_argument_copy_zero_function_pointer
+                #else /* exception_null_argument_copy_zero_function_pointer */
+                    exception_null_argument_copy = 0;
+                #endif /* exception_null_argument_copy_zero_function_pointer */
+                #ifdef exception_null_argument_delete_zero_function_pointer
+                    exception_null_argument_delete_zero_function_pointer
+                #else /* exception_null_argument_delete_zero_function_pointer */
+                    exception_null_argument_delete = 0;
+                #endif /* exception_null_argument_delete_zero_function_pointer */
+                #ifdef exception_null_argument_cast_to_base_zero_function_pointer
+                    exception_null_argument_cast_to_base_zero_function_pointer
+                #else /* exception_null_argument_cast_to_base_zero_function_pointer */
+                    exception_null_argument_cast_to_base = 0;
+                #endif /* exception_null_argument_cast_to_base_zero_function_pointer */
+                #ifdef exception_division_by_zero_new_zero_function_pointer
+                    exception_division_by_zero_new_zero_function_pointer
+                #else /* exception_division_by_zero_new_zero_function_pointer */
+                    exception_division_by_zero_new = 0;
+                #endif /* exception_division_by_zero_new_zero_function_pointer */
+                #ifdef exception_division_by_zero_copy_zero_function_pointer
+                    exception_division_by_zero_copy_zero_function_pointer
+                #else /* exception_division_by_zero_copy_zero_function_pointer */
+                    exception_division_by_zero_copy = 0;
+                #endif /* exception_division_by_zero_copy_zero_function_pointer */
+                #ifdef exception_division_by_zero_delete_zero_function_pointer
+                    exception_division_by_zero_delete_zero_function_pointer
+                #else /* exception_division_by_zero_delete_zero_function_pointer */
+                    exception_division_by_zero_delete = 0;
+                #endif /* exception_division_by_zero_delete_zero_function_pointer */
+                #ifdef exception_division_by_zero_cast_to_base_zero_function_pointer
+                    exception_division_by_zero_cast_to_base_zero_function_pointer
+                #else /* exception_division_by_zero_cast_to_base_zero_function_pointer */
+                    exception_division_by_zero_cast_to_base = 0;
+                #endif /* exception_division_by_zero_cast_to_base_zero_function_pointer */
             }
         };
     }

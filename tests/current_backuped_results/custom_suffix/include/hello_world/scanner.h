@@ -49,7 +49,7 @@ inline hello_world::scanner_raw_ptr::scanner_raw_ptr(const scanner_raw_ptr& othe
 #ifdef HELLO_WORLD_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline hello_world::scanner_raw_ptr::scanner_raw_ptr(scanner_raw_ptr&& other)
 {
-    mObject = other.get_raw_pointer();
+    mObject = other.mObject;
     other.mObject = 0;
 }
 #endif /* HELLO_WORLD_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -82,7 +82,7 @@ inline hello_world::scanner_raw_ptr& hello_world::scanner_raw_ptr::operator=(hel
 {
     if (this != &other)
     {
-        mObject = other.get_raw_pointer();
+        mObject = other.mObject;
         other.mObject = 0;
     }
     return *this;

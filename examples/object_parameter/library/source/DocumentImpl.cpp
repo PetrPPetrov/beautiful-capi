@@ -76,6 +76,7 @@ void Example::DocumentImpl::Show() const
 
 Example::PageImpl* Example::DocumentImpl::GetPage() const
 {
+    mPage->AddRef(); // We return a raw pointer, so, we need to call AddRef() here
     return mPage;
 }
 

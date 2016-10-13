@@ -146,13 +146,41 @@
     
     #ifdef EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS
         
-        extern example_get_major_version_function_type example_get_major_version = 0;
-        extern example_get_minor_version_function_type example_get_minor_version = 0;
-        extern example_get_patch_version_function_type example_get_patch_version = 0;
-        extern example_printer_shared_ptr_default_function_type example_printer_shared_ptr_default = 0;
-        extern example_printer_shared_ptr_show_function_type example_printer_shared_ptr_show = 0;
-        extern example_printer_shared_ptr_copy_function_type example_printer_shared_ptr_copy = 0;
-        extern example_printer_shared_ptr_delete_function_type example_printer_shared_ptr_delete = 0;
+        #ifdef example_get_major_version_define_function_pointer_var
+            example_get_major_version_define_function_pointer_var
+        #else
+            extern example_get_major_version_function_type example_get_major_version = 0;
+        #endif
+        #ifdef example_get_minor_version_define_function_pointer_var
+            example_get_minor_version_define_function_pointer_var
+        #else
+            extern example_get_minor_version_function_type example_get_minor_version = 0;
+        #endif
+        #ifdef example_get_patch_version_define_function_pointer_var
+            example_get_patch_version_define_function_pointer_var
+        #else
+            extern example_get_patch_version_function_type example_get_patch_version = 0;
+        #endif
+        #ifdef example_printer_shared_ptr_default_define_function_pointer_var
+            example_printer_shared_ptr_default_define_function_pointer_var
+        #else
+            extern example_printer_shared_ptr_default_function_type example_printer_shared_ptr_default = 0;
+        #endif
+        #ifdef example_printer_shared_ptr_show_define_function_pointer_var
+            example_printer_shared_ptr_show_define_function_pointer_var
+        #else
+            extern example_printer_shared_ptr_show_function_type example_printer_shared_ptr_show = 0;
+        #endif
+        #ifdef example_printer_shared_ptr_copy_define_function_pointer_var
+            example_printer_shared_ptr_copy_define_function_pointer_var
+        #else
+            extern example_printer_shared_ptr_copy_function_type example_printer_shared_ptr_copy = 0;
+        #endif
+        #ifdef example_printer_shared_ptr_delete_define_function_pointer_var
+            example_printer_shared_ptr_delete_define_function_pointer_var
+        #else
+            extern example_printer_shared_ptr_delete_function_type example_printer_shared_ptr_delete = 0;
+        #endif
         
     #else /* EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS */
         
@@ -217,41 +245,41 @@
                     error_message << "Can't load shared library " << shared_library_name;
                     throw std::runtime_error(error_message.str());
                 }
-                #ifdef example_get_major_version_str
-                    load_function<example_get_major_version_function_type>(example_get_major_version, example_get_major_version_str);
-                #else /* example_get_major_version_str */
+                #ifdef example_get_major_version_load_function_call
+                    example_get_major_version_load_function_call
+                #else /* example_get_major_version_load_function_call */
                     load_function<example_get_major_version_function_type>(example_get_major_version, "example_get_major_version");
-                #endif /* example_get_major_version_str */
-                #ifdef example_get_minor_version_str
-                    load_function<example_get_minor_version_function_type>(example_get_minor_version, example_get_minor_version_str);
-                #else /* example_get_minor_version_str */
+                #endif /* example_get_major_version_load_function_call */
+                #ifdef example_get_minor_version_load_function_call
+                    example_get_minor_version_load_function_call
+                #else /* example_get_minor_version_load_function_call */
                     load_function<example_get_minor_version_function_type>(example_get_minor_version, "example_get_minor_version");
-                #endif /* example_get_minor_version_str */
-                #ifdef example_get_patch_version_str
-                    load_function<example_get_patch_version_function_type>(example_get_patch_version, example_get_patch_version_str);
-                #else /* example_get_patch_version_str */
+                #endif /* example_get_minor_version_load_function_call */
+                #ifdef example_get_patch_version_load_function_call
+                    example_get_patch_version_load_function_call
+                #else /* example_get_patch_version_load_function_call */
                     load_function<example_get_patch_version_function_type>(example_get_patch_version, "example_get_patch_version");
-                #endif /* example_get_patch_version_str */
-                #ifdef example_printer_shared_ptr_default_str
-                    load_function<example_printer_shared_ptr_default_function_type>(example_printer_shared_ptr_default, example_printer_shared_ptr_default_str);
-                #else /* example_printer_shared_ptr_default_str */
+                #endif /* example_get_patch_version_load_function_call */
+                #ifdef example_printer_shared_ptr_default_load_function_call
+                    example_printer_shared_ptr_default_load_function_call
+                #else /* example_printer_shared_ptr_default_load_function_call */
                     load_function<example_printer_shared_ptr_default_function_type>(example_printer_shared_ptr_default, "example_printer_shared_ptr_default");
-                #endif /* example_printer_shared_ptr_default_str */
-                #ifdef example_printer_shared_ptr_show_str
-                    load_function<example_printer_shared_ptr_show_function_type>(example_printer_shared_ptr_show, example_printer_shared_ptr_show_str);
-                #else /* example_printer_shared_ptr_show_str */
+                #endif /* example_printer_shared_ptr_default_load_function_call */
+                #ifdef example_printer_shared_ptr_show_load_function_call
+                    example_printer_shared_ptr_show_load_function_call
+                #else /* example_printer_shared_ptr_show_load_function_call */
                     load_function<example_printer_shared_ptr_show_function_type>(example_printer_shared_ptr_show, "example_printer_shared_ptr_show");
-                #endif /* example_printer_shared_ptr_show_str */
-                #ifdef example_printer_shared_ptr_copy_str
-                    load_function<example_printer_shared_ptr_copy_function_type>(example_printer_shared_ptr_copy, example_printer_shared_ptr_copy_str);
-                #else /* example_printer_shared_ptr_copy_str */
+                #endif /* example_printer_shared_ptr_show_load_function_call */
+                #ifdef example_printer_shared_ptr_copy_load_function_call
+                    example_printer_shared_ptr_copy_load_function_call
+                #else /* example_printer_shared_ptr_copy_load_function_call */
                     load_function<example_printer_shared_ptr_copy_function_type>(example_printer_shared_ptr_copy, "example_printer_shared_ptr_copy");
-                #endif /* example_printer_shared_ptr_copy_str */
-                #ifdef example_printer_shared_ptr_delete_str
-                    load_function<example_printer_shared_ptr_delete_function_type>(example_printer_shared_ptr_delete, example_printer_shared_ptr_delete_str);
-                #else /* example_printer_shared_ptr_delete_str */
+                #endif /* example_printer_shared_ptr_copy_load_function_call */
+                #ifdef example_printer_shared_ptr_delete_load_function_call
+                    example_printer_shared_ptr_delete_load_function_call
+                #else /* example_printer_shared_ptr_delete_load_function_call */
                     load_function<example_printer_shared_ptr_delete_function_type>(example_printer_shared_ptr_delete, "example_printer_shared_ptr_delete");
-                #endif /* example_printer_shared_ptr_delete_str */
+                #endif /* example_printer_shared_ptr_delete_load_function_call */
                 const int major_version = example_get_major_version();
                 const int minor_version = example_get_minor_version();
                 const int patch_version = example_get_patch_version();
@@ -282,13 +310,41 @@
                 #else /* _WIN32 */
                     dlclose(handle);
                 #endif /* _WIN32 */
-                example_get_major_version = 0;
-                example_get_minor_version = 0;
-                example_get_patch_version = 0;
-                example_printer_shared_ptr_default = 0;
-                example_printer_shared_ptr_show = 0;
-                example_printer_shared_ptr_copy = 0;
-                example_printer_shared_ptr_delete = 0;
+                #ifdef example_get_major_version_zero_function_pointer
+                    example_get_major_version_zero_function_pointer
+                #else /* example_get_major_version_zero_function_pointer */
+                    example_get_major_version = 0;
+                #endif /* example_get_major_version_zero_function_pointer */
+                #ifdef example_get_minor_version_zero_function_pointer
+                    example_get_minor_version_zero_function_pointer
+                #else /* example_get_minor_version_zero_function_pointer */
+                    example_get_minor_version = 0;
+                #endif /* example_get_minor_version_zero_function_pointer */
+                #ifdef example_get_patch_version_zero_function_pointer
+                    example_get_patch_version_zero_function_pointer
+                #else /* example_get_patch_version_zero_function_pointer */
+                    example_get_patch_version = 0;
+                #endif /* example_get_patch_version_zero_function_pointer */
+                #ifdef example_printer_shared_ptr_default_zero_function_pointer
+                    example_printer_shared_ptr_default_zero_function_pointer
+                #else /* example_printer_shared_ptr_default_zero_function_pointer */
+                    example_printer_shared_ptr_default = 0;
+                #endif /* example_printer_shared_ptr_default_zero_function_pointer */
+                #ifdef example_printer_shared_ptr_show_zero_function_pointer
+                    example_printer_shared_ptr_show_zero_function_pointer
+                #else /* example_printer_shared_ptr_show_zero_function_pointer */
+                    example_printer_shared_ptr_show = 0;
+                #endif /* example_printer_shared_ptr_show_zero_function_pointer */
+                #ifdef example_printer_shared_ptr_copy_zero_function_pointer
+                    example_printer_shared_ptr_copy_zero_function_pointer
+                #else /* example_printer_shared_ptr_copy_zero_function_pointer */
+                    example_printer_shared_ptr_copy = 0;
+                #endif /* example_printer_shared_ptr_copy_zero_function_pointer */
+                #ifdef example_printer_shared_ptr_delete_zero_function_pointer
+                    example_printer_shared_ptr_delete_zero_function_pointer
+                #else /* example_printer_shared_ptr_delete_zero_function_pointer */
+                    example_printer_shared_ptr_delete = 0;
+                #endif /* example_printer_shared_ptr_delete_zero_function_pointer */
             }
         };
     }

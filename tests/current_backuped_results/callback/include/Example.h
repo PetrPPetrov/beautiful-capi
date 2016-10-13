@@ -27,22 +27,9 @@
 #ifndef EXAMPLE_INCLUDED
 #define EXAMPLE_INCLUDED
 
-#ifdef __cplusplus
-
-namespace Example {
-
-enum EPrintingDevice
-{
-    printer = 1,
-    plotter = 2
-};
-
-}
-
-#endif /* __cplusplus */
-
 #include "ExampleCapi.h"
 #include "ExampleFwd.h"
+#include "ExampleEnums.h"
 #include "Example/Printer.h"
 #include "Example/Person.h"
 #include "Example/PrinterCallback.h"

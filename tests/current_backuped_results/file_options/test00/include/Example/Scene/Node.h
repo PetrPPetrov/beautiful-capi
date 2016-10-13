@@ -61,7 +61,7 @@ inline Example::Scene::Node::Node(const Node& other)
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::Scene::Node::Node(Node&& other)
 {
-    mObject = other.GetRawPointer();
+    mObject = other.mObject;
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -98,7 +98,7 @@ inline Example::Scene::Node& Example::Scene::Node::operator=(const Example::Scen
         }
         if (other.GetRawPointer())
         {
-            SetObject(example_scene_node_copy(other.GetRawPointer()));
+            SetObject(example_scene_node_copy(other.mObject));
         }
         else
         {
@@ -118,7 +118,7 @@ inline Example::Scene::Node& Example::Scene::Node::operator=(Example::Scene::Nod
             example_scene_node_delete(GetRawPointer());
             SetObject(0);
         }
-        mObject = other.GetRawPointer();
+        mObject = other.mObject;
         other.mObject = 0;
     }
     return *this;

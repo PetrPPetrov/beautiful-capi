@@ -176,28 +176,116 @@
     
     #ifdef EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS
         
-        extern example_get_major_version_function_type example_get_major_version = 0;
-        extern example_get_minor_version_function_type example_get_minor_version = 0;
-        extern example_get_patch_version_function_type example_get_patch_version = 0;
-        extern example_geometry_brep_body_new_function_type example_geometry_brep_body_new = 0;
-        extern example_geometry_brep_body_get_name_function_type example_geometry_brep_body_get_name = 0;
-        extern example_geometry_brep_body_set_name_function_type example_geometry_brep_body_set_name = 0;
-        extern example_geometry_brep_body_copy_function_type example_geometry_brep_body_copy = 0;
-        extern example_geometry_brep_body_delete_function_type example_geometry_brep_body_delete = 0;
-        extern example_geometry_sphere_new_function_type example_geometry_sphere_new = 0;
-        extern example_geometry_sphere_get_radius_function_type example_geometry_sphere_get_radius = 0;
-        extern example_geometry_sphere_set_radius_function_type example_geometry_sphere_set_radius = 0;
-        extern example_geometry_sphere_copy_function_type example_geometry_sphere_copy = 0;
-        extern example_geometry_sphere_delete_function_type example_geometry_sphere_delete = 0;
-        extern example_scene_node_new_function_type example_scene_node_new = 0;
-        extern example_scene_node_get_name_function_type example_scene_node_get_name = 0;
-        extern example_scene_node_set_name_function_type example_scene_node_set_name = 0;
-        extern example_scene_node_copy_function_type example_scene_node_copy = 0;
-        extern example_scene_node_delete_function_type example_scene_node_delete = 0;
-        extern example_printer_new_function_type example_printer_new = 0;
-        extern example_printer_show_function_type example_printer_show = 0;
-        extern example_printer_copy_function_type example_printer_copy = 0;
-        extern example_printer_delete_function_type example_printer_delete = 0;
+        #ifdef example_get_major_version_define_function_pointer_var
+            example_get_major_version_define_function_pointer_var
+        #else
+            extern example_get_major_version_function_type example_get_major_version = 0;
+        #endif
+        #ifdef example_get_minor_version_define_function_pointer_var
+            example_get_minor_version_define_function_pointer_var
+        #else
+            extern example_get_minor_version_function_type example_get_minor_version = 0;
+        #endif
+        #ifdef example_get_patch_version_define_function_pointer_var
+            example_get_patch_version_define_function_pointer_var
+        #else
+            extern example_get_patch_version_function_type example_get_patch_version = 0;
+        #endif
+        #ifdef example_geometry_brep_body_new_define_function_pointer_var
+            example_geometry_brep_body_new_define_function_pointer_var
+        #else
+            extern example_geometry_brep_body_new_function_type example_geometry_brep_body_new = 0;
+        #endif
+        #ifdef example_geometry_brep_body_get_name_define_function_pointer_var
+            example_geometry_brep_body_get_name_define_function_pointer_var
+        #else
+            extern example_geometry_brep_body_get_name_function_type example_geometry_brep_body_get_name = 0;
+        #endif
+        #ifdef example_geometry_brep_body_set_name_define_function_pointer_var
+            example_geometry_brep_body_set_name_define_function_pointer_var
+        #else
+            extern example_geometry_brep_body_set_name_function_type example_geometry_brep_body_set_name = 0;
+        #endif
+        #ifdef example_geometry_brep_body_copy_define_function_pointer_var
+            example_geometry_brep_body_copy_define_function_pointer_var
+        #else
+            extern example_geometry_brep_body_copy_function_type example_geometry_brep_body_copy = 0;
+        #endif
+        #ifdef example_geometry_brep_body_delete_define_function_pointer_var
+            example_geometry_brep_body_delete_define_function_pointer_var
+        #else
+            extern example_geometry_brep_body_delete_function_type example_geometry_brep_body_delete = 0;
+        #endif
+        #ifdef example_geometry_sphere_new_define_function_pointer_var
+            example_geometry_sphere_new_define_function_pointer_var
+        #else
+            extern example_geometry_sphere_new_function_type example_geometry_sphere_new = 0;
+        #endif
+        #ifdef example_geometry_sphere_get_radius_define_function_pointer_var
+            example_geometry_sphere_get_radius_define_function_pointer_var
+        #else
+            extern example_geometry_sphere_get_radius_function_type example_geometry_sphere_get_radius = 0;
+        #endif
+        #ifdef example_geometry_sphere_set_radius_define_function_pointer_var
+            example_geometry_sphere_set_radius_define_function_pointer_var
+        #else
+            extern example_geometry_sphere_set_radius_function_type example_geometry_sphere_set_radius = 0;
+        #endif
+        #ifdef example_geometry_sphere_copy_define_function_pointer_var
+            example_geometry_sphere_copy_define_function_pointer_var
+        #else
+            extern example_geometry_sphere_copy_function_type example_geometry_sphere_copy = 0;
+        #endif
+        #ifdef example_geometry_sphere_delete_define_function_pointer_var
+            example_geometry_sphere_delete_define_function_pointer_var
+        #else
+            extern example_geometry_sphere_delete_function_type example_geometry_sphere_delete = 0;
+        #endif
+        #ifdef example_scene_node_new_define_function_pointer_var
+            example_scene_node_new_define_function_pointer_var
+        #else
+            extern example_scene_node_new_function_type example_scene_node_new = 0;
+        #endif
+        #ifdef example_scene_node_get_name_define_function_pointer_var
+            example_scene_node_get_name_define_function_pointer_var
+        #else
+            extern example_scene_node_get_name_function_type example_scene_node_get_name = 0;
+        #endif
+        #ifdef example_scene_node_set_name_define_function_pointer_var
+            example_scene_node_set_name_define_function_pointer_var
+        #else
+            extern example_scene_node_set_name_function_type example_scene_node_set_name = 0;
+        #endif
+        #ifdef example_scene_node_copy_define_function_pointer_var
+            example_scene_node_copy_define_function_pointer_var
+        #else
+            extern example_scene_node_copy_function_type example_scene_node_copy = 0;
+        #endif
+        #ifdef example_scene_node_delete_define_function_pointer_var
+            example_scene_node_delete_define_function_pointer_var
+        #else
+            extern example_scene_node_delete_function_type example_scene_node_delete = 0;
+        #endif
+        #ifdef example_printer_new_define_function_pointer_var
+            example_printer_new_define_function_pointer_var
+        #else
+            extern example_printer_new_function_type example_printer_new = 0;
+        #endif
+        #ifdef example_printer_show_define_function_pointer_var
+            example_printer_show_define_function_pointer_var
+        #else
+            extern example_printer_show_function_type example_printer_show = 0;
+        #endif
+        #ifdef example_printer_copy_define_function_pointer_var
+            example_printer_copy_define_function_pointer_var
+        #else
+            extern example_printer_copy_function_type example_printer_copy = 0;
+        #endif
+        #ifdef example_printer_delete_define_function_pointer_var
+            example_printer_delete_define_function_pointer_var
+        #else
+            extern example_printer_delete_function_type example_printer_delete = 0;
+        #endif
         
     #else /* EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS */
         
@@ -277,116 +365,116 @@
                     error_message << "Can't load shared library " << shared_library_name;
                     throw std::runtime_error(error_message.str());
                 }
-                #ifdef example_get_major_version_str
-                    load_function<example_get_major_version_function_type>(example_get_major_version, example_get_major_version_str);
-                #else /* example_get_major_version_str */
+                #ifdef example_get_major_version_load_function_call
+                    example_get_major_version_load_function_call
+                #else /* example_get_major_version_load_function_call */
                     load_function<example_get_major_version_function_type>(example_get_major_version, "example_get_major_version");
-                #endif /* example_get_major_version_str */
-                #ifdef example_get_minor_version_str
-                    load_function<example_get_minor_version_function_type>(example_get_minor_version, example_get_minor_version_str);
-                #else /* example_get_minor_version_str */
+                #endif /* example_get_major_version_load_function_call */
+                #ifdef example_get_minor_version_load_function_call
+                    example_get_minor_version_load_function_call
+                #else /* example_get_minor_version_load_function_call */
                     load_function<example_get_minor_version_function_type>(example_get_minor_version, "example_get_minor_version");
-                #endif /* example_get_minor_version_str */
-                #ifdef example_get_patch_version_str
-                    load_function<example_get_patch_version_function_type>(example_get_patch_version, example_get_patch_version_str);
-                #else /* example_get_patch_version_str */
+                #endif /* example_get_minor_version_load_function_call */
+                #ifdef example_get_patch_version_load_function_call
+                    example_get_patch_version_load_function_call
+                #else /* example_get_patch_version_load_function_call */
                     load_function<example_get_patch_version_function_type>(example_get_patch_version, "example_get_patch_version");
-                #endif /* example_get_patch_version_str */
-                #ifdef example_geometry_brep_body_new_str
-                    load_function<example_geometry_brep_body_new_function_type>(example_geometry_brep_body_new, example_geometry_brep_body_new_str);
-                #else /* example_geometry_brep_body_new_str */
+                #endif /* example_get_patch_version_load_function_call */
+                #ifdef example_geometry_brep_body_new_load_function_call
+                    example_geometry_brep_body_new_load_function_call
+                #else /* example_geometry_brep_body_new_load_function_call */
                     load_function<example_geometry_brep_body_new_function_type>(example_geometry_brep_body_new, "example_geometry_brep_body_new");
-                #endif /* example_geometry_brep_body_new_str */
-                #ifdef example_geometry_brep_body_get_name_str
-                    load_function<example_geometry_brep_body_get_name_function_type>(example_geometry_brep_body_get_name, example_geometry_brep_body_get_name_str);
-                #else /* example_geometry_brep_body_get_name_str */
+                #endif /* example_geometry_brep_body_new_load_function_call */
+                #ifdef example_geometry_brep_body_get_name_load_function_call
+                    example_geometry_brep_body_get_name_load_function_call
+                #else /* example_geometry_brep_body_get_name_load_function_call */
                     load_function<example_geometry_brep_body_get_name_function_type>(example_geometry_brep_body_get_name, "example_geometry_brep_body_get_name");
-                #endif /* example_geometry_brep_body_get_name_str */
-                #ifdef example_geometry_brep_body_set_name_str
-                    load_function<example_geometry_brep_body_set_name_function_type>(example_geometry_brep_body_set_name, example_geometry_brep_body_set_name_str);
-                #else /* example_geometry_brep_body_set_name_str */
+                #endif /* example_geometry_brep_body_get_name_load_function_call */
+                #ifdef example_geometry_brep_body_set_name_load_function_call
+                    example_geometry_brep_body_set_name_load_function_call
+                #else /* example_geometry_brep_body_set_name_load_function_call */
                     load_function<example_geometry_brep_body_set_name_function_type>(example_geometry_brep_body_set_name, "example_geometry_brep_body_set_name");
-                #endif /* example_geometry_brep_body_set_name_str */
-                #ifdef example_geometry_brep_body_copy_str
-                    load_function<example_geometry_brep_body_copy_function_type>(example_geometry_brep_body_copy, example_geometry_brep_body_copy_str);
-                #else /* example_geometry_brep_body_copy_str */
+                #endif /* example_geometry_brep_body_set_name_load_function_call */
+                #ifdef example_geometry_brep_body_copy_load_function_call
+                    example_geometry_brep_body_copy_load_function_call
+                #else /* example_geometry_brep_body_copy_load_function_call */
                     load_function<example_geometry_brep_body_copy_function_type>(example_geometry_brep_body_copy, "example_geometry_brep_body_copy");
-                #endif /* example_geometry_brep_body_copy_str */
-                #ifdef example_geometry_brep_body_delete_str
-                    load_function<example_geometry_brep_body_delete_function_type>(example_geometry_brep_body_delete, example_geometry_brep_body_delete_str);
-                #else /* example_geometry_brep_body_delete_str */
+                #endif /* example_geometry_brep_body_copy_load_function_call */
+                #ifdef example_geometry_brep_body_delete_load_function_call
+                    example_geometry_brep_body_delete_load_function_call
+                #else /* example_geometry_brep_body_delete_load_function_call */
                     load_function<example_geometry_brep_body_delete_function_type>(example_geometry_brep_body_delete, "example_geometry_brep_body_delete");
-                #endif /* example_geometry_brep_body_delete_str */
-                #ifdef example_geometry_sphere_new_str
-                    load_function<example_geometry_sphere_new_function_type>(example_geometry_sphere_new, example_geometry_sphere_new_str);
-                #else /* example_geometry_sphere_new_str */
+                #endif /* example_geometry_brep_body_delete_load_function_call */
+                #ifdef example_geometry_sphere_new_load_function_call
+                    example_geometry_sphere_new_load_function_call
+                #else /* example_geometry_sphere_new_load_function_call */
                     load_function<example_geometry_sphere_new_function_type>(example_geometry_sphere_new, "example_geometry_sphere_new");
-                #endif /* example_geometry_sphere_new_str */
-                #ifdef example_geometry_sphere_get_radius_str
-                    load_function<example_geometry_sphere_get_radius_function_type>(example_geometry_sphere_get_radius, example_geometry_sphere_get_radius_str);
-                #else /* example_geometry_sphere_get_radius_str */
+                #endif /* example_geometry_sphere_new_load_function_call */
+                #ifdef example_geometry_sphere_get_radius_load_function_call
+                    example_geometry_sphere_get_radius_load_function_call
+                #else /* example_geometry_sphere_get_radius_load_function_call */
                     load_function<example_geometry_sphere_get_radius_function_type>(example_geometry_sphere_get_radius, "example_geometry_sphere_get_radius");
-                #endif /* example_geometry_sphere_get_radius_str */
-                #ifdef example_geometry_sphere_set_radius_str
-                    load_function<example_geometry_sphere_set_radius_function_type>(example_geometry_sphere_set_radius, example_geometry_sphere_set_radius_str);
-                #else /* example_geometry_sphere_set_radius_str */
+                #endif /* example_geometry_sphere_get_radius_load_function_call */
+                #ifdef example_geometry_sphere_set_radius_load_function_call
+                    example_geometry_sphere_set_radius_load_function_call
+                #else /* example_geometry_sphere_set_radius_load_function_call */
                     load_function<example_geometry_sphere_set_radius_function_type>(example_geometry_sphere_set_radius, "example_geometry_sphere_set_radius");
-                #endif /* example_geometry_sphere_set_radius_str */
-                #ifdef example_geometry_sphere_copy_str
-                    load_function<example_geometry_sphere_copy_function_type>(example_geometry_sphere_copy, example_geometry_sphere_copy_str);
-                #else /* example_geometry_sphere_copy_str */
+                #endif /* example_geometry_sphere_set_radius_load_function_call */
+                #ifdef example_geometry_sphere_copy_load_function_call
+                    example_geometry_sphere_copy_load_function_call
+                #else /* example_geometry_sphere_copy_load_function_call */
                     load_function<example_geometry_sphere_copy_function_type>(example_geometry_sphere_copy, "example_geometry_sphere_copy");
-                #endif /* example_geometry_sphere_copy_str */
-                #ifdef example_geometry_sphere_delete_str
-                    load_function<example_geometry_sphere_delete_function_type>(example_geometry_sphere_delete, example_geometry_sphere_delete_str);
-                #else /* example_geometry_sphere_delete_str */
+                #endif /* example_geometry_sphere_copy_load_function_call */
+                #ifdef example_geometry_sphere_delete_load_function_call
+                    example_geometry_sphere_delete_load_function_call
+                #else /* example_geometry_sphere_delete_load_function_call */
                     load_function<example_geometry_sphere_delete_function_type>(example_geometry_sphere_delete, "example_geometry_sphere_delete");
-                #endif /* example_geometry_sphere_delete_str */
-                #ifdef example_scene_node_new_str
-                    load_function<example_scene_node_new_function_type>(example_scene_node_new, example_scene_node_new_str);
-                #else /* example_scene_node_new_str */
+                #endif /* example_geometry_sphere_delete_load_function_call */
+                #ifdef example_scene_node_new_load_function_call
+                    example_scene_node_new_load_function_call
+                #else /* example_scene_node_new_load_function_call */
                     load_function<example_scene_node_new_function_type>(example_scene_node_new, "example_scene_node_new");
-                #endif /* example_scene_node_new_str */
-                #ifdef example_scene_node_get_name_str
-                    load_function<example_scene_node_get_name_function_type>(example_scene_node_get_name, example_scene_node_get_name_str);
-                #else /* example_scene_node_get_name_str */
+                #endif /* example_scene_node_new_load_function_call */
+                #ifdef example_scene_node_get_name_load_function_call
+                    example_scene_node_get_name_load_function_call
+                #else /* example_scene_node_get_name_load_function_call */
                     load_function<example_scene_node_get_name_function_type>(example_scene_node_get_name, "example_scene_node_get_name");
-                #endif /* example_scene_node_get_name_str */
-                #ifdef example_scene_node_set_name_str
-                    load_function<example_scene_node_set_name_function_type>(example_scene_node_set_name, example_scene_node_set_name_str);
-                #else /* example_scene_node_set_name_str */
+                #endif /* example_scene_node_get_name_load_function_call */
+                #ifdef example_scene_node_set_name_load_function_call
+                    example_scene_node_set_name_load_function_call
+                #else /* example_scene_node_set_name_load_function_call */
                     load_function<example_scene_node_set_name_function_type>(example_scene_node_set_name, "example_scene_node_set_name");
-                #endif /* example_scene_node_set_name_str */
-                #ifdef example_scene_node_copy_str
-                    load_function<example_scene_node_copy_function_type>(example_scene_node_copy, example_scene_node_copy_str);
-                #else /* example_scene_node_copy_str */
+                #endif /* example_scene_node_set_name_load_function_call */
+                #ifdef example_scene_node_copy_load_function_call
+                    example_scene_node_copy_load_function_call
+                #else /* example_scene_node_copy_load_function_call */
                     load_function<example_scene_node_copy_function_type>(example_scene_node_copy, "example_scene_node_copy");
-                #endif /* example_scene_node_copy_str */
-                #ifdef example_scene_node_delete_str
-                    load_function<example_scene_node_delete_function_type>(example_scene_node_delete, example_scene_node_delete_str);
-                #else /* example_scene_node_delete_str */
+                #endif /* example_scene_node_copy_load_function_call */
+                #ifdef example_scene_node_delete_load_function_call
+                    example_scene_node_delete_load_function_call
+                #else /* example_scene_node_delete_load_function_call */
                     load_function<example_scene_node_delete_function_type>(example_scene_node_delete, "example_scene_node_delete");
-                #endif /* example_scene_node_delete_str */
-                #ifdef example_printer_new_str
-                    load_function<example_printer_new_function_type>(example_printer_new, example_printer_new_str);
-                #else /* example_printer_new_str */
+                #endif /* example_scene_node_delete_load_function_call */
+                #ifdef example_printer_new_load_function_call
+                    example_printer_new_load_function_call
+                #else /* example_printer_new_load_function_call */
                     load_function<example_printer_new_function_type>(example_printer_new, "example_printer_new");
-                #endif /* example_printer_new_str */
-                #ifdef example_printer_show_str
-                    load_function<example_printer_show_function_type>(example_printer_show, example_printer_show_str);
-                #else /* example_printer_show_str */
+                #endif /* example_printer_new_load_function_call */
+                #ifdef example_printer_show_load_function_call
+                    example_printer_show_load_function_call
+                #else /* example_printer_show_load_function_call */
                     load_function<example_printer_show_function_type>(example_printer_show, "example_printer_show");
-                #endif /* example_printer_show_str */
-                #ifdef example_printer_copy_str
-                    load_function<example_printer_copy_function_type>(example_printer_copy, example_printer_copy_str);
-                #else /* example_printer_copy_str */
+                #endif /* example_printer_show_load_function_call */
+                #ifdef example_printer_copy_load_function_call
+                    example_printer_copy_load_function_call
+                #else /* example_printer_copy_load_function_call */
                     load_function<example_printer_copy_function_type>(example_printer_copy, "example_printer_copy");
-                #endif /* example_printer_copy_str */
-                #ifdef example_printer_delete_str
-                    load_function<example_printer_delete_function_type>(example_printer_delete, example_printer_delete_str);
-                #else /* example_printer_delete_str */
+                #endif /* example_printer_copy_load_function_call */
+                #ifdef example_printer_delete_load_function_call
+                    example_printer_delete_load_function_call
+                #else /* example_printer_delete_load_function_call */
                     load_function<example_printer_delete_function_type>(example_printer_delete, "example_printer_delete");
-                #endif /* example_printer_delete_str */
+                #endif /* example_printer_delete_load_function_call */
                 const int major_version = example_get_major_version();
                 const int minor_version = example_get_minor_version();
                 const int patch_version = example_get_patch_version();
@@ -417,28 +505,116 @@
                 #else /* _WIN32 */
                     dlclose(handle);
                 #endif /* _WIN32 */
-                example_get_major_version = 0;
-                example_get_minor_version = 0;
-                example_get_patch_version = 0;
-                example_geometry_brep_body_new = 0;
-                example_geometry_brep_body_get_name = 0;
-                example_geometry_brep_body_set_name = 0;
-                example_geometry_brep_body_copy = 0;
-                example_geometry_brep_body_delete = 0;
-                example_geometry_sphere_new = 0;
-                example_geometry_sphere_get_radius = 0;
-                example_geometry_sphere_set_radius = 0;
-                example_geometry_sphere_copy = 0;
-                example_geometry_sphere_delete = 0;
-                example_scene_node_new = 0;
-                example_scene_node_get_name = 0;
-                example_scene_node_set_name = 0;
-                example_scene_node_copy = 0;
-                example_scene_node_delete = 0;
-                example_printer_new = 0;
-                example_printer_show = 0;
-                example_printer_copy = 0;
-                example_printer_delete = 0;
+                #ifdef example_get_major_version_zero_function_pointer
+                    example_get_major_version_zero_function_pointer
+                #else /* example_get_major_version_zero_function_pointer */
+                    example_get_major_version = 0;
+                #endif /* example_get_major_version_zero_function_pointer */
+                #ifdef example_get_minor_version_zero_function_pointer
+                    example_get_minor_version_zero_function_pointer
+                #else /* example_get_minor_version_zero_function_pointer */
+                    example_get_minor_version = 0;
+                #endif /* example_get_minor_version_zero_function_pointer */
+                #ifdef example_get_patch_version_zero_function_pointer
+                    example_get_patch_version_zero_function_pointer
+                #else /* example_get_patch_version_zero_function_pointer */
+                    example_get_patch_version = 0;
+                #endif /* example_get_patch_version_zero_function_pointer */
+                #ifdef example_geometry_brep_body_new_zero_function_pointer
+                    example_geometry_brep_body_new_zero_function_pointer
+                #else /* example_geometry_brep_body_new_zero_function_pointer */
+                    example_geometry_brep_body_new = 0;
+                #endif /* example_geometry_brep_body_new_zero_function_pointer */
+                #ifdef example_geometry_brep_body_get_name_zero_function_pointer
+                    example_geometry_brep_body_get_name_zero_function_pointer
+                #else /* example_geometry_brep_body_get_name_zero_function_pointer */
+                    example_geometry_brep_body_get_name = 0;
+                #endif /* example_geometry_brep_body_get_name_zero_function_pointer */
+                #ifdef example_geometry_brep_body_set_name_zero_function_pointer
+                    example_geometry_brep_body_set_name_zero_function_pointer
+                #else /* example_geometry_brep_body_set_name_zero_function_pointer */
+                    example_geometry_brep_body_set_name = 0;
+                #endif /* example_geometry_brep_body_set_name_zero_function_pointer */
+                #ifdef example_geometry_brep_body_copy_zero_function_pointer
+                    example_geometry_brep_body_copy_zero_function_pointer
+                #else /* example_geometry_brep_body_copy_zero_function_pointer */
+                    example_geometry_brep_body_copy = 0;
+                #endif /* example_geometry_brep_body_copy_zero_function_pointer */
+                #ifdef example_geometry_brep_body_delete_zero_function_pointer
+                    example_geometry_brep_body_delete_zero_function_pointer
+                #else /* example_geometry_brep_body_delete_zero_function_pointer */
+                    example_geometry_brep_body_delete = 0;
+                #endif /* example_geometry_brep_body_delete_zero_function_pointer */
+                #ifdef example_geometry_sphere_new_zero_function_pointer
+                    example_geometry_sphere_new_zero_function_pointer
+                #else /* example_geometry_sphere_new_zero_function_pointer */
+                    example_geometry_sphere_new = 0;
+                #endif /* example_geometry_sphere_new_zero_function_pointer */
+                #ifdef example_geometry_sphere_get_radius_zero_function_pointer
+                    example_geometry_sphere_get_radius_zero_function_pointer
+                #else /* example_geometry_sphere_get_radius_zero_function_pointer */
+                    example_geometry_sphere_get_radius = 0;
+                #endif /* example_geometry_sphere_get_radius_zero_function_pointer */
+                #ifdef example_geometry_sphere_set_radius_zero_function_pointer
+                    example_geometry_sphere_set_radius_zero_function_pointer
+                #else /* example_geometry_sphere_set_radius_zero_function_pointer */
+                    example_geometry_sphere_set_radius = 0;
+                #endif /* example_geometry_sphere_set_radius_zero_function_pointer */
+                #ifdef example_geometry_sphere_copy_zero_function_pointer
+                    example_geometry_sphere_copy_zero_function_pointer
+                #else /* example_geometry_sphere_copy_zero_function_pointer */
+                    example_geometry_sphere_copy = 0;
+                #endif /* example_geometry_sphere_copy_zero_function_pointer */
+                #ifdef example_geometry_sphere_delete_zero_function_pointer
+                    example_geometry_sphere_delete_zero_function_pointer
+                #else /* example_geometry_sphere_delete_zero_function_pointer */
+                    example_geometry_sphere_delete = 0;
+                #endif /* example_geometry_sphere_delete_zero_function_pointer */
+                #ifdef example_scene_node_new_zero_function_pointer
+                    example_scene_node_new_zero_function_pointer
+                #else /* example_scene_node_new_zero_function_pointer */
+                    example_scene_node_new = 0;
+                #endif /* example_scene_node_new_zero_function_pointer */
+                #ifdef example_scene_node_get_name_zero_function_pointer
+                    example_scene_node_get_name_zero_function_pointer
+                #else /* example_scene_node_get_name_zero_function_pointer */
+                    example_scene_node_get_name = 0;
+                #endif /* example_scene_node_get_name_zero_function_pointer */
+                #ifdef example_scene_node_set_name_zero_function_pointer
+                    example_scene_node_set_name_zero_function_pointer
+                #else /* example_scene_node_set_name_zero_function_pointer */
+                    example_scene_node_set_name = 0;
+                #endif /* example_scene_node_set_name_zero_function_pointer */
+                #ifdef example_scene_node_copy_zero_function_pointer
+                    example_scene_node_copy_zero_function_pointer
+                #else /* example_scene_node_copy_zero_function_pointer */
+                    example_scene_node_copy = 0;
+                #endif /* example_scene_node_copy_zero_function_pointer */
+                #ifdef example_scene_node_delete_zero_function_pointer
+                    example_scene_node_delete_zero_function_pointer
+                #else /* example_scene_node_delete_zero_function_pointer */
+                    example_scene_node_delete = 0;
+                #endif /* example_scene_node_delete_zero_function_pointer */
+                #ifdef example_printer_new_zero_function_pointer
+                    example_printer_new_zero_function_pointer
+                #else /* example_printer_new_zero_function_pointer */
+                    example_printer_new = 0;
+                #endif /* example_printer_new_zero_function_pointer */
+                #ifdef example_printer_show_zero_function_pointer
+                    example_printer_show_zero_function_pointer
+                #else /* example_printer_show_zero_function_pointer */
+                    example_printer_show = 0;
+                #endif /* example_printer_show_zero_function_pointer */
+                #ifdef example_printer_copy_zero_function_pointer
+                    example_printer_copy_zero_function_pointer
+                #else /* example_printer_copy_zero_function_pointer */
+                    example_printer_copy = 0;
+                #endif /* example_printer_copy_zero_function_pointer */
+                #ifdef example_printer_delete_zero_function_pointer
+                    example_printer_delete_zero_function_pointer
+                #else /* example_printer_delete_zero_function_pointer */
+                    example_printer_delete = 0;
+                #endif /* example_printer_delete_zero_function_pointer */
             }
         };
     }

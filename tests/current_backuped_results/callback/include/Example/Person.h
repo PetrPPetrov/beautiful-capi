@@ -133,7 +133,7 @@ inline Example::Person::Person(const Person& other)
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::Person::Person(Person&& other)
 {
-    mObject = other.GetRawPointer();
+    mObject = other.mObject;
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -174,7 +174,7 @@ inline Example::Person& Example::Person::operator=(const Example::Person& other)
         if (other.GetRawPointer())
         {
             beautiful_capi_callback_exception_info_t exception_info;
-            void* result(example_person_copy(&exception_info, other.GetRawPointer()));
+            void* result(example_person_copy(&exception_info, other.mObject));
             beautiful_capi_Callback::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
             SetObject(result);
         }
@@ -196,7 +196,7 @@ inline Example::Person& Example::Person::operator=(Example::Person&& other)
             example_person_delete(GetRawPointer());
             SetObject(0);
         }
-        mObject = other.GetRawPointer();
+        mObject = other.mObject;
         other.mObject = 0;
     }
     return *this;

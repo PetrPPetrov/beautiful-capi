@@ -61,7 +61,7 @@ inline Example::Geometry::Brep::Body::Body(const Body& other)
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::Geometry::Brep::Body::Body(Body&& other)
 {
-    mObject = other.GetRawPointer();
+    mObject = other.mObject;
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -98,7 +98,7 @@ inline Example::Geometry::Brep::Body& Example::Geometry::Brep::Body::operator=(c
         }
         if (other.GetRawPointer())
         {
-            SetObject(example_geometry_brep_body_copy(other.GetRawPointer()));
+            SetObject(example_geometry_brep_body_copy(other.mObject));
         }
         else
         {
@@ -118,7 +118,7 @@ inline Example::Geometry::Brep::Body& Example::Geometry::Brep::Body::operator=(E
             example_geometry_brep_body_delete(GetRawPointer());
             SetObject(0);
         }
-        mObject = other.GetRawPointer();
+        mObject = other.mObject;
         other.mObject = 0;
     }
     return *this;

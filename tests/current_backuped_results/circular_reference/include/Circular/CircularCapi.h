@@ -154,17 +154,61 @@
     
     #ifdef CIRCULAR_CAPI_DEFINE_FUNCTION_POINTERS
         
-        extern circular_get_major_version_function_type circular_get_major_version = 0;
-        extern circular_get_minor_version_function_type circular_get_minor_version = 0;
-        extern circular_get_patch_version_function_type circular_get_patch_version = 0;
-        extern circular_class_a_default_function_type circular_class_a_default = 0;
-        extern circular_class_a_set_b_function_type circular_class_a_set_b = 0;
-        extern circular_class_a_get_b_function_type circular_class_a_get_b = 0;
-        extern circular_class_a_delete_function_type circular_class_a_delete = 0;
-        extern circular_class_b_default_function_type circular_class_b_default = 0;
-        extern circular_class_b_set_a_function_type circular_class_b_set_a = 0;
-        extern circular_class_b_get_a_function_type circular_class_b_get_a = 0;
-        extern circular_class_b_delete_function_type circular_class_b_delete = 0;
+        #ifdef circular_get_major_version_define_function_pointer_var
+            circular_get_major_version_define_function_pointer_var
+        #else
+            extern circular_get_major_version_function_type circular_get_major_version = 0;
+        #endif
+        #ifdef circular_get_minor_version_define_function_pointer_var
+            circular_get_minor_version_define_function_pointer_var
+        #else
+            extern circular_get_minor_version_function_type circular_get_minor_version = 0;
+        #endif
+        #ifdef circular_get_patch_version_define_function_pointer_var
+            circular_get_patch_version_define_function_pointer_var
+        #else
+            extern circular_get_patch_version_function_type circular_get_patch_version = 0;
+        #endif
+        #ifdef circular_class_a_default_define_function_pointer_var
+            circular_class_a_default_define_function_pointer_var
+        #else
+            extern circular_class_a_default_function_type circular_class_a_default = 0;
+        #endif
+        #ifdef circular_class_a_set_b_define_function_pointer_var
+            circular_class_a_set_b_define_function_pointer_var
+        #else
+            extern circular_class_a_set_b_function_type circular_class_a_set_b = 0;
+        #endif
+        #ifdef circular_class_a_get_b_define_function_pointer_var
+            circular_class_a_get_b_define_function_pointer_var
+        #else
+            extern circular_class_a_get_b_function_type circular_class_a_get_b = 0;
+        #endif
+        #ifdef circular_class_a_delete_define_function_pointer_var
+            circular_class_a_delete_define_function_pointer_var
+        #else
+            extern circular_class_a_delete_function_type circular_class_a_delete = 0;
+        #endif
+        #ifdef circular_class_b_default_define_function_pointer_var
+            circular_class_b_default_define_function_pointer_var
+        #else
+            extern circular_class_b_default_function_type circular_class_b_default = 0;
+        #endif
+        #ifdef circular_class_b_set_a_define_function_pointer_var
+            circular_class_b_set_a_define_function_pointer_var
+        #else
+            extern circular_class_b_set_a_function_type circular_class_b_set_a = 0;
+        #endif
+        #ifdef circular_class_b_get_a_define_function_pointer_var
+            circular_class_b_get_a_define_function_pointer_var
+        #else
+            extern circular_class_b_get_a_function_type circular_class_b_get_a = 0;
+        #endif
+        #ifdef circular_class_b_delete_define_function_pointer_var
+            circular_class_b_delete_define_function_pointer_var
+        #else
+            extern circular_class_b_delete_function_type circular_class_b_delete = 0;
+        #endif
         
     #else /* CIRCULAR_CAPI_DEFINE_FUNCTION_POINTERS */
         
@@ -233,61 +277,61 @@
                     error_message << "Can't load shared library " << shared_library_name;
                     throw std::runtime_error(error_message.str());
                 }
-                #ifdef circular_get_major_version_str
-                    load_function<circular_get_major_version_function_type>(circular_get_major_version, circular_get_major_version_str);
-                #else /* circular_get_major_version_str */
+                #ifdef circular_get_major_version_load_function_call
+                    circular_get_major_version_load_function_call
+                #else /* circular_get_major_version_load_function_call */
                     load_function<circular_get_major_version_function_type>(circular_get_major_version, "circular_get_major_version");
-                #endif /* circular_get_major_version_str */
-                #ifdef circular_get_minor_version_str
-                    load_function<circular_get_minor_version_function_type>(circular_get_minor_version, circular_get_minor_version_str);
-                #else /* circular_get_minor_version_str */
+                #endif /* circular_get_major_version_load_function_call */
+                #ifdef circular_get_minor_version_load_function_call
+                    circular_get_minor_version_load_function_call
+                #else /* circular_get_minor_version_load_function_call */
                     load_function<circular_get_minor_version_function_type>(circular_get_minor_version, "circular_get_minor_version");
-                #endif /* circular_get_minor_version_str */
-                #ifdef circular_get_patch_version_str
-                    load_function<circular_get_patch_version_function_type>(circular_get_patch_version, circular_get_patch_version_str);
-                #else /* circular_get_patch_version_str */
+                #endif /* circular_get_minor_version_load_function_call */
+                #ifdef circular_get_patch_version_load_function_call
+                    circular_get_patch_version_load_function_call
+                #else /* circular_get_patch_version_load_function_call */
                     load_function<circular_get_patch_version_function_type>(circular_get_patch_version, "circular_get_patch_version");
-                #endif /* circular_get_patch_version_str */
-                #ifdef circular_class_a_default_str
-                    load_function<circular_class_a_default_function_type>(circular_class_a_default, circular_class_a_default_str);
-                #else /* circular_class_a_default_str */
+                #endif /* circular_get_patch_version_load_function_call */
+                #ifdef circular_class_a_default_load_function_call
+                    circular_class_a_default_load_function_call
+                #else /* circular_class_a_default_load_function_call */
                     load_function<circular_class_a_default_function_type>(circular_class_a_default, "circular_class_a_default");
-                #endif /* circular_class_a_default_str */
-                #ifdef circular_class_a_set_b_str
-                    load_function<circular_class_a_set_b_function_type>(circular_class_a_set_b, circular_class_a_set_b_str);
-                #else /* circular_class_a_set_b_str */
+                #endif /* circular_class_a_default_load_function_call */
+                #ifdef circular_class_a_set_b_load_function_call
+                    circular_class_a_set_b_load_function_call
+                #else /* circular_class_a_set_b_load_function_call */
                     load_function<circular_class_a_set_b_function_type>(circular_class_a_set_b, "circular_class_a_set_b");
-                #endif /* circular_class_a_set_b_str */
-                #ifdef circular_class_a_get_b_str
-                    load_function<circular_class_a_get_b_function_type>(circular_class_a_get_b, circular_class_a_get_b_str);
-                #else /* circular_class_a_get_b_str */
+                #endif /* circular_class_a_set_b_load_function_call */
+                #ifdef circular_class_a_get_b_load_function_call
+                    circular_class_a_get_b_load_function_call
+                #else /* circular_class_a_get_b_load_function_call */
                     load_function<circular_class_a_get_b_function_type>(circular_class_a_get_b, "circular_class_a_get_b");
-                #endif /* circular_class_a_get_b_str */
-                #ifdef circular_class_a_delete_str
-                    load_function<circular_class_a_delete_function_type>(circular_class_a_delete, circular_class_a_delete_str);
-                #else /* circular_class_a_delete_str */
+                #endif /* circular_class_a_get_b_load_function_call */
+                #ifdef circular_class_a_delete_load_function_call
+                    circular_class_a_delete_load_function_call
+                #else /* circular_class_a_delete_load_function_call */
                     load_function<circular_class_a_delete_function_type>(circular_class_a_delete, "circular_class_a_delete");
-                #endif /* circular_class_a_delete_str */
-                #ifdef circular_class_b_default_str
-                    load_function<circular_class_b_default_function_type>(circular_class_b_default, circular_class_b_default_str);
-                #else /* circular_class_b_default_str */
+                #endif /* circular_class_a_delete_load_function_call */
+                #ifdef circular_class_b_default_load_function_call
+                    circular_class_b_default_load_function_call
+                #else /* circular_class_b_default_load_function_call */
                     load_function<circular_class_b_default_function_type>(circular_class_b_default, "circular_class_b_default");
-                #endif /* circular_class_b_default_str */
-                #ifdef circular_class_b_set_a_str
-                    load_function<circular_class_b_set_a_function_type>(circular_class_b_set_a, circular_class_b_set_a_str);
-                #else /* circular_class_b_set_a_str */
+                #endif /* circular_class_b_default_load_function_call */
+                #ifdef circular_class_b_set_a_load_function_call
+                    circular_class_b_set_a_load_function_call
+                #else /* circular_class_b_set_a_load_function_call */
                     load_function<circular_class_b_set_a_function_type>(circular_class_b_set_a, "circular_class_b_set_a");
-                #endif /* circular_class_b_set_a_str */
-                #ifdef circular_class_b_get_a_str
-                    load_function<circular_class_b_get_a_function_type>(circular_class_b_get_a, circular_class_b_get_a_str);
-                #else /* circular_class_b_get_a_str */
+                #endif /* circular_class_b_set_a_load_function_call */
+                #ifdef circular_class_b_get_a_load_function_call
+                    circular_class_b_get_a_load_function_call
+                #else /* circular_class_b_get_a_load_function_call */
                     load_function<circular_class_b_get_a_function_type>(circular_class_b_get_a, "circular_class_b_get_a");
-                #endif /* circular_class_b_get_a_str */
-                #ifdef circular_class_b_delete_str
-                    load_function<circular_class_b_delete_function_type>(circular_class_b_delete, circular_class_b_delete_str);
-                #else /* circular_class_b_delete_str */
+                #endif /* circular_class_b_get_a_load_function_call */
+                #ifdef circular_class_b_delete_load_function_call
+                    circular_class_b_delete_load_function_call
+                #else /* circular_class_b_delete_load_function_call */
                     load_function<circular_class_b_delete_function_type>(circular_class_b_delete, "circular_class_b_delete");
-                #endif /* circular_class_b_delete_str */
+                #endif /* circular_class_b_delete_load_function_call */
                 const int major_version = circular_get_major_version();
                 const int minor_version = circular_get_minor_version();
                 const int patch_version = circular_get_patch_version();
@@ -318,17 +362,61 @@
                 #else /* _WIN32 */
                     dlclose(handle);
                 #endif /* _WIN32 */
-                circular_get_major_version = 0;
-                circular_get_minor_version = 0;
-                circular_get_patch_version = 0;
-                circular_class_a_default = 0;
-                circular_class_a_set_b = 0;
-                circular_class_a_get_b = 0;
-                circular_class_a_delete = 0;
-                circular_class_b_default = 0;
-                circular_class_b_set_a = 0;
-                circular_class_b_get_a = 0;
-                circular_class_b_delete = 0;
+                #ifdef circular_get_major_version_zero_function_pointer
+                    circular_get_major_version_zero_function_pointer
+                #else /* circular_get_major_version_zero_function_pointer */
+                    circular_get_major_version = 0;
+                #endif /* circular_get_major_version_zero_function_pointer */
+                #ifdef circular_get_minor_version_zero_function_pointer
+                    circular_get_minor_version_zero_function_pointer
+                #else /* circular_get_minor_version_zero_function_pointer */
+                    circular_get_minor_version = 0;
+                #endif /* circular_get_minor_version_zero_function_pointer */
+                #ifdef circular_get_patch_version_zero_function_pointer
+                    circular_get_patch_version_zero_function_pointer
+                #else /* circular_get_patch_version_zero_function_pointer */
+                    circular_get_patch_version = 0;
+                #endif /* circular_get_patch_version_zero_function_pointer */
+                #ifdef circular_class_a_default_zero_function_pointer
+                    circular_class_a_default_zero_function_pointer
+                #else /* circular_class_a_default_zero_function_pointer */
+                    circular_class_a_default = 0;
+                #endif /* circular_class_a_default_zero_function_pointer */
+                #ifdef circular_class_a_set_b_zero_function_pointer
+                    circular_class_a_set_b_zero_function_pointer
+                #else /* circular_class_a_set_b_zero_function_pointer */
+                    circular_class_a_set_b = 0;
+                #endif /* circular_class_a_set_b_zero_function_pointer */
+                #ifdef circular_class_a_get_b_zero_function_pointer
+                    circular_class_a_get_b_zero_function_pointer
+                #else /* circular_class_a_get_b_zero_function_pointer */
+                    circular_class_a_get_b = 0;
+                #endif /* circular_class_a_get_b_zero_function_pointer */
+                #ifdef circular_class_a_delete_zero_function_pointer
+                    circular_class_a_delete_zero_function_pointer
+                #else /* circular_class_a_delete_zero_function_pointer */
+                    circular_class_a_delete = 0;
+                #endif /* circular_class_a_delete_zero_function_pointer */
+                #ifdef circular_class_b_default_zero_function_pointer
+                    circular_class_b_default_zero_function_pointer
+                #else /* circular_class_b_default_zero_function_pointer */
+                    circular_class_b_default = 0;
+                #endif /* circular_class_b_default_zero_function_pointer */
+                #ifdef circular_class_b_set_a_zero_function_pointer
+                    circular_class_b_set_a_zero_function_pointer
+                #else /* circular_class_b_set_a_zero_function_pointer */
+                    circular_class_b_set_a = 0;
+                #endif /* circular_class_b_set_a_zero_function_pointer */
+                #ifdef circular_class_b_get_a_zero_function_pointer
+                    circular_class_b_get_a_zero_function_pointer
+                #else /* circular_class_b_get_a_zero_function_pointer */
+                    circular_class_b_get_a = 0;
+                #endif /* circular_class_b_get_a_zero_function_pointer */
+                #ifdef circular_class_b_delete_zero_function_pointer
+                    circular_class_b_delete_zero_function_pointer
+                #else /* circular_class_b_delete_zero_function_pointer */
+                    circular_class_b_delete = 0;
+                #endif /* circular_class_b_delete_zero_function_pointer */
             }
         };
     }

@@ -31,9 +31,6 @@ class ClassTypeGenerator(object):
         self.class_argument_generator = class_argument_generator
         self.copy_or_add_ref_when_c_2_wrap = False
 
-    def init_copy_or_add_ref_default_value_for_return(self):
-        self.copy_or_add_ref_when_c_2_wrap = self.class_argument_generator.method_copy_or_add_ref_default_value
-
     def wrap_argument_declaration(self) -> str:
         return 'const {type_name}&'.format(type_name=self.class_argument_generator.full_wrap_name)
 
@@ -106,6 +103,8 @@ class ClassTypeGenerator(object):
         return self.class_argument_generator.snippet_implementation_declaration
 
     def implementation_2_c_var(self, result_var: str, expression: str) -> ([str], str):
+        expression = self.class_argument_generator.lifecycle_traits.implementation_2_c.format(
+            implementation_expression=expression)
         return self.class_argument_generator.implementation_result_instructions(result_var, expression)
 
     @staticmethod
@@ -124,9 +123,6 @@ class ClassTypeGenerator(object):
 class EnumTypeGenerator(object):
     def __init__(self, enum_argument_generator):
         self.enum_argument_generator = enum_argument_generator
-
-    def init_copy_or_add_ref_default_value_for_return(self):
-        pass
 
     def wrap_argument_declaration(self) -> str:
         return self.enum_argument_generator.full_wrap_name
@@ -204,9 +200,6 @@ class EnumTypeGenerator(object):
 class BuiltinTypeGenerator(object):
     def __init__(self, type_name: str):
         self.type_name = type_name
-
-    def init_copy_or_add_ref_default_value_for_return(self):
-        pass
 
     @property
     def is_void(self):

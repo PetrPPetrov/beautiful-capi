@@ -30,7 +30,7 @@
 #include "ExampleCapi.h"
 #include "ExampleFwd.h"
 #include "Example/PrinterDecl.h"
-#include "Example.h"
+#include "ExampleEnums.h"
 
 #ifdef __cplusplus
 

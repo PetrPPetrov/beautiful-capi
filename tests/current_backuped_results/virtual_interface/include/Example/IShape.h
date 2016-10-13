@@ -44,7 +44,7 @@ inline Example::IShapeRawPtr::IShapeRawPtr(const IShapeRawPtr& other)
 #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline Example::IShapeRawPtr::IShapeRawPtr(IShapeRawPtr&& other)
 {
-    mObject = other.GetRawPointer();
+    mObject = other.mObject;
     other.mObject = 0;
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -77,7 +77,7 @@ inline Example::IShapeRawPtr& Example::IShapeRawPtr::operator=(Example::IShapeRa
 {
     if (this != &other)
     {
-        mObject = other.GetRawPointer();
+        mObject = other.mObject;
         other.mObject = 0;
     }
     return *this;

@@ -164,22 +164,86 @@
     
     #ifdef EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS
         
-        extern example_get_major_version_function_type example_get_major_version = 0;
-        extern example_get_minor_version_function_type example_get_minor_version = 0;
-        extern example_get_patch_version_function_type example_get_patch_version = 0;
-        extern example_page_default_function_type example_page_default = 0;
-        extern example_page_get_width_function_type example_page_get_width = 0;
-        extern example_page_set_width_function_type example_page_set_width = 0;
-        extern example_page_get_height_function_type example_page_get_height = 0;
-        extern example_page_set_height_function_type example_page_set_height = 0;
-        extern example_page_add_ref_function_type example_page_add_ref = 0;
-        extern example_page_release_function_type example_page_release = 0;
-        extern example_document_default_function_type example_document_default = 0;
-        extern example_document_show_function_type example_document_show = 0;
-        extern example_document_get_page_function_type example_document_get_page = 0;
-        extern example_document_set_page_function_type example_document_set_page = 0;
-        extern example_document_add_ref_function_type example_document_add_ref = 0;
-        extern example_document_release_function_type example_document_release = 0;
+        #ifdef example_get_major_version_define_function_pointer_var
+            example_get_major_version_define_function_pointer_var
+        #else
+            extern example_get_major_version_function_type example_get_major_version = 0;
+        #endif
+        #ifdef example_get_minor_version_define_function_pointer_var
+            example_get_minor_version_define_function_pointer_var
+        #else
+            extern example_get_minor_version_function_type example_get_minor_version = 0;
+        #endif
+        #ifdef example_get_patch_version_define_function_pointer_var
+            example_get_patch_version_define_function_pointer_var
+        #else
+            extern example_get_patch_version_function_type example_get_patch_version = 0;
+        #endif
+        #ifdef example_page_default_define_function_pointer_var
+            example_page_default_define_function_pointer_var
+        #else
+            extern example_page_default_function_type example_page_default = 0;
+        #endif
+        #ifdef example_page_get_width_define_function_pointer_var
+            example_page_get_width_define_function_pointer_var
+        #else
+            extern example_page_get_width_function_type example_page_get_width = 0;
+        #endif
+        #ifdef example_page_set_width_define_function_pointer_var
+            example_page_set_width_define_function_pointer_var
+        #else
+            extern example_page_set_width_function_type example_page_set_width = 0;
+        #endif
+        #ifdef example_page_get_height_define_function_pointer_var
+            example_page_get_height_define_function_pointer_var
+        #else
+            extern example_page_get_height_function_type example_page_get_height = 0;
+        #endif
+        #ifdef example_page_set_height_define_function_pointer_var
+            example_page_set_height_define_function_pointer_var
+        #else
+            extern example_page_set_height_function_type example_page_set_height = 0;
+        #endif
+        #ifdef example_page_add_ref_define_function_pointer_var
+            example_page_add_ref_define_function_pointer_var
+        #else
+            extern example_page_add_ref_function_type example_page_add_ref = 0;
+        #endif
+        #ifdef example_page_release_define_function_pointer_var
+            example_page_release_define_function_pointer_var
+        #else
+            extern example_page_release_function_type example_page_release = 0;
+        #endif
+        #ifdef example_document_default_define_function_pointer_var
+            example_document_default_define_function_pointer_var
+        #else
+            extern example_document_default_function_type example_document_default = 0;
+        #endif
+        #ifdef example_document_show_define_function_pointer_var
+            example_document_show_define_function_pointer_var
+        #else
+            extern example_document_show_function_type example_document_show = 0;
+        #endif
+        #ifdef example_document_get_page_define_function_pointer_var
+            example_document_get_page_define_function_pointer_var
+        #else
+            extern example_document_get_page_function_type example_document_get_page = 0;
+        #endif
+        #ifdef example_document_set_page_define_function_pointer_var
+            example_document_set_page_define_function_pointer_var
+        #else
+            extern example_document_set_page_function_type example_document_set_page = 0;
+        #endif
+        #ifdef example_document_add_ref_define_function_pointer_var
+            example_document_add_ref_define_function_pointer_var
+        #else
+            extern example_document_add_ref_function_type example_document_add_ref = 0;
+        #endif
+        #ifdef example_document_release_define_function_pointer_var
+            example_document_release_define_function_pointer_var
+        #else
+            extern example_document_release_function_type example_document_release = 0;
+        #endif
         
     #else /* EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS */
         
@@ -253,86 +317,86 @@
                     error_message << "Can't load shared library " << shared_library_name;
                     throw std::runtime_error(error_message.str());
                 }
-                #ifdef example_get_major_version_str
-                    load_function<example_get_major_version_function_type>(example_get_major_version, example_get_major_version_str);
-                #else /* example_get_major_version_str */
+                #ifdef example_get_major_version_load_function_call
+                    example_get_major_version_load_function_call
+                #else /* example_get_major_version_load_function_call */
                     load_function<example_get_major_version_function_type>(example_get_major_version, "example_get_major_version");
-                #endif /* example_get_major_version_str */
-                #ifdef example_get_minor_version_str
-                    load_function<example_get_minor_version_function_type>(example_get_minor_version, example_get_minor_version_str);
-                #else /* example_get_minor_version_str */
+                #endif /* example_get_major_version_load_function_call */
+                #ifdef example_get_minor_version_load_function_call
+                    example_get_minor_version_load_function_call
+                #else /* example_get_minor_version_load_function_call */
                     load_function<example_get_minor_version_function_type>(example_get_minor_version, "example_get_minor_version");
-                #endif /* example_get_minor_version_str */
-                #ifdef example_get_patch_version_str
-                    load_function<example_get_patch_version_function_type>(example_get_patch_version, example_get_patch_version_str);
-                #else /* example_get_patch_version_str */
+                #endif /* example_get_minor_version_load_function_call */
+                #ifdef example_get_patch_version_load_function_call
+                    example_get_patch_version_load_function_call
+                #else /* example_get_patch_version_load_function_call */
                     load_function<example_get_patch_version_function_type>(example_get_patch_version, "example_get_patch_version");
-                #endif /* example_get_patch_version_str */
-                #ifdef example_page_default_str
-                    load_function<example_page_default_function_type>(example_page_default, example_page_default_str);
-                #else /* example_page_default_str */
+                #endif /* example_get_patch_version_load_function_call */
+                #ifdef example_page_default_load_function_call
+                    example_page_default_load_function_call
+                #else /* example_page_default_load_function_call */
                     load_function<example_page_default_function_type>(example_page_default, "example_page_default");
-                #endif /* example_page_default_str */
-                #ifdef example_page_get_width_str
-                    load_function<example_page_get_width_function_type>(example_page_get_width, example_page_get_width_str);
-                #else /* example_page_get_width_str */
+                #endif /* example_page_default_load_function_call */
+                #ifdef example_page_get_width_load_function_call
+                    example_page_get_width_load_function_call
+                #else /* example_page_get_width_load_function_call */
                     load_function<example_page_get_width_function_type>(example_page_get_width, "example_page_get_width");
-                #endif /* example_page_get_width_str */
-                #ifdef example_page_set_width_str
-                    load_function<example_page_set_width_function_type>(example_page_set_width, example_page_set_width_str);
-                #else /* example_page_set_width_str */
+                #endif /* example_page_get_width_load_function_call */
+                #ifdef example_page_set_width_load_function_call
+                    example_page_set_width_load_function_call
+                #else /* example_page_set_width_load_function_call */
                     load_function<example_page_set_width_function_type>(example_page_set_width, "example_page_set_width");
-                #endif /* example_page_set_width_str */
-                #ifdef example_page_get_height_str
-                    load_function<example_page_get_height_function_type>(example_page_get_height, example_page_get_height_str);
-                #else /* example_page_get_height_str */
+                #endif /* example_page_set_width_load_function_call */
+                #ifdef example_page_get_height_load_function_call
+                    example_page_get_height_load_function_call
+                #else /* example_page_get_height_load_function_call */
                     load_function<example_page_get_height_function_type>(example_page_get_height, "example_page_get_height");
-                #endif /* example_page_get_height_str */
-                #ifdef example_page_set_height_str
-                    load_function<example_page_set_height_function_type>(example_page_set_height, example_page_set_height_str);
-                #else /* example_page_set_height_str */
+                #endif /* example_page_get_height_load_function_call */
+                #ifdef example_page_set_height_load_function_call
+                    example_page_set_height_load_function_call
+                #else /* example_page_set_height_load_function_call */
                     load_function<example_page_set_height_function_type>(example_page_set_height, "example_page_set_height");
-                #endif /* example_page_set_height_str */
-                #ifdef example_page_add_ref_str
-                    load_function<example_page_add_ref_function_type>(example_page_add_ref, example_page_add_ref_str);
-                #else /* example_page_add_ref_str */
+                #endif /* example_page_set_height_load_function_call */
+                #ifdef example_page_add_ref_load_function_call
+                    example_page_add_ref_load_function_call
+                #else /* example_page_add_ref_load_function_call */
                     load_function<example_page_add_ref_function_type>(example_page_add_ref, "example_page_add_ref");
-                #endif /* example_page_add_ref_str */
-                #ifdef example_page_release_str
-                    load_function<example_page_release_function_type>(example_page_release, example_page_release_str);
-                #else /* example_page_release_str */
+                #endif /* example_page_add_ref_load_function_call */
+                #ifdef example_page_release_load_function_call
+                    example_page_release_load_function_call
+                #else /* example_page_release_load_function_call */
                     load_function<example_page_release_function_type>(example_page_release, "example_page_release");
-                #endif /* example_page_release_str */
-                #ifdef example_document_default_str
-                    load_function<example_document_default_function_type>(example_document_default, example_document_default_str);
-                #else /* example_document_default_str */
+                #endif /* example_page_release_load_function_call */
+                #ifdef example_document_default_load_function_call
+                    example_document_default_load_function_call
+                #else /* example_document_default_load_function_call */
                     load_function<example_document_default_function_type>(example_document_default, "example_document_default");
-                #endif /* example_document_default_str */
-                #ifdef example_document_show_str
-                    load_function<example_document_show_function_type>(example_document_show, example_document_show_str);
-                #else /* example_document_show_str */
+                #endif /* example_document_default_load_function_call */
+                #ifdef example_document_show_load_function_call
+                    example_document_show_load_function_call
+                #else /* example_document_show_load_function_call */
                     load_function<example_document_show_function_type>(example_document_show, "example_document_show");
-                #endif /* example_document_show_str */
-                #ifdef example_document_get_page_str
-                    load_function<example_document_get_page_function_type>(example_document_get_page, example_document_get_page_str);
-                #else /* example_document_get_page_str */
+                #endif /* example_document_show_load_function_call */
+                #ifdef example_document_get_page_load_function_call
+                    example_document_get_page_load_function_call
+                #else /* example_document_get_page_load_function_call */
                     load_function<example_document_get_page_function_type>(example_document_get_page, "example_document_get_page");
-                #endif /* example_document_get_page_str */
-                #ifdef example_document_set_page_str
-                    load_function<example_document_set_page_function_type>(example_document_set_page, example_document_set_page_str);
-                #else /* example_document_set_page_str */
+                #endif /* example_document_get_page_load_function_call */
+                #ifdef example_document_set_page_load_function_call
+                    example_document_set_page_load_function_call
+                #else /* example_document_set_page_load_function_call */
                     load_function<example_document_set_page_function_type>(example_document_set_page, "example_document_set_page");
-                #endif /* example_document_set_page_str */
-                #ifdef example_document_add_ref_str
-                    load_function<example_document_add_ref_function_type>(example_document_add_ref, example_document_add_ref_str);
-                #else /* example_document_add_ref_str */
+                #endif /* example_document_set_page_load_function_call */
+                #ifdef example_document_add_ref_load_function_call
+                    example_document_add_ref_load_function_call
+                #else /* example_document_add_ref_load_function_call */
                     load_function<example_document_add_ref_function_type>(example_document_add_ref, "example_document_add_ref");
-                #endif /* example_document_add_ref_str */
-                #ifdef example_document_release_str
-                    load_function<example_document_release_function_type>(example_document_release, example_document_release_str);
-                #else /* example_document_release_str */
+                #endif /* example_document_add_ref_load_function_call */
+                #ifdef example_document_release_load_function_call
+                    example_document_release_load_function_call
+                #else /* example_document_release_load_function_call */
                     load_function<example_document_release_function_type>(example_document_release, "example_document_release");
-                #endif /* example_document_release_str */
+                #endif /* example_document_release_load_function_call */
                 const int major_version = example_get_major_version();
                 const int minor_version = example_get_minor_version();
                 const int patch_version = example_get_patch_version();
@@ -363,22 +427,86 @@
                 #else /* _WIN32 */
                     dlclose(handle);
                 #endif /* _WIN32 */
-                example_get_major_version = 0;
-                example_get_minor_version = 0;
-                example_get_patch_version = 0;
-                example_page_default = 0;
-                example_page_get_width = 0;
-                example_page_set_width = 0;
-                example_page_get_height = 0;
-                example_page_set_height = 0;
-                example_page_add_ref = 0;
-                example_page_release = 0;
-                example_document_default = 0;
-                example_document_show = 0;
-                example_document_get_page = 0;
-                example_document_set_page = 0;
-                example_document_add_ref = 0;
-                example_document_release = 0;
+                #ifdef example_get_major_version_zero_function_pointer
+                    example_get_major_version_zero_function_pointer
+                #else /* example_get_major_version_zero_function_pointer */
+                    example_get_major_version = 0;
+                #endif /* example_get_major_version_zero_function_pointer */
+                #ifdef example_get_minor_version_zero_function_pointer
+                    example_get_minor_version_zero_function_pointer
+                #else /* example_get_minor_version_zero_function_pointer */
+                    example_get_minor_version = 0;
+                #endif /* example_get_minor_version_zero_function_pointer */
+                #ifdef example_get_patch_version_zero_function_pointer
+                    example_get_patch_version_zero_function_pointer
+                #else /* example_get_patch_version_zero_function_pointer */
+                    example_get_patch_version = 0;
+                #endif /* example_get_patch_version_zero_function_pointer */
+                #ifdef example_page_default_zero_function_pointer
+                    example_page_default_zero_function_pointer
+                #else /* example_page_default_zero_function_pointer */
+                    example_page_default = 0;
+                #endif /* example_page_default_zero_function_pointer */
+                #ifdef example_page_get_width_zero_function_pointer
+                    example_page_get_width_zero_function_pointer
+                #else /* example_page_get_width_zero_function_pointer */
+                    example_page_get_width = 0;
+                #endif /* example_page_get_width_zero_function_pointer */
+                #ifdef example_page_set_width_zero_function_pointer
+                    example_page_set_width_zero_function_pointer
+                #else /* example_page_set_width_zero_function_pointer */
+                    example_page_set_width = 0;
+                #endif /* example_page_set_width_zero_function_pointer */
+                #ifdef example_page_get_height_zero_function_pointer
+                    example_page_get_height_zero_function_pointer
+                #else /* example_page_get_height_zero_function_pointer */
+                    example_page_get_height = 0;
+                #endif /* example_page_get_height_zero_function_pointer */
+                #ifdef example_page_set_height_zero_function_pointer
+                    example_page_set_height_zero_function_pointer
+                #else /* example_page_set_height_zero_function_pointer */
+                    example_page_set_height = 0;
+                #endif /* example_page_set_height_zero_function_pointer */
+                #ifdef example_page_add_ref_zero_function_pointer
+                    example_page_add_ref_zero_function_pointer
+                #else /* example_page_add_ref_zero_function_pointer */
+                    example_page_add_ref = 0;
+                #endif /* example_page_add_ref_zero_function_pointer */
+                #ifdef example_page_release_zero_function_pointer
+                    example_page_release_zero_function_pointer
+                #else /* example_page_release_zero_function_pointer */
+                    example_page_release = 0;
+                #endif /* example_page_release_zero_function_pointer */
+                #ifdef example_document_default_zero_function_pointer
+                    example_document_default_zero_function_pointer
+                #else /* example_document_default_zero_function_pointer */
+                    example_document_default = 0;
+                #endif /* example_document_default_zero_function_pointer */
+                #ifdef example_document_show_zero_function_pointer
+                    example_document_show_zero_function_pointer
+                #else /* example_document_show_zero_function_pointer */
+                    example_document_show = 0;
+                #endif /* example_document_show_zero_function_pointer */
+                #ifdef example_document_get_page_zero_function_pointer
+                    example_document_get_page_zero_function_pointer
+                #else /* example_document_get_page_zero_function_pointer */
+                    example_document_get_page = 0;
+                #endif /* example_document_get_page_zero_function_pointer */
+                #ifdef example_document_set_page_zero_function_pointer
+                    example_document_set_page_zero_function_pointer
+                #else /* example_document_set_page_zero_function_pointer */
+                    example_document_set_page = 0;
+                #endif /* example_document_set_page_zero_function_pointer */
+                #ifdef example_document_add_ref_zero_function_pointer
+                    example_document_add_ref_zero_function_pointer
+                #else /* example_document_add_ref_zero_function_pointer */
+                    example_document_add_ref = 0;
+                #endif /* example_document_add_ref_zero_function_pointer */
+                #ifdef example_document_release_zero_function_pointer
+                    example_document_release_zero_function_pointer
+                #else /* example_document_release_zero_function_pointer */
+                    example_document_release = 0;
+                #endif /* example_document_release_zero_function_pointer */
             }
         };
     }

@@ -56,7 +56,7 @@ inline HelloWorld::Printer::Printer(const Printer& other)
 #ifdef HELLOWORLD_CPP_COMPILER_HAS_RVALUE_REFERENCES
 inline HelloWorld::Printer::Printer(Printer&& other)
 {
-    mObject = other.GetRawPointer();
+    mObject = other.mObject;
     other.mObject = 0;
 }
 #endif /* HELLOWORLD_CPP_COMPILER_HAS_RVALUE_REFERENCES */
@@ -93,7 +93,7 @@ inline HelloWorld::Printer& HelloWorld::Printer::operator=(const HelloWorld::Pri
         }
         if (other.GetRawPointer())
         {
-            SetObject(hello_world_printer_copy(other.GetRawPointer()));
+            SetObject(hello_world_printer_copy(other.mObject));
         }
         else
         {
@@ -113,7 +113,7 @@ inline HelloWorld::Printer& HelloWorld::Printer::operator=(HelloWorld::Printer&&
             hello_world_printer_delete(GetRawPointer());
             SetObject(0);
         }
-        mObject = other.GetRawPointer();
+        mObject = other.mObject;
         other.mObject = 0;
     }
     return *this;

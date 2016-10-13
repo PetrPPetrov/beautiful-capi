@@ -117,10 +117,6 @@ class ClassGenerator(object):
             self.lifecycle_traits.snippet_implementation_usage.format(implementation_name=self.implementation_name))
 
     @property
-    def method_copy_or_add_ref_default_value(self) -> bool:
-        return self.lifecycle_traits.method_copy_or_add_ref_default_value
-
-    @property
     def is_callback(self) -> bool:
         return self.base_class_generator and self.base_class_generator.class_object.callbacks
 
