@@ -112,8 +112,7 @@ class LifecycleTraits(object):
                 )
                 with IndentScope(out):
                     class_generator.inheritance_traits.generate_object_assignment(
-                        out, class_generator, '', 'other.{get_raw}()'.format(
-                            get_raw=self.params.get_raw_pointer_method_name))
+                        out, class_generator, '', 'other.mObject')
                     class_generator.inheritance_traits.generate_object_assignment(
                         out, class_generator, 'other.', '0')
 
@@ -269,7 +268,7 @@ class CopySemantic(LifecycleTraits):
                 with IndentScope(out):
                     copy_result = self.init_method_exception_traits.generate_c_call(
                         out, BuiltinTypeGenerator('void*'), class_generator.copy_method,
-                        ['other.{get_raw}()'.format(get_raw=self.params.get_raw_pointer_method_name)])
+                        ['other.mObject'.format(get_raw=self.params.get_raw_pointer_method_name)])
                     out.put_line('SetObject({copy_result});'.format(copy_result=copy_result))
                 out.put_line('else')
                 with IndentScope(out):
@@ -289,8 +288,7 @@ class CopySemantic(LifecycleTraits):
                             out.put_line('{0}::operator=(std::move(other));'.format(
                                 class_generator.base_class_generator.full_wrap_name))
                         class_generator.inheritance_traits.generate_object_assignment(
-                            out, class_generator, '', 'other.{get_raw}()'.format(
-                                get_raw=self.params.get_raw_pointer_method_name))
+                            out, class_generator, '', 'other.mObject')
                         class_generator.inheritance_traits.generate_object_assignment(
                             out, class_generator, 'other.', '0')
                     out.put_line('return *this;')
@@ -442,8 +440,7 @@ class RawPointerSemantic(LifecycleTraits):
                             out.put_line('{0}::operator=(std::move(other));'.format(
                                 class_generator.base_class_generator.full_wrap_name))
                         class_generator.inheritance_traits.generate_object_assignment(
-                            out, class_generator, '', 'other.{get_raw}()'.format(
-                                get_raw=self.params.get_raw_pointer_method_name))
+                            out, class_generator, '', 'other.mObject')
                         class_generator.inheritance_traits.generate_object_assignment(
                             out, class_generator, 'other.', '0')
                     out.put_line('return *this;')
@@ -610,8 +607,7 @@ class RefCountedSemantic(LifecycleTraits):
                             out.put_line('{0}::operator=(std::move(other));'.format(
                                 class_generator.base_class_generator.full_wrap_name))
                         class_generator.inheritance_traits.generate_object_assignment(
-                            out, class_generator, '', 'other.{get_raw}()'.format(
-                                get_raw=self.params.get_raw_pointer_method_name))
+                            out, class_generator, '', 'other.mObject')
                         class_generator.inheritance_traits.generate_object_assignment(
                             out, class_generator, 'other.', '0')
                     out.put_line('return *this;')
