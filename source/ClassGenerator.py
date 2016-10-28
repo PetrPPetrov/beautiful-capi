@@ -231,7 +231,7 @@ class ClassGenerator(object):
                 base_class_argument_generator = ArgumentGenerator(
                     ClassTypeGenerator(cur_base_class_generator), 'source_object')
                 declaration_header.put_line('template<>')
-                declaration_header.put_line('inline {cast_to} down_cast<{cast_to}>({cast_from_ref});'.format(
+                declaration_header.put_line('inline {cast_to} down_cast<{cast_to} >({cast_from_ref});'.format(
                     cast_to=self.full_wrap_name,
                     cast_from_ref=base_class_argument_generator.wrap_argument_declaration()
                 ))
@@ -301,7 +301,7 @@ class ClassGenerator(object):
                 base_class_argument_generator = ArgumentGenerator(
                     ClassTypeGenerator(cur_base_class_generator), 'source_object')
                 definition_header.put_line('template<>')
-                definition_header.put_line('inline {cast_to} down_cast<{cast_to}>({cast_from_ref})'.format(
+                definition_header.put_line('inline {cast_to} down_cast<{cast_to} >({cast_from_ref})'.format(
                     cast_to=self.full_wrap_name,
                     cast_from_ref=base_class_argument_generator.wrap_argument_declaration()
                 ))

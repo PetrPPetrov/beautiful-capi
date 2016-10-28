@@ -337,6 +337,8 @@ class CapiGenerator(object):
             # We always have at least one element
             output_capi = file_cache.get_file_for_capi(namespace_info.c_functions[0].path_to_namespace)
             output_capi.put_begin_cpp_comments(self.params)
+            output_capi.put_include_files()
+            output_capi.include_system_header('stddef.h')
             with WatchdogScope(output_capi, namespace_name + '_CAPI_INCLUDED'):
                 self.main_exception_traits.generate_exception_info(output_capi)
                 self.__generate_capi_defines(output_capi)
