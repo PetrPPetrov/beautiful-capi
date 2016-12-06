@@ -46,15 +46,17 @@ def get_c_name(name: str) -> str:
 def pascal_to_stl(pascal_name: str) -> str:
     result = ''
     first = True
+    previous_symbol_is_upper_case = False
     for letter in pascal_name:
         if first:
             result += letter.lower()
             first = False
         else:
-            if letter.isupper():
+            if letter.isupper() and not previous_symbol_is_upper_case:
                 result += '_' + letter.lower()
             else:
-                result += letter
+                result += letter.lower()
+        previous_symbol_is_upper_case = letter.isupper()
     return result
 
 
