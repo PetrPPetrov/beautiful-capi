@@ -307,7 +307,7 @@ class ByFirstArgument(object):
             catch_generator(out, exception_class_generator)
         out.put_line('catch (...)')
         with IndentScope(out):
-            out.put_line('{exception_info}->code = -1;'.format(
+            out.put_line('{exception_info}->code = -2;'.format(
                 exception_info=self.params.exception_info_argument_name))
         return_type.generate_c_default_return_value(out)
 
