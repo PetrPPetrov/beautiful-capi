@@ -213,20 +213,30 @@ class ClassGenerator(object):
         if self.class_object.lifecycle != TLifecycle.copy_semantic and self.derived_class_generators:
             this_class_argument_generator = ArgumentGenerator(ClassTypeGenerator(self), 'source_object')
             declaration_header.put_line('')
+            declaration_header.put_line(self.parent_namespace.the_most_parent.one_line_namespace_begin)
+            declaration_header.put_line('')
             declaration_header.put_line('template<typename TargetType>')
             declaration_header.put_line('inline TargetType down_cast({cast_from_ref});'.format(
                 cast_from_ref=this_class_argument_generator.wrap_argument_declaration()
             ))
+            return self.parent_namespace.the_most_parent
+        return None
 
     def __get_all_base_classes(self) -> []:
         return self.base_class_generator.__get_all_base_classes() + [self] if self.base_class_generator else [self]
 
-    def __generate_down_cast_template_specializations(self, declaration_header):
+    def __generate_down_cast_template_specializations(self, declaration_header, previous_ns):
         if self.class_object.lifecycle != TLifecycle.copy_semantic and self.base_class_generator:
             for cur_base_class_generator in self.base_class_generator.__get_all_base_classes():
-                declaration_header.put_line('')
-                declaration_header.put_line(cur_base_class_generator.parent_namespace.one_line_namespace_begin)
-                declaration_header.put_line('')
+                the_most_parent_namespace = cur_base_class_generator.parent_namespace.the_most_parent
+                if the_most_parent_namespace is not previous_ns:
+                    if previous_ns:
+                        declaration_header.put_line('')
+                        declaration_header.put_line(previous_ns.one_line_namespace_end)
+                    declaration_header.put_line('')
+                    declaration_header.put_line(the_most_parent_namespace.one_line_namespace_begin)
+                    declaration_header.put_line('')
+                    previous_ns = the_most_parent_namespace
 
                 base_class_argument_generator = ArgumentGenerator(
                     ClassTypeGenerator(cur_base_class_generator), 'source_object')
@@ -235,9 +245,14 @@ class ClassGenerator(object):
                     cast_to=self.full_wrap_name,
                     cast_from_ref=base_class_argument_generator.wrap_argument_declaration()
                 ))
+        return previous_ns
 
-                declaration_header.put_line('')
-                declaration_header.put_line(cur_base_class_generator.parent_namespace.one_line_namespace_end)
+    def __generate_down_cast_template_declarations(self, declaration_header):
+        previous_ns = self.__generate_down_cast_template_declaration(declaration_header)
+        previous_ns = self.__generate_down_cast_template_specializations(declaration_header, previous_ns)
+        if previous_ns:
+            declaration_header.put_line('')
+            declaration_header.put_line(previous_ns.one_line_namespace_end)
 
     def __generate_class_declaration(self, declaration_header: FileGenerator):
         put_template_line(declaration_header, self.class_object)
@@ -257,7 +272,6 @@ class ClassGenerator(object):
             ))
         for template_argument_generator in self.template_argument_generators:
             template_argument_generator.include_dependent_declaration_headers(declaration_header, self.file_cache)
-        self.__generate_down_cast_template_declaration(declaration_header)
         self.__generate_callback_lifecycle_traits()
         generate_callbacks_on_client_side_declarations(declaration_header, self)
 
@@ -275,7 +289,7 @@ class ClassGenerator(object):
                 self.__generate_class_declaration(declaration_header)
                 declaration_header.put_line('')
                 declaration_header.put_line(self.parent_namespace.one_line_namespace_end)
-                self.__generate_down_cast_template_specializations(declaration_header)
+                self.__generate_down_cast_template_declarations(declaration_header)
             include_headers(declaration_header, self.class_object.include_headers)
 
     def __generate_constructor_definitions(self, definition_header, first_method):
@@ -294,8 +308,9 @@ class ClassGenerator(object):
     def __generate_down_cast_definitions(self, definition_header):
         if self.class_object.lifecycle != TLifecycle.copy_semantic and self.base_class_generator:
             for cur_base_class_generator in self.base_class_generator.__get_all_base_classes():
+                the_most_parent_namespace = cur_base_class_generator.parent_namespace.the_most_parent
                 definition_header.put_line('')
-                definition_header.put_line(cur_base_class_generator.parent_namespace.one_line_namespace_begin)
+                definition_header.put_line(the_most_parent_namespace.one_line_namespace_begin)
                 definition_header.put_line('')
 
                 base_class_argument_generator = ArgumentGenerator(
@@ -316,7 +331,7 @@ class ClassGenerator(object):
                     definition_header.put_return_cpp_statement(return_expression)
 
                 definition_header.put_line('')
-                definition_header.put_line(cur_base_class_generator.parent_namespace.one_line_namespace_end)
+                definition_header.put_line(the_most_parent_namespace.one_line_namespace_end)
 
     def __generate_definition(self):
         definition_header = self.file_cache.get_file_for_class(self.full_name_array)

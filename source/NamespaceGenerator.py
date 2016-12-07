@@ -40,6 +40,10 @@ class NamespaceGenerator(object):
         self.params = params
 
     @property
+    def the_most_parent(self):
+        return self.parent_namespace.the_most_parent if self.parent_namespace else self
+
+    @property
     def name(self) -> str:
         return self.namespace_object.name
 
