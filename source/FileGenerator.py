@@ -117,7 +117,8 @@ class FileGenerator(object):
         self.include_header(header_file, True)
 
     def put_line(self, line, eol='\n'):
-        self.lines.append(AtomicString(self.get_indent_str() + line + eol))
+        result_line = self.get_indent_str() + line if line else ''
+        self.lines.append(AtomicString(result_line + eol))
 
     def put_lines(self, lines: [str], eol='\n'):
         for line in lines:
