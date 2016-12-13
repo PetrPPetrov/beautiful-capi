@@ -207,6 +207,10 @@ class GeneratorCreator(object):
             self.__bind_class(class_generator)
         for function_generator in namespace_generator.functions:
             self.__bind_function(function_generator)
+        for enum_generator in namespace_generator.enum_generators:
+            self.__bind_documentation(enum_generator.enum_object)
+            for item in enum_generator.enum_object.items:
+                self.__bind_documentation(item)
 
     def bind_namespaces(self, namespace_generators: [NamespaceGenerator]):
         for namespace_generator in namespace_generators:
