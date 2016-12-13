@@ -22,6 +22,7 @@
 
 from Parser import TEnumeration, TEnumerationItem
 from FileGenerator import FileGenerator, IndentScope
+from DoxygenCpp import DoxygenCppGenerator
 
 
 class EnumGenerator(object):
@@ -61,11 +62,12 @@ class EnumGenerator(object):
             return '{name}'.format(name=enum_item.name)
 
     def generate_enum_definition(self, out: FileGenerator):
+        DoxygenCppGenerator().generate_for_enum(out, self.enum_object)
         out.put_line('enum {name}'.format(name=self.name))
         with IndentScope(out, '};'):
             items_definitions = [self.__get_enum_item_definition(enum_item) for enum_item in self.enum_object.items]
             items_definitions_with_comma = [item + ',' for item in items_definitions[:-1]]
             if items_definitions:
                 items_definitions_with_comma.append(items_definitions[-1])
-            for item_definition in items_definitions_with_comma:
-                out.put_line(item_definition)
+            for item_definition, item in zip(items_definitions_with_comma, self.enum_object.items):
+                out.put_line(item_definition + DoxygenCppGenerator().get_for_enum_item(item))

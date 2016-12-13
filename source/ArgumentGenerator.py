@@ -23,6 +23,7 @@
 from FileGenerator import FileGenerator
 from FileCache import FileCache
 from NamespaceGenerator import NamespaceGenerator
+from Parser import TArgument
 from Helpers import bool_to_str
 
 
@@ -278,6 +279,7 @@ class BuiltinTypeGenerator(object):
 class ArgumentGenerator(object):
     def __init__(self, type_generator: ClassTypeGenerator or EnumTypeGenerator or BuiltinTypeGenerator, name: str):
         self.type_generator = type_generator
+        self.argument_object = None
         self.name = name
 
     def wrap_argument_declaration(self) -> str:

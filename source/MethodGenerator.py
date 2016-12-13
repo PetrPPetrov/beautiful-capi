@@ -46,8 +46,20 @@ class ConstructorGenerator(object):
         self.exception_traits = None
 
     @property
+    def full_name(self) -> str:
+        return '::'.join([self.parent_class_generator.full_name, self.constructor_object.name])
+
+    @property
     def full_c_name(self) -> str:
         return get_c_name(self.parent_class_generator.full_c_name + '_' + self.constructor_object.name)
+
+    @property
+    def wrap_name(self) -> str:
+        return '::'.join([self.parent_class_generator.wrap_name, self.constructor_object.name])
+
+    @property
+    def full_wrap_name(self) -> str:
+        return '::'.join([self.parent_class_generator.full_wrap_name, self.constructor_object.name])
 
     def wrap_declaration(self) -> str:
         arguments = ', '.join(
@@ -119,6 +131,10 @@ class MethodGenerator(object):
     @property
     def name(self) -> str:
         return self.method_object.name
+
+    @property
+    def full_name(self) -> str:
+        return '::'.join([self.parent_class_generator.full_name, self.method_object.name])
 
     @property
     def c_name(self) -> str:
@@ -242,6 +258,10 @@ class FunctionGenerator(object):
         self.return_type_generator = None
         self.params = params
         self.exception_traits = None
+
+    @property
+    def full_name(self) -> str:
+        return '::'.join([self.parent_namespace_generator.full_name, self.function_object.name])
 
     @property
     def full_c_name(self) -> str:

@@ -16,27 +16,31 @@
   <xs:complexType name="TNamespace">
     <xs:sequence>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="include" minOccurs="0" maxOccurs="unbounded" type="TApiInclude"/>
-        <xs:element name="namespace" minOccurs="0" maxOccurs="unbounded" type="TNamespace"/>
-        <xs:element name="include_header" minOccurs="0" maxOccurs="unbounded" type="THeaderInclude"/>
-        <xs:element name="enumeration" minOccurs="0" maxOccurs="unbounded" type="TEnumeration"/>
-        <xs:element name="class" minOccurs="0" maxOccurs="unbounded" type="TClass"/>
-        <xs:element name="function" minOccurs="0" maxOccurs="unbounded" type="TFunction"/>
-        <xs:element name="template" minOccurs="0" maxOccurs="unbounded" type="TTemplate"/>
-        <xs:element name="property_set_prefix" minOccurs="0" maxOccurs="1" type="TPropertySetPrefix"/>
-        <xs:element name="property_get_prefix" minOccurs="0" maxOccurs="1" type="TPropertyGetPrefix"/>
-        <xs:element name="property_get_const" minOccurs="0" maxOccurs="1" type="TPropertyGetConst"/>
+        <xs:element name="include" type="TApiInclude"/>
+        <xs:element name="namespace" type="TNamespace"/>
+        <xs:element name="include_header" type="THeaderInclude"/>
+        <xs:element name="enumeration" type="TEnumeration"/>
+        <xs:element name="class" type="TClass"/>
+        <xs:element name="function" type="TFunction"/>
+        <xs:element name="template" type="TTemplate"/>
+        <xs:element name="property_set_prefix" type="TPropertySetPrefix"/>
+        <xs:element name="property_get_prefix" type="TPropertyGetPrefix"/>
+        <xs:element name="property_get_const" type="TPropertyGetConst"/>
       </xs:choice>
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required"/>
     <xs:attribute name="implementation_header" type="xs:string" use="optional" default=""/>
   </xs:complexType>
   <xs:complexType name="TEnumerationItem">
+    <xs:sequence>
+      <xs:element name="documentation" minOccurs="0" maxOccurs="1" type="TGenericDocumentation"/>
+    </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required"/>
     <xs:attribute name="value" type="xs:string" use="optional"/>
   </xs:complexType>
   <xs:complexType name="TEnumeration">
     <xs:sequence>
+      <xs:element name="documentation" minOccurs="0" maxOccurs="1" type="TDocumentation"/>
       <xs:element name="item" minOccurs="1" maxOccurs="unbounded" type="TEnumerationItem"/>
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required"/>
@@ -61,6 +65,7 @@
   </xs:complexType>
   <xs:complexType name="TClass">
     <xs:sequence>
+      <xs:element name="documentation" minOccurs="0" maxOccurs="1" type="TDocumentation"/>
       <xs:element name="include_header" minOccurs="0" maxOccurs="unbounded" type="THeaderInclude"/>
       <xs:element name="enumeration" minOccurs="0" maxOccurs="unbounded" type="TEnumeration"/>
       <xs:element name="constructor" minOccurs="0" maxOccurs="unbounded" type="TConstructor"/>
@@ -91,6 +96,7 @@
   </xs:complexType>
   <xs:complexType name="TConstructor">
     <xs:sequence>
+      <xs:element name="documentation" minOccurs="0" maxOccurs="1" type="TDocumentation"/>
       <xs:element name="argument" minOccurs="0" maxOccurs="unbounded" type="TArgument"/>
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required"/>
@@ -114,6 +120,9 @@
     </xs:complexContent>
   </xs:complexType>
   <xs:complexType name="TArgument">
+    <xs:sequence>
+      <xs:element name="documentation" minOccurs="0" maxOccurs="1" type="TGenericDocumentation"/>
+    </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required"/>
     <xs:attribute name="type" type="xs:string" use="required"/>
   </xs:complexType>
@@ -143,5 +152,26 @@
   </xs:complexType>
   <xs:complexType name="TPropertyGetConst">
     <xs:attribute name="value" type="xs:boolean" use="optional" default="true"/>
+  </xs:complexType>
+  <xs:complexType name="TReference" mixed="true"/>
+  <xs:complexType name="TGenericDocumentation" mixed="true">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="reference" type="TReference"/>
+        <xs:element name="see_also" type="TGenericDocumentation"/>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TDocumentation">
+    <xs:complexContent>
+      <xs:extension base="TGenericDocumentation">
+        <xs:sequence>
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="brief" type="TGenericDocumentation"/>
+            <xs:element name="returns" type="TGenericDocumentation"/>
+          </xs:choice>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
 </xs:schema>

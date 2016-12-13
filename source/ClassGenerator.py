@@ -33,6 +33,7 @@ from ArgumentGenerator import ClassTypeGenerator, ArgumentGenerator
 from CustomerCallbacks import generate_callbacks_on_client_side_definitions
 from CustomerCallbacks import generate_callbacks_on_client_side_declarations
 from LibraryCallbacks import generate_callbacks_on_library_side
+from DoxygenCpp import DoxygenCppGenerator
 from Helpers import get_c_name, get_template_name, replace_template_to_filename, get_template_tail
 from Helpers import if_required_then_add_empty_line, format_type, include_headers
 
@@ -179,12 +180,16 @@ class ClassGenerator(object):
 
     def __generate_constructor_declarations(self, declaration_header):
         for constructor_generator in self.constructor_generators:
+            DoxygenCppGenerator().generate_for_routine(
+                declaration_header, constructor_generator.constructor_object, constructor_generator)
             declaration_header.put_line('{constructor_declaration};'.format(
                 constructor_declaration=constructor_generator.wrap_declaration()))
             constructor_generator.include_dependent_declaration_headers(declaration_header, self.file_cache)
 
     def __generate_method_declarations(self, declaration_header):
         for method_generator in self.method_generators:
+            DoxygenCppGenerator().generate_for_routine(
+                declaration_header, method_generator.method_object, method_generator)
             declaration_header.put_line('{method_declaration};'.format(
                 method_declaration=method_generator.wrap_declaration(self.capi_generator)))
             method_generator.include_dependent_declaration_headers(declaration_header, self.file_cache)
@@ -255,9 +260,10 @@ class ClassGenerator(object):
             declaration_header.put_line(previous_ns.one_line_namespace_end)
 
     def __generate_class_declaration(self, declaration_header: FileGenerator):
+        DoxygenCppGenerator().generate_for_class(declaration_header, self.class_object)
         put_template_line(declaration_header, self.class_object)
         if self.base_class_generator:
-            declaration_header.put_line('class {name}: public {base_class}'.format(
+            declaration_header.put_line('class {name} : public {base_class}'.format(
                 name=self.wrap_name,
                 base_class=self.base_class_generator.full_wrap_name))
             declaration_header.include_user_header(

@@ -55,6 +55,7 @@ class TLifecycle(Enum):
 
 class TBeautifulCapiRoot(object):
     def __init__(self):
+        self.all_items = []
         self.project_name = ""
         self.project_name_filled = False
         self.major_version = 1
@@ -64,12 +65,14 @@ class TBeautifulCapiRoot(object):
         self.patch_version = 0
         self.patch_version_filled = False
         self.namespaces = []
-    
-    def load(self, dom_node):
-        for element in [node for node in dom_node.childNodes if node.nodeName == "namespace"]:
+
+    def load_element(self, element):
+        if element.nodeName == "namespace":
             new_element = TNamespace()
             new_element.load(element)
             self.namespaces.append(new_element)
+
+    def load_attributes(self, dom_node):
         if dom_node.hasAttribute("project_name"):
             cur_attr = dom_node.getAttribute("project_name")
             self.project_name = cur_attr
@@ -86,22 +89,37 @@ class TBeautifulCapiRoot(object):
             cur_attr = dom_node.getAttribute("patch_version")
             self.patch_version = string_to_int(cur_attr)
             self.patch_version_filled = True
-    
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
 
 class TApiInclude(object):
     def __init__(self):
+        self.all_items = []
         self.path = ""
         self.path_filled = False
-    
-    def load(self, dom_node):
+
+    def load_element(self, element):
+        pass
+
+    def load_attributes(self, dom_node):
         if dom_node.hasAttribute("path"):
             cur_attr = dom_node.getAttribute("path")
             self.path = cur_attr
             self.path_filled = True
-    
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
 
 class TNamespace(object):
     def __init__(self):
+        self.all_items = []
         self.name = ""
         self.name_filled = False
         self.implementation_header = ""
@@ -116,48 +134,50 @@ class TNamespace(object):
         self.property_set_prefixes = []
         self.property_get_prefixes = []
         self.property_get_consts = []
-    
-    def load(self, dom_node):
-        for element in [node for node in dom_node.childNodes if node.nodeName == "include"]:
+
+    def load_element(self, element):
+        if element.nodeName == "include":
             new_element = TApiInclude()
             new_element.load(element)
             self.includes.append(new_element)
-        for element in [node for node in dom_node.childNodes if node.nodeName == "namespace"]:
+        if element.nodeName == "namespace":
             new_element = TNamespace()
             new_element.load(element)
             self.namespaces.append(new_element)
-        for element in [node for node in dom_node.childNodes if node.nodeName == "include_header"]:
+        if element.nodeName == "include_header":
             new_element = THeaderInclude()
             new_element.load(element)
             self.include_headers.append(new_element)
-        for element in [node for node in dom_node.childNodes if node.nodeName == "enumeration"]:
+        if element.nodeName == "enumeration":
             new_element = TEnumeration()
             new_element.load(element)
             self.enumerations.append(new_element)
-        for element in [node for node in dom_node.childNodes if node.nodeName == "class"]:
+        if element.nodeName == "class":
             new_element = TClass()
             new_element.load(element)
             self.classes.append(new_element)
-        for element in [node for node in dom_node.childNodes if node.nodeName == "function"]:
+        if element.nodeName == "function":
             new_element = TFunction()
             new_element.load(element)
             self.functions.append(new_element)
-        for element in [node for node in dom_node.childNodes if node.nodeName == "template"]:
+        if element.nodeName == "template":
             new_element = TTemplate()
             new_element.load(element)
             self.templates.append(new_element)
-        for element in [node for node in dom_node.childNodes if node.nodeName == "property_set_prefix"]:
+        if element.nodeName == "property_set_prefix":
             new_element = TPropertySetPrefix()
             new_element.load(element)
             self.property_set_prefixes.append(new_element)
-        for element in [node for node in dom_node.childNodes if node.nodeName == "property_get_prefix"]:
+        if element.nodeName == "property_get_prefix":
             new_element = TPropertyGetPrefix()
             new_element.load(element)
             self.property_get_prefixes.append(new_element)
-        for element in [node for node in dom_node.childNodes if node.nodeName == "property_get_const"]:
+        if element.nodeName == "property_get_const":
             new_element = TPropertyGetConst()
             new_element.load(element)
             self.property_get_consts.append(new_element)
+
+    def load_attributes(self, dom_node):
         if dom_node.hasAttribute("name"):
             cur_attr = dom_node.getAttribute("name")
             self.name = cur_attr
@@ -166,16 +186,29 @@ class TNamespace(object):
             cur_attr = dom_node.getAttribute("implementation_header")
             self.implementation_header = cur_attr
             self.implementation_header_filled = True
-    
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
 
 class TEnumerationItem(object):
     def __init__(self):
+        self.all_items = []
         self.name = ""
         self.name_filled = False
         self.value = ""
         self.value_filled = False
-    
-    def load(self, dom_node):
+        self.documentations = []
+
+    def load_element(self, element):
+        if element.nodeName == "documentation":
+            new_element = TGenericDocumentation()
+            new_element.load(element)
+            self.documentations.append(new_element)
+
+    def load_attributes(self, dom_node):
         if dom_node.hasAttribute("name"):
             cur_attr = dom_node.getAttribute("name")
             self.name = cur_attr
@@ -184,21 +217,34 @@ class TEnumerationItem(object):
             cur_attr = dom_node.getAttribute("value")
             self.value = cur_attr
             self.value_filled = True
-    
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
 
 class TEnumeration(object):
     def __init__(self):
+        self.all_items = []
         self.name = ""
         self.name_filled = False
         self.underlying_type = ""
         self.underlying_type_filled = False
+        self.documentations = []
         self.items = []
-    
-    def load(self, dom_node):
-        for element in [node for node in dom_node.childNodes if node.nodeName == "item"]:
+
+    def load_element(self, element):
+        if element.nodeName == "documentation":
+            new_element = TDocumentation()
+            new_element.load(element)
+            self.documentations.append(new_element)
+        if element.nodeName == "item":
             new_element = TEnumerationItem()
             new_element.load(element)
             self.items.append(new_element)
+
+    def load_attributes(self, dom_node):
         if dom_node.hasAttribute("name"):
             cur_attr = dom_node.getAttribute("name")
             self.name = cur_attr
@@ -207,54 +253,80 @@ class TEnumeration(object):
             cur_attr = dom_node.getAttribute("underlying_type")
             self.underlying_type = cur_attr
             self.underlying_type_filled = True
-    
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
 
 class TTemplate(object):
     def __init__(self):
+        self.all_items = []
         self.arguments = []
         self.instantiations = []
         self.classes = []
-    
-    def load(self, dom_node):
-        for element in [node for node in dom_node.childNodes if node.nodeName == "argument"]:
+
+    def load_element(self, element):
+        if element.nodeName == "argument":
             new_element = TArgument()
             new_element.load(element)
             self.arguments.append(new_element)
-        for element in [node for node in dom_node.childNodes if node.nodeName == "instantiation"]:
+        if element.nodeName == "instantiation":
             new_element = TInstantiation()
             new_element.load(element)
             self.instantiations.append(new_element)
-        for element in [node for node in dom_node.childNodes if node.nodeName == "class"]:
+        if element.nodeName == "class":
             new_element = TClass()
             new_element.load(element)
             self.classes.append(new_element)
-    
+
+    def load_attributes(self, dom_node):
+        pass
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
 
 class TInstantiation(object):
     def __init__(self):
+        self.all_items = []
         self.typedef_name = ""
         self.typedef_name_filled = False
         self.arguments = []
-    
-    def load(self, dom_node):
-        for element in [node for node in dom_node.childNodes if node.nodeName == "argument"]:
+
+    def load_element(self, element):
+        if element.nodeName == "argument":
             new_element = TInstantiationArgument()
             new_element.load(element)
             self.arguments.append(new_element)
+
+    def load_attributes(self, dom_node):
         if dom_node.hasAttribute("typedef_name"):
             cur_attr = dom_node.getAttribute("typedef_name")
             self.typedef_name = cur_attr
             self.typedef_name_filled = True
-    
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
 
 class TInstantiationArgument(object):
     def __init__(self):
+        self.all_items = []
         self.name = ""
         self.name_filled = False
         self.value = ""
         self.value_filled = False
-    
-    def load(self, dom_node):
+
+    def load_element(self, element):
+        pass
+
+    def load_attributes(self, dom_node):
         if dom_node.hasAttribute("name"):
             cur_attr = dom_node.getAttribute("name")
             self.name = cur_attr
@@ -263,10 +335,16 @@ class TInstantiationArgument(object):
             cur_attr = dom_node.getAttribute("value")
             self.value = cur_attr
             self.value_filled = True
-    
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
 
 class TClass(object):
     def __init__(self):
+        self.all_items = []
         self.name = ""
         self.name_filled = False
         self.base = ""
@@ -293,38 +371,45 @@ class TClass(object):
         self.copy_or_add_ref_noexcept_filled = False
         self.delete_or_release_noexcept = True
         self.delete_or_release_noexcept_filled = False
+        self.documentations = []
         self.include_headers = []
         self.enumerations = []
         self.constructors = []
         self.properties = []
         self.methods = []
         self.callbacks = []
-    
-    def load(self, dom_node):
-        for element in [node for node in dom_node.childNodes if node.nodeName == "include_header"]:
+
+    def load_element(self, element):
+        if element.nodeName == "documentation":
+            new_element = TDocumentation()
+            new_element.load(element)
+            self.documentations.append(new_element)
+        if element.nodeName == "include_header":
             new_element = THeaderInclude()
             new_element.load(element)
             self.include_headers.append(new_element)
-        for element in [node for node in dom_node.childNodes if node.nodeName == "enumeration"]:
+        if element.nodeName == "enumeration":
             new_element = TEnumeration()
             new_element.load(element)
             self.enumerations.append(new_element)
-        for element in [node for node in dom_node.childNodes if node.nodeName == "constructor"]:
+        if element.nodeName == "constructor":
             new_element = TConstructor()
             new_element.load(element)
             self.constructors.append(new_element)
-        for element in [node for node in dom_node.childNodes if node.nodeName == "property"]:
+        if element.nodeName == "property":
             new_element = TProperty()
             new_element.load(element)
             self.properties.append(new_element)
-        for element in [node for node in dom_node.childNodes if node.nodeName == "method"]:
+        if element.nodeName == "method":
             new_element = TMethod()
             new_element.load(element)
             self.methods.append(new_element)
-        for element in [node for node in dom_node.childNodes if node.nodeName == "callback"]:
+        if element.nodeName == "callback":
             new_element = TCallback()
             new_element.load(element)
             self.callbacks.append(new_element)
+
+    def load_attributes(self, dom_node):
         if dom_node.hasAttribute("name"):
             cur_attr = dom_node.getAttribute("name")
             self.name = cur_attr
@@ -377,10 +462,16 @@ class TClass(object):
             cur_attr = dom_node.getAttribute("delete_or_release_noexcept")
             self.delete_or_release_noexcept = string_to_bool(cur_attr)
             self.delete_or_release_noexcept_filled = True
-    
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
 
 class TCallback(object):
     def __init__(self):
+        self.all_items = []
         self.lifecycle = TLifecycle.reference_counted
         self.lifecycle_filled = False
         self.copy_or_add_ref_noexcept = False
@@ -391,8 +482,11 @@ class TCallback(object):
         self.implementation_class_name_filled = False
         self.implementation_class_header = ""
         self.implementation_class_header_filled = False
-    
-    def load(self, dom_node):
+
+    def load_element(self, element):
+        pass
+
+    def load_attributes(self, dom_node):
         if dom_node.hasAttribute("lifecycle"):
             cur_attr = dom_node.getAttribute("lifecycle")
             self.lifecycle = TLifecycle.load(cur_attr)
@@ -413,23 +507,36 @@ class TCallback(object):
             cur_attr = dom_node.getAttribute("implementation_class_header")
             self.implementation_class_header = cur_attr
             self.implementation_class_header_filled = True
-    
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
 
 class TConstructor(object):
     def __init__(self):
+        self.all_items = []
         self.name = ""
         self.name_filled = False
         self.return_copy_or_add_ref = False
         self.return_copy_or_add_ref_filled = False
         self.noexcept = False
         self.noexcept_filled = False
+        self.documentations = []
         self.arguments = []
-    
-    def load(self, dom_node):
-        for element in [node for node in dom_node.childNodes if node.nodeName == "argument"]:
+
+    def load_element(self, element):
+        if element.nodeName == "documentation":
+            new_element = TDocumentation()
+            new_element.load(element)
+            self.documentations.append(new_element)
+        if element.nodeName == "argument":
             new_element = TArgument()
             new_element.load(element)
             self.arguments.append(new_element)
+
+    def load_attributes(self, dom_node):
         if dom_node.hasAttribute("name"):
             cur_attr = dom_node.getAttribute("name")
             self.name = cur_attr
@@ -442,7 +549,12 @@ class TConstructor(object):
             cur_attr = dom_node.getAttribute("noexcept")
             self.noexcept = string_to_bool(cur_attr)
             self.noexcept_filled = True
-    
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
 
 class TMethod(TConstructor):
     def __init__(self):
@@ -451,9 +563,12 @@ class TMethod(TConstructor):
         self.return_type_filled = False
         self.const = False
         self.const_filled = False
-    
-    def load(self, dom_node):
-        super().load(dom_node)
+
+    def load_element(self, element):
+        super().load_element(element)
+
+    def load_attributes(self, dom_node):
+        super().load_attributes(dom_node)
         if dom_node.hasAttribute("return"):
             cur_attr = dom_node.getAttribute("return")
             self.return_type = cur_attr
@@ -462,7 +577,12 @@ class TMethod(TConstructor):
             cur_attr = dom_node.getAttribute("const")
             self.const = string_to_bool(cur_attr)
             self.const_filled = True
-    
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
 
 class TFunction(TMethod):
     def __init__(self):
@@ -471,9 +591,12 @@ class TFunction(TMethod):
         self.implementation_name_filled = False
         self.implementation_header = ""
         self.implementation_header_filled = False
-    
-    def load(self, dom_node):
-        super().load(dom_node)
+
+    def load_element(self, element):
+        super().load_element(element)
+
+    def load_attributes(self, dom_node):
+        super().load_attributes(dom_node)
         if dom_node.hasAttribute("implementation_name"):
             cur_attr = dom_node.getAttribute("implementation_name")
             self.implementation_name = cur_attr
@@ -482,16 +605,29 @@ class TFunction(TMethod):
             cur_attr = dom_node.getAttribute("implementation_header")
             self.implementation_header = cur_attr
             self.implementation_header_filled = True
-    
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
 
 class TArgument(object):
     def __init__(self):
+        self.all_items = []
         self.name = ""
         self.name_filled = False
         self.type_name = ""
         self.type_name_filled = False
-    
-    def load(self, dom_node):
+        self.documentations = []
+
+    def load_element(self, element):
+        if element.nodeName == "documentation":
+            new_element = TGenericDocumentation()
+            new_element.load(element)
+            self.documentations.append(new_element)
+
+    def load_attributes(self, dom_node):
         if dom_node.hasAttribute("name"):
             cur_attr = dom_node.getAttribute("name")
             self.name = cur_attr
@@ -500,16 +636,25 @@ class TArgument(object):
             cur_attr = dom_node.getAttribute("type")
             self.type_name = cur_attr
             self.type_name_filled = True
-    
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
 
 class THeaderInclude(object):
     def __init__(self):
+        self.all_items = []
         self.file = ""
         self.file_filled = False
         self.system = False
         self.system_filled = False
-    
-    def load(self, dom_node):
+
+    def load_element(self, element):
+        pass
+
+    def load_attributes(self, dom_node):
         if dom_node.hasAttribute("file"):
             cur_attr = dom_node.getAttribute("file")
             self.file = cur_attr
@@ -518,10 +663,16 @@ class THeaderInclude(object):
             cur_attr = dom_node.getAttribute("system")
             self.system = string_to_bool(cur_attr)
             self.system_filled = True
-    
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
 
 class TProperty(object):
     def __init__(self):
+        self.all_items = []
         self.name = ""
         self.name_filled = False
         self.type_name = ""
@@ -532,8 +683,11 @@ class TProperty(object):
         self.get_prefix_filled = False
         self.get_const = True
         self.get_const_filled = False
-    
-    def load(self, dom_node):
+
+    def load_element(self, element):
+        pass
+
+    def load_attributes(self, dom_node):
         if dom_node.hasAttribute("name"):
             cur_attr = dom_node.getAttribute("name")
             self.name = cur_attr
@@ -554,43 +708,161 @@ class TProperty(object):
             cur_attr = dom_node.getAttribute("get_const")
             self.get_const = string_to_bool(cur_attr)
             self.get_const_filled = True
-    
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
 
 class TPropertySetPrefix(object):
     def __init__(self):
+        self.all_items = []
         self.value = "Set"
         self.value_filled = False
-    
-    def load(self, dom_node):
+
+    def load_element(self, element):
+        pass
+
+    def load_attributes(self, dom_node):
         if dom_node.hasAttribute("value"):
             cur_attr = dom_node.getAttribute("value")
             self.value = cur_attr
             self.value_filled = True
-    
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
 
 class TPropertyGetPrefix(object):
     def __init__(self):
+        self.all_items = []
         self.value = "Get"
         self.value_filled = False
-    
-    def load(self, dom_node):
+
+    def load_element(self, element):
+        pass
+
+    def load_attributes(self, dom_node):
         if dom_node.hasAttribute("value"):
             cur_attr = dom_node.getAttribute("value")
             self.value = cur_attr
             self.value_filled = True
-    
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
 
 class TPropertyGetConst(object):
     def __init__(self):
+        self.all_items = []
         self.value = True
         self.value_filled = False
-    
-    def load(self, dom_node):
+
+    def load_element(self, element):
+        pass
+
+    def load_attributes(self, dom_node):
         if dom_node.hasAttribute("value"):
             cur_attr = dom_node.getAttribute("value")
             self.value = string_to_bool(cur_attr)
             self.value_filled = True
-    
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
+
+class TReference(object):
+    def __init__(self):
+        self.all_items = []
+
+    def load_element(self, element):
+        if element.nodeType == element.TEXT_NODE:
+            cur_texts = [text.strip() for text in element.data.split('\n')]
+            first = True
+            for text in cur_texts:
+                if first and self.all_items and type(self.all_items[-1]) is str:
+                    self.all_items[-1] += text
+                else:
+                    self.all_items.append(text)
+                first = False
+
+    def load_attributes(self, dom_node):
+        pass
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
+
+class TGenericDocumentation(object):
+    def __init__(self):
+        self.all_items = []
+        self.references = []
+        self.see_alsos = []
+
+    def load_element(self, element):
+        if element.nodeName == "reference":
+            new_element = TReference()
+            new_element.load(element)
+            self.references.append(new_element)
+            self.all_items.append(new_element)
+        if element.nodeName == "see_also":
+            new_element = TGenericDocumentation()
+            new_element.load(element)
+            self.see_alsos.append(new_element)
+            self.all_items.append(new_element)
+        if element.nodeType == element.TEXT_NODE:
+            cur_texts = [text.strip() for text in element.data.split('\n')]
+            first = True
+            for text in cur_texts:
+                if first and self.all_items and type(self.all_items[-1]) is str:
+                    self.all_items[-1] += text
+                else:
+                    self.all_items.append(text)
+                first = False
+
+    def load_attributes(self, dom_node):
+        pass
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
+
+class TDocumentation(TGenericDocumentation):
+    def __init__(self):
+        super().__init__()
+        self.briefs = []
+        self.returns = []
+
+    def load_element(self, element):
+        super().load_element(element)
+        if element.nodeName == "brief":
+            new_element = TGenericDocumentation()
+            new_element.load(element)
+            self.briefs.append(new_element)
+        if element.nodeName == "returns":
+            new_element = TGenericDocumentation()
+            new_element.load(element)
+            self.returns.append(new_element)
+
+    def load_attributes(self, dom_node):
+        super().load_attributes(dom_node)
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
 
 def load(dom_node):
     for root_element in [root for root in dom_node.childNodes if root.localName == "api"]:

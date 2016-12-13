@@ -26,6 +26,7 @@ from Helpers import get_c_name, include_headers
 from FileGenerator import FileGenerator, WatchdogScope, IfDefScope, IndentScope
 from CapiGenerator import CapiGenerator
 from FileCache import FileCache
+from DoxygenCpp import DoxygenCppGenerator
 
 
 class NamespaceGenerator(object):
@@ -103,6 +104,8 @@ class NamespaceGenerator(object):
                 namespace_header.put_line(self.one_line_namespace_begin)
                 namespace_header.put_line('')
                 for function_generator in self.functions:
+                    DoxygenCppGenerator().generate_for_routine(
+                        namespace_header, function_generator.function_object, function_generator)
                     function_generator.generate_wrap_definition(namespace_header, capi_generator)
                     function_generator.generate_c_function(capi_generator)
                     function_generator.include_dependent_definition_headers(namespace_header, file_cache)

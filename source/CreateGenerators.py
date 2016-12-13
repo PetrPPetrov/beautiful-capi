@@ -21,6 +21,7 @@
 
 
 from Parser import TClass, TEnumeration, TNamespace, TArgument, TBeautifulCapiRoot
+from Parser import TGenericDocumentation, TDocumentation, TReference
 from ParamsParser import TBeautifulCapiParams
 from NamespaceGenerator import NamespaceGenerator
 from TemplateGenerator import TemplateGenerator
@@ -28,20 +29,22 @@ from ClassGenerator import ClassGenerator
 from MethodGenerator import MethodGenerator, FunctionGenerator, ConstructorGenerator
 from ArgumentGenerator import ClassTypeGenerator, BuiltinTypeGenerator, EnumTypeGenerator, ArgumentGenerator
 from EnumGenerator import EnumGenerator
-from Helpers import BeautifulCapiException, get_template_name, get_template_tail
+from DocumentationGenerator import ReferenceGenerator
+from Helpers import BeautifulCapiException
 from Helpers import get_template_arguments_count, get_template_argument, replace_template_argument
 
 
 class GeneratorCreator(object):
     def __init__(self, params: TBeautifulCapiParams):
-        self.full_name_2_generator = {}
+        self.full_name_2_type_generator = {}
+        self.full_name_2_routine_generator = {}
         self.cur_namespace_generator = None
         self.params = params
         self.cur_exception_code = 1
 
     def __register_class_or_namespace_generator(
             self, generator: ClassGenerator or NamespaceGenerator or EnumGenerator):
-        self.full_name_2_generator.update({generator.full_name.replace(' ', ''): generator})
+        self.full_name_2_type_generator.update({generator.full_name.replace(' ', ''): generator})
 
     def __create_enum_generator(self, cur_enum: TEnumeration, parent_generator) -> EnumGenerator:
         new_enum_generator = EnumGenerator(cur_enum, parent_generator)
@@ -57,9 +60,11 @@ class GeneratorCreator(object):
         for constructor in cur_class.constructors:
             new_constructor_generator = ConstructorGenerator(constructor, new_class_generator, self.params)
             new_class_generator.constructor_generators.append(new_constructor_generator)
+            self.full_name_2_routine_generator.update({new_constructor_generator.full_name: new_constructor_generator})
         for method in cur_class.methods:
             new_method_generator = MethodGenerator(method, new_class_generator, self.params)
             new_class_generator.method_generators.append(new_method_generator)
+            self.full_name_2_routine_generator.update({new_method_generator.full_name: new_method_generator})
         return new_class_generator
 
     def create_namespace_generator(self, namespace: TNamespace) -> NamespaceGenerator:
@@ -80,15 +85,16 @@ class GeneratorCreator(object):
         for cur_class in namespace.classes:
             new_namespace_generator.classes.append(self.__create_class_generator(cur_class))
         for cur_function in namespace.functions:
-            new_namespace_generator.functions.append(
-                FunctionGenerator(cur_function, new_namespace_generator, self.params))
+            new_function_generator = FunctionGenerator(cur_function, new_namespace_generator, self.params)
+            new_namespace_generator.functions.append(new_function_generator)
+            self.full_name_2_routine_generator.update({new_function_generator.full_name: new_function_generator})
         self.cur_namespace_generator = previous_namespace_generator
         return new_namespace_generator
 
     def __create_type_generator(
             self, type_name: str) -> ClassTypeGenerator or EnumTypeGenerator or BuiltinTypeGenerator:
-        if type_name.replace(' ', '') in self.full_name_2_generator:
-            type_generator = self.full_name_2_generator[type_name.replace(' ', '')]
+        if type_name.replace(' ', '') in self.full_name_2_type_generator:
+            type_generator = self.full_name_2_type_generator[type_name.replace(' ', '')]
             if type(type_generator) is ClassGenerator:
                 return ClassTypeGenerator(type_generator)
             elif type(type_generator) is EnumGenerator:
@@ -98,24 +104,61 @@ class GeneratorCreator(object):
         else:
             return BuiltinTypeGenerator(type_name)
 
+    def __get_generator(self, type_name: str) -> object:
+        type_name_without_spaces = type_name.replace(' ', '')
+        if type_name_without_spaces in self.full_name_2_routine_generator:
+            return self.full_name_2_routine_generator[type_name_without_spaces]
+        elif type_name_without_spaces in self.full_name_2_type_generator:
+            return self.full_name_2_type_generator[type_name_without_spaces]
+        raise BeautifulCapiException('reference could not be bound')
+
+    def __bind_documentation_references_impl(self, documentation: TGenericDocumentation):
+        for i in range(len(documentation.all_items)):
+            doc_item = documentation.all_items[i]
+            if type(doc_item) is TReference:
+                reference_as_text = ''.join(doc_item.all_items)
+                new_reference_to_replace = ReferenceGenerator()
+                new_reference_to_replace.referenced_generator = self.__get_generator(reference_as_text)
+                documentation.all_items[i] = new_reference_to_replace
+            elif type(doc_item) is TGenericDocumentation:
+                self.__bind_documentation_references(doc_item)
+
+    def __bind_documentation_references(self, documentation):
+        if issubclass(type(documentation), TDocumentation):
+            for brief in documentation.briefs:
+                self.__bind_documentation_references_impl(brief)
+            for doc_return in documentation.returns:
+                self.__bind_documentation_references_impl(doc_return)
+        self.__bind_documentation_references_impl(documentation)
+
+    def __bind_documentation(self, some_object):
+        for documentation in some_object.documentations:
+            self.__bind_documentation_references(documentation)
+
     def __create_argument_generator(self, argument: TArgument) -> ArgumentGenerator:
-        return ArgumentGenerator(self.__create_type_generator(argument.type_name), argument.name)
+        new_argument_generator = ArgumentGenerator(self.__create_type_generator(argument.type_name), argument.name)
+        new_argument_generator.argument_object = argument
+        self.__bind_documentation(new_argument_generator.argument_object)
+        return new_argument_generator
 
     def __bind_constructor(self, constructor_generator: ConstructorGenerator):
         for argument in constructor_generator.constructor_object.arguments:
             constructor_generator.argument_generators.append(self.__create_argument_generator(argument))
+        self.__bind_documentation(constructor_generator.constructor_object)
 
     def __bind_method(self, method_generator: MethodGenerator):
         for argument in method_generator.method_object.arguments:
             method_generator.argument_generators.append(self.__create_argument_generator(argument))
         method_generator.return_type_generator = self.__create_type_generator(
             method_generator.method_object.return_type)
+        self.__bind_documentation(method_generator.method_object)
 
     def __bind_function(self, function_generator: FunctionGenerator):
         for argument in function_generator.function_object.arguments:
             function_generator.argument_generators.append(self.__create_argument_generator(argument))
         function_generator.return_type_generator = self.__create_type_generator(
             function_generator.function_object.return_type)
+        self.__bind_documentation(function_generator.function_object)
 
     def __replace_template_implementation_class(self, class_generator):
         implementation_class_name = class_generator.class_object.implementation_class_name
@@ -123,8 +166,8 @@ class GeneratorCreator(object):
         for index in range(template_arguments_count):
             original_template_argument = get_template_argument(implementation_class_name, index)
             original_template_argument_for_search = original_template_argument.replace(' ', '')
-            if original_template_argument_for_search in self.full_name_2_generator:
-                argument_generator = self.full_name_2_generator[original_template_argument_for_search]
+            if original_template_argument_for_search in self.full_name_2_type_generator:
+                argument_generator = self.full_name_2_type_generator[original_template_argument_for_search]
                 if type(argument_generator) is ClassGenerator:
                     self.__replace_template_implementation_class(argument_generator)
                 implementation_class_name = replace_template_argument(
@@ -134,10 +177,10 @@ class GeneratorCreator(object):
     def __bind_class(self, class_generator: ClassGenerator):
         if class_generator.class_object.base:
             base_class_str = class_generator.class_object.base.replace(' ', '')
-            if base_class_str not in self.full_name_2_generator:
+            if base_class_str not in self.full_name_2_type_generator:
                 raise BeautifulCapiException(
                     'base class {0} is not found'.format(class_generator.class_object.base))
-            class_generator.base_class_generator = self.full_name_2_generator[base_class_str]
+            class_generator.base_class_generator = self.full_name_2_type_generator[base_class_str]
             class_generator.base_class_generator.derived_class_generators.append(class_generator)
         if class_generator.class_object.exception:
             class_generator.exception_code = self.cur_exception_code
@@ -150,6 +193,11 @@ class GeneratorCreator(object):
             self.__bind_constructor(constructor_generator)
         for method_generator in class_generator.method_generators:
             self.__bind_method(method_generator)
+        self.__bind_documentation(class_generator.class_object)
+        for enum_generator in class_generator.enum_generators:
+            self.__bind_documentation(enum_generator.enum_object)
+            for item in enum_generator.enum_object.items:
+                self.__bind_documentation(item)
         self.__replace_template_implementation_class(class_generator)
 
     def __bind_namespace(self, namespace_generator: NamespaceGenerator):

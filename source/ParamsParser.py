@@ -128,7 +128,7 @@ class TBeautifulCapiParams(object):
         self.copyright_header_filled = False
         self.automatic_generated_warning = ""
         self.automatic_generated_warning_filled = False
-    
+
     def load(self, dom_node):
         for element in [node for node in dom_node.childNodes if node.nodeName == "copyright_header"]:
             for text in [text for text in element.childNodes if text.nodeType == text.TEXT_NODE]:
@@ -280,7 +280,7 @@ class TBeautifulCapiParams(object):
             cur_attr = dom_node.getAttribute("shared_library_name")
             self.shared_library_name = cur_attr
             self.shared_library_name_filled = True
-    
+
 
 def load(dom_node):
     for root_element in [root for root in dom_node.childNodes if root.localName == "params"]:
