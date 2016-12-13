@@ -40,7 +40,7 @@ public:
     inline Data();
     inline int GetData();
     inline void SetData(int value);
-    
+
     inline Data(const Data& other);
     #ifdef SAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
     inline Data(Data&& other);

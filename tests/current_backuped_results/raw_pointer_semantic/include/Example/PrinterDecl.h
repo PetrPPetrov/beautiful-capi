@@ -39,7 +39,7 @@ class PrinterRawPtr
 public:
     inline PrinterRawPtr();
     inline void Show(const char* text);
-    
+
     inline PrinterRawPtr(const PrinterRawPtr& other);
     #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
     inline PrinterRawPtr(PrinterRawPtr&& other);

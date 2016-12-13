@@ -35,11 +35,11 @@
 
 namespace Exception {
 
-class DivisionByZero: public Exception::Generic
+class DivisionByZero : public Exception::Generic
 {
 public:
     inline DivisionByZero();
-    
+
     inline DivisionByZero(const DivisionByZero& other);
     #ifdef EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES
     inline DivisionByZero(DivisionByZero&& other);

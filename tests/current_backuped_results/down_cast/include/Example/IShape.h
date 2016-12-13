@@ -33,7 +33,7 @@
 
 inline void Example::IShapePtr::Show() const
 {
-    example_i_shape_show(GetRawPointer());
+    example_ishape_show(GetRawPointer());
 }
 
 inline Example::IShapePtr::IShapePtr(const IShapePtr& other)
@@ -41,7 +41,7 @@ inline Example::IShapePtr::IShapePtr(const IShapePtr& other)
     SetObject(other.GetRawPointer());
     if (other.GetRawPointer())
     {
-        example_i_shape_add_ref(other.GetRawPointer());
+        example_ishape_add_ref(other.GetRawPointer());
     }
 }
 
@@ -58,7 +58,7 @@ inline Example::IShapePtr::IShapePtr(Example::IShapePtr::ECreateFromRawPointer, 
     SetObject(object_pointer);
     if (add_ref_object && object_pointer)
     {
-        example_i_shape_add_ref(object_pointer);
+        example_ishape_add_ref(object_pointer);
     }
 }
 
@@ -66,7 +66,7 @@ inline Example::IShapePtr::~IShapePtr()
 {
     if (GetRawPointer())
     {
-        example_i_shape_release(GetRawPointer());
+        example_ishape_release(GetRawPointer());
         SetObject(0);
     }
 }
@@ -77,13 +77,13 @@ inline Example::IShapePtr& Example::IShapePtr::operator=(const Example::IShapePt
     {
         if (GetRawPointer())
         {
-            example_i_shape_release(GetRawPointer());
+            example_ishape_release(GetRawPointer());
             SetObject(0);
         }
         SetObject(other.GetRawPointer());
         if (other.GetRawPointer())
         {
-            example_i_shape_add_ref(other.GetRawPointer());
+            example_ishape_add_ref(other.GetRawPointer());
         }
     }
     return *this;
@@ -96,7 +96,7 @@ inline Example::IShapePtr& Example::IShapePtr::operator=(Example::IShapePtr&& ot
     {
         if (GetRawPointer())
         {
-            example_i_shape_release(GetRawPointer());
+            example_ishape_release(GetRawPointer());
             SetObject(0);
         }
         mObject = other.mObject;

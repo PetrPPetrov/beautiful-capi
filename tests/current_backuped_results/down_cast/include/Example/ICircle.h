@@ -34,7 +34,7 @@
 
 inline void Example::ICirclePtr::SetRadius(double radius)
 {
-    example_i_circle_set_radius(GetRawPointer(), radius);
+    example_icircle_set_radius(GetRawPointer(), radius);
 }
 
 inline Example::ICirclePtr::ICirclePtr(const ICirclePtr& other) : Example::IShapePtr(Example::IShapePtr::force_creating_from_raw_pointer, 0, false)
@@ -42,7 +42,7 @@ inline Example::ICirclePtr::ICirclePtr(const ICirclePtr& other) : Example::IShap
     SetObject(other.GetRawPointer());
     if (other.GetRawPointer())
     {
-        example_i_circle_add_ref(other.GetRawPointer());
+        example_icircle_add_ref(other.GetRawPointer());
     }
 }
 
@@ -59,7 +59,7 @@ inline Example::ICirclePtr::ICirclePtr(Example::ICirclePtr::ECreateFromRawPointe
     SetObject(object_pointer);
     if (add_ref_object && object_pointer)
     {
-        example_i_circle_add_ref(object_pointer);
+        example_icircle_add_ref(object_pointer);
     }
 }
 
@@ -67,7 +67,7 @@ inline Example::ICirclePtr::~ICirclePtr()
 {
     if (GetRawPointer())
     {
-        example_i_circle_release(GetRawPointer());
+        example_icircle_release(GetRawPointer());
         SetObject(0);
     }
 }
@@ -78,13 +78,13 @@ inline Example::ICirclePtr& Example::ICirclePtr::operator=(const Example::ICircl
     {
         if (GetRawPointer())
         {
-            example_i_circle_release(GetRawPointer());
+            example_icircle_release(GetRawPointer());
             SetObject(0);
         }
         SetObject(other.GetRawPointer());
         if (other.GetRawPointer())
         {
-            example_i_circle_add_ref(other.GetRawPointer());
+            example_icircle_add_ref(other.GetRawPointer());
         }
     }
     return *this;
@@ -97,7 +97,7 @@ inline Example::ICirclePtr& Example::ICirclePtr::operator=(Example::ICirclePtr&&
     {
         if (GetRawPointer())
         {
-            example_i_circle_release(GetRawPointer());
+            example_icircle_release(GetRawPointer());
             SetObject(0);
         }
         Example::IShapePtr::operator=(std::move(other));
@@ -155,7 +155,7 @@ inline void Example::ICirclePtr::SetObject(void* object_pointer)
     mObject = object_pointer;
     if (mObject)
     {
-        Example::IShapePtr::SetObject(example_i_circle_cast_to_base(mObject));
+        Example::IShapePtr::SetObject(example_icircle_cast_to_base(mObject));
     }
     else
     {
@@ -166,9 +166,9 @@ inline void Example::ICirclePtr::SetObject(void* object_pointer)
 namespace Example {
 
 template<>
-inline Example::ICirclePtr down_cast<Example::ICirclePtr>(const Example::IShapePtr& source_object)
+inline Example::ICirclePtr down_cast<Example::ICirclePtr >(const Example::IShapePtr& source_object)
 {
-    return Example::ICirclePtr(Example::ICirclePtr::force_creating_from_raw_pointer, example_i_shape_cast_to_example_i_circle(source_object.GetRawPointer()), true);
+    return Example::ICirclePtr(Example::ICirclePtr::force_creating_from_raw_pointer, example_ishape_cast_to_example_icircle(source_object.GetRawPointer()), true);
 }
 
 }

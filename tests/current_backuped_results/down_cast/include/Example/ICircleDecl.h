@@ -35,11 +35,11 @@
 
 namespace Example {
 
-class ICirclePtr: public Example::IShapePtr
+class ICirclePtr : public Example::IShapePtr
 {
 public:
     inline void SetRadius(double radius);
-    
+
     inline ICirclePtr(const ICirclePtr& other);
     #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
     inline ICirclePtr(ICirclePtr&& other);
@@ -69,7 +69,7 @@ protected:
 namespace Example {
 
 template<>
-inline Example::ICirclePtr down_cast<Example::ICirclePtr>(const Example::IShapePtr& source_object);
+inline Example::ICirclePtr down_cast<Example::ICirclePtr >(const Example::IShapePtr& source_object);
 
 }
 

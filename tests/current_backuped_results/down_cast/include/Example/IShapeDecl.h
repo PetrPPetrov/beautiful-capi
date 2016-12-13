@@ -38,7 +38,7 @@ class IShapePtr
 {
 public:
     inline void Show() const;
-    
+
     inline IShapePtr(const IShapePtr& other);
     #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
     inline IShapePtr(IShapePtr&& other);
@@ -62,6 +62,10 @@ protected:
     inline void SetObject(void* object_pointer);
     void* mObject;
 };
+
+}
+
+namespace Example {
 
 template<typename TargetType>
 inline TargetType down_cast(const Example::IShapePtr& source_object);

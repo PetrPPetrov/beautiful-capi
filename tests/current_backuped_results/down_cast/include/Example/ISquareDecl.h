@@ -35,11 +35,11 @@
 
 namespace Example {
 
-class ISquarePtr: public Example::IPolygonPtr
+class ISquarePtr : public Example::IPolygonPtr
 {
 public:
     inline void SetSize(double size);
-    
+
     inline ISquarePtr(const ISquarePtr& other);
     #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
     inline ISquarePtr(ISquarePtr&& other);
@@ -69,14 +69,9 @@ protected:
 namespace Example {
 
 template<>
-inline Example::ISquarePtr down_cast<Example::ISquarePtr>(const Example::IShapePtr& source_object);
-
-}
-
-namespace Example {
-
+inline Example::ISquarePtr down_cast<Example::ISquarePtr >(const Example::IShapePtr& source_object);
 template<>
-inline Example::ISquarePtr down_cast<Example::ISquarePtr>(const Example::IPolygonPtr& source_object);
+inline Example::ISquarePtr down_cast<Example::ISquarePtr >(const Example::IPolygonPtr& source_object);
 
 }
 

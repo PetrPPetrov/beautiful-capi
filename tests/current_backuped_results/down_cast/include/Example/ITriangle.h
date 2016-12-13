@@ -34,7 +34,7 @@
 
 inline void Example::ITrianglePtr::SetPoints(double x1, double y1, double x2, double y2, double x3, double y3)
 {
-    example_i_triangle_set_points(GetRawPointer(), x1, y1, x2, y2, x3, y3);
+    example_itriangle_set_points(GetRawPointer(), x1, y1, x2, y2, x3, y3);
 }
 
 inline Example::ITrianglePtr::ITrianglePtr(const ITrianglePtr& other) : Example::IPolygonPtr(Example::IPolygonPtr::force_creating_from_raw_pointer, 0, false)
@@ -42,7 +42,7 @@ inline Example::ITrianglePtr::ITrianglePtr(const ITrianglePtr& other) : Example:
     SetObject(other.GetRawPointer());
     if (other.GetRawPointer())
     {
-        example_i_triangle_add_ref(other.GetRawPointer());
+        example_itriangle_add_ref(other.GetRawPointer());
     }
 }
 
@@ -59,7 +59,7 @@ inline Example::ITrianglePtr::ITrianglePtr(Example::ITrianglePtr::ECreateFromRaw
     SetObject(object_pointer);
     if (add_ref_object && object_pointer)
     {
-        example_i_triangle_add_ref(object_pointer);
+        example_itriangle_add_ref(object_pointer);
     }
 }
 
@@ -67,7 +67,7 @@ inline Example::ITrianglePtr::~ITrianglePtr()
 {
     if (GetRawPointer())
     {
-        example_i_triangle_release(GetRawPointer());
+        example_itriangle_release(GetRawPointer());
         SetObject(0);
     }
 }
@@ -78,13 +78,13 @@ inline Example::ITrianglePtr& Example::ITrianglePtr::operator=(const Example::IT
     {
         if (GetRawPointer())
         {
-            example_i_triangle_release(GetRawPointer());
+            example_itriangle_release(GetRawPointer());
             SetObject(0);
         }
         SetObject(other.GetRawPointer());
         if (other.GetRawPointer())
         {
-            example_i_triangle_add_ref(other.GetRawPointer());
+            example_itriangle_add_ref(other.GetRawPointer());
         }
     }
     return *this;
@@ -97,7 +97,7 @@ inline Example::ITrianglePtr& Example::ITrianglePtr::operator=(Example::ITriangl
     {
         if (GetRawPointer())
         {
-            example_i_triangle_release(GetRawPointer());
+            example_itriangle_release(GetRawPointer());
             SetObject(0);
         }
         Example::IPolygonPtr::operator=(std::move(other));
@@ -155,7 +155,7 @@ inline void Example::ITrianglePtr::SetObject(void* object_pointer)
     mObject = object_pointer;
     if (mObject)
     {
-        Example::IPolygonPtr::SetObject(example_i_triangle_cast_to_base(mObject));
+        Example::IPolygonPtr::SetObject(example_itriangle_cast_to_base(mObject));
     }
     else
     {
@@ -166,9 +166,9 @@ inline void Example::ITrianglePtr::SetObject(void* object_pointer)
 namespace Example {
 
 template<>
-inline Example::ITrianglePtr down_cast<Example::ITrianglePtr>(const Example::IShapePtr& source_object)
+inline Example::ITrianglePtr down_cast<Example::ITrianglePtr >(const Example::IShapePtr& source_object)
 {
-    return Example::ITrianglePtr(Example::ITrianglePtr::force_creating_from_raw_pointer, example_i_shape_cast_to_example_i_triangle(source_object.GetRawPointer()), true);
+    return Example::ITrianglePtr(Example::ITrianglePtr::force_creating_from_raw_pointer, example_ishape_cast_to_example_itriangle(source_object.GetRawPointer()), true);
 }
 
 }
@@ -176,9 +176,9 @@ inline Example::ITrianglePtr down_cast<Example::ITrianglePtr>(const Example::ISh
 namespace Example {
 
 template<>
-inline Example::ITrianglePtr down_cast<Example::ITrianglePtr>(const Example::IPolygonPtr& source_object)
+inline Example::ITrianglePtr down_cast<Example::ITrianglePtr >(const Example::IPolygonPtr& source_object)
 {
-    return Example::ITrianglePtr(Example::ITrianglePtr::force_creating_from_raw_pointer, example_i_polygon_cast_to_example_i_triangle(source_object.GetRawPointer()), true);
+    return Example::ITrianglePtr(Example::ITrianglePtr::force_creating_from_raw_pointer, example_ipolygon_cast_to_example_itriangle(source_object.GetRawPointer()), true);
 }
 
 }

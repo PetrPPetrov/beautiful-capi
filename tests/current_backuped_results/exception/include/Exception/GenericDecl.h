@@ -39,7 +39,7 @@ class Generic
 public:
     inline Generic();
     inline const char* GetErrorText() const;
-    
+
     inline Generic(const Generic& other);
     #ifdef EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES
     inline Generic(Generic&& other);

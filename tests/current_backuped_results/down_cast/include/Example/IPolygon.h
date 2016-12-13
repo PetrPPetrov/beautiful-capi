@@ -34,7 +34,7 @@
 
 inline int Example::IPolygonPtr::GetPointsCount() const
 {
-    return example_i_polygon_get_points_count(GetRawPointer());
+    return example_ipolygon_get_points_count(GetRawPointer());
 }
 
 inline Example::IPolygonPtr::IPolygonPtr(const IPolygonPtr& other) : Example::IShapePtr(Example::IShapePtr::force_creating_from_raw_pointer, 0, false)
@@ -42,7 +42,7 @@ inline Example::IPolygonPtr::IPolygonPtr(const IPolygonPtr& other) : Example::IS
     SetObject(other.GetRawPointer());
     if (other.GetRawPointer())
     {
-        example_i_polygon_add_ref(other.GetRawPointer());
+        example_ipolygon_add_ref(other.GetRawPointer());
     }
 }
 
@@ -59,7 +59,7 @@ inline Example::IPolygonPtr::IPolygonPtr(Example::IPolygonPtr::ECreateFromRawPoi
     SetObject(object_pointer);
     if (add_ref_object && object_pointer)
     {
-        example_i_polygon_add_ref(object_pointer);
+        example_ipolygon_add_ref(object_pointer);
     }
 }
 
@@ -67,7 +67,7 @@ inline Example::IPolygonPtr::~IPolygonPtr()
 {
     if (GetRawPointer())
     {
-        example_i_polygon_release(GetRawPointer());
+        example_ipolygon_release(GetRawPointer());
         SetObject(0);
     }
 }
@@ -78,13 +78,13 @@ inline Example::IPolygonPtr& Example::IPolygonPtr::operator=(const Example::IPol
     {
         if (GetRawPointer())
         {
-            example_i_polygon_release(GetRawPointer());
+            example_ipolygon_release(GetRawPointer());
             SetObject(0);
         }
         SetObject(other.GetRawPointer());
         if (other.GetRawPointer())
         {
-            example_i_polygon_add_ref(other.GetRawPointer());
+            example_ipolygon_add_ref(other.GetRawPointer());
         }
     }
     return *this;
@@ -97,7 +97,7 @@ inline Example::IPolygonPtr& Example::IPolygonPtr::operator=(Example::IPolygonPt
     {
         if (GetRawPointer())
         {
-            example_i_polygon_release(GetRawPointer());
+            example_ipolygon_release(GetRawPointer());
             SetObject(0);
         }
         Example::IShapePtr::operator=(std::move(other));
@@ -155,7 +155,7 @@ inline void Example::IPolygonPtr::SetObject(void* object_pointer)
     mObject = object_pointer;
     if (mObject)
     {
-        Example::IShapePtr::SetObject(example_i_polygon_cast_to_base(mObject));
+        Example::IShapePtr::SetObject(example_ipolygon_cast_to_base(mObject));
     }
     else
     {
@@ -166,9 +166,9 @@ inline void Example::IPolygonPtr::SetObject(void* object_pointer)
 namespace Example {
 
 template<>
-inline Example::IPolygonPtr down_cast<Example::IPolygonPtr>(const Example::IShapePtr& source_object)
+inline Example::IPolygonPtr down_cast<Example::IPolygonPtr >(const Example::IShapePtr& source_object)
 {
-    return Example::IPolygonPtr(Example::IPolygonPtr::force_creating_from_raw_pointer, example_i_shape_cast_to_example_i_polygon(source_object.GetRawPointer()), true);
+    return Example::IPolygonPtr(Example::IPolygonPtr::force_creating_from_raw_pointer, example_ishape_cast_to_example_ipolygon(source_object.GetRawPointer()), true);
 }
 
 }

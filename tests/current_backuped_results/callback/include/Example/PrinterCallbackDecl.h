@@ -35,7 +35,7 @@
 
 namespace Example {
 
-class PrinterCallbackPtr: public Example::PrinterPtr
+class PrinterCallbackPtr : public Example::PrinterPtr
 {
 public:
     inline PrinterCallbackPtr();
@@ -45,7 +45,7 @@ public:
     inline void SetCFunctionForSetPrintingQuality(example_printer_set_printing_quality_callback_type c_function_pointer);
     inline void SetCFunctionForGetPrintingQuality(example_printer_get_printing_quality_callback_type c_function_pointer);
     inline void SetCFunctionForGetDeviceType(example_printer_get_device_type_callback_type c_function_pointer);
-    
+
     inline PrinterCallbackPtr(const PrinterCallbackPtr& other);
     #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
     inline PrinterCallbackPtr(PrinterCallbackPtr&& other);
@@ -81,7 +81,7 @@ inline Example::PrinterCallbackPtr create_callback_for_printer(ImplementationCla
 namespace Example {
 
 template<>
-inline Example::PrinterCallbackPtr down_cast<Example::PrinterCallbackPtr>(const Example::PrinterPtr& source_object);
+inline Example::PrinterCallbackPtr down_cast<Example::PrinterCallbackPtr >(const Example::PrinterPtr& source_object);
 
 }
 

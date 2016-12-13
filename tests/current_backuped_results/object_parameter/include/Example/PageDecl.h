@@ -42,7 +42,7 @@ public:
     inline void SetWidth(size_t value);
     inline size_t GetHeight() const;
     inline void SetHeight(size_t value);
-    
+
     inline PagePtr(const PagePtr& other);
     #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
     inline PagePtr(PagePtr&& other);

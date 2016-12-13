@@ -45,7 +45,7 @@ public:
     inline void SetElement(size_t index, const PointSet::Position& value);
     inline void PushBack(const PointSet::Position& value);
     inline void Clear();
-    
+
     inline PointsPtr(const PointsPtr& other);
     #ifdef POINTSET_CPP_COMPILER_HAS_RVALUE_REFERENCES
     inline PointsPtr(PointsPtr&& other);

@@ -41,7 +41,7 @@ public:
     inline const char* ScanText();
     inline void PowerOn();
     inline void PowerOff();
-    
+
     inline ScannerPtr(const ScannerPtr& other);
     #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
     inline ScannerPtr(ScannerPtr&& other);

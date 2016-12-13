@@ -38,7 +38,7 @@ class IShapeRawPtr
 {
 public:
     inline void Show() const;
-    
+
     inline IShapeRawPtr(const IShapeRawPtr& other);
     #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
     inline IShapeRawPtr(IShapeRawPtr&& other);

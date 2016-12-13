@@ -36,12 +36,12 @@
 namespace Example {
 
 template<>
-class VectorOfObjectsDerivedPtr<Example::ModelPtr<double> >: public Example::VectorOfObjectsPtr<Example::ModelPtr<double> >
+class VectorOfObjectsDerivedPtr<Example::ModelPtr<double> > : public Example::VectorOfObjectsPtr<Example::ModelPtr<double> >
 {
 public:
     inline VectorOfObjectsDerivedPtr();
     inline int GetA() const;
-    
+
     inline VectorOfObjectsDerivedPtr(const VectorOfObjectsDerivedPtr<Example::ModelPtr<double> >& other);
     #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
     inline VectorOfObjectsDerivedPtr(VectorOfObjectsDerivedPtr<Example::ModelPtr<double> >&& other);
@@ -71,7 +71,7 @@ protected:
 namespace Example {
 
 template<>
-inline Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<double> > down_cast<Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<double> >>(const Example::VectorOfObjectsPtr<Example::ModelPtr<double> >& source_object);
+inline Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<double> > down_cast<Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<double> > >(const Example::VectorOfObjectsPtr<Example::ModelPtr<double> >& source_object);
 
 }
 

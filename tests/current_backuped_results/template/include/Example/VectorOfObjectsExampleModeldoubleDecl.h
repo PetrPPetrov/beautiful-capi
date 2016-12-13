@@ -43,7 +43,7 @@ public:
     inline void Clear();
     inline void PushBack(const Example::ModelPtr<double>& value);
     inline Example::ModelPtr<double> GetItem(int index) const;
-    
+
     inline VectorOfObjectsPtr(const VectorOfObjectsPtr<Example::ModelPtr<double> >& other);
     #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
     inline VectorOfObjectsPtr(VectorOfObjectsPtr<Example::ModelPtr<double> >&& other);
@@ -67,6 +67,10 @@ protected:
     inline void SetObject(void* object_pointer);
     void* mObject;
 };
+
+}
+
+namespace Example {
 
 template<typename TargetType>
 inline TargetType down_cast(const Example::VectorOfObjectsPtr<Example::ModelPtr<double> >& source_object);

@@ -171,7 +171,7 @@ inline void Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<double> >::SetO
 namespace Example {
 
 template<>
-inline Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<double> > down_cast<Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<double> >>(const Example::VectorOfObjectsPtr<Example::ModelPtr<double> >& source_object)
+inline Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<double> > down_cast<Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<double> > >(const Example::VectorOfObjectsPtr<Example::ModelPtr<double> >& source_object)
 {
     return Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<double> >(Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<double> >::force_creating_from_raw_pointer, example_vector_of_objects_example_model_double_cast_to_example_vector_of_objects_derived_example_model_double(source_object.GetRawPointer()), true);
 }

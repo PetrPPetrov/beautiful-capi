@@ -35,12 +35,12 @@
 
 namespace Exception {
 
-class BadArgument: public Exception::Generic
+class BadArgument : public Exception::Generic
 {
 public:
     inline BadArgument();
     inline const char* GetArgumentName() const;
-    
+
     inline BadArgument(const BadArgument& other);
     #ifdef EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES
     inline BadArgument(BadArgument&& other);

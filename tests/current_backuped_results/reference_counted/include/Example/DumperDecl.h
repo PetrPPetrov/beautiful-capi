@@ -41,7 +41,7 @@ public:
     inline Example::PrinterPtr GetPrinter() const;
     inline void SetPrinter(const Example::PrinterPtr& printer);
     inline void Dump() const;
-    
+
     inline Dumper(const Dumper& other);
     #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
     inline Dumper(Dumper&& other);

@@ -45,7 +45,7 @@ public:
     inline void SetY(float y);
     inline float GetZ() const;
     inline void SetZ(float z);
-    
+
     inline Position(const Position<float>& other);
     #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
     inline Position(Position<float>&& other);

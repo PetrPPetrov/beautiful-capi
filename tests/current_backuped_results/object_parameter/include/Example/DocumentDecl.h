@@ -41,7 +41,7 @@ public:
     inline void Show() const;
     inline Example::PagePtr GetPage() const;
     inline void SetPage(const Example::PagePtr& value);
-    
+
     inline DocumentPtr(const DocumentPtr& other);
     #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
     inline DocumentPtr(DocumentPtr&& other);

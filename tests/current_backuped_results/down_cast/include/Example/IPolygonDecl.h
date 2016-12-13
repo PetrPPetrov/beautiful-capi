@@ -35,11 +35,11 @@
 
 namespace Example {
 
-class IPolygonPtr: public Example::IShapePtr
+class IPolygonPtr : public Example::IShapePtr
 {
 public:
     inline int GetPointsCount() const;
-    
+
     inline IPolygonPtr(const IPolygonPtr& other);
     #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
     inline IPolygonPtr(IPolygonPtr&& other);
@@ -64,15 +64,14 @@ protected:
     void* mObject;
 };
 
-template<typename TargetType>
-inline TargetType down_cast(const Example::IPolygonPtr& source_object);
-
 }
 
 namespace Example {
 
+template<typename TargetType>
+inline TargetType down_cast(const Example::IPolygonPtr& source_object);
 template<>
-inline Example::IPolygonPtr down_cast<Example::IPolygonPtr>(const Example::IShapePtr& source_object);
+inline Example::IPolygonPtr down_cast<Example::IPolygonPtr >(const Example::IShapePtr& source_object);
 
 }
 

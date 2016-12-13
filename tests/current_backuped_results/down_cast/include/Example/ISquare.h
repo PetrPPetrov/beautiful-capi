@@ -34,7 +34,7 @@
 
 inline void Example::ISquarePtr::SetSize(double size)
 {
-    example_i_square_set_size(GetRawPointer(), size);
+    example_isquare_set_size(GetRawPointer(), size);
 }
 
 inline Example::ISquarePtr::ISquarePtr(const ISquarePtr& other) : Example::IPolygonPtr(Example::IPolygonPtr::force_creating_from_raw_pointer, 0, false)
@@ -42,7 +42,7 @@ inline Example::ISquarePtr::ISquarePtr(const ISquarePtr& other) : Example::IPoly
     SetObject(other.GetRawPointer());
     if (other.GetRawPointer())
     {
-        example_i_square_add_ref(other.GetRawPointer());
+        example_isquare_add_ref(other.GetRawPointer());
     }
 }
 
@@ -59,7 +59,7 @@ inline Example::ISquarePtr::ISquarePtr(Example::ISquarePtr::ECreateFromRawPointe
     SetObject(object_pointer);
     if (add_ref_object && object_pointer)
     {
-        example_i_square_add_ref(object_pointer);
+        example_isquare_add_ref(object_pointer);
     }
 }
 
@@ -67,7 +67,7 @@ inline Example::ISquarePtr::~ISquarePtr()
 {
     if (GetRawPointer())
     {
-        example_i_square_release(GetRawPointer());
+        example_isquare_release(GetRawPointer());
         SetObject(0);
     }
 }
@@ -78,13 +78,13 @@ inline Example::ISquarePtr& Example::ISquarePtr::operator=(const Example::ISquar
     {
         if (GetRawPointer())
         {
-            example_i_square_release(GetRawPointer());
+            example_isquare_release(GetRawPointer());
             SetObject(0);
         }
         SetObject(other.GetRawPointer());
         if (other.GetRawPointer())
         {
-            example_i_square_add_ref(other.GetRawPointer());
+            example_isquare_add_ref(other.GetRawPointer());
         }
     }
     return *this;
@@ -97,7 +97,7 @@ inline Example::ISquarePtr& Example::ISquarePtr::operator=(Example::ISquarePtr&&
     {
         if (GetRawPointer())
         {
-            example_i_square_release(GetRawPointer());
+            example_isquare_release(GetRawPointer());
             SetObject(0);
         }
         Example::IPolygonPtr::operator=(std::move(other));
@@ -155,7 +155,7 @@ inline void Example::ISquarePtr::SetObject(void* object_pointer)
     mObject = object_pointer;
     if (mObject)
     {
-        Example::IPolygonPtr::SetObject(example_i_square_cast_to_base(mObject));
+        Example::IPolygonPtr::SetObject(example_isquare_cast_to_base(mObject));
     }
     else
     {
@@ -166,9 +166,9 @@ inline void Example::ISquarePtr::SetObject(void* object_pointer)
 namespace Example {
 
 template<>
-inline Example::ISquarePtr down_cast<Example::ISquarePtr>(const Example::IShapePtr& source_object)
+inline Example::ISquarePtr down_cast<Example::ISquarePtr >(const Example::IShapePtr& source_object)
 {
-    return Example::ISquarePtr(Example::ISquarePtr::force_creating_from_raw_pointer, example_i_shape_cast_to_example_i_square(source_object.GetRawPointer()), true);
+    return Example::ISquarePtr(Example::ISquarePtr::force_creating_from_raw_pointer, example_ishape_cast_to_example_isquare(source_object.GetRawPointer()), true);
 }
 
 }
@@ -176,9 +176,9 @@ inline Example::ISquarePtr down_cast<Example::ISquarePtr>(const Example::IShapeP
 namespace Example {
 
 template<>
-inline Example::ISquarePtr down_cast<Example::ISquarePtr>(const Example::IPolygonPtr& source_object)
+inline Example::ISquarePtr down_cast<Example::ISquarePtr >(const Example::IPolygonPtr& source_object)
 {
-    return Example::ISquarePtr(Example::ISquarePtr::force_creating_from_raw_pointer, example_i_polygon_cast_to_example_i_square(source_object.GetRawPointer()), true);
+    return Example::ISquarePtr(Example::ISquarePtr::force_creating_from_raw_pointer, example_ipolygon_cast_to_example_isquare(source_object.GetRawPointer()), true);
 }
 
 }

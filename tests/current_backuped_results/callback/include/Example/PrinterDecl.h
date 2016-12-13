@@ -45,12 +45,12 @@ public:
         normal,
         high
     };
-    
+
     inline void Print(const char* text) const;
     inline void SetPrintingQuality(Example::PrinterPtr::EQuality quality);
     inline Example::PrinterPtr::EQuality GetPrintingQuality() const;
     inline Example::EPrintingDevice GetDeviceType() const;
-    
+
     inline PrinterPtr(const PrinterPtr& other);
     #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
     inline PrinterPtr(PrinterPtr&& other);
@@ -74,6 +74,10 @@ protected:
     inline void SetObject(void* object_pointer);
     void* mObject;
 };
+
+}
+
+namespace Example {
 
 template<typename TargetType>
 inline TargetType down_cast(const Example::PrinterPtr& source_object);

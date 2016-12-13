@@ -40,7 +40,7 @@ public:
     inline Body();
     inline const char* GetName();
     inline void SetName(const char* value);
-    
+
     inline Body(const Body& other);
     #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
     inline Body(Body&& other);

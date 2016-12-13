@@ -43,7 +43,7 @@ public:
     inline void Clear();
     inline void PushBack(const Example::Position<float>& value);
     inline Example::Position<float> GetItem(int index) const;
-    
+
     inline VectorOf(const VectorOf<Example::Position<float> >& other);
     #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
     inline VectorOf(VectorOf<Example::Position<float> >&& other);

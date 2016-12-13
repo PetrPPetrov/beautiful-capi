@@ -39,7 +39,7 @@ class Printer
 public:
     inline Printer();
     inline void Show(const char* text);
-    
+
     inline Printer(const Printer& other);
     #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
     inline Printer(Printer&& other);

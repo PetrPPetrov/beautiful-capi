@@ -40,7 +40,7 @@ public:
     inline ClassARawPtr();
     inline void SetB(const Circular::ClassBRawPtr& value);
     inline Circular::ClassBRawPtr GetB() const;
-    
+
     inline ClassARawPtr(const ClassARawPtr& other);
     #ifdef CIRCULAR_CPP_COMPILER_HAS_RVALUE_REFERENCES
     inline ClassARawPtr(ClassARawPtr&& other);

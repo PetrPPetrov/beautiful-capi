@@ -39,7 +39,7 @@ class plotter_ptr
 public:
     inline plotter_ptr();
     inline void draw() const;
-    
+
     inline plotter_ptr(const plotter_ptr& other);
     #ifdef HELLO_WORLD_CPP_COMPILER_HAS_RVALUE_REFERENCES
     inline plotter_ptr(plotter_ptr&& other);

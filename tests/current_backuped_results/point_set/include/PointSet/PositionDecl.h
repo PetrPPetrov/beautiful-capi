@@ -45,7 +45,7 @@ public:
     inline void SetY(double value);
     inline double GetZ() const;
     inline void SetZ(double value);
-    
+
     inline Position(const Position& other);
     #ifdef POINTSET_CPP_COMPILER_HAS_RVALUE_REFERENCES
     inline Position(Position&& other);

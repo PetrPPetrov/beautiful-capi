@@ -40,7 +40,7 @@ public:
     inline Node();
     inline const char* GetName();
     inline void SetName(const char* value);
-    
+
     inline Node(const Node& other);
     #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
     inline Node(Node&& other);

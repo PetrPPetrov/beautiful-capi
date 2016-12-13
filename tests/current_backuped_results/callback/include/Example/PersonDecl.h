@@ -43,7 +43,7 @@ public:
         male,
         female
     };
-    
+
     inline Person();
     inline void SetFirstName(const char* first_name);
     inline const char* GetFirstName() const;
@@ -55,7 +55,7 @@ public:
     inline Example::Person::ESex GetSex() const;
     inline void Dump(const Example::PrinterPtr& printer) const;
     inline void Print(const Example::PrinterPtr& printer, const char* text) const;
-    
+
     inline Person(const Person& other);
     #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
     inline Person(Person&& other);

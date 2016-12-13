@@ -43,7 +43,7 @@ public:
     inline void Clear();
     inline void PushBack(double value);
     inline double GetItem(int index) const;
-    
+
     inline VectorOf(const VectorOf<double>& other);
     #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
     inline VectorOf(VectorOf<double>&& other);

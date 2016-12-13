@@ -39,7 +39,7 @@ class printer
 public:
     inline printer();
     inline void show() const;
-    
+
     inline printer(const printer& other);
     #ifdef HELLO_WORLD_CPP_COMPILER_HAS_RVALUE_REFERENCES
     inline printer(printer&& other);

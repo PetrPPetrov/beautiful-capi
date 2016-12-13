@@ -40,7 +40,7 @@ public:
     inline Sphere();
     inline double GetRadius();
     inline void SetRadius(double value);
-    
+
     inline Sphere(const Sphere& other);
     #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
     inline Sphere(Sphere&& other);

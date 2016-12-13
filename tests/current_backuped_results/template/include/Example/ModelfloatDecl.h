@@ -43,7 +43,7 @@ public:
     inline void SetName(const char* name);
     inline Example::Position<float> GetPosition() const;
     inline void SetPosition(const Example::Position<float>& position);
-    
+
     inline ModelPtr(const ModelPtr<float>& other);
     #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
     inline ModelPtr(ModelPtr<float>&& other);

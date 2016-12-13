@@ -39,7 +39,7 @@ class scanner_raw_ptr
 public:
     inline scanner_raw_ptr();
     inline void scan() const;
-    
+
     inline scanner_raw_ptr(const scanner_raw_ptr& other);
     #ifdef HELLO_WORLD_CPP_COMPILER_HAS_RVALUE_REFERENCES
     inline scanner_raw_ptr(scanner_raw_ptr&& other);

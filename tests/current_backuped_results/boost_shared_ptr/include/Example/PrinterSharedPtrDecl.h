@@ -39,7 +39,7 @@ class PrinterSharedPtr
 public:
     inline PrinterSharedPtr();
     inline void Show(const char* text) const;
-    
+
     inline PrinterSharedPtr(const PrinterSharedPtr& other);
     #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
     inline PrinterSharedPtr(PrinterSharedPtr&& other);

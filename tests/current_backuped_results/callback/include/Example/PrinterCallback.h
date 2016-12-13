@@ -53,22 +53,22 @@ inline void* Example::PrinterCallbackPtr::GetObjectPointer() const
 
 inline void Example::PrinterCallbackPtr::SetCFunctionForPrint(example_printer_print_callback_type c_function_pointer)
 {
-    example_printer_callback_set_c_function_for_print(GetRawPointer(), c_function_pointer);
+    example_printer_callback_set_cfunction_for_print(GetRawPointer(), c_function_pointer);
 }
 
 inline void Example::PrinterCallbackPtr::SetCFunctionForSetPrintingQuality(example_printer_set_printing_quality_callback_type c_function_pointer)
 {
-    example_printer_callback_set_c_function_for_set_printing_quality(GetRawPointer(), c_function_pointer);
+    example_printer_callback_set_cfunction_for_set_printing_quality(GetRawPointer(), c_function_pointer);
 }
 
 inline void Example::PrinterCallbackPtr::SetCFunctionForGetPrintingQuality(example_printer_get_printing_quality_callback_type c_function_pointer)
 {
-    example_printer_callback_set_c_function_for_get_printing_quality(GetRawPointer(), c_function_pointer);
+    example_printer_callback_set_cfunction_for_get_printing_quality(GetRawPointer(), c_function_pointer);
 }
 
 inline void Example::PrinterCallbackPtr::SetCFunctionForGetDeviceType(example_printer_get_device_type_callback_type c_function_pointer)
 {
-    example_printer_callback_set_c_function_for_get_device_type(GetRawPointer(), c_function_pointer);
+    example_printer_callback_set_cfunction_for_get_device_type(GetRawPointer(), c_function_pointer);
 }
 
 inline Example::PrinterCallbackPtr::PrinterCallbackPtr(const PrinterCallbackPtr& other) : Example::PrinterPtr(Example::PrinterPtr::force_creating_from_raw_pointer, 0, false)
@@ -200,7 +200,7 @@ inline void Example::PrinterCallbackPtr::SetObject(void* object_pointer)
 namespace Example {
 
 template<>
-inline Example::PrinterCallbackPtr down_cast<Example::PrinterCallbackPtr>(const Example::PrinterPtr& source_object)
+inline Example::PrinterCallbackPtr down_cast<Example::PrinterCallbackPtr >(const Example::PrinterPtr& source_object)
 {
     return Example::PrinterCallbackPtr(Example::PrinterCallbackPtr::force_creating_from_raw_pointer, example_printer_cast_to_example_printer_callback(source_object.GetRawPointer()), true);
 }
@@ -243,53 +243,40 @@ template<typename ImplementationClass>
 void EXAMPLE_API_CONVENTION printer_print_callback(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* text)
 {
     const ImplementationClass* self = static_cast<ImplementationClass*>(object_pointer);
+    beautiful_capi_callback_exception_info_t exception_info_default;
+    if (!exception_info)
+    {
+        exception_info = &exception_info_default;
+    }
     try
     {
-        if (exception_info)
-        {
-            exception_info->code = 0;
-            exception_info->object_pointer = 0;
-        }
+        exception_info->code = 0;
+        exception_info->object_pointer = 0;
         self->Print(text);
     }
     catch (Exception::NullArgument& exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 3;
-            exception_info->object_pointer = exception_object.Detach();
-        }
+        exception_info->code = 3;
+        exception_info->object_pointer = exception_object.Detach();
     }
     catch (Exception::BadArgument& exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 2;
-            exception_info->object_pointer = exception_object.Detach();
-        }
+        exception_info->code = 2;
+        exception_info->object_pointer = exception_object.Detach();
     }
     catch (Exception::DivisionByZero& exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 4;
-            exception_info->object_pointer = exception_object.Detach();
-        }
+        exception_info->code = 4;
+        exception_info->object_pointer = exception_object.Detach();
     }
     catch (Exception::Generic& exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 1;
-            exception_info->object_pointer = exception_object.Detach();
-        }
+        exception_info->code = 1;
+        exception_info->object_pointer = exception_object.Detach();
     }
     catch (...)
     {
-        if (exception_info)
-        {
-            exception_info->code = -1;
-        }
+        exception_info->code = -2;
     }
 }
 
@@ -297,53 +284,40 @@ template<typename ImplementationClass>
 void EXAMPLE_API_CONVENTION printer_set_printing_quality_callback(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, int quality)
 {
     ImplementationClass* self = static_cast<ImplementationClass*>(object_pointer);
+    beautiful_capi_callback_exception_info_t exception_info_default;
+    if (!exception_info)
+    {
+        exception_info = &exception_info_default;
+    }
     try
     {
-        if (exception_info)
-        {
-            exception_info->code = 0;
-            exception_info->object_pointer = 0;
-        }
+        exception_info->code = 0;
+        exception_info->object_pointer = 0;
         self->SetPrintingQuality(Example::PrinterPtr::EQuality(static_cast<Example::PrinterPtr::EQuality>(quality)));
     }
     catch (Exception::NullArgument& exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 3;
-            exception_info->object_pointer = exception_object.Detach();
-        }
+        exception_info->code = 3;
+        exception_info->object_pointer = exception_object.Detach();
     }
     catch (Exception::BadArgument& exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 2;
-            exception_info->object_pointer = exception_object.Detach();
-        }
+        exception_info->code = 2;
+        exception_info->object_pointer = exception_object.Detach();
     }
     catch (Exception::DivisionByZero& exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 4;
-            exception_info->object_pointer = exception_object.Detach();
-        }
+        exception_info->code = 4;
+        exception_info->object_pointer = exception_object.Detach();
     }
     catch (Exception::Generic& exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 1;
-            exception_info->object_pointer = exception_object.Detach();
-        }
+        exception_info->code = 1;
+        exception_info->object_pointer = exception_object.Detach();
     }
     catch (...)
     {
-        if (exception_info)
-        {
-            exception_info->code = -1;
-        }
+        exception_info->code = -2;
     }
 }
 
@@ -351,53 +325,40 @@ template<typename ImplementationClass>
 int EXAMPLE_API_CONVENTION printer_get_printing_quality_callback(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer)
 {
     const ImplementationClass* self = static_cast<ImplementationClass*>(object_pointer);
+    beautiful_capi_callback_exception_info_t exception_info_default;
+    if (!exception_info)
+    {
+        exception_info = &exception_info_default;
+    }
     try
     {
-        if (exception_info)
-        {
-            exception_info->code = 0;
-            exception_info->object_pointer = 0;
-        }
+        exception_info->code = 0;
+        exception_info->object_pointer = 0;
         return static_cast<int>(self->GetPrintingQuality());
     }
     catch (Exception::NullArgument& exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 3;
-            exception_info->object_pointer = exception_object.Detach();
-        }
+        exception_info->code = 3;
+        exception_info->object_pointer = exception_object.Detach();
     }
     catch (Exception::BadArgument& exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 2;
-            exception_info->object_pointer = exception_object.Detach();
-        }
+        exception_info->code = 2;
+        exception_info->object_pointer = exception_object.Detach();
     }
     catch (Exception::DivisionByZero& exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 4;
-            exception_info->object_pointer = exception_object.Detach();
-        }
+        exception_info->code = 4;
+        exception_info->object_pointer = exception_object.Detach();
     }
     catch (Exception::Generic& exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 1;
-            exception_info->object_pointer = exception_object.Detach();
-        }
+        exception_info->code = 1;
+        exception_info->object_pointer = exception_object.Detach();
     }
     catch (...)
     {
-        if (exception_info)
-        {
-            exception_info->code = -1;
-        }
+        exception_info->code = -2;
     }
     return static_cast<int>(0);
 }
@@ -406,53 +367,40 @@ template<typename ImplementationClass>
 int EXAMPLE_API_CONVENTION printer_get_device_type_callback(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer)
 {
     const ImplementationClass* self = static_cast<ImplementationClass*>(object_pointer);
+    beautiful_capi_callback_exception_info_t exception_info_default;
+    if (!exception_info)
+    {
+        exception_info = &exception_info_default;
+    }
     try
     {
-        if (exception_info)
-        {
-            exception_info->code = 0;
-            exception_info->object_pointer = 0;
-        }
+        exception_info->code = 0;
+        exception_info->object_pointer = 0;
         return static_cast<int>(self->GetDeviceType());
     }
     catch (Exception::NullArgument& exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 3;
-            exception_info->object_pointer = exception_object.Detach();
-        }
+        exception_info->code = 3;
+        exception_info->object_pointer = exception_object.Detach();
     }
     catch (Exception::BadArgument& exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 2;
-            exception_info->object_pointer = exception_object.Detach();
-        }
+        exception_info->code = 2;
+        exception_info->object_pointer = exception_object.Detach();
     }
     catch (Exception::DivisionByZero& exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 4;
-            exception_info->object_pointer = exception_object.Detach();
-        }
+        exception_info->code = 4;
+        exception_info->object_pointer = exception_object.Detach();
     }
     catch (Exception::Generic& exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 1;
-            exception_info->object_pointer = exception_object.Detach();
-        }
+        exception_info->code = 1;
+        exception_info->object_pointer = exception_object.Detach();
     }
     catch (...)
     {
-        if (exception_info)
-        {
-            exception_info->code = -1;
-        }
+        exception_info->code = -2;
     }
     return static_cast<int>(0);
 }

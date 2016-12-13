@@ -36,13 +36,13 @@
 namespace Example {
 
 template<>
-class Position4D<double>: public Example::Position<double>
+class Position4D<double> : public Example::Position<double>
 {
 public:
     inline Position4D();
     inline double GetW() const;
     inline void SetW(double x);
-    
+
     inline Position4D(const Position4D<double>& other);
     #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
     inline Position4D(Position4D<double>&& other);

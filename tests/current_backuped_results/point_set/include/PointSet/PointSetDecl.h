@@ -42,7 +42,7 @@ public:
     inline void SetName(const char* name);
     inline PointSet::PointsPtr GetPoints() const;
     inline void SetPoints(const PointSet::PointsPtr& value);
-    
+
     inline PointSetPtr(const PointSetPtr& other);
     #ifdef POINTSET_CPP_COMPILER_HAS_RVALUE_REFERENCES
     inline PointSetPtr(PointSetPtr&& other);

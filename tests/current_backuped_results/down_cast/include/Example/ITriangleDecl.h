@@ -35,11 +35,11 @@
 
 namespace Example {
 
-class ITrianglePtr: public Example::IPolygonPtr
+class ITrianglePtr : public Example::IPolygonPtr
 {
 public:
     inline void SetPoints(double x1, double y1, double x2, double y2, double x3, double y3);
-    
+
     inline ITrianglePtr(const ITrianglePtr& other);
     #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
     inline ITrianglePtr(ITrianglePtr&& other);
@@ -69,14 +69,9 @@ protected:
 namespace Example {
 
 template<>
-inline Example::ITrianglePtr down_cast<Example::ITrianglePtr>(const Example::IShapePtr& source_object);
-
-}
-
-namespace Example {
-
+inline Example::ITrianglePtr down_cast<Example::ITrianglePtr >(const Example::IShapePtr& source_object);
 template<>
-inline Example::ITrianglePtr down_cast<Example::ITrianglePtr>(const Example::IPolygonPtr& source_object);
+inline Example::ITrianglePtr down_cast<Example::ITrianglePtr >(const Example::IPolygonPtr& source_object);
 
 }
 

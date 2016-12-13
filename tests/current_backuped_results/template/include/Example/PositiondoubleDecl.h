@@ -45,7 +45,7 @@ public:
     inline void SetY(double y);
     inline double GetZ() const;
     inline void SetZ(double z);
-    
+
     inline Position(const Position<double>& other);
     #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
     inline Position(Position<double>&& other);

@@ -114,44 +114,44 @@ EXAMPLE_API int EXAMPLE_API_CONVENTION example_get_patch_version()
     return AutoGen_Internal_DownCast_ExampleGetPatchVersionImpl();
 }
 
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_i_shape_show(void* object_pointer)
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_ishape_show(void* object_pointer)
 {
     const Example::IShape* self = static_cast<Example::IShape*>(object_pointer);
     self->Show();
 }
 
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_i_shape_add_ref(void* object_pointer)
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_ishape_add_ref(void* object_pointer)
 {
     intrusive_ptr_add_ref(static_cast<Example::IShape*>(object_pointer));
 }
 
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_i_shape_release(void* object_pointer)
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_ishape_release(void* object_pointer)
 {
     intrusive_ptr_release(static_cast<Example::IShape*>(object_pointer));
 }
 
-EXAMPLE_API int EXAMPLE_API_CONVENTION example_i_polygon_get_points_count(void* object_pointer)
+EXAMPLE_API int EXAMPLE_API_CONVENTION example_ipolygon_get_points_count(void* object_pointer)
 {
     const Example::IPolygon* self = static_cast<Example::IPolygon*>(object_pointer);
     return self->GetPointsCount();
 }
 
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_i_polygon_add_ref(void* object_pointer)
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_ipolygon_add_ref(void* object_pointer)
 {
     intrusive_ptr_add_ref(static_cast<Example::IPolygon*>(object_pointer));
 }
 
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_i_polygon_release(void* object_pointer)
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_ipolygon_release(void* object_pointer)
 {
     intrusive_ptr_release(static_cast<Example::IPolygon*>(object_pointer));
 }
 
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_i_polygon_cast_to_base(void* object_pointer)
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_ipolygon_cast_to_base(void* object_pointer)
 {
     return static_cast<Example::IShape*>(static_cast<Example::IPolygon*>(object_pointer));
 }
 
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_i_shape_cast_to_example_i_polygon(void* source_object)
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_ishape_cast_to_example_ipolygon(void* source_object)
 {
     if (source_object)
     {
@@ -163,28 +163,28 @@ EXAMPLE_API void* EXAMPLE_API_CONVENTION example_i_shape_cast_to_example_i_polyg
     }
 }
 
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_i_triangle_set_points(void* object_pointer, double x1, double y1, double x2, double y2, double x3, double y3)
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_itriangle_set_points(void* object_pointer, double x1, double y1, double x2, double y2, double x3, double y3)
 {
     Example::TriangleImpl* self = static_cast<Example::TriangleImpl*>(object_pointer);
     self->SetPoints(x1, y1, x2, y2, x3, y3);
 }
 
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_i_triangle_add_ref(void* object_pointer)
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_itriangle_add_ref(void* object_pointer)
 {
     intrusive_ptr_add_ref(static_cast<Example::TriangleImpl*>(object_pointer));
 }
 
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_i_triangle_release(void* object_pointer)
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_itriangle_release(void* object_pointer)
 {
     intrusive_ptr_release(static_cast<Example::TriangleImpl*>(object_pointer));
 }
 
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_i_triangle_cast_to_base(void* object_pointer)
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_itriangle_cast_to_base(void* object_pointer)
 {
     return static_cast<Example::IPolygon*>(static_cast<Example::TriangleImpl*>(object_pointer));
 }
 
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_i_shape_cast_to_example_i_triangle(void* source_object)
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_ishape_cast_to_example_itriangle(void* source_object)
 {
     if (source_object)
     {
@@ -196,7 +196,7 @@ EXAMPLE_API void* EXAMPLE_API_CONVENTION example_i_shape_cast_to_example_i_trian
     }
 }
 
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_i_polygon_cast_to_example_i_triangle(void* source_object)
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_ipolygon_cast_to_example_itriangle(void* source_object)
 {
     if (source_object)
     {
@@ -208,28 +208,28 @@ EXAMPLE_API void* EXAMPLE_API_CONVENTION example_i_polygon_cast_to_example_i_tri
     }
 }
 
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_i_square_set_size(void* object_pointer, double size)
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_isquare_set_size(void* object_pointer, double size)
 {
     Example::SquareImpl* self = static_cast<Example::SquareImpl*>(object_pointer);
     self->SetSize(size);
 }
 
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_i_square_add_ref(void* object_pointer)
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_isquare_add_ref(void* object_pointer)
 {
     intrusive_ptr_add_ref(static_cast<Example::SquareImpl*>(object_pointer));
 }
 
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_i_square_release(void* object_pointer)
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_isquare_release(void* object_pointer)
 {
     intrusive_ptr_release(static_cast<Example::SquareImpl*>(object_pointer));
 }
 
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_i_square_cast_to_base(void* object_pointer)
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_isquare_cast_to_base(void* object_pointer)
 {
     return static_cast<Example::IPolygon*>(static_cast<Example::SquareImpl*>(object_pointer));
 }
 
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_i_shape_cast_to_example_i_square(void* source_object)
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_ishape_cast_to_example_isquare(void* source_object)
 {
     if (source_object)
     {
@@ -241,7 +241,7 @@ EXAMPLE_API void* EXAMPLE_API_CONVENTION example_i_shape_cast_to_example_i_squar
     }
 }
 
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_i_polygon_cast_to_example_i_square(void* source_object)
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_ipolygon_cast_to_example_isquare(void* source_object)
 {
     if (source_object)
     {
@@ -253,28 +253,28 @@ EXAMPLE_API void* EXAMPLE_API_CONVENTION example_i_polygon_cast_to_example_i_squ
     }
 }
 
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_i_circle_set_radius(void* object_pointer, double radius)
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_icircle_set_radius(void* object_pointer, double radius)
 {
     Example::CircleImpl* self = static_cast<Example::CircleImpl*>(object_pointer);
     self->SetRadius(radius);
 }
 
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_i_circle_add_ref(void* object_pointer)
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_icircle_add_ref(void* object_pointer)
 {
     intrusive_ptr_add_ref(static_cast<Example::CircleImpl*>(object_pointer));
 }
 
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_i_circle_release(void* object_pointer)
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_icircle_release(void* object_pointer)
 {
     intrusive_ptr_release(static_cast<Example::CircleImpl*>(object_pointer));
 }
 
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_i_circle_cast_to_base(void* object_pointer)
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_icircle_cast_to_base(void* object_pointer)
 {
     return static_cast<Example::IShape*>(static_cast<Example::CircleImpl*>(object_pointer));
 }
 
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_i_shape_cast_to_example_i_circle(void* source_object)
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_ishape_cast_to_example_icircle(void* source_object)
 {
     if (source_object)
     {

@@ -41,7 +41,7 @@ public:
     inline const char* Show(const char* text);
     inline void PowerOn();
     inline void PowerOff();
-    
+
     inline Printer(const Printer& other);
     #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES
     inline Printer(Printer&& other);

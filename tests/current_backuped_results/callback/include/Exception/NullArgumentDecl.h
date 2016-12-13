@@ -35,11 +35,11 @@
 
 namespace Exception {
 
-class NullArgument: public Exception::BadArgument
+class NullArgument : public Exception::BadArgument
 {
 public:
     inline NullArgument();
-    
+
     inline NullArgument(const NullArgument& other);
     #ifdef EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES
     inline NullArgument(NullArgument&& other);

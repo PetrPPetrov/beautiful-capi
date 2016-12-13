@@ -33,7 +33,7 @@
 
 inline void Example::IShapeRawPtr::Show() const
 {
-    example_i_shape_show(GetRawPointer());
+    example_ishape_show(GetRawPointer());
 }
 
 inline Example::IShapeRawPtr::IShapeRawPtr(const IShapeRawPtr& other)
@@ -58,7 +58,7 @@ inline void Example::IShapeRawPtr::Delete()
 {
     if (GetRawPointer())
     {
-        example_i_shape_delete(GetRawPointer());
+        example_ishape_delete(GetRawPointer());
         SetObject(0);
     }
 }

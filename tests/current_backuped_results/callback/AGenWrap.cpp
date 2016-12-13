@@ -284,117 +284,92 @@ public:
 
 EXCEPTION_API void* EXCEPTION_API_CONVENTION example_create_default_printer(beautiful_capi_callback_exception_info_t* exception_info, int printing_device)
 {
+    beautiful_capi_callback_exception_info_t exception_info_default;
+    if (!exception_info)
+    {
+        exception_info = &exception_info_default;
+    }
     try
     {
-        if (exception_info)
-        {
-            exception_info->code = 0;
-            exception_info->object_pointer = 0;
-        }
+        exception_info->code = 0;
+        exception_info->object_pointer = 0;
         return Example::CreateDefaultPrinterImpl(static_cast<Example::EPrintingDevice>(printing_device));
     }
     catch (Exception::NullArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 3;
+        try
         {
-            exception_info->code = 3;
-            try
-            {
-                exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::NullArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 3;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 3;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::BadArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 2;
+        try
         {
-            exception_info->code = 2;
-            try
-            {
-                exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::BadArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 2;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 2;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::DivisionByZeroImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 4;
+        try
         {
-            exception_info->code = 4;
-            try
-            {
-                exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::DivisionByZeroImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 4;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 4;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::GenericImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 1;
+        try
         {
-            exception_info->code = 1;
-            try
-            {
-                exception_info->object_pointer = new Exception::GenericImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::GenericImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::GenericImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 1;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 1;
+        exception_info->object_pointer = exception_object;
     }
     catch (...)
     {
-        if (exception_info)
-        {
-            exception_info->code = -1;
-        }
+        exception_info->code = -2;
     }
     return static_cast<void*>(0);
 }
@@ -417,351 +392,276 @@ EXCEPTION_API int EXCEPTION_API_CONVENTION example_get_patch_version()
 EXCEPTION_API void EXCEPTION_API_CONVENTION example_printer_print(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* text)
 {
     const Example::IPrinter* self = static_cast<Example::IPrinter*>(object_pointer);
+    beautiful_capi_callback_exception_info_t exception_info_default;
+    if (!exception_info)
+    {
+        exception_info = &exception_info_default;
+    }
     try
     {
-        if (exception_info)
-        {
-            exception_info->code = 0;
-            exception_info->object_pointer = 0;
-        }
+        exception_info->code = 0;
+        exception_info->object_pointer = 0;
         self->Print(text);
     }
     catch (Exception::NullArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 3;
+        try
         {
-            exception_info->code = 3;
-            try
-            {
-                exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::NullArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 3;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 3;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::BadArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 2;
+        try
         {
-            exception_info->code = 2;
-            try
-            {
-                exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::BadArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 2;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 2;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::DivisionByZeroImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 4;
+        try
         {
-            exception_info->code = 4;
-            try
-            {
-                exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::DivisionByZeroImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 4;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 4;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::GenericImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 1;
+        try
         {
-            exception_info->code = 1;
-            try
-            {
-                exception_info->object_pointer = new Exception::GenericImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::GenericImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::GenericImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 1;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 1;
+        exception_info->object_pointer = exception_object;
     }
     catch (...)
     {
-        if (exception_info)
-        {
-            exception_info->code = -1;
-        }
+        exception_info->code = -2;
     }
 }
 
 EXCEPTION_API void EXCEPTION_API_CONVENTION example_printer_set_printing_quality(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, int quality)
 {
     Example::IPrinter* self = static_cast<Example::IPrinter*>(object_pointer);
+    beautiful_capi_callback_exception_info_t exception_info_default;
+    if (!exception_info)
+    {
+        exception_info = &exception_info_default;
+    }
     try
     {
-        if (exception_info)
-        {
-            exception_info->code = 0;
-            exception_info->object_pointer = 0;
-        }
+        exception_info->code = 0;
+        exception_info->object_pointer = 0;
         self->SetPrintingQuality(static_cast<Example::IPrinter::EQuality>(quality));
     }
     catch (Exception::NullArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 3;
+        try
         {
-            exception_info->code = 3;
-            try
-            {
-                exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::NullArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 3;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 3;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::BadArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 2;
+        try
         {
-            exception_info->code = 2;
-            try
-            {
-                exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::BadArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 2;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 2;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::DivisionByZeroImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 4;
+        try
         {
-            exception_info->code = 4;
-            try
-            {
-                exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::DivisionByZeroImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 4;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 4;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::GenericImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 1;
+        try
         {
-            exception_info->code = 1;
-            try
-            {
-                exception_info->object_pointer = new Exception::GenericImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::GenericImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::GenericImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 1;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 1;
+        exception_info->object_pointer = exception_object;
     }
     catch (...)
     {
-        if (exception_info)
-        {
-            exception_info->code = -1;
-        }
+        exception_info->code = -2;
     }
 }
 
 EXCEPTION_API int EXCEPTION_API_CONVENTION example_printer_get_printing_quality(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer)
 {
     const Example::IPrinter* self = static_cast<Example::IPrinter*>(object_pointer);
+    beautiful_capi_callback_exception_info_t exception_info_default;
+    if (!exception_info)
+    {
+        exception_info = &exception_info_default;
+    }
     try
     {
-        if (exception_info)
-        {
-            exception_info->code = 0;
-            exception_info->object_pointer = 0;
-        }
+        exception_info->code = 0;
+        exception_info->object_pointer = 0;
         return static_cast<int>(self->GetPrintingQuality());
     }
     catch (Exception::NullArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 3;
+        try
         {
-            exception_info->code = 3;
-            try
-            {
-                exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::NullArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 3;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 3;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::BadArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 2;
+        try
         {
-            exception_info->code = 2;
-            try
-            {
-                exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::BadArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 2;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 2;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::DivisionByZeroImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 4;
+        try
         {
-            exception_info->code = 4;
-            try
-            {
-                exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::DivisionByZeroImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 4;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 4;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::GenericImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 1;
+        try
         {
-            exception_info->code = 1;
-            try
-            {
-                exception_info->object_pointer = new Exception::GenericImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::GenericImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::GenericImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 1;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 1;
+        exception_info->object_pointer = exception_object;
     }
     catch (...)
     {
-        if (exception_info)
-        {
-            exception_info->code = -1;
-        }
+        exception_info->code = -2;
     }
     return static_cast<int>(0);
 }
@@ -769,117 +669,92 @@ EXCEPTION_API int EXCEPTION_API_CONVENTION example_printer_get_printing_quality(
 EXCEPTION_API int EXCEPTION_API_CONVENTION example_printer_get_device_type(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer)
 {
     const Example::IPrinter* self = static_cast<Example::IPrinter*>(object_pointer);
+    beautiful_capi_callback_exception_info_t exception_info_default;
+    if (!exception_info)
+    {
+        exception_info = &exception_info_default;
+    }
     try
     {
-        if (exception_info)
-        {
-            exception_info->code = 0;
-            exception_info->object_pointer = 0;
-        }
+        exception_info->code = 0;
+        exception_info->object_pointer = 0;
         return static_cast<int>(self->GetDeviceType());
     }
     catch (Exception::NullArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 3;
+        try
         {
-            exception_info->code = 3;
-            try
-            {
-                exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::NullArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 3;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 3;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::BadArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 2;
+        try
         {
-            exception_info->code = 2;
-            try
-            {
-                exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::BadArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 2;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 2;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::DivisionByZeroImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 4;
+        try
         {
-            exception_info->code = 4;
-            try
-            {
-                exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::DivisionByZeroImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 4;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 4;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::GenericImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 1;
+        try
         {
-            exception_info->code = 1;
-            try
-            {
-                exception_info->object_pointer = new Exception::GenericImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::GenericImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::GenericImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 1;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 1;
+        exception_info->object_pointer = exception_object;
     }
     catch (...)
     {
-        if (exception_info)
-        {
-            exception_info->code = -1;
-        }
+        exception_info->code = -2;
     }
     return static_cast<int>(0);
 }
@@ -896,117 +771,92 @@ EXCEPTION_API void EXCEPTION_API_CONVENTION example_printer_release(void* object
 
 EXCEPTION_API void* EXCEPTION_API_CONVENTION example_person_default(beautiful_capi_callback_exception_info_t* exception_info)
 {
+    beautiful_capi_callback_exception_info_t exception_info_default;
+    if (!exception_info)
+    {
+        exception_info = &exception_info_default;
+    }
     try
     {
-        if (exception_info)
-        {
-            exception_info->code = 0;
-            exception_info->object_pointer = 0;
-        }
+        exception_info->code = 0;
+        exception_info->object_pointer = 0;
         return new Example::PersonImpl();
     }
     catch (Exception::NullArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 3;
+        try
         {
-            exception_info->code = 3;
-            try
-            {
-                exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::NullArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 3;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 3;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::BadArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 2;
+        try
         {
-            exception_info->code = 2;
-            try
-            {
-                exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::BadArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 2;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 2;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::DivisionByZeroImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 4;
+        try
         {
-            exception_info->code = 4;
-            try
-            {
-                exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::DivisionByZeroImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 4;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 4;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::GenericImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 1;
+        try
         {
-            exception_info->code = 1;
-            try
-            {
-                exception_info->object_pointer = new Exception::GenericImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::GenericImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::GenericImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 1;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 1;
+        exception_info->object_pointer = exception_object;
     }
     catch (...)
     {
-        if (exception_info)
-        {
-            exception_info->code = -1;
-        }
+        exception_info->code = -2;
     }
     return static_cast<void*>(0);
 }
@@ -1014,234 +864,184 @@ EXCEPTION_API void* EXCEPTION_API_CONVENTION example_person_default(beautiful_ca
 EXCEPTION_API void EXCEPTION_API_CONVENTION example_person_set_first_name(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* first_name)
 {
     Example::PersonImpl* self = static_cast<Example::PersonImpl*>(object_pointer);
+    beautiful_capi_callback_exception_info_t exception_info_default;
+    if (!exception_info)
+    {
+        exception_info = &exception_info_default;
+    }
     try
     {
-        if (exception_info)
-        {
-            exception_info->code = 0;
-            exception_info->object_pointer = 0;
-        }
+        exception_info->code = 0;
+        exception_info->object_pointer = 0;
         self->SetFirstName(first_name);
     }
     catch (Exception::NullArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 3;
+        try
         {
-            exception_info->code = 3;
-            try
-            {
-                exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::NullArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 3;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 3;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::BadArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 2;
+        try
         {
-            exception_info->code = 2;
-            try
-            {
-                exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::BadArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 2;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 2;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::DivisionByZeroImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 4;
+        try
         {
-            exception_info->code = 4;
-            try
-            {
-                exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::DivisionByZeroImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 4;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 4;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::GenericImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 1;
+        try
         {
-            exception_info->code = 1;
-            try
-            {
-                exception_info->object_pointer = new Exception::GenericImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::GenericImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::GenericImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 1;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 1;
+        exception_info->object_pointer = exception_object;
     }
     catch (...)
     {
-        if (exception_info)
-        {
-            exception_info->code = -1;
-        }
+        exception_info->code = -2;
     }
 }
 
 EXCEPTION_API const char* EXCEPTION_API_CONVENTION example_person_get_first_name(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer)
 {
     const Example::PersonImpl* self = static_cast<Example::PersonImpl*>(object_pointer);
+    beautiful_capi_callback_exception_info_t exception_info_default;
+    if (!exception_info)
+    {
+        exception_info = &exception_info_default;
+    }
     try
     {
-        if (exception_info)
-        {
-            exception_info->code = 0;
-            exception_info->object_pointer = 0;
-        }
+        exception_info->code = 0;
+        exception_info->object_pointer = 0;
         return self->GetFirstName();
     }
     catch (Exception::NullArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 3;
+        try
         {
-            exception_info->code = 3;
-            try
-            {
-                exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::NullArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 3;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 3;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::BadArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 2;
+        try
         {
-            exception_info->code = 2;
-            try
-            {
-                exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::BadArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 2;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 2;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::DivisionByZeroImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 4;
+        try
         {
-            exception_info->code = 4;
-            try
-            {
-                exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::DivisionByZeroImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 4;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 4;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::GenericImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 1;
+        try
         {
-            exception_info->code = 1;
-            try
-            {
-                exception_info->object_pointer = new Exception::GenericImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::GenericImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::GenericImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 1;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 1;
+        exception_info->object_pointer = exception_object;
     }
     catch (...)
     {
-        if (exception_info)
-        {
-            exception_info->code = -1;
-        }
+        exception_info->code = -2;
     }
     return static_cast<const char*>(0);
 }
@@ -1249,234 +1049,184 @@ EXCEPTION_API const char* EXCEPTION_API_CONVENTION example_person_get_first_name
 EXCEPTION_API void EXCEPTION_API_CONVENTION example_person_set_second_name(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* second_name)
 {
     Example::PersonImpl* self = static_cast<Example::PersonImpl*>(object_pointer);
+    beautiful_capi_callback_exception_info_t exception_info_default;
+    if (!exception_info)
+    {
+        exception_info = &exception_info_default;
+    }
     try
     {
-        if (exception_info)
-        {
-            exception_info->code = 0;
-            exception_info->object_pointer = 0;
-        }
+        exception_info->code = 0;
+        exception_info->object_pointer = 0;
         self->SetSecondName(second_name);
     }
     catch (Exception::NullArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 3;
+        try
         {
-            exception_info->code = 3;
-            try
-            {
-                exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::NullArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 3;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 3;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::BadArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 2;
+        try
         {
-            exception_info->code = 2;
-            try
-            {
-                exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::BadArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 2;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 2;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::DivisionByZeroImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 4;
+        try
         {
-            exception_info->code = 4;
-            try
-            {
-                exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::DivisionByZeroImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 4;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 4;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::GenericImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 1;
+        try
         {
-            exception_info->code = 1;
-            try
-            {
-                exception_info->object_pointer = new Exception::GenericImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::GenericImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::GenericImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 1;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 1;
+        exception_info->object_pointer = exception_object;
     }
     catch (...)
     {
-        if (exception_info)
-        {
-            exception_info->code = -1;
-        }
+        exception_info->code = -2;
     }
 }
 
 EXCEPTION_API const char* EXCEPTION_API_CONVENTION example_person_get_second_name(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer)
 {
     const Example::PersonImpl* self = static_cast<Example::PersonImpl*>(object_pointer);
+    beautiful_capi_callback_exception_info_t exception_info_default;
+    if (!exception_info)
+    {
+        exception_info = &exception_info_default;
+    }
     try
     {
-        if (exception_info)
-        {
-            exception_info->code = 0;
-            exception_info->object_pointer = 0;
-        }
+        exception_info->code = 0;
+        exception_info->object_pointer = 0;
         return self->GetSecondName();
     }
     catch (Exception::NullArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 3;
+        try
         {
-            exception_info->code = 3;
-            try
-            {
-                exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::NullArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 3;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 3;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::BadArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 2;
+        try
         {
-            exception_info->code = 2;
-            try
-            {
-                exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::BadArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 2;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 2;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::DivisionByZeroImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 4;
+        try
         {
-            exception_info->code = 4;
-            try
-            {
-                exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::DivisionByZeroImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 4;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 4;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::GenericImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 1;
+        try
         {
-            exception_info->code = 1;
-            try
-            {
-                exception_info->object_pointer = new Exception::GenericImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::GenericImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::GenericImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 1;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 1;
+        exception_info->object_pointer = exception_object;
     }
     catch (...)
     {
-        if (exception_info)
-        {
-            exception_info->code = -1;
-        }
+        exception_info->code = -2;
     }
     return static_cast<const char*>(0);
 }
@@ -1484,234 +1234,184 @@ EXCEPTION_API const char* EXCEPTION_API_CONVENTION example_person_get_second_nam
 EXCEPTION_API void EXCEPTION_API_CONVENTION example_person_set_age(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, unsigned int age)
 {
     Example::PersonImpl* self = static_cast<Example::PersonImpl*>(object_pointer);
+    beautiful_capi_callback_exception_info_t exception_info_default;
+    if (!exception_info)
+    {
+        exception_info = &exception_info_default;
+    }
     try
     {
-        if (exception_info)
-        {
-            exception_info->code = 0;
-            exception_info->object_pointer = 0;
-        }
+        exception_info->code = 0;
+        exception_info->object_pointer = 0;
         self->SetAge(age);
     }
     catch (Exception::NullArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 3;
+        try
         {
-            exception_info->code = 3;
-            try
-            {
-                exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::NullArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 3;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 3;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::BadArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 2;
+        try
         {
-            exception_info->code = 2;
-            try
-            {
-                exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::BadArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 2;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 2;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::DivisionByZeroImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 4;
+        try
         {
-            exception_info->code = 4;
-            try
-            {
-                exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::DivisionByZeroImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 4;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 4;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::GenericImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 1;
+        try
         {
-            exception_info->code = 1;
-            try
-            {
-                exception_info->object_pointer = new Exception::GenericImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::GenericImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::GenericImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 1;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 1;
+        exception_info->object_pointer = exception_object;
     }
     catch (...)
     {
-        if (exception_info)
-        {
-            exception_info->code = -1;
-        }
+        exception_info->code = -2;
     }
 }
 
 EXCEPTION_API unsigned int EXCEPTION_API_CONVENTION example_person_get_age(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer)
 {
     const Example::PersonImpl* self = static_cast<Example::PersonImpl*>(object_pointer);
+    beautiful_capi_callback_exception_info_t exception_info_default;
+    if (!exception_info)
+    {
+        exception_info = &exception_info_default;
+    }
     try
     {
-        if (exception_info)
-        {
-            exception_info->code = 0;
-            exception_info->object_pointer = 0;
-        }
+        exception_info->code = 0;
+        exception_info->object_pointer = 0;
         return self->GetAge();
     }
     catch (Exception::NullArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 3;
+        try
         {
-            exception_info->code = 3;
-            try
-            {
-                exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::NullArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 3;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 3;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::BadArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 2;
+        try
         {
-            exception_info->code = 2;
-            try
-            {
-                exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::BadArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 2;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 2;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::DivisionByZeroImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 4;
+        try
         {
-            exception_info->code = 4;
-            try
-            {
-                exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::DivisionByZeroImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 4;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 4;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::GenericImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 1;
+        try
         {
-            exception_info->code = 1;
-            try
-            {
-                exception_info->object_pointer = new Exception::GenericImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::GenericImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::GenericImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 1;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 1;
+        exception_info->object_pointer = exception_object;
     }
     catch (...)
     {
-        if (exception_info)
-        {
-            exception_info->code = -1;
-        }
+        exception_info->code = -2;
     }
     return static_cast<unsigned int>(0);
 }
@@ -1719,234 +1419,184 @@ EXCEPTION_API unsigned int EXCEPTION_API_CONVENTION example_person_get_age(beaut
 EXCEPTION_API void EXCEPTION_API_CONVENTION example_person_set_sex(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, char sex)
 {
     Example::PersonImpl* self = static_cast<Example::PersonImpl*>(object_pointer);
+    beautiful_capi_callback_exception_info_t exception_info_default;
+    if (!exception_info)
+    {
+        exception_info = &exception_info_default;
+    }
     try
     {
-        if (exception_info)
-        {
-            exception_info->code = 0;
-            exception_info->object_pointer = 0;
-        }
+        exception_info->code = 0;
+        exception_info->object_pointer = 0;
         self->SetSex(static_cast<Example::PersonImpl::ESex>(sex));
     }
     catch (Exception::NullArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 3;
+        try
         {
-            exception_info->code = 3;
-            try
-            {
-                exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::NullArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 3;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 3;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::BadArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 2;
+        try
         {
-            exception_info->code = 2;
-            try
-            {
-                exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::BadArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 2;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 2;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::DivisionByZeroImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 4;
+        try
         {
-            exception_info->code = 4;
-            try
-            {
-                exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::DivisionByZeroImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 4;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 4;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::GenericImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 1;
+        try
         {
-            exception_info->code = 1;
-            try
-            {
-                exception_info->object_pointer = new Exception::GenericImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::GenericImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::GenericImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 1;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 1;
+        exception_info->object_pointer = exception_object;
     }
     catch (...)
     {
-        if (exception_info)
-        {
-            exception_info->code = -1;
-        }
+        exception_info->code = -2;
     }
 }
 
 EXCEPTION_API char EXCEPTION_API_CONVENTION example_person_get_sex(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer)
 {
     const Example::PersonImpl* self = static_cast<Example::PersonImpl*>(object_pointer);
+    beautiful_capi_callback_exception_info_t exception_info_default;
+    if (!exception_info)
+    {
+        exception_info = &exception_info_default;
+    }
     try
     {
-        if (exception_info)
-        {
-            exception_info->code = 0;
-            exception_info->object_pointer = 0;
-        }
+        exception_info->code = 0;
+        exception_info->object_pointer = 0;
         return static_cast<char>(self->GetSex());
     }
     catch (Exception::NullArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 3;
+        try
         {
-            exception_info->code = 3;
-            try
-            {
-                exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::NullArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 3;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 3;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::BadArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 2;
+        try
         {
-            exception_info->code = 2;
-            try
-            {
-                exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::BadArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 2;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 2;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::DivisionByZeroImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 4;
+        try
         {
-            exception_info->code = 4;
-            try
-            {
-                exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::DivisionByZeroImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 4;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 4;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::GenericImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 1;
+        try
         {
-            exception_info->code = 1;
-            try
-            {
-                exception_info->object_pointer = new Exception::GenericImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::GenericImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::GenericImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 1;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 1;
+        exception_info->object_pointer = exception_object;
     }
     catch (...)
     {
-        if (exception_info)
-        {
-            exception_info->code = -1;
-        }
+        exception_info->code = -2;
     }
     return static_cast<char>(0);
 }
@@ -1954,350 +1604,275 @@ EXCEPTION_API char EXCEPTION_API_CONVENTION example_person_get_sex(beautiful_cap
 EXCEPTION_API void EXCEPTION_API_CONVENTION example_person_dump(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, void* printer)
 {
     const Example::PersonImpl* self = static_cast<Example::PersonImpl*>(object_pointer);
+    beautiful_capi_callback_exception_info_t exception_info_default;
+    if (!exception_info)
+    {
+        exception_info = &exception_info_default;
+    }
     try
     {
-        if (exception_info)
-        {
-            exception_info->code = 0;
-            exception_info->object_pointer = 0;
-        }
+        exception_info->code = 0;
+        exception_info->object_pointer = 0;
         self->Dump(static_cast<Example::IPrinter*>(printer));
     }
     catch (Exception::NullArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 3;
+        try
         {
-            exception_info->code = 3;
-            try
-            {
-                exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::NullArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 3;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 3;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::BadArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 2;
+        try
         {
-            exception_info->code = 2;
-            try
-            {
-                exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::BadArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 2;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 2;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::DivisionByZeroImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 4;
+        try
         {
-            exception_info->code = 4;
-            try
-            {
-                exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::DivisionByZeroImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 4;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 4;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::GenericImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 1;
+        try
         {
-            exception_info->code = 1;
-            try
-            {
-                exception_info->object_pointer = new Exception::GenericImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::GenericImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::GenericImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 1;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 1;
+        exception_info->object_pointer = exception_object;
     }
     catch (...)
     {
-        if (exception_info)
-        {
-            exception_info->code = -1;
-        }
+        exception_info->code = -2;
     }
 }
 
 EXCEPTION_API void EXCEPTION_API_CONVENTION example_person_print(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, void* printer, const char* text)
 {
     const Example::PersonImpl* self = static_cast<Example::PersonImpl*>(object_pointer);
+    beautiful_capi_callback_exception_info_t exception_info_default;
+    if (!exception_info)
+    {
+        exception_info = &exception_info_default;
+    }
     try
     {
-        if (exception_info)
-        {
-            exception_info->code = 0;
-            exception_info->object_pointer = 0;
-        }
+        exception_info->code = 0;
+        exception_info->object_pointer = 0;
         self->Print(static_cast<Example::IPrinter*>(printer), text);
     }
     catch (Exception::NullArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 3;
+        try
         {
-            exception_info->code = 3;
-            try
-            {
-                exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::NullArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 3;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 3;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::BadArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 2;
+        try
         {
-            exception_info->code = 2;
-            try
-            {
-                exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::BadArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 2;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 2;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::DivisionByZeroImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 4;
+        try
         {
-            exception_info->code = 4;
-            try
-            {
-                exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::DivisionByZeroImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 4;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 4;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::GenericImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 1;
+        try
         {
-            exception_info->code = 1;
-            try
-            {
-                exception_info->object_pointer = new Exception::GenericImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::GenericImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::GenericImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 1;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 1;
+        exception_info->object_pointer = exception_object;
     }
     catch (...)
     {
-        if (exception_info)
-        {
-            exception_info->code = -1;
-        }
+        exception_info->code = -2;
     }
 }
 
 EXCEPTION_API void* EXCEPTION_API_CONVENTION example_person_copy(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer)
 {
+    beautiful_capi_callback_exception_info_t exception_info_default;
+    if (!exception_info)
+    {
+        exception_info = &exception_info_default;
+    }
     try
     {
-        if (exception_info)
-        {
-            exception_info->code = 0;
-            exception_info->object_pointer = 0;
-        }
+        exception_info->code = 0;
+        exception_info->object_pointer = 0;
         return new Example::PersonImpl(*static_cast<Example::PersonImpl*>(object_pointer));
     }
     catch (Exception::NullArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 3;
+        try
         {
-            exception_info->code = 3;
-            try
-            {
-                exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::NullArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 3;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 3;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::BadArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 2;
+        try
         {
-            exception_info->code = 2;
-            try
-            {
-                exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::BadArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 2;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 2;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::DivisionByZeroImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 4;
+        try
         {
-            exception_info->code = 4;
-            try
-            {
-                exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::DivisionByZeroImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 4;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 4;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::GenericImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 1;
+        try
         {
-            exception_info->code = 1;
-            try
-            {
-                exception_info->object_pointer = new Exception::GenericImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::GenericImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::GenericImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 1;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 1;
+        exception_info->object_pointer = exception_object;
     }
     catch (...)
     {
-        if (exception_info)
-        {
-            exception_info->code = -1;
-        }
+        exception_info->code = -2;
     }
     return static_cast<void*>(0);
 }
@@ -2309,117 +1884,92 @@ EXCEPTION_API void EXCEPTION_API_CONVENTION example_person_delete(void* object_p
 
 EXCEPTION_API void* EXCEPTION_API_CONVENTION example_printer_callback_default(beautiful_capi_callback_exception_info_t* exception_info)
 {
+    beautiful_capi_callback_exception_info_t exception_info_default;
+    if (!exception_info)
+    {
+        exception_info = &exception_info_default;
+    }
     try
     {
-        if (exception_info)
-        {
-            exception_info->code = 0;
-            exception_info->object_pointer = 0;
-        }
+        exception_info->code = 0;
+        exception_info->object_pointer = 0;
         return new Example::AutoGen_Internal_Callback_PrinterImpl();
     }
     catch (Exception::NullArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 3;
+        try
         {
-            exception_info->code = 3;
-            try
-            {
-                exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::NullArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 3;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 3;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::BadArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 2;
+        try
         {
-            exception_info->code = 2;
-            try
-            {
-                exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::BadArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 2;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 2;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::DivisionByZeroImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 4;
+        try
         {
-            exception_info->code = 4;
-            try
-            {
-                exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::DivisionByZeroImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 4;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 4;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::GenericImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 1;
+        try
         {
-            exception_info->code = 1;
-            try
-            {
-                exception_info->object_pointer = new Exception::GenericImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::GenericImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::GenericImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 1;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 1;
+        exception_info->object_pointer = exception_object;
     }
     catch (...)
     {
-        if (exception_info)
-        {
-            exception_info->code = -1;
-        }
+        exception_info->code = -2;
     }
     return static_cast<void*>(0);
 }
@@ -2436,25 +1986,25 @@ EXCEPTION_API void* EXCEPTION_API_CONVENTION example_printer_callback_get_object
     return self->GetObjectPointer();
 }
 
-EXCEPTION_API void EXCEPTION_API_CONVENTION example_printer_callback_set_c_function_for_print(void* object_pointer, example_printer_print_callback_type c_function_pointer)
+EXCEPTION_API void EXCEPTION_API_CONVENTION example_printer_callback_set_cfunction_for_print(void* object_pointer, example_printer_print_callback_type c_function_pointer)
 {
     Example::AutoGen_Internal_Callback_PrinterImpl* self = static_cast<Example::AutoGen_Internal_Callback_PrinterImpl*>(object_pointer);
     self->SetCFunctionForPrint(c_function_pointer);
 }
 
-EXCEPTION_API void EXCEPTION_API_CONVENTION example_printer_callback_set_c_function_for_set_printing_quality(void* object_pointer, example_printer_set_printing_quality_callback_type c_function_pointer)
+EXCEPTION_API void EXCEPTION_API_CONVENTION example_printer_callback_set_cfunction_for_set_printing_quality(void* object_pointer, example_printer_set_printing_quality_callback_type c_function_pointer)
 {
     Example::AutoGen_Internal_Callback_PrinterImpl* self = static_cast<Example::AutoGen_Internal_Callback_PrinterImpl*>(object_pointer);
     self->SetCFunctionForSetPrintingQuality(c_function_pointer);
 }
 
-EXCEPTION_API void EXCEPTION_API_CONVENTION example_printer_callback_set_c_function_for_get_printing_quality(void* object_pointer, example_printer_get_printing_quality_callback_type c_function_pointer)
+EXCEPTION_API void EXCEPTION_API_CONVENTION example_printer_callback_set_cfunction_for_get_printing_quality(void* object_pointer, example_printer_get_printing_quality_callback_type c_function_pointer)
 {
     Example::AutoGen_Internal_Callback_PrinterImpl* self = static_cast<Example::AutoGen_Internal_Callback_PrinterImpl*>(object_pointer);
     self->SetCFunctionForGetPrintingQuality(c_function_pointer);
 }
 
-EXCEPTION_API void EXCEPTION_API_CONVENTION example_printer_callback_set_c_function_for_get_device_type(void* object_pointer, example_printer_get_device_type_callback_type c_function_pointer)
+EXCEPTION_API void EXCEPTION_API_CONVENTION example_printer_callback_set_cfunction_for_get_device_type(void* object_pointer, example_printer_get_device_type_callback_type c_function_pointer)
 {
     Example::AutoGen_Internal_Callback_PrinterImpl* self = static_cast<Example::AutoGen_Internal_Callback_PrinterImpl*>(object_pointer);
     self->SetCFunctionForGetDeviceType(c_function_pointer);
@@ -2504,117 +2054,92 @@ EXCEPTION_API int EXCEPTION_API_CONVENTION exception_get_patch_version()
 
 EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_generic_new(beautiful_capi_callback_exception_info_t* exception_info)
 {
+    beautiful_capi_callback_exception_info_t exception_info_default;
+    if (!exception_info)
+    {
+        exception_info = &exception_info_default;
+    }
     try
     {
-        if (exception_info)
-        {
-            exception_info->code = 0;
-            exception_info->object_pointer = 0;
-        }
+        exception_info->code = 0;
+        exception_info->object_pointer = 0;
         return new Exception::GenericImpl();
     }
     catch (Exception::NullArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 3;
+        try
         {
-            exception_info->code = 3;
-            try
-            {
-                exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::NullArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 3;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 3;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::BadArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 2;
+        try
         {
-            exception_info->code = 2;
-            try
-            {
-                exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::BadArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 2;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 2;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::DivisionByZeroImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 4;
+        try
         {
-            exception_info->code = 4;
-            try
-            {
-                exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::DivisionByZeroImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 4;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 4;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::GenericImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 1;
+        try
         {
-            exception_info->code = 1;
-            try
-            {
-                exception_info->object_pointer = new Exception::GenericImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::GenericImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::GenericImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 1;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 1;
+        exception_info->object_pointer = exception_object;
     }
     catch (...)
     {
-        if (exception_info)
-        {
-            exception_info->code = -1;
-        }
+        exception_info->code = -2;
     }
     return static_cast<void*>(0);
 }
@@ -2627,117 +2152,92 @@ EXCEPTION_API const char* EXCEPTION_API_CONVENTION exception_generic_get_error_t
 
 EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_generic_copy(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer)
 {
+    beautiful_capi_callback_exception_info_t exception_info_default;
+    if (!exception_info)
+    {
+        exception_info = &exception_info_default;
+    }
     try
     {
-        if (exception_info)
-        {
-            exception_info->code = 0;
-            exception_info->object_pointer = 0;
-        }
+        exception_info->code = 0;
+        exception_info->object_pointer = 0;
         return new Exception::GenericImpl(*static_cast<Exception::GenericImpl*>(object_pointer));
     }
     catch (Exception::NullArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 3;
+        try
         {
-            exception_info->code = 3;
-            try
-            {
-                exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::NullArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 3;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 3;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::BadArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 2;
+        try
         {
-            exception_info->code = 2;
-            try
-            {
-                exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::BadArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 2;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 2;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::DivisionByZeroImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 4;
+        try
         {
-            exception_info->code = 4;
-            try
-            {
-                exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::DivisionByZeroImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 4;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 4;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::GenericImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 1;
+        try
         {
-            exception_info->code = 1;
-            try
-            {
-                exception_info->object_pointer = new Exception::GenericImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::GenericImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::GenericImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 1;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 1;
+        exception_info->object_pointer = exception_object;
     }
     catch (...)
     {
-        if (exception_info)
-        {
-            exception_info->code = -1;
-        }
+        exception_info->code = -2;
     }
     return static_cast<void*>(0);
 }
@@ -2749,117 +2249,92 @@ EXCEPTION_API void EXCEPTION_API_CONVENTION exception_generic_delete(void* objec
 
 EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_bad_argument_new(beautiful_capi_callback_exception_info_t* exception_info)
 {
+    beautiful_capi_callback_exception_info_t exception_info_default;
+    if (!exception_info)
+    {
+        exception_info = &exception_info_default;
+    }
     try
     {
-        if (exception_info)
-        {
-            exception_info->code = 0;
-            exception_info->object_pointer = 0;
-        }
+        exception_info->code = 0;
+        exception_info->object_pointer = 0;
         return new Exception::BadArgumentImpl();
     }
     catch (Exception::NullArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 3;
+        try
         {
-            exception_info->code = 3;
-            try
-            {
-                exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::NullArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 3;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 3;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::BadArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 2;
+        try
         {
-            exception_info->code = 2;
-            try
-            {
-                exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::BadArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 2;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 2;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::DivisionByZeroImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 4;
+        try
         {
-            exception_info->code = 4;
-            try
-            {
-                exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::DivisionByZeroImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 4;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 4;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::GenericImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 1;
+        try
         {
-            exception_info->code = 1;
-            try
-            {
-                exception_info->object_pointer = new Exception::GenericImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::GenericImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::GenericImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 1;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 1;
+        exception_info->object_pointer = exception_object;
     }
     catch (...)
     {
-        if (exception_info)
-        {
-            exception_info->code = -1;
-        }
+        exception_info->code = -2;
     }
     return static_cast<void*>(0);
 }
@@ -2872,117 +2347,92 @@ EXCEPTION_API const char* EXCEPTION_API_CONVENTION exception_bad_argument_get_ar
 
 EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_bad_argument_copy(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer)
 {
+    beautiful_capi_callback_exception_info_t exception_info_default;
+    if (!exception_info)
+    {
+        exception_info = &exception_info_default;
+    }
     try
     {
-        if (exception_info)
-        {
-            exception_info->code = 0;
-            exception_info->object_pointer = 0;
-        }
+        exception_info->code = 0;
+        exception_info->object_pointer = 0;
         return new Exception::BadArgumentImpl(*static_cast<Exception::BadArgumentImpl*>(object_pointer));
     }
     catch (Exception::NullArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 3;
+        try
         {
-            exception_info->code = 3;
-            try
-            {
-                exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::NullArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 3;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 3;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::BadArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 2;
+        try
         {
-            exception_info->code = 2;
-            try
-            {
-                exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::BadArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 2;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 2;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::DivisionByZeroImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 4;
+        try
         {
-            exception_info->code = 4;
-            try
-            {
-                exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::DivisionByZeroImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 4;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 4;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::GenericImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 1;
+        try
         {
-            exception_info->code = 1;
-            try
-            {
-                exception_info->object_pointer = new Exception::GenericImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::GenericImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::GenericImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 1;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 1;
+        exception_info->object_pointer = exception_object;
     }
     catch (...)
     {
-        if (exception_info)
-        {
-            exception_info->code = -1;
-        }
+        exception_info->code = -2;
     }
     return static_cast<void*>(0);
 }
@@ -2999,234 +2449,184 @@ EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_bad_argument_cast_to_base
 
 EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_null_argument_new(beautiful_capi_callback_exception_info_t* exception_info)
 {
+    beautiful_capi_callback_exception_info_t exception_info_default;
+    if (!exception_info)
+    {
+        exception_info = &exception_info_default;
+    }
     try
     {
-        if (exception_info)
-        {
-            exception_info->code = 0;
-            exception_info->object_pointer = 0;
-        }
+        exception_info->code = 0;
+        exception_info->object_pointer = 0;
         return new Exception::NullArgumentImpl();
     }
     catch (Exception::NullArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 3;
+        try
         {
-            exception_info->code = 3;
-            try
-            {
-                exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::NullArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 3;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 3;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::BadArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 2;
+        try
         {
-            exception_info->code = 2;
-            try
-            {
-                exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::BadArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 2;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 2;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::DivisionByZeroImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 4;
+        try
         {
-            exception_info->code = 4;
-            try
-            {
-                exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::DivisionByZeroImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 4;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 4;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::GenericImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 1;
+        try
         {
-            exception_info->code = 1;
-            try
-            {
-                exception_info->object_pointer = new Exception::GenericImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::GenericImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::GenericImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 1;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 1;
+        exception_info->object_pointer = exception_object;
     }
     catch (...)
     {
-        if (exception_info)
-        {
-            exception_info->code = -1;
-        }
+        exception_info->code = -2;
     }
     return static_cast<void*>(0);
 }
 
 EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_null_argument_copy(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer)
 {
+    beautiful_capi_callback_exception_info_t exception_info_default;
+    if (!exception_info)
+    {
+        exception_info = &exception_info_default;
+    }
     try
     {
-        if (exception_info)
-        {
-            exception_info->code = 0;
-            exception_info->object_pointer = 0;
-        }
+        exception_info->code = 0;
+        exception_info->object_pointer = 0;
         return new Exception::NullArgumentImpl(*static_cast<Exception::NullArgumentImpl*>(object_pointer));
     }
     catch (Exception::NullArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 3;
+        try
         {
-            exception_info->code = 3;
-            try
-            {
-                exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::NullArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 3;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 3;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::BadArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 2;
+        try
         {
-            exception_info->code = 2;
-            try
-            {
-                exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::BadArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 2;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 2;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::DivisionByZeroImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 4;
+        try
         {
-            exception_info->code = 4;
-            try
-            {
-                exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::DivisionByZeroImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 4;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 4;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::GenericImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 1;
+        try
         {
-            exception_info->code = 1;
-            try
-            {
-                exception_info->object_pointer = new Exception::GenericImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::GenericImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::GenericImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 1;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 1;
+        exception_info->object_pointer = exception_object;
     }
     catch (...)
     {
-        if (exception_info)
-        {
-            exception_info->code = -1;
-        }
+        exception_info->code = -2;
     }
     return static_cast<void*>(0);
 }
@@ -3243,234 +2643,184 @@ EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_null_argument_cast_to_bas
 
 EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_division_by_zero_new(beautiful_capi_callback_exception_info_t* exception_info)
 {
+    beautiful_capi_callback_exception_info_t exception_info_default;
+    if (!exception_info)
+    {
+        exception_info = &exception_info_default;
+    }
     try
     {
-        if (exception_info)
-        {
-            exception_info->code = 0;
-            exception_info->object_pointer = 0;
-        }
+        exception_info->code = 0;
+        exception_info->object_pointer = 0;
         return new Exception::DivisionByZeroImpl();
     }
     catch (Exception::NullArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 3;
+        try
         {
-            exception_info->code = 3;
-            try
-            {
-                exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::NullArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 3;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 3;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::BadArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 2;
+        try
         {
-            exception_info->code = 2;
-            try
-            {
-                exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::BadArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 2;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 2;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::DivisionByZeroImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 4;
+        try
         {
-            exception_info->code = 4;
-            try
-            {
-                exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::DivisionByZeroImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 4;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 4;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::GenericImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 1;
+        try
         {
-            exception_info->code = 1;
-            try
-            {
-                exception_info->object_pointer = new Exception::GenericImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::GenericImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::GenericImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 1;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 1;
+        exception_info->object_pointer = exception_object;
     }
     catch (...)
     {
-        if (exception_info)
-        {
-            exception_info->code = -1;
-        }
+        exception_info->code = -2;
     }
     return static_cast<void*>(0);
 }
 
 EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_division_by_zero_copy(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer)
 {
+    beautiful_capi_callback_exception_info_t exception_info_default;
+    if (!exception_info)
+    {
+        exception_info = &exception_info_default;
+    }
     try
     {
-        if (exception_info)
-        {
-            exception_info->code = 0;
-            exception_info->object_pointer = 0;
-        }
+        exception_info->code = 0;
+        exception_info->object_pointer = 0;
         return new Exception::DivisionByZeroImpl(*static_cast<Exception::DivisionByZeroImpl*>(object_pointer));
     }
     catch (Exception::NullArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 3;
+        try
         {
-            exception_info->code = 3;
-            try
-            {
-                exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::NullArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::NullArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 3;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 3;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::BadArgumentImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 2;
+        try
         {
-            exception_info->code = 2;
-            try
-            {
-                exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::BadArgumentImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::BadArgumentImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 2;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 2;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::DivisionByZeroImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 4;
+        try
         {
-            exception_info->code = 4;
-            try
-            {
-                exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::DivisionByZeroImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::DivisionByZeroImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 4;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 4;
+        exception_info->object_pointer = exception_object;
     }
     catch (Exception::GenericImpl& exception_object)
     {
-        if (exception_info)
+        exception_info->code = 1;
+        try
         {
-            exception_info->code = 1;
-            try
-            {
-                exception_info->object_pointer = new Exception::GenericImpl(exception_object);
-            }
-            catch (...)
-            {
-                exception_info->code = -1;
-                assert(false);
-            }
+            exception_info->object_pointer = new Exception::GenericImpl(exception_object);
+        }
+        catch (...)
+        {
+            exception_info->code = -1;
+            assert(false);
         }
     }
     catch (Exception::GenericImpl* exception_object)
     {
-        if (exception_info)
-        {
-            exception_info->code = 1;
-            exception_info->object_pointer = exception_object;
-        }
+        exception_info->code = 1;
+        exception_info->object_pointer = exception_object;
     }
     catch (...)
     {
-        if (exception_info)
-        {
-            exception_info->code = -1;
-        }
+        exception_info->code = -2;
     }
     return static_cast<void*>(0);
 }
