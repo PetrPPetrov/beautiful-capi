@@ -29,8 +29,8 @@
 
 #include "ExampleCapi.h"
 #include "ExampleFwd.h"
-#include "Example/PrinterDecl.h"
 #include "ExampleEnums.h"
+#include "Example/PrinterDecl.h"
 
 #ifdef __cplusplus
 
@@ -59,19 +59,18 @@ public:
      */
     inline void Print(const char* text) const;
     /**
-     * @brief Sets the printing quality.
-     * @param quality specifies the required printing quality.
+     * @brief Gets the printing device type.
+     * @returns Printing device type.
      */
-    inline void SetPrintingQuality(Example::PrinterPtr::EQuality quality);
+    inline Example::EPrintingDevice GetDeviceType() const;
     /**
      * @brief Gets the printing quality.
      */
     inline Example::PrinterPtr::EQuality GetPrintingQuality() const;
     /**
-     * @brief Gets the printing device type.
-     * @returns Printing device type.
+     * @brief Sets the printing quality.
      */
-    inline Example::EPrintingDevice GetDeviceType() const;
+    inline void SetPrintingQuality(Example::PrinterPtr::EQuality value);
 
     inline PrinterPtr(const PrinterPtr& other);
     #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES

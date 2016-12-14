@@ -36,6 +36,6 @@ enum EQuality
 
 virtual ~IPrinter() {}
 virtual void Print(const char* text) const = 0;
-virtual void SetPrintingQuality(Example::IPrinter::EQuality quality) = 0;
-virtual Example::IPrinter::EQuality GetPrintingQuality() const = 0;
 virtual Example::EPrintingDevice GetDeviceType() const = 0;
+virtual Example::IPrinter::EQuality GetPrintingQuality() const = 0;
+virtual void SetPrintingQuality(Example::IPrinter::EQuality value) = 0;

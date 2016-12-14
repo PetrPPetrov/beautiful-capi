@@ -21,7 +21,7 @@
 
 
 import copy
-from Parser import TClass, TMethod, TArgument, TNamespace, TBeautifulCapiRoot
+from Parser import TClass, TMethod, TArgument, TNamespace, TBeautifulCapiRoot, TDocumentation
 
 
 class PropertiesDefaultValues(object):
@@ -36,6 +36,29 @@ class PropertiesProcessor(object):
         self.root_node = root_node
         self.properties_stack = [PropertiesDefaultValues()]
 
+    @staticmethod
+    def __process_documentation_impl(documentation, get: bool):
+        for i in range(len(documentation.all_items)):
+            doc_item = documentation.all_items[i]
+            if type(doc_item) is str:
+                documentation.all_items[i] = doc_item.format(Setget='Gets' if get else 'Sets')
+            else:
+                PropertiesProcessor.__process_documentation(doc_item)
+
+    @staticmethod
+    def __process_documentation(documentation, get: bool):
+        if issubclass(type(documentation), TDocumentation):
+            for brief in documentation.briefs:
+                PropertiesProcessor.__process_documentation_impl(brief, get)
+            for doc_return in documentation.returns:
+                PropertiesProcessor.__process_documentation_impl(doc_return, get)
+        PropertiesProcessor.__process_documentation_impl(documentation, get)
+
+    @staticmethod
+    def __process_documentations(documented_object, get: bool):
+        for documentation in documented_object.documentations:
+            PropertiesProcessor.__process_documentation(documentation, get)
+
     def process_class(self, cur_class: TClass):
         top = self.properties_stack.pop()
         for cur_property in cur_class.properties:
@@ -46,6 +69,8 @@ class PropertiesProcessor(object):
             new_get_method.name = cur_get_prefix + cur_property.name
             new_get_method.const = cur_get_const
             new_get_method.return_type = cur_property.type_name
+            new_get_method.documentations = copy.deepcopy(cur_property.documentations)
+            PropertiesProcessor.__process_documentations(new_get_method, True)
             cur_class.methods.append(new_get_method)
             new_set_method = TMethod()
             new_set_method.name = cur_set_prefix + cur_property.name
@@ -53,6 +78,8 @@ class PropertiesProcessor(object):
             set_input_argument.name = 'value'
             set_input_argument.type_name = cur_property.type_name
             new_set_method.arguments.append(set_input_argument)
+            new_set_method.documentations = copy.deepcopy(cur_property.documentations)
+            PropertiesProcessor.__process_documentations(new_set_method, False)
             cur_class.methods.append(new_set_method)
         self.properties_stack.append(top)
 

@@ -193,20 +193,19 @@ class SchemaGenerator(object):
             ))
             if mixed:
                 self.output_file.put_line('self.all_items.append(new_element)')
+            self.output_file.put_line('return True')
 
     def __build_load_element(self, complex_type, base_class):
         self.output_file.put_line('def load_element(self, element):')
         with FileGenerator.Indent(self.output_file):
-            load_is_empty = True
             if base_class != 'object':
-                load_is_empty = False
-                self.output_file.put_line('super().load_element(element)')
+                self.output_file.put_line('if super().load_element(element):')
+                with FileGenerator.Indent(self.output_file):
+                    self.output_file.put_line('return True')
             mixed = complex_type.hasAttribute('mixed') and string_to_bool(complex_type.getAttribute('mixed'))
             for element in complex_type.getElementsByTagName('xs:element'):
-                load_is_empty = False
                 self.__build_load_element_item(element, mixed)
             if mixed:
-                load_is_empty = False
                 self.output_file.put_line('if element.nodeType == element.TEXT_NODE:')
                 with FileGenerator.Indent(self.output_file):
                     self.output_file.put_line("cur_texts = [text.strip() for text in element.data.split('\\n')]")
@@ -221,8 +220,8 @@ class SchemaGenerator(object):
                         with FileGenerator.Indent(self.output_file):
                             self.output_file.put_line('self.all_items.append(text)')
                         self.output_file.put_line('first = False')
-            if load_is_empty:
-                self.output_file.put_line('pass')
+                    self.output_file.put_line('return True')
+            self.output_file.put_line('return False')
 
     def __build_load_attributes(self, complex_type, base_class):
         self.output_file.put_line('def load_attributes(self, dom_node):')

@@ -48,21 +48,11 @@
         </documentation>
         <argument type="const char*" name="text"/>
       </method>
-      <method name="SetPrintingQuality">
+      <property name="PrintingQuality" type="Example::Printer::EQuality">
         <documentation>
-          <brief>Sets the printing quality.</brief>
+          <brief>{Setget} the printing quality.</brief>
         </documentation>
-        <argument type="Example::Printer::EQuality" name="quality">
-          <documentation>
-            specifies the required printing quality.
-          </documentation>
-        </argument>
-      </method>
-      <method name="GetPrintingQuality" return="Example::Printer::EQuality" const="true">
-        <documentation>
-          <brief>Gets the printing quality.</brief>
-        </documentation>
-      </method>
+      </property>
       <method name="GetDeviceType" return="Example::EPrintingDevice" const="true">
         <documentation>
           <brief>Gets the printing device type.</brief>

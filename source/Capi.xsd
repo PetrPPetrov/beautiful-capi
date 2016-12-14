@@ -138,6 +138,9 @@
     <xs:attribute name="system" type="xs:boolean" use="optional" default="false"/>
   </xs:complexType>
   <xs:complexType name="TProperty">
+    <xs:sequence>
+      <xs:element name="documentation" minOccurs="0" maxOccurs="1" type="TDocumentation"/>
+    </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required"/>
     <xs:attribute name="type" type="xs:string" use="required"/>
     <xs:attribute name="set_prefix" type="xs:string" use="optional" default="Set"/>

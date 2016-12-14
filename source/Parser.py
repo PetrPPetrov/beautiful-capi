@@ -71,6 +71,8 @@ class TBeautifulCapiRoot(object):
             new_element = TNamespace()
             new_element.load(element)
             self.namespaces.append(new_element)
+            return True
+        return False
 
     def load_attributes(self, dom_node):
         if dom_node.hasAttribute("project_name"):
@@ -103,7 +105,7 @@ class TApiInclude(object):
         self.path_filled = False
 
     def load_element(self, element):
-        pass
+        return False
 
     def load_attributes(self, dom_node):
         if dom_node.hasAttribute("path"):
@@ -140,42 +142,53 @@ class TNamespace(object):
             new_element = TApiInclude()
             new_element.load(element)
             self.includes.append(new_element)
+            return True
         if element.nodeName == "namespace":
             new_element = TNamespace()
             new_element.load(element)
             self.namespaces.append(new_element)
+            return True
         if element.nodeName == "include_header":
             new_element = THeaderInclude()
             new_element.load(element)
             self.include_headers.append(new_element)
+            return True
         if element.nodeName == "enumeration":
             new_element = TEnumeration()
             new_element.load(element)
             self.enumerations.append(new_element)
+            return True
         if element.nodeName == "class":
             new_element = TClass()
             new_element.load(element)
             self.classes.append(new_element)
+            return True
         if element.nodeName == "function":
             new_element = TFunction()
             new_element.load(element)
             self.functions.append(new_element)
+            return True
         if element.nodeName == "template":
             new_element = TTemplate()
             new_element.load(element)
             self.templates.append(new_element)
+            return True
         if element.nodeName == "property_set_prefix":
             new_element = TPropertySetPrefix()
             new_element.load(element)
             self.property_set_prefixes.append(new_element)
+            return True
         if element.nodeName == "property_get_prefix":
             new_element = TPropertyGetPrefix()
             new_element.load(element)
             self.property_get_prefixes.append(new_element)
+            return True
         if element.nodeName == "property_get_const":
             new_element = TPropertyGetConst()
             new_element.load(element)
             self.property_get_consts.append(new_element)
+            return True
+        return False
 
     def load_attributes(self, dom_node):
         if dom_node.hasAttribute("name"):
@@ -207,6 +220,8 @@ class TEnumerationItem(object):
             new_element = TGenericDocumentation()
             new_element.load(element)
             self.documentations.append(new_element)
+            return True
+        return False
 
     def load_attributes(self, dom_node):
         if dom_node.hasAttribute("name"):
@@ -239,10 +254,13 @@ class TEnumeration(object):
             new_element = TDocumentation()
             new_element.load(element)
             self.documentations.append(new_element)
+            return True
         if element.nodeName == "item":
             new_element = TEnumerationItem()
             new_element.load(element)
             self.items.append(new_element)
+            return True
+        return False
 
     def load_attributes(self, dom_node):
         if dom_node.hasAttribute("name"):
@@ -272,14 +290,18 @@ class TTemplate(object):
             new_element = TArgument()
             new_element.load(element)
             self.arguments.append(new_element)
+            return True
         if element.nodeName == "instantiation":
             new_element = TInstantiation()
             new_element.load(element)
             self.instantiations.append(new_element)
+            return True
         if element.nodeName == "class":
             new_element = TClass()
             new_element.load(element)
             self.classes.append(new_element)
+            return True
+        return False
 
     def load_attributes(self, dom_node):
         pass
@@ -302,6 +324,8 @@ class TInstantiation(object):
             new_element = TInstantiationArgument()
             new_element.load(element)
             self.arguments.append(new_element)
+            return True
+        return False
 
     def load_attributes(self, dom_node):
         if dom_node.hasAttribute("typedef_name"):
@@ -324,7 +348,7 @@ class TInstantiationArgument(object):
         self.value_filled = False
 
     def load_element(self, element):
-        pass
+        return False
 
     def load_attributes(self, dom_node):
         if dom_node.hasAttribute("name"):
@@ -384,30 +408,38 @@ class TClass(object):
             new_element = TDocumentation()
             new_element.load(element)
             self.documentations.append(new_element)
+            return True
         if element.nodeName == "include_header":
             new_element = THeaderInclude()
             new_element.load(element)
             self.include_headers.append(new_element)
+            return True
         if element.nodeName == "enumeration":
             new_element = TEnumeration()
             new_element.load(element)
             self.enumerations.append(new_element)
+            return True
         if element.nodeName == "constructor":
             new_element = TConstructor()
             new_element.load(element)
             self.constructors.append(new_element)
+            return True
         if element.nodeName == "property":
             new_element = TProperty()
             new_element.load(element)
             self.properties.append(new_element)
+            return True
         if element.nodeName == "method":
             new_element = TMethod()
             new_element.load(element)
             self.methods.append(new_element)
+            return True
         if element.nodeName == "callback":
             new_element = TCallback()
             new_element.load(element)
             self.callbacks.append(new_element)
+            return True
+        return False
 
     def load_attributes(self, dom_node):
         if dom_node.hasAttribute("name"):
@@ -484,7 +516,7 @@ class TCallback(object):
         self.implementation_class_header_filled = False
 
     def load_element(self, element):
-        pass
+        return False
 
     def load_attributes(self, dom_node):
         if dom_node.hasAttribute("lifecycle"):
@@ -531,10 +563,13 @@ class TConstructor(object):
             new_element = TDocumentation()
             new_element.load(element)
             self.documentations.append(new_element)
+            return True
         if element.nodeName == "argument":
             new_element = TArgument()
             new_element.load(element)
             self.arguments.append(new_element)
+            return True
+        return False
 
     def load_attributes(self, dom_node):
         if dom_node.hasAttribute("name"):
@@ -565,7 +600,9 @@ class TMethod(TConstructor):
         self.const_filled = False
 
     def load_element(self, element):
-        super().load_element(element)
+        if super().load_element(element):
+            return True
+        return False
 
     def load_attributes(self, dom_node):
         super().load_attributes(dom_node)
@@ -593,7 +630,9 @@ class TFunction(TMethod):
         self.implementation_header_filled = False
 
     def load_element(self, element):
-        super().load_element(element)
+        if super().load_element(element):
+            return True
+        return False
 
     def load_attributes(self, dom_node):
         super().load_attributes(dom_node)
@@ -626,6 +665,8 @@ class TArgument(object):
             new_element = TGenericDocumentation()
             new_element.load(element)
             self.documentations.append(new_element)
+            return True
+        return False
 
     def load_attributes(self, dom_node):
         if dom_node.hasAttribute("name"):
@@ -652,7 +693,7 @@ class THeaderInclude(object):
         self.system_filled = False
 
     def load_element(self, element):
-        pass
+        return False
 
     def load_attributes(self, dom_node):
         if dom_node.hasAttribute("file"):
@@ -683,9 +724,15 @@ class TProperty(object):
         self.get_prefix_filled = False
         self.get_const = True
         self.get_const_filled = False
+        self.documentations = []
 
     def load_element(self, element):
-        pass
+        if element.nodeName == "documentation":
+            new_element = TDocumentation()
+            new_element.load(element)
+            self.documentations.append(new_element)
+            return True
+        return False
 
     def load_attributes(self, dom_node):
         if dom_node.hasAttribute("name"):
@@ -722,7 +769,7 @@ class TPropertySetPrefix(object):
         self.value_filled = False
 
     def load_element(self, element):
-        pass
+        return False
 
     def load_attributes(self, dom_node):
         if dom_node.hasAttribute("value"):
@@ -743,7 +790,7 @@ class TPropertyGetPrefix(object):
         self.value_filled = False
 
     def load_element(self, element):
-        pass
+        return False
 
     def load_attributes(self, dom_node):
         if dom_node.hasAttribute("value"):
@@ -764,7 +811,7 @@ class TPropertyGetConst(object):
         self.value_filled = False
 
     def load_element(self, element):
-        pass
+        return False
 
     def load_attributes(self, dom_node):
         if dom_node.hasAttribute("value"):
@@ -792,6 +839,8 @@ class TReference(object):
                 else:
                     self.all_items.append(text)
                 first = False
+            return True
+        return False
 
     def load_attributes(self, dom_node):
         pass
@@ -814,11 +863,13 @@ class TGenericDocumentation(object):
             new_element.load(element)
             self.references.append(new_element)
             self.all_items.append(new_element)
+            return True
         if element.nodeName == "see_also":
             new_element = TGenericDocumentation()
             new_element.load(element)
             self.see_alsos.append(new_element)
             self.all_items.append(new_element)
+            return True
         if element.nodeType == element.TEXT_NODE:
             cur_texts = [text.strip() for text in element.data.split('\n')]
             first = True
@@ -828,6 +879,8 @@ class TGenericDocumentation(object):
                 else:
                     self.all_items.append(text)
                 first = False
+            return True
+        return False
 
     def load_attributes(self, dom_node):
         pass
@@ -845,15 +898,19 @@ class TDocumentation(TGenericDocumentation):
         self.returns = []
 
     def load_element(self, element):
-        super().load_element(element)
+        if super().load_element(element):
+            return True
         if element.nodeName == "brief":
             new_element = TGenericDocumentation()
             new_element.load(element)
             self.briefs.append(new_element)
+            return True
         if element.nodeName == "returns":
             new_element = TGenericDocumentation()
             new_element.load(element)
             self.returns.append(new_element)
+            return True
+        return False
 
     def load_attributes(self, dom_node):
         super().load_attributes(dom_node)

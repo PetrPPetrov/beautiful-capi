@@ -42,9 +42,9 @@ public:
     inline void SetObjectPointer(void* custom_object);
     inline void* GetObjectPointer() const;
     inline void SetCFunctionForPrint(example_printer_print_callback_type c_function_pointer);
-    inline void SetCFunctionForSetPrintingQuality(example_printer_set_printing_quality_callback_type c_function_pointer);
-    inline void SetCFunctionForGetPrintingQuality(example_printer_get_printing_quality_callback_type c_function_pointer);
     inline void SetCFunctionForGetDeviceType(example_printer_get_device_type_callback_type c_function_pointer);
+    inline void SetCFunctionForGetPrintingQuality(example_printer_get_printing_quality_callback_type c_function_pointer);
+    inline void SetCFunctionForSetPrintingQuality(example_printer_set_printing_quality_callback_type c_function_pointer);
 
     inline PrinterCallbackPtr(const PrinterCallbackPtr& other);
     #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES

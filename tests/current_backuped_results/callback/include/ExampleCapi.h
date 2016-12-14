@@ -121,18 +121,18 @@ enum beautiful_capi_callback_exception_code_t
 #ifndef EXAMPLE_CAPI_USE_DYNAMIC_LOADER
 
     typedef void (EXAMPLE_API_CONVENTION *example_printer_print_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* text);
-    typedef void (EXAMPLE_API_CONVENTION *example_printer_set_printing_quality_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, int quality);
-    typedef int (EXAMPLE_API_CONVENTION *example_printer_get_printing_quality_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
     typedef int (EXAMPLE_API_CONVENTION *example_printer_get_device_type_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+    typedef int (EXAMPLE_API_CONVENTION *example_printer_get_printing_quality_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_printer_set_printing_quality_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, int value);
 
     EXAMPLE_API void* EXAMPLE_API_CONVENTION example_create_default_printer(beautiful_capi_callback_exception_info_t* exception_info, int printing_device);
     EXAMPLE_API int EXAMPLE_API_CONVENTION example_get_major_version();
     EXAMPLE_API int EXAMPLE_API_CONVENTION example_get_minor_version();
     EXAMPLE_API int EXAMPLE_API_CONVENTION example_get_patch_version();
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_print(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* text);
-    EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_set_printing_quality(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, int quality);
-    EXAMPLE_API int EXAMPLE_API_CONVENTION example_printer_get_printing_quality(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
     EXAMPLE_API int EXAMPLE_API_CONVENTION example_printer_get_device_type(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+    EXAMPLE_API int EXAMPLE_API_CONVENTION example_printer_get_printing_quality(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_set_printing_quality(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, int value);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_add_ref(void* object_pointer);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_release(void* object_pointer);
     EXAMPLE_API void* EXAMPLE_API_CONVENTION example_person_default(beautiful_capi_callback_exception_info_t* exception_info);
@@ -152,9 +152,9 @@ enum beautiful_capi_callback_exception_code_t
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_callback_set_object_pointer(void* object_pointer, void* custom_object);
     EXAMPLE_API void* EXAMPLE_API_CONVENTION example_printer_callback_get_object_pointer(void* object_pointer);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_callback_set_cfunction_for_print(void* object_pointer, example_printer_print_callback_type c_function_pointer);
-    EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_callback_set_cfunction_for_set_printing_quality(void* object_pointer, example_printer_set_printing_quality_callback_type c_function_pointer);
-    EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_callback_set_cfunction_for_get_printing_quality(void* object_pointer, example_printer_get_printing_quality_callback_type c_function_pointer);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_callback_set_cfunction_for_get_device_type(void* object_pointer, example_printer_get_device_type_callback_type c_function_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_callback_set_cfunction_for_get_printing_quality(void* object_pointer, example_printer_get_printing_quality_callback_type c_function_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_callback_set_cfunction_for_set_printing_quality(void* object_pointer, example_printer_set_printing_quality_callback_type c_function_pointer);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_callback_add_ref(void* object_pointer);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_callback_release(void* object_pointer);
     EXAMPLE_API void* EXAMPLE_API_CONVENTION example_printer_callback_cast_to_base(void* object_pointer);
@@ -192,17 +192,17 @@ enum beautiful_capi_callback_exception_code_t
 #else /* EXAMPLE_CAPI_USE_DYNAMIC_LOADER */
 
     typedef void (EXAMPLE_API_CONVENTION *example_printer_print_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* text);
-    typedef void (EXAMPLE_API_CONVENTION *example_printer_set_printing_quality_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, int quality);
-    typedef int (EXAMPLE_API_CONVENTION *example_printer_get_printing_quality_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
     typedef int (EXAMPLE_API_CONVENTION *example_printer_get_device_type_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+    typedef int (EXAMPLE_API_CONVENTION *example_printer_get_printing_quality_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_printer_set_printing_quality_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, int value);
     typedef void* (EXAMPLE_API_CONVENTION *example_create_default_printer_function_type)(beautiful_capi_callback_exception_info_t* exception_info, int printing_device);
     typedef int (EXAMPLE_API_CONVENTION *example_get_major_version_function_type)();
     typedef int (EXAMPLE_API_CONVENTION *example_get_minor_version_function_type)();
     typedef int (EXAMPLE_API_CONVENTION *example_get_patch_version_function_type)();
     typedef void (EXAMPLE_API_CONVENTION *example_printer_print_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* text);
-    typedef void (EXAMPLE_API_CONVENTION *example_printer_set_printing_quality_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, int quality);
-    typedef int (EXAMPLE_API_CONVENTION *example_printer_get_printing_quality_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
     typedef int (EXAMPLE_API_CONVENTION *example_printer_get_device_type_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+    typedef int (EXAMPLE_API_CONVENTION *example_printer_get_printing_quality_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_printer_set_printing_quality_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, int value);
     typedef void (EXAMPLE_API_CONVENTION *example_printer_add_ref_function_type)(void* object_pointer);
     typedef void (EXAMPLE_API_CONVENTION *example_printer_release_function_type)(void* object_pointer);
     typedef void* (EXAMPLE_API_CONVENTION *example_person_default_function_type)(beautiful_capi_callback_exception_info_t* exception_info);
@@ -222,9 +222,9 @@ enum beautiful_capi_callback_exception_code_t
     typedef void (EXAMPLE_API_CONVENTION *example_printer_callback_set_object_pointer_function_type)(void* object_pointer, void* custom_object);
     typedef void* (EXAMPLE_API_CONVENTION *example_printer_callback_get_object_pointer_function_type)(void* object_pointer);
     typedef void (EXAMPLE_API_CONVENTION *example_printer_callback_set_cfunction_for_print_function_type)(void* object_pointer, example_printer_print_callback_type c_function_pointer);
-    typedef void (EXAMPLE_API_CONVENTION *example_printer_callback_set_cfunction_for_set_printing_quality_function_type)(void* object_pointer, example_printer_set_printing_quality_callback_type c_function_pointer);
-    typedef void (EXAMPLE_API_CONVENTION *example_printer_callback_set_cfunction_for_get_printing_quality_function_type)(void* object_pointer, example_printer_get_printing_quality_callback_type c_function_pointer);
     typedef void (EXAMPLE_API_CONVENTION *example_printer_callback_set_cfunction_for_get_device_type_function_type)(void* object_pointer, example_printer_get_device_type_callback_type c_function_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_printer_callback_set_cfunction_for_get_printing_quality_function_type)(void* object_pointer, example_printer_get_printing_quality_callback_type c_function_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_printer_callback_set_cfunction_for_set_printing_quality_function_type)(void* object_pointer, example_printer_set_printing_quality_callback_type c_function_pointer);
     typedef void (EXAMPLE_API_CONVENTION *example_printer_callback_add_ref_function_type)(void* object_pointer);
     typedef void (EXAMPLE_API_CONVENTION *example_printer_callback_release_function_type)(void* object_pointer);
     typedef void* (EXAMPLE_API_CONVENTION *example_printer_callback_cast_to_base_function_type)(void* object_pointer);
@@ -257,20 +257,20 @@ enum beautiful_capi_callback_exception_code_t
         #else
             extern example_printer_print_function_type example_printer_print = 0;
         #endif
-        #ifdef example_printer_set_printing_quality_define_function_pointer_var
-            example_printer_set_printing_quality_define_function_pointer_var
+        #ifdef example_printer_get_device_type_define_function_pointer_var
+            example_printer_get_device_type_define_function_pointer_var
         #else
-            extern example_printer_set_printing_quality_function_type example_printer_set_printing_quality = 0;
+            extern example_printer_get_device_type_function_type example_printer_get_device_type = 0;
         #endif
         #ifdef example_printer_get_printing_quality_define_function_pointer_var
             example_printer_get_printing_quality_define_function_pointer_var
         #else
             extern example_printer_get_printing_quality_function_type example_printer_get_printing_quality = 0;
         #endif
-        #ifdef example_printer_get_device_type_define_function_pointer_var
-            example_printer_get_device_type_define_function_pointer_var
+        #ifdef example_printer_set_printing_quality_define_function_pointer_var
+            example_printer_set_printing_quality_define_function_pointer_var
         #else
-            extern example_printer_get_device_type_function_type example_printer_get_device_type = 0;
+            extern example_printer_set_printing_quality_function_type example_printer_set_printing_quality = 0;
         #endif
         #ifdef example_printer_add_ref_define_function_pointer_var
             example_printer_add_ref_define_function_pointer_var
@@ -367,20 +367,20 @@ enum beautiful_capi_callback_exception_code_t
         #else
             extern example_printer_callback_set_cfunction_for_print_function_type example_printer_callback_set_cfunction_for_print = 0;
         #endif
-        #ifdef example_printer_callback_set_cfunction_for_set_printing_quality_define_function_pointer_var
-            example_printer_callback_set_cfunction_for_set_printing_quality_define_function_pointer_var
+        #ifdef example_printer_callback_set_cfunction_for_get_device_type_define_function_pointer_var
+            example_printer_callback_set_cfunction_for_get_device_type_define_function_pointer_var
         #else
-            extern example_printer_callback_set_cfunction_for_set_printing_quality_function_type example_printer_callback_set_cfunction_for_set_printing_quality = 0;
+            extern example_printer_callback_set_cfunction_for_get_device_type_function_type example_printer_callback_set_cfunction_for_get_device_type = 0;
         #endif
         #ifdef example_printer_callback_set_cfunction_for_get_printing_quality_define_function_pointer_var
             example_printer_callback_set_cfunction_for_get_printing_quality_define_function_pointer_var
         #else
             extern example_printer_callback_set_cfunction_for_get_printing_quality_function_type example_printer_callback_set_cfunction_for_get_printing_quality = 0;
         #endif
-        #ifdef example_printer_callback_set_cfunction_for_get_device_type_define_function_pointer_var
-            example_printer_callback_set_cfunction_for_get_device_type_define_function_pointer_var
+        #ifdef example_printer_callback_set_cfunction_for_set_printing_quality_define_function_pointer_var
+            example_printer_callback_set_cfunction_for_set_printing_quality_define_function_pointer_var
         #else
-            extern example_printer_callback_set_cfunction_for_get_device_type_function_type example_printer_callback_set_cfunction_for_get_device_type = 0;
+            extern example_printer_callback_set_cfunction_for_set_printing_quality_function_type example_printer_callback_set_cfunction_for_set_printing_quality = 0;
         #endif
         #ifdef example_printer_callback_add_ref_define_function_pointer_var
             example_printer_callback_add_ref_define_function_pointer_var
@@ -410,9 +410,9 @@ enum beautiful_capi_callback_exception_code_t
         extern example_get_minor_version_function_type example_get_minor_version;
         extern example_get_patch_version_function_type example_get_patch_version;
         extern example_printer_print_function_type example_printer_print;
-        extern example_printer_set_printing_quality_function_type example_printer_set_printing_quality;
-        extern example_printer_get_printing_quality_function_type example_printer_get_printing_quality;
         extern example_printer_get_device_type_function_type example_printer_get_device_type;
+        extern example_printer_get_printing_quality_function_type example_printer_get_printing_quality;
+        extern example_printer_set_printing_quality_function_type example_printer_set_printing_quality;
         extern example_printer_add_ref_function_type example_printer_add_ref;
         extern example_printer_release_function_type example_printer_release;
         extern example_person_default_function_type example_person_default;
@@ -432,9 +432,9 @@ enum beautiful_capi_callback_exception_code_t
         extern example_printer_callback_set_object_pointer_function_type example_printer_callback_set_object_pointer;
         extern example_printer_callback_get_object_pointer_function_type example_printer_callback_get_object_pointer;
         extern example_printer_callback_set_cfunction_for_print_function_type example_printer_callback_set_cfunction_for_print;
-        extern example_printer_callback_set_cfunction_for_set_printing_quality_function_type example_printer_callback_set_cfunction_for_set_printing_quality;
-        extern example_printer_callback_set_cfunction_for_get_printing_quality_function_type example_printer_callback_set_cfunction_for_get_printing_quality;
         extern example_printer_callback_set_cfunction_for_get_device_type_function_type example_printer_callback_set_cfunction_for_get_device_type;
+        extern example_printer_callback_set_cfunction_for_get_printing_quality_function_type example_printer_callback_set_cfunction_for_get_printing_quality;
+        extern example_printer_callback_set_cfunction_for_set_printing_quality_function_type example_printer_callback_set_cfunction_for_set_printing_quality;
         extern example_printer_callback_add_ref_function_type example_printer_callback_add_ref;
         extern example_printer_callback_release_function_type example_printer_callback_release;
         extern example_printer_callback_cast_to_base_function_type example_printer_callback_cast_to_base;
@@ -518,21 +518,21 @@ enum beautiful_capi_callback_exception_code_t
                 #else /* example_printer_print_load_function_call */
                     load_function<example_printer_print_function_type>(example_printer_print, "example_printer_print");
                 #endif /* example_printer_print_load_function_call */
-                #ifdef example_printer_set_printing_quality_load_function_call
-                    example_printer_set_printing_quality_load_function_call
-                #else /* example_printer_set_printing_quality_load_function_call */
-                    load_function<example_printer_set_printing_quality_function_type>(example_printer_set_printing_quality, "example_printer_set_printing_quality");
-                #endif /* example_printer_set_printing_quality_load_function_call */
-                #ifdef example_printer_get_printing_quality_load_function_call
-                    example_printer_get_printing_quality_load_function_call
-                #else /* example_printer_get_printing_quality_load_function_call */
-                    load_function<example_printer_get_printing_quality_function_type>(example_printer_get_printing_quality, "example_printer_get_printing_quality");
-                #endif /* example_printer_get_printing_quality_load_function_call */
                 #ifdef example_printer_get_device_type_load_function_call
                     example_printer_get_device_type_load_function_call
                 #else /* example_printer_get_device_type_load_function_call */
                     load_function<example_printer_get_device_type_function_type>(example_printer_get_device_type, "example_printer_get_device_type");
                 #endif /* example_printer_get_device_type_load_function_call */
+                #ifdef example_printer_get_printing_quality_load_function_call
+                    example_printer_get_printing_quality_load_function_call
+                #else /* example_printer_get_printing_quality_load_function_call */
+                    load_function<example_printer_get_printing_quality_function_type>(example_printer_get_printing_quality, "example_printer_get_printing_quality");
+                #endif /* example_printer_get_printing_quality_load_function_call */
+                #ifdef example_printer_set_printing_quality_load_function_call
+                    example_printer_set_printing_quality_load_function_call
+                #else /* example_printer_set_printing_quality_load_function_call */
+                    load_function<example_printer_set_printing_quality_function_type>(example_printer_set_printing_quality, "example_printer_set_printing_quality");
+                #endif /* example_printer_set_printing_quality_load_function_call */
                 #ifdef example_printer_add_ref_load_function_call
                     example_printer_add_ref_load_function_call
                 #else /* example_printer_add_ref_load_function_call */
@@ -628,21 +628,21 @@ enum beautiful_capi_callback_exception_code_t
                 #else /* example_printer_callback_set_cfunction_for_print_load_function_call */
                     load_function<example_printer_callback_set_cfunction_for_print_function_type>(example_printer_callback_set_cfunction_for_print, "example_printer_callback_set_cfunction_for_print");
                 #endif /* example_printer_callback_set_cfunction_for_print_load_function_call */
-                #ifdef example_printer_callback_set_cfunction_for_set_printing_quality_load_function_call
-                    example_printer_callback_set_cfunction_for_set_printing_quality_load_function_call
-                #else /* example_printer_callback_set_cfunction_for_set_printing_quality_load_function_call */
-                    load_function<example_printer_callback_set_cfunction_for_set_printing_quality_function_type>(example_printer_callback_set_cfunction_for_set_printing_quality, "example_printer_callback_set_cfunction_for_set_printing_quality");
-                #endif /* example_printer_callback_set_cfunction_for_set_printing_quality_load_function_call */
-                #ifdef example_printer_callback_set_cfunction_for_get_printing_quality_load_function_call
-                    example_printer_callback_set_cfunction_for_get_printing_quality_load_function_call
-                #else /* example_printer_callback_set_cfunction_for_get_printing_quality_load_function_call */
-                    load_function<example_printer_callback_set_cfunction_for_get_printing_quality_function_type>(example_printer_callback_set_cfunction_for_get_printing_quality, "example_printer_callback_set_cfunction_for_get_printing_quality");
-                #endif /* example_printer_callback_set_cfunction_for_get_printing_quality_load_function_call */
                 #ifdef example_printer_callback_set_cfunction_for_get_device_type_load_function_call
                     example_printer_callback_set_cfunction_for_get_device_type_load_function_call
                 #else /* example_printer_callback_set_cfunction_for_get_device_type_load_function_call */
                     load_function<example_printer_callback_set_cfunction_for_get_device_type_function_type>(example_printer_callback_set_cfunction_for_get_device_type, "example_printer_callback_set_cfunction_for_get_device_type");
                 #endif /* example_printer_callback_set_cfunction_for_get_device_type_load_function_call */
+                #ifdef example_printer_callback_set_cfunction_for_get_printing_quality_load_function_call
+                    example_printer_callback_set_cfunction_for_get_printing_quality_load_function_call
+                #else /* example_printer_callback_set_cfunction_for_get_printing_quality_load_function_call */
+                    load_function<example_printer_callback_set_cfunction_for_get_printing_quality_function_type>(example_printer_callback_set_cfunction_for_get_printing_quality, "example_printer_callback_set_cfunction_for_get_printing_quality");
+                #endif /* example_printer_callback_set_cfunction_for_get_printing_quality_load_function_call */
+                #ifdef example_printer_callback_set_cfunction_for_set_printing_quality_load_function_call
+                    example_printer_callback_set_cfunction_for_set_printing_quality_load_function_call
+                #else /* example_printer_callback_set_cfunction_for_set_printing_quality_load_function_call */
+                    load_function<example_printer_callback_set_cfunction_for_set_printing_quality_function_type>(example_printer_callback_set_cfunction_for_set_printing_quality, "example_printer_callback_set_cfunction_for_set_printing_quality");
+                #endif /* example_printer_callback_set_cfunction_for_set_printing_quality_load_function_call */
                 #ifdef example_printer_callback_add_ref_load_function_call
                     example_printer_callback_add_ref_load_function_call
                 #else /* example_printer_callback_add_ref_load_function_call */
@@ -718,21 +718,21 @@ enum beautiful_capi_callback_exception_code_t
                 #else /* example_printer_print_zero_function_pointer */
                     example_printer_print = 0;
                 #endif /* example_printer_print_zero_function_pointer */
-                #ifdef example_printer_set_printing_quality_zero_function_pointer
-                    example_printer_set_printing_quality_zero_function_pointer
-                #else /* example_printer_set_printing_quality_zero_function_pointer */
-                    example_printer_set_printing_quality = 0;
-                #endif /* example_printer_set_printing_quality_zero_function_pointer */
-                #ifdef example_printer_get_printing_quality_zero_function_pointer
-                    example_printer_get_printing_quality_zero_function_pointer
-                #else /* example_printer_get_printing_quality_zero_function_pointer */
-                    example_printer_get_printing_quality = 0;
-                #endif /* example_printer_get_printing_quality_zero_function_pointer */
                 #ifdef example_printer_get_device_type_zero_function_pointer
                     example_printer_get_device_type_zero_function_pointer
                 #else /* example_printer_get_device_type_zero_function_pointer */
                     example_printer_get_device_type = 0;
                 #endif /* example_printer_get_device_type_zero_function_pointer */
+                #ifdef example_printer_get_printing_quality_zero_function_pointer
+                    example_printer_get_printing_quality_zero_function_pointer
+                #else /* example_printer_get_printing_quality_zero_function_pointer */
+                    example_printer_get_printing_quality = 0;
+                #endif /* example_printer_get_printing_quality_zero_function_pointer */
+                #ifdef example_printer_set_printing_quality_zero_function_pointer
+                    example_printer_set_printing_quality_zero_function_pointer
+                #else /* example_printer_set_printing_quality_zero_function_pointer */
+                    example_printer_set_printing_quality = 0;
+                #endif /* example_printer_set_printing_quality_zero_function_pointer */
                 #ifdef example_printer_add_ref_zero_function_pointer
                     example_printer_add_ref_zero_function_pointer
                 #else /* example_printer_add_ref_zero_function_pointer */
@@ -828,21 +828,21 @@ enum beautiful_capi_callback_exception_code_t
                 #else /* example_printer_callback_set_cfunction_for_print_zero_function_pointer */
                     example_printer_callback_set_cfunction_for_print = 0;
                 #endif /* example_printer_callback_set_cfunction_for_print_zero_function_pointer */
-                #ifdef example_printer_callback_set_cfunction_for_set_printing_quality_zero_function_pointer
-                    example_printer_callback_set_cfunction_for_set_printing_quality_zero_function_pointer
-                #else /* example_printer_callback_set_cfunction_for_set_printing_quality_zero_function_pointer */
-                    example_printer_callback_set_cfunction_for_set_printing_quality = 0;
-                #endif /* example_printer_callback_set_cfunction_for_set_printing_quality_zero_function_pointer */
-                #ifdef example_printer_callback_set_cfunction_for_get_printing_quality_zero_function_pointer
-                    example_printer_callback_set_cfunction_for_get_printing_quality_zero_function_pointer
-                #else /* example_printer_callback_set_cfunction_for_get_printing_quality_zero_function_pointer */
-                    example_printer_callback_set_cfunction_for_get_printing_quality = 0;
-                #endif /* example_printer_callback_set_cfunction_for_get_printing_quality_zero_function_pointer */
                 #ifdef example_printer_callback_set_cfunction_for_get_device_type_zero_function_pointer
                     example_printer_callback_set_cfunction_for_get_device_type_zero_function_pointer
                 #else /* example_printer_callback_set_cfunction_for_get_device_type_zero_function_pointer */
                     example_printer_callback_set_cfunction_for_get_device_type = 0;
                 #endif /* example_printer_callback_set_cfunction_for_get_device_type_zero_function_pointer */
+                #ifdef example_printer_callback_set_cfunction_for_get_printing_quality_zero_function_pointer
+                    example_printer_callback_set_cfunction_for_get_printing_quality_zero_function_pointer
+                #else /* example_printer_callback_set_cfunction_for_get_printing_quality_zero_function_pointer */
+                    example_printer_callback_set_cfunction_for_get_printing_quality = 0;
+                #endif /* example_printer_callback_set_cfunction_for_get_printing_quality_zero_function_pointer */
+                #ifdef example_printer_callback_set_cfunction_for_set_printing_quality_zero_function_pointer
+                    example_printer_callback_set_cfunction_for_set_printing_quality_zero_function_pointer
+                #else /* example_printer_callback_set_cfunction_for_set_printing_quality_zero_function_pointer */
+                    example_printer_callback_set_cfunction_for_set_printing_quality = 0;
+                #endif /* example_printer_callback_set_cfunction_for_set_printing_quality_zero_function_pointer */
                 #ifdef example_printer_callback_add_ref_zero_function_pointer
                     example_printer_callback_add_ref_zero_function_pointer
                 #else /* example_printer_callback_add_ref_zero_function_pointer */
