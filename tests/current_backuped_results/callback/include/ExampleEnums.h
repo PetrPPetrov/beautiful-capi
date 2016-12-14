@@ -31,10 +31,13 @@
 
 namespace Example {
 
+/**
+ * @brief Represents a printing device.
+ */
 enum EPrintingDevice
 {
-    printer = 1,
-    plotter = 2
+    printer = 1, /**< Specifies printer device. */
+    plotter = 2 /**< Specifies plotter device. */
 };
 
 }

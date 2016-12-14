@@ -34,10 +34,22 @@
 
 namespace Exception {
 
+/**
+ * @brief Represents a generic exception.
+ * Note that this exception object could be thrown at @ref Example::Person
+ * and @ref Example::PrinterPtr class implementations.
+ */
 class Generic
 {
 public:
+    /**
+     * @brief Creates a default exception instance.
+     */
     inline Generic();
+    /**
+     * @brief Gets the error text.
+     * @returns The error text.
+     */
     inline const char* GetErrorText() const;
 
     inline Generic(const Generic& other);

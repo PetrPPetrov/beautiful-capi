@@ -39,6 +39,10 @@
 
 namespace Example {
 
+/**
+ * @brief Creates a default printing device.
+ * @param printing_device specifies the printing device type.
+ */
 inline Example::PrinterPtr CreateDefaultPrinter(Example::EPrintingDevice printing_device)
 {
     beautiful_capi_callback_exception_info_t exception_info;
