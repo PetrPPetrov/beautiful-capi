@@ -114,8 +114,7 @@ class ClassGenerator(object):
 
     @property
     def snippet_implementation_declaration(self) -> str:
-        return format_type(
-            self.lifecycle_traits.snippet_implementation_usage.format(implementation_name=self.implementation_name))
+        return self.lifecycle_traits.snippet_implementation_usage.format(implementation_name=self.implementation_name)
 
     @property
     def is_callback(self) -> bool:

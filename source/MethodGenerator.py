@@ -96,7 +96,7 @@ class ConstructorGenerator(object):
         c_function_body = FileGenerator(None)
         with IndentScope(c_function_body):
             implementation_call = 'return new {impl_class}({arguments});'.format(
-                impl_class=format_type(self.parent_class_generator.class_object.implementation_class_name),
+                impl_class=self.parent_class_generator.class_object.implementation_class_name,
                 arguments=implementation_arguments
             )
             self.exception_traits.generate_implementation_call(

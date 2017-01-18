@@ -24,7 +24,7 @@ import shutil
 import argparse
 import ExceptionTraits
 from xml.dom.minidom import parse
-from Helpers import BeautifulCapiException
+from Helpers import BeautifulCapiException, format_type
 from CreateGenerators import create_namespace_generators
 from FileCache import FileCache
 from CapiGenerator import CapiGenerator
@@ -137,6 +137,13 @@ class Capi(object):
                         else:
                             self.__generate_root_initializer(root_header, namespace_generators)
 
+    @staticmethod
+    def __substitute_implementation_class_name(namespace):
+        for sub_namespace in namespace.namespaces:
+            Capi.__substitute_implementation_class_name(sub_namespace)
+        for cur_class in namespace.classes:
+            cur_class.implementation_class_name = format_type(cur_class.implementation_class_name)
+
     def __generate(self):
         process_check_binary_compatibility(self.api_description, self.params_description)
         process_properties(self.api_description)
@@ -144,6 +151,8 @@ class Capi(object):
         first_namespace_generators = create_namespace_generators(
             self.api_description, self.params_description)
         process_callbacks(first_namespace_generators)
+        for namespace in self.api_description.namespaces:
+            Capi.__substitute_implementation_class_name(namespace)
         namespace_generators = create_namespace_generators(
             self.api_description, self.params_description)
         by_first_argument_exception_traits = ExceptionTraits.ByFirstArgument(
