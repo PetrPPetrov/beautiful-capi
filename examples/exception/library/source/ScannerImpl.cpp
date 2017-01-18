@@ -41,21 +41,15 @@ Example::ScannerImpl::~ScannerImpl()
 
 void Example::ScannerImpl::AddRef()
 {
-    if (this)
-    {
-        ++mRefCount;
-    }
+    ++mRefCount;
 }
 
 void Example::ScannerImpl::Release()
 {
-    if (this)
+    --mRefCount;
+    if (mRefCount <= 0)
     {
-        --mRefCount;
-        if (mRefCount <= 0)
-        {
-            delete this;
-        }
+        delete this;
     }
 }
 

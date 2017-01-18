@@ -41,21 +41,15 @@ Example::PrinterImpl::~PrinterImpl()
 
 void Example::PrinterImpl::AddRef()
 {
-    if (this)
-    {
-        ++mRefCount;
-    }
+    ++mRefCount;
 }
 
 void Example::PrinterImpl::Release()
 {
-    if (this)
+    --mRefCount;
+    if (mRefCount <= 0)
     {
-        --mRefCount;
-        if (mRefCount <= 0)
-        {
-            delete this;
-        }
+        delete this;
     }
 }
 

@@ -38,12 +38,18 @@ namespace Example
 
     inline void intrusive_ptr_add_ref(PrinterImpl* printer)
     {
-        printer->AddRef();
+        if (printer)
+        {
+            printer->AddRef();
+        }
     }
 
     inline void intrusive_ptr_release(PrinterImpl* printer)
     {
-        printer->Release();
+        if (printer)
+        {
+            printer->Release();
+        }
     }
 }
 

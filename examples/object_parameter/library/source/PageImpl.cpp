@@ -41,22 +41,16 @@ Example::PageImpl::~PageImpl()
 
 void Example::PageImpl::AddRef()
 {
-    if (this)
-    {
-        ++mRefCount;
-    }
+    ++mRefCount;
 }
 
 void Example::PageImpl::Release()
 {
-    if (this)
+    --mRefCount;
+    if (mRefCount <= 0)
     {
-        --mRefCount;
-        if (mRefCount <= 0)
-        {
-            delete this;
+        delete this;
 
-        }
     }
 }
 

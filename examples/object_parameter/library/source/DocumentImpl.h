@@ -43,14 +43,20 @@ namespace Example
         void SetPage(PageImpl* page);
     };
 
-    inline void intrusive_ptr_add_ref(DocumentImpl* page)
+    inline void intrusive_ptr_add_ref(DocumentImpl* document)
     {
-        page->AddRef();
+        if (document)
+        {
+            document->AddRef();
+        }
     }
 
-    inline void intrusive_ptr_release(DocumentImpl* page)
+    inline void intrusive_ptr_release(DocumentImpl* document)
     {
-        page->Release();
+        if (document)
+        {
+            document->Release();
+        }
     }
 }
 

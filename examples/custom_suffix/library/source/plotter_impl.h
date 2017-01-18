@@ -39,12 +39,18 @@ namespace hello_world
 
     inline void intrusive_ptr_add_ref(plotter_impl* plotter)
     {
-        plotter->AddRef();
+        if (plotter)
+        {
+            plotter->AddRef();
+        }
     }
 
     inline void intrusive_ptr_release(plotter_impl* plotter)
     {
-        plotter->Release();
+        if (plotter)
+        {
+            plotter->Release();
+        }
     }
 }
 

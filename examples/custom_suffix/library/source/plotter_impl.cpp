@@ -41,21 +41,15 @@ hello_world::plotter_impl::~plotter_impl()
 
 void hello_world::plotter_impl::AddRef()
 {
-    if (this)
-    {
-        ++reference_count;
-    }
+    ++reference_count;
 }
 
 void hello_world::plotter_impl::Release()
 {
-    if (this)
+    --reference_count;
+    if (reference_count <= 0)
     {
-        --reference_count;
-        if (reference_count <= 0)
-        {
-            delete this;
-        }
+        delete this;
     }
 }
 

@@ -50,7 +50,6 @@ namespace Example
         {
             std::cout << "Model dtor" << std::endl;
         }
-
         const char* GetName() const
         {
             return mName.c_str();
@@ -67,31 +66,36 @@ namespace Example
         {
             mPosition = position;
         }
-
-        void AddRef() { if (this) ++mRefCount; }
+        void AddRef()
+        {
+            ++mRefCount;
+        }
         void Release()
         {
-            if (this)
+            --mRefCount;
+            if (mRefCount <= 0)
             {
-                --mRefCount;
-                if (mRefCount <= 0)
-                {
-                    delete this;
-                }
+                delete this;
             }
         }
     };
 
     template<typename WorkType>
-    inline void intrusive_ptr_add_ref(ModelImpl<WorkType>* printer)
+    inline void intrusive_ptr_add_ref(ModelImpl<WorkType>* model)
     {
-        printer->AddRef();
+        if (model)
+        {
+            model->AddRef();
+        }
     }
 
     template<typename WorkType>
-    inline void intrusive_ptr_release(ModelImpl<WorkType>* printer)
+    inline void intrusive_ptr_release(ModelImpl<WorkType>* model)
     {
-        printer->Release();
+        if (model)
+        {
+            model->Release();
+        }
     }
 }
 

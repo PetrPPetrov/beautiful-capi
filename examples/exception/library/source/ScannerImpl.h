@@ -43,12 +43,18 @@ namespace Example
 
     inline void intrusive_ptr_add_ref(ScannerImpl* scanner)
     {
-        scanner->AddRef();
+        if (scanner)
+        {
+            scanner->AddRef();
+        }
     }
 
     inline void intrusive_ptr_release(ScannerImpl* scanner)
     {
-        scanner->Release();
+        if (scanner)
+        {
+            scanner->Release();
+        }
     }
 }
 

@@ -43,21 +43,15 @@ Example::DocumentImpl::~DocumentImpl()
 
 void Example::DocumentImpl::AddRef()
 {
-    if (this)
-    {
-        ++mRefCount;
-    }
+    ++mRefCount;
 }
 
 void Example::DocumentImpl::Release()
 {
-    if (this)
+    --mRefCount;
+    if (mRefCount <= 0)
     {
-        --mRefCount;
-        if (mRefCount <= 0)
-        {
-            delete this;
-        }
+        delete this;
     }
 }
 

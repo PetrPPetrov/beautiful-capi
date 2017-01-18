@@ -36,12 +36,18 @@ namespace Example
 
     inline void intrusive_ptr_add_ref(IShape* ref_counted_shape)
     {
-        ref_counted_shape->AddRef();
+        if (ref_counted_shape)
+        {
+            ref_counted_shape->AddRef();
+        }
     }
 
     inline void intrusive_ptr_release(IShape* ref_counted_shape)
     {
-        ref_counted_shape->Release();
+        if (ref_counted_shape)
+        {
+            ref_counted_shape->Release();
+        }
     }
 }
 

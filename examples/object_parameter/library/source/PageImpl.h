@@ -47,12 +47,18 @@ namespace Example
 
     inline void intrusive_ptr_add_ref(PageImpl* page)
     {
-        page->AddRef();
+        if (page)
+        {
+            page->AddRef();
+        }
     }
 
     inline void intrusive_ptr_release(PageImpl* page)
     {
-        page->Release();
+        if (page)
+        {
+            page->Release();
+        }
     }
 }
 

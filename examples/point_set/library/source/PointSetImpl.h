@@ -61,28 +61,34 @@ namespace PointSet
         }
         void SetPoints(PointsImpl* points) { mPoints = points; }
 
-        void AddRef() { if (this) ++mRefCount; }
+        void AddRef()
+        {
+            ++mRefCount;
+        }
         void Release()
         {
-            if (this)
+            --mRefCount;
+            if (mRefCount <= 0)
             {
-                --mRefCount;
-                if (mRefCount <= 0)
-                {
-                    delete this;
-                }
+                delete this;
             }
         }
     };
 
-    inline void intrusive_ptr_add_ref(PointSetImpl* printer)
+    inline void intrusive_ptr_add_ref(PointSetImpl* point_set)
     {
-        printer->AddRef();
+        if (point_set)
+        {
+            point_set->AddRef();
+        }
     }
 
-    inline void intrusive_ptr_release(PointSetImpl* printer)
+    inline void intrusive_ptr_release(PointSetImpl* point_set)
     {
-        printer->Release();
+        if (point_set)
+        {
+            point_set->Release();
+        }
     }
 }
 

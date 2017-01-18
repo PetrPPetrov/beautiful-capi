@@ -107,17 +107,16 @@ namespace Example
         {
             return mVector.at(static_cast<size_t>(index));
         }
-
-        void AddRef() { if (this) ++mRefCount; }
+        void AddRef()
+        {
+            ++mRefCount;
+        }
         void Release()
         {
-            if (this)
+            --mRefCount;
+            if (mRefCount <= 0)
             {
-                --mRefCount;
-                if (mRefCount <= 0)
-                {
-                    delete this;
-                }
+                delete this;
             }
         }
     };
@@ -147,15 +146,21 @@ namespace Example
     };
 
     template<typename WorkType>
-    inline void intrusive_ptr_add_ref(VectorOfObjectsImpl<WorkType>* printer)
+    inline void intrusive_ptr_add_ref(VectorOfObjectsImpl<WorkType>* objects)
     {
-        printer->AddRef();
+        if (objects)
+        {
+            objects->AddRef();
+        }
     }
 
     template<typename WorkType>
-    inline void intrusive_ptr_release(VectorOfObjectsImpl<WorkType>* printer)
+    inline void intrusive_ptr_release(VectorOfObjectsImpl<WorkType>* objects)
     {
-        printer->Release();
+        if (objects)
+        {
+            objects->Release();
+        }
     }
 }
 

@@ -49,39 +49,62 @@ namespace PointSet
         {
             std::cout << "Points dtor" << std::endl;
         }
-
-        size_t Size() const { return mPoints.size(); }
-        void Reserve(size_t capacity) { mPoints.reserve(capacity); }
-        void Resize(size_t size, PositionImpl default_value) { mPoints.resize(size, default_value); }
-
-        PositionImpl GetElement(size_t index) const { return mPoints[index]; }
-        void SetElement(size_t index, PositionImpl value) { mPoints[index] = value; }
-        void PushBack(PositionImpl value) { mPoints.push_back(value); }
-
-        void Clear() { mPoints.clear(); }
-
-        void AddRef() { if (this) ++mRefCount; }
+        size_t Size() const
+        {
+            return mPoints.size();
+        }
+        void Reserve(size_t capacity)
+        {
+            mPoints.reserve(capacity);
+        }
+        void Resize(size_t size, PositionImpl default_value)
+        {
+            mPoints.resize(size, default_value);
+        }
+        PositionImpl GetElement(size_t index) const
+        {
+            return mPoints[index];
+        }
+        void SetElement(size_t index, PositionImpl value)
+        {
+            mPoints[index] = value;
+        }
+        void PushBack(PositionImpl value)
+        {
+            mPoints.push_back(value);
+        }
+        void Clear()
+        {
+            mPoints.clear();
+        }
+        void AddRef()
+        {
+            ++mRefCount;
+        }
         void Release()
         {
-            if (this)
+            --mRefCount;
+            if (mRefCount <= 0)
             {
-                --mRefCount;
-                if (mRefCount <= 0)
-                {
-                    delete this;
-                }
+                delete this;
             }
         }
     };
 
-    inline void intrusive_ptr_add_ref(PointsImpl* printer)
+    inline void intrusive_ptr_add_ref(PointsImpl* points)
     {
-        printer->AddRef();
+        if (points)
+        {
+            points->AddRef();
+        }
     }
 
-    inline void intrusive_ptr_release(PointsImpl* printer)
+    inline void intrusive_ptr_release(PointsImpl* points)
     {
-        printer->Release();
+        if (points)
+        {
+            points->Release();
+        }
     }
 }
 
