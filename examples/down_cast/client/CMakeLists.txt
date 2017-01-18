@@ -30,4 +30,7 @@ add_executable(down_cast_client
 
 if(TARGET down_cast)
   add_dependencies(down_cast_client down_cast)
+  if(NOT WIN32 AND NOT APPLE)
+    target_link_libraries(down_cast_client dl)
+  endif()
 endif()
