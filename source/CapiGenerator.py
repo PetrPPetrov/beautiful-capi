@@ -180,7 +180,7 @@ class CapiGenerator(object):
                     out.put_line('{name}_define_function_pointer_var'.format(name=c_function.name))
                 out.put_line('#else')
                 with Indent(out):
-                    out.put_line('extern {name}_function_type {name} = 0;'.format(
+                    out.put_line('{name}_function_type {name} = 0;'.format(
                         name=c_function.name, define_to_null_str=' = 0' if define else ''))
                 out.put_line('#endif')
             else:
@@ -318,7 +318,7 @@ class CapiGenerator(object):
             ))
         define_order = zip(define_order_list, define_order_list_to_substitute)
         for opened_name, opened_name_to_substitute in define_order:
-            out.put_line('#define {0}_define_function_pointer_var extern {1}_function_type {1} = 0;'.format(
+            out.put_line('#define {0}_define_function_pointer_var {1}_function_type {1} = 0;'.format(
                 opened_name, opened_name_to_substitute
             ))
         load_order = zip(load_order_list, load_order_list_to_substitute)
