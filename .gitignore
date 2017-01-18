@@ -1,10 +1,9 @@
-/source/__pycache__/
-/source/.idea/
+__pycache__/
+.idea/
 *.py[cod]
 *.user
-/.idea/
-build/
-bin/
+/build/
+/bin/
 /examples/hello_world/library/include/
 /examples/reference_counted/library/include/
 /examples/copy_semantic/library/include/
