@@ -25,3 +25,6 @@
 [submodule "3rdparty/boost/align"]
 	path = 3rdparty/boost/align
 	url = https://github.com/boostorg/align.git
+[submodule "3rdparty/boost/test"]
+	path = 3rdparty/boost/test
+	url = https://github.com/boostorg/test.git

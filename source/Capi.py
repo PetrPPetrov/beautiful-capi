@@ -35,6 +35,7 @@ from Properties import process as process_properties
 from CheckBinaryCompatibilityGenerator import process as process_check_binary_compatibility
 from ParamsParser import TBeautifulCapiParams, TExceptionHandlingMode, load
 from ParseRoot import parse_root
+from UnitTestGenerator import TestGenerator
 
 
 class Capi(object):
@@ -45,7 +46,8 @@ class Capi(object):
                  output_wrap_file_name,
                  internal_snippets_folder,
                  api_keys_folder,
-                 clean):
+                 clean,
+                 unit_tests_file):
         self.input_xml = input_filename
         self.input_params = parse(input_params_filename)
         self.output_folder = output_folder
@@ -54,11 +56,14 @@ class Capi(object):
         self.api_keys_folder = api_keys_folder
         self.api_description = None
         self.params_description = None
+        self.unit_tests_file = unit_tests_file
         if clean:
             if os.path.exists(self.output_folder):
                 shutil.rmtree(self.output_folder)
             if os.path.exists(self.internal_snippets_folder):
                 shutil.rmtree(self.internal_snippets_folder)
+
+        self.unit_tests_generator = None
 
     def __substitute_project_name(self, params: TBeautifulCapiParams):
         if not self.api_description.project_name:
@@ -146,7 +151,7 @@ class Capi(object):
 
     def __generate(self):
         process_check_binary_compatibility(self.api_description, self.params_description)
-        process_properties(self.api_description)
+        process_properties(self.api_description, self.unit_tests_generator)
         process_templates(self.api_description)
         first_namespace_generators = create_namespace_generators(
             self.api_description, self.params_description)
@@ -170,6 +175,9 @@ class Capi(object):
         capi_generator.generate(file_cache)
         self.__generate_root_header(namespace_generators, file_cache)
 
+        if self.unit_tests_generator:
+            self.unit_tests_generator.generate(namespace_generators)
+
     def generate(self):
         self.params_description = load(self.input_params)
         self.params_description.output_folder = self.output_folder
@@ -178,6 +186,9 @@ class Capi(object):
         self.params_description.output_wrap_file_name = self.output_wrap_file_name
         self.api_description = parse_root(self.input_xml)
         self.__substitute_project_name(self.params_description)
+
+        if self.unit_tests_file:
+            self.unit_tests_generator = TestGenerator(self.params_description, self.unit_tests_file)
 
         self.__generate()
 
@@ -194,27 +205,28 @@ def main():
         description='This program generates C and C++ wrappers for your C++ classes.')
 
     parser.add_argument(
-        '-i', '--input', nargs=None, default='input.xml', metavar='INPUT',
+        '-i', '--input', nargs=None, default='input.xml', dest='input',
         help='specifies input API description file')
     parser.add_argument(
-        '-p', '--params', nargs=None, default='params.xml', metavar='PARAMS',
+        '-p', '--params', nargs=None, default='params.xml', dest='params',
         help='specifies wrapper generation parameters input file')
     parser.add_argument(
-        '-o', '--output-folder', nargs=None, default='./output', metavar='OUTPUT_FOLDER',
+        '-o', '--output-folder', nargs=None, default='./output', dest='output_folder',
         help='specifies output folder for generated files')
     parser.add_argument(
-        '-w', '--output-wrap-file-name', nargs=None, default='./capi_wrappers.cpp', metavar='OUTPUT_WRAP',
+        '-w', '--output-wrap-file-name', nargs=None, default='./capi_wrappers.cpp', dest='output_wrap',
         help='specifies output file name for wrapper C-functions')
     parser.add_argument(
-        '-s', '--internal-snippets-folder', nargs=None, default='./internal_snippets', metavar='OUTPUT_SNIPPETS',
+        '-s', '--internal-snippets-folder', nargs=None, default='./internal_snippets', dest='output_snippets',
         help='specifies output folder for generated library snippets')
     parser.add_argument(
-        '-k', '--api-keys-folder', nargs=None, default='./keys', metavar='API_KEYS_FOLDER',
+        '-k', '--api-keys-folder', nargs=None, default='./keys', dest='api_keys_folder',
         help='specifies output folder for generated API keys')
-    parser.add_argument(
-        '-c', '--clean', nargs=None, default=True, metavar='CLEAN',
-        help='specifies whether if clean input and snippets directories'
-    )
+    parser.add_argument('-c', '--clean', dest='clean', action='store_true',
+                        help='cleans input and snippets directories')
+    parser.set_defaults(clean=False)
+    parser.add_argument('-t', '--tests-file', nargs=None, default="", dest='unit_tests_file',
+                        help='generates unit tests for properties into specified file')
 
     args = parser.parse_args()
 
@@ -222,10 +234,11 @@ def main():
         args.input,
         args.params,
         args.output_folder,
-        args.output_wrap_file_name,
-        args.internal_snippets_folder,
+        args.output_wrap,
+        args.output_snippets,
         args.api_keys_folder,
-        args.clean
+        args.clean,
+        args.unit_tests_file
     )
     capi.generate()
 

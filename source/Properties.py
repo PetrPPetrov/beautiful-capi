@@ -22,6 +22,7 @@
 
 import copy
 from Parser import TClass, TMethod, TArgument, TNamespace, TBeautifulCapiRoot, TDocumentation
+from UnitTestGenerator import TestGenerator
 
 
 class PropertiesDefaultValues(object):
@@ -32,9 +33,10 @@ class PropertiesDefaultValues(object):
 
 
 class PropertiesProcessor(object):
-    def __init__(self, root_node: TBeautifulCapiRoot):
+    def __init__(self, root_node: TBeautifulCapiRoot, test_generator: TestGenerator):
         self.root_node = root_node
         self.properties_stack = [PropertiesDefaultValues()]
+        self.unittest_generator = test_generator
 
     @staticmethod
     def __process_documentation_impl(documentation, get: bool):
@@ -61,6 +63,7 @@ class PropertiesProcessor(object):
 
     def process_class(self, cur_class: TClass):
         top = self.properties_stack.pop()
+
         for cur_property in cur_class.properties:
             cur_set_prefix = cur_property.set_prefix if cur_property.set_prefix_filled else top.set_prefix_value
             cur_get_prefix = cur_property.get_prefix if cur_property.get_prefix_filled else top.get_prefix_value
@@ -81,6 +84,9 @@ class PropertiesProcessor(object):
             new_set_method.documentations = copy.deepcopy(cur_property.documentations)
             PropertiesProcessor.__process_documentations(new_set_method, False)
             cur_class.methods.append(new_set_method)
+
+            if self.unittest_generator:
+                self.unittest_generator.add_property(cur_class, cur_property, new_set_method, new_get_method)
         self.properties_stack.append(top)
 
     def process_namespace(self, namespace: TNamespace):
@@ -105,6 +111,6 @@ class PropertiesProcessor(object):
             self.process_namespace(cur_namespace)
 
 
-def process(root_node: TBeautifulCapiRoot):
-    properties_processor = PropertiesProcessor(root_node)
+def process(root_node: TBeautifulCapiRoot, test_generator):
+    properties_processor = PropertiesProcessor(root_node, test_generator)
     properties_processor.process()

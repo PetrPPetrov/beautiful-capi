@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 #
 # Beautiful Capi generates beautiful C API wrappers for your C++ classes
 # Copyright (C) 2015 Petr Petrovich Petrov
@@ -17,24 +18,3 @@
 # You should have received a copy of the GNU General Public License
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
-
-project(examples)
-
-cmake_minimum_required(VERSION 2.8)
-
-add_subdirectory(hello_world)
-add_subdirectory(reference_counted)
-add_subdirectory(copy_semantic)
-add_subdirectory(raw_pointer_semantic)
-add_subdirectory(virtual_interface)
-add_subdirectory(object_parameter)
-add_subdirectory(circular_reference)
-add_subdirectory(custom_suffix)
-add_subdirectory(boost_shared_ptr)
-add_subdirectory(down_cast)
-add_subdirectory(point_set)
-add_subdirectory(exception)
-add_subdirectory(callback)
-add_subdirectory(clanguage)
-add_subdirectory(template)
-add_subdirectory(unit_test)

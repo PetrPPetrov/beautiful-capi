@@ -65,6 +65,10 @@ class ClassGenerator(object):
         self.cached_wrap_template_name = None
 
     @property
+    def access_operator(self) -> str:
+        return self.lifecycle_traits.access_operator
+
+    @property
     def is_template(self) -> bool:
         return self.class_object.template_line
 

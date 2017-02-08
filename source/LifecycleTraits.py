@@ -56,6 +56,10 @@ class LifecycleTraits(object):
         self.default_value_for_init_noexcept = default_init_noexcept
         self.default_value_for_finish_noexcept = default_finish_noexcept
 
+    @property
+    def access_operator(self) -> str:
+        return '->'
+
     def create_exception_traits(self, properties_container, capi_generator):
         init_method_no_except = self.default_value_for_init_noexcept
         if properties_container.copy_or_add_ref_noexcept_filled:
@@ -157,6 +161,10 @@ class LifecycleTraits(object):
 class CopySemantic(LifecycleTraits):
     def __init__(self, params: TBeautifulCapiParams):
         super().__init__(params.copy_semantic_wrapper_class_suffix, False, True, params)
+
+    @property
+    def access_operator(self) -> str:
+        return '.'
 
     @property
     def snippet_implementation_usage(self) -> str:

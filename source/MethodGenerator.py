@@ -46,6 +46,10 @@ class ConstructorGenerator(object):
         self.exception_traits = None
 
     @property
+    def access_operator(self) -> str:
+        return self.parent_class_generator.access_operator
+
+    @property
     def full_name(self) -> str:
         return '::'.join([self.parent_class_generator.full_name, self.constructor_object.name])
 
@@ -127,6 +131,10 @@ class MethodGenerator(object):
         self.return_type_generator = None
         self.params = params
         self.exception_traits = None
+
+    @property
+    def access_operator(self) -> str:
+        return self.parent_class_generator.access_operator
 
     @property
     def name(self) -> str:

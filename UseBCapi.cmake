@@ -47,3 +47,31 @@ function(add_bcapi_generation)
             ${CMAKE_CURRENT_SOURCE_DIR}
     )
 endfunction(add_bcapi_generation)
+
+function(add_bcapi_generation_with_test)
+    if (ARGN)
+        list(GET ARGN 0 generated_source)
+    else()
+        set(generated_source ${CMAKE_CURRENT_SOURCE_DIR}/source/AutoGenWrap.cpp)
+    endif()
+
+    add_custom_command(
+        OUTPUT
+            ${generated_source}
+        COMMAND
+            ${PYTHON_EXECUTABLE}
+            ${beautiful_capi_SOURCE_DIR}/source/Capi.py
+            -i ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.xml
+            -p ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}_params.xml
+            -o ${CMAKE_CURRENT_SOURCE_DIR}/include
+            -s ${CMAKE_CURRENT_SOURCE_DIR}/source/snippets
+            -w ${generated_source}
+            -t ${CMAKE_CURRENT_SOURCE_DIR}/../client/AutoGenUnitTests.cpp
+        MAIN_DEPENDENCY
+            ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.xml
+        DEPENDS
+            ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}_params.xml
+        WORKING_DIRECTORY
+            ${CMAKE_CURRENT_SOURCE_DIR}
+    )
+endfunction(add_bcapi_generation_with_test)
