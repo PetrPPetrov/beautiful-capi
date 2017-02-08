@@ -19,6 +19,7 @@ __pycache__/
 /examples/callback/library/include/
 /examples/clanguage/library/include/
 /examples/template/library/include/
+/examples/unit_test/library/include/
 /tests/file_options/library/include/
 AutoGen*
 auto_gen*

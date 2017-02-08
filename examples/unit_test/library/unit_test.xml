@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<unit_test:api xmlns:hello_world="http://gkmsoft.ru/beautifulcapi" project_name="UnitTest">
+  <namespace name="UnitTest">
+    <class name="Name" lifecycle="copy_semantic" implementation_class_name="UnitTest::NameImpl" implementation_class_header="NameImpl.h">
+      <constructor name="FullName">
+        <argument name="FirstName" type="const char*"/>
+        <argument name="MiddleName" type="const char*"/>
+        <argument name="LastName" type="const char*"/>
+      </constructor>
+      
+      <property name="FirstName" type="const char*"/>
+      <property name="MiddleName" type="const char*"/>
+      <property name="LastName" type="const char*"/>
+      
+      <method name="GetFullName" return="const char*"/>
+    </class>
+    
+    <class name="Address" lifecycle="reference_counted" implementation_class_name="UnitTest::AddressImpl" implementation_class_header="AddressImpl.h">
+      <constructor name="Default"/>
+      
+      <property name="StreetName" type="const char*"/>
+      <property name="City" type="const char*"/>
+      <property name="State" type="unsigned int"/>
+      <property name="ZipCode" type="unsigned int"/>
+    </class>
+    
+    <class name="Person" lifecycle="raw_pointer_semantic" implementation_class_name="UnitTest::PersonImpl" implementation_class_header="PersonImpl.h">
+      <enumeration name="Sex" underlying_type="unsigned int">
+        <item name="Unknown" value="0"/>
+        <item name="Male"/>
+        <item name="Female"/>
+      </enumeration>
+      
+      <constructor name="Default"/>
+      
+      <property name="Name" type="UnitTest::Name"/>
+      <property name="Address" type="UnitTest::Address"/>
+      <property name="Age" type="unsigned char"/>
+      <property name="Sex" type="UnitTest::Person::Sex"/>
+      <property name="Mother" type="UnitTest::Person"/>
+      <property name="Father" type="UnitTest::Person"/>
+    </class>
+  </namespace>
+</unit_test:api>
