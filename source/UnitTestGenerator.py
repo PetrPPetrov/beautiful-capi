@@ -162,10 +162,22 @@ class TestGenerator(object):
             name=enum_generator.parent_generator.full_wrap_name, value=rand_enum_value.name)
         return value
 
+    @staticmethod
+    def __get__enum_items(enum_type_generator: EnumTypeGenerator) -> [str]:
+        result = list()
+        enum_generator = enum_type_generator.enum_argument_generator
+        enum_items = enum_generator.enum_object.items
+        for enum_value in enum_items:
+            value = '{name}::{value}'.format(
+                name=enum_generator.parent_generator.full_wrap_name, value=enum_value.name)
+            result.append(value)
+        return result
+
     def __gen_code_for_test_enum(self, c_property: ClassToProperties.Properties):
         enum_type_generator = c_property.get_method_generator.return_type_generator
-        value = self.__gen_init_enum_type(enum_type_generator)
-        self.__gen_test_for_simple_value(c_property, value)
+        all_items = self.__get__enum_items(enum_type_generator)
+        for item in all_items:
+            self.__gen_test_for_simple_value(c_property, item)
 
     def __gen_code_for_test_builtin_type(self, c_property: ClassToProperties.Properties):
         random_value = RandomValue().generate(c_property.get_method.return_type)
