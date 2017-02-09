@@ -358,7 +358,7 @@ class TestGenerator(object):
 
     def __gen_code_equal_method(self, c_generator_to_properties: ClassToProperties.CGeneratorToProperties,
                                 full_type: str):
-        method_declaration = 'inline bool equal({type_name}& first, {type_name}& second){is_declaration}'
+        method_declaration = 'inline bool equal(const {type_name}& first, const {type_name}& second){is_declaration}'
         self.equal_generator.declaration_section.put_line(method_declaration.format(
             type_name=full_type, is_declaration=';'))
         self.equal_generator.main_generator.put_line(method_declaration.format(
