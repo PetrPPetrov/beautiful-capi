@@ -122,7 +122,7 @@ class ClassGenerator(object):
 
     @property
     def is_callback(self) -> bool:
-        return self.base_class_generator and self.base_class_generator.class_object.callbacks
+        return type(self.class_object.callbacks) is bool
 
     @property
     def cast_to_base(self) -> str:

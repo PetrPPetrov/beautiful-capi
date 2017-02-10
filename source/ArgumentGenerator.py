@@ -329,7 +329,7 @@ class ThisArgumentGenerator(object):
         return self.type_generator.c_2_implementation_to_pointer('object_pointer')
 
     def implementation_2_c(self) -> str:
-        return self.type_generator.implementation_2_c_var('', 'mObject')[1]
+        return 'mObject'
 
     def include_dependent_declaration_headers(self, file_generator: FileGenerator, file_cache: FileCache):
         pass
