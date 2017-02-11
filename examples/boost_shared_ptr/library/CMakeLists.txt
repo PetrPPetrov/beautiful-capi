@@ -23,19 +23,12 @@ project(boost_shared_ptr)
 cmake_minimum_required(VERSION 2.8)
 
 find_package(PythonInterp 3.4 REQUIRED)
+find_package(Boost REQUIRED)
 
 include(../../../UseBCapi.cmake)
 
 include_directories(
-  ${boost_shared_ptr_SOURCE_DIR}/../../../3rdparty/boost/core/include/
-  ${boost_shared_ptr_SOURCE_DIR}/../../../3rdparty/boost/config/include/
-  ${boost_shared_ptr_SOURCE_DIR}/../../../3rdparty/boost/assert/include/
-  ${boost_shared_ptr_SOURCE_DIR}/../../../3rdparty/boost/throw_exception/include/
-  ${boost_shared_ptr_SOURCE_DIR}/../../../3rdparty/boost/predef/include/
-  ${boost_shared_ptr_SOURCE_DIR}/../../../3rdparty/boost/smart_ptr/include/
-  ${boost_shared_ptr_SOURCE_DIR}/../../../3rdparty/boost/type_traits/include/
-  ${boost_shared_ptr_SOURCE_DIR}/../../../3rdparty/boost/static_assert/include/
-  ${boost_shared_ptr_SOURCE_DIR}/../../../3rdparty/boost/align/include/
+  ${Boost_INCLUDE_DIR}/
   ${boost_shared_ptr_SOURCE_DIR}/source/
 )
 

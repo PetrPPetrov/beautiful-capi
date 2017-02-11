@@ -18,7 +18,6 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-
 cmake_minimum_required(VERSION 2.8)
 
 function(add_bcapi_generation)
@@ -66,7 +65,7 @@ function(add_bcapi_generation_with_test)
             -o ${CMAKE_CURRENT_SOURCE_DIR}/include
             -s ${CMAKE_CURRENT_SOURCE_DIR}/source/snippets
             -w ${generated_source}
-            -t ${CMAKE_CURRENT_SOURCE_DIR}/../client/AutoGenUnitTests.cpp
+            -t ${CMAKE_CURRENT_SOURCE_DIR}/../client/AutoGenUnitTests.h
         MAIN_DEPENDENCY
             ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.xml
         DEPENDS

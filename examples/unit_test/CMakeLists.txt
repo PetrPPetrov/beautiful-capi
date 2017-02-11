@@ -22,22 +22,12 @@ project(unit_test_example)
 
 cmake_minimum_required(VERSION 2.8)
 
-find_path(boost_core_found enable_if.hpp ${unit_test_example_SOURCE_DIR}/../../3rdparty/boost/core/include/boost/core/ NO_DEFAULT_PATH)
-find_path(boost_config_found config.hpp ${unit_test_example_SOURCE_DIR}/../../3rdparty/boost/config/include/boost/ NO_DEFAULT_PATH)
-find_path(boost_assert_found assert.hpp ${unit_test_example_SOURCE_DIR}/../../3rdparty/boost/assert/include/boost/ NO_DEFAULT_PATH)
-find_path(boost_throw_exception_found throw_exception.hpp ${unit_test_example_SOURCE_DIR}/../../3rdparty/boost/throw_exception/include/boost/ NO_DEFAULT_PATH)
-find_path(boost_predef_found predef.h ${unit_test_example_SOURCE_DIR}/../../3rdparty/boost/predef/include/boost/ NO_DEFAULT_PATH)
-find_path(boost_smart_ptr_found smart_ptr.hpp ${unit_test_example_SOURCE_DIR}/../../3rdparty/boost/smart_ptr/include/boost/ NO_DEFAULT_PATH)
-find_path(boost_type_traits_found type_traits.hpp ${unit_test_example_SOURCE_DIR}/../../3rdparty/boost/type_traits/include/boost/ NO_DEFAULT_PATH)
-find_path(boost_static_assert_found static_assert.hpp ${unit_test_example_SOURCE_DIR}/../../3rdparty/boost/static_assert/include/boost/ NO_DEFAULT_PATH)
-find_path(boost_align_found align.hpp ${unit_test_example_SOURCE_DIR}/../../3rdparty/boost/align/include/boost/ NO_DEFAULT_PATH)
+set(Boost_USE_STATIC_LIBS ON)
+find_package(Boost COMPONENTS unit_test_framework)
 
-if(boost_core_found AND boost_config_found AND boost_assert_found AND boost_throw_exception_found AND
-   boost_predef_found AND boost_smart_ptr_found AND boost_type_traits_found AND boost_static_assert_found AND
-   boost_align_found)
+if(Boost_FOUND AND Boost_UNIT_TEST_FRAMEWORK_LIBRARY)
   add_subdirectory(library)
   add_subdirectory(client)
 else()
-  message(STATUS "Boost components are not found. Please update boost submodule by git submodule init, git submodule update commands.")
+  message(STATUS "Boost.Test is not found, it's required to build unit_test example.")
 endif()
-

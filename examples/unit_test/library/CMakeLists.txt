@@ -18,28 +18,18 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-
 project(unit_test)
 
 cmake_minimum_required(VERSION 2.8)
 
 find_package(PythonInterp 3.4 REQUIRED)
+find_package(Boost REQUIRED)
 
 include(../../../UseBCapi.cmake)
 
 include_directories(
-  ${unit_test_SOURCE_DIR}/../../../3rdparty/boost/core/include/
-  ${unit_test_SOURCE_DIR}/../../../3rdparty/boost/config/include/
-  ${unit_test_SOURCE_DIR}/../../../3rdparty/boost/assert/include/
-  ${unit_test_SOURCE_DIR}/../../../3rdparty/boost/throw_exception/include/
-  ${unit_test_SOURCE_DIR}/../../../3rdparty/boost/predef/include/
-  ${unit_test_SOURCE_DIR}/../../../3rdparty/boost/smart_ptr/include/
-  ${unit_test_SOURCE_DIR}/../../../3rdparty/boost/type_traits/include/
-  ${unit_test_SOURCE_DIR}/../../../3rdparty/boost/static_assert/include/
-  ${unit_test_SOURCE_DIR}/../../../3rdparty/boost/align/include/
-  ${unit_test_SOURCE_DIR}/../../../3rdparty/boost/test/
+  ${Boost_INCLUDE_DIR}/
   ${unit_test_SOURCE_DIR}/source/
-  ${unit_test_SOURCE_DIR}/include/
 )
 
 add_library(unit_test SHARED

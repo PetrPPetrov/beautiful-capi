@@ -13,8 +13,6 @@
 #ifndef VTSL_STATIC_EQUAL_COPY_SEMANTIC
 #define VTSL_STATIC_EQUAL_COPY_SEMANTIC
 
-#include "UnitTest.h"
-
 template <class T>
 inline bool builtin_equal(T first, T second)
 {

@@ -24,19 +24,12 @@ project(point_set)
 cmake_minimum_required(VERSION 2.8)
 
 find_package(PythonInterp 3.4 REQUIRED)
+find_package(Boost REQUIRED)
 
 include(../../../UseBCapi.cmake)
 
 include_directories(
-  ${point_set_SOURCE_DIR}/../../../3rdparty/boost/core/include/
-  ${point_set_SOURCE_DIR}/../../../3rdparty/boost/config/include/
-  ${point_set_SOURCE_DIR}/../../../3rdparty/boost/assert/include/
-  ${point_set_SOURCE_DIR}/../../../3rdparty/boost/throw_exception/include/
-  ${point_set_SOURCE_DIR}/../../../3rdparty/boost/predef/include/
-  ${point_set_SOURCE_DIR}/../../../3rdparty/boost/smart_ptr/include/
-  ${point_set_SOURCE_DIR}/../../../3rdparty/boost/type_traits/include/
-  ${point_set_SOURCE_DIR}/../../../3rdparty/boost/static_assert/include/
-  ${point_set_SOURCE_DIR}/../../../3rdparty/boost/align/include/
+  ${Boost_INCLUDE_DIR}/
   ${point_set_SOURCE_DIR}/source/
 )
 
