@@ -35,7 +35,7 @@ namespace UnitTest
         
         void init_from_char(const char* value, std::string &result_string)
         {
-            if (value != nullptr)
+            if (!value)
                 result_string = value;
         }
     public:

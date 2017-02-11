@@ -34,7 +34,7 @@ namespace UnitTest
 #include "snippets/UnitTest/PersonImpl.h"
         // By default newly created objects implies to have value 1 of reference counter
         PersonImpl()
-            : mMother(nullptr), mFather(nullptr), mAge(0), mSex(Sex::Unknown), mName("", "", "")
+            : mMother(0), mFather(0), mAge(0), mSex(Unknown), mName("", "", "")
         {
             std::cout << "Person ctor" << std::endl;
         }
