@@ -50,8 +50,7 @@ class ClassToProperties(object):
             self.class_generator = None
             self.properties = []
 
-        def add_property(self, c_property, set_method: Parser.TMethod,
-                         get_method: Parser.TMethod):
+        def add_property(self, c_property, set_method: Parser.TMethod, get_method: Parser.TMethod):
             self.properties.append(ClassToProperties.Properties(c_property, set_method, get_method))
 
     def __init__(self):
@@ -85,7 +84,7 @@ class RandomValue(object):
             return random.randint(0, 255)
         elif type_name in ['short int', 'signed short int']:
             return random.randint(-32768, 32767)
-        elif type_name == 'unsigned short int':
+        elif type_name in ['unsigned short int', 'unsigned short']:
             return random.randint(0, 65535)
         elif type_name in ['int', 'long int', 'signed int', 'signed long int']:
             return random.randint(-2147483647, 2147483647)
