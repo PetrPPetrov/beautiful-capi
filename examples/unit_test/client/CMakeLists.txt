@@ -25,6 +25,8 @@ cmake_minimum_required(VERSION 2.8)
 set(Boost_USE_STATIC_LIBS ON)
 find_package(Boost COMPONENTS unit_test_framework REQUIRED)
 
+add_definitions(-fvisibility=default)
+
 include_directories(
   ${Boost_INCLUDE_DIR}/
   ${unit_test_client_SOURCE_DIR}/../library/include
@@ -39,3 +41,4 @@ if(TARGET unit_test)
   add_dependencies(unit_test_client unit_test)
 endif()
 target_link_libraries(unit_test_client unit_test ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+ 
