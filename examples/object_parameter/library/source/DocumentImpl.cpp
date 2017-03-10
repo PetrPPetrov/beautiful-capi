@@ -77,6 +77,6 @@ Example::PageImpl* Example::DocumentImpl::GetPage() const
 void Example::DocumentImpl::SetPage(PageImpl* page)
 {
     page->AddRef();
-    mPage->Release();
+    intrusive_ptr_release(mPage);
     mPage = page;
 }
