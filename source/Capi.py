@@ -22,8 +22,9 @@
 import os
 import shutil
 import argparse
-import ExceptionTraits
 from xml.dom.minidom import parse
+
+import ExceptionTraits
 from Helpers import BeautifulCapiException, format_type
 from CreateGenerators import create_namespace_generators
 from FileCache import FileCache
@@ -35,7 +36,9 @@ from Properties import process as process_properties
 from CheckBinaryCompatibilityGenerator import process as process_check_binary_compatibility
 from ParamsParser import TBeautifulCapiParams, TExceptionHandlingMode, load
 from ParseRoot import parse_root
+from Parser import TOverloadSuffixMode
 from UnitTestGenerator import TestGenerator
+from OverloadSuffixes import process as process_overload_suffixes
 
 
 class Capi(object):
@@ -47,7 +50,8 @@ class Capi(object):
                  internal_snippets_folder,
                  api_keys_folder,
                  clean,
-                 unit_tests_file):
+                 unit_tests_file
+                 ):
         self.input_xml = input_filename
         self.input_params = parse(input_params_filename)
         self.output_folder = output_folder
@@ -152,6 +156,7 @@ class Capi(object):
     def __generate(self):
         process_check_binary_compatibility(self.api_description, self.params_description)
         process_properties(self.api_description, self.unit_tests_generator)
+        process_overload_suffixes(self.api_description)
         process_templates(self.api_description)
         first_namespace_generators = create_namespace_generators(
             self.api_description, self.params_description)

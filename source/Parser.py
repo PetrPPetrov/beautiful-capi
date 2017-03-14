@@ -53,6 +53,22 @@ class TLifecycle(Enum):
         raise ValueError
 
 
+class TOverloadSuffixMode(Enum):
+    Off = 0
+    Notify = 1
+    Silent = 2
+
+    @staticmethod
+    def load(value):
+        if value == "Off":
+            return TOverloadSuffixMode.Off
+        if value == "Notify":
+            return TOverloadSuffixMode.Notify
+        if value == "Silent":
+            return TOverloadSuffixMode.Silent
+        raise ValueError
+
+
 class TBeautifulCapiRoot(object):
     def __init__(self):
         self.all_items = []
@@ -126,6 +142,8 @@ class TNamespace(object):
         self.name_filled = False
         self.implementation_header = ""
         self.implementation_header_filled = False
+        self.overload_suffix_mode = TOverloadSuffixMode.Off
+        self.overload_suffix_mode_filled = False
         self.includes = []
         self.namespaces = []
         self.include_headers = []
@@ -199,6 +217,10 @@ class TNamespace(object):
             cur_attr = dom_node.getAttribute("implementation_header")
             self.implementation_header = cur_attr
             self.implementation_header_filled = True
+        if dom_node.hasAttribute("overload_suffix_mode"):
+            cur_attr = dom_node.getAttribute("overload_suffix_mode")
+            self.overload_suffix_mode = TOverloadSuffixMode.load(cur_attr)
+            self.overload_suffix_mode_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:
@@ -395,6 +417,8 @@ class TClass(object):
         self.copy_or_add_ref_noexcept_filled = False
         self.delete_or_release_noexcept = True
         self.delete_or_release_noexcept_filled = False
+        self.overload_suffix_mode = TOverloadSuffixMode.Off
+        self.overload_suffix_mode_filled = False
         self.documentations = []
         self.include_headers = []
         self.enumerations = []
@@ -494,6 +518,10 @@ class TClass(object):
             cur_attr = dom_node.getAttribute("delete_or_release_noexcept")
             self.delete_or_release_noexcept = string_to_bool(cur_attr)
             self.delete_or_release_noexcept_filled = True
+        if dom_node.hasAttribute("overload_suffix_mode"):
+            cur_attr = dom_node.getAttribute("overload_suffix_mode")
+            self.overload_suffix_mode = TOverloadSuffixMode.load(cur_attr)
+            self.overload_suffix_mode_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:
@@ -598,6 +626,8 @@ class TMethod(TConstructor):
         self.return_type_filled = False
         self.const = False
         self.const_filled = False
+        self.overload_suffix = ""
+        self.overload_suffix_filled = False
 
     def load_element(self, element):
         if super().load_element(element):
@@ -614,6 +644,10 @@ class TMethod(TConstructor):
             cur_attr = dom_node.getAttribute("const")
             self.const = string_to_bool(cur_attr)
             self.const_filled = True
+        if dom_node.hasAttribute("overload_suffix"):
+            cur_attr = dom_node.getAttribute("overload_suffix")
+            self.overload_suffix = cur_attr
+            self.overload_suffix_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:

@@ -146,11 +146,12 @@ class MethodGenerator(object):
 
     @property
     def c_name(self) -> str:
-        return get_c_name(self.name)
+        return get_c_name(self.name + '_' + self.method_object.overload_suffix if self.method_object.overload_suffix
+                          else self.name)
 
     @property
     def full_c_name(self) -> str:
-        return get_c_name(self.parent_class_generator.full_c_name + '_' + self.method_object.name)
+        return get_c_name(self.parent_class_generator.full_c_name + '_' + self.c_name)
 
     @property
     def wrap_name(self) -> str:
@@ -268,20 +269,29 @@ class FunctionGenerator(object):
         self.exception_traits = None
 
     @property
-    def full_name(self) -> str:
-        return '::'.join([self.parent_namespace_generator.full_name, self.function_object.name])
-
-    @property
-    def full_c_name(self) -> str:
-        return get_c_name(self.parent_namespace_generator.full_c_name + '_' + self.function_object.name)
-
-    @property
-    def wrap_name(self) -> str:
+    def name(self) -> str:
         return self.function_object.name
 
     @property
+    def full_name(self) -> str:
+        return '::'.join([self.parent_namespace_generator.full_name, self.name])
+
+    @property
+    def c_name(self) -> str:
+        return get_c_name(self.name + '_' + self.function_object.overload_suffix if self.function_object.overload_suffix
+                          else self.name)
+
+    @property
+    def full_c_name(self) -> str:
+        return get_c_name(self.parent_namespace_generator.full_c_name + '_' + self.c_name)
+
+    @property
+    def wrap_name(self) -> str:
+        return self.name
+
+    @property
     def full_wrap_name(self) -> str:
-        return '::'.join([self.parent_namespace_generator.full_wrap_name, self.function_object.name])
+        return '::'.join([self.parent_namespace_generator.full_wrap_name, self.name])
 
     def generate_wrap_definition(self, out: FileGenerator, capi_generator: CapiGenerator):
         self.exception_traits = capi_generator.get_exception_traits(self.function_object.noexcept)
