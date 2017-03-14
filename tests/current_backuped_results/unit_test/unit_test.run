@@ -1,0 +1,28 @@
+./unit_test_client
+___std::cout___
+Running 3 test cases...
+Name ctor
+Name dtor
+Address constructor
+Address destructor
+Name ctor
+Person ctor
+Name ctor
+Name dtor
+Name dtor
+Name dtor
+Name dtor
+Address constructor
+Name ctor
+Person ctor
+Person dtor
+Name dtor
+Name ctor
+Person ctor
+Person dtor
+Name dtor
+Person dtor
+Address destructor
+Name dtor
+___std::cerr___
+___eof___

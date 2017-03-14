@@ -28,8 +28,8 @@ class AtomicString(object):
     def __init__(self, string_value):
         self.value = string_value
 
-    def get_lines(self):
-        return [self.value]
+    def get_lines(self) -> [str]:
+        return self.value
 
 
 class IncludeHeaders(object):

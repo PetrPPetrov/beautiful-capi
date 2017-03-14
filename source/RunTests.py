@@ -106,6 +106,7 @@ def run_tests(input_folder, output_folder):
     process_example(input_folder, 'boost_shared_ptr', base_backup_folder)
     process_example(input_folder, 'callback', base_backup_folder)
     process_example(input_folder, 'circular_reference', base_backup_folder)
+    process_example(input_folder, 'clanguage', base_backup_folder)
     process_example(input_folder, 'copy_semantic', base_backup_folder)
     process_example(input_folder, 'custom_suffix', base_backup_folder)
     process_example(input_folder, 'down_cast', base_backup_folder)
@@ -115,8 +116,9 @@ def run_tests(input_folder, output_folder):
     process_example(input_folder, 'point_set', base_backup_folder)
     process_example(input_folder, 'raw_pointer_semantic', base_backup_folder)
     process_example(input_folder, 'reference_counted', base_backup_folder)
-    process_example(input_folder, 'virtual_interface', base_backup_folder)
     process_example(input_folder, 'template', base_backup_folder)
+    process_example(input_folder, 'unit_test', base_backup_folder)
+    process_example(input_folder, 'virtual_interface', base_backup_folder)
     process_test(input_folder, 'file_options', 'test00', base_backup_folder)
     process_test(input_folder, 'file_options', 'test01', base_backup_folder)
 

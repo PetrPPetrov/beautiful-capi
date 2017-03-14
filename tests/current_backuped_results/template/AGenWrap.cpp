@@ -425,37 +425,37 @@ EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position_floa
 
 EXAMPLE_API int EXAMPLE_API_CONVENTION example_vector_of_example_position_float_get_size(void* object_pointer)
 {
-    const Example::VectorImpl<Example::PositionImpl<float>>* self = static_cast<Example::VectorImpl<Example::PositionImpl<float>>*>(object_pointer);
+    const Example::VectorImpl<Example::PositionImpl<float> >* self = static_cast<Example::VectorImpl<Example::PositionImpl<float> >*>(object_pointer);
     return self->GetSize();
 }
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_position_float_clear(void* object_pointer)
 {
-    Example::VectorImpl<Example::PositionImpl<float>>* self = static_cast<Example::VectorImpl<Example::PositionImpl<float>>*>(object_pointer);
+    Example::VectorImpl<Example::PositionImpl<float> >* self = static_cast<Example::VectorImpl<Example::PositionImpl<float> >*>(object_pointer);
     self->Clear();
 }
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_position_float_push_back(void* object_pointer, void* value)
 {
-    Example::VectorImpl<Example::PositionImpl<float>>* self = static_cast<Example::VectorImpl<Example::PositionImpl<float>>*>(object_pointer);
+    Example::VectorImpl<Example::PositionImpl<float> >* self = static_cast<Example::VectorImpl<Example::PositionImpl<float> >*>(object_pointer);
     self->PushBack(*static_cast<Example::PositionImpl<float>*>(value));
 }
 
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position_float_get_item(void* object_pointer, int index)
 {
-    const Example::VectorImpl<Example::PositionImpl<float>>* self = static_cast<Example::VectorImpl<Example::PositionImpl<float>>*>(object_pointer);
+    const Example::VectorImpl<Example::PositionImpl<float> >* self = static_cast<Example::VectorImpl<Example::PositionImpl<float> >*>(object_pointer);
     Example::PositionImpl<float> result_implementation_copy(self->GetItem(index));
     return new Example::PositionImpl<float>(result_implementation_copy);
 }
 
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position_float_copy(void* object_pointer)
 {
-    return new Example::VectorImpl<Example::PositionImpl<float>>(*static_cast<Example::VectorImpl<Example::PositionImpl<float>>*>(object_pointer));
+    return new Example::VectorImpl<Example::PositionImpl<float> >(*static_cast<Example::VectorImpl<Example::PositionImpl<float> >*>(object_pointer));
 }
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_position_float_delete(void* object_pointer)
 {
-    delete static_cast<Example::VectorImpl<Example::PositionImpl<float>>*>(object_pointer);
+    delete static_cast<Example::VectorImpl<Example::PositionImpl<float> >*>(object_pointer);
 }
 
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position_double_default()
@@ -465,37 +465,37 @@ EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position_doub
 
 EXAMPLE_API int EXAMPLE_API_CONVENTION example_vector_of_example_position_double_get_size(void* object_pointer)
 {
-    const Example::VectorImpl<Example::PositionImpl<double>>* self = static_cast<Example::VectorImpl<Example::PositionImpl<double>>*>(object_pointer);
+    const Example::VectorImpl<Example::PositionImpl<double> >* self = static_cast<Example::VectorImpl<Example::PositionImpl<double> >*>(object_pointer);
     return self->GetSize();
 }
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_position_double_clear(void* object_pointer)
 {
-    Example::VectorImpl<Example::PositionImpl<double>>* self = static_cast<Example::VectorImpl<Example::PositionImpl<double>>*>(object_pointer);
+    Example::VectorImpl<Example::PositionImpl<double> >* self = static_cast<Example::VectorImpl<Example::PositionImpl<double> >*>(object_pointer);
     self->Clear();
 }
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_position_double_push_back(void* object_pointer, void* value)
 {
-    Example::VectorImpl<Example::PositionImpl<double>>* self = static_cast<Example::VectorImpl<Example::PositionImpl<double>>*>(object_pointer);
+    Example::VectorImpl<Example::PositionImpl<double> >* self = static_cast<Example::VectorImpl<Example::PositionImpl<double> >*>(object_pointer);
     self->PushBack(*static_cast<Example::PositionImpl<double>*>(value));
 }
 
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position_double_get_item(void* object_pointer, int index)
 {
-    const Example::VectorImpl<Example::PositionImpl<double>>* self = static_cast<Example::VectorImpl<Example::PositionImpl<double>>*>(object_pointer);
+    const Example::VectorImpl<Example::PositionImpl<double> >* self = static_cast<Example::VectorImpl<Example::PositionImpl<double> >*>(object_pointer);
     Example::PositionImpl<double> result_implementation_copy(self->GetItem(index));
     return new Example::PositionImpl<double>(result_implementation_copy);
 }
 
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position_double_copy(void* object_pointer)
 {
-    return new Example::VectorImpl<Example::PositionImpl<double>>(*static_cast<Example::VectorImpl<Example::PositionImpl<double>>*>(object_pointer));
+    return new Example::VectorImpl<Example::PositionImpl<double> >(*static_cast<Example::VectorImpl<Example::PositionImpl<double> >*>(object_pointer));
 }
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_position_double_delete(void* object_pointer)
 {
-    delete static_cast<Example::VectorImpl<Example::PositionImpl<double>>*>(object_pointer);
+    delete static_cast<Example::VectorImpl<Example::PositionImpl<double> >*>(object_pointer);
 }
 
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_float_default()
@@ -505,37 +505,37 @@ EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_f
 
 EXAMPLE_API int EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_float_get_size(void* object_pointer)
 {
-    const Example::VectorImpl<Example::Position4DImpl<float>>* self = static_cast<Example::VectorImpl<Example::Position4DImpl<float>>*>(object_pointer);
+    const Example::VectorImpl<Example::Position4DImpl<float> >* self = static_cast<Example::VectorImpl<Example::Position4DImpl<float> >*>(object_pointer);
     return self->GetSize();
 }
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_float_clear(void* object_pointer)
 {
-    Example::VectorImpl<Example::Position4DImpl<float>>* self = static_cast<Example::VectorImpl<Example::Position4DImpl<float>>*>(object_pointer);
+    Example::VectorImpl<Example::Position4DImpl<float> >* self = static_cast<Example::VectorImpl<Example::Position4DImpl<float> >*>(object_pointer);
     self->Clear();
 }
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_float_push_back(void* object_pointer, void* value)
 {
-    Example::VectorImpl<Example::Position4DImpl<float>>* self = static_cast<Example::VectorImpl<Example::Position4DImpl<float>>*>(object_pointer);
+    Example::VectorImpl<Example::Position4DImpl<float> >* self = static_cast<Example::VectorImpl<Example::Position4DImpl<float> >*>(object_pointer);
     self->PushBack(*static_cast<Example::Position4DImpl<float>*>(value));
 }
 
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_float_get_item(void* object_pointer, int index)
 {
-    const Example::VectorImpl<Example::Position4DImpl<float>>* self = static_cast<Example::VectorImpl<Example::Position4DImpl<float>>*>(object_pointer);
+    const Example::VectorImpl<Example::Position4DImpl<float> >* self = static_cast<Example::VectorImpl<Example::Position4DImpl<float> >*>(object_pointer);
     Example::Position4DImpl<float> result_implementation_copy(self->GetItem(index));
     return new Example::Position4DImpl<float>(result_implementation_copy);
 }
 
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_float_copy(void* object_pointer)
 {
-    return new Example::VectorImpl<Example::Position4DImpl<float>>(*static_cast<Example::VectorImpl<Example::Position4DImpl<float>>*>(object_pointer));
+    return new Example::VectorImpl<Example::Position4DImpl<float> >(*static_cast<Example::VectorImpl<Example::Position4DImpl<float> >*>(object_pointer));
 }
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_float_delete(void* object_pointer)
 {
-    delete static_cast<Example::VectorImpl<Example::Position4DImpl<float>>*>(object_pointer);
+    delete static_cast<Example::VectorImpl<Example::Position4DImpl<float> >*>(object_pointer);
 }
 
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_double_default()
@@ -545,37 +545,37 @@ EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_d
 
 EXAMPLE_API int EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_double_get_size(void* object_pointer)
 {
-    const Example::VectorImpl<Example::Position4DImpl<double>>* self = static_cast<Example::VectorImpl<Example::Position4DImpl<double>>*>(object_pointer);
+    const Example::VectorImpl<Example::Position4DImpl<double> >* self = static_cast<Example::VectorImpl<Example::Position4DImpl<double> >*>(object_pointer);
     return self->GetSize();
 }
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_double_clear(void* object_pointer)
 {
-    Example::VectorImpl<Example::Position4DImpl<double>>* self = static_cast<Example::VectorImpl<Example::Position4DImpl<double>>*>(object_pointer);
+    Example::VectorImpl<Example::Position4DImpl<double> >* self = static_cast<Example::VectorImpl<Example::Position4DImpl<double> >*>(object_pointer);
     self->Clear();
 }
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_double_push_back(void* object_pointer, void* value)
 {
-    Example::VectorImpl<Example::Position4DImpl<double>>* self = static_cast<Example::VectorImpl<Example::Position4DImpl<double>>*>(object_pointer);
+    Example::VectorImpl<Example::Position4DImpl<double> >* self = static_cast<Example::VectorImpl<Example::Position4DImpl<double> >*>(object_pointer);
     self->PushBack(*static_cast<Example::Position4DImpl<double>*>(value));
 }
 
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_double_get_item(void* object_pointer, int index)
 {
-    const Example::VectorImpl<Example::Position4DImpl<double>>* self = static_cast<Example::VectorImpl<Example::Position4DImpl<double>>*>(object_pointer);
+    const Example::VectorImpl<Example::Position4DImpl<double> >* self = static_cast<Example::VectorImpl<Example::Position4DImpl<double> >*>(object_pointer);
     Example::Position4DImpl<double> result_implementation_copy(self->GetItem(index));
     return new Example::Position4DImpl<double>(result_implementation_copy);
 }
 
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_double_copy(void* object_pointer)
 {
-    return new Example::VectorImpl<Example::Position4DImpl<double>>(*static_cast<Example::VectorImpl<Example::Position4DImpl<double>>*>(object_pointer));
+    return new Example::VectorImpl<Example::Position4DImpl<double> >(*static_cast<Example::VectorImpl<Example::Position4DImpl<double> >*>(object_pointer));
 }
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_double_delete(void* object_pointer)
 {
-    delete static_cast<Example::VectorImpl<Example::Position4DImpl<double>>*>(object_pointer);
+    delete static_cast<Example::VectorImpl<Example::Position4DImpl<double> >*>(object_pointer);
 }
 
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_vector_of_example_position4_d_float_default()
@@ -585,37 +585,37 @@ EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_vector_of_exa
 
 EXAMPLE_API int EXAMPLE_API_CONVENTION example_vector_of_example_vector_of_example_position4_d_float_get_size(void* object_pointer)
 {
-    const Example::VectorImpl<Example::VectorImpl<Example::Position4DImpl<float>>>* self = static_cast<Example::VectorImpl<Example::VectorImpl<Example::Position4DImpl<float>>>*>(object_pointer);
+    const Example::VectorImpl<Example::VectorImpl<Example::Position4DImpl<float> > >* self = static_cast<Example::VectorImpl<Example::VectorImpl<Example::Position4DImpl<float> > >*>(object_pointer);
     return self->GetSize();
 }
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_vector_of_example_position4_d_float_clear(void* object_pointer)
 {
-    Example::VectorImpl<Example::VectorImpl<Example::Position4DImpl<float>>>* self = static_cast<Example::VectorImpl<Example::VectorImpl<Example::Position4DImpl<float>>>*>(object_pointer);
+    Example::VectorImpl<Example::VectorImpl<Example::Position4DImpl<float> > >* self = static_cast<Example::VectorImpl<Example::VectorImpl<Example::Position4DImpl<float> > >*>(object_pointer);
     self->Clear();
 }
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_vector_of_example_position4_d_float_push_back(void* object_pointer, void* value)
 {
-    Example::VectorImpl<Example::VectorImpl<Example::Position4DImpl<float>>>* self = static_cast<Example::VectorImpl<Example::VectorImpl<Example::Position4DImpl<float>>>*>(object_pointer);
-    self->PushBack(*static_cast<Example::VectorImpl<Example::Position4DImpl<float>>*>(value));
+    Example::VectorImpl<Example::VectorImpl<Example::Position4DImpl<float> > >* self = static_cast<Example::VectorImpl<Example::VectorImpl<Example::Position4DImpl<float> > >*>(object_pointer);
+    self->PushBack(*static_cast<Example::VectorImpl<Example::Position4DImpl<float> >*>(value));
 }
 
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_vector_of_example_position4_d_float_get_item(void* object_pointer, int index)
 {
-    const Example::VectorImpl<Example::VectorImpl<Example::Position4DImpl<float>>>* self = static_cast<Example::VectorImpl<Example::VectorImpl<Example::Position4DImpl<float>>>*>(object_pointer);
-    Example::VectorImpl<Example::Position4DImpl<float>> result_implementation_copy(self->GetItem(index));
-    return new Example::VectorImpl<Example::Position4DImpl<float>>(result_implementation_copy);
+    const Example::VectorImpl<Example::VectorImpl<Example::Position4DImpl<float> > >* self = static_cast<Example::VectorImpl<Example::VectorImpl<Example::Position4DImpl<float> > >*>(object_pointer);
+    Example::VectorImpl<Example::Position4DImpl<float> > result_implementation_copy(self->GetItem(index));
+    return new Example::VectorImpl<Example::Position4DImpl<float> >(result_implementation_copy);
 }
 
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_vector_of_example_position4_d_float_copy(void* object_pointer)
 {
-    return new Example::VectorImpl<Example::VectorImpl<Example::Position4DImpl<float>>>(*static_cast<Example::VectorImpl<Example::VectorImpl<Example::Position4DImpl<float>>>*>(object_pointer));
+    return new Example::VectorImpl<Example::VectorImpl<Example::Position4DImpl<float> > >(*static_cast<Example::VectorImpl<Example::VectorImpl<Example::Position4DImpl<float> > >*>(object_pointer));
 }
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_vector_of_example_position4_d_float_delete(void* object_pointer)
 {
-    delete static_cast<Example::VectorImpl<Example::VectorImpl<Example::Position4DImpl<float>>>*>(object_pointer);
+    delete static_cast<Example::VectorImpl<Example::VectorImpl<Example::Position4DImpl<float> > >*>(object_pointer);
 }
 
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_float_default()
@@ -625,36 +625,36 @@ EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_objects_example_model
 
 EXAMPLE_API int EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_float_get_size(void* object_pointer)
 {
-    const Example::VectorOfObjectsImpl<Example::ModelImpl<float>>* self = static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<float>>*>(object_pointer);
+    const Example::VectorOfObjectsImpl<Example::ModelImpl<float> >* self = static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<float> >*>(object_pointer);
     return self->GetSize();
 }
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_float_clear(void* object_pointer)
 {
-    Example::VectorOfObjectsImpl<Example::ModelImpl<float>>* self = static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<float>>*>(object_pointer);
+    Example::VectorOfObjectsImpl<Example::ModelImpl<float> >* self = static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<float> >*>(object_pointer);
     self->Clear();
 }
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_float_push_back(void* object_pointer, void* value)
 {
-    Example::VectorOfObjectsImpl<Example::ModelImpl<float>>* self = static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<float>>*>(object_pointer);
+    Example::VectorOfObjectsImpl<Example::ModelImpl<float> >* self = static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<float> >*>(object_pointer);
     self->PushBack(static_cast<Example::ModelImpl<float>*>(value));
 }
 
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_float_get_item(void* object_pointer, int index)
 {
-    const Example::VectorOfObjectsImpl<Example::ModelImpl<float>>* self = static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<float>>*>(object_pointer);
+    const Example::VectorOfObjectsImpl<Example::ModelImpl<float> >* self = static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<float> >*>(object_pointer);
     return self->GetItem(index).detach();
 }
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_float_add_ref(void* object_pointer)
 {
-    intrusive_ptr_add_ref(static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<float>>*>(object_pointer));
+    intrusive_ptr_add_ref(static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<float> >*>(object_pointer));
 }
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_float_release(void* object_pointer)
 {
-    intrusive_ptr_release(static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<float>>*>(object_pointer));
+    intrusive_ptr_release(static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<float> >*>(object_pointer));
 }
 
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_double_default()
@@ -664,36 +664,36 @@ EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_objects_example_model
 
 EXAMPLE_API int EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_double_get_size(void* object_pointer)
 {
-    const Example::VectorOfObjectsImpl<Example::ModelImpl<double>>* self = static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<double>>*>(object_pointer);
+    const Example::VectorOfObjectsImpl<Example::ModelImpl<double> >* self = static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<double> >*>(object_pointer);
     return self->GetSize();
 }
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_double_clear(void* object_pointer)
 {
-    Example::VectorOfObjectsImpl<Example::ModelImpl<double>>* self = static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<double>>*>(object_pointer);
+    Example::VectorOfObjectsImpl<Example::ModelImpl<double> >* self = static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<double> >*>(object_pointer);
     self->Clear();
 }
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_double_push_back(void* object_pointer, void* value)
 {
-    Example::VectorOfObjectsImpl<Example::ModelImpl<double>>* self = static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<double>>*>(object_pointer);
+    Example::VectorOfObjectsImpl<Example::ModelImpl<double> >* self = static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<double> >*>(object_pointer);
     self->PushBack(static_cast<Example::ModelImpl<double>*>(value));
 }
 
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_double_get_item(void* object_pointer, int index)
 {
-    const Example::VectorOfObjectsImpl<Example::ModelImpl<double>>* self = static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<double>>*>(object_pointer);
+    const Example::VectorOfObjectsImpl<Example::ModelImpl<double> >* self = static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<double> >*>(object_pointer);
     return self->GetItem(index).detach();
 }
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_double_add_ref(void* object_pointer)
 {
-    intrusive_ptr_add_ref(static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<double>>*>(object_pointer));
+    intrusive_ptr_add_ref(static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<double> >*>(object_pointer));
 }
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_double_release(void* object_pointer)
 {
-    intrusive_ptr_release(static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<double>>*>(object_pointer));
+    intrusive_ptr_release(static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<double> >*>(object_pointer));
 }
 
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_objects_derived_example_model_float_default()
@@ -703,30 +703,30 @@ EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_objects_derived_examp
 
 EXAMPLE_API int EXAMPLE_API_CONVENTION example_vector_of_objects_derived_example_model_float_get_a(void* object_pointer)
 {
-    const Example::VectorOfObjectsDerivedImpl<Example::ModelImpl<float>>* self = static_cast<Example::VectorOfObjectsDerivedImpl<Example::ModelImpl<float>>*>(object_pointer);
+    const Example::VectorOfObjectsDerivedImpl<Example::ModelImpl<float> >* self = static_cast<Example::VectorOfObjectsDerivedImpl<Example::ModelImpl<float> >*>(object_pointer);
     return self->GetA();
 }
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_objects_derived_example_model_float_add_ref(void* object_pointer)
 {
-    intrusive_ptr_add_ref(static_cast<Example::VectorOfObjectsDerivedImpl<Example::ModelImpl<float>>*>(object_pointer));
+    intrusive_ptr_add_ref(static_cast<Example::VectorOfObjectsDerivedImpl<Example::ModelImpl<float> >*>(object_pointer));
 }
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_objects_derived_example_model_float_release(void* object_pointer)
 {
-    intrusive_ptr_release(static_cast<Example::VectorOfObjectsDerivedImpl<Example::ModelImpl<float>>*>(object_pointer));
+    intrusive_ptr_release(static_cast<Example::VectorOfObjectsDerivedImpl<Example::ModelImpl<float> >*>(object_pointer));
 }
 
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_objects_derived_example_model_float_cast_to_base(void* object_pointer)
 {
-    return static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<float>>*>(static_cast<Example::VectorOfObjectsDerivedImpl<Example::ModelImpl<float>>*>(object_pointer));
+    return static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<float> >*>(static_cast<Example::VectorOfObjectsDerivedImpl<Example::ModelImpl<float> >*>(object_pointer));
 }
 
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_float_cast_to_example_vector_of_objects_derived_example_model_float(void* source_object)
 {
     if (source_object)
     {
-        return dynamic_cast<Example::VectorOfObjectsDerivedImpl<Example::ModelImpl<float>>*>(static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<float>>*>(source_object));
+        return dynamic_cast<Example::VectorOfObjectsDerivedImpl<Example::ModelImpl<float> >*>(static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<float> >*>(source_object));
     }
     else
     {
@@ -741,30 +741,30 @@ EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_objects_derived_examp
 
 EXAMPLE_API int EXAMPLE_API_CONVENTION example_vector_of_objects_derived_example_model_double_get_a(void* object_pointer)
 {
-    const Example::VectorOfObjectsDerivedImpl<Example::ModelImpl<double>>* self = static_cast<Example::VectorOfObjectsDerivedImpl<Example::ModelImpl<double>>*>(object_pointer);
+    const Example::VectorOfObjectsDerivedImpl<Example::ModelImpl<double> >* self = static_cast<Example::VectorOfObjectsDerivedImpl<Example::ModelImpl<double> >*>(object_pointer);
     return self->GetA();
 }
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_objects_derived_example_model_double_add_ref(void* object_pointer)
 {
-    intrusive_ptr_add_ref(static_cast<Example::VectorOfObjectsDerivedImpl<Example::ModelImpl<double>>*>(object_pointer));
+    intrusive_ptr_add_ref(static_cast<Example::VectorOfObjectsDerivedImpl<Example::ModelImpl<double> >*>(object_pointer));
 }
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_objects_derived_example_model_double_release(void* object_pointer)
 {
-    intrusive_ptr_release(static_cast<Example::VectorOfObjectsDerivedImpl<Example::ModelImpl<double>>*>(object_pointer));
+    intrusive_ptr_release(static_cast<Example::VectorOfObjectsDerivedImpl<Example::ModelImpl<double> >*>(object_pointer));
 }
 
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_objects_derived_example_model_double_cast_to_base(void* object_pointer)
 {
-    return static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<double>>*>(static_cast<Example::VectorOfObjectsDerivedImpl<Example::ModelImpl<double>>*>(object_pointer));
+    return static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<double> >*>(static_cast<Example::VectorOfObjectsDerivedImpl<Example::ModelImpl<double> >*>(object_pointer));
 }
 
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_objects_example_model_double_cast_to_example_vector_of_objects_derived_example_model_double(void* source_object)
 {
     if (source_object)
     {
-        return dynamic_cast<Example::VectorOfObjectsDerivedImpl<Example::ModelImpl<double>>*>(static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<double>>*>(source_object));
+        return dynamic_cast<Example::VectorOfObjectsDerivedImpl<Example::ModelImpl<double> >*>(static_cast<Example::VectorOfObjectsImpl<Example::ModelImpl<double> >*>(source_object));
     }
     else
     {

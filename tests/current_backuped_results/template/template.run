@@ -29,10 +29,10 @@ Position copy ctor
 Position4D copy ctor
 Position copy ctor
 Position4D copy ctor
-Position4D dtor
-Position dtor
 Position copy ctor
 Position4D copy ctor
+Position4D dtor
+Position dtor
 Position4D dtor
 Position dtor
 Position4D dtor
@@ -85,16 +85,16 @@ Position4D copy ctor
 Position copy ctor
 Position4D copy ctor
 Vector copy ctor
-Vector dtor
-Position4D dtor
-Position dtor
-Position4D dtor
-Position dtor
 Position copy ctor
 Position4D copy ctor
 Position copy ctor
 Position4D copy ctor
 Vector copy ctor
+Vector dtor
+Position4D dtor
+Position dtor
+Position4D dtor
+Position dtor
 Vector dtor
 Position4D dtor
 Position dtor

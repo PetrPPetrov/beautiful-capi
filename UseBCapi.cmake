@@ -65,7 +65,7 @@ function(add_bcapi_generation_with_test)
             -o ${CMAKE_CURRENT_SOURCE_DIR}/include
             -s ${CMAKE_CURRENT_SOURCE_DIR}/source/snippets
             -w ${generated_source}
-            -t ${CMAKE_CURRENT_SOURCE_DIR}/../client/AutoGenUnitTests.h
+            -t ${CMAKE_CURRENT_SOURCE_DIR}/include/AutoGenUnitTests.h
         MAIN_DEPENDENCY
             ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.xml
         DEPENDS
