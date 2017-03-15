@@ -39,7 +39,7 @@ inline Example::ModelPtr<double>::ModelPtr()
 
 inline const char* Example::ModelPtr<double>::GetName() const
 {
-    return example_model_double_get_name(GetRawPointer());
+    return example_model_double_get_name_const(GetRawPointer());
 }
 
 inline void Example::ModelPtr<double>::SetName(const char* name)
@@ -49,7 +49,7 @@ inline void Example::ModelPtr<double>::SetName(const char* name)
 
 inline Example::Position<double> Example::ModelPtr<double>::GetPosition() const
 {
-    return Example::Position<double>(Example::Position<double>::force_creating_from_raw_pointer, example_model_double_get_position(GetRawPointer()), false);
+    return Example::Position<double>(Example::Position<double>::force_creating_from_raw_pointer, example_model_double_get_position_const(GetRawPointer()), false);
 }
 
 inline void Example::ModelPtr<double>::SetPosition(const Example::Position<double>& position)

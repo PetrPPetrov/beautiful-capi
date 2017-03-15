@@ -39,12 +39,12 @@ inline Example::DocumentPtr::DocumentPtr()
 
 inline void Example::DocumentPtr::Show() const
 {
-    example_document_show(GetRawPointer());
+    example_document_show_const(GetRawPointer());
 }
 
 inline Example::PagePtr Example::DocumentPtr::GetPage() const
 {
-    return Example::PagePtr(Example::PagePtr::force_creating_from_raw_pointer, example_document_get_page(GetRawPointer()), false);
+    return Example::PagePtr(Example::PagePtr::force_creating_from_raw_pointer, example_document_get_page_const(GetRawPointer()), false);
 }
 
 inline void Example::DocumentPtr::SetPage(const Example::PagePtr& value)

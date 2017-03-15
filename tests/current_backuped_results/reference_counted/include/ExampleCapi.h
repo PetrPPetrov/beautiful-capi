@@ -103,13 +103,13 @@
     EXAMPLE_API int EXAMPLE_API_CONVENTION example_get_minor_version();
     EXAMPLE_API int EXAMPLE_API_CONVENTION example_get_patch_version();
     EXAMPLE_API void* EXAMPLE_API_CONVENTION example_printer_new();
-    EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_show(void* object_pointer, const char* text);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_show_const(void* object_pointer, const char* text);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_add_ref(void* object_pointer);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_release(void* object_pointer);
     EXAMPLE_API void* EXAMPLE_API_CONVENTION example_dumper_new();
-    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_dumper_get_printer(void* object_pointer);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_dumper_get_printer_const(void* object_pointer);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_dumper_set_printer(void* object_pointer, void* printer);
-    EXAMPLE_API void EXAMPLE_API_CONVENTION example_dumper_dump(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_dumper_dump_const(void* object_pointer);
     EXAMPLE_API void* EXAMPLE_API_CONVENTION example_dumper_copy(void* object_pointer);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_dumper_delete(void* object_pointer);
 
@@ -148,13 +148,13 @@
     typedef int (EXAMPLE_API_CONVENTION *example_get_minor_version_function_type)();
     typedef int (EXAMPLE_API_CONVENTION *example_get_patch_version_function_type)();
     typedef void* (EXAMPLE_API_CONVENTION *example_printer_new_function_type)();
-    typedef void (EXAMPLE_API_CONVENTION *example_printer_show_function_type)(void* object_pointer, const char* text);
+    typedef void (EXAMPLE_API_CONVENTION *example_printer_show_const_function_type)(void* object_pointer, const char* text);
     typedef void (EXAMPLE_API_CONVENTION *example_printer_add_ref_function_type)(void* object_pointer);
     typedef void (EXAMPLE_API_CONVENTION *example_printer_release_function_type)(void* object_pointer);
     typedef void* (EXAMPLE_API_CONVENTION *example_dumper_new_function_type)();
-    typedef void* (EXAMPLE_API_CONVENTION *example_dumper_get_printer_function_type)(void* object_pointer);
+    typedef void* (EXAMPLE_API_CONVENTION *example_dumper_get_printer_const_function_type)(void* object_pointer);
     typedef void (EXAMPLE_API_CONVENTION *example_dumper_set_printer_function_type)(void* object_pointer, void* printer);
-    typedef void (EXAMPLE_API_CONVENTION *example_dumper_dump_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_dumper_dump_const_function_type)(void* object_pointer);
     typedef void* (EXAMPLE_API_CONVENTION *example_dumper_copy_function_type)(void* object_pointer);
     typedef void (EXAMPLE_API_CONVENTION *example_dumper_delete_function_type)(void* object_pointer);
 
@@ -180,10 +180,10 @@
         #else
             example_printer_new_function_type example_printer_new = 0;
         #endif
-        #ifdef example_printer_show_define_function_pointer_var
-            example_printer_show_define_function_pointer_var
+        #ifdef example_printer_show_const_define_function_pointer_var
+            example_printer_show_const_define_function_pointer_var
         #else
-            example_printer_show_function_type example_printer_show = 0;
+            example_printer_show_const_function_type example_printer_show_const = 0;
         #endif
         #ifdef example_printer_add_ref_define_function_pointer_var
             example_printer_add_ref_define_function_pointer_var
@@ -200,20 +200,20 @@
         #else
             example_dumper_new_function_type example_dumper_new = 0;
         #endif
-        #ifdef example_dumper_get_printer_define_function_pointer_var
-            example_dumper_get_printer_define_function_pointer_var
+        #ifdef example_dumper_get_printer_const_define_function_pointer_var
+            example_dumper_get_printer_const_define_function_pointer_var
         #else
-            example_dumper_get_printer_function_type example_dumper_get_printer = 0;
+            example_dumper_get_printer_const_function_type example_dumper_get_printer_const = 0;
         #endif
         #ifdef example_dumper_set_printer_define_function_pointer_var
             example_dumper_set_printer_define_function_pointer_var
         #else
             example_dumper_set_printer_function_type example_dumper_set_printer = 0;
         #endif
-        #ifdef example_dumper_dump_define_function_pointer_var
-            example_dumper_dump_define_function_pointer_var
+        #ifdef example_dumper_dump_const_define_function_pointer_var
+            example_dumper_dump_const_define_function_pointer_var
         #else
-            example_dumper_dump_function_type example_dumper_dump = 0;
+            example_dumper_dump_const_function_type example_dumper_dump_const = 0;
         #endif
         #ifdef example_dumper_copy_define_function_pointer_var
             example_dumper_copy_define_function_pointer_var
@@ -232,13 +232,13 @@
         extern example_get_minor_version_function_type example_get_minor_version;
         extern example_get_patch_version_function_type example_get_patch_version;
         extern example_printer_new_function_type example_printer_new;
-        extern example_printer_show_function_type example_printer_show;
+        extern example_printer_show_const_function_type example_printer_show_const;
         extern example_printer_add_ref_function_type example_printer_add_ref;
         extern example_printer_release_function_type example_printer_release;
         extern example_dumper_new_function_type example_dumper_new;
-        extern example_dumper_get_printer_function_type example_dumper_get_printer;
+        extern example_dumper_get_printer_const_function_type example_dumper_get_printer_const;
         extern example_dumper_set_printer_function_type example_dumper_set_printer;
-        extern example_dumper_dump_function_type example_dumper_dump;
+        extern example_dumper_dump_const_function_type example_dumper_dump_const;
         extern example_dumper_copy_function_type example_dumper_copy;
         extern example_dumper_delete_function_type example_dumper_delete;
 
@@ -315,11 +315,11 @@
                 #else /* example_printer_new_load_function_call */
                     load_function<example_printer_new_function_type>(example_printer_new, "example_printer_new");
                 #endif /* example_printer_new_load_function_call */
-                #ifdef example_printer_show_load_function_call
-                    example_printer_show_load_function_call
-                #else /* example_printer_show_load_function_call */
-                    load_function<example_printer_show_function_type>(example_printer_show, "example_printer_show");
-                #endif /* example_printer_show_load_function_call */
+                #ifdef example_printer_show_const_load_function_call
+                    example_printer_show_const_load_function_call
+                #else /* example_printer_show_const_load_function_call */
+                    load_function<example_printer_show_const_function_type>(example_printer_show_const, "example_printer_show_const");
+                #endif /* example_printer_show_const_load_function_call */
                 #ifdef example_printer_add_ref_load_function_call
                     example_printer_add_ref_load_function_call
                 #else /* example_printer_add_ref_load_function_call */
@@ -335,21 +335,21 @@
                 #else /* example_dumper_new_load_function_call */
                     load_function<example_dumper_new_function_type>(example_dumper_new, "example_dumper_new");
                 #endif /* example_dumper_new_load_function_call */
-                #ifdef example_dumper_get_printer_load_function_call
-                    example_dumper_get_printer_load_function_call
-                #else /* example_dumper_get_printer_load_function_call */
-                    load_function<example_dumper_get_printer_function_type>(example_dumper_get_printer, "example_dumper_get_printer");
-                #endif /* example_dumper_get_printer_load_function_call */
+                #ifdef example_dumper_get_printer_const_load_function_call
+                    example_dumper_get_printer_const_load_function_call
+                #else /* example_dumper_get_printer_const_load_function_call */
+                    load_function<example_dumper_get_printer_const_function_type>(example_dumper_get_printer_const, "example_dumper_get_printer_const");
+                #endif /* example_dumper_get_printer_const_load_function_call */
                 #ifdef example_dumper_set_printer_load_function_call
                     example_dumper_set_printer_load_function_call
                 #else /* example_dumper_set_printer_load_function_call */
                     load_function<example_dumper_set_printer_function_type>(example_dumper_set_printer, "example_dumper_set_printer");
                 #endif /* example_dumper_set_printer_load_function_call */
-                #ifdef example_dumper_dump_load_function_call
-                    example_dumper_dump_load_function_call
-                #else /* example_dumper_dump_load_function_call */
-                    load_function<example_dumper_dump_function_type>(example_dumper_dump, "example_dumper_dump");
-                #endif /* example_dumper_dump_load_function_call */
+                #ifdef example_dumper_dump_const_load_function_call
+                    example_dumper_dump_const_load_function_call
+                #else /* example_dumper_dump_const_load_function_call */
+                    load_function<example_dumper_dump_const_function_type>(example_dumper_dump_const, "example_dumper_dump_const");
+                #endif /* example_dumper_dump_const_load_function_call */
                 #ifdef example_dumper_copy_load_function_call
                     example_dumper_copy_load_function_call
                 #else /* example_dumper_copy_load_function_call */
@@ -410,11 +410,11 @@
                 #else /* example_printer_new_zero_function_pointer */
                     example_printer_new = 0;
                 #endif /* example_printer_new_zero_function_pointer */
-                #ifdef example_printer_show_zero_function_pointer
-                    example_printer_show_zero_function_pointer
-                #else /* example_printer_show_zero_function_pointer */
-                    example_printer_show = 0;
-                #endif /* example_printer_show_zero_function_pointer */
+                #ifdef example_printer_show_const_zero_function_pointer
+                    example_printer_show_const_zero_function_pointer
+                #else /* example_printer_show_const_zero_function_pointer */
+                    example_printer_show_const = 0;
+                #endif /* example_printer_show_const_zero_function_pointer */
                 #ifdef example_printer_add_ref_zero_function_pointer
                     example_printer_add_ref_zero_function_pointer
                 #else /* example_printer_add_ref_zero_function_pointer */
@@ -430,21 +430,21 @@
                 #else /* example_dumper_new_zero_function_pointer */
                     example_dumper_new = 0;
                 #endif /* example_dumper_new_zero_function_pointer */
-                #ifdef example_dumper_get_printer_zero_function_pointer
-                    example_dumper_get_printer_zero_function_pointer
-                #else /* example_dumper_get_printer_zero_function_pointer */
-                    example_dumper_get_printer = 0;
-                #endif /* example_dumper_get_printer_zero_function_pointer */
+                #ifdef example_dumper_get_printer_const_zero_function_pointer
+                    example_dumper_get_printer_const_zero_function_pointer
+                #else /* example_dumper_get_printer_const_zero_function_pointer */
+                    example_dumper_get_printer_const = 0;
+                #endif /* example_dumper_get_printer_const_zero_function_pointer */
                 #ifdef example_dumper_set_printer_zero_function_pointer
                     example_dumper_set_printer_zero_function_pointer
                 #else /* example_dumper_set_printer_zero_function_pointer */
                     example_dumper_set_printer = 0;
                 #endif /* example_dumper_set_printer_zero_function_pointer */
-                #ifdef example_dumper_dump_zero_function_pointer
-                    example_dumper_dump_zero_function_pointer
-                #else /* example_dumper_dump_zero_function_pointer */
-                    example_dumper_dump = 0;
-                #endif /* example_dumper_dump_zero_function_pointer */
+                #ifdef example_dumper_dump_const_zero_function_pointer
+                    example_dumper_dump_const_zero_function_pointer
+                #else /* example_dumper_dump_const_zero_function_pointer */
+                    example_dumper_dump_const = 0;
+                #endif /* example_dumper_dump_const_zero_function_pointer */
                 #ifdef example_dumper_copy_zero_function_pointer
                     example_dumper_copy_zero_function_pointer
                 #else /* example_dumper_copy_zero_function_pointer */

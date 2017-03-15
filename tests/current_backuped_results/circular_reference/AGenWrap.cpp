@@ -104,7 +104,7 @@ CIRCULAR_API void CIRCULAR_API_CONVENTION circular_class_a_set_b(void* object_po
     self->SetB(static_cast<Circular::ClassBImpl*>(value));
 }
 
-CIRCULAR_API void* CIRCULAR_API_CONVENTION circular_class_a_get_b(void* object_pointer)
+CIRCULAR_API void* CIRCULAR_API_CONVENTION circular_class_a_get_b_const(void* object_pointer)
 {
     const Circular::ClassAImpl* self = static_cast<Circular::ClassAImpl*>(object_pointer);
     return self->GetB();
@@ -126,7 +126,7 @@ CIRCULAR_API void CIRCULAR_API_CONVENTION circular_class_b_set_a(void* object_po
     self->SetA(static_cast<Circular::ClassAImpl*>(value));
 }
 
-CIRCULAR_API void* CIRCULAR_API_CONVENTION circular_class_b_get_a(void* object_pointer)
+CIRCULAR_API void* CIRCULAR_API_CONVENTION circular_class_b_get_a_const(void* object_pointer)
 {
     const Circular::ClassBImpl* self = static_cast<Circular::ClassBImpl*>(object_pointer);
     return self->GetA();

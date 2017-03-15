@@ -103,15 +103,15 @@
     EXAMPLE_API int EXAMPLE_API_CONVENTION example_get_minor_version();
     EXAMPLE_API int EXAMPLE_API_CONVENTION example_get_patch_version();
     EXAMPLE_API void* EXAMPLE_API_CONVENTION example_page_default();
-    EXAMPLE_API size_t EXAMPLE_API_CONVENTION example_page_get_width(void* object_pointer);
+    EXAMPLE_API size_t EXAMPLE_API_CONVENTION example_page_get_width_const(void* object_pointer);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_page_set_width(void* object_pointer, size_t value);
-    EXAMPLE_API size_t EXAMPLE_API_CONVENTION example_page_get_height(void* object_pointer);
+    EXAMPLE_API size_t EXAMPLE_API_CONVENTION example_page_get_height_const(void* object_pointer);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_page_set_height(void* object_pointer, size_t value);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_page_add_ref(void* object_pointer);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_page_release(void* object_pointer);
     EXAMPLE_API void* EXAMPLE_API_CONVENTION example_document_default();
-    EXAMPLE_API void EXAMPLE_API_CONVENTION example_document_show(void* object_pointer);
-    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_document_get_page(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_document_show_const(void* object_pointer);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_document_get_page_const(void* object_pointer);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_document_set_page(void* object_pointer, void* value);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_document_add_ref(void* object_pointer);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_document_release(void* object_pointer);
@@ -151,15 +151,15 @@
     typedef int (EXAMPLE_API_CONVENTION *example_get_minor_version_function_type)();
     typedef int (EXAMPLE_API_CONVENTION *example_get_patch_version_function_type)();
     typedef void* (EXAMPLE_API_CONVENTION *example_page_default_function_type)();
-    typedef size_t (EXAMPLE_API_CONVENTION *example_page_get_width_function_type)(void* object_pointer);
+    typedef size_t (EXAMPLE_API_CONVENTION *example_page_get_width_const_function_type)(void* object_pointer);
     typedef void (EXAMPLE_API_CONVENTION *example_page_set_width_function_type)(void* object_pointer, size_t value);
-    typedef size_t (EXAMPLE_API_CONVENTION *example_page_get_height_function_type)(void* object_pointer);
+    typedef size_t (EXAMPLE_API_CONVENTION *example_page_get_height_const_function_type)(void* object_pointer);
     typedef void (EXAMPLE_API_CONVENTION *example_page_set_height_function_type)(void* object_pointer, size_t value);
     typedef void (EXAMPLE_API_CONVENTION *example_page_add_ref_function_type)(void* object_pointer);
     typedef void (EXAMPLE_API_CONVENTION *example_page_release_function_type)(void* object_pointer);
     typedef void* (EXAMPLE_API_CONVENTION *example_document_default_function_type)();
-    typedef void (EXAMPLE_API_CONVENTION *example_document_show_function_type)(void* object_pointer);
-    typedef void* (EXAMPLE_API_CONVENTION *example_document_get_page_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_document_show_const_function_type)(void* object_pointer);
+    typedef void* (EXAMPLE_API_CONVENTION *example_document_get_page_const_function_type)(void* object_pointer);
     typedef void (EXAMPLE_API_CONVENTION *example_document_set_page_function_type)(void* object_pointer, void* value);
     typedef void (EXAMPLE_API_CONVENTION *example_document_add_ref_function_type)(void* object_pointer);
     typedef void (EXAMPLE_API_CONVENTION *example_document_release_function_type)(void* object_pointer);
@@ -186,20 +186,20 @@
         #else
             example_page_default_function_type example_page_default = 0;
         #endif
-        #ifdef example_page_get_width_define_function_pointer_var
-            example_page_get_width_define_function_pointer_var
+        #ifdef example_page_get_width_const_define_function_pointer_var
+            example_page_get_width_const_define_function_pointer_var
         #else
-            example_page_get_width_function_type example_page_get_width = 0;
+            example_page_get_width_const_function_type example_page_get_width_const = 0;
         #endif
         #ifdef example_page_set_width_define_function_pointer_var
             example_page_set_width_define_function_pointer_var
         #else
             example_page_set_width_function_type example_page_set_width = 0;
         #endif
-        #ifdef example_page_get_height_define_function_pointer_var
-            example_page_get_height_define_function_pointer_var
+        #ifdef example_page_get_height_const_define_function_pointer_var
+            example_page_get_height_const_define_function_pointer_var
         #else
-            example_page_get_height_function_type example_page_get_height = 0;
+            example_page_get_height_const_function_type example_page_get_height_const = 0;
         #endif
         #ifdef example_page_set_height_define_function_pointer_var
             example_page_set_height_define_function_pointer_var
@@ -221,15 +221,15 @@
         #else
             example_document_default_function_type example_document_default = 0;
         #endif
-        #ifdef example_document_show_define_function_pointer_var
-            example_document_show_define_function_pointer_var
+        #ifdef example_document_show_const_define_function_pointer_var
+            example_document_show_const_define_function_pointer_var
         #else
-            example_document_show_function_type example_document_show = 0;
+            example_document_show_const_function_type example_document_show_const = 0;
         #endif
-        #ifdef example_document_get_page_define_function_pointer_var
-            example_document_get_page_define_function_pointer_var
+        #ifdef example_document_get_page_const_define_function_pointer_var
+            example_document_get_page_const_define_function_pointer_var
         #else
-            example_document_get_page_function_type example_document_get_page = 0;
+            example_document_get_page_const_function_type example_document_get_page_const = 0;
         #endif
         #ifdef example_document_set_page_define_function_pointer_var
             example_document_set_page_define_function_pointer_var
@@ -253,15 +253,15 @@
         extern example_get_minor_version_function_type example_get_minor_version;
         extern example_get_patch_version_function_type example_get_patch_version;
         extern example_page_default_function_type example_page_default;
-        extern example_page_get_width_function_type example_page_get_width;
+        extern example_page_get_width_const_function_type example_page_get_width_const;
         extern example_page_set_width_function_type example_page_set_width;
-        extern example_page_get_height_function_type example_page_get_height;
+        extern example_page_get_height_const_function_type example_page_get_height_const;
         extern example_page_set_height_function_type example_page_set_height;
         extern example_page_add_ref_function_type example_page_add_ref;
         extern example_page_release_function_type example_page_release;
         extern example_document_default_function_type example_document_default;
-        extern example_document_show_function_type example_document_show;
-        extern example_document_get_page_function_type example_document_get_page;
+        extern example_document_show_const_function_type example_document_show_const;
+        extern example_document_get_page_const_function_type example_document_get_page_const;
         extern example_document_set_page_function_type example_document_set_page;
         extern example_document_add_ref_function_type example_document_add_ref;
         extern example_document_release_function_type example_document_release;
@@ -339,21 +339,21 @@
                 #else /* example_page_default_load_function_call */
                     load_function<example_page_default_function_type>(example_page_default, "example_page_default");
                 #endif /* example_page_default_load_function_call */
-                #ifdef example_page_get_width_load_function_call
-                    example_page_get_width_load_function_call
-                #else /* example_page_get_width_load_function_call */
-                    load_function<example_page_get_width_function_type>(example_page_get_width, "example_page_get_width");
-                #endif /* example_page_get_width_load_function_call */
+                #ifdef example_page_get_width_const_load_function_call
+                    example_page_get_width_const_load_function_call
+                #else /* example_page_get_width_const_load_function_call */
+                    load_function<example_page_get_width_const_function_type>(example_page_get_width_const, "example_page_get_width_const");
+                #endif /* example_page_get_width_const_load_function_call */
                 #ifdef example_page_set_width_load_function_call
                     example_page_set_width_load_function_call
                 #else /* example_page_set_width_load_function_call */
                     load_function<example_page_set_width_function_type>(example_page_set_width, "example_page_set_width");
                 #endif /* example_page_set_width_load_function_call */
-                #ifdef example_page_get_height_load_function_call
-                    example_page_get_height_load_function_call
-                #else /* example_page_get_height_load_function_call */
-                    load_function<example_page_get_height_function_type>(example_page_get_height, "example_page_get_height");
-                #endif /* example_page_get_height_load_function_call */
+                #ifdef example_page_get_height_const_load_function_call
+                    example_page_get_height_const_load_function_call
+                #else /* example_page_get_height_const_load_function_call */
+                    load_function<example_page_get_height_const_function_type>(example_page_get_height_const, "example_page_get_height_const");
+                #endif /* example_page_get_height_const_load_function_call */
                 #ifdef example_page_set_height_load_function_call
                     example_page_set_height_load_function_call
                 #else /* example_page_set_height_load_function_call */
@@ -374,16 +374,16 @@
                 #else /* example_document_default_load_function_call */
                     load_function<example_document_default_function_type>(example_document_default, "example_document_default");
                 #endif /* example_document_default_load_function_call */
-                #ifdef example_document_show_load_function_call
-                    example_document_show_load_function_call
-                #else /* example_document_show_load_function_call */
-                    load_function<example_document_show_function_type>(example_document_show, "example_document_show");
-                #endif /* example_document_show_load_function_call */
-                #ifdef example_document_get_page_load_function_call
-                    example_document_get_page_load_function_call
-                #else /* example_document_get_page_load_function_call */
-                    load_function<example_document_get_page_function_type>(example_document_get_page, "example_document_get_page");
-                #endif /* example_document_get_page_load_function_call */
+                #ifdef example_document_show_const_load_function_call
+                    example_document_show_const_load_function_call
+                #else /* example_document_show_const_load_function_call */
+                    load_function<example_document_show_const_function_type>(example_document_show_const, "example_document_show_const");
+                #endif /* example_document_show_const_load_function_call */
+                #ifdef example_document_get_page_const_load_function_call
+                    example_document_get_page_const_load_function_call
+                #else /* example_document_get_page_const_load_function_call */
+                    load_function<example_document_get_page_const_function_type>(example_document_get_page_const, "example_document_get_page_const");
+                #endif /* example_document_get_page_const_load_function_call */
                 #ifdef example_document_set_page_load_function_call
                     example_document_set_page_load_function_call
                 #else /* example_document_set_page_load_function_call */
@@ -449,21 +449,21 @@
                 #else /* example_page_default_zero_function_pointer */
                     example_page_default = 0;
                 #endif /* example_page_default_zero_function_pointer */
-                #ifdef example_page_get_width_zero_function_pointer
-                    example_page_get_width_zero_function_pointer
-                #else /* example_page_get_width_zero_function_pointer */
-                    example_page_get_width = 0;
-                #endif /* example_page_get_width_zero_function_pointer */
+                #ifdef example_page_get_width_const_zero_function_pointer
+                    example_page_get_width_const_zero_function_pointer
+                #else /* example_page_get_width_const_zero_function_pointer */
+                    example_page_get_width_const = 0;
+                #endif /* example_page_get_width_const_zero_function_pointer */
                 #ifdef example_page_set_width_zero_function_pointer
                     example_page_set_width_zero_function_pointer
                 #else /* example_page_set_width_zero_function_pointer */
                     example_page_set_width = 0;
                 #endif /* example_page_set_width_zero_function_pointer */
-                #ifdef example_page_get_height_zero_function_pointer
-                    example_page_get_height_zero_function_pointer
-                #else /* example_page_get_height_zero_function_pointer */
-                    example_page_get_height = 0;
-                #endif /* example_page_get_height_zero_function_pointer */
+                #ifdef example_page_get_height_const_zero_function_pointer
+                    example_page_get_height_const_zero_function_pointer
+                #else /* example_page_get_height_const_zero_function_pointer */
+                    example_page_get_height_const = 0;
+                #endif /* example_page_get_height_const_zero_function_pointer */
                 #ifdef example_page_set_height_zero_function_pointer
                     example_page_set_height_zero_function_pointer
                 #else /* example_page_set_height_zero_function_pointer */
@@ -484,16 +484,16 @@
                 #else /* example_document_default_zero_function_pointer */
                     example_document_default = 0;
                 #endif /* example_document_default_zero_function_pointer */
-                #ifdef example_document_show_zero_function_pointer
-                    example_document_show_zero_function_pointer
-                #else /* example_document_show_zero_function_pointer */
-                    example_document_show = 0;
-                #endif /* example_document_show_zero_function_pointer */
-                #ifdef example_document_get_page_zero_function_pointer
-                    example_document_get_page_zero_function_pointer
-                #else /* example_document_get_page_zero_function_pointer */
-                    example_document_get_page = 0;
-                #endif /* example_document_get_page_zero_function_pointer */
+                #ifdef example_document_show_const_zero_function_pointer
+                    example_document_show_const_zero_function_pointer
+                #else /* example_document_show_const_zero_function_pointer */
+                    example_document_show_const = 0;
+                #endif /* example_document_show_const_zero_function_pointer */
+                #ifdef example_document_get_page_const_zero_function_pointer
+                    example_document_get_page_const_zero_function_pointer
+                #else /* example_document_get_page_const_zero_function_pointer */
+                    example_document_get_page_const = 0;
+                #endif /* example_document_get_page_const_zero_function_pointer */
                 #ifdef example_document_set_page_zero_function_pointer
                     example_document_set_page_zero_function_pointer
                 #else /* example_document_set_page_zero_function_pointer */

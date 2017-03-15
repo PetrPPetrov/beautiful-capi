@@ -38,7 +38,7 @@ inline hello_world::scanner_raw_ptr::scanner_raw_ptr()
 
 inline void hello_world::scanner_raw_ptr::scan() const
 {
-    hello_world_scanner_scan(get_raw_pointer());
+    hello_world_scanner_scan_const(get_raw_pointer());
 }
 
 inline hello_world::scanner_raw_ptr::scanner_raw_ptr(const scanner_raw_ptr& other)

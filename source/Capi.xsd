@@ -30,7 +30,7 @@
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required"/>
     <xs:attribute name="implementation_header" type="xs:string" use="optional" default=""/>
-    <xs:attribute name="overload_suffix_mode" type="TOverloadSuffixMode" use="optional" default="Off"/>
+    <xs:attribute name="overload_suffix_mode" type="TOverloadSuffixMode" use="optional" default="Notify"/>
   </xs:complexType>
   <xs:complexType name="TEnumerationItem">
     <xs:sequence>
@@ -87,7 +87,7 @@
     <xs:attribute name="typedef_name" type="xs:string" use="optional" default=""/>
     <xs:attribute name="copy_or_add_ref_noexcept" type="xs:boolean" use="optional" default="false"/>
     <xs:attribute name="delete_or_release_noexcept" type="xs:boolean" use="optional" default="true"/>
-    <xs:attribute name="overload_suffix_mode" type="TOverloadSuffixMode" use="optional" default="Off"/>
+    <xs:attribute name="overload_suffix_mode" type="TOverloadSuffixMode" use="optional" default="Notify"/>
   </xs:complexType>
   <xs:complexType name="TCallback">
     <xs:attribute name="lifecycle" type="TLifecycle" use="optional" default="reference_counted"/>

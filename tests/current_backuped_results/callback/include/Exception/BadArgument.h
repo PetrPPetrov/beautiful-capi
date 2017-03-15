@@ -43,7 +43,7 @@ inline Exception::BadArgument::BadArgument() : Exception::Generic(Exception::Gen
 
 inline const char* Exception::BadArgument::GetArgumentName() const
 {
-    return exception_bad_argument_get_argument_name(GetRawPointer());
+    return exception_bad_argument_get_argument_name_const(GetRawPointer());
 }
 
 inline Exception::BadArgument::BadArgument(const BadArgument& other) : Exception::Generic(Exception::Generic::force_creating_from_raw_pointer, 0, false)

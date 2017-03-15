@@ -33,7 +33,7 @@
 
 inline void Example::IShapeRawPtr::Show() const
 {
-    example_ishape_show(GetRawPointer());
+    example_ishape_show_const(GetRawPointer());
 }
 
 inline Example::IShapeRawPtr::IShapeRawPtr(const IShapeRawPtr& other)

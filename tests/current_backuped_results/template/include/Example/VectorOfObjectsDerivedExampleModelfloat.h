@@ -39,7 +39,7 @@ inline Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<float> >::VectorOfOb
 
 inline int Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<float> >::GetA() const
 {
-    return example_vector_of_objects_derived_example_model_float_get_a(GetRawPointer());
+    return example_vector_of_objects_derived_example_model_float_get_a_const(GetRawPointer());
 }
 
 inline Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<float> >::VectorOfObjectsDerivedPtr(const VectorOfObjectsDerivedPtr<Example::ModelPtr<float> >& other) : Example::VectorOfObjectsPtr<Example::ModelPtr<float> >(Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::force_creating_from_raw_pointer, 0, false)

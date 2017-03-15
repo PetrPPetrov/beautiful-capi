@@ -39,7 +39,7 @@ inline PointSet::PointSetPtr::PointSetPtr()
 
 inline const char* PointSet::PointSetPtr::GetName() const
 {
-    return point_set_point_set_get_name(GetRawPointer());
+    return point_set_point_set_get_name_const(GetRawPointer());
 }
 
 inline void PointSet::PointSetPtr::SetName(const char* name)
@@ -49,7 +49,7 @@ inline void PointSet::PointSetPtr::SetName(const char* name)
 
 inline PointSet::PointsPtr PointSet::PointSetPtr::GetPoints() const
 {
-    return PointSet::PointsPtr(PointSet::PointsPtr::force_creating_from_raw_pointer, point_set_point_set_get_points(GetRawPointer()), false);
+    return PointSet::PointsPtr(PointSet::PointsPtr::force_creating_from_raw_pointer, point_set_point_set_get_points_const(GetRawPointer()), false);
 }
 
 inline void PointSet::PointSetPtr::SetPoints(const PointSet::PointsPtr& value)

@@ -105,10 +105,10 @@
     EXAMPLE_API int EXAMPLE_API_CONVENTION example_get_major_version();
     EXAMPLE_API int EXAMPLE_API_CONVENTION example_get_minor_version();
     EXAMPLE_API int EXAMPLE_API_CONVENTION example_get_patch_version();
-    EXAMPLE_API void EXAMPLE_API_CONVENTION example_ishape_show(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_ishape_show_const(void* object_pointer);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_ishape_add_ref(void* object_pointer);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_ishape_release(void* object_pointer);
-    EXAMPLE_API int EXAMPLE_API_CONVENTION example_ipolygon_get_points_count(void* object_pointer);
+    EXAMPLE_API int EXAMPLE_API_CONVENTION example_ipolygon_get_points_count_const(void* object_pointer);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_ipolygon_add_ref(void* object_pointer);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_ipolygon_release(void* object_pointer);
     EXAMPLE_API void* EXAMPLE_API_CONVENTION example_ipolygon_cast_to_base(void* object_pointer);
@@ -168,10 +168,10 @@
     typedef int (EXAMPLE_API_CONVENTION *example_get_major_version_function_type)();
     typedef int (EXAMPLE_API_CONVENTION *example_get_minor_version_function_type)();
     typedef int (EXAMPLE_API_CONVENTION *example_get_patch_version_function_type)();
-    typedef void (EXAMPLE_API_CONVENTION *example_ishape_show_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_ishape_show_const_function_type)(void* object_pointer);
     typedef void (EXAMPLE_API_CONVENTION *example_ishape_add_ref_function_type)(void* object_pointer);
     typedef void (EXAMPLE_API_CONVENTION *example_ishape_release_function_type)(void* object_pointer);
-    typedef int (EXAMPLE_API_CONVENTION *example_ipolygon_get_points_count_function_type)(void* object_pointer);
+    typedef int (EXAMPLE_API_CONVENTION *example_ipolygon_get_points_count_const_function_type)(void* object_pointer);
     typedef void (EXAMPLE_API_CONVENTION *example_ipolygon_add_ref_function_type)(void* object_pointer);
     typedef void (EXAMPLE_API_CONVENTION *example_ipolygon_release_function_type)(void* object_pointer);
     typedef void* (EXAMPLE_API_CONVENTION *example_ipolygon_cast_to_base_function_type)(void* object_pointer);
@@ -226,10 +226,10 @@
         #else
             example_get_patch_version_function_type example_get_patch_version = 0;
         #endif
-        #ifdef example_ishape_show_define_function_pointer_var
-            example_ishape_show_define_function_pointer_var
+        #ifdef example_ishape_show_const_define_function_pointer_var
+            example_ishape_show_const_define_function_pointer_var
         #else
-            example_ishape_show_function_type example_ishape_show = 0;
+            example_ishape_show_const_function_type example_ishape_show_const = 0;
         #endif
         #ifdef example_ishape_add_ref_define_function_pointer_var
             example_ishape_add_ref_define_function_pointer_var
@@ -241,10 +241,10 @@
         #else
             example_ishape_release_function_type example_ishape_release = 0;
         #endif
-        #ifdef example_ipolygon_get_points_count_define_function_pointer_var
-            example_ipolygon_get_points_count_define_function_pointer_var
+        #ifdef example_ipolygon_get_points_count_const_define_function_pointer_var
+            example_ipolygon_get_points_count_const_define_function_pointer_var
         #else
-            example_ipolygon_get_points_count_function_type example_ipolygon_get_points_count = 0;
+            example_ipolygon_get_points_count_const_function_type example_ipolygon_get_points_count_const = 0;
         #endif
         #ifdef example_ipolygon_add_ref_define_function_pointer_var
             example_ipolygon_add_ref_define_function_pointer_var
@@ -360,10 +360,10 @@
         extern example_get_major_version_function_type example_get_major_version;
         extern example_get_minor_version_function_type example_get_minor_version;
         extern example_get_patch_version_function_type example_get_patch_version;
-        extern example_ishape_show_function_type example_ishape_show;
+        extern example_ishape_show_const_function_type example_ishape_show_const;
         extern example_ishape_add_ref_function_type example_ishape_add_ref;
         extern example_ishape_release_function_type example_ishape_release;
-        extern example_ipolygon_get_points_count_function_type example_ipolygon_get_points_count;
+        extern example_ipolygon_get_points_count_const_function_type example_ipolygon_get_points_count_const;
         extern example_ipolygon_add_ref_function_type example_ipolygon_add_ref;
         extern example_ipolygon_release_function_type example_ipolygon_release;
         extern example_ipolygon_cast_to_base_function_type example_ipolygon_cast_to_base;
@@ -469,11 +469,11 @@
                 #else /* example_get_patch_version_load_function_call */
                     load_function<example_get_patch_version_function_type>(example_get_patch_version, "example_get_patch_version");
                 #endif /* example_get_patch_version_load_function_call */
-                #ifdef example_ishape_show_load_function_call
-                    example_ishape_show_load_function_call
-                #else /* example_ishape_show_load_function_call */
-                    load_function<example_ishape_show_function_type>(example_ishape_show, "example_ishape_show");
-                #endif /* example_ishape_show_load_function_call */
+                #ifdef example_ishape_show_const_load_function_call
+                    example_ishape_show_const_load_function_call
+                #else /* example_ishape_show_const_load_function_call */
+                    load_function<example_ishape_show_const_function_type>(example_ishape_show_const, "example_ishape_show_const");
+                #endif /* example_ishape_show_const_load_function_call */
                 #ifdef example_ishape_add_ref_load_function_call
                     example_ishape_add_ref_load_function_call
                 #else /* example_ishape_add_ref_load_function_call */
@@ -484,11 +484,11 @@
                 #else /* example_ishape_release_load_function_call */
                     load_function<example_ishape_release_function_type>(example_ishape_release, "example_ishape_release");
                 #endif /* example_ishape_release_load_function_call */
-                #ifdef example_ipolygon_get_points_count_load_function_call
-                    example_ipolygon_get_points_count_load_function_call
-                #else /* example_ipolygon_get_points_count_load_function_call */
-                    load_function<example_ipolygon_get_points_count_function_type>(example_ipolygon_get_points_count, "example_ipolygon_get_points_count");
-                #endif /* example_ipolygon_get_points_count_load_function_call */
+                #ifdef example_ipolygon_get_points_count_const_load_function_call
+                    example_ipolygon_get_points_count_const_load_function_call
+                #else /* example_ipolygon_get_points_count_const_load_function_call */
+                    load_function<example_ipolygon_get_points_count_const_function_type>(example_ipolygon_get_points_count_const, "example_ipolygon_get_points_count_const");
+                #endif /* example_ipolygon_get_points_count_const_load_function_call */
                 #ifdef example_ipolygon_add_ref_load_function_call
                     example_ipolygon_add_ref_load_function_call
                 #else /* example_ipolygon_add_ref_load_function_call */
@@ -663,11 +663,11 @@
                 #else /* example_get_patch_version_zero_function_pointer */
                     example_get_patch_version = 0;
                 #endif /* example_get_patch_version_zero_function_pointer */
-                #ifdef example_ishape_show_zero_function_pointer
-                    example_ishape_show_zero_function_pointer
-                #else /* example_ishape_show_zero_function_pointer */
-                    example_ishape_show = 0;
-                #endif /* example_ishape_show_zero_function_pointer */
+                #ifdef example_ishape_show_const_zero_function_pointer
+                    example_ishape_show_const_zero_function_pointer
+                #else /* example_ishape_show_const_zero_function_pointer */
+                    example_ishape_show_const = 0;
+                #endif /* example_ishape_show_const_zero_function_pointer */
                 #ifdef example_ishape_add_ref_zero_function_pointer
                     example_ishape_add_ref_zero_function_pointer
                 #else /* example_ishape_add_ref_zero_function_pointer */
@@ -678,11 +678,11 @@
                 #else /* example_ishape_release_zero_function_pointer */
                     example_ishape_release = 0;
                 #endif /* example_ishape_release_zero_function_pointer */
-                #ifdef example_ipolygon_get_points_count_zero_function_pointer
-                    example_ipolygon_get_points_count_zero_function_pointer
-                #else /* example_ipolygon_get_points_count_zero_function_pointer */
-                    example_ipolygon_get_points_count = 0;
-                #endif /* example_ipolygon_get_points_count_zero_function_pointer */
+                #ifdef example_ipolygon_get_points_count_const_zero_function_pointer
+                    example_ipolygon_get_points_count_const_zero_function_pointer
+                #else /* example_ipolygon_get_points_count_const_zero_function_pointer */
+                    example_ipolygon_get_points_count_const = 0;
+                #endif /* example_ipolygon_get_points_count_const_zero_function_pointer */
                 #ifdef example_ipolygon_add_ref_zero_function_pointer
                     example_ipolygon_add_ref_zero_function_pointer
                 #else /* example_ipolygon_add_ref_zero_function_pointer */

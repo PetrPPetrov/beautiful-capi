@@ -38,7 +38,7 @@ inline hello_world::printer::printer()
 
 inline void hello_world::printer::show() const
 {
-    hello_world_printer_show(get_raw_pointer());
+    hello_world_printer_show_const(get_raw_pointer());
 }
 
 inline hello_world::printer::printer(const printer& other)

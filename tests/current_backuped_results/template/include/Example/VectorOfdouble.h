@@ -38,7 +38,7 @@ inline Example::VectorOf<double>::VectorOf()
 
 inline int Example::VectorOf<double>::GetSize() const
 {
-    return example_vector_of_double_get_size(GetRawPointer());
+    return example_vector_of_double_get_size_const(GetRawPointer());
 }
 
 inline void Example::VectorOf<double>::Clear()
@@ -53,7 +53,7 @@ inline void Example::VectorOf<double>::PushBack(double value)
 
 inline double Example::VectorOf<double>::GetItem(int index) const
 {
-    return example_vector_of_double_get_item(GetRawPointer(), index);
+    return example_vector_of_double_get_item_const(GetRawPointer(), index);
 }
 
 inline Example::VectorOf<double>::VectorOf(const VectorOf<double>& other)

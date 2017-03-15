@@ -39,7 +39,7 @@ inline Example::Position4D<float>::Position4D() : Example::Position<float>(Examp
 
 inline float Example::Position4D<float>::GetW() const
 {
-    return example_position4_d_float_get_w(GetRawPointer());
+    return example_position4_d_float_get_w_const(GetRawPointer());
 }
 
 inline void Example::Position4D<float>::SetW(float x)

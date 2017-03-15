@@ -99,7 +99,7 @@ HELLO_WORLD_API void* HELLO_WORLD_API_CONVENTION hello_world_printer_default()
     return new hello_world::printer_impl();
 }
 
-HELLO_WORLD_API void HELLO_WORLD_API_CONVENTION hello_world_printer_show(void* object_pointer)
+HELLO_WORLD_API void HELLO_WORLD_API_CONVENTION hello_world_printer_show_const(void* object_pointer)
 {
     const hello_world::printer_impl* self = static_cast<hello_world::printer_impl*>(object_pointer);
     self->show();
@@ -120,7 +120,7 @@ HELLO_WORLD_API void* HELLO_WORLD_API_CONVENTION hello_world_scanner_default()
     return new hello_world::scanner_impl();
 }
 
-HELLO_WORLD_API void HELLO_WORLD_API_CONVENTION hello_world_scanner_scan(void* object_pointer)
+HELLO_WORLD_API void HELLO_WORLD_API_CONVENTION hello_world_scanner_scan_const(void* object_pointer)
 {
     const hello_world::scanner_impl* self = static_cast<hello_world::scanner_impl*>(object_pointer);
     self->scan();
@@ -136,7 +136,7 @@ HELLO_WORLD_API void* HELLO_WORLD_API_CONVENTION hello_world_plotter_default()
     return new hello_world::plotter_impl();
 }
 
-HELLO_WORLD_API void HELLO_WORLD_API_CONVENTION hello_world_plotter_draw(void* object_pointer)
+HELLO_WORLD_API void HELLO_WORLD_API_CONVENTION hello_world_plotter_draw_const(void* object_pointer)
 {
     const hello_world::plotter_impl* self = static_cast<hello_world::plotter_impl*>(object_pointer);
     self->draw();

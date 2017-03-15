@@ -30,7 +30,7 @@ from NamespaceGenerator import NamespaceGenerator
 from ArgumentGenerator import ClassTypeGenerator, ThisArgumentGenerator, BuiltinTypeGenerator
 from CapiGenerator import CapiGenerator
 from LifecycleTraits import get_base_init
-from Helpers import get_c_name, format_type
+from Helpers import get_c_name, get_full_method_name
 
 
 class ConstructorGenerator(object):
@@ -146,8 +146,8 @@ class MethodGenerator(object):
 
     @property
     def c_name(self) -> str:
-        return get_c_name(self.name + '_' + self.method_object.overload_suffix if self.method_object.overload_suffix
-                          else self.name)
+        compound_name = get_full_method_name(self.method_object)
+        return get_c_name('_'.join(compound_name))
 
     @property
     def full_c_name(self) -> str:

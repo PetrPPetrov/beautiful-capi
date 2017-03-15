@@ -124,11 +124,11 @@ enum beautiful_capi_exception_exception_code_t
     EXCEPTION_API int EXCEPTION_API_CONVENTION exception_get_minor_version();
     EXCEPTION_API int EXCEPTION_API_CONVENTION exception_get_patch_version();
     EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_generic_new(beautiful_capi_exception_exception_info_t* exception_info);
-    EXCEPTION_API const char* EXCEPTION_API_CONVENTION exception_generic_get_error_text(void* object_pointer);
+    EXCEPTION_API const char* EXCEPTION_API_CONVENTION exception_generic_get_error_text_const(void* object_pointer);
     EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_generic_copy(beautiful_capi_exception_exception_info_t* exception_info, void* object_pointer);
     EXCEPTION_API void EXCEPTION_API_CONVENTION exception_generic_delete(void* object_pointer);
     EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_bad_argument_new(beautiful_capi_exception_exception_info_t* exception_info);
-    EXCEPTION_API const char* EXCEPTION_API_CONVENTION exception_bad_argument_get_argument_name(void* object_pointer);
+    EXCEPTION_API const char* EXCEPTION_API_CONVENTION exception_bad_argument_get_argument_name_const(void* object_pointer);
     EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_bad_argument_copy(beautiful_capi_exception_exception_info_t* exception_info, void* object_pointer);
     EXCEPTION_API void EXCEPTION_API_CONVENTION exception_bad_argument_delete(void* object_pointer);
     EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_bad_argument_cast_to_base(void* object_pointer);
@@ -176,11 +176,11 @@ enum beautiful_capi_exception_exception_code_t
     typedef int (EXCEPTION_API_CONVENTION *exception_get_minor_version_function_type)();
     typedef int (EXCEPTION_API_CONVENTION *exception_get_patch_version_function_type)();
     typedef void* (EXCEPTION_API_CONVENTION *exception_generic_new_function_type)(beautiful_capi_exception_exception_info_t* exception_info);
-    typedef const char* (EXCEPTION_API_CONVENTION *exception_generic_get_error_text_function_type)(void* object_pointer);
+    typedef const char* (EXCEPTION_API_CONVENTION *exception_generic_get_error_text_const_function_type)(void* object_pointer);
     typedef void* (EXCEPTION_API_CONVENTION *exception_generic_copy_function_type)(beautiful_capi_exception_exception_info_t* exception_info, void* object_pointer);
     typedef void (EXCEPTION_API_CONVENTION *exception_generic_delete_function_type)(void* object_pointer);
     typedef void* (EXCEPTION_API_CONVENTION *exception_bad_argument_new_function_type)(beautiful_capi_exception_exception_info_t* exception_info);
-    typedef const char* (EXCEPTION_API_CONVENTION *exception_bad_argument_get_argument_name_function_type)(void* object_pointer);
+    typedef const char* (EXCEPTION_API_CONVENTION *exception_bad_argument_get_argument_name_const_function_type)(void* object_pointer);
     typedef void* (EXCEPTION_API_CONVENTION *exception_bad_argument_copy_function_type)(beautiful_capi_exception_exception_info_t* exception_info, void* object_pointer);
     typedef void (EXCEPTION_API_CONVENTION *exception_bad_argument_delete_function_type)(void* object_pointer);
     typedef void* (EXCEPTION_API_CONVENTION *exception_bad_argument_cast_to_base_function_type)(void* object_pointer);
@@ -215,10 +215,10 @@ enum beautiful_capi_exception_exception_code_t
         #else
             exception_generic_new_function_type exception_generic_new = 0;
         #endif
-        #ifdef exception_generic_get_error_text_define_function_pointer_var
-            exception_generic_get_error_text_define_function_pointer_var
+        #ifdef exception_generic_get_error_text_const_define_function_pointer_var
+            exception_generic_get_error_text_const_define_function_pointer_var
         #else
-            exception_generic_get_error_text_function_type exception_generic_get_error_text = 0;
+            exception_generic_get_error_text_const_function_type exception_generic_get_error_text_const = 0;
         #endif
         #ifdef exception_generic_copy_define_function_pointer_var
             exception_generic_copy_define_function_pointer_var
@@ -235,10 +235,10 @@ enum beautiful_capi_exception_exception_code_t
         #else
             exception_bad_argument_new_function_type exception_bad_argument_new = 0;
         #endif
-        #ifdef exception_bad_argument_get_argument_name_define_function_pointer_var
-            exception_bad_argument_get_argument_name_define_function_pointer_var
+        #ifdef exception_bad_argument_get_argument_name_const_define_function_pointer_var
+            exception_bad_argument_get_argument_name_const_define_function_pointer_var
         #else
-            exception_bad_argument_get_argument_name_function_type exception_bad_argument_get_argument_name = 0;
+            exception_bad_argument_get_argument_name_const_function_type exception_bad_argument_get_argument_name_const = 0;
         #endif
         #ifdef exception_bad_argument_copy_define_function_pointer_var
             exception_bad_argument_copy_define_function_pointer_var
@@ -302,11 +302,11 @@ enum beautiful_capi_exception_exception_code_t
         extern exception_get_minor_version_function_type exception_get_minor_version;
         extern exception_get_patch_version_function_type exception_get_patch_version;
         extern exception_generic_new_function_type exception_generic_new;
-        extern exception_generic_get_error_text_function_type exception_generic_get_error_text;
+        extern exception_generic_get_error_text_const_function_type exception_generic_get_error_text_const;
         extern exception_generic_copy_function_type exception_generic_copy;
         extern exception_generic_delete_function_type exception_generic_delete;
         extern exception_bad_argument_new_function_type exception_bad_argument_new;
-        extern exception_bad_argument_get_argument_name_function_type exception_bad_argument_get_argument_name;
+        extern exception_bad_argument_get_argument_name_const_function_type exception_bad_argument_get_argument_name_const;
         extern exception_bad_argument_copy_function_type exception_bad_argument_copy;
         extern exception_bad_argument_delete_function_type exception_bad_argument_delete;
         extern exception_bad_argument_cast_to_base_function_type exception_bad_argument_cast_to_base;
@@ -392,11 +392,11 @@ enum beautiful_capi_exception_exception_code_t
                 #else /* exception_generic_new_load_function_call */
                     load_function<exception_generic_new_function_type>(exception_generic_new, "exception_generic_new");
                 #endif /* exception_generic_new_load_function_call */
-                #ifdef exception_generic_get_error_text_load_function_call
-                    exception_generic_get_error_text_load_function_call
-                #else /* exception_generic_get_error_text_load_function_call */
-                    load_function<exception_generic_get_error_text_function_type>(exception_generic_get_error_text, "exception_generic_get_error_text");
-                #endif /* exception_generic_get_error_text_load_function_call */
+                #ifdef exception_generic_get_error_text_const_load_function_call
+                    exception_generic_get_error_text_const_load_function_call
+                #else /* exception_generic_get_error_text_const_load_function_call */
+                    load_function<exception_generic_get_error_text_const_function_type>(exception_generic_get_error_text_const, "exception_generic_get_error_text_const");
+                #endif /* exception_generic_get_error_text_const_load_function_call */
                 #ifdef exception_generic_copy_load_function_call
                     exception_generic_copy_load_function_call
                 #else /* exception_generic_copy_load_function_call */
@@ -412,11 +412,11 @@ enum beautiful_capi_exception_exception_code_t
                 #else /* exception_bad_argument_new_load_function_call */
                     load_function<exception_bad_argument_new_function_type>(exception_bad_argument_new, "exception_bad_argument_new");
                 #endif /* exception_bad_argument_new_load_function_call */
-                #ifdef exception_bad_argument_get_argument_name_load_function_call
-                    exception_bad_argument_get_argument_name_load_function_call
-                #else /* exception_bad_argument_get_argument_name_load_function_call */
-                    load_function<exception_bad_argument_get_argument_name_function_type>(exception_bad_argument_get_argument_name, "exception_bad_argument_get_argument_name");
-                #endif /* exception_bad_argument_get_argument_name_load_function_call */
+                #ifdef exception_bad_argument_get_argument_name_const_load_function_call
+                    exception_bad_argument_get_argument_name_const_load_function_call
+                #else /* exception_bad_argument_get_argument_name_const_load_function_call */
+                    load_function<exception_bad_argument_get_argument_name_const_function_type>(exception_bad_argument_get_argument_name_const, "exception_bad_argument_get_argument_name_const");
+                #endif /* exception_bad_argument_get_argument_name_const_load_function_call */
                 #ifdef exception_bad_argument_copy_load_function_call
                     exception_bad_argument_copy_load_function_call
                 #else /* exception_bad_argument_copy_load_function_call */
@@ -522,11 +522,11 @@ enum beautiful_capi_exception_exception_code_t
                 #else /* exception_generic_new_zero_function_pointer */
                     exception_generic_new = 0;
                 #endif /* exception_generic_new_zero_function_pointer */
-                #ifdef exception_generic_get_error_text_zero_function_pointer
-                    exception_generic_get_error_text_zero_function_pointer
-                #else /* exception_generic_get_error_text_zero_function_pointer */
-                    exception_generic_get_error_text = 0;
-                #endif /* exception_generic_get_error_text_zero_function_pointer */
+                #ifdef exception_generic_get_error_text_const_zero_function_pointer
+                    exception_generic_get_error_text_const_zero_function_pointer
+                #else /* exception_generic_get_error_text_const_zero_function_pointer */
+                    exception_generic_get_error_text_const = 0;
+                #endif /* exception_generic_get_error_text_const_zero_function_pointer */
                 #ifdef exception_generic_copy_zero_function_pointer
                     exception_generic_copy_zero_function_pointer
                 #else /* exception_generic_copy_zero_function_pointer */
@@ -542,11 +542,11 @@ enum beautiful_capi_exception_exception_code_t
                 #else /* exception_bad_argument_new_zero_function_pointer */
                     exception_bad_argument_new = 0;
                 #endif /* exception_bad_argument_new_zero_function_pointer */
-                #ifdef exception_bad_argument_get_argument_name_zero_function_pointer
-                    exception_bad_argument_get_argument_name_zero_function_pointer
-                #else /* exception_bad_argument_get_argument_name_zero_function_pointer */
-                    exception_bad_argument_get_argument_name = 0;
-                #endif /* exception_bad_argument_get_argument_name_zero_function_pointer */
+                #ifdef exception_bad_argument_get_argument_name_const_zero_function_pointer
+                    exception_bad_argument_get_argument_name_const_zero_function_pointer
+                #else /* exception_bad_argument_get_argument_name_const_zero_function_pointer */
+                    exception_bad_argument_get_argument_name_const = 0;
+                #endif /* exception_bad_argument_get_argument_name_const_zero_function_pointer */
                 #ifdef exception_bad_argument_copy_zero_function_pointer
                     exception_bad_argument_copy_zero_function_pointer
                 #else /* exception_bad_argument_copy_zero_function_pointer */

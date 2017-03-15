@@ -105,7 +105,7 @@
     EXAMPLE_API int EXAMPLE_API_CONVENTION example_get_major_version();
     EXAMPLE_API int EXAMPLE_API_CONVENTION example_get_minor_version();
     EXAMPLE_API int EXAMPLE_API_CONVENTION example_get_patch_version();
-    EXAMPLE_API void EXAMPLE_API_CONVENTION example_ishape_show(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_ishape_show_const(void* object_pointer);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_ishape_delete(void* object_pointer);
 
     #ifdef __cplusplus
@@ -145,7 +145,7 @@
     typedef int (EXAMPLE_API_CONVENTION *example_get_major_version_function_type)();
     typedef int (EXAMPLE_API_CONVENTION *example_get_minor_version_function_type)();
     typedef int (EXAMPLE_API_CONVENTION *example_get_patch_version_function_type)();
-    typedef void (EXAMPLE_API_CONVENTION *example_ishape_show_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_ishape_show_const_function_type)(void* object_pointer);
     typedef void (EXAMPLE_API_CONVENTION *example_ishape_delete_function_type)(void* object_pointer);
 
     #ifdef EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS
@@ -180,10 +180,10 @@
         #else
             example_get_patch_version_function_type example_get_patch_version = 0;
         #endif
-        #ifdef example_ishape_show_define_function_pointer_var
-            example_ishape_show_define_function_pointer_var
+        #ifdef example_ishape_show_const_define_function_pointer_var
+            example_ishape_show_const_define_function_pointer_var
         #else
-            example_ishape_show_function_type example_ishape_show = 0;
+            example_ishape_show_const_function_type example_ishape_show_const = 0;
         #endif
         #ifdef example_ishape_delete_define_function_pointer_var
             example_ishape_delete_define_function_pointer_var
@@ -199,7 +199,7 @@
         extern example_get_major_version_function_type example_get_major_version;
         extern example_get_minor_version_function_type example_get_minor_version;
         extern example_get_patch_version_function_type example_get_patch_version;
-        extern example_ishape_show_function_type example_ishape_show;
+        extern example_ishape_show_const_function_type example_ishape_show_const;
         extern example_ishape_delete_function_type example_ishape_delete;
 
     #endif /* EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS */
@@ -285,11 +285,11 @@
                 #else /* example_get_patch_version_load_function_call */
                     load_function<example_get_patch_version_function_type>(example_get_patch_version, "example_get_patch_version");
                 #endif /* example_get_patch_version_load_function_call */
-                #ifdef example_ishape_show_load_function_call
-                    example_ishape_show_load_function_call
-                #else /* example_ishape_show_load_function_call */
-                    load_function<example_ishape_show_function_type>(example_ishape_show, "example_ishape_show");
-                #endif /* example_ishape_show_load_function_call */
+                #ifdef example_ishape_show_const_load_function_call
+                    example_ishape_show_const_load_function_call
+                #else /* example_ishape_show_const_load_function_call */
+                    load_function<example_ishape_show_const_function_type>(example_ishape_show_const, "example_ishape_show_const");
+                #endif /* example_ishape_show_const_load_function_call */
                 #ifdef example_ishape_delete_load_function_call
                     example_ishape_delete_load_function_call
                 #else /* example_ishape_delete_load_function_call */
@@ -355,11 +355,11 @@
                 #else /* example_get_patch_version_zero_function_pointer */
                     example_get_patch_version = 0;
                 #endif /* example_get_patch_version_zero_function_pointer */
-                #ifdef example_ishape_show_zero_function_pointer
-                    example_ishape_show_zero_function_pointer
-                #else /* example_ishape_show_zero_function_pointer */
-                    example_ishape_show = 0;
-                #endif /* example_ishape_show_zero_function_pointer */
+                #ifdef example_ishape_show_const_zero_function_pointer
+                    example_ishape_show_const_zero_function_pointer
+                #else /* example_ishape_show_const_zero_function_pointer */
+                    example_ishape_show_const = 0;
+                #endif /* example_ishape_show_const_zero_function_pointer */
                 #ifdef example_ishape_delete_zero_function_pointer
                     example_ishape_delete_zero_function_pointer
                 #else /* example_ishape_delete_zero_function_pointer */

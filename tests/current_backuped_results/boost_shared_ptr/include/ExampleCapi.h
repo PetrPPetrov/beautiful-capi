@@ -103,7 +103,7 @@
     EXAMPLE_API int EXAMPLE_API_CONVENTION example_get_minor_version();
     EXAMPLE_API int EXAMPLE_API_CONVENTION example_get_patch_version();
     EXAMPLE_API void* EXAMPLE_API_CONVENTION example_printer_shared_ptr_default();
-    EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_shared_ptr_show(void* object_pointer, const char* text);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_shared_ptr_show_const(void* object_pointer, const char* text);
     EXAMPLE_API void* EXAMPLE_API_CONVENTION example_printer_shared_ptr_copy(void* object_pointer);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_shared_ptr_delete(void* object_pointer);
 
@@ -142,7 +142,7 @@
     typedef int (EXAMPLE_API_CONVENTION *example_get_minor_version_function_type)();
     typedef int (EXAMPLE_API_CONVENTION *example_get_patch_version_function_type)();
     typedef void* (EXAMPLE_API_CONVENTION *example_printer_shared_ptr_default_function_type)();
-    typedef void (EXAMPLE_API_CONVENTION *example_printer_shared_ptr_show_function_type)(void* object_pointer, const char* text);
+    typedef void (EXAMPLE_API_CONVENTION *example_printer_shared_ptr_show_const_function_type)(void* object_pointer, const char* text);
     typedef void* (EXAMPLE_API_CONVENTION *example_printer_shared_ptr_copy_function_type)(void* object_pointer);
     typedef void (EXAMPLE_API_CONVENTION *example_printer_shared_ptr_delete_function_type)(void* object_pointer);
 
@@ -168,10 +168,10 @@
         #else
             example_printer_shared_ptr_default_function_type example_printer_shared_ptr_default = 0;
         #endif
-        #ifdef example_printer_shared_ptr_show_define_function_pointer_var
-            example_printer_shared_ptr_show_define_function_pointer_var
+        #ifdef example_printer_shared_ptr_show_const_define_function_pointer_var
+            example_printer_shared_ptr_show_const_define_function_pointer_var
         #else
-            example_printer_shared_ptr_show_function_type example_printer_shared_ptr_show = 0;
+            example_printer_shared_ptr_show_const_function_type example_printer_shared_ptr_show_const = 0;
         #endif
         #ifdef example_printer_shared_ptr_copy_define_function_pointer_var
             example_printer_shared_ptr_copy_define_function_pointer_var
@@ -190,7 +190,7 @@
         extern example_get_minor_version_function_type example_get_minor_version;
         extern example_get_patch_version_function_type example_get_patch_version;
         extern example_printer_shared_ptr_default_function_type example_printer_shared_ptr_default;
-        extern example_printer_shared_ptr_show_function_type example_printer_shared_ptr_show;
+        extern example_printer_shared_ptr_show_const_function_type example_printer_shared_ptr_show_const;
         extern example_printer_shared_ptr_copy_function_type example_printer_shared_ptr_copy;
         extern example_printer_shared_ptr_delete_function_type example_printer_shared_ptr_delete;
 
@@ -267,11 +267,11 @@
                 #else /* example_printer_shared_ptr_default_load_function_call */
                     load_function<example_printer_shared_ptr_default_function_type>(example_printer_shared_ptr_default, "example_printer_shared_ptr_default");
                 #endif /* example_printer_shared_ptr_default_load_function_call */
-                #ifdef example_printer_shared_ptr_show_load_function_call
-                    example_printer_shared_ptr_show_load_function_call
-                #else /* example_printer_shared_ptr_show_load_function_call */
-                    load_function<example_printer_shared_ptr_show_function_type>(example_printer_shared_ptr_show, "example_printer_shared_ptr_show");
-                #endif /* example_printer_shared_ptr_show_load_function_call */
+                #ifdef example_printer_shared_ptr_show_const_load_function_call
+                    example_printer_shared_ptr_show_const_load_function_call
+                #else /* example_printer_shared_ptr_show_const_load_function_call */
+                    load_function<example_printer_shared_ptr_show_const_function_type>(example_printer_shared_ptr_show_const, "example_printer_shared_ptr_show_const");
+                #endif /* example_printer_shared_ptr_show_const_load_function_call */
                 #ifdef example_printer_shared_ptr_copy_load_function_call
                     example_printer_shared_ptr_copy_load_function_call
                 #else /* example_printer_shared_ptr_copy_load_function_call */
@@ -332,11 +332,11 @@
                 #else /* example_printer_shared_ptr_default_zero_function_pointer */
                     example_printer_shared_ptr_default = 0;
                 #endif /* example_printer_shared_ptr_default_zero_function_pointer */
-                #ifdef example_printer_shared_ptr_show_zero_function_pointer
-                    example_printer_shared_ptr_show_zero_function_pointer
-                #else /* example_printer_shared_ptr_show_zero_function_pointer */
-                    example_printer_shared_ptr_show = 0;
-                #endif /* example_printer_shared_ptr_show_zero_function_pointer */
+                #ifdef example_printer_shared_ptr_show_const_zero_function_pointer
+                    example_printer_shared_ptr_show_const_zero_function_pointer
+                #else /* example_printer_shared_ptr_show_const_zero_function_pointer */
+                    example_printer_shared_ptr_show_const = 0;
+                #endif /* example_printer_shared_ptr_show_const_zero_function_pointer */
                 #ifdef example_printer_shared_ptr_copy_zero_function_pointer
                     example_printer_shared_ptr_copy_zero_function_pointer
                 #else /* example_printer_shared_ptr_copy_zero_function_pointer */

@@ -97,7 +97,7 @@ HELLOWORLD_API void* HELLOWORLD_API_CONVENTION hello_world_printer_default()
     return new HelloWorld::PrinterImpl();
 }
 
-HELLOWORLD_API void HELLOWORLD_API_CONVENTION hello_world_printer_show(void* object_pointer)
+HELLOWORLD_API void HELLOWORLD_API_CONVENTION hello_world_printer_show_const(void* object_pointer)
 {
     const HelloWorld::PrinterImpl* self = static_cast<HelloWorld::PrinterImpl*>(object_pointer);
     self->Show();

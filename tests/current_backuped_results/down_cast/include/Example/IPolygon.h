@@ -34,7 +34,7 @@
 
 inline int Example::IPolygonPtr::GetPointsCount() const
 {
-    return example_ipolygon_get_points_count(GetRawPointer());
+    return example_ipolygon_get_points_count_const(GetRawPointer());
 }
 
 inline Example::IPolygonPtr::IPolygonPtr(const IPolygonPtr& other) : Example::IShapePtr(Example::IShapePtr::force_creating_from_raw_pointer, 0, false)

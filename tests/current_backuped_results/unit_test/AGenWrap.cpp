@@ -105,7 +105,7 @@ UNITTEST_API const char* UNITTEST_API_CONVENTION unit_test_name_get_full_name(vo
     return self->GetFullName();
 }
 
-UNITTEST_API const char* UNITTEST_API_CONVENTION unit_test_name_get_first_name(void* object_pointer)
+UNITTEST_API const char* UNITTEST_API_CONVENTION unit_test_name_get_first_name_const(void* object_pointer)
 {
     const UnitTest::NameImpl* self = static_cast<UnitTest::NameImpl*>(object_pointer);
     return self->GetFirstName();
@@ -117,7 +117,7 @@ UNITTEST_API void UNITTEST_API_CONVENTION unit_test_name_set_first_name(void* ob
     self->SetFirstName(value);
 }
 
-UNITTEST_API const char* UNITTEST_API_CONVENTION unit_test_name_get_middle_name(void* object_pointer)
+UNITTEST_API const char* UNITTEST_API_CONVENTION unit_test_name_get_middle_name_const(void* object_pointer)
 {
     const UnitTest::NameImpl* self = static_cast<UnitTest::NameImpl*>(object_pointer);
     return self->GetMiddleName();
@@ -129,7 +129,7 @@ UNITTEST_API void UNITTEST_API_CONVENTION unit_test_name_set_middle_name(void* o
     self->SetMiddleName(value);
 }
 
-UNITTEST_API const char* UNITTEST_API_CONVENTION unit_test_name_get_last_name(void* object_pointer)
+UNITTEST_API const char* UNITTEST_API_CONVENTION unit_test_name_get_last_name_const(void* object_pointer)
 {
     const UnitTest::NameImpl* self = static_cast<UnitTest::NameImpl*>(object_pointer);
     return self->GetLastName();
@@ -156,7 +156,7 @@ UNITTEST_API void* UNITTEST_API_CONVENTION unit_test_address_default()
     return new UnitTest::AddressImpl();
 }
 
-UNITTEST_API const char* UNITTEST_API_CONVENTION unit_test_address_get_street_name(void* object_pointer)
+UNITTEST_API const char* UNITTEST_API_CONVENTION unit_test_address_get_street_name_const(void* object_pointer)
 {
     const UnitTest::AddressImpl* self = static_cast<UnitTest::AddressImpl*>(object_pointer);
     return self->GetStreetName();
@@ -168,7 +168,7 @@ UNITTEST_API void UNITTEST_API_CONVENTION unit_test_address_set_street_name(void
     self->SetStreetName(value);
 }
 
-UNITTEST_API const char* UNITTEST_API_CONVENTION unit_test_address_get_city(void* object_pointer)
+UNITTEST_API const char* UNITTEST_API_CONVENTION unit_test_address_get_city_const(void* object_pointer)
 {
     const UnitTest::AddressImpl* self = static_cast<UnitTest::AddressImpl*>(object_pointer);
     return self->GetCity();
@@ -180,7 +180,7 @@ UNITTEST_API void UNITTEST_API_CONVENTION unit_test_address_set_city(void* objec
     self->SetCity(value);
 }
 
-UNITTEST_API unsigned int UNITTEST_API_CONVENTION unit_test_address_get_state(void* object_pointer)
+UNITTEST_API unsigned int UNITTEST_API_CONVENTION unit_test_address_get_state_const(void* object_pointer)
 {
     const UnitTest::AddressImpl* self = static_cast<UnitTest::AddressImpl*>(object_pointer);
     return self->GetState();
@@ -192,7 +192,7 @@ UNITTEST_API void UNITTEST_API_CONVENTION unit_test_address_set_state(void* obje
     self->SetState(value);
 }
 
-UNITTEST_API unsigned int UNITTEST_API_CONVENTION unit_test_address_get_zip_code(void* object_pointer)
+UNITTEST_API unsigned int UNITTEST_API_CONVENTION unit_test_address_get_zip_code_const(void* object_pointer)
 {
     const UnitTest::AddressImpl* self = static_cast<UnitTest::AddressImpl*>(object_pointer);
     return self->GetZipCode();
@@ -219,7 +219,7 @@ UNITTEST_API void* UNITTEST_API_CONVENTION unit_test_person_default()
     return new UnitTest::PersonImpl();
 }
 
-UNITTEST_API void* UNITTEST_API_CONVENTION unit_test_person_get_name(void* object_pointer)
+UNITTEST_API void* UNITTEST_API_CONVENTION unit_test_person_get_name_const(void* object_pointer)
 {
     const UnitTest::PersonImpl* self = static_cast<UnitTest::PersonImpl*>(object_pointer);
     UnitTest::NameImpl result_implementation_copy(self->GetName());
@@ -232,7 +232,7 @@ UNITTEST_API void UNITTEST_API_CONVENTION unit_test_person_set_name(void* object
     self->SetName(*static_cast<UnitTest::NameImpl*>(value));
 }
 
-UNITTEST_API void* UNITTEST_API_CONVENTION unit_test_person_get_address(void* object_pointer)
+UNITTEST_API void* UNITTEST_API_CONVENTION unit_test_person_get_address_const(void* object_pointer)
 {
     const UnitTest::PersonImpl* self = static_cast<UnitTest::PersonImpl*>(object_pointer);
     return self->GetAddress();
@@ -244,7 +244,7 @@ UNITTEST_API void UNITTEST_API_CONVENTION unit_test_person_set_address(void* obj
     self->SetAddress(static_cast<UnitTest::AddressImpl*>(value));
 }
 
-UNITTEST_API unsigned char UNITTEST_API_CONVENTION unit_test_person_get_age(void* object_pointer)
+UNITTEST_API unsigned char UNITTEST_API_CONVENTION unit_test_person_get_age_const(void* object_pointer)
 {
     const UnitTest::PersonImpl* self = static_cast<UnitTest::PersonImpl*>(object_pointer);
     return self->GetAge();
@@ -256,7 +256,7 @@ UNITTEST_API void UNITTEST_API_CONVENTION unit_test_person_set_age(void* object_
     self->SetAge(value);
 }
 
-UNITTEST_API unsigned int UNITTEST_API_CONVENTION unit_test_person_get_sex(void* object_pointer)
+UNITTEST_API unsigned int UNITTEST_API_CONVENTION unit_test_person_get_sex_const(void* object_pointer)
 {
     const UnitTest::PersonImpl* self = static_cast<UnitTest::PersonImpl*>(object_pointer);
     return static_cast<unsigned int>(self->GetSex());
@@ -268,7 +268,7 @@ UNITTEST_API void UNITTEST_API_CONVENTION unit_test_person_set_sex(void* object_
     self->SetSex(static_cast<UnitTest::PersonImpl::Sex>(value));
 }
 
-UNITTEST_API void* UNITTEST_API_CONVENTION unit_test_person_get_mother(void* object_pointer)
+UNITTEST_API void* UNITTEST_API_CONVENTION unit_test_person_get_mother_const(void* object_pointer)
 {
     const UnitTest::PersonImpl* self = static_cast<UnitTest::PersonImpl*>(object_pointer);
     return self->GetMother();
@@ -280,7 +280,7 @@ UNITTEST_API void UNITTEST_API_CONVENTION unit_test_person_set_mother(void* obje
     self->SetMother(static_cast<UnitTest::PersonImpl*>(value));
 }
 
-UNITTEST_API void* UNITTEST_API_CONVENTION unit_test_person_get_father(void* object_pointer)
+UNITTEST_API void* UNITTEST_API_CONVENTION unit_test_person_get_father_const(void* object_pointer)
 {
     const UnitTest::PersonImpl* self = static_cast<UnitTest::PersonImpl*>(object_pointer);
     return self->GetFather();

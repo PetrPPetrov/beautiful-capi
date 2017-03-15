@@ -97,7 +97,7 @@ EXAMPLE_API void* EXAMPLE_API_CONVENTION example_printer_shared_ptr_default()
     return new Example::PrinterSharedPtr();
 }
 
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_shared_ptr_show(void* object_pointer, const char* text)
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_shared_ptr_show_const(void* object_pointer, const char* text)
 {
     const Example::PrinterSharedPtr* self = static_cast<Example::PrinterSharedPtr*>(object_pointer);
     (*self)->Show(text);

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hello_world:api xmlns:hello_world="http://gkmsoft.ru/beautifulcapi" project_name="OverloadSuffix">
+  <namespace name="OverloadSuffix" overload_suffix_mode="Silent">
+    <class name="Printer" overload_suffix_mode="Notify" lifecycle="copy_semantic" implementation_class_name="OverloadSuffix::PrinterImpl" implementation_class_header="PrinterImpl.h">
+      <constructor name="Default"/>
+      <method name="Show"/>
+      <method name="Show" const="true"/>
+      <method name="Show" overload_suffix="Int">
+        <argument name="a" type="int" />
+      </method>
+      <method name="Show">
+          <argument name="a" type="double"/>   
+      </method> 
+    </class>
+    <function name="Show" implementation_header="PrinterImpl.h" implementation_name="OverloadSuffix::Show"/>
+    <function name="Show" overload_suffix="Int" implementation_header="PrinterImpl.h" implementation_name="OverloadSuffix::Show">
+        <argument name="a" type="int"/>
+    </function>
+    <function name="Show" implementation_header="PrinterImpl.h" implementation_name="OverloadSuffix::Show">
+        <argument name="a" type="double"/>
+    </function>
+  </namespace>
+</hello_world:api>

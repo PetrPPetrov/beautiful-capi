@@ -110,7 +110,7 @@ EXAMPLE_API int EXAMPLE_API_CONVENTION example_get_patch_version()
     return AutoGen_Internal_VirtualInterface_ExampleGetPatchVersionImpl();
 }
 
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_ishape_show(void* object_pointer)
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_ishape_show_const(void* object_pointer)
 {
     const Example::IShape* self = static_cast<Example::IShape*>(object_pointer);
     self->Show();

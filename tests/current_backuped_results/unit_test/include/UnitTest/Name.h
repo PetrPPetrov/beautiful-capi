@@ -43,7 +43,7 @@ inline const char* UnitTest::Name::GetFullName()
 
 inline const char* UnitTest::Name::GetFirstName() const
 {
-    return unit_test_name_get_first_name(GetRawPointer());
+    return unit_test_name_get_first_name_const(GetRawPointer());
 }
 
 inline void UnitTest::Name::SetFirstName(const char* value)
@@ -53,7 +53,7 @@ inline void UnitTest::Name::SetFirstName(const char* value)
 
 inline const char* UnitTest::Name::GetMiddleName() const
 {
-    return unit_test_name_get_middle_name(GetRawPointer());
+    return unit_test_name_get_middle_name_const(GetRawPointer());
 }
 
 inline void UnitTest::Name::SetMiddleName(const char* value)
@@ -63,7 +63,7 @@ inline void UnitTest::Name::SetMiddleName(const char* value)
 
 inline const char* UnitTest::Name::GetLastName() const
 {
-    return unit_test_name_get_last_name(GetRawPointer());
+    return unit_test_name_get_last_name_const(GetRawPointer());
 }
 
 inline void UnitTest::Name::SetLastName(const char* value)

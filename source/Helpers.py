@@ -165,6 +165,15 @@ def include_headers(out, headers):
         out.include_header(header.file, header.system)
 
 
+def get_full_method_name(method) -> [str]:
+    compound_name = [method.name]
+    if method.const:
+        compound_name.append('const')
+    if method.overload_suffix:
+        compound_name.append(method.overload_suffix)
+    return compound_name
+
+
 class BeautifulCapiException(Exception):
     def __init__(self, message):
         self.message = message

@@ -39,7 +39,7 @@ inline Example::Dumper::Dumper()
 
 inline Example::Printer Example::Dumper::GetPrinter() const
 {
-    return Example::Printer(Example::Printer::force_creating_from_raw_pointer, example_dumper_get_printer(GetRawPointer()), false);
+    return Example::Printer(Example::Printer::force_creating_from_raw_pointer, example_dumper_get_printer_const(GetRawPointer()), false);
 }
 
 inline void Example::Dumper::SetPrinter(const Example::Printer& printer)

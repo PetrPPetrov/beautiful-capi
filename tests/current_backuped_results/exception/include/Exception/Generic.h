@@ -42,7 +42,7 @@ inline Exception::Generic::Generic()
 
 inline const char* Exception::Generic::GetErrorText() const
 {
-    return exception_generic_get_error_text(GetRawPointer());
+    return exception_generic_get_error_text_const(GetRawPointer());
 }
 
 inline Exception::Generic::Generic(const Generic& other)

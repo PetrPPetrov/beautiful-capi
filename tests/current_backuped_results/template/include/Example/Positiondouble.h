@@ -38,7 +38,7 @@ inline Example::Position<double>::Position()
 
 inline double Example::Position<double>::GetX() const
 {
-    return example_position_double_get_x(GetRawPointer());
+    return example_position_double_get_x_const(GetRawPointer());
 }
 
 inline void Example::Position<double>::SetX(double x)
@@ -48,7 +48,7 @@ inline void Example::Position<double>::SetX(double x)
 
 inline double Example::Position<double>::GetY() const
 {
-    return example_position_double_get_y(GetRawPointer());
+    return example_position_double_get_y_const(GetRawPointer());
 }
 
 inline void Example::Position<double>::SetY(double y)
@@ -58,7 +58,7 @@ inline void Example::Position<double>::SetY(double y)
 
 inline double Example::Position<double>::GetZ() const
 {
-    return example_position_double_get_z(GetRawPointer());
+    return example_position_double_get_z_const(GetRawPointer());
 }
 
 inline void Example::Position<double>::SetZ(double z)

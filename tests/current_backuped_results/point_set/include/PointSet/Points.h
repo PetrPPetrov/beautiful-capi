@@ -39,7 +39,7 @@ inline PointSet::PointsPtr::PointsPtr()
 
 inline size_t PointSet::PointsPtr::Size() const
 {
-    return point_set_points_size(GetRawPointer());
+    return point_set_points_size_const(GetRawPointer());
 }
 
 inline void PointSet::PointsPtr::Reserve(size_t capacity)
@@ -54,7 +54,7 @@ inline void PointSet::PointsPtr::Resize(size_t size, const PointSet::Position& d
 
 inline PointSet::Position PointSet::PointsPtr::GetElement(size_t index) const
 {
-    return PointSet::Position(PointSet::Position::force_creating_from_raw_pointer, point_set_points_get_element(GetRawPointer(), index), false);
+    return PointSet::Position(PointSet::Position::force_creating_from_raw_pointer, point_set_points_get_element_const(GetRawPointer(), index), false);
 }
 
 inline void PointSet::PointsPtr::SetElement(size_t index, const PointSet::Position& value)

@@ -44,7 +44,7 @@ inline void Circular::ClassBRawPtr::SetA(const Circular::ClassARawPtr& value)
 
 inline Circular::ClassARawPtr Circular::ClassBRawPtr::GetA() const
 {
-    return Circular::ClassARawPtr(Circular::ClassARawPtr::force_creating_from_raw_pointer, circular_class_b_get_a(GetRawPointer()), false);
+    return Circular::ClassARawPtr(Circular::ClassARawPtr::force_creating_from_raw_pointer, circular_class_b_get_a_const(GetRawPointer()), false);
 }
 
 inline Circular::ClassBRawPtr::ClassBRawPtr(const ClassBRawPtr& other)

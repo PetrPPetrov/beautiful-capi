@@ -142,7 +142,7 @@ class TNamespace(object):
         self.name_filled = False
         self.implementation_header = ""
         self.implementation_header_filled = False
-        self.overload_suffix_mode = TOverloadSuffixMode.Off
+        self.overload_suffix_mode = TOverloadSuffixMode.Notify
         self.overload_suffix_mode_filled = False
         self.includes = []
         self.namespaces = []
@@ -417,7 +417,7 @@ class TClass(object):
         self.copy_or_add_ref_noexcept_filled = False
         self.delete_or_release_noexcept = True
         self.delete_or_release_noexcept_filled = False
-        self.overload_suffix_mode = TOverloadSuffixMode.Off
+        self.overload_suffix_mode = TOverloadSuffixMode.Notify
         self.overload_suffix_mode_filled = False
         self.documentations = []
         self.include_headers = []

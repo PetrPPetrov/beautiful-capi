@@ -38,7 +38,7 @@ inline HelloWorld::Printer::Printer()
 
 inline void HelloWorld::Printer::Show() const
 {
-    hello_world_printer_show(GetRawPointer());
+    hello_world_printer_show_const(GetRawPointer());
 }
 
 inline HelloWorld::Printer::Printer(const Printer& other)

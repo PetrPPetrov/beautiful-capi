@@ -1,0 +1,16 @@
+./overload_suffix_client
+___std::cout___
+Namespace overload_suffix_mode = Notify
+Class overload_suffix_mode = Silent
+Create Printer
+Overloaded methods:
+	Method without parameters
+	Const method without parameters
+	Overloaded method with manually installed suffix "Int". Int value = 7
+	Overloaded method with automatic installed suffix "1". Double value = 4.2
+Overloaded functions:
+	Function without parameters
+	Overloaded function with manually installed suffix "Int". Int value = 5
+	Overloaded function with automatic installed suffix "1". Double value = 1.3
+___std::cerr___
+___eof___

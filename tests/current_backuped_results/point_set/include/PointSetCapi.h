@@ -104,28 +104,28 @@
     POINTSET_API int POINTSET_API_CONVENTION point_set_get_patch_version();
     POINTSET_API void* POINTSET_API_CONVENTION point_set_position_default();
     POINTSET_API void* POINTSET_API_CONVENTION point_set_position_initialized(double X, double Y, double Z);
-    POINTSET_API double POINTSET_API_CONVENTION point_set_position_get_x(void* object_pointer);
+    POINTSET_API double POINTSET_API_CONVENTION point_set_position_get_x_const(void* object_pointer);
     POINTSET_API void POINTSET_API_CONVENTION point_set_position_set_x(void* object_pointer, double value);
-    POINTSET_API double POINTSET_API_CONVENTION point_set_position_get_y(void* object_pointer);
+    POINTSET_API double POINTSET_API_CONVENTION point_set_position_get_y_const(void* object_pointer);
     POINTSET_API void POINTSET_API_CONVENTION point_set_position_set_y(void* object_pointer, double value);
-    POINTSET_API double POINTSET_API_CONVENTION point_set_position_get_z(void* object_pointer);
+    POINTSET_API double POINTSET_API_CONVENTION point_set_position_get_z_const(void* object_pointer);
     POINTSET_API void POINTSET_API_CONVENTION point_set_position_set_z(void* object_pointer, double value);
     POINTSET_API void* POINTSET_API_CONVENTION point_set_position_copy(void* object_pointer);
     POINTSET_API void POINTSET_API_CONVENTION point_set_position_delete(void* object_pointer);
     POINTSET_API void* POINTSET_API_CONVENTION point_set_points_default();
-    POINTSET_API size_t POINTSET_API_CONVENTION point_set_points_size(void* object_pointer);
+    POINTSET_API size_t POINTSET_API_CONVENTION point_set_points_size_const(void* object_pointer);
     POINTSET_API void POINTSET_API_CONVENTION point_set_points_reserve(void* object_pointer, size_t capacity);
     POINTSET_API void POINTSET_API_CONVENTION point_set_points_resize(void* object_pointer, size_t size, void* default_value);
-    POINTSET_API void* POINTSET_API_CONVENTION point_set_points_get_element(void* object_pointer, size_t index);
+    POINTSET_API void* POINTSET_API_CONVENTION point_set_points_get_element_const(void* object_pointer, size_t index);
     POINTSET_API void POINTSET_API_CONVENTION point_set_points_set_element(void* object_pointer, size_t index, void* value);
     POINTSET_API void POINTSET_API_CONVENTION point_set_points_push_back(void* object_pointer, void* value);
     POINTSET_API void POINTSET_API_CONVENTION point_set_points_clear(void* object_pointer);
     POINTSET_API void POINTSET_API_CONVENTION point_set_points_add_ref(void* object_pointer);
     POINTSET_API void POINTSET_API_CONVENTION point_set_points_release(void* object_pointer);
     POINTSET_API void* POINTSET_API_CONVENTION point_set_point_set_default();
-    POINTSET_API const char* POINTSET_API_CONVENTION point_set_point_set_get_name(void* object_pointer);
+    POINTSET_API const char* POINTSET_API_CONVENTION point_set_point_set_get_name_const(void* object_pointer);
     POINTSET_API void POINTSET_API_CONVENTION point_set_point_set_set_name(void* object_pointer, const char* name);
-    POINTSET_API void* POINTSET_API_CONVENTION point_set_point_set_get_points(void* object_pointer);
+    POINTSET_API void* POINTSET_API_CONVENTION point_set_point_set_get_points_const(void* object_pointer);
     POINTSET_API void POINTSET_API_CONVENTION point_set_point_set_set_points(void* object_pointer, void* value);
     POINTSET_API void POINTSET_API_CONVENTION point_set_point_set_add_ref(void* object_pointer);
     POINTSET_API void POINTSET_API_CONVENTION point_set_point_set_release(void* object_pointer);
@@ -166,28 +166,28 @@
     typedef int (POINTSET_API_CONVENTION *point_set_get_patch_version_function_type)();
     typedef void* (POINTSET_API_CONVENTION *point_set_position_default_function_type)();
     typedef void* (POINTSET_API_CONVENTION *point_set_position_initialized_function_type)(double X, double Y, double Z);
-    typedef double (POINTSET_API_CONVENTION *point_set_position_get_x_function_type)(void* object_pointer);
+    typedef double (POINTSET_API_CONVENTION *point_set_position_get_x_const_function_type)(void* object_pointer);
     typedef void (POINTSET_API_CONVENTION *point_set_position_set_x_function_type)(void* object_pointer, double value);
-    typedef double (POINTSET_API_CONVENTION *point_set_position_get_y_function_type)(void* object_pointer);
+    typedef double (POINTSET_API_CONVENTION *point_set_position_get_y_const_function_type)(void* object_pointer);
     typedef void (POINTSET_API_CONVENTION *point_set_position_set_y_function_type)(void* object_pointer, double value);
-    typedef double (POINTSET_API_CONVENTION *point_set_position_get_z_function_type)(void* object_pointer);
+    typedef double (POINTSET_API_CONVENTION *point_set_position_get_z_const_function_type)(void* object_pointer);
     typedef void (POINTSET_API_CONVENTION *point_set_position_set_z_function_type)(void* object_pointer, double value);
     typedef void* (POINTSET_API_CONVENTION *point_set_position_copy_function_type)(void* object_pointer);
     typedef void (POINTSET_API_CONVENTION *point_set_position_delete_function_type)(void* object_pointer);
     typedef void* (POINTSET_API_CONVENTION *point_set_points_default_function_type)();
-    typedef size_t (POINTSET_API_CONVENTION *point_set_points_size_function_type)(void* object_pointer);
+    typedef size_t (POINTSET_API_CONVENTION *point_set_points_size_const_function_type)(void* object_pointer);
     typedef void (POINTSET_API_CONVENTION *point_set_points_reserve_function_type)(void* object_pointer, size_t capacity);
     typedef void (POINTSET_API_CONVENTION *point_set_points_resize_function_type)(void* object_pointer, size_t size, void* default_value);
-    typedef void* (POINTSET_API_CONVENTION *point_set_points_get_element_function_type)(void* object_pointer, size_t index);
+    typedef void* (POINTSET_API_CONVENTION *point_set_points_get_element_const_function_type)(void* object_pointer, size_t index);
     typedef void (POINTSET_API_CONVENTION *point_set_points_set_element_function_type)(void* object_pointer, size_t index, void* value);
     typedef void (POINTSET_API_CONVENTION *point_set_points_push_back_function_type)(void* object_pointer, void* value);
     typedef void (POINTSET_API_CONVENTION *point_set_points_clear_function_type)(void* object_pointer);
     typedef void (POINTSET_API_CONVENTION *point_set_points_add_ref_function_type)(void* object_pointer);
     typedef void (POINTSET_API_CONVENTION *point_set_points_release_function_type)(void* object_pointer);
     typedef void* (POINTSET_API_CONVENTION *point_set_point_set_default_function_type)();
-    typedef const char* (POINTSET_API_CONVENTION *point_set_point_set_get_name_function_type)(void* object_pointer);
+    typedef const char* (POINTSET_API_CONVENTION *point_set_point_set_get_name_const_function_type)(void* object_pointer);
     typedef void (POINTSET_API_CONVENTION *point_set_point_set_set_name_function_type)(void* object_pointer, const char* name);
-    typedef void* (POINTSET_API_CONVENTION *point_set_point_set_get_points_function_type)(void* object_pointer);
+    typedef void* (POINTSET_API_CONVENTION *point_set_point_set_get_points_const_function_type)(void* object_pointer);
     typedef void (POINTSET_API_CONVENTION *point_set_point_set_set_points_function_type)(void* object_pointer, void* value);
     typedef void (POINTSET_API_CONVENTION *point_set_point_set_add_ref_function_type)(void* object_pointer);
     typedef void (POINTSET_API_CONVENTION *point_set_point_set_release_function_type)(void* object_pointer);
@@ -219,30 +219,30 @@
         #else
             point_set_position_initialized_function_type point_set_position_initialized = 0;
         #endif
-        #ifdef point_set_position_get_x_define_function_pointer_var
-            point_set_position_get_x_define_function_pointer_var
+        #ifdef point_set_position_get_x_const_define_function_pointer_var
+            point_set_position_get_x_const_define_function_pointer_var
         #else
-            point_set_position_get_x_function_type point_set_position_get_x = 0;
+            point_set_position_get_x_const_function_type point_set_position_get_x_const = 0;
         #endif
         #ifdef point_set_position_set_x_define_function_pointer_var
             point_set_position_set_x_define_function_pointer_var
         #else
             point_set_position_set_x_function_type point_set_position_set_x = 0;
         #endif
-        #ifdef point_set_position_get_y_define_function_pointer_var
-            point_set_position_get_y_define_function_pointer_var
+        #ifdef point_set_position_get_y_const_define_function_pointer_var
+            point_set_position_get_y_const_define_function_pointer_var
         #else
-            point_set_position_get_y_function_type point_set_position_get_y = 0;
+            point_set_position_get_y_const_function_type point_set_position_get_y_const = 0;
         #endif
         #ifdef point_set_position_set_y_define_function_pointer_var
             point_set_position_set_y_define_function_pointer_var
         #else
             point_set_position_set_y_function_type point_set_position_set_y = 0;
         #endif
-        #ifdef point_set_position_get_z_define_function_pointer_var
-            point_set_position_get_z_define_function_pointer_var
+        #ifdef point_set_position_get_z_const_define_function_pointer_var
+            point_set_position_get_z_const_define_function_pointer_var
         #else
-            point_set_position_get_z_function_type point_set_position_get_z = 0;
+            point_set_position_get_z_const_function_type point_set_position_get_z_const = 0;
         #endif
         #ifdef point_set_position_set_z_define_function_pointer_var
             point_set_position_set_z_define_function_pointer_var
@@ -264,10 +264,10 @@
         #else
             point_set_points_default_function_type point_set_points_default = 0;
         #endif
-        #ifdef point_set_points_size_define_function_pointer_var
-            point_set_points_size_define_function_pointer_var
+        #ifdef point_set_points_size_const_define_function_pointer_var
+            point_set_points_size_const_define_function_pointer_var
         #else
-            point_set_points_size_function_type point_set_points_size = 0;
+            point_set_points_size_const_function_type point_set_points_size_const = 0;
         #endif
         #ifdef point_set_points_reserve_define_function_pointer_var
             point_set_points_reserve_define_function_pointer_var
@@ -279,10 +279,10 @@
         #else
             point_set_points_resize_function_type point_set_points_resize = 0;
         #endif
-        #ifdef point_set_points_get_element_define_function_pointer_var
-            point_set_points_get_element_define_function_pointer_var
+        #ifdef point_set_points_get_element_const_define_function_pointer_var
+            point_set_points_get_element_const_define_function_pointer_var
         #else
-            point_set_points_get_element_function_type point_set_points_get_element = 0;
+            point_set_points_get_element_const_function_type point_set_points_get_element_const = 0;
         #endif
         #ifdef point_set_points_set_element_define_function_pointer_var
             point_set_points_set_element_define_function_pointer_var
@@ -314,20 +314,20 @@
         #else
             point_set_point_set_default_function_type point_set_point_set_default = 0;
         #endif
-        #ifdef point_set_point_set_get_name_define_function_pointer_var
-            point_set_point_set_get_name_define_function_pointer_var
+        #ifdef point_set_point_set_get_name_const_define_function_pointer_var
+            point_set_point_set_get_name_const_define_function_pointer_var
         #else
-            point_set_point_set_get_name_function_type point_set_point_set_get_name = 0;
+            point_set_point_set_get_name_const_function_type point_set_point_set_get_name_const = 0;
         #endif
         #ifdef point_set_point_set_set_name_define_function_pointer_var
             point_set_point_set_set_name_define_function_pointer_var
         #else
             point_set_point_set_set_name_function_type point_set_point_set_set_name = 0;
         #endif
-        #ifdef point_set_point_set_get_points_define_function_pointer_var
-            point_set_point_set_get_points_define_function_pointer_var
+        #ifdef point_set_point_set_get_points_const_define_function_pointer_var
+            point_set_point_set_get_points_const_define_function_pointer_var
         #else
-            point_set_point_set_get_points_function_type point_set_point_set_get_points = 0;
+            point_set_point_set_get_points_const_function_type point_set_point_set_get_points_const = 0;
         #endif
         #ifdef point_set_point_set_set_points_define_function_pointer_var
             point_set_point_set_set_points_define_function_pointer_var
@@ -352,28 +352,28 @@
         extern point_set_get_patch_version_function_type point_set_get_patch_version;
         extern point_set_position_default_function_type point_set_position_default;
         extern point_set_position_initialized_function_type point_set_position_initialized;
-        extern point_set_position_get_x_function_type point_set_position_get_x;
+        extern point_set_position_get_x_const_function_type point_set_position_get_x_const;
         extern point_set_position_set_x_function_type point_set_position_set_x;
-        extern point_set_position_get_y_function_type point_set_position_get_y;
+        extern point_set_position_get_y_const_function_type point_set_position_get_y_const;
         extern point_set_position_set_y_function_type point_set_position_set_y;
-        extern point_set_position_get_z_function_type point_set_position_get_z;
+        extern point_set_position_get_z_const_function_type point_set_position_get_z_const;
         extern point_set_position_set_z_function_type point_set_position_set_z;
         extern point_set_position_copy_function_type point_set_position_copy;
         extern point_set_position_delete_function_type point_set_position_delete;
         extern point_set_points_default_function_type point_set_points_default;
-        extern point_set_points_size_function_type point_set_points_size;
+        extern point_set_points_size_const_function_type point_set_points_size_const;
         extern point_set_points_reserve_function_type point_set_points_reserve;
         extern point_set_points_resize_function_type point_set_points_resize;
-        extern point_set_points_get_element_function_type point_set_points_get_element;
+        extern point_set_points_get_element_const_function_type point_set_points_get_element_const;
         extern point_set_points_set_element_function_type point_set_points_set_element;
         extern point_set_points_push_back_function_type point_set_points_push_back;
         extern point_set_points_clear_function_type point_set_points_clear;
         extern point_set_points_add_ref_function_type point_set_points_add_ref;
         extern point_set_points_release_function_type point_set_points_release;
         extern point_set_point_set_default_function_type point_set_point_set_default;
-        extern point_set_point_set_get_name_function_type point_set_point_set_get_name;
+        extern point_set_point_set_get_name_const_function_type point_set_point_set_get_name_const;
         extern point_set_point_set_set_name_function_type point_set_point_set_set_name;
-        extern point_set_point_set_get_points_function_type point_set_point_set_get_points;
+        extern point_set_point_set_get_points_const_function_type point_set_point_set_get_points_const;
         extern point_set_point_set_set_points_function_type point_set_point_set_set_points;
         extern point_set_point_set_add_ref_function_type point_set_point_set_add_ref;
         extern point_set_point_set_release_function_type point_set_point_set_release;
@@ -456,31 +456,31 @@
                 #else /* point_set_position_initialized_load_function_call */
                     load_function<point_set_position_initialized_function_type>(point_set_position_initialized, "point_set_position_initialized");
                 #endif /* point_set_position_initialized_load_function_call */
-                #ifdef point_set_position_get_x_load_function_call
-                    point_set_position_get_x_load_function_call
-                #else /* point_set_position_get_x_load_function_call */
-                    load_function<point_set_position_get_x_function_type>(point_set_position_get_x, "point_set_position_get_x");
-                #endif /* point_set_position_get_x_load_function_call */
+                #ifdef point_set_position_get_x_const_load_function_call
+                    point_set_position_get_x_const_load_function_call
+                #else /* point_set_position_get_x_const_load_function_call */
+                    load_function<point_set_position_get_x_const_function_type>(point_set_position_get_x_const, "point_set_position_get_x_const");
+                #endif /* point_set_position_get_x_const_load_function_call */
                 #ifdef point_set_position_set_x_load_function_call
                     point_set_position_set_x_load_function_call
                 #else /* point_set_position_set_x_load_function_call */
                     load_function<point_set_position_set_x_function_type>(point_set_position_set_x, "point_set_position_set_x");
                 #endif /* point_set_position_set_x_load_function_call */
-                #ifdef point_set_position_get_y_load_function_call
-                    point_set_position_get_y_load_function_call
-                #else /* point_set_position_get_y_load_function_call */
-                    load_function<point_set_position_get_y_function_type>(point_set_position_get_y, "point_set_position_get_y");
-                #endif /* point_set_position_get_y_load_function_call */
+                #ifdef point_set_position_get_y_const_load_function_call
+                    point_set_position_get_y_const_load_function_call
+                #else /* point_set_position_get_y_const_load_function_call */
+                    load_function<point_set_position_get_y_const_function_type>(point_set_position_get_y_const, "point_set_position_get_y_const");
+                #endif /* point_set_position_get_y_const_load_function_call */
                 #ifdef point_set_position_set_y_load_function_call
                     point_set_position_set_y_load_function_call
                 #else /* point_set_position_set_y_load_function_call */
                     load_function<point_set_position_set_y_function_type>(point_set_position_set_y, "point_set_position_set_y");
                 #endif /* point_set_position_set_y_load_function_call */
-                #ifdef point_set_position_get_z_load_function_call
-                    point_set_position_get_z_load_function_call
-                #else /* point_set_position_get_z_load_function_call */
-                    load_function<point_set_position_get_z_function_type>(point_set_position_get_z, "point_set_position_get_z");
-                #endif /* point_set_position_get_z_load_function_call */
+                #ifdef point_set_position_get_z_const_load_function_call
+                    point_set_position_get_z_const_load_function_call
+                #else /* point_set_position_get_z_const_load_function_call */
+                    load_function<point_set_position_get_z_const_function_type>(point_set_position_get_z_const, "point_set_position_get_z_const");
+                #endif /* point_set_position_get_z_const_load_function_call */
                 #ifdef point_set_position_set_z_load_function_call
                     point_set_position_set_z_load_function_call
                 #else /* point_set_position_set_z_load_function_call */
@@ -501,11 +501,11 @@
                 #else /* point_set_points_default_load_function_call */
                     load_function<point_set_points_default_function_type>(point_set_points_default, "point_set_points_default");
                 #endif /* point_set_points_default_load_function_call */
-                #ifdef point_set_points_size_load_function_call
-                    point_set_points_size_load_function_call
-                #else /* point_set_points_size_load_function_call */
-                    load_function<point_set_points_size_function_type>(point_set_points_size, "point_set_points_size");
-                #endif /* point_set_points_size_load_function_call */
+                #ifdef point_set_points_size_const_load_function_call
+                    point_set_points_size_const_load_function_call
+                #else /* point_set_points_size_const_load_function_call */
+                    load_function<point_set_points_size_const_function_type>(point_set_points_size_const, "point_set_points_size_const");
+                #endif /* point_set_points_size_const_load_function_call */
                 #ifdef point_set_points_reserve_load_function_call
                     point_set_points_reserve_load_function_call
                 #else /* point_set_points_reserve_load_function_call */
@@ -516,11 +516,11 @@
                 #else /* point_set_points_resize_load_function_call */
                     load_function<point_set_points_resize_function_type>(point_set_points_resize, "point_set_points_resize");
                 #endif /* point_set_points_resize_load_function_call */
-                #ifdef point_set_points_get_element_load_function_call
-                    point_set_points_get_element_load_function_call
-                #else /* point_set_points_get_element_load_function_call */
-                    load_function<point_set_points_get_element_function_type>(point_set_points_get_element, "point_set_points_get_element");
-                #endif /* point_set_points_get_element_load_function_call */
+                #ifdef point_set_points_get_element_const_load_function_call
+                    point_set_points_get_element_const_load_function_call
+                #else /* point_set_points_get_element_const_load_function_call */
+                    load_function<point_set_points_get_element_const_function_type>(point_set_points_get_element_const, "point_set_points_get_element_const");
+                #endif /* point_set_points_get_element_const_load_function_call */
                 #ifdef point_set_points_set_element_load_function_call
                     point_set_points_set_element_load_function_call
                 #else /* point_set_points_set_element_load_function_call */
@@ -551,21 +551,21 @@
                 #else /* point_set_point_set_default_load_function_call */
                     load_function<point_set_point_set_default_function_type>(point_set_point_set_default, "point_set_point_set_default");
                 #endif /* point_set_point_set_default_load_function_call */
-                #ifdef point_set_point_set_get_name_load_function_call
-                    point_set_point_set_get_name_load_function_call
-                #else /* point_set_point_set_get_name_load_function_call */
-                    load_function<point_set_point_set_get_name_function_type>(point_set_point_set_get_name, "point_set_point_set_get_name");
-                #endif /* point_set_point_set_get_name_load_function_call */
+                #ifdef point_set_point_set_get_name_const_load_function_call
+                    point_set_point_set_get_name_const_load_function_call
+                #else /* point_set_point_set_get_name_const_load_function_call */
+                    load_function<point_set_point_set_get_name_const_function_type>(point_set_point_set_get_name_const, "point_set_point_set_get_name_const");
+                #endif /* point_set_point_set_get_name_const_load_function_call */
                 #ifdef point_set_point_set_set_name_load_function_call
                     point_set_point_set_set_name_load_function_call
                 #else /* point_set_point_set_set_name_load_function_call */
                     load_function<point_set_point_set_set_name_function_type>(point_set_point_set_set_name, "point_set_point_set_set_name");
                 #endif /* point_set_point_set_set_name_load_function_call */
-                #ifdef point_set_point_set_get_points_load_function_call
-                    point_set_point_set_get_points_load_function_call
-                #else /* point_set_point_set_get_points_load_function_call */
-                    load_function<point_set_point_set_get_points_function_type>(point_set_point_set_get_points, "point_set_point_set_get_points");
-                #endif /* point_set_point_set_get_points_load_function_call */
+                #ifdef point_set_point_set_get_points_const_load_function_call
+                    point_set_point_set_get_points_const_load_function_call
+                #else /* point_set_point_set_get_points_const_load_function_call */
+                    load_function<point_set_point_set_get_points_const_function_type>(point_set_point_set_get_points_const, "point_set_point_set_get_points_const");
+                #endif /* point_set_point_set_get_points_const_load_function_call */
                 #ifdef point_set_point_set_set_points_load_function_call
                     point_set_point_set_set_points_load_function_call
                 #else /* point_set_point_set_set_points_load_function_call */
@@ -636,31 +636,31 @@
                 #else /* point_set_position_initialized_zero_function_pointer */
                     point_set_position_initialized = 0;
                 #endif /* point_set_position_initialized_zero_function_pointer */
-                #ifdef point_set_position_get_x_zero_function_pointer
-                    point_set_position_get_x_zero_function_pointer
-                #else /* point_set_position_get_x_zero_function_pointer */
-                    point_set_position_get_x = 0;
-                #endif /* point_set_position_get_x_zero_function_pointer */
+                #ifdef point_set_position_get_x_const_zero_function_pointer
+                    point_set_position_get_x_const_zero_function_pointer
+                #else /* point_set_position_get_x_const_zero_function_pointer */
+                    point_set_position_get_x_const = 0;
+                #endif /* point_set_position_get_x_const_zero_function_pointer */
                 #ifdef point_set_position_set_x_zero_function_pointer
                     point_set_position_set_x_zero_function_pointer
                 #else /* point_set_position_set_x_zero_function_pointer */
                     point_set_position_set_x = 0;
                 #endif /* point_set_position_set_x_zero_function_pointer */
-                #ifdef point_set_position_get_y_zero_function_pointer
-                    point_set_position_get_y_zero_function_pointer
-                #else /* point_set_position_get_y_zero_function_pointer */
-                    point_set_position_get_y = 0;
-                #endif /* point_set_position_get_y_zero_function_pointer */
+                #ifdef point_set_position_get_y_const_zero_function_pointer
+                    point_set_position_get_y_const_zero_function_pointer
+                #else /* point_set_position_get_y_const_zero_function_pointer */
+                    point_set_position_get_y_const = 0;
+                #endif /* point_set_position_get_y_const_zero_function_pointer */
                 #ifdef point_set_position_set_y_zero_function_pointer
                     point_set_position_set_y_zero_function_pointer
                 #else /* point_set_position_set_y_zero_function_pointer */
                     point_set_position_set_y = 0;
                 #endif /* point_set_position_set_y_zero_function_pointer */
-                #ifdef point_set_position_get_z_zero_function_pointer
-                    point_set_position_get_z_zero_function_pointer
-                #else /* point_set_position_get_z_zero_function_pointer */
-                    point_set_position_get_z = 0;
-                #endif /* point_set_position_get_z_zero_function_pointer */
+                #ifdef point_set_position_get_z_const_zero_function_pointer
+                    point_set_position_get_z_const_zero_function_pointer
+                #else /* point_set_position_get_z_const_zero_function_pointer */
+                    point_set_position_get_z_const = 0;
+                #endif /* point_set_position_get_z_const_zero_function_pointer */
                 #ifdef point_set_position_set_z_zero_function_pointer
                     point_set_position_set_z_zero_function_pointer
                 #else /* point_set_position_set_z_zero_function_pointer */
@@ -681,11 +681,11 @@
                 #else /* point_set_points_default_zero_function_pointer */
                     point_set_points_default = 0;
                 #endif /* point_set_points_default_zero_function_pointer */
-                #ifdef point_set_points_size_zero_function_pointer
-                    point_set_points_size_zero_function_pointer
-                #else /* point_set_points_size_zero_function_pointer */
-                    point_set_points_size = 0;
-                #endif /* point_set_points_size_zero_function_pointer */
+                #ifdef point_set_points_size_const_zero_function_pointer
+                    point_set_points_size_const_zero_function_pointer
+                #else /* point_set_points_size_const_zero_function_pointer */
+                    point_set_points_size_const = 0;
+                #endif /* point_set_points_size_const_zero_function_pointer */
                 #ifdef point_set_points_reserve_zero_function_pointer
                     point_set_points_reserve_zero_function_pointer
                 #else /* point_set_points_reserve_zero_function_pointer */
@@ -696,11 +696,11 @@
                 #else /* point_set_points_resize_zero_function_pointer */
                     point_set_points_resize = 0;
                 #endif /* point_set_points_resize_zero_function_pointer */
-                #ifdef point_set_points_get_element_zero_function_pointer
-                    point_set_points_get_element_zero_function_pointer
-                #else /* point_set_points_get_element_zero_function_pointer */
-                    point_set_points_get_element = 0;
-                #endif /* point_set_points_get_element_zero_function_pointer */
+                #ifdef point_set_points_get_element_const_zero_function_pointer
+                    point_set_points_get_element_const_zero_function_pointer
+                #else /* point_set_points_get_element_const_zero_function_pointer */
+                    point_set_points_get_element_const = 0;
+                #endif /* point_set_points_get_element_const_zero_function_pointer */
                 #ifdef point_set_points_set_element_zero_function_pointer
                     point_set_points_set_element_zero_function_pointer
                 #else /* point_set_points_set_element_zero_function_pointer */
@@ -731,21 +731,21 @@
                 #else /* point_set_point_set_default_zero_function_pointer */
                     point_set_point_set_default = 0;
                 #endif /* point_set_point_set_default_zero_function_pointer */
-                #ifdef point_set_point_set_get_name_zero_function_pointer
-                    point_set_point_set_get_name_zero_function_pointer
-                #else /* point_set_point_set_get_name_zero_function_pointer */
-                    point_set_point_set_get_name = 0;
-                #endif /* point_set_point_set_get_name_zero_function_pointer */
+                #ifdef point_set_point_set_get_name_const_zero_function_pointer
+                    point_set_point_set_get_name_const_zero_function_pointer
+                #else /* point_set_point_set_get_name_const_zero_function_pointer */
+                    point_set_point_set_get_name_const = 0;
+                #endif /* point_set_point_set_get_name_const_zero_function_pointer */
                 #ifdef point_set_point_set_set_name_zero_function_pointer
                     point_set_point_set_set_name_zero_function_pointer
                 #else /* point_set_point_set_set_name_zero_function_pointer */
                     point_set_point_set_set_name = 0;
                 #endif /* point_set_point_set_set_name_zero_function_pointer */
-                #ifdef point_set_point_set_get_points_zero_function_pointer
-                    point_set_point_set_get_points_zero_function_pointer
-                #else /* point_set_point_set_get_points_zero_function_pointer */
-                    point_set_point_set_get_points = 0;
-                #endif /* point_set_point_set_get_points_zero_function_pointer */
+                #ifdef point_set_point_set_get_points_const_zero_function_pointer
+                    point_set_point_set_get_points_const_zero_function_pointer
+                #else /* point_set_point_set_get_points_const_zero_function_pointer */
+                    point_set_point_set_get_points_const = 0;
+                #endif /* point_set_point_set_get_points_const_zero_function_pointer */
                 #ifdef point_set_point_set_set_points_zero_function_pointer
                     point_set_point_set_set_points_zero_function_pointer
                 #else /* point_set_point_set_set_points_zero_function_pointer */

@@ -38,7 +38,7 @@ inline hello_world::plotter_ptr::plotter_ptr()
 
 inline void hello_world::plotter_ptr::draw() const
 {
-    hello_world_plotter_draw(get_raw_pointer());
+    hello_world_plotter_draw_const(get_raw_pointer());
 }
 
 inline hello_world::plotter_ptr::plotter_ptr(const plotter_ptr& other)

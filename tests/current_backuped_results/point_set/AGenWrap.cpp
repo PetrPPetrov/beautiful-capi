@@ -104,7 +104,7 @@ POINTSET_API void* POINTSET_API_CONVENTION point_set_position_initialized(double
     return new PointSet::PositionImpl(X, Y, Z);
 }
 
-POINTSET_API double POINTSET_API_CONVENTION point_set_position_get_x(void* object_pointer)
+POINTSET_API double POINTSET_API_CONVENTION point_set_position_get_x_const(void* object_pointer)
 {
     const PointSet::PositionImpl* self = static_cast<PointSet::PositionImpl*>(object_pointer);
     return self->GetX();
@@ -116,7 +116,7 @@ POINTSET_API void POINTSET_API_CONVENTION point_set_position_set_x(void* object_
     self->SetX(value);
 }
 
-POINTSET_API double POINTSET_API_CONVENTION point_set_position_get_y(void* object_pointer)
+POINTSET_API double POINTSET_API_CONVENTION point_set_position_get_y_const(void* object_pointer)
 {
     const PointSet::PositionImpl* self = static_cast<PointSet::PositionImpl*>(object_pointer);
     return self->GetY();
@@ -128,7 +128,7 @@ POINTSET_API void POINTSET_API_CONVENTION point_set_position_set_y(void* object_
     self->SetY(value);
 }
 
-POINTSET_API double POINTSET_API_CONVENTION point_set_position_get_z(void* object_pointer)
+POINTSET_API double POINTSET_API_CONVENTION point_set_position_get_z_const(void* object_pointer)
 {
     const PointSet::PositionImpl* self = static_cast<PointSet::PositionImpl*>(object_pointer);
     return self->GetZ();
@@ -155,7 +155,7 @@ POINTSET_API void* POINTSET_API_CONVENTION point_set_points_default()
     return new PointSet::PointsImpl();
 }
 
-POINTSET_API size_t POINTSET_API_CONVENTION point_set_points_size(void* object_pointer)
+POINTSET_API size_t POINTSET_API_CONVENTION point_set_points_size_const(void* object_pointer)
 {
     const PointSet::PointsImpl* self = static_cast<PointSet::PointsImpl*>(object_pointer);
     return self->Size();
@@ -173,7 +173,7 @@ POINTSET_API void POINTSET_API_CONVENTION point_set_points_resize(void* object_p
     self->Resize(size, *static_cast<PointSet::PositionImpl*>(default_value));
 }
 
-POINTSET_API void* POINTSET_API_CONVENTION point_set_points_get_element(void* object_pointer, size_t index)
+POINTSET_API void* POINTSET_API_CONVENTION point_set_points_get_element_const(void* object_pointer, size_t index)
 {
     const PointSet::PointsImpl* self = static_cast<PointSet::PointsImpl*>(object_pointer);
     PointSet::PositionImpl result_implementation_copy(self->GetElement(index));
@@ -213,7 +213,7 @@ POINTSET_API void* POINTSET_API_CONVENTION point_set_point_set_default()
     return new PointSet::PointSetImpl();
 }
 
-POINTSET_API const char* POINTSET_API_CONVENTION point_set_point_set_get_name(void* object_pointer)
+POINTSET_API const char* POINTSET_API_CONVENTION point_set_point_set_get_name_const(void* object_pointer)
 {
     const PointSet::PointSetImpl* self = static_cast<PointSet::PointSetImpl*>(object_pointer);
     return self->GetName();
@@ -225,7 +225,7 @@ POINTSET_API void POINTSET_API_CONVENTION point_set_point_set_set_name(void* obj
     self->SetName(name);
 }
 
-POINTSET_API void* POINTSET_API_CONVENTION point_set_point_set_get_points(void* object_pointer)
+POINTSET_API void* POINTSET_API_CONVENTION point_set_point_set_get_points_const(void* object_pointer)
 {
     const PointSet::PointSetImpl* self = static_cast<PointSet::PointSetImpl*>(object_pointer);
     return self->GetPoints();

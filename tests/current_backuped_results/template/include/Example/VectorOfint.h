@@ -38,7 +38,7 @@ inline Example::VectorOf<int>::VectorOf()
 
 inline int Example::VectorOf<int>::GetSize() const
 {
-    return example_vector_of_int_get_size(GetRawPointer());
+    return example_vector_of_int_get_size_const(GetRawPointer());
 }
 
 inline void Example::VectorOf<int>::Clear()
@@ -53,7 +53,7 @@ inline void Example::VectorOf<int>::PushBack(int value)
 
 inline int Example::VectorOf<int>::GetItem(int index) const
 {
-    return example_vector_of_int_get_item(GetRawPointer(), index);
+    return example_vector_of_int_get_item_const(GetRawPointer(), index);
 }
 
 inline Example::VectorOf<int>::VectorOf(const VectorOf<int>& other)

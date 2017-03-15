@@ -43,7 +43,7 @@ inline PointSet::Position::Position(double X, double Y, double Z)
 
 inline double PointSet::Position::GetX() const
 {
-    return point_set_position_get_x(GetRawPointer());
+    return point_set_position_get_x_const(GetRawPointer());
 }
 
 inline void PointSet::Position::SetX(double value)
@@ -53,7 +53,7 @@ inline void PointSet::Position::SetX(double value)
 
 inline double PointSet::Position::GetY() const
 {
-    return point_set_position_get_y(GetRawPointer());
+    return point_set_position_get_y_const(GetRawPointer());
 }
 
 inline void PointSet::Position::SetY(double value)
@@ -63,7 +63,7 @@ inline void PointSet::Position::SetY(double value)
 
 inline double PointSet::Position::GetZ() const
 {
-    return point_set_position_get_z(GetRawPointer());
+    return point_set_position_get_z_const(GetRawPointer());
 }
 
 inline void PointSet::Position::SetZ(double value)

@@ -120,40 +120,40 @@ enum beautiful_capi_callback_exception_code_t
 
 #ifndef EXAMPLE_CAPI_USE_DYNAMIC_LOADER
 
-    typedef void (EXAMPLE_API_CONVENTION *example_printer_print_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* text);
-    typedef int (EXAMPLE_API_CONVENTION *example_printer_get_device_type_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
-    typedef int (EXAMPLE_API_CONVENTION *example_printer_get_printing_quality_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_printer_print_const_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* text);
+    typedef int (EXAMPLE_API_CONVENTION *example_printer_get_device_type_const_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+    typedef int (EXAMPLE_API_CONVENTION *example_printer_get_printing_quality_const_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
     typedef void (EXAMPLE_API_CONVENTION *example_printer_set_printing_quality_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, int value);
 
     EXAMPLE_API void* EXAMPLE_API_CONVENTION example_create_default_printer(beautiful_capi_callback_exception_info_t* exception_info, int printing_device);
     EXAMPLE_API int EXAMPLE_API_CONVENTION example_get_major_version();
     EXAMPLE_API int EXAMPLE_API_CONVENTION example_get_minor_version();
     EXAMPLE_API int EXAMPLE_API_CONVENTION example_get_patch_version();
-    EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_print(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* text);
-    EXAMPLE_API int EXAMPLE_API_CONVENTION example_printer_get_device_type(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
-    EXAMPLE_API int EXAMPLE_API_CONVENTION example_printer_get_printing_quality(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_print_const(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* text);
+    EXAMPLE_API int EXAMPLE_API_CONVENTION example_printer_get_device_type_const(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+    EXAMPLE_API int EXAMPLE_API_CONVENTION example_printer_get_printing_quality_const(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_set_printing_quality(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, int value);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_add_ref(void* object_pointer);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_release(void* object_pointer);
     EXAMPLE_API void* EXAMPLE_API_CONVENTION example_person_default(beautiful_capi_callback_exception_info_t* exception_info);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_person_set_first_name(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* first_name);
-    EXAMPLE_API const char* EXAMPLE_API_CONVENTION example_person_get_first_name(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+    EXAMPLE_API const char* EXAMPLE_API_CONVENTION example_person_get_first_name_const(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_person_set_second_name(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* second_name);
-    EXAMPLE_API const char* EXAMPLE_API_CONVENTION example_person_get_second_name(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+    EXAMPLE_API const char* EXAMPLE_API_CONVENTION example_person_get_second_name_const(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_person_set_age(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, unsigned int age);
-    EXAMPLE_API unsigned int EXAMPLE_API_CONVENTION example_person_get_age(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+    EXAMPLE_API unsigned int EXAMPLE_API_CONVENTION example_person_get_age_const(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_person_set_sex(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, char sex);
-    EXAMPLE_API char EXAMPLE_API_CONVENTION example_person_get_sex(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
-    EXAMPLE_API void EXAMPLE_API_CONVENTION example_person_dump(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, void* printer);
-    EXAMPLE_API void EXAMPLE_API_CONVENTION example_person_print(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, void* printer, const char* text);
+    EXAMPLE_API char EXAMPLE_API_CONVENTION example_person_get_sex_const(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_person_dump_const(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, void* printer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_person_print_const(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, void* printer, const char* text);
     EXAMPLE_API void* EXAMPLE_API_CONVENTION example_person_copy(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_person_delete(void* object_pointer);
     EXAMPLE_API void* EXAMPLE_API_CONVENTION example_printer_callback_default(beautiful_capi_callback_exception_info_t* exception_info);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_callback_set_object_pointer(void* object_pointer, void* custom_object);
-    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_printer_callback_get_object_pointer(void* object_pointer);
-    EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_callback_set_cfunction_for_print(void* object_pointer, example_printer_print_callback_type c_function_pointer);
-    EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_callback_set_cfunction_for_get_device_type(void* object_pointer, example_printer_get_device_type_callback_type c_function_pointer);
-    EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_callback_set_cfunction_for_get_printing_quality(void* object_pointer, example_printer_get_printing_quality_callback_type c_function_pointer);
+    EXAMPLE_API void* EXAMPLE_API_CONVENTION example_printer_callback_get_object_pointer_const(void* object_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_callback_set_cfunction_for_print(void* object_pointer, example_printer_print_const_callback_type c_function_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_callback_set_cfunction_for_get_device_type(void* object_pointer, example_printer_get_device_type_const_callback_type c_function_pointer);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_callback_set_cfunction_for_get_printing_quality(void* object_pointer, example_printer_get_printing_quality_const_callback_type c_function_pointer);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_callback_set_cfunction_for_set_printing_quality(void* object_pointer, example_printer_set_printing_quality_callback_type c_function_pointer);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_callback_add_ref(void* object_pointer);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_callback_release(void* object_pointer);
@@ -191,39 +191,39 @@ enum beautiful_capi_callback_exception_code_t
 
 #else /* EXAMPLE_CAPI_USE_DYNAMIC_LOADER */
 
-    typedef void (EXAMPLE_API_CONVENTION *example_printer_print_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* text);
-    typedef int (EXAMPLE_API_CONVENTION *example_printer_get_device_type_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
-    typedef int (EXAMPLE_API_CONVENTION *example_printer_get_printing_quality_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_printer_print_const_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* text);
+    typedef int (EXAMPLE_API_CONVENTION *example_printer_get_device_type_const_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+    typedef int (EXAMPLE_API_CONVENTION *example_printer_get_printing_quality_const_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
     typedef void (EXAMPLE_API_CONVENTION *example_printer_set_printing_quality_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, int value);
     typedef void* (EXAMPLE_API_CONVENTION *example_create_default_printer_function_type)(beautiful_capi_callback_exception_info_t* exception_info, int printing_device);
     typedef int (EXAMPLE_API_CONVENTION *example_get_major_version_function_type)();
     typedef int (EXAMPLE_API_CONVENTION *example_get_minor_version_function_type)();
     typedef int (EXAMPLE_API_CONVENTION *example_get_patch_version_function_type)();
-    typedef void (EXAMPLE_API_CONVENTION *example_printer_print_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* text);
-    typedef int (EXAMPLE_API_CONVENTION *example_printer_get_device_type_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
-    typedef int (EXAMPLE_API_CONVENTION *example_printer_get_printing_quality_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_printer_print_const_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* text);
+    typedef int (EXAMPLE_API_CONVENTION *example_printer_get_device_type_const_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+    typedef int (EXAMPLE_API_CONVENTION *example_printer_get_printing_quality_const_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
     typedef void (EXAMPLE_API_CONVENTION *example_printer_set_printing_quality_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, int value);
     typedef void (EXAMPLE_API_CONVENTION *example_printer_add_ref_function_type)(void* object_pointer);
     typedef void (EXAMPLE_API_CONVENTION *example_printer_release_function_type)(void* object_pointer);
     typedef void* (EXAMPLE_API_CONVENTION *example_person_default_function_type)(beautiful_capi_callback_exception_info_t* exception_info);
     typedef void (EXAMPLE_API_CONVENTION *example_person_set_first_name_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* first_name);
-    typedef const char* (EXAMPLE_API_CONVENTION *example_person_get_first_name_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+    typedef const char* (EXAMPLE_API_CONVENTION *example_person_get_first_name_const_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
     typedef void (EXAMPLE_API_CONVENTION *example_person_set_second_name_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* second_name);
-    typedef const char* (EXAMPLE_API_CONVENTION *example_person_get_second_name_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+    typedef const char* (EXAMPLE_API_CONVENTION *example_person_get_second_name_const_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
     typedef void (EXAMPLE_API_CONVENTION *example_person_set_age_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, unsigned int age);
-    typedef unsigned int (EXAMPLE_API_CONVENTION *example_person_get_age_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+    typedef unsigned int (EXAMPLE_API_CONVENTION *example_person_get_age_const_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
     typedef void (EXAMPLE_API_CONVENTION *example_person_set_sex_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, char sex);
-    typedef char (EXAMPLE_API_CONVENTION *example_person_get_sex_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
-    typedef void (EXAMPLE_API_CONVENTION *example_person_dump_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, void* printer);
-    typedef void (EXAMPLE_API_CONVENTION *example_person_print_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, void* printer, const char* text);
+    typedef char (EXAMPLE_API_CONVENTION *example_person_get_sex_const_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_person_dump_const_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, void* printer);
+    typedef void (EXAMPLE_API_CONVENTION *example_person_print_const_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, void* printer, const char* text);
     typedef void* (EXAMPLE_API_CONVENTION *example_person_copy_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
     typedef void (EXAMPLE_API_CONVENTION *example_person_delete_function_type)(void* object_pointer);
     typedef void* (EXAMPLE_API_CONVENTION *example_printer_callback_default_function_type)(beautiful_capi_callback_exception_info_t* exception_info);
     typedef void (EXAMPLE_API_CONVENTION *example_printer_callback_set_object_pointer_function_type)(void* object_pointer, void* custom_object);
-    typedef void* (EXAMPLE_API_CONVENTION *example_printer_callback_get_object_pointer_function_type)(void* object_pointer);
-    typedef void (EXAMPLE_API_CONVENTION *example_printer_callback_set_cfunction_for_print_function_type)(void* object_pointer, example_printer_print_callback_type c_function_pointer);
-    typedef void (EXAMPLE_API_CONVENTION *example_printer_callback_set_cfunction_for_get_device_type_function_type)(void* object_pointer, example_printer_get_device_type_callback_type c_function_pointer);
-    typedef void (EXAMPLE_API_CONVENTION *example_printer_callback_set_cfunction_for_get_printing_quality_function_type)(void* object_pointer, example_printer_get_printing_quality_callback_type c_function_pointer);
+    typedef void* (EXAMPLE_API_CONVENTION *example_printer_callback_get_object_pointer_const_function_type)(void* object_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_printer_callback_set_cfunction_for_print_function_type)(void* object_pointer, example_printer_print_const_callback_type c_function_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_printer_callback_set_cfunction_for_get_device_type_function_type)(void* object_pointer, example_printer_get_device_type_const_callback_type c_function_pointer);
+    typedef void (EXAMPLE_API_CONVENTION *example_printer_callback_set_cfunction_for_get_printing_quality_function_type)(void* object_pointer, example_printer_get_printing_quality_const_callback_type c_function_pointer);
     typedef void (EXAMPLE_API_CONVENTION *example_printer_callback_set_cfunction_for_set_printing_quality_function_type)(void* object_pointer, example_printer_set_printing_quality_callback_type c_function_pointer);
     typedef void (EXAMPLE_API_CONVENTION *example_printer_callback_add_ref_function_type)(void* object_pointer);
     typedef void (EXAMPLE_API_CONVENTION *example_printer_callback_release_function_type)(void* object_pointer);
@@ -252,20 +252,20 @@ enum beautiful_capi_callback_exception_code_t
         #else
             example_get_patch_version_function_type example_get_patch_version = 0;
         #endif
-        #ifdef example_printer_print_define_function_pointer_var
-            example_printer_print_define_function_pointer_var
+        #ifdef example_printer_print_const_define_function_pointer_var
+            example_printer_print_const_define_function_pointer_var
         #else
-            example_printer_print_function_type example_printer_print = 0;
+            example_printer_print_const_function_type example_printer_print_const = 0;
         #endif
-        #ifdef example_printer_get_device_type_define_function_pointer_var
-            example_printer_get_device_type_define_function_pointer_var
+        #ifdef example_printer_get_device_type_const_define_function_pointer_var
+            example_printer_get_device_type_const_define_function_pointer_var
         #else
-            example_printer_get_device_type_function_type example_printer_get_device_type = 0;
+            example_printer_get_device_type_const_function_type example_printer_get_device_type_const = 0;
         #endif
-        #ifdef example_printer_get_printing_quality_define_function_pointer_var
-            example_printer_get_printing_quality_define_function_pointer_var
+        #ifdef example_printer_get_printing_quality_const_define_function_pointer_var
+            example_printer_get_printing_quality_const_define_function_pointer_var
         #else
-            example_printer_get_printing_quality_function_type example_printer_get_printing_quality = 0;
+            example_printer_get_printing_quality_const_function_type example_printer_get_printing_quality_const = 0;
         #endif
         #ifdef example_printer_set_printing_quality_define_function_pointer_var
             example_printer_set_printing_quality_define_function_pointer_var
@@ -292,50 +292,50 @@ enum beautiful_capi_callback_exception_code_t
         #else
             example_person_set_first_name_function_type example_person_set_first_name = 0;
         #endif
-        #ifdef example_person_get_first_name_define_function_pointer_var
-            example_person_get_first_name_define_function_pointer_var
+        #ifdef example_person_get_first_name_const_define_function_pointer_var
+            example_person_get_first_name_const_define_function_pointer_var
         #else
-            example_person_get_first_name_function_type example_person_get_first_name = 0;
+            example_person_get_first_name_const_function_type example_person_get_first_name_const = 0;
         #endif
         #ifdef example_person_set_second_name_define_function_pointer_var
             example_person_set_second_name_define_function_pointer_var
         #else
             example_person_set_second_name_function_type example_person_set_second_name = 0;
         #endif
-        #ifdef example_person_get_second_name_define_function_pointer_var
-            example_person_get_second_name_define_function_pointer_var
+        #ifdef example_person_get_second_name_const_define_function_pointer_var
+            example_person_get_second_name_const_define_function_pointer_var
         #else
-            example_person_get_second_name_function_type example_person_get_second_name = 0;
+            example_person_get_second_name_const_function_type example_person_get_second_name_const = 0;
         #endif
         #ifdef example_person_set_age_define_function_pointer_var
             example_person_set_age_define_function_pointer_var
         #else
             example_person_set_age_function_type example_person_set_age = 0;
         #endif
-        #ifdef example_person_get_age_define_function_pointer_var
-            example_person_get_age_define_function_pointer_var
+        #ifdef example_person_get_age_const_define_function_pointer_var
+            example_person_get_age_const_define_function_pointer_var
         #else
-            example_person_get_age_function_type example_person_get_age = 0;
+            example_person_get_age_const_function_type example_person_get_age_const = 0;
         #endif
         #ifdef example_person_set_sex_define_function_pointer_var
             example_person_set_sex_define_function_pointer_var
         #else
             example_person_set_sex_function_type example_person_set_sex = 0;
         #endif
-        #ifdef example_person_get_sex_define_function_pointer_var
-            example_person_get_sex_define_function_pointer_var
+        #ifdef example_person_get_sex_const_define_function_pointer_var
+            example_person_get_sex_const_define_function_pointer_var
         #else
-            example_person_get_sex_function_type example_person_get_sex = 0;
+            example_person_get_sex_const_function_type example_person_get_sex_const = 0;
         #endif
-        #ifdef example_person_dump_define_function_pointer_var
-            example_person_dump_define_function_pointer_var
+        #ifdef example_person_dump_const_define_function_pointer_var
+            example_person_dump_const_define_function_pointer_var
         #else
-            example_person_dump_function_type example_person_dump = 0;
+            example_person_dump_const_function_type example_person_dump_const = 0;
         #endif
-        #ifdef example_person_print_define_function_pointer_var
-            example_person_print_define_function_pointer_var
+        #ifdef example_person_print_const_define_function_pointer_var
+            example_person_print_const_define_function_pointer_var
         #else
-            example_person_print_function_type example_person_print = 0;
+            example_person_print_const_function_type example_person_print_const = 0;
         #endif
         #ifdef example_person_copy_define_function_pointer_var
             example_person_copy_define_function_pointer_var
@@ -357,10 +357,10 @@ enum beautiful_capi_callback_exception_code_t
         #else
             example_printer_callback_set_object_pointer_function_type example_printer_callback_set_object_pointer = 0;
         #endif
-        #ifdef example_printer_callback_get_object_pointer_define_function_pointer_var
-            example_printer_callback_get_object_pointer_define_function_pointer_var
+        #ifdef example_printer_callback_get_object_pointer_const_define_function_pointer_var
+            example_printer_callback_get_object_pointer_const_define_function_pointer_var
         #else
-            example_printer_callback_get_object_pointer_function_type example_printer_callback_get_object_pointer = 0;
+            example_printer_callback_get_object_pointer_const_function_type example_printer_callback_get_object_pointer_const = 0;
         #endif
         #ifdef example_printer_callback_set_cfunction_for_print_define_function_pointer_var
             example_printer_callback_set_cfunction_for_print_define_function_pointer_var
@@ -409,28 +409,28 @@ enum beautiful_capi_callback_exception_code_t
         extern example_get_major_version_function_type example_get_major_version;
         extern example_get_minor_version_function_type example_get_minor_version;
         extern example_get_patch_version_function_type example_get_patch_version;
-        extern example_printer_print_function_type example_printer_print;
-        extern example_printer_get_device_type_function_type example_printer_get_device_type;
-        extern example_printer_get_printing_quality_function_type example_printer_get_printing_quality;
+        extern example_printer_print_const_function_type example_printer_print_const;
+        extern example_printer_get_device_type_const_function_type example_printer_get_device_type_const;
+        extern example_printer_get_printing_quality_const_function_type example_printer_get_printing_quality_const;
         extern example_printer_set_printing_quality_function_type example_printer_set_printing_quality;
         extern example_printer_add_ref_function_type example_printer_add_ref;
         extern example_printer_release_function_type example_printer_release;
         extern example_person_default_function_type example_person_default;
         extern example_person_set_first_name_function_type example_person_set_first_name;
-        extern example_person_get_first_name_function_type example_person_get_first_name;
+        extern example_person_get_first_name_const_function_type example_person_get_first_name_const;
         extern example_person_set_second_name_function_type example_person_set_second_name;
-        extern example_person_get_second_name_function_type example_person_get_second_name;
+        extern example_person_get_second_name_const_function_type example_person_get_second_name_const;
         extern example_person_set_age_function_type example_person_set_age;
-        extern example_person_get_age_function_type example_person_get_age;
+        extern example_person_get_age_const_function_type example_person_get_age_const;
         extern example_person_set_sex_function_type example_person_set_sex;
-        extern example_person_get_sex_function_type example_person_get_sex;
-        extern example_person_dump_function_type example_person_dump;
-        extern example_person_print_function_type example_person_print;
+        extern example_person_get_sex_const_function_type example_person_get_sex_const;
+        extern example_person_dump_const_function_type example_person_dump_const;
+        extern example_person_print_const_function_type example_person_print_const;
         extern example_person_copy_function_type example_person_copy;
         extern example_person_delete_function_type example_person_delete;
         extern example_printer_callback_default_function_type example_printer_callback_default;
         extern example_printer_callback_set_object_pointer_function_type example_printer_callback_set_object_pointer;
-        extern example_printer_callback_get_object_pointer_function_type example_printer_callback_get_object_pointer;
+        extern example_printer_callback_get_object_pointer_const_function_type example_printer_callback_get_object_pointer_const;
         extern example_printer_callback_set_cfunction_for_print_function_type example_printer_callback_set_cfunction_for_print;
         extern example_printer_callback_set_cfunction_for_get_device_type_function_type example_printer_callback_set_cfunction_for_get_device_type;
         extern example_printer_callback_set_cfunction_for_get_printing_quality_function_type example_printer_callback_set_cfunction_for_get_printing_quality;
@@ -513,21 +513,21 @@ enum beautiful_capi_callback_exception_code_t
                 #else /* example_get_patch_version_load_function_call */
                     load_function<example_get_patch_version_function_type>(example_get_patch_version, "example_get_patch_version");
                 #endif /* example_get_patch_version_load_function_call */
-                #ifdef example_printer_print_load_function_call
-                    example_printer_print_load_function_call
-                #else /* example_printer_print_load_function_call */
-                    load_function<example_printer_print_function_type>(example_printer_print, "example_printer_print");
-                #endif /* example_printer_print_load_function_call */
-                #ifdef example_printer_get_device_type_load_function_call
-                    example_printer_get_device_type_load_function_call
-                #else /* example_printer_get_device_type_load_function_call */
-                    load_function<example_printer_get_device_type_function_type>(example_printer_get_device_type, "example_printer_get_device_type");
-                #endif /* example_printer_get_device_type_load_function_call */
-                #ifdef example_printer_get_printing_quality_load_function_call
-                    example_printer_get_printing_quality_load_function_call
-                #else /* example_printer_get_printing_quality_load_function_call */
-                    load_function<example_printer_get_printing_quality_function_type>(example_printer_get_printing_quality, "example_printer_get_printing_quality");
-                #endif /* example_printer_get_printing_quality_load_function_call */
+                #ifdef example_printer_print_const_load_function_call
+                    example_printer_print_const_load_function_call
+                #else /* example_printer_print_const_load_function_call */
+                    load_function<example_printer_print_const_function_type>(example_printer_print_const, "example_printer_print_const");
+                #endif /* example_printer_print_const_load_function_call */
+                #ifdef example_printer_get_device_type_const_load_function_call
+                    example_printer_get_device_type_const_load_function_call
+                #else /* example_printer_get_device_type_const_load_function_call */
+                    load_function<example_printer_get_device_type_const_function_type>(example_printer_get_device_type_const, "example_printer_get_device_type_const");
+                #endif /* example_printer_get_device_type_const_load_function_call */
+                #ifdef example_printer_get_printing_quality_const_load_function_call
+                    example_printer_get_printing_quality_const_load_function_call
+                #else /* example_printer_get_printing_quality_const_load_function_call */
+                    load_function<example_printer_get_printing_quality_const_function_type>(example_printer_get_printing_quality_const, "example_printer_get_printing_quality_const");
+                #endif /* example_printer_get_printing_quality_const_load_function_call */
                 #ifdef example_printer_set_printing_quality_load_function_call
                     example_printer_set_printing_quality_load_function_call
                 #else /* example_printer_set_printing_quality_load_function_call */
@@ -553,51 +553,51 @@ enum beautiful_capi_callback_exception_code_t
                 #else /* example_person_set_first_name_load_function_call */
                     load_function<example_person_set_first_name_function_type>(example_person_set_first_name, "example_person_set_first_name");
                 #endif /* example_person_set_first_name_load_function_call */
-                #ifdef example_person_get_first_name_load_function_call
-                    example_person_get_first_name_load_function_call
-                #else /* example_person_get_first_name_load_function_call */
-                    load_function<example_person_get_first_name_function_type>(example_person_get_first_name, "example_person_get_first_name");
-                #endif /* example_person_get_first_name_load_function_call */
+                #ifdef example_person_get_first_name_const_load_function_call
+                    example_person_get_first_name_const_load_function_call
+                #else /* example_person_get_first_name_const_load_function_call */
+                    load_function<example_person_get_first_name_const_function_type>(example_person_get_first_name_const, "example_person_get_first_name_const");
+                #endif /* example_person_get_first_name_const_load_function_call */
                 #ifdef example_person_set_second_name_load_function_call
                     example_person_set_second_name_load_function_call
                 #else /* example_person_set_second_name_load_function_call */
                     load_function<example_person_set_second_name_function_type>(example_person_set_second_name, "example_person_set_second_name");
                 #endif /* example_person_set_second_name_load_function_call */
-                #ifdef example_person_get_second_name_load_function_call
-                    example_person_get_second_name_load_function_call
-                #else /* example_person_get_second_name_load_function_call */
-                    load_function<example_person_get_second_name_function_type>(example_person_get_second_name, "example_person_get_second_name");
-                #endif /* example_person_get_second_name_load_function_call */
+                #ifdef example_person_get_second_name_const_load_function_call
+                    example_person_get_second_name_const_load_function_call
+                #else /* example_person_get_second_name_const_load_function_call */
+                    load_function<example_person_get_second_name_const_function_type>(example_person_get_second_name_const, "example_person_get_second_name_const");
+                #endif /* example_person_get_second_name_const_load_function_call */
                 #ifdef example_person_set_age_load_function_call
                     example_person_set_age_load_function_call
                 #else /* example_person_set_age_load_function_call */
                     load_function<example_person_set_age_function_type>(example_person_set_age, "example_person_set_age");
                 #endif /* example_person_set_age_load_function_call */
-                #ifdef example_person_get_age_load_function_call
-                    example_person_get_age_load_function_call
-                #else /* example_person_get_age_load_function_call */
-                    load_function<example_person_get_age_function_type>(example_person_get_age, "example_person_get_age");
-                #endif /* example_person_get_age_load_function_call */
+                #ifdef example_person_get_age_const_load_function_call
+                    example_person_get_age_const_load_function_call
+                #else /* example_person_get_age_const_load_function_call */
+                    load_function<example_person_get_age_const_function_type>(example_person_get_age_const, "example_person_get_age_const");
+                #endif /* example_person_get_age_const_load_function_call */
                 #ifdef example_person_set_sex_load_function_call
                     example_person_set_sex_load_function_call
                 #else /* example_person_set_sex_load_function_call */
                     load_function<example_person_set_sex_function_type>(example_person_set_sex, "example_person_set_sex");
                 #endif /* example_person_set_sex_load_function_call */
-                #ifdef example_person_get_sex_load_function_call
-                    example_person_get_sex_load_function_call
-                #else /* example_person_get_sex_load_function_call */
-                    load_function<example_person_get_sex_function_type>(example_person_get_sex, "example_person_get_sex");
-                #endif /* example_person_get_sex_load_function_call */
-                #ifdef example_person_dump_load_function_call
-                    example_person_dump_load_function_call
-                #else /* example_person_dump_load_function_call */
-                    load_function<example_person_dump_function_type>(example_person_dump, "example_person_dump");
-                #endif /* example_person_dump_load_function_call */
-                #ifdef example_person_print_load_function_call
-                    example_person_print_load_function_call
-                #else /* example_person_print_load_function_call */
-                    load_function<example_person_print_function_type>(example_person_print, "example_person_print");
-                #endif /* example_person_print_load_function_call */
+                #ifdef example_person_get_sex_const_load_function_call
+                    example_person_get_sex_const_load_function_call
+                #else /* example_person_get_sex_const_load_function_call */
+                    load_function<example_person_get_sex_const_function_type>(example_person_get_sex_const, "example_person_get_sex_const");
+                #endif /* example_person_get_sex_const_load_function_call */
+                #ifdef example_person_dump_const_load_function_call
+                    example_person_dump_const_load_function_call
+                #else /* example_person_dump_const_load_function_call */
+                    load_function<example_person_dump_const_function_type>(example_person_dump_const, "example_person_dump_const");
+                #endif /* example_person_dump_const_load_function_call */
+                #ifdef example_person_print_const_load_function_call
+                    example_person_print_const_load_function_call
+                #else /* example_person_print_const_load_function_call */
+                    load_function<example_person_print_const_function_type>(example_person_print_const, "example_person_print_const");
+                #endif /* example_person_print_const_load_function_call */
                 #ifdef example_person_copy_load_function_call
                     example_person_copy_load_function_call
                 #else /* example_person_copy_load_function_call */
@@ -618,11 +618,11 @@ enum beautiful_capi_callback_exception_code_t
                 #else /* example_printer_callback_set_object_pointer_load_function_call */
                     load_function<example_printer_callback_set_object_pointer_function_type>(example_printer_callback_set_object_pointer, "example_printer_callback_set_object_pointer");
                 #endif /* example_printer_callback_set_object_pointer_load_function_call */
-                #ifdef example_printer_callback_get_object_pointer_load_function_call
-                    example_printer_callback_get_object_pointer_load_function_call
-                #else /* example_printer_callback_get_object_pointer_load_function_call */
-                    load_function<example_printer_callback_get_object_pointer_function_type>(example_printer_callback_get_object_pointer, "example_printer_callback_get_object_pointer");
-                #endif /* example_printer_callback_get_object_pointer_load_function_call */
+                #ifdef example_printer_callback_get_object_pointer_const_load_function_call
+                    example_printer_callback_get_object_pointer_const_load_function_call
+                #else /* example_printer_callback_get_object_pointer_const_load_function_call */
+                    load_function<example_printer_callback_get_object_pointer_const_function_type>(example_printer_callback_get_object_pointer_const, "example_printer_callback_get_object_pointer_const");
+                #endif /* example_printer_callback_get_object_pointer_const_load_function_call */
                 #ifdef example_printer_callback_set_cfunction_for_print_load_function_call
                     example_printer_callback_set_cfunction_for_print_load_function_call
                 #else /* example_printer_callback_set_cfunction_for_print_load_function_call */
@@ -713,21 +713,21 @@ enum beautiful_capi_callback_exception_code_t
                 #else /* example_get_patch_version_zero_function_pointer */
                     example_get_patch_version = 0;
                 #endif /* example_get_patch_version_zero_function_pointer */
-                #ifdef example_printer_print_zero_function_pointer
-                    example_printer_print_zero_function_pointer
-                #else /* example_printer_print_zero_function_pointer */
-                    example_printer_print = 0;
-                #endif /* example_printer_print_zero_function_pointer */
-                #ifdef example_printer_get_device_type_zero_function_pointer
-                    example_printer_get_device_type_zero_function_pointer
-                #else /* example_printer_get_device_type_zero_function_pointer */
-                    example_printer_get_device_type = 0;
-                #endif /* example_printer_get_device_type_zero_function_pointer */
-                #ifdef example_printer_get_printing_quality_zero_function_pointer
-                    example_printer_get_printing_quality_zero_function_pointer
-                #else /* example_printer_get_printing_quality_zero_function_pointer */
-                    example_printer_get_printing_quality = 0;
-                #endif /* example_printer_get_printing_quality_zero_function_pointer */
+                #ifdef example_printer_print_const_zero_function_pointer
+                    example_printer_print_const_zero_function_pointer
+                #else /* example_printer_print_const_zero_function_pointer */
+                    example_printer_print_const = 0;
+                #endif /* example_printer_print_const_zero_function_pointer */
+                #ifdef example_printer_get_device_type_const_zero_function_pointer
+                    example_printer_get_device_type_const_zero_function_pointer
+                #else /* example_printer_get_device_type_const_zero_function_pointer */
+                    example_printer_get_device_type_const = 0;
+                #endif /* example_printer_get_device_type_const_zero_function_pointer */
+                #ifdef example_printer_get_printing_quality_const_zero_function_pointer
+                    example_printer_get_printing_quality_const_zero_function_pointer
+                #else /* example_printer_get_printing_quality_const_zero_function_pointer */
+                    example_printer_get_printing_quality_const = 0;
+                #endif /* example_printer_get_printing_quality_const_zero_function_pointer */
                 #ifdef example_printer_set_printing_quality_zero_function_pointer
                     example_printer_set_printing_quality_zero_function_pointer
                 #else /* example_printer_set_printing_quality_zero_function_pointer */
@@ -753,51 +753,51 @@ enum beautiful_capi_callback_exception_code_t
                 #else /* example_person_set_first_name_zero_function_pointer */
                     example_person_set_first_name = 0;
                 #endif /* example_person_set_first_name_zero_function_pointer */
-                #ifdef example_person_get_first_name_zero_function_pointer
-                    example_person_get_first_name_zero_function_pointer
-                #else /* example_person_get_first_name_zero_function_pointer */
-                    example_person_get_first_name = 0;
-                #endif /* example_person_get_first_name_zero_function_pointer */
+                #ifdef example_person_get_first_name_const_zero_function_pointer
+                    example_person_get_first_name_const_zero_function_pointer
+                #else /* example_person_get_first_name_const_zero_function_pointer */
+                    example_person_get_first_name_const = 0;
+                #endif /* example_person_get_first_name_const_zero_function_pointer */
                 #ifdef example_person_set_second_name_zero_function_pointer
                     example_person_set_second_name_zero_function_pointer
                 #else /* example_person_set_second_name_zero_function_pointer */
                     example_person_set_second_name = 0;
                 #endif /* example_person_set_second_name_zero_function_pointer */
-                #ifdef example_person_get_second_name_zero_function_pointer
-                    example_person_get_second_name_zero_function_pointer
-                #else /* example_person_get_second_name_zero_function_pointer */
-                    example_person_get_second_name = 0;
-                #endif /* example_person_get_second_name_zero_function_pointer */
+                #ifdef example_person_get_second_name_const_zero_function_pointer
+                    example_person_get_second_name_const_zero_function_pointer
+                #else /* example_person_get_second_name_const_zero_function_pointer */
+                    example_person_get_second_name_const = 0;
+                #endif /* example_person_get_second_name_const_zero_function_pointer */
                 #ifdef example_person_set_age_zero_function_pointer
                     example_person_set_age_zero_function_pointer
                 #else /* example_person_set_age_zero_function_pointer */
                     example_person_set_age = 0;
                 #endif /* example_person_set_age_zero_function_pointer */
-                #ifdef example_person_get_age_zero_function_pointer
-                    example_person_get_age_zero_function_pointer
-                #else /* example_person_get_age_zero_function_pointer */
-                    example_person_get_age = 0;
-                #endif /* example_person_get_age_zero_function_pointer */
+                #ifdef example_person_get_age_const_zero_function_pointer
+                    example_person_get_age_const_zero_function_pointer
+                #else /* example_person_get_age_const_zero_function_pointer */
+                    example_person_get_age_const = 0;
+                #endif /* example_person_get_age_const_zero_function_pointer */
                 #ifdef example_person_set_sex_zero_function_pointer
                     example_person_set_sex_zero_function_pointer
                 #else /* example_person_set_sex_zero_function_pointer */
                     example_person_set_sex = 0;
                 #endif /* example_person_set_sex_zero_function_pointer */
-                #ifdef example_person_get_sex_zero_function_pointer
-                    example_person_get_sex_zero_function_pointer
-                #else /* example_person_get_sex_zero_function_pointer */
-                    example_person_get_sex = 0;
-                #endif /* example_person_get_sex_zero_function_pointer */
-                #ifdef example_person_dump_zero_function_pointer
-                    example_person_dump_zero_function_pointer
-                #else /* example_person_dump_zero_function_pointer */
-                    example_person_dump = 0;
-                #endif /* example_person_dump_zero_function_pointer */
-                #ifdef example_person_print_zero_function_pointer
-                    example_person_print_zero_function_pointer
-                #else /* example_person_print_zero_function_pointer */
-                    example_person_print = 0;
-                #endif /* example_person_print_zero_function_pointer */
+                #ifdef example_person_get_sex_const_zero_function_pointer
+                    example_person_get_sex_const_zero_function_pointer
+                #else /* example_person_get_sex_const_zero_function_pointer */
+                    example_person_get_sex_const = 0;
+                #endif /* example_person_get_sex_const_zero_function_pointer */
+                #ifdef example_person_dump_const_zero_function_pointer
+                    example_person_dump_const_zero_function_pointer
+                #else /* example_person_dump_const_zero_function_pointer */
+                    example_person_dump_const = 0;
+                #endif /* example_person_dump_const_zero_function_pointer */
+                #ifdef example_person_print_const_zero_function_pointer
+                    example_person_print_const_zero_function_pointer
+                #else /* example_person_print_const_zero_function_pointer */
+                    example_person_print_const = 0;
+                #endif /* example_person_print_const_zero_function_pointer */
                 #ifdef example_person_copy_zero_function_pointer
                     example_person_copy_zero_function_pointer
                 #else /* example_person_copy_zero_function_pointer */
@@ -818,11 +818,11 @@ enum beautiful_capi_callback_exception_code_t
                 #else /* example_printer_callback_set_object_pointer_zero_function_pointer */
                     example_printer_callback_set_object_pointer = 0;
                 #endif /* example_printer_callback_set_object_pointer_zero_function_pointer */
-                #ifdef example_printer_callback_get_object_pointer_zero_function_pointer
-                    example_printer_callback_get_object_pointer_zero_function_pointer
-                #else /* example_printer_callback_get_object_pointer_zero_function_pointer */
-                    example_printer_callback_get_object_pointer = 0;
-                #endif /* example_printer_callback_get_object_pointer_zero_function_pointer */
+                #ifdef example_printer_callback_get_object_pointer_const_zero_function_pointer
+                    example_printer_callback_get_object_pointer_const_zero_function_pointer
+                #else /* example_printer_callback_get_object_pointer_const_zero_function_pointer */
+                    example_printer_callback_get_object_pointer_const = 0;
+                #endif /* example_printer_callback_get_object_pointer_const_zero_function_pointer */
                 #ifdef example_printer_callback_set_cfunction_for_print_zero_function_pointer
                     example_printer_callback_set_cfunction_for_print_zero_function_pointer
                 #else /* example_printer_callback_set_cfunction_for_print_zero_function_pointer */

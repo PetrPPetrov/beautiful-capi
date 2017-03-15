@@ -39,7 +39,7 @@ inline Example::ModelPtr<float>::ModelPtr()
 
 inline const char* Example::ModelPtr<float>::GetName() const
 {
-    return example_model_float_get_name(GetRawPointer());
+    return example_model_float_get_name_const(GetRawPointer());
 }
 
 inline void Example::ModelPtr<float>::SetName(const char* name)
@@ -49,7 +49,7 @@ inline void Example::ModelPtr<float>::SetName(const char* name)
 
 inline Example::Position<float> Example::ModelPtr<float>::GetPosition() const
 {
-    return Example::Position<float>(Example::Position<float>::force_creating_from_raw_pointer, example_model_float_get_position(GetRawPointer()), false);
+    return Example::Position<float>(Example::Position<float>::force_creating_from_raw_pointer, example_model_float_get_position_const(GetRawPointer()), false);
 }
 
 inline void Example::ModelPtr<float>::SetPosition(const Example::Position<float>& position)

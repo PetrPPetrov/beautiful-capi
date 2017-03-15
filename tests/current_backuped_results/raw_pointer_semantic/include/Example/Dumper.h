@@ -39,7 +39,7 @@ inline Example::Dumper::Dumper()
 
 inline Example::PrinterRawPtr Example::Dumper::GetPrinter() const
 {
-    return Example::PrinterRawPtr(Example::PrinterRawPtr::force_creating_from_raw_pointer, example_dumper_get_printer(GetRawPointer()), false);
+    return Example::PrinterRawPtr(Example::PrinterRawPtr::force_creating_from_raw_pointer, example_dumper_get_printer_const(GetRawPointer()), false);
 }
 
 inline void Example::Dumper::SetPrinter(const Example::PrinterRawPtr& printer)
@@ -49,7 +49,7 @@ inline void Example::Dumper::SetPrinter(const Example::PrinterRawPtr& printer)
 
 inline void Example::Dumper::Dump() const
 {
-    example_dumper_dump(GetRawPointer());
+    example_dumper_dump_const(GetRawPointer());
 }
 
 inline Example::Dumper::Dumper(const Dumper& other)

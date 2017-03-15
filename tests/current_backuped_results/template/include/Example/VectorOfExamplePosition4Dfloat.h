@@ -39,7 +39,7 @@ inline Example::VectorOf<Example::Position4D<float> >::VectorOf()
 
 inline int Example::VectorOf<Example::Position4D<float> >::GetSize() const
 {
-    return example_vector_of_example_position4_d_float_get_size(GetRawPointer());
+    return example_vector_of_example_position4_d_float_get_size_const(GetRawPointer());
 }
 
 inline void Example::VectorOf<Example::Position4D<float> >::Clear()
@@ -54,7 +54,7 @@ inline void Example::VectorOf<Example::Position4D<float> >::PushBack(const Examp
 
 inline Example::Position4D<float> Example::VectorOf<Example::Position4D<float> >::GetItem(int index) const
 {
-    return Example::Position4D<float>(Example::Position4D<float>::force_creating_from_raw_pointer, example_vector_of_example_position4_d_float_get_item(GetRawPointer(), index), false);
+    return Example::Position4D<float>(Example::Position4D<float>::force_creating_from_raw_pointer, example_vector_of_example_position4_d_float_get_item_const(GetRawPointer(), index), false);
 }
 
 inline Example::VectorOf<Example::Position4D<float> >::VectorOf(const VectorOf<Example::Position4D<float> >& other)

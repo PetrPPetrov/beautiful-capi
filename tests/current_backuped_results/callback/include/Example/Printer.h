@@ -35,14 +35,14 @@
 inline void Example::PrinterPtr::Print(const char* text) const
 {
     beautiful_capi_callback_exception_info_t exception_info;
-    example_printer_print(&exception_info, GetRawPointer(), text);
+    example_printer_print_const(&exception_info, GetRawPointer(), text);
     beautiful_capi_Callback::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
 }
 
 inline Example::EPrintingDevice Example::PrinterPtr::GetDeviceType() const
 {
     beautiful_capi_callback_exception_info_t exception_info;
-    Example::EPrintingDevice result(static_cast<Example::EPrintingDevice>(example_printer_get_device_type(&exception_info, GetRawPointer())));
+    Example::EPrintingDevice result(static_cast<Example::EPrintingDevice>(example_printer_get_device_type_const(&exception_info, GetRawPointer())));
     beautiful_capi_Callback::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
     return result;
 }
@@ -50,7 +50,7 @@ inline Example::EPrintingDevice Example::PrinterPtr::GetDeviceType() const
 inline Example::PrinterPtr::EQuality Example::PrinterPtr::GetPrintingQuality() const
 {
     beautiful_capi_callback_exception_info_t exception_info;
-    Example::PrinterPtr::EQuality result(static_cast<Example::PrinterPtr::EQuality>(example_printer_get_printing_quality(&exception_info, GetRawPointer())));
+    Example::PrinterPtr::EQuality result(static_cast<Example::PrinterPtr::EQuality>(example_printer_get_printing_quality_const(&exception_info, GetRawPointer())));
     beautiful_capi_Callback::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
     return result;
 }

@@ -104,11 +104,11 @@
     CIRCULAR_API int CIRCULAR_API_CONVENTION circular_get_patch_version();
     CIRCULAR_API void* CIRCULAR_API_CONVENTION circular_class_a_default();
     CIRCULAR_API void CIRCULAR_API_CONVENTION circular_class_a_set_b(void* object_pointer, void* value);
-    CIRCULAR_API void* CIRCULAR_API_CONVENTION circular_class_a_get_b(void* object_pointer);
+    CIRCULAR_API void* CIRCULAR_API_CONVENTION circular_class_a_get_b_const(void* object_pointer);
     CIRCULAR_API void CIRCULAR_API_CONVENTION circular_class_a_delete(void* object_pointer);
     CIRCULAR_API void* CIRCULAR_API_CONVENTION circular_class_b_default();
     CIRCULAR_API void CIRCULAR_API_CONVENTION circular_class_b_set_a(void* object_pointer, void* value);
-    CIRCULAR_API void* CIRCULAR_API_CONVENTION circular_class_b_get_a(void* object_pointer);
+    CIRCULAR_API void* CIRCULAR_API_CONVENTION circular_class_b_get_a_const(void* object_pointer);
     CIRCULAR_API void CIRCULAR_API_CONVENTION circular_class_b_delete(void* object_pointer);
 
     #ifdef __cplusplus
@@ -147,11 +147,11 @@
     typedef int (CIRCULAR_API_CONVENTION *circular_get_patch_version_function_type)();
     typedef void* (CIRCULAR_API_CONVENTION *circular_class_a_default_function_type)();
     typedef void (CIRCULAR_API_CONVENTION *circular_class_a_set_b_function_type)(void* object_pointer, void* value);
-    typedef void* (CIRCULAR_API_CONVENTION *circular_class_a_get_b_function_type)(void* object_pointer);
+    typedef void* (CIRCULAR_API_CONVENTION *circular_class_a_get_b_const_function_type)(void* object_pointer);
     typedef void (CIRCULAR_API_CONVENTION *circular_class_a_delete_function_type)(void* object_pointer);
     typedef void* (CIRCULAR_API_CONVENTION *circular_class_b_default_function_type)();
     typedef void (CIRCULAR_API_CONVENTION *circular_class_b_set_a_function_type)(void* object_pointer, void* value);
-    typedef void* (CIRCULAR_API_CONVENTION *circular_class_b_get_a_function_type)(void* object_pointer);
+    typedef void* (CIRCULAR_API_CONVENTION *circular_class_b_get_a_const_function_type)(void* object_pointer);
     typedef void (CIRCULAR_API_CONVENTION *circular_class_b_delete_function_type)(void* object_pointer);
 
     #ifdef CIRCULAR_CAPI_DEFINE_FUNCTION_POINTERS
@@ -181,10 +181,10 @@
         #else
             circular_class_a_set_b_function_type circular_class_a_set_b = 0;
         #endif
-        #ifdef circular_class_a_get_b_define_function_pointer_var
-            circular_class_a_get_b_define_function_pointer_var
+        #ifdef circular_class_a_get_b_const_define_function_pointer_var
+            circular_class_a_get_b_const_define_function_pointer_var
         #else
-            circular_class_a_get_b_function_type circular_class_a_get_b = 0;
+            circular_class_a_get_b_const_function_type circular_class_a_get_b_const = 0;
         #endif
         #ifdef circular_class_a_delete_define_function_pointer_var
             circular_class_a_delete_define_function_pointer_var
@@ -201,10 +201,10 @@
         #else
             circular_class_b_set_a_function_type circular_class_b_set_a = 0;
         #endif
-        #ifdef circular_class_b_get_a_define_function_pointer_var
-            circular_class_b_get_a_define_function_pointer_var
+        #ifdef circular_class_b_get_a_const_define_function_pointer_var
+            circular_class_b_get_a_const_define_function_pointer_var
         #else
-            circular_class_b_get_a_function_type circular_class_b_get_a = 0;
+            circular_class_b_get_a_const_function_type circular_class_b_get_a_const = 0;
         #endif
         #ifdef circular_class_b_delete_define_function_pointer_var
             circular_class_b_delete_define_function_pointer_var
@@ -219,11 +219,11 @@
         extern circular_get_patch_version_function_type circular_get_patch_version;
         extern circular_class_a_default_function_type circular_class_a_default;
         extern circular_class_a_set_b_function_type circular_class_a_set_b;
-        extern circular_class_a_get_b_function_type circular_class_a_get_b;
+        extern circular_class_a_get_b_const_function_type circular_class_a_get_b_const;
         extern circular_class_a_delete_function_type circular_class_a_delete;
         extern circular_class_b_default_function_type circular_class_b_default;
         extern circular_class_b_set_a_function_type circular_class_b_set_a;
-        extern circular_class_b_get_a_function_type circular_class_b_get_a;
+        extern circular_class_b_get_a_const_function_type circular_class_b_get_a_const;
         extern circular_class_b_delete_function_type circular_class_b_delete;
 
     #endif /* CIRCULAR_CAPI_DEFINE_FUNCTION_POINTERS */
@@ -304,11 +304,11 @@
                 #else /* circular_class_a_set_b_load_function_call */
                     load_function<circular_class_a_set_b_function_type>(circular_class_a_set_b, "circular_class_a_set_b");
                 #endif /* circular_class_a_set_b_load_function_call */
-                #ifdef circular_class_a_get_b_load_function_call
-                    circular_class_a_get_b_load_function_call
-                #else /* circular_class_a_get_b_load_function_call */
-                    load_function<circular_class_a_get_b_function_type>(circular_class_a_get_b, "circular_class_a_get_b");
-                #endif /* circular_class_a_get_b_load_function_call */
+                #ifdef circular_class_a_get_b_const_load_function_call
+                    circular_class_a_get_b_const_load_function_call
+                #else /* circular_class_a_get_b_const_load_function_call */
+                    load_function<circular_class_a_get_b_const_function_type>(circular_class_a_get_b_const, "circular_class_a_get_b_const");
+                #endif /* circular_class_a_get_b_const_load_function_call */
                 #ifdef circular_class_a_delete_load_function_call
                     circular_class_a_delete_load_function_call
                 #else /* circular_class_a_delete_load_function_call */
@@ -324,11 +324,11 @@
                 #else /* circular_class_b_set_a_load_function_call */
                     load_function<circular_class_b_set_a_function_type>(circular_class_b_set_a, "circular_class_b_set_a");
                 #endif /* circular_class_b_set_a_load_function_call */
-                #ifdef circular_class_b_get_a_load_function_call
-                    circular_class_b_get_a_load_function_call
-                #else /* circular_class_b_get_a_load_function_call */
-                    load_function<circular_class_b_get_a_function_type>(circular_class_b_get_a, "circular_class_b_get_a");
-                #endif /* circular_class_b_get_a_load_function_call */
+                #ifdef circular_class_b_get_a_const_load_function_call
+                    circular_class_b_get_a_const_load_function_call
+                #else /* circular_class_b_get_a_const_load_function_call */
+                    load_function<circular_class_b_get_a_const_function_type>(circular_class_b_get_a_const, "circular_class_b_get_a_const");
+                #endif /* circular_class_b_get_a_const_load_function_call */
                 #ifdef circular_class_b_delete_load_function_call
                     circular_class_b_delete_load_function_call
                 #else /* circular_class_b_delete_load_function_call */
@@ -389,11 +389,11 @@
                 #else /* circular_class_a_set_b_zero_function_pointer */
                     circular_class_a_set_b = 0;
                 #endif /* circular_class_a_set_b_zero_function_pointer */
-                #ifdef circular_class_a_get_b_zero_function_pointer
-                    circular_class_a_get_b_zero_function_pointer
-                #else /* circular_class_a_get_b_zero_function_pointer */
-                    circular_class_a_get_b = 0;
-                #endif /* circular_class_a_get_b_zero_function_pointer */
+                #ifdef circular_class_a_get_b_const_zero_function_pointer
+                    circular_class_a_get_b_const_zero_function_pointer
+                #else /* circular_class_a_get_b_const_zero_function_pointer */
+                    circular_class_a_get_b_const = 0;
+                #endif /* circular_class_a_get_b_const_zero_function_pointer */
                 #ifdef circular_class_a_delete_zero_function_pointer
                     circular_class_a_delete_zero_function_pointer
                 #else /* circular_class_a_delete_zero_function_pointer */
@@ -409,11 +409,11 @@
                 #else /* circular_class_b_set_a_zero_function_pointer */
                     circular_class_b_set_a = 0;
                 #endif /* circular_class_b_set_a_zero_function_pointer */
-                #ifdef circular_class_b_get_a_zero_function_pointer
-                    circular_class_b_get_a_zero_function_pointer
-                #else /* circular_class_b_get_a_zero_function_pointer */
-                    circular_class_b_get_a = 0;
-                #endif /* circular_class_b_get_a_zero_function_pointer */
+                #ifdef circular_class_b_get_a_const_zero_function_pointer
+                    circular_class_b_get_a_const_zero_function_pointer
+                #else /* circular_class_b_get_a_const_zero_function_pointer */
+                    circular_class_b_get_a_const = 0;
+                #endif /* circular_class_b_get_a_const_zero_function_pointer */
                 #ifdef circular_class_b_delete_zero_function_pointer
                     circular_class_b_delete_zero_function_pointer
                 #else /* circular_class_b_delete_zero_function_pointer */

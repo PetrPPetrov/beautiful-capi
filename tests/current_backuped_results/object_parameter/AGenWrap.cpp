@@ -98,7 +98,7 @@ EXAMPLE_API void* EXAMPLE_API_CONVENTION example_page_default()
     return new Example::PageImpl();
 }
 
-EXAMPLE_API size_t EXAMPLE_API_CONVENTION example_page_get_width(void* object_pointer)
+EXAMPLE_API size_t EXAMPLE_API_CONVENTION example_page_get_width_const(void* object_pointer)
 {
     const Example::PageImpl* self = static_cast<Example::PageImpl*>(object_pointer);
     return self->GetWidth();
@@ -110,7 +110,7 @@ EXAMPLE_API void EXAMPLE_API_CONVENTION example_page_set_width(void* object_poin
     self->SetWidth(value);
 }
 
-EXAMPLE_API size_t EXAMPLE_API_CONVENTION example_page_get_height(void* object_pointer)
+EXAMPLE_API size_t EXAMPLE_API_CONVENTION example_page_get_height_const(void* object_pointer)
 {
     const Example::PageImpl* self = static_cast<Example::PageImpl*>(object_pointer);
     return self->GetHeight();
@@ -137,13 +137,13 @@ EXAMPLE_API void* EXAMPLE_API_CONVENTION example_document_default()
     return new Example::DocumentImpl();
 }
 
-EXAMPLE_API void EXAMPLE_API_CONVENTION example_document_show(void* object_pointer)
+EXAMPLE_API void EXAMPLE_API_CONVENTION example_document_show_const(void* object_pointer)
 {
     const Example::DocumentImpl* self = static_cast<Example::DocumentImpl*>(object_pointer);
     self->Show();
 }
 
-EXAMPLE_API void* EXAMPLE_API_CONVENTION example_document_get_page(void* object_pointer)
+EXAMPLE_API void* EXAMPLE_API_CONVENTION example_document_get_page_const(void* object_pointer)
 {
     const Example::DocumentImpl* self = static_cast<Example::DocumentImpl*>(object_pointer);
     return self->GetPage();

@@ -104,37 +104,37 @@
     UNITTEST_API int UNITTEST_API_CONVENTION unit_test_get_patch_version();
     UNITTEST_API void* UNITTEST_API_CONVENTION unit_test_name_full_name(const char* FirstName, const char* MiddleName, const char* LastName);
     UNITTEST_API const char* UNITTEST_API_CONVENTION unit_test_name_get_full_name(void* object_pointer);
-    UNITTEST_API const char* UNITTEST_API_CONVENTION unit_test_name_get_first_name(void* object_pointer);
+    UNITTEST_API const char* UNITTEST_API_CONVENTION unit_test_name_get_first_name_const(void* object_pointer);
     UNITTEST_API void UNITTEST_API_CONVENTION unit_test_name_set_first_name(void* object_pointer, const char* value);
-    UNITTEST_API const char* UNITTEST_API_CONVENTION unit_test_name_get_middle_name(void* object_pointer);
+    UNITTEST_API const char* UNITTEST_API_CONVENTION unit_test_name_get_middle_name_const(void* object_pointer);
     UNITTEST_API void UNITTEST_API_CONVENTION unit_test_name_set_middle_name(void* object_pointer, const char* value);
-    UNITTEST_API const char* UNITTEST_API_CONVENTION unit_test_name_get_last_name(void* object_pointer);
+    UNITTEST_API const char* UNITTEST_API_CONVENTION unit_test_name_get_last_name_const(void* object_pointer);
     UNITTEST_API void UNITTEST_API_CONVENTION unit_test_name_set_last_name(void* object_pointer, const char* value);
     UNITTEST_API void* UNITTEST_API_CONVENTION unit_test_name_copy(void* object_pointer);
     UNITTEST_API void UNITTEST_API_CONVENTION unit_test_name_delete(void* object_pointer);
     UNITTEST_API void* UNITTEST_API_CONVENTION unit_test_address_default();
-    UNITTEST_API const char* UNITTEST_API_CONVENTION unit_test_address_get_street_name(void* object_pointer);
+    UNITTEST_API const char* UNITTEST_API_CONVENTION unit_test_address_get_street_name_const(void* object_pointer);
     UNITTEST_API void UNITTEST_API_CONVENTION unit_test_address_set_street_name(void* object_pointer, const char* value);
-    UNITTEST_API const char* UNITTEST_API_CONVENTION unit_test_address_get_city(void* object_pointer);
+    UNITTEST_API const char* UNITTEST_API_CONVENTION unit_test_address_get_city_const(void* object_pointer);
     UNITTEST_API void UNITTEST_API_CONVENTION unit_test_address_set_city(void* object_pointer, const char* value);
-    UNITTEST_API unsigned int UNITTEST_API_CONVENTION unit_test_address_get_state(void* object_pointer);
+    UNITTEST_API unsigned int UNITTEST_API_CONVENTION unit_test_address_get_state_const(void* object_pointer);
     UNITTEST_API void UNITTEST_API_CONVENTION unit_test_address_set_state(void* object_pointer, unsigned int value);
-    UNITTEST_API unsigned int UNITTEST_API_CONVENTION unit_test_address_get_zip_code(void* object_pointer);
+    UNITTEST_API unsigned int UNITTEST_API_CONVENTION unit_test_address_get_zip_code_const(void* object_pointer);
     UNITTEST_API void UNITTEST_API_CONVENTION unit_test_address_set_zip_code(void* object_pointer, unsigned int value);
     UNITTEST_API void UNITTEST_API_CONVENTION unit_test_address_add_ref(void* object_pointer);
     UNITTEST_API void UNITTEST_API_CONVENTION unit_test_address_release(void* object_pointer);
     UNITTEST_API void* UNITTEST_API_CONVENTION unit_test_person_default();
-    UNITTEST_API void* UNITTEST_API_CONVENTION unit_test_person_get_name(void* object_pointer);
+    UNITTEST_API void* UNITTEST_API_CONVENTION unit_test_person_get_name_const(void* object_pointer);
     UNITTEST_API void UNITTEST_API_CONVENTION unit_test_person_set_name(void* object_pointer, void* value);
-    UNITTEST_API void* UNITTEST_API_CONVENTION unit_test_person_get_address(void* object_pointer);
+    UNITTEST_API void* UNITTEST_API_CONVENTION unit_test_person_get_address_const(void* object_pointer);
     UNITTEST_API void UNITTEST_API_CONVENTION unit_test_person_set_address(void* object_pointer, void* value);
-    UNITTEST_API unsigned char UNITTEST_API_CONVENTION unit_test_person_get_age(void* object_pointer);
+    UNITTEST_API unsigned char UNITTEST_API_CONVENTION unit_test_person_get_age_const(void* object_pointer);
     UNITTEST_API void UNITTEST_API_CONVENTION unit_test_person_set_age(void* object_pointer, unsigned char value);
-    UNITTEST_API unsigned int UNITTEST_API_CONVENTION unit_test_person_get_sex(void* object_pointer);
+    UNITTEST_API unsigned int UNITTEST_API_CONVENTION unit_test_person_get_sex_const(void* object_pointer);
     UNITTEST_API void UNITTEST_API_CONVENTION unit_test_person_set_sex(void* object_pointer, unsigned int value);
-    UNITTEST_API void* UNITTEST_API_CONVENTION unit_test_person_get_mother(void* object_pointer);
+    UNITTEST_API void* UNITTEST_API_CONVENTION unit_test_person_get_mother_const(void* object_pointer);
     UNITTEST_API void UNITTEST_API_CONVENTION unit_test_person_set_mother(void* object_pointer, void* value);
-    UNITTEST_API void* UNITTEST_API_CONVENTION unit_test_person_get_father(void* object_pointer);
+    UNITTEST_API void* UNITTEST_API_CONVENTION unit_test_person_get_father_const(void* object_pointer);
     UNITTEST_API void UNITTEST_API_CONVENTION unit_test_person_set_father(void* object_pointer, void* value);
     UNITTEST_API void UNITTEST_API_CONVENTION unit_test_person_delete(void* object_pointer);
 
@@ -174,37 +174,37 @@
     typedef int (UNITTEST_API_CONVENTION *unit_test_get_patch_version_function_type)();
     typedef void* (UNITTEST_API_CONVENTION *unit_test_name_full_name_function_type)(const char* FirstName, const char* MiddleName, const char* LastName);
     typedef const char* (UNITTEST_API_CONVENTION *unit_test_name_get_full_name_function_type)(void* object_pointer);
-    typedef const char* (UNITTEST_API_CONVENTION *unit_test_name_get_first_name_function_type)(void* object_pointer);
+    typedef const char* (UNITTEST_API_CONVENTION *unit_test_name_get_first_name_const_function_type)(void* object_pointer);
     typedef void (UNITTEST_API_CONVENTION *unit_test_name_set_first_name_function_type)(void* object_pointer, const char* value);
-    typedef const char* (UNITTEST_API_CONVENTION *unit_test_name_get_middle_name_function_type)(void* object_pointer);
+    typedef const char* (UNITTEST_API_CONVENTION *unit_test_name_get_middle_name_const_function_type)(void* object_pointer);
     typedef void (UNITTEST_API_CONVENTION *unit_test_name_set_middle_name_function_type)(void* object_pointer, const char* value);
-    typedef const char* (UNITTEST_API_CONVENTION *unit_test_name_get_last_name_function_type)(void* object_pointer);
+    typedef const char* (UNITTEST_API_CONVENTION *unit_test_name_get_last_name_const_function_type)(void* object_pointer);
     typedef void (UNITTEST_API_CONVENTION *unit_test_name_set_last_name_function_type)(void* object_pointer, const char* value);
     typedef void* (UNITTEST_API_CONVENTION *unit_test_name_copy_function_type)(void* object_pointer);
     typedef void (UNITTEST_API_CONVENTION *unit_test_name_delete_function_type)(void* object_pointer);
     typedef void* (UNITTEST_API_CONVENTION *unit_test_address_default_function_type)();
-    typedef const char* (UNITTEST_API_CONVENTION *unit_test_address_get_street_name_function_type)(void* object_pointer);
+    typedef const char* (UNITTEST_API_CONVENTION *unit_test_address_get_street_name_const_function_type)(void* object_pointer);
     typedef void (UNITTEST_API_CONVENTION *unit_test_address_set_street_name_function_type)(void* object_pointer, const char* value);
-    typedef const char* (UNITTEST_API_CONVENTION *unit_test_address_get_city_function_type)(void* object_pointer);
+    typedef const char* (UNITTEST_API_CONVENTION *unit_test_address_get_city_const_function_type)(void* object_pointer);
     typedef void (UNITTEST_API_CONVENTION *unit_test_address_set_city_function_type)(void* object_pointer, const char* value);
-    typedef unsigned int (UNITTEST_API_CONVENTION *unit_test_address_get_state_function_type)(void* object_pointer);
+    typedef unsigned int (UNITTEST_API_CONVENTION *unit_test_address_get_state_const_function_type)(void* object_pointer);
     typedef void (UNITTEST_API_CONVENTION *unit_test_address_set_state_function_type)(void* object_pointer, unsigned int value);
-    typedef unsigned int (UNITTEST_API_CONVENTION *unit_test_address_get_zip_code_function_type)(void* object_pointer);
+    typedef unsigned int (UNITTEST_API_CONVENTION *unit_test_address_get_zip_code_const_function_type)(void* object_pointer);
     typedef void (UNITTEST_API_CONVENTION *unit_test_address_set_zip_code_function_type)(void* object_pointer, unsigned int value);
     typedef void (UNITTEST_API_CONVENTION *unit_test_address_add_ref_function_type)(void* object_pointer);
     typedef void (UNITTEST_API_CONVENTION *unit_test_address_release_function_type)(void* object_pointer);
     typedef void* (UNITTEST_API_CONVENTION *unit_test_person_default_function_type)();
-    typedef void* (UNITTEST_API_CONVENTION *unit_test_person_get_name_function_type)(void* object_pointer);
+    typedef void* (UNITTEST_API_CONVENTION *unit_test_person_get_name_const_function_type)(void* object_pointer);
     typedef void (UNITTEST_API_CONVENTION *unit_test_person_set_name_function_type)(void* object_pointer, void* value);
-    typedef void* (UNITTEST_API_CONVENTION *unit_test_person_get_address_function_type)(void* object_pointer);
+    typedef void* (UNITTEST_API_CONVENTION *unit_test_person_get_address_const_function_type)(void* object_pointer);
     typedef void (UNITTEST_API_CONVENTION *unit_test_person_set_address_function_type)(void* object_pointer, void* value);
-    typedef unsigned char (UNITTEST_API_CONVENTION *unit_test_person_get_age_function_type)(void* object_pointer);
+    typedef unsigned char (UNITTEST_API_CONVENTION *unit_test_person_get_age_const_function_type)(void* object_pointer);
     typedef void (UNITTEST_API_CONVENTION *unit_test_person_set_age_function_type)(void* object_pointer, unsigned char value);
-    typedef unsigned int (UNITTEST_API_CONVENTION *unit_test_person_get_sex_function_type)(void* object_pointer);
+    typedef unsigned int (UNITTEST_API_CONVENTION *unit_test_person_get_sex_const_function_type)(void* object_pointer);
     typedef void (UNITTEST_API_CONVENTION *unit_test_person_set_sex_function_type)(void* object_pointer, unsigned int value);
-    typedef void* (UNITTEST_API_CONVENTION *unit_test_person_get_mother_function_type)(void* object_pointer);
+    typedef void* (UNITTEST_API_CONVENTION *unit_test_person_get_mother_const_function_type)(void* object_pointer);
     typedef void (UNITTEST_API_CONVENTION *unit_test_person_set_mother_function_type)(void* object_pointer, void* value);
-    typedef void* (UNITTEST_API_CONVENTION *unit_test_person_get_father_function_type)(void* object_pointer);
+    typedef void* (UNITTEST_API_CONVENTION *unit_test_person_get_father_const_function_type)(void* object_pointer);
     typedef void (UNITTEST_API_CONVENTION *unit_test_person_set_father_function_type)(void* object_pointer, void* value);
     typedef void (UNITTEST_API_CONVENTION *unit_test_person_delete_function_type)(void* object_pointer);
 
@@ -235,30 +235,30 @@
         #else
             unit_test_name_get_full_name_function_type unit_test_name_get_full_name = 0;
         #endif
-        #ifdef unit_test_name_get_first_name_define_function_pointer_var
-            unit_test_name_get_first_name_define_function_pointer_var
+        #ifdef unit_test_name_get_first_name_const_define_function_pointer_var
+            unit_test_name_get_first_name_const_define_function_pointer_var
         #else
-            unit_test_name_get_first_name_function_type unit_test_name_get_first_name = 0;
+            unit_test_name_get_first_name_const_function_type unit_test_name_get_first_name_const = 0;
         #endif
         #ifdef unit_test_name_set_first_name_define_function_pointer_var
             unit_test_name_set_first_name_define_function_pointer_var
         #else
             unit_test_name_set_first_name_function_type unit_test_name_set_first_name = 0;
         #endif
-        #ifdef unit_test_name_get_middle_name_define_function_pointer_var
-            unit_test_name_get_middle_name_define_function_pointer_var
+        #ifdef unit_test_name_get_middle_name_const_define_function_pointer_var
+            unit_test_name_get_middle_name_const_define_function_pointer_var
         #else
-            unit_test_name_get_middle_name_function_type unit_test_name_get_middle_name = 0;
+            unit_test_name_get_middle_name_const_function_type unit_test_name_get_middle_name_const = 0;
         #endif
         #ifdef unit_test_name_set_middle_name_define_function_pointer_var
             unit_test_name_set_middle_name_define_function_pointer_var
         #else
             unit_test_name_set_middle_name_function_type unit_test_name_set_middle_name = 0;
         #endif
-        #ifdef unit_test_name_get_last_name_define_function_pointer_var
-            unit_test_name_get_last_name_define_function_pointer_var
+        #ifdef unit_test_name_get_last_name_const_define_function_pointer_var
+            unit_test_name_get_last_name_const_define_function_pointer_var
         #else
-            unit_test_name_get_last_name_function_type unit_test_name_get_last_name = 0;
+            unit_test_name_get_last_name_const_function_type unit_test_name_get_last_name_const = 0;
         #endif
         #ifdef unit_test_name_set_last_name_define_function_pointer_var
             unit_test_name_set_last_name_define_function_pointer_var
@@ -280,40 +280,40 @@
         #else
             unit_test_address_default_function_type unit_test_address_default = 0;
         #endif
-        #ifdef unit_test_address_get_street_name_define_function_pointer_var
-            unit_test_address_get_street_name_define_function_pointer_var
+        #ifdef unit_test_address_get_street_name_const_define_function_pointer_var
+            unit_test_address_get_street_name_const_define_function_pointer_var
         #else
-            unit_test_address_get_street_name_function_type unit_test_address_get_street_name = 0;
+            unit_test_address_get_street_name_const_function_type unit_test_address_get_street_name_const = 0;
         #endif
         #ifdef unit_test_address_set_street_name_define_function_pointer_var
             unit_test_address_set_street_name_define_function_pointer_var
         #else
             unit_test_address_set_street_name_function_type unit_test_address_set_street_name = 0;
         #endif
-        #ifdef unit_test_address_get_city_define_function_pointer_var
-            unit_test_address_get_city_define_function_pointer_var
+        #ifdef unit_test_address_get_city_const_define_function_pointer_var
+            unit_test_address_get_city_const_define_function_pointer_var
         #else
-            unit_test_address_get_city_function_type unit_test_address_get_city = 0;
+            unit_test_address_get_city_const_function_type unit_test_address_get_city_const = 0;
         #endif
         #ifdef unit_test_address_set_city_define_function_pointer_var
             unit_test_address_set_city_define_function_pointer_var
         #else
             unit_test_address_set_city_function_type unit_test_address_set_city = 0;
         #endif
-        #ifdef unit_test_address_get_state_define_function_pointer_var
-            unit_test_address_get_state_define_function_pointer_var
+        #ifdef unit_test_address_get_state_const_define_function_pointer_var
+            unit_test_address_get_state_const_define_function_pointer_var
         #else
-            unit_test_address_get_state_function_type unit_test_address_get_state = 0;
+            unit_test_address_get_state_const_function_type unit_test_address_get_state_const = 0;
         #endif
         #ifdef unit_test_address_set_state_define_function_pointer_var
             unit_test_address_set_state_define_function_pointer_var
         #else
             unit_test_address_set_state_function_type unit_test_address_set_state = 0;
         #endif
-        #ifdef unit_test_address_get_zip_code_define_function_pointer_var
-            unit_test_address_get_zip_code_define_function_pointer_var
+        #ifdef unit_test_address_get_zip_code_const_define_function_pointer_var
+            unit_test_address_get_zip_code_const_define_function_pointer_var
         #else
-            unit_test_address_get_zip_code_function_type unit_test_address_get_zip_code = 0;
+            unit_test_address_get_zip_code_const_function_type unit_test_address_get_zip_code_const = 0;
         #endif
         #ifdef unit_test_address_set_zip_code_define_function_pointer_var
             unit_test_address_set_zip_code_define_function_pointer_var
@@ -335,60 +335,60 @@
         #else
             unit_test_person_default_function_type unit_test_person_default = 0;
         #endif
-        #ifdef unit_test_person_get_name_define_function_pointer_var
-            unit_test_person_get_name_define_function_pointer_var
+        #ifdef unit_test_person_get_name_const_define_function_pointer_var
+            unit_test_person_get_name_const_define_function_pointer_var
         #else
-            unit_test_person_get_name_function_type unit_test_person_get_name = 0;
+            unit_test_person_get_name_const_function_type unit_test_person_get_name_const = 0;
         #endif
         #ifdef unit_test_person_set_name_define_function_pointer_var
             unit_test_person_set_name_define_function_pointer_var
         #else
             unit_test_person_set_name_function_type unit_test_person_set_name = 0;
         #endif
-        #ifdef unit_test_person_get_address_define_function_pointer_var
-            unit_test_person_get_address_define_function_pointer_var
+        #ifdef unit_test_person_get_address_const_define_function_pointer_var
+            unit_test_person_get_address_const_define_function_pointer_var
         #else
-            unit_test_person_get_address_function_type unit_test_person_get_address = 0;
+            unit_test_person_get_address_const_function_type unit_test_person_get_address_const = 0;
         #endif
         #ifdef unit_test_person_set_address_define_function_pointer_var
             unit_test_person_set_address_define_function_pointer_var
         #else
             unit_test_person_set_address_function_type unit_test_person_set_address = 0;
         #endif
-        #ifdef unit_test_person_get_age_define_function_pointer_var
-            unit_test_person_get_age_define_function_pointer_var
+        #ifdef unit_test_person_get_age_const_define_function_pointer_var
+            unit_test_person_get_age_const_define_function_pointer_var
         #else
-            unit_test_person_get_age_function_type unit_test_person_get_age = 0;
+            unit_test_person_get_age_const_function_type unit_test_person_get_age_const = 0;
         #endif
         #ifdef unit_test_person_set_age_define_function_pointer_var
             unit_test_person_set_age_define_function_pointer_var
         #else
             unit_test_person_set_age_function_type unit_test_person_set_age = 0;
         #endif
-        #ifdef unit_test_person_get_sex_define_function_pointer_var
-            unit_test_person_get_sex_define_function_pointer_var
+        #ifdef unit_test_person_get_sex_const_define_function_pointer_var
+            unit_test_person_get_sex_const_define_function_pointer_var
         #else
-            unit_test_person_get_sex_function_type unit_test_person_get_sex = 0;
+            unit_test_person_get_sex_const_function_type unit_test_person_get_sex_const = 0;
         #endif
         #ifdef unit_test_person_set_sex_define_function_pointer_var
             unit_test_person_set_sex_define_function_pointer_var
         #else
             unit_test_person_set_sex_function_type unit_test_person_set_sex = 0;
         #endif
-        #ifdef unit_test_person_get_mother_define_function_pointer_var
-            unit_test_person_get_mother_define_function_pointer_var
+        #ifdef unit_test_person_get_mother_const_define_function_pointer_var
+            unit_test_person_get_mother_const_define_function_pointer_var
         #else
-            unit_test_person_get_mother_function_type unit_test_person_get_mother = 0;
+            unit_test_person_get_mother_const_function_type unit_test_person_get_mother_const = 0;
         #endif
         #ifdef unit_test_person_set_mother_define_function_pointer_var
             unit_test_person_set_mother_define_function_pointer_var
         #else
             unit_test_person_set_mother_function_type unit_test_person_set_mother = 0;
         #endif
-        #ifdef unit_test_person_get_father_define_function_pointer_var
-            unit_test_person_get_father_define_function_pointer_var
+        #ifdef unit_test_person_get_father_const_define_function_pointer_var
+            unit_test_person_get_father_const_define_function_pointer_var
         #else
-            unit_test_person_get_father_function_type unit_test_person_get_father = 0;
+            unit_test_person_get_father_const_function_type unit_test_person_get_father_const = 0;
         #endif
         #ifdef unit_test_person_set_father_define_function_pointer_var
             unit_test_person_set_father_define_function_pointer_var
@@ -408,37 +408,37 @@
         extern unit_test_get_patch_version_function_type unit_test_get_patch_version;
         extern unit_test_name_full_name_function_type unit_test_name_full_name;
         extern unit_test_name_get_full_name_function_type unit_test_name_get_full_name;
-        extern unit_test_name_get_first_name_function_type unit_test_name_get_first_name;
+        extern unit_test_name_get_first_name_const_function_type unit_test_name_get_first_name_const;
         extern unit_test_name_set_first_name_function_type unit_test_name_set_first_name;
-        extern unit_test_name_get_middle_name_function_type unit_test_name_get_middle_name;
+        extern unit_test_name_get_middle_name_const_function_type unit_test_name_get_middle_name_const;
         extern unit_test_name_set_middle_name_function_type unit_test_name_set_middle_name;
-        extern unit_test_name_get_last_name_function_type unit_test_name_get_last_name;
+        extern unit_test_name_get_last_name_const_function_type unit_test_name_get_last_name_const;
         extern unit_test_name_set_last_name_function_type unit_test_name_set_last_name;
         extern unit_test_name_copy_function_type unit_test_name_copy;
         extern unit_test_name_delete_function_type unit_test_name_delete;
         extern unit_test_address_default_function_type unit_test_address_default;
-        extern unit_test_address_get_street_name_function_type unit_test_address_get_street_name;
+        extern unit_test_address_get_street_name_const_function_type unit_test_address_get_street_name_const;
         extern unit_test_address_set_street_name_function_type unit_test_address_set_street_name;
-        extern unit_test_address_get_city_function_type unit_test_address_get_city;
+        extern unit_test_address_get_city_const_function_type unit_test_address_get_city_const;
         extern unit_test_address_set_city_function_type unit_test_address_set_city;
-        extern unit_test_address_get_state_function_type unit_test_address_get_state;
+        extern unit_test_address_get_state_const_function_type unit_test_address_get_state_const;
         extern unit_test_address_set_state_function_type unit_test_address_set_state;
-        extern unit_test_address_get_zip_code_function_type unit_test_address_get_zip_code;
+        extern unit_test_address_get_zip_code_const_function_type unit_test_address_get_zip_code_const;
         extern unit_test_address_set_zip_code_function_type unit_test_address_set_zip_code;
         extern unit_test_address_add_ref_function_type unit_test_address_add_ref;
         extern unit_test_address_release_function_type unit_test_address_release;
         extern unit_test_person_default_function_type unit_test_person_default;
-        extern unit_test_person_get_name_function_type unit_test_person_get_name;
+        extern unit_test_person_get_name_const_function_type unit_test_person_get_name_const;
         extern unit_test_person_set_name_function_type unit_test_person_set_name;
-        extern unit_test_person_get_address_function_type unit_test_person_get_address;
+        extern unit_test_person_get_address_const_function_type unit_test_person_get_address_const;
         extern unit_test_person_set_address_function_type unit_test_person_set_address;
-        extern unit_test_person_get_age_function_type unit_test_person_get_age;
+        extern unit_test_person_get_age_const_function_type unit_test_person_get_age_const;
         extern unit_test_person_set_age_function_type unit_test_person_set_age;
-        extern unit_test_person_get_sex_function_type unit_test_person_get_sex;
+        extern unit_test_person_get_sex_const_function_type unit_test_person_get_sex_const;
         extern unit_test_person_set_sex_function_type unit_test_person_set_sex;
-        extern unit_test_person_get_mother_function_type unit_test_person_get_mother;
+        extern unit_test_person_get_mother_const_function_type unit_test_person_get_mother_const;
         extern unit_test_person_set_mother_function_type unit_test_person_set_mother;
-        extern unit_test_person_get_father_function_type unit_test_person_get_father;
+        extern unit_test_person_get_father_const_function_type unit_test_person_get_father_const;
         extern unit_test_person_set_father_function_type unit_test_person_set_father;
         extern unit_test_person_delete_function_type unit_test_person_delete;
 
@@ -520,31 +520,31 @@
                 #else /* unit_test_name_get_full_name_load_function_call */
                     load_function<unit_test_name_get_full_name_function_type>(unit_test_name_get_full_name, "unit_test_name_get_full_name");
                 #endif /* unit_test_name_get_full_name_load_function_call */
-                #ifdef unit_test_name_get_first_name_load_function_call
-                    unit_test_name_get_first_name_load_function_call
-                #else /* unit_test_name_get_first_name_load_function_call */
-                    load_function<unit_test_name_get_first_name_function_type>(unit_test_name_get_first_name, "unit_test_name_get_first_name");
-                #endif /* unit_test_name_get_first_name_load_function_call */
+                #ifdef unit_test_name_get_first_name_const_load_function_call
+                    unit_test_name_get_first_name_const_load_function_call
+                #else /* unit_test_name_get_first_name_const_load_function_call */
+                    load_function<unit_test_name_get_first_name_const_function_type>(unit_test_name_get_first_name_const, "unit_test_name_get_first_name_const");
+                #endif /* unit_test_name_get_first_name_const_load_function_call */
                 #ifdef unit_test_name_set_first_name_load_function_call
                     unit_test_name_set_first_name_load_function_call
                 #else /* unit_test_name_set_first_name_load_function_call */
                     load_function<unit_test_name_set_first_name_function_type>(unit_test_name_set_first_name, "unit_test_name_set_first_name");
                 #endif /* unit_test_name_set_first_name_load_function_call */
-                #ifdef unit_test_name_get_middle_name_load_function_call
-                    unit_test_name_get_middle_name_load_function_call
-                #else /* unit_test_name_get_middle_name_load_function_call */
-                    load_function<unit_test_name_get_middle_name_function_type>(unit_test_name_get_middle_name, "unit_test_name_get_middle_name");
-                #endif /* unit_test_name_get_middle_name_load_function_call */
+                #ifdef unit_test_name_get_middle_name_const_load_function_call
+                    unit_test_name_get_middle_name_const_load_function_call
+                #else /* unit_test_name_get_middle_name_const_load_function_call */
+                    load_function<unit_test_name_get_middle_name_const_function_type>(unit_test_name_get_middle_name_const, "unit_test_name_get_middle_name_const");
+                #endif /* unit_test_name_get_middle_name_const_load_function_call */
                 #ifdef unit_test_name_set_middle_name_load_function_call
                     unit_test_name_set_middle_name_load_function_call
                 #else /* unit_test_name_set_middle_name_load_function_call */
                     load_function<unit_test_name_set_middle_name_function_type>(unit_test_name_set_middle_name, "unit_test_name_set_middle_name");
                 #endif /* unit_test_name_set_middle_name_load_function_call */
-                #ifdef unit_test_name_get_last_name_load_function_call
-                    unit_test_name_get_last_name_load_function_call
-                #else /* unit_test_name_get_last_name_load_function_call */
-                    load_function<unit_test_name_get_last_name_function_type>(unit_test_name_get_last_name, "unit_test_name_get_last_name");
-                #endif /* unit_test_name_get_last_name_load_function_call */
+                #ifdef unit_test_name_get_last_name_const_load_function_call
+                    unit_test_name_get_last_name_const_load_function_call
+                #else /* unit_test_name_get_last_name_const_load_function_call */
+                    load_function<unit_test_name_get_last_name_const_function_type>(unit_test_name_get_last_name_const, "unit_test_name_get_last_name_const");
+                #endif /* unit_test_name_get_last_name_const_load_function_call */
                 #ifdef unit_test_name_set_last_name_load_function_call
                     unit_test_name_set_last_name_load_function_call
                 #else /* unit_test_name_set_last_name_load_function_call */
@@ -565,41 +565,41 @@
                 #else /* unit_test_address_default_load_function_call */
                     load_function<unit_test_address_default_function_type>(unit_test_address_default, "unit_test_address_default");
                 #endif /* unit_test_address_default_load_function_call */
-                #ifdef unit_test_address_get_street_name_load_function_call
-                    unit_test_address_get_street_name_load_function_call
-                #else /* unit_test_address_get_street_name_load_function_call */
-                    load_function<unit_test_address_get_street_name_function_type>(unit_test_address_get_street_name, "unit_test_address_get_street_name");
-                #endif /* unit_test_address_get_street_name_load_function_call */
+                #ifdef unit_test_address_get_street_name_const_load_function_call
+                    unit_test_address_get_street_name_const_load_function_call
+                #else /* unit_test_address_get_street_name_const_load_function_call */
+                    load_function<unit_test_address_get_street_name_const_function_type>(unit_test_address_get_street_name_const, "unit_test_address_get_street_name_const");
+                #endif /* unit_test_address_get_street_name_const_load_function_call */
                 #ifdef unit_test_address_set_street_name_load_function_call
                     unit_test_address_set_street_name_load_function_call
                 #else /* unit_test_address_set_street_name_load_function_call */
                     load_function<unit_test_address_set_street_name_function_type>(unit_test_address_set_street_name, "unit_test_address_set_street_name");
                 #endif /* unit_test_address_set_street_name_load_function_call */
-                #ifdef unit_test_address_get_city_load_function_call
-                    unit_test_address_get_city_load_function_call
-                #else /* unit_test_address_get_city_load_function_call */
-                    load_function<unit_test_address_get_city_function_type>(unit_test_address_get_city, "unit_test_address_get_city");
-                #endif /* unit_test_address_get_city_load_function_call */
+                #ifdef unit_test_address_get_city_const_load_function_call
+                    unit_test_address_get_city_const_load_function_call
+                #else /* unit_test_address_get_city_const_load_function_call */
+                    load_function<unit_test_address_get_city_const_function_type>(unit_test_address_get_city_const, "unit_test_address_get_city_const");
+                #endif /* unit_test_address_get_city_const_load_function_call */
                 #ifdef unit_test_address_set_city_load_function_call
                     unit_test_address_set_city_load_function_call
                 #else /* unit_test_address_set_city_load_function_call */
                     load_function<unit_test_address_set_city_function_type>(unit_test_address_set_city, "unit_test_address_set_city");
                 #endif /* unit_test_address_set_city_load_function_call */
-                #ifdef unit_test_address_get_state_load_function_call
-                    unit_test_address_get_state_load_function_call
-                #else /* unit_test_address_get_state_load_function_call */
-                    load_function<unit_test_address_get_state_function_type>(unit_test_address_get_state, "unit_test_address_get_state");
-                #endif /* unit_test_address_get_state_load_function_call */
+                #ifdef unit_test_address_get_state_const_load_function_call
+                    unit_test_address_get_state_const_load_function_call
+                #else /* unit_test_address_get_state_const_load_function_call */
+                    load_function<unit_test_address_get_state_const_function_type>(unit_test_address_get_state_const, "unit_test_address_get_state_const");
+                #endif /* unit_test_address_get_state_const_load_function_call */
                 #ifdef unit_test_address_set_state_load_function_call
                     unit_test_address_set_state_load_function_call
                 #else /* unit_test_address_set_state_load_function_call */
                     load_function<unit_test_address_set_state_function_type>(unit_test_address_set_state, "unit_test_address_set_state");
                 #endif /* unit_test_address_set_state_load_function_call */
-                #ifdef unit_test_address_get_zip_code_load_function_call
-                    unit_test_address_get_zip_code_load_function_call
-                #else /* unit_test_address_get_zip_code_load_function_call */
-                    load_function<unit_test_address_get_zip_code_function_type>(unit_test_address_get_zip_code, "unit_test_address_get_zip_code");
-                #endif /* unit_test_address_get_zip_code_load_function_call */
+                #ifdef unit_test_address_get_zip_code_const_load_function_call
+                    unit_test_address_get_zip_code_const_load_function_call
+                #else /* unit_test_address_get_zip_code_const_load_function_call */
+                    load_function<unit_test_address_get_zip_code_const_function_type>(unit_test_address_get_zip_code_const, "unit_test_address_get_zip_code_const");
+                #endif /* unit_test_address_get_zip_code_const_load_function_call */
                 #ifdef unit_test_address_set_zip_code_load_function_call
                     unit_test_address_set_zip_code_load_function_call
                 #else /* unit_test_address_set_zip_code_load_function_call */
@@ -620,61 +620,61 @@
                 #else /* unit_test_person_default_load_function_call */
                     load_function<unit_test_person_default_function_type>(unit_test_person_default, "unit_test_person_default");
                 #endif /* unit_test_person_default_load_function_call */
-                #ifdef unit_test_person_get_name_load_function_call
-                    unit_test_person_get_name_load_function_call
-                #else /* unit_test_person_get_name_load_function_call */
-                    load_function<unit_test_person_get_name_function_type>(unit_test_person_get_name, "unit_test_person_get_name");
-                #endif /* unit_test_person_get_name_load_function_call */
+                #ifdef unit_test_person_get_name_const_load_function_call
+                    unit_test_person_get_name_const_load_function_call
+                #else /* unit_test_person_get_name_const_load_function_call */
+                    load_function<unit_test_person_get_name_const_function_type>(unit_test_person_get_name_const, "unit_test_person_get_name_const");
+                #endif /* unit_test_person_get_name_const_load_function_call */
                 #ifdef unit_test_person_set_name_load_function_call
                     unit_test_person_set_name_load_function_call
                 #else /* unit_test_person_set_name_load_function_call */
                     load_function<unit_test_person_set_name_function_type>(unit_test_person_set_name, "unit_test_person_set_name");
                 #endif /* unit_test_person_set_name_load_function_call */
-                #ifdef unit_test_person_get_address_load_function_call
-                    unit_test_person_get_address_load_function_call
-                #else /* unit_test_person_get_address_load_function_call */
-                    load_function<unit_test_person_get_address_function_type>(unit_test_person_get_address, "unit_test_person_get_address");
-                #endif /* unit_test_person_get_address_load_function_call */
+                #ifdef unit_test_person_get_address_const_load_function_call
+                    unit_test_person_get_address_const_load_function_call
+                #else /* unit_test_person_get_address_const_load_function_call */
+                    load_function<unit_test_person_get_address_const_function_type>(unit_test_person_get_address_const, "unit_test_person_get_address_const");
+                #endif /* unit_test_person_get_address_const_load_function_call */
                 #ifdef unit_test_person_set_address_load_function_call
                     unit_test_person_set_address_load_function_call
                 #else /* unit_test_person_set_address_load_function_call */
                     load_function<unit_test_person_set_address_function_type>(unit_test_person_set_address, "unit_test_person_set_address");
                 #endif /* unit_test_person_set_address_load_function_call */
-                #ifdef unit_test_person_get_age_load_function_call
-                    unit_test_person_get_age_load_function_call
-                #else /* unit_test_person_get_age_load_function_call */
-                    load_function<unit_test_person_get_age_function_type>(unit_test_person_get_age, "unit_test_person_get_age");
-                #endif /* unit_test_person_get_age_load_function_call */
+                #ifdef unit_test_person_get_age_const_load_function_call
+                    unit_test_person_get_age_const_load_function_call
+                #else /* unit_test_person_get_age_const_load_function_call */
+                    load_function<unit_test_person_get_age_const_function_type>(unit_test_person_get_age_const, "unit_test_person_get_age_const");
+                #endif /* unit_test_person_get_age_const_load_function_call */
                 #ifdef unit_test_person_set_age_load_function_call
                     unit_test_person_set_age_load_function_call
                 #else /* unit_test_person_set_age_load_function_call */
                     load_function<unit_test_person_set_age_function_type>(unit_test_person_set_age, "unit_test_person_set_age");
                 #endif /* unit_test_person_set_age_load_function_call */
-                #ifdef unit_test_person_get_sex_load_function_call
-                    unit_test_person_get_sex_load_function_call
-                #else /* unit_test_person_get_sex_load_function_call */
-                    load_function<unit_test_person_get_sex_function_type>(unit_test_person_get_sex, "unit_test_person_get_sex");
-                #endif /* unit_test_person_get_sex_load_function_call */
+                #ifdef unit_test_person_get_sex_const_load_function_call
+                    unit_test_person_get_sex_const_load_function_call
+                #else /* unit_test_person_get_sex_const_load_function_call */
+                    load_function<unit_test_person_get_sex_const_function_type>(unit_test_person_get_sex_const, "unit_test_person_get_sex_const");
+                #endif /* unit_test_person_get_sex_const_load_function_call */
                 #ifdef unit_test_person_set_sex_load_function_call
                     unit_test_person_set_sex_load_function_call
                 #else /* unit_test_person_set_sex_load_function_call */
                     load_function<unit_test_person_set_sex_function_type>(unit_test_person_set_sex, "unit_test_person_set_sex");
                 #endif /* unit_test_person_set_sex_load_function_call */
-                #ifdef unit_test_person_get_mother_load_function_call
-                    unit_test_person_get_mother_load_function_call
-                #else /* unit_test_person_get_mother_load_function_call */
-                    load_function<unit_test_person_get_mother_function_type>(unit_test_person_get_mother, "unit_test_person_get_mother");
-                #endif /* unit_test_person_get_mother_load_function_call */
+                #ifdef unit_test_person_get_mother_const_load_function_call
+                    unit_test_person_get_mother_const_load_function_call
+                #else /* unit_test_person_get_mother_const_load_function_call */
+                    load_function<unit_test_person_get_mother_const_function_type>(unit_test_person_get_mother_const, "unit_test_person_get_mother_const");
+                #endif /* unit_test_person_get_mother_const_load_function_call */
                 #ifdef unit_test_person_set_mother_load_function_call
                     unit_test_person_set_mother_load_function_call
                 #else /* unit_test_person_set_mother_load_function_call */
                     load_function<unit_test_person_set_mother_function_type>(unit_test_person_set_mother, "unit_test_person_set_mother");
                 #endif /* unit_test_person_set_mother_load_function_call */
-                #ifdef unit_test_person_get_father_load_function_call
-                    unit_test_person_get_father_load_function_call
-                #else /* unit_test_person_get_father_load_function_call */
-                    load_function<unit_test_person_get_father_function_type>(unit_test_person_get_father, "unit_test_person_get_father");
-                #endif /* unit_test_person_get_father_load_function_call */
+                #ifdef unit_test_person_get_father_const_load_function_call
+                    unit_test_person_get_father_const_load_function_call
+                #else /* unit_test_person_get_father_const_load_function_call */
+                    load_function<unit_test_person_get_father_const_function_type>(unit_test_person_get_father_const, "unit_test_person_get_father_const");
+                #endif /* unit_test_person_get_father_const_load_function_call */
                 #ifdef unit_test_person_set_father_load_function_call
                     unit_test_person_set_father_load_function_call
                 #else /* unit_test_person_set_father_load_function_call */
@@ -740,31 +740,31 @@
                 #else /* unit_test_name_get_full_name_zero_function_pointer */
                     unit_test_name_get_full_name = 0;
                 #endif /* unit_test_name_get_full_name_zero_function_pointer */
-                #ifdef unit_test_name_get_first_name_zero_function_pointer
-                    unit_test_name_get_first_name_zero_function_pointer
-                #else /* unit_test_name_get_first_name_zero_function_pointer */
-                    unit_test_name_get_first_name = 0;
-                #endif /* unit_test_name_get_first_name_zero_function_pointer */
+                #ifdef unit_test_name_get_first_name_const_zero_function_pointer
+                    unit_test_name_get_first_name_const_zero_function_pointer
+                #else /* unit_test_name_get_first_name_const_zero_function_pointer */
+                    unit_test_name_get_first_name_const = 0;
+                #endif /* unit_test_name_get_first_name_const_zero_function_pointer */
                 #ifdef unit_test_name_set_first_name_zero_function_pointer
                     unit_test_name_set_first_name_zero_function_pointer
                 #else /* unit_test_name_set_first_name_zero_function_pointer */
                     unit_test_name_set_first_name = 0;
                 #endif /* unit_test_name_set_first_name_zero_function_pointer */
-                #ifdef unit_test_name_get_middle_name_zero_function_pointer
-                    unit_test_name_get_middle_name_zero_function_pointer
-                #else /* unit_test_name_get_middle_name_zero_function_pointer */
-                    unit_test_name_get_middle_name = 0;
-                #endif /* unit_test_name_get_middle_name_zero_function_pointer */
+                #ifdef unit_test_name_get_middle_name_const_zero_function_pointer
+                    unit_test_name_get_middle_name_const_zero_function_pointer
+                #else /* unit_test_name_get_middle_name_const_zero_function_pointer */
+                    unit_test_name_get_middle_name_const = 0;
+                #endif /* unit_test_name_get_middle_name_const_zero_function_pointer */
                 #ifdef unit_test_name_set_middle_name_zero_function_pointer
                     unit_test_name_set_middle_name_zero_function_pointer
                 #else /* unit_test_name_set_middle_name_zero_function_pointer */
                     unit_test_name_set_middle_name = 0;
                 #endif /* unit_test_name_set_middle_name_zero_function_pointer */
-                #ifdef unit_test_name_get_last_name_zero_function_pointer
-                    unit_test_name_get_last_name_zero_function_pointer
-                #else /* unit_test_name_get_last_name_zero_function_pointer */
-                    unit_test_name_get_last_name = 0;
-                #endif /* unit_test_name_get_last_name_zero_function_pointer */
+                #ifdef unit_test_name_get_last_name_const_zero_function_pointer
+                    unit_test_name_get_last_name_const_zero_function_pointer
+                #else /* unit_test_name_get_last_name_const_zero_function_pointer */
+                    unit_test_name_get_last_name_const = 0;
+                #endif /* unit_test_name_get_last_name_const_zero_function_pointer */
                 #ifdef unit_test_name_set_last_name_zero_function_pointer
                     unit_test_name_set_last_name_zero_function_pointer
                 #else /* unit_test_name_set_last_name_zero_function_pointer */
@@ -785,41 +785,41 @@
                 #else /* unit_test_address_default_zero_function_pointer */
                     unit_test_address_default = 0;
                 #endif /* unit_test_address_default_zero_function_pointer */
-                #ifdef unit_test_address_get_street_name_zero_function_pointer
-                    unit_test_address_get_street_name_zero_function_pointer
-                #else /* unit_test_address_get_street_name_zero_function_pointer */
-                    unit_test_address_get_street_name = 0;
-                #endif /* unit_test_address_get_street_name_zero_function_pointer */
+                #ifdef unit_test_address_get_street_name_const_zero_function_pointer
+                    unit_test_address_get_street_name_const_zero_function_pointer
+                #else /* unit_test_address_get_street_name_const_zero_function_pointer */
+                    unit_test_address_get_street_name_const = 0;
+                #endif /* unit_test_address_get_street_name_const_zero_function_pointer */
                 #ifdef unit_test_address_set_street_name_zero_function_pointer
                     unit_test_address_set_street_name_zero_function_pointer
                 #else /* unit_test_address_set_street_name_zero_function_pointer */
                     unit_test_address_set_street_name = 0;
                 #endif /* unit_test_address_set_street_name_zero_function_pointer */
-                #ifdef unit_test_address_get_city_zero_function_pointer
-                    unit_test_address_get_city_zero_function_pointer
-                #else /* unit_test_address_get_city_zero_function_pointer */
-                    unit_test_address_get_city = 0;
-                #endif /* unit_test_address_get_city_zero_function_pointer */
+                #ifdef unit_test_address_get_city_const_zero_function_pointer
+                    unit_test_address_get_city_const_zero_function_pointer
+                #else /* unit_test_address_get_city_const_zero_function_pointer */
+                    unit_test_address_get_city_const = 0;
+                #endif /* unit_test_address_get_city_const_zero_function_pointer */
                 #ifdef unit_test_address_set_city_zero_function_pointer
                     unit_test_address_set_city_zero_function_pointer
                 #else /* unit_test_address_set_city_zero_function_pointer */
                     unit_test_address_set_city = 0;
                 #endif /* unit_test_address_set_city_zero_function_pointer */
-                #ifdef unit_test_address_get_state_zero_function_pointer
-                    unit_test_address_get_state_zero_function_pointer
-                #else /* unit_test_address_get_state_zero_function_pointer */
-                    unit_test_address_get_state = 0;
-                #endif /* unit_test_address_get_state_zero_function_pointer */
+                #ifdef unit_test_address_get_state_const_zero_function_pointer
+                    unit_test_address_get_state_const_zero_function_pointer
+                #else /* unit_test_address_get_state_const_zero_function_pointer */
+                    unit_test_address_get_state_const = 0;
+                #endif /* unit_test_address_get_state_const_zero_function_pointer */
                 #ifdef unit_test_address_set_state_zero_function_pointer
                     unit_test_address_set_state_zero_function_pointer
                 #else /* unit_test_address_set_state_zero_function_pointer */
                     unit_test_address_set_state = 0;
                 #endif /* unit_test_address_set_state_zero_function_pointer */
-                #ifdef unit_test_address_get_zip_code_zero_function_pointer
-                    unit_test_address_get_zip_code_zero_function_pointer
-                #else /* unit_test_address_get_zip_code_zero_function_pointer */
-                    unit_test_address_get_zip_code = 0;
-                #endif /* unit_test_address_get_zip_code_zero_function_pointer */
+                #ifdef unit_test_address_get_zip_code_const_zero_function_pointer
+                    unit_test_address_get_zip_code_const_zero_function_pointer
+                #else /* unit_test_address_get_zip_code_const_zero_function_pointer */
+                    unit_test_address_get_zip_code_const = 0;
+                #endif /* unit_test_address_get_zip_code_const_zero_function_pointer */
                 #ifdef unit_test_address_set_zip_code_zero_function_pointer
                     unit_test_address_set_zip_code_zero_function_pointer
                 #else /* unit_test_address_set_zip_code_zero_function_pointer */
@@ -840,61 +840,61 @@
                 #else /* unit_test_person_default_zero_function_pointer */
                     unit_test_person_default = 0;
                 #endif /* unit_test_person_default_zero_function_pointer */
-                #ifdef unit_test_person_get_name_zero_function_pointer
-                    unit_test_person_get_name_zero_function_pointer
-                #else /* unit_test_person_get_name_zero_function_pointer */
-                    unit_test_person_get_name = 0;
-                #endif /* unit_test_person_get_name_zero_function_pointer */
+                #ifdef unit_test_person_get_name_const_zero_function_pointer
+                    unit_test_person_get_name_const_zero_function_pointer
+                #else /* unit_test_person_get_name_const_zero_function_pointer */
+                    unit_test_person_get_name_const = 0;
+                #endif /* unit_test_person_get_name_const_zero_function_pointer */
                 #ifdef unit_test_person_set_name_zero_function_pointer
                     unit_test_person_set_name_zero_function_pointer
                 #else /* unit_test_person_set_name_zero_function_pointer */
                     unit_test_person_set_name = 0;
                 #endif /* unit_test_person_set_name_zero_function_pointer */
-                #ifdef unit_test_person_get_address_zero_function_pointer
-                    unit_test_person_get_address_zero_function_pointer
-                #else /* unit_test_person_get_address_zero_function_pointer */
-                    unit_test_person_get_address = 0;
-                #endif /* unit_test_person_get_address_zero_function_pointer */
+                #ifdef unit_test_person_get_address_const_zero_function_pointer
+                    unit_test_person_get_address_const_zero_function_pointer
+                #else /* unit_test_person_get_address_const_zero_function_pointer */
+                    unit_test_person_get_address_const = 0;
+                #endif /* unit_test_person_get_address_const_zero_function_pointer */
                 #ifdef unit_test_person_set_address_zero_function_pointer
                     unit_test_person_set_address_zero_function_pointer
                 #else /* unit_test_person_set_address_zero_function_pointer */
                     unit_test_person_set_address = 0;
                 #endif /* unit_test_person_set_address_zero_function_pointer */
-                #ifdef unit_test_person_get_age_zero_function_pointer
-                    unit_test_person_get_age_zero_function_pointer
-                #else /* unit_test_person_get_age_zero_function_pointer */
-                    unit_test_person_get_age = 0;
-                #endif /* unit_test_person_get_age_zero_function_pointer */
+                #ifdef unit_test_person_get_age_const_zero_function_pointer
+                    unit_test_person_get_age_const_zero_function_pointer
+                #else /* unit_test_person_get_age_const_zero_function_pointer */
+                    unit_test_person_get_age_const = 0;
+                #endif /* unit_test_person_get_age_const_zero_function_pointer */
                 #ifdef unit_test_person_set_age_zero_function_pointer
                     unit_test_person_set_age_zero_function_pointer
                 #else /* unit_test_person_set_age_zero_function_pointer */
                     unit_test_person_set_age = 0;
                 #endif /* unit_test_person_set_age_zero_function_pointer */
-                #ifdef unit_test_person_get_sex_zero_function_pointer
-                    unit_test_person_get_sex_zero_function_pointer
-                #else /* unit_test_person_get_sex_zero_function_pointer */
-                    unit_test_person_get_sex = 0;
-                #endif /* unit_test_person_get_sex_zero_function_pointer */
+                #ifdef unit_test_person_get_sex_const_zero_function_pointer
+                    unit_test_person_get_sex_const_zero_function_pointer
+                #else /* unit_test_person_get_sex_const_zero_function_pointer */
+                    unit_test_person_get_sex_const = 0;
+                #endif /* unit_test_person_get_sex_const_zero_function_pointer */
                 #ifdef unit_test_person_set_sex_zero_function_pointer
                     unit_test_person_set_sex_zero_function_pointer
                 #else /* unit_test_person_set_sex_zero_function_pointer */
                     unit_test_person_set_sex = 0;
                 #endif /* unit_test_person_set_sex_zero_function_pointer */
-                #ifdef unit_test_person_get_mother_zero_function_pointer
-                    unit_test_person_get_mother_zero_function_pointer
-                #else /* unit_test_person_get_mother_zero_function_pointer */
-                    unit_test_person_get_mother = 0;
-                #endif /* unit_test_person_get_mother_zero_function_pointer */
+                #ifdef unit_test_person_get_mother_const_zero_function_pointer
+                    unit_test_person_get_mother_const_zero_function_pointer
+                #else /* unit_test_person_get_mother_const_zero_function_pointer */
+                    unit_test_person_get_mother_const = 0;
+                #endif /* unit_test_person_get_mother_const_zero_function_pointer */
                 #ifdef unit_test_person_set_mother_zero_function_pointer
                     unit_test_person_set_mother_zero_function_pointer
                 #else /* unit_test_person_set_mother_zero_function_pointer */
                     unit_test_person_set_mother = 0;
                 #endif /* unit_test_person_set_mother_zero_function_pointer */
-                #ifdef unit_test_person_get_father_zero_function_pointer
-                    unit_test_person_get_father_zero_function_pointer
-                #else /* unit_test_person_get_father_zero_function_pointer */
-                    unit_test_person_get_father = 0;
-                #endif /* unit_test_person_get_father_zero_function_pointer */
+                #ifdef unit_test_person_get_father_const_zero_function_pointer
+                    unit_test_person_get_father_const_zero_function_pointer
+                #else /* unit_test_person_get_father_const_zero_function_pointer */
+                    unit_test_person_get_father_const = 0;
+                #endif /* unit_test_person_get_father_const_zero_function_pointer */
                 #ifdef unit_test_person_set_father_zero_function_pointer
                     unit_test_person_set_father_zero_function_pointer
                 #else /* unit_test_person_set_father_zero_function_pointer */

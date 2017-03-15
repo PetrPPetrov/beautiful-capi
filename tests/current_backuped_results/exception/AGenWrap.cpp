@@ -947,7 +947,7 @@ EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_generic_new(beautiful_cap
     return static_cast<void*>(0);
 }
 
-EXCEPTION_API const char* EXCEPTION_API_CONVENTION exception_generic_get_error_text(void* object_pointer)
+EXCEPTION_API const char* EXCEPTION_API_CONVENTION exception_generic_get_error_text_const(void* object_pointer)
 {
     const Exception::GenericImpl* self = static_cast<Exception::GenericImpl*>(object_pointer);
     return self->GetErrorText();
@@ -1142,7 +1142,7 @@ EXCEPTION_API void* EXCEPTION_API_CONVENTION exception_bad_argument_new(beautifu
     return static_cast<void*>(0);
 }
 
-EXCEPTION_API const char* EXCEPTION_API_CONVENTION exception_bad_argument_get_argument_name(void* object_pointer)
+EXCEPTION_API const char* EXCEPTION_API_CONVENTION exception_bad_argument_get_argument_name_const(void* object_pointer)
 {
     const Exception::BadArgumentImpl* self = static_cast<Exception::BadArgumentImpl*>(object_pointer);
     return self->GetArgumentName();

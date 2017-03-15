@@ -39,7 +39,7 @@ inline Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::VectorOfObjectsPt
 
 inline int Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::GetSize() const
 {
-    return example_vector_of_objects_example_model_float_get_size(GetRawPointer());
+    return example_vector_of_objects_example_model_float_get_size_const(GetRawPointer());
 }
 
 inline void Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::Clear()
@@ -54,7 +54,7 @@ inline void Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::PushBack(con
 
 inline Example::ModelPtr<float> Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::GetItem(int index) const
 {
-    return Example::ModelPtr<float>(Example::ModelPtr<float>::force_creating_from_raw_pointer, example_vector_of_objects_example_model_float_get_item(GetRawPointer(), index), false);
+    return Example::ModelPtr<float>(Example::ModelPtr<float>::force_creating_from_raw_pointer, example_vector_of_objects_example_model_float_get_item_const(GetRawPointer(), index), false);
 }
 
 inline Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::VectorOfObjectsPtr(const VectorOfObjectsPtr<Example::ModelPtr<float> >& other)

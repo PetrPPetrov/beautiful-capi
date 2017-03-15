@@ -103,14 +103,14 @@
     HELLO_WORLD_API int HELLO_WORLD_API_CONVENTION hello_world_get_minor_version();
     HELLO_WORLD_API int HELLO_WORLD_API_CONVENTION hello_world_get_patch_version();
     HELLO_WORLD_API void* HELLO_WORLD_API_CONVENTION hello_world_printer_default();
-    HELLO_WORLD_API void HELLO_WORLD_API_CONVENTION hello_world_printer_show(void* object_pointer);
+    HELLO_WORLD_API void HELLO_WORLD_API_CONVENTION hello_world_printer_show_const(void* object_pointer);
     HELLO_WORLD_API void* HELLO_WORLD_API_CONVENTION hello_world_printer_copy(void* object_pointer);
     HELLO_WORLD_API void HELLO_WORLD_API_CONVENTION hello_world_printer_delete(void* object_pointer);
     HELLO_WORLD_API void* HELLO_WORLD_API_CONVENTION hello_world_scanner_default();
-    HELLO_WORLD_API void HELLO_WORLD_API_CONVENTION hello_world_scanner_scan(void* object_pointer);
+    HELLO_WORLD_API void HELLO_WORLD_API_CONVENTION hello_world_scanner_scan_const(void* object_pointer);
     HELLO_WORLD_API void HELLO_WORLD_API_CONVENTION hello_world_scanner_delete(void* object_pointer);
     HELLO_WORLD_API void* HELLO_WORLD_API_CONVENTION hello_world_plotter_default();
-    HELLO_WORLD_API void HELLO_WORLD_API_CONVENTION hello_world_plotter_draw(void* object_pointer);
+    HELLO_WORLD_API void HELLO_WORLD_API_CONVENTION hello_world_plotter_draw_const(void* object_pointer);
     HELLO_WORLD_API void HELLO_WORLD_API_CONVENTION hello_world_plotter_add_ref(void* object_pointer);
     HELLO_WORLD_API void HELLO_WORLD_API_CONVENTION hello_world_plotter_release(void* object_pointer);
 
@@ -149,14 +149,14 @@
     typedef int (HELLO_WORLD_API_CONVENTION *hello_world_get_minor_version_function_type)();
     typedef int (HELLO_WORLD_API_CONVENTION *hello_world_get_patch_version_function_type)();
     typedef void* (HELLO_WORLD_API_CONVENTION *hello_world_printer_default_function_type)();
-    typedef void (HELLO_WORLD_API_CONVENTION *hello_world_printer_show_function_type)(void* object_pointer);
+    typedef void (HELLO_WORLD_API_CONVENTION *hello_world_printer_show_const_function_type)(void* object_pointer);
     typedef void* (HELLO_WORLD_API_CONVENTION *hello_world_printer_copy_function_type)(void* object_pointer);
     typedef void (HELLO_WORLD_API_CONVENTION *hello_world_printer_delete_function_type)(void* object_pointer);
     typedef void* (HELLO_WORLD_API_CONVENTION *hello_world_scanner_default_function_type)();
-    typedef void (HELLO_WORLD_API_CONVENTION *hello_world_scanner_scan_function_type)(void* object_pointer);
+    typedef void (HELLO_WORLD_API_CONVENTION *hello_world_scanner_scan_const_function_type)(void* object_pointer);
     typedef void (HELLO_WORLD_API_CONVENTION *hello_world_scanner_delete_function_type)(void* object_pointer);
     typedef void* (HELLO_WORLD_API_CONVENTION *hello_world_plotter_default_function_type)();
-    typedef void (HELLO_WORLD_API_CONVENTION *hello_world_plotter_draw_function_type)(void* object_pointer);
+    typedef void (HELLO_WORLD_API_CONVENTION *hello_world_plotter_draw_const_function_type)(void* object_pointer);
     typedef void (HELLO_WORLD_API_CONVENTION *hello_world_plotter_add_ref_function_type)(void* object_pointer);
     typedef void (HELLO_WORLD_API_CONVENTION *hello_world_plotter_release_function_type)(void* object_pointer);
 
@@ -182,10 +182,10 @@
         #else
             hello_world_printer_default_function_type hello_world_printer_default = 0;
         #endif
-        #ifdef hello_world_printer_show_define_function_pointer_var
-            hello_world_printer_show_define_function_pointer_var
+        #ifdef hello_world_printer_show_const_define_function_pointer_var
+            hello_world_printer_show_const_define_function_pointer_var
         #else
-            hello_world_printer_show_function_type hello_world_printer_show = 0;
+            hello_world_printer_show_const_function_type hello_world_printer_show_const = 0;
         #endif
         #ifdef hello_world_printer_copy_define_function_pointer_var
             hello_world_printer_copy_define_function_pointer_var
@@ -202,10 +202,10 @@
         #else
             hello_world_scanner_default_function_type hello_world_scanner_default = 0;
         #endif
-        #ifdef hello_world_scanner_scan_define_function_pointer_var
-            hello_world_scanner_scan_define_function_pointer_var
+        #ifdef hello_world_scanner_scan_const_define_function_pointer_var
+            hello_world_scanner_scan_const_define_function_pointer_var
         #else
-            hello_world_scanner_scan_function_type hello_world_scanner_scan = 0;
+            hello_world_scanner_scan_const_function_type hello_world_scanner_scan_const = 0;
         #endif
         #ifdef hello_world_scanner_delete_define_function_pointer_var
             hello_world_scanner_delete_define_function_pointer_var
@@ -217,10 +217,10 @@
         #else
             hello_world_plotter_default_function_type hello_world_plotter_default = 0;
         #endif
-        #ifdef hello_world_plotter_draw_define_function_pointer_var
-            hello_world_plotter_draw_define_function_pointer_var
+        #ifdef hello_world_plotter_draw_const_define_function_pointer_var
+            hello_world_plotter_draw_const_define_function_pointer_var
         #else
-            hello_world_plotter_draw_function_type hello_world_plotter_draw = 0;
+            hello_world_plotter_draw_const_function_type hello_world_plotter_draw_const = 0;
         #endif
         #ifdef hello_world_plotter_add_ref_define_function_pointer_var
             hello_world_plotter_add_ref_define_function_pointer_var
@@ -239,14 +239,14 @@
         extern hello_world_get_minor_version_function_type hello_world_get_minor_version;
         extern hello_world_get_patch_version_function_type hello_world_get_patch_version;
         extern hello_world_printer_default_function_type hello_world_printer_default;
-        extern hello_world_printer_show_function_type hello_world_printer_show;
+        extern hello_world_printer_show_const_function_type hello_world_printer_show_const;
         extern hello_world_printer_copy_function_type hello_world_printer_copy;
         extern hello_world_printer_delete_function_type hello_world_printer_delete;
         extern hello_world_scanner_default_function_type hello_world_scanner_default;
-        extern hello_world_scanner_scan_function_type hello_world_scanner_scan;
+        extern hello_world_scanner_scan_const_function_type hello_world_scanner_scan_const;
         extern hello_world_scanner_delete_function_type hello_world_scanner_delete;
         extern hello_world_plotter_default_function_type hello_world_plotter_default;
-        extern hello_world_plotter_draw_function_type hello_world_plotter_draw;
+        extern hello_world_plotter_draw_const_function_type hello_world_plotter_draw_const;
         extern hello_world_plotter_add_ref_function_type hello_world_plotter_add_ref;
         extern hello_world_plotter_release_function_type hello_world_plotter_release;
 
@@ -323,11 +323,11 @@
                 #else /* hello_world_printer_default_load_function_call */
                     load_function<hello_world_printer_default_function_type>(hello_world_printer_default, "hello_world_printer_default");
                 #endif /* hello_world_printer_default_load_function_call */
-                #ifdef hello_world_printer_show_load_function_call
-                    hello_world_printer_show_load_function_call
-                #else /* hello_world_printer_show_load_function_call */
-                    load_function<hello_world_printer_show_function_type>(hello_world_printer_show, "hello_world_printer_show");
-                #endif /* hello_world_printer_show_load_function_call */
+                #ifdef hello_world_printer_show_const_load_function_call
+                    hello_world_printer_show_const_load_function_call
+                #else /* hello_world_printer_show_const_load_function_call */
+                    load_function<hello_world_printer_show_const_function_type>(hello_world_printer_show_const, "hello_world_printer_show_const");
+                #endif /* hello_world_printer_show_const_load_function_call */
                 #ifdef hello_world_printer_copy_load_function_call
                     hello_world_printer_copy_load_function_call
                 #else /* hello_world_printer_copy_load_function_call */
@@ -343,11 +343,11 @@
                 #else /* hello_world_scanner_default_load_function_call */
                     load_function<hello_world_scanner_default_function_type>(hello_world_scanner_default, "hello_world_scanner_default");
                 #endif /* hello_world_scanner_default_load_function_call */
-                #ifdef hello_world_scanner_scan_load_function_call
-                    hello_world_scanner_scan_load_function_call
-                #else /* hello_world_scanner_scan_load_function_call */
-                    load_function<hello_world_scanner_scan_function_type>(hello_world_scanner_scan, "hello_world_scanner_scan");
-                #endif /* hello_world_scanner_scan_load_function_call */
+                #ifdef hello_world_scanner_scan_const_load_function_call
+                    hello_world_scanner_scan_const_load_function_call
+                #else /* hello_world_scanner_scan_const_load_function_call */
+                    load_function<hello_world_scanner_scan_const_function_type>(hello_world_scanner_scan_const, "hello_world_scanner_scan_const");
+                #endif /* hello_world_scanner_scan_const_load_function_call */
                 #ifdef hello_world_scanner_delete_load_function_call
                     hello_world_scanner_delete_load_function_call
                 #else /* hello_world_scanner_delete_load_function_call */
@@ -358,11 +358,11 @@
                 #else /* hello_world_plotter_default_load_function_call */
                     load_function<hello_world_plotter_default_function_type>(hello_world_plotter_default, "hello_world_plotter_default");
                 #endif /* hello_world_plotter_default_load_function_call */
-                #ifdef hello_world_plotter_draw_load_function_call
-                    hello_world_plotter_draw_load_function_call
-                #else /* hello_world_plotter_draw_load_function_call */
-                    load_function<hello_world_plotter_draw_function_type>(hello_world_plotter_draw, "hello_world_plotter_draw");
-                #endif /* hello_world_plotter_draw_load_function_call */
+                #ifdef hello_world_plotter_draw_const_load_function_call
+                    hello_world_plotter_draw_const_load_function_call
+                #else /* hello_world_plotter_draw_const_load_function_call */
+                    load_function<hello_world_plotter_draw_const_function_type>(hello_world_plotter_draw_const, "hello_world_plotter_draw_const");
+                #endif /* hello_world_plotter_draw_const_load_function_call */
                 #ifdef hello_world_plotter_add_ref_load_function_call
                     hello_world_plotter_add_ref_load_function_call
                 #else /* hello_world_plotter_add_ref_load_function_call */
@@ -423,11 +423,11 @@
                 #else /* hello_world_printer_default_zero_function_pointer */
                     hello_world_printer_default = 0;
                 #endif /* hello_world_printer_default_zero_function_pointer */
-                #ifdef hello_world_printer_show_zero_function_pointer
-                    hello_world_printer_show_zero_function_pointer
-                #else /* hello_world_printer_show_zero_function_pointer */
-                    hello_world_printer_show = 0;
-                #endif /* hello_world_printer_show_zero_function_pointer */
+                #ifdef hello_world_printer_show_const_zero_function_pointer
+                    hello_world_printer_show_const_zero_function_pointer
+                #else /* hello_world_printer_show_const_zero_function_pointer */
+                    hello_world_printer_show_const = 0;
+                #endif /* hello_world_printer_show_const_zero_function_pointer */
                 #ifdef hello_world_printer_copy_zero_function_pointer
                     hello_world_printer_copy_zero_function_pointer
                 #else /* hello_world_printer_copy_zero_function_pointer */
@@ -443,11 +443,11 @@
                 #else /* hello_world_scanner_default_zero_function_pointer */
                     hello_world_scanner_default = 0;
                 #endif /* hello_world_scanner_default_zero_function_pointer */
-                #ifdef hello_world_scanner_scan_zero_function_pointer
-                    hello_world_scanner_scan_zero_function_pointer
-                #else /* hello_world_scanner_scan_zero_function_pointer */
-                    hello_world_scanner_scan = 0;
-                #endif /* hello_world_scanner_scan_zero_function_pointer */
+                #ifdef hello_world_scanner_scan_const_zero_function_pointer
+                    hello_world_scanner_scan_const_zero_function_pointer
+                #else /* hello_world_scanner_scan_const_zero_function_pointer */
+                    hello_world_scanner_scan_const = 0;
+                #endif /* hello_world_scanner_scan_const_zero_function_pointer */
                 #ifdef hello_world_scanner_delete_zero_function_pointer
                     hello_world_scanner_delete_zero_function_pointer
                 #else /* hello_world_scanner_delete_zero_function_pointer */
@@ -458,11 +458,11 @@
                 #else /* hello_world_plotter_default_zero_function_pointer */
                     hello_world_plotter_default = 0;
                 #endif /* hello_world_plotter_default_zero_function_pointer */
-                #ifdef hello_world_plotter_draw_zero_function_pointer
-                    hello_world_plotter_draw_zero_function_pointer
-                #else /* hello_world_plotter_draw_zero_function_pointer */
-                    hello_world_plotter_draw = 0;
-                #endif /* hello_world_plotter_draw_zero_function_pointer */
+                #ifdef hello_world_plotter_draw_const_zero_function_pointer
+                    hello_world_plotter_draw_const_zero_function_pointer
+                #else /* hello_world_plotter_draw_const_zero_function_pointer */
+                    hello_world_plotter_draw_const = 0;
+                #endif /* hello_world_plotter_draw_const_zero_function_pointer */
                 #ifdef hello_world_plotter_add_ref_zero_function_pointer
                     hello_world_plotter_add_ref_zero_function_pointer
                 #else /* hello_world_plotter_add_ref_zero_function_pointer */

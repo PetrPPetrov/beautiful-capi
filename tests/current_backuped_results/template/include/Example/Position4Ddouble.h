@@ -39,7 +39,7 @@ inline Example::Position4D<double>::Position4D() : Example::Position<double>(Exa
 
 inline double Example::Position4D<double>::GetW() const
 {
-    return example_position4_d_double_get_w(GetRawPointer());
+    return example_position4_d_double_get_w_const(GetRawPointer());
 }
 
 inline void Example::Position4D<double>::SetW(double x)

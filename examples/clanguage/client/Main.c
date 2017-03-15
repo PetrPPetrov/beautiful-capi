@@ -53,7 +53,7 @@ int main()
     example_dumper_set_printer(dumper_t, printer);
     example_dumper_dump(dumper_t);
 
-    void* printer2 = example_dumper_get_printer(dumper_t);
+    void* printer2 = example_dumper_get_printer_const(dumper_t);
     example_printer_show(printer2, "printer2");
 
     example_printer_delete(printer);

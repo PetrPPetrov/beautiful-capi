@@ -38,7 +38,7 @@ inline Example::Position<float>::Position()
 
 inline float Example::Position<float>::GetX() const
 {
-    return example_position_float_get_x(GetRawPointer());
+    return example_position_float_get_x_const(GetRawPointer());
 }
 
 inline void Example::Position<float>::SetX(float x)
@@ -48,7 +48,7 @@ inline void Example::Position<float>::SetX(float x)
 
 inline float Example::Position<float>::GetY() const
 {
-    return example_position_float_get_y(GetRawPointer());
+    return example_position_float_get_y_const(GetRawPointer());
 }
 
 inline void Example::Position<float>::SetY(float y)
@@ -58,7 +58,7 @@ inline void Example::Position<float>::SetY(float y)
 
 inline float Example::Position<float>::GetZ() const
 {
-    return example_position_float_get_z(GetRawPointer());
+    return example_position_float_get_z_const(GetRawPointer());
 }
 
 inline void Example::Position<float>::SetZ(float z)

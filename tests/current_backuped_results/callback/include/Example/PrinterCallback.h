@@ -48,20 +48,20 @@ inline void Example::PrinterCallbackPtr::SetObjectPointer(void* custom_object)
 
 inline void* Example::PrinterCallbackPtr::GetObjectPointer() const
 {
-    return example_printer_callback_get_object_pointer(GetRawPointer());
+    return example_printer_callback_get_object_pointer_const(GetRawPointer());
 }
 
-inline void Example::PrinterCallbackPtr::SetCFunctionForPrint(example_printer_print_callback_type c_function_pointer)
+inline void Example::PrinterCallbackPtr::SetCFunctionForPrint(example_printer_print_const_callback_type c_function_pointer)
 {
     example_printer_callback_set_cfunction_for_print(GetRawPointer(), c_function_pointer);
 }
 
-inline void Example::PrinterCallbackPtr::SetCFunctionForGetDeviceType(example_printer_get_device_type_callback_type c_function_pointer)
+inline void Example::PrinterCallbackPtr::SetCFunctionForGetDeviceType(example_printer_get_device_type_const_callback_type c_function_pointer)
 {
     example_printer_callback_set_cfunction_for_get_device_type(GetRawPointer(), c_function_pointer);
 }
 
-inline void Example::PrinterCallbackPtr::SetCFunctionForGetPrintingQuality(example_printer_get_printing_quality_callback_type c_function_pointer)
+inline void Example::PrinterCallbackPtr::SetCFunctionForGetPrintingQuality(example_printer_get_printing_quality_const_callback_type c_function_pointer)
 {
     example_printer_callback_set_cfunction_for_get_printing_quality(GetRawPointer(), c_function_pointer);
 }
@@ -210,13 +210,13 @@ inline Example::PrinterCallbackPtr down_cast<Example::PrinterCallbackPtr >(const
 namespace Example {
 
 template<typename ImplementationClass>
-void EXAMPLE_API_CONVENTION printer_print_callback(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* text);
+void EXAMPLE_API_CONVENTION printer_print_const_callback(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* text);
 
 template<typename ImplementationClass>
-int EXAMPLE_API_CONVENTION printer_get_device_type_callback(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+int EXAMPLE_API_CONVENTION printer_get_device_type_const_callback(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
 
 template<typename ImplementationClass>
-int EXAMPLE_API_CONVENTION printer_get_printing_quality_callback(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
+int EXAMPLE_API_CONVENTION printer_get_printing_quality_const_callback(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
 
 template<typename ImplementationClass>
 void EXAMPLE_API_CONVENTION printer_set_printing_quality_callback(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, int value);
@@ -225,9 +225,9 @@ template<typename ImplementationClass>
 Example::PrinterCallbackPtr create_callback_for_printer(ImplementationClass* implementation_class)
 {
     Example::PrinterCallbackPtr result;
-    result.SetCFunctionForPrint(printer_print_callback<ImplementationClass>);
-    result.SetCFunctionForGetDeviceType(printer_get_device_type_callback<ImplementationClass>);
-    result.SetCFunctionForGetPrintingQuality(printer_get_printing_quality_callback<ImplementationClass>);
+    result.SetCFunctionForPrint(printer_print_const_callback<ImplementationClass>);
+    result.SetCFunctionForGetDeviceType(printer_get_device_type_const_callback<ImplementationClass>);
+    result.SetCFunctionForGetPrintingQuality(printer_get_printing_quality_const_callback<ImplementationClass>);
     result.SetCFunctionForSetPrintingQuality(printer_set_printing_quality_callback<ImplementationClass>);
     result.SetObjectPointer(implementation_class);
     return result;
@@ -240,7 +240,7 @@ inline Example::PrinterCallbackPtr create_callback_for_printer(ImplementationCla
 }
 
 template<typename ImplementationClass>
-void EXAMPLE_API_CONVENTION printer_print_callback(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* text)
+void EXAMPLE_API_CONVENTION printer_print_const_callback(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* text)
 {
     const ImplementationClass* self = static_cast<ImplementationClass*>(object_pointer);
     beautiful_capi_callback_exception_info_t exception_info_default;
@@ -281,7 +281,7 @@ void EXAMPLE_API_CONVENTION printer_print_callback(beautiful_capi_callback_excep
 }
 
 template<typename ImplementationClass>
-int EXAMPLE_API_CONVENTION printer_get_device_type_callback(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer)
+int EXAMPLE_API_CONVENTION printer_get_device_type_const_callback(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer)
 {
     const ImplementationClass* self = static_cast<ImplementationClass*>(object_pointer);
     beautiful_capi_callback_exception_info_t exception_info_default;
@@ -323,7 +323,7 @@ int EXAMPLE_API_CONVENTION printer_get_device_type_callback(beautiful_capi_callb
 }
 
 template<typename ImplementationClass>
-int EXAMPLE_API_CONVENTION printer_get_printing_quality_callback(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer)
+int EXAMPLE_API_CONVENTION printer_get_printing_quality_const_callback(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer)
 {
     const ImplementationClass* self = static_cast<ImplementationClass*>(object_pointer);
     beautiful_capi_callback_exception_info_t exception_info_default;
