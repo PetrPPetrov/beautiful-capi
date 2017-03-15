@@ -2,7 +2,7 @@
 <hello_world:api xmlns:hello_world="http://gkmsoft.ru/beautifulcapi" project_name="OverloadSuffix">
   <namespace name="OverloadSuffix" overload_suffix_mode="Silent">
     <class name="Printer" overload_suffix_mode="Notify" lifecycle="copy_semantic" implementation_class_name="OverloadSuffix::PrinterImpl" implementation_class_header="PrinterImpl.h">
-      <constructor name="Default"/>
+      <constructor name="Default" explicit="true"/>
       <method name="Show"/>
       <method name="Show" const="true"/>
       <method name="Show" overload_suffix="Int">

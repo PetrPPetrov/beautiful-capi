@@ -167,7 +167,7 @@ def include_headers(out, headers):
 
 def get_full_method_name(method) -> [str]:
     compound_name = [method.name]
-    if method.const:
+    if hasattr(method, 'const') and method.const:
         compound_name.append('const')
     if method.overload_suffix:
         compound_name.append(method.overload_suffix)

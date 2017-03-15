@@ -68,9 +68,10 @@ class ConstructorGenerator(object):
     def wrap_declaration(self) -> str:
         arguments = ', '.join(
             [argument_generator.wrap_argument_declaration() for argument_generator in self.argument_generators])
-        return 'inline {name}({arguments})'.format(
+        return 'inline {explicit}{name}({arguments})'.format(
             name=self.parent_class_generator.wrap_short_name,
-            arguments=arguments
+            arguments=arguments,
+            explicit='explicit ' if self.constructor_object.explicit else ''
         )
 
     def generate_wrap_definition(self, out: FileGenerator, capi_generator: CapiGenerator):

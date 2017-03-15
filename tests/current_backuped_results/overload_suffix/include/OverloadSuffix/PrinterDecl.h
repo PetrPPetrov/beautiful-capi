@@ -37,7 +37,7 @@ namespace OverloadSuffix {
 class Printer
 {
 public:
-    inline Printer();
+    inline explicit Printer();
     inline void Show();
     inline void Show() const;
     inline void Show(int a);

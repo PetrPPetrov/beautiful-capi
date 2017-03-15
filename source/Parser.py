@@ -574,7 +574,7 @@ class TCallback(object):
         self.load_attributes(dom_node)
 
 
-class TConstructor(object):
+class TConstructorBase(object):
     def __init__(self):
         self.all_items = []
         self.name = ""
@@ -619,13 +619,35 @@ class TConstructor(object):
         self.load_attributes(dom_node)
 
 
-class TMethod(TConstructor):
+class TConstructor(TConstructorBase):
+    def __init__(self):
+        super().__init__()
+        self.explicit = False
+        self.explicit_filled = False
+
+    def load_element(self, element):
+        if super().load_element(element):
+            return True
+        return False
+
+    def load_attributes(self, dom_node):
+        super().load_attributes(dom_node)
+        if dom_node.hasAttribute("explicit"):
+            cur_attr = dom_node.getAttribute("explicit")
+            self.explicit = string_to_bool(cur_attr)
+            self.explicit_filled = True
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
+
+class TMethodBase(TConstructorBase):
     def __init__(self):
         super().__init__()
         self.return_type = ""
         self.return_type_filled = False
-        self.const = False
-        self.const_filled = False
         self.overload_suffix = ""
         self.overload_suffix_filled = False
 
@@ -640,10 +662,6 @@ class TMethod(TConstructor):
             cur_attr = dom_node.getAttribute("return")
             self.return_type = cur_attr
             self.return_type_filled = True
-        if dom_node.hasAttribute("const"):
-            cur_attr = dom_node.getAttribute("const")
-            self.const = string_to_bool(cur_attr)
-            self.const_filled = True
         if dom_node.hasAttribute("overload_suffix"):
             cur_attr = dom_node.getAttribute("overload_suffix")
             self.overload_suffix = cur_attr
@@ -655,7 +673,31 @@ class TMethod(TConstructor):
         self.load_attributes(dom_node)
 
 
-class TFunction(TMethod):
+class TMethod(TMethodBase):
+    def __init__(self):
+        super().__init__()
+        self.const = False
+        self.const_filled = False
+
+    def load_element(self, element):
+        if super().load_element(element):
+            return True
+        return False
+
+    def load_attributes(self, dom_node):
+        super().load_attributes(dom_node)
+        if dom_node.hasAttribute("const"):
+            cur_attr = dom_node.getAttribute("const")
+            self.const = string_to_bool(cur_attr)
+            self.const_filled = True
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
+
+class TFunction(TMethodBase):
     def __init__(self):
         super().__init__()
         self.implementation_name = ""
