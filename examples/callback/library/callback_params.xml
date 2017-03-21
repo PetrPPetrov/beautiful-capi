@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<params:params xmlns:params="http://gkmsoft.ru/beautifulcapi-params"
+<params:params warn_when_builtin_type_used="false" xmlns:params="http://gkmsoft.ru/beautifulcapi-params"
                exception_handling_mode="by_first_argument">
   <copyright_header>/*
  * Beautiful Capi generates beautiful C API wrappers for your C++ classes
