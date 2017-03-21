@@ -660,6 +660,8 @@ class TMethodBase(TConstructorBase):
         super().__init__()
         self.return_type = ""
         self.return_type_filled = False
+        self.return_is_builtin = False
+        self.return_is_builtin_filled = False
         self.overload_suffix = ""
         self.overload_suffix_filled = False
 
@@ -674,6 +676,10 @@ class TMethodBase(TConstructorBase):
             cur_attr = dom_node.getAttribute("return")
             self.return_type = cur_attr
             self.return_type_filled = True
+        if dom_node.hasAttribute("return_is_builtin"):
+            cur_attr = dom_node.getAttribute("return_is_builtin")
+            self.return_is_builtin = string_to_bool(cur_attr)
+            self.return_is_builtin_filled = True
         if dom_node.hasAttribute("overload_suffix"):
             cur_attr = dom_node.getAttribute("overload_suffix")
             self.overload_suffix = cur_attr
@@ -746,6 +752,8 @@ class TArgument(object):
         self.name_filled = False
         self.type_name = ""
         self.type_name_filled = False
+        self.is_builtin = False
+        self.is_builtin_filled = False
         self.documentations = []
 
     def load_element(self, element):
@@ -765,6 +773,10 @@ class TArgument(object):
             cur_attr = dom_node.getAttribute("type")
             self.type_name = cur_attr
             self.type_name_filled = True
+        if dom_node.hasAttribute("is_builtin"):
+            cur_attr = dom_node.getAttribute("is_builtin")
+            self.is_builtin = string_to_bool(cur_attr)
+            self.is_builtin_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:

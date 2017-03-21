@@ -104,7 +104,7 @@ class GeneratorCreator(object):
         return new_namespace_generator
 
     def __create_type_generator(
-            self, type_name: str) -> ClassTypeGenerator \
+            self, type_name: str, is_builtin: bool) -> ClassTypeGenerator \
                                      or EnumTypeGenerator \
                                      or BuiltinTypeGenerator \
                                      or MappedTypeGenerator:
@@ -122,6 +122,8 @@ class GeneratorCreator(object):
                 if cur_scope in self.scope_2_mapped_types:
                     if type_name in self.scope_2_mapped_types[cur_scope]:
                         return self.scope_2_mapped_types[cur_scope][type_name]
+            if self.params.warn_when_builtin_type_used and type_name and not is_builtin:
+                print('Warning: Builtin type "{name}" used, use type maps for overriding them.'.format(name=type_name))
             return BuiltinTypeGenerator(type_name)
 
     def __get_generator(self, type_name: str) -> object:
@@ -155,7 +157,8 @@ class GeneratorCreator(object):
             self.__bind_documentation_references(documentation)
 
     def __create_argument_generator(self, argument: TArgument) -> ArgumentGenerator:
-        new_argument_generator = ArgumentGenerator(self.__create_type_generator(argument.type_name), argument.name)
+        new_argument_generator = ArgumentGenerator(
+            self.__create_type_generator(argument.type_name, argument.is_builtin), argument.name)
         new_argument_generator.argument_object = argument
         self.__bind_documentation(new_argument_generator.argument_object)
         return new_argument_generator
@@ -169,14 +172,16 @@ class GeneratorCreator(object):
         for argument in method_generator.method_object.arguments:
             method_generator.argument_generators.append(self.__create_argument_generator(argument))
         method_generator.return_type_generator = self.__create_type_generator(
-            method_generator.method_object.return_type)
+            method_generator.method_object.return_type,
+            method_generator.method_object.return_is_builtin)
         self.__bind_documentation(method_generator.method_object)
 
     def __bind_function(self, function_generator: FunctionGenerator):
         for argument in function_generator.function_object.arguments:
             function_generator.argument_generators.append(self.__create_argument_generator(argument))
         function_generator.return_type_generator = self.__create_type_generator(
-            function_generator.function_object.return_type)
+            function_generator.function_object.return_type,
+            function_generator.function_object.return_is_builtin)
         self.__bind_documentation(function_generator.function_object)
 
     def __replace_template_implementation_class(self, class_generator):
@@ -208,7 +213,7 @@ class GeneratorCreator(object):
         template_arguments_count = get_template_arguments_count(class_generator.name)
         for index in range(template_arguments_count):
             template_argument = get_template_argument(class_generator.name, index)
-            class_generator.template_argument_generators.append(self.__create_type_generator(template_argument))
+            class_generator.template_argument_generators.append(self.__create_type_generator(template_argument, False))
         for constructor_generator in class_generator.constructor_generators:
             self.__bind_constructor(constructor_generator)
         for method_generator in class_generator.method_generators:

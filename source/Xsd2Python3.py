@@ -186,8 +186,16 @@ class SchemaGenerator(object):
     def __build_load_element_item(self, element, mixed):
         self.output_file.put_line('if element.nodeName == "{0}":'.format(element.getAttribute('name')))
         with FileGenerator.Indent(self.output_file):
-            self.output_file.put_line('new_element = {0}()'.format(element.getAttribute('type')))
-            self.output_file.put_line('new_element.load(element)')
+            if element.getAttribute('type') == 'xs:string':
+                self.output_file.put_line('new_element = "{0}"'.format(element.getAttribute('default')))
+                self.output_file.put_line(
+                    'for text in [text for text in element.childNodes if text.nodeType == text.TEXT_NODE]:'
+                )
+                with FileGenerator.Indent(self.output_file):
+                    self.output_file.put_line('new_element += text.nodeValue')
+            else:
+                self.output_file.put_line('new_element = {0}()'.format(element.getAttribute('type')))
+                self.output_file.put_line('new_element.load(element)')
             self.output_file.put_line('self.{0}.append(new_element)'.format(
                 SchemaGenerator.__get_array_name(get_name_for_field(element))
             ))

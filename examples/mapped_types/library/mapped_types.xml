@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<mapped_types:api xmlns:mapped_types="http://gkmsoft.ru/beautifulcapi" project_name="MappedTypes">
+  <namespace name="MappedTypes" overload_suffix_mode="Silent">
+    <mapped_type name="int" wrap_type="int32_t" c_type="int32_t" implementation_type="int"/>
+    <mapped_type name="std::string" wrap_type="std::string" c_type="const char*" implementation_type="std::string" c_2_impl="std::string({expression})" c_2_wrap="std::string({expression})" impl_2_c="{expression}.c_str()" wrap_2_c="{expression}.c_str()"/>
+    <mapped_type name="c_string" wrap_type="std::string" c_type="const char*" implementation_type="const char*" c_2_impl="{expression}" c_2_wrap="std::string({expression})" impl_2_c="{expression}" wrap_2_c="{expression}.c_str()"/>
+    <mapped_type name="bool" wrap_type="bool" c_type="uint8_t" implementation_type="bool" />
+    <class name="Person" lifecycle="copy_semantic" implementation_class_name="MappedTypes::PersonImpl" implementation_class_header="MappedTypes.h">
+      <constructor name="Default"/>
+      <property name="Age" type="int" get_const="true"/>
+      <property name="FirstName" type="std::string" get_const="true"/>
+      <property name="SecondName" type="c_string" get_const="true"/>
+      <method name="IsMan" return="bool" const="true"/>
+      <method name="SetSex">
+        <argument name="Sex" type="bool"/>
+      </method>
+    </class>
+    <class name="Device" lifecycle="copy_semantic" implementation_class_name="MappedTypes::DeviceImpl" implementation_class_header="MappedTypes.h">
+      <mapped_type name="bool" wrap_type="bool" c_type="uint32_t" implementation_type="bool"/>
+      <constructor name="Default"/>
+      <property name="Name" type="std::string" get_const="true"/>
+      <property name="Busy" type="bool" get_const="true" get_prefix="Is"/>
+    </class>
+  </namespace>
+</mapped_types:api>

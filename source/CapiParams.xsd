@@ -40,6 +40,7 @@
     <xs:attribute name="reference_counted_implementation_2_c" type="xs:string" use="optional" default="{implementation_expression}"/>
     <xs:attribute name="raw_implementation_2_c" type="xs:string" use="optional" default="{implementation_expression}"/>
     <xs:attribute name="value_implementation_2_c" type="xs:string" use="optional" default="{implementation_expression}"/>
+    <xs:attribute name="warn_when_builtin_type_used" type="xs:boolean" use="optional" default="true"/>
     <xs:attribute name="exception_handling_mode" type="TExceptionHandlingMode" use="optional" default="no_handling"/>
     <xs:attribute name="check_and_throw_exception_filename" type="xs:string" use="optional" default="{project_name}/common/check_and_throw_exception.h"/>
     <xs:attribute name="beautiful_capi_namespace" type="xs:string" use="optional" default="beautiful_capi_{project_name}"/>

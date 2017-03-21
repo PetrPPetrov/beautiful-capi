@@ -27,6 +27,7 @@
         <xs:element name="property_get_prefix" type="TPropertyGetPrefix"/>
         <xs:element name="property_get_const" type="TPropertyGetConst"/>
         <xs:element name="mapped_type" type="TMappedType"/>
+
       </xs:choice>
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required"/>
@@ -67,14 +68,16 @@
   </xs:complexType>
   <xs:complexType name="TClass">
     <xs:sequence>
-      <xs:element name="documentation" minOccurs="0" maxOccurs="1" type="TDocumentation"/>
-      <xs:element name="include_header" minOccurs="0" maxOccurs="unbounded" type="THeaderInclude"/>
-      <xs:element name="enumeration" minOccurs="0" maxOccurs="unbounded" type="TEnumeration"/>
-      <xs:element name="constructor" minOccurs="0" maxOccurs="unbounded" type="TConstructor"/>
-      <xs:element name="property" minOccurs="0" maxOccurs="unbounded" type="TProperty"/>
-      <xs:element name="method" minOccurs="0" maxOccurs="unbounded" type="TMethod"/>
-      <xs:element name="callback" minOccurs="0" maxOccurs="1" type="TCallback"/>
-      <xs:element name="mapped_type" minOccurs="0" maxOccurs="unbounded" type="TMappedType"/>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="documentation" minOccurs="0" maxOccurs="1" type="TDocumentation"/>
+        <xs:element name="include_header" minOccurs="0" maxOccurs="unbounded" type="THeaderInclude"/>
+        <xs:element name="enumeration" minOccurs="0" maxOccurs="unbounded" type="TEnumeration"/>
+        <xs:element name="constructor" minOccurs="0" maxOccurs="unbounded" type="TConstructor"/>
+        <xs:element name="property" minOccurs="0" maxOccurs="unbounded" type="TProperty"/>
+        <xs:element name="method" minOccurs="0" maxOccurs="unbounded" type="TMethod"/>
+        <xs:element name="callback" minOccurs="0" maxOccurs="1" type="TCallback"/>
+        <xs:element name="mapped_type" minOccurs="0" maxOccurs="unbounded" type="TMappedType"/>
+      </xs:choice>
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required"/>
     <xs:attribute name="base" type="xs:string" use="optional" default=""/>
@@ -118,6 +121,7 @@
     <xs:complexContent>
       <xs:extension base="TConstructorBase">
         <xs:attribute name="return" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="return_is_builtin" type="xs:boolean" use="optional" default="false"/>
         <xs:attribute name="overload_suffix" type="xs:string" use="optional" default=""/>
       </xs:extension>
     </xs:complexContent>
@@ -143,6 +147,7 @@
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required"/>
     <xs:attribute name="type" type="xs:string" use="required"/>
+    <xs:attribute name="is_builtin" type="xs:boolean" use="optional" default="false"/>
   </xs:complexType>
   <xs:simpleType name="TLifecycle">
     <xs:restriction base="xs:string">

@@ -52,6 +52,7 @@ class TExceptionHandlingMode(Enum):
 
 class TBeautifulCapiParams(object):
     def __init__(self):
+        self.all_items = []
         self.output_folder = ""
         self.output_folder_filled = False
         self.output_wrap_file_name = ""
@@ -108,6 +109,8 @@ class TBeautifulCapiParams(object):
         self.raw_implementation_2_c_filled = False
         self.value_implementation_2_c = "{implementation_expression}"
         self.value_implementation_2_c_filled = False
+        self.warn_when_builtin_type_used = True
+        self.warn_when_builtin_type_used_filled = False
         self.exception_handling_mode = TExceptionHandlingMode.no_handling
         self.exception_handling_mode_filled = False
         self.check_and_throw_exception_filename = "{project_name}/common/check_and_throw_exception.h"
@@ -124,18 +127,25 @@ class TBeautifulCapiParams(object):
         self.root_header_initializer_filled = False
         self.shared_library_name = ""
         self.shared_library_name_filled = False
-        self.copyright_header = ""
-        self.copyright_header_filled = False
-        self.automatic_generated_warning = ""
-        self.automatic_generated_warning_filled = False
+        self.copyright_headers = []
+        self.automatic_generated_warnings = []
 
-    def load(self, dom_node):
-        for element in [node for node in dom_node.childNodes if node.nodeName == "copyright_header"]:
+    def load_element(self, element):
+        if element.nodeName == "copyright_header":
+            new_element = ""
             for text in [text for text in element.childNodes if text.nodeType == text.TEXT_NODE]:
-                self.copyright_header += text.nodeValue
-        for element in [node for node in dom_node.childNodes if node.nodeName == "automatic_generated_warning"]:
+                new_element += text.nodeValue
+            self.copyright_headers.append(new_element)
+            return True
+        if element.nodeName == "automatic_generated_warning":
+            new_element = ""
             for text in [text for text in element.childNodes if text.nodeType == text.TEXT_NODE]:
-                self.automatic_generated_warning += text.nodeValue
+                new_element += text.nodeValue
+            self.automatic_generated_warnings.append(new_element)
+            return True
+        return False
+
+    def load_attributes(self, dom_node):
         if dom_node.hasAttribute("output_folder"):
             cur_attr = dom_node.getAttribute("output_folder")
             self.output_folder = cur_attr
@@ -248,6 +258,10 @@ class TBeautifulCapiParams(object):
             cur_attr = dom_node.getAttribute("value_implementation_2_c")
             self.value_implementation_2_c = cur_attr
             self.value_implementation_2_c_filled = True
+        if dom_node.hasAttribute("warn_when_builtin_type_used"):
+            cur_attr = dom_node.getAttribute("warn_when_builtin_type_used")
+            self.warn_when_builtin_type_used = string_to_bool(cur_attr)
+            self.warn_when_builtin_type_used_filled = True
         if dom_node.hasAttribute("exception_handling_mode"):
             cur_attr = dom_node.getAttribute("exception_handling_mode")
             self.exception_handling_mode = TExceptionHandlingMode.load(cur_attr)
@@ -280,6 +294,11 @@ class TBeautifulCapiParams(object):
             cur_attr = dom_node.getAttribute("shared_library_name")
             self.shared_library_name = cur_attr
             self.shared_library_name_filled = True
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
 
 
 def load(dom_node):

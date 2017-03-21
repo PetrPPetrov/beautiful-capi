@@ -55,6 +55,7 @@ def generate_set_c_function_for_copy(class_generator, new_callback_class):
     set_copy_c_function = TMethod()
     set_copy_c_function.name = 'SetCFunctionForCopy'
     set_copy_c_function.arguments.append(TArgument())
+    set_copy_c_function.arguments[0].is_builtin = True
     set_copy_c_function.arguments[0].type_name = class_generator.copy_callback_type
     set_copy_c_function.arguments[0].name = 'c_function_pointer'
     set_copy_c_function.noexcept = True
@@ -66,6 +67,7 @@ def generate_set_c_function_for_delete(class_generator, new_callback_class):
     set_delete_c_function = TMethod()
     set_delete_c_function.name = 'SetCFunctionForDelete'
     set_delete_c_function.arguments.append(TArgument())
+    set_delete_c_function.arguments[0].is_builtin = True
     set_delete_c_function.arguments[0].type_name = class_generator.delete_callback_type
     set_delete_c_function.arguments[0].name = 'c_function_pointer'
     set_delete_c_function.noexcept = True
@@ -82,6 +84,7 @@ def generate_set_c_function_for_add_ref(class_generator, new_callback_class):
     set_add_ref_c_function = TMethod()
     set_add_ref_c_function.name = 'SetCFunctionForAddRef'
     set_add_ref_c_function.arguments.append(TArgument())
+    set_add_ref_c_function.arguments[0].is_builtin = True
     set_add_ref_c_function.arguments[0].type_name = class_generator.add_ref_callback_type
     set_add_ref_c_function.arguments[0].name = 'c_function_pointer'
     set_add_ref_c_function.noexcept = True
@@ -93,6 +96,7 @@ def generate_set_c_function_for_release(class_generator, new_callback_class):
     set_release_c_function = TMethod()
     set_release_c_function.name = 'SetCFunctionForRelease'
     set_release_c_function.arguments.append(TArgument())
+    set_release_c_function.arguments[0].is_builtin = True
     set_release_c_function.arguments[0].type_name = class_generator.release_callback_type
     set_release_c_function.arguments[0].name = 'c_function_pointer'
     set_release_c_function.noexcept = True
@@ -109,6 +113,7 @@ def generate_set_object_pointer(new_callback_class):
     set_object_pointer_method = TMethod()
     set_object_pointer_method.name = 'SetObjectPointer'
     set_object_pointer_method.arguments.append(TArgument())
+    set_object_pointer_method.arguments[0].is_builtin = True
     set_object_pointer_method.arguments[0].type_name = 'void*'
     set_object_pointer_method.arguments[0].name = 'custom_object'
     set_object_pointer_method.noexcept = True
@@ -119,6 +124,7 @@ def generate_set_object_pointer(new_callback_class):
 def generate_get_object_pointer(new_callback_class):
     get_object_pointer_method = TMethod()
     get_object_pointer_method.name = 'GetObjectPointer'
+    get_object_pointer_method.return_is_builtin = True
     get_object_pointer_method.return_type = 'void*'
     get_object_pointer_method.noexcept = True
     get_object_pointer_method.noexcept_filled = True
@@ -130,6 +136,7 @@ def generate_callback_for_method(cur_method_generator, new_callback_class):
     set_c_function_method = TMethod()
     set_c_function_method.name = 'SetCFunctionFor{0}'.format(cur_method_generator.name)
     set_c_function_method.arguments.append(TArgument())
+    set_c_function_method.arguments[0].is_builtin = True
     set_c_function_method.arguments[0].type_name = cur_method_generator.callback_type
     set_c_function_method.arguments[0].name = 'c_function_pointer'
     set_c_function_method.noexcept = True
