@@ -33,20 +33,20 @@ int main()
 #endif
     std::cout << "Namespace overload_suffix_mode = Notify" << std::endl;
     std::cout << "Class overload_suffix_mode = Silent" << std::endl;
-    std::cout << "Create Printer" << std::endl;    
+    std::cout << "Create Printer" << std::endl;
     OverloadSuffix::Printer printer;
     const OverloadSuffix::Printer& printer2 = printer;
-    
+
     std::cout << "Overloaded methods:" << std::endl;
     printer.Show();
     printer2.Show();
     printer.Show(7);
     printer.Show(4.2);
-        
+
     std::cout << "Overloaded functions:" << std::endl;
     OverloadSuffix::Show();
     OverloadSuffix::Show(5);
     OverloadSuffix::Show(1.3);
-        
+
     return EXIT_SUCCESS;
 }

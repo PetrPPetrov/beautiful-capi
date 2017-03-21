@@ -29,48 +29,47 @@ namespace MappedTypes
     {
         return firstName;
     }
-    void PersonImpl::SetFirstName(const std::string& Name)
+    void PersonImpl::SetFirstName(const std::string& name)
     {
-        firstName = Name;
+        firstName = name;
     }
-    
+
     const char* PersonImpl::GetSecondName() const
     {
-        return secondName;
+        return secondName.c_str();
     }
-    void PersonImpl::SetSecondName(const char* SName) 
+    void PersonImpl::SetSecondName(const char* sname)
     {
-        secondName = SName;
+        secondName = sname;
     }
 
     int PersonImpl::GetAge() const
     {
         return age;
     }
-    void PersonImpl::SetAge(int Age) 
+    void PersonImpl::SetAge(int age)
     {
-        age = Age;
+        this->age = age;
     }
-    
+
     bool PersonImpl::IsMan() const
     {
         return isMan;
     }
-    void PersonImpl::SetSex(bool Sex) 
+    void PersonImpl::SetSex(bool sex)
     {
-        isMan = Sex;
+        isMan = sex;
     }
-    
 
     const std::string& DeviceImpl::GetName() const
     {
         return name;
     }
-    void DeviceImpl::SetName(const std::string& Name) 
+    void DeviceImpl::SetName(const std::string& name)
     {
-        name = Name;
+        this->name = name;
     }
-    
+
     bool DeviceImpl::IsBusy() const
     {
         return isBusy;
@@ -80,4 +79,3 @@ namespace MappedTypes
         isBusy = Busy;
     }
 }
-

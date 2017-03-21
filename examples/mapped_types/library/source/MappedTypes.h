@@ -19,19 +19,21 @@
  *
  */
 
-#ifndef BEAUTIFUL_CAPI_HELLO_WORLD_PRINTER_H
-#define BEAUTIFUL_CAPI_HELLO_WORLD_PRINTER_H
+#ifndef BEAUTIFUL_CAPI_MAPPED_TYPES_H
+#define BEAUTIFUL_CAPI_MAPPED_TYPES_H
+
 #include <string>
+
 namespace MappedTypes
 {
     class PersonImpl
     {
     private:
         std::string firstName;
-        const char* secondName;        
+        std::string secondName;
         int age;
         bool isMan;
-    public:        
+    public:
         const std::string& GetFirstName() const;
         void SetFirstName(const std::string&);
         const char* GetSecondName() const;
@@ -41,19 +43,18 @@ namespace MappedTypes
         bool IsMan() const;
         void SetSex(bool);
     };
-    
+
     class DeviceImpl
     {
     private:
         std::string name;
         bool isBusy;
-    public:        
+    public:
         const std::string& GetName() const;
         void SetName(const std::string&);
         bool IsBusy() const;
         void SetBusy(bool);
     };
-    
 }
 
-#endif /* BEAUTIFUL_CAPI_HELLO_WORLD_PRINTER_H */
+#endif /* BEAUTIFUL_CAPI_MAPPED_TYPES_H */

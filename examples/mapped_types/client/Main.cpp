@@ -30,7 +30,7 @@ int main()
 {
 #if defined(_WIN32) && defined(_DEBUG)
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-#endif   
+#endif
     MappedTypes::Person person;
     person.SetFirstName("John");
     person.SetSecondName("Snow");
@@ -40,11 +40,12 @@ int main()
     std::cout << person.GetSecondName() << std::endl;
     std::cout << person.GetAge() << std::endl;
     std::cout << person.IsMan() << std::endl;
-        
+
     MappedTypes::Device device;
     device.SetName("Printer");
     device.SetBusy(false);
-    std::cout << device.GetName() << std::endl;  
-    std::cout << device.IsBusy() << std::endl;    
+    std::cout << device.GetName() << std::endl;
+    std::cout << device.IsBusy() << std::endl;
+
     return EXIT_SUCCESS;
 }

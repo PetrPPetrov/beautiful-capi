@@ -19,8 +19,8 @@
  *
  */
 
-#ifndef BEAUTIFUL_CAPI_HELLO_WORLD_PRINTER_H
-#define BEAUTIFUL_CAPI_HELLO_WORLD_PRINTER_H
+#ifndef BEAUTIFUL_CAPI_OVERLOAD_SUFFIX_H
+#define BEAUTIFUL_CAPI_OVERLOAD_SUFFIX_H
 
 namespace OverloadSuffix
 {
@@ -32,10 +32,10 @@ namespace OverloadSuffix
         void Show(int a);
         void Show(double a);
     };
-    
-    void Show();    
+
+    void Show();
     void Show(int a);
     void Show(double a);
 }
 
-#endif /* BEAUTIFUL_CAPI_HELLO_WORLD_PRINTER_H */
+#endif /* BEAUTIFUL_CAPI_OVERLOAD_SUFFIX_H */

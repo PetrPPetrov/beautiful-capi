@@ -54,4 +54,3 @@ namespace OverloadSuffix
         std::cout << "\tOverloaded function with automatic installed suffix \"1\". Double value = " << a << std::endl;
     }
 }
-
