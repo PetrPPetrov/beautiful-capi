@@ -26,6 +26,7 @@
         <xs:element name="property_set_prefix" type="TPropertySetPrefix"/>
         <xs:element name="property_get_prefix" type="TPropertyGetPrefix"/>
         <xs:element name="property_get_const" type="TPropertyGetConst"/>
+        <xs:element name="mapped_type" type="TMappedType"/>
       </xs:choice>
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required"/>
@@ -73,6 +74,7 @@
       <xs:element name="property" minOccurs="0" maxOccurs="unbounded" type="TProperty"/>
       <xs:element name="method" minOccurs="0" maxOccurs="unbounded" type="TMethod"/>
       <xs:element name="callback" minOccurs="0" maxOccurs="1" type="TCallback"/>
+      <xs:element name="mapped_type" minOccurs="0" maxOccurs="unbounded" type="TMappedType"/>
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required"/>
     <xs:attribute name="base" type="xs:string" use="optional" default=""/>
@@ -200,4 +202,14 @@
       <xs:enumeration value="Silent"/>
     </xs:restriction>
   </xs:simpleType>
+  <xs:complexType name="TMappedType">
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="wrap_type" type="xs:string" use="required"/>
+    <xs:attribute name="c_type" type="xs:string" use="required"/>
+    <xs:attribute name="implementation_type" type="xs:string" use="required"/>
+    <xs:attribute name="wrap_2_c" type="xs:string" use="optional" default="static_cast&lt;{c_type}&gt;({expression})"/>
+    <xs:attribute name="c_2_impl" type="xs:string" use="optional" default="static_cast&lt;{implementation_type}&gt;({expression})"/>
+    <xs:attribute name="impl_2_c" type="xs:string" use="optional" default="static_cast&lt;{c_type}&gt;({expression})"/>
+    <xs:attribute name="c_2_wrap" type="xs:string" use="optional" default="static_cast&lt;{wrap_type}&gt;({expression})"/>
+  </xs:complexType>
 </xs:schema>

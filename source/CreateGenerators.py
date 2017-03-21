@@ -20,14 +20,14 @@
 #
 
 
-from Parser import TClass, TEnumeration, TNamespace, TArgument, TBeautifulCapiRoot
+from Parser import TClass, TEnumeration, TNamespace, TArgument, TBeautifulCapiRoot, TMappedType
 from Parser import TGenericDocumentation, TDocumentation, TReference
 from ParamsParser import TBeautifulCapiParams
 from NamespaceGenerator import NamespaceGenerator
 from TemplateGenerator import TemplateGenerator
 from ClassGenerator import ClassGenerator
 from MethodGenerator import MethodGenerator, FunctionGenerator, ConstructorGenerator
-from ArgumentGenerator import ClassTypeGenerator, BuiltinTypeGenerator, EnumTypeGenerator, ArgumentGenerator
+from ArgumentGenerator import *
 from EnumGenerator import EnumGenerator
 from DocumentationGenerator import ReferenceGenerator
 from Helpers import BeautifulCapiException
@@ -38,12 +38,14 @@ class GeneratorCreator(object):
     def __init__(self, params: TBeautifulCapiParams):
         self.full_name_2_type_generator = {}
         self.full_name_2_routine_generator = {}
+        self.scope_2_mapped_types = {}  # NamespaceGenerator or ClassGenerator -> {str -> MappedTypeGenerator}
+        self.scope_stack = []  # NamespaceGenerator or ClassGenerator
         self.cur_namespace_generator = None
         self.params = params
         self.cur_exception_code = 1
 
     def __register_class_or_namespace_generator(
-            self, generator: ClassGenerator or NamespaceGenerator or EnumGenerator):
+            self, generator: ClassGenerator or NamespaceGenerator or EnumGenerator or MappedTypeGenerator):
         self.full_name_2_type_generator.update({generator.full_name.replace(' ', ''): generator})
 
     def __create_enum_generator(self, cur_enum: TEnumeration, parent_generator) -> EnumGenerator:
@@ -54,6 +56,8 @@ class GeneratorCreator(object):
     def __create_class_generator(self, cur_class: TClass) -> ClassGenerator:
         new_class_generator = ClassGenerator(cur_class, self.cur_namespace_generator, self.params)
         self.__register_class_or_namespace_generator(new_class_generator)
+        for cur_mapped_type in cur_class.mapped_types:
+            self.__create_mapped_type_generator(cur_mapped_type, new_class_generator)
         for cur_enum in cur_class.enumerations:
             new_enum_generator = self.__create_enum_generator(cur_enum, new_class_generator)
             new_class_generator.enum_generators.append(new_enum_generator)
@@ -67,6 +71,12 @@ class GeneratorCreator(object):
             self.full_name_2_routine_generator.update({new_method_generator.full_name: new_method_generator})
         return new_class_generator
 
+    def __create_mapped_type_generator(self, cur_mapped_type: TMappedType, parent_generator):
+        if parent_generator not in self.scope_2_mapped_types:
+            self.scope_2_mapped_types[parent_generator] = {}
+        new_mapped_type_generator = MappedTypeGenerator(cur_mapped_type, parent_generator)
+        self.scope_2_mapped_types[parent_generator].update({cur_mapped_type.name: new_mapped_type_generator})
+
     def create_namespace_generator(self, namespace: TNamespace) -> NamespaceGenerator:
         previous_namespace_generator = self.cur_namespace_generator
         new_namespace_generator = NamespaceGenerator(
@@ -76,6 +86,8 @@ class GeneratorCreator(object):
         for nested_namespace in namespace.namespaces:
             new_namespace_generator.nested_namespaces.append(
                 self.create_namespace_generator(nested_namespace))
+        for cur_mapped_type in namespace.mapped_types:
+            self.__create_mapped_type_generator(cur_mapped_type, new_namespace_generator)
         for cur_template in namespace.templates:
             new_namespace_generator.templates.append(
                 TemplateGenerator(cur_template, new_namespace_generator, self.params))
@@ -92,9 +104,13 @@ class GeneratorCreator(object):
         return new_namespace_generator
 
     def __create_type_generator(
-            self, type_name: str) -> ClassTypeGenerator or EnumTypeGenerator or BuiltinTypeGenerator:
-        if type_name.replace(' ', '') in self.full_name_2_type_generator:
-            type_generator = self.full_name_2_type_generator[type_name.replace(' ', '')]
+            self, type_name: str) -> ClassTypeGenerator \
+                                     or EnumTypeGenerator \
+                                     or BuiltinTypeGenerator \
+                                     or MappedTypeGenerator:
+        name = type_name.replace(' ', '')
+        if name in self.full_name_2_type_generator:
+            type_generator = self.full_name_2_type_generator[name]
             if type(type_generator) is ClassGenerator:
                 return ClassTypeGenerator(type_generator)
             elif type(type_generator) is EnumGenerator:
@@ -102,6 +118,10 @@ class GeneratorCreator(object):
             else:
                 raise BeautifulCapiException('namespace is used as type name')
         else:
+            for cur_scope in reversed(self.scope_stack):
+                if cur_scope in self.scope_2_mapped_types:
+                    if type_name in self.scope_2_mapped_types[cur_scope]:
+                        return self.scope_2_mapped_types[cur_scope][type_name]
             return BuiltinTypeGenerator(type_name)
 
     def __get_generator(self, type_name: str) -> object:
@@ -175,6 +195,7 @@ class GeneratorCreator(object):
         class_generator.class_object.implementation_class_name = implementation_class_name
 
     def __bind_class(self, class_generator: ClassGenerator):
+        self.scope_stack.append(class_generator)
         if class_generator.class_object.base:
             base_class_str = class_generator.class_object.base.replace(' ', '')
             if base_class_str not in self.full_name_2_type_generator:
@@ -199,8 +220,10 @@ class GeneratorCreator(object):
             for item in enum_generator.enum_object.items:
                 self.__bind_documentation(item)
         self.__replace_template_implementation_class(class_generator)
+        self.scope_stack.pop()
 
     def __bind_namespace(self, namespace_generator: NamespaceGenerator):
+        self.scope_stack.append(namespace_generator)
         for nested_namespace_generator in namespace_generator.nested_namespaces:
             self.__bind_namespace(nested_namespace_generator)
         for class_generator in namespace_generator.classes:
@@ -211,6 +234,7 @@ class GeneratorCreator(object):
             self.__bind_documentation(enum_generator.enum_object)
             for item in enum_generator.enum_object.items:
                 self.__bind_documentation(item)
+        self.scope_stack.pop()
 
     def bind_namespaces(self, namespace_generators: [NamespaceGenerator]):
         for namespace_generator in namespace_generators:

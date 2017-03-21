@@ -36,7 +36,6 @@ from Properties import process as process_properties
 from CheckBinaryCompatibilityGenerator import process as process_check_binary_compatibility
 from ParamsParser import TBeautifulCapiParams, TExceptionHandlingMode, load
 from ParseRoot import parse_root
-from Parser import TOverloadSuffixMode
 from UnitTestGenerator import TestGenerator
 from OverloadSuffixes import process as process_overload_suffixes
 

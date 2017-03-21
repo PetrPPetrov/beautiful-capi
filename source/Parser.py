@@ -154,6 +154,7 @@ class TNamespace(object):
         self.property_set_prefixes = []
         self.property_get_prefixes = []
         self.property_get_consts = []
+        self.mapped_types = []
 
     def load_element(self, element):
         if element.nodeName == "include":
@@ -205,6 +206,11 @@ class TNamespace(object):
             new_element = TPropertyGetConst()
             new_element.load(element)
             self.property_get_consts.append(new_element)
+            return True
+        if element.nodeName == "mapped_type":
+            new_element = TMappedType()
+            new_element.load(element)
+            self.mapped_types.append(new_element)
             return True
         return False
 
@@ -426,6 +432,7 @@ class TClass(object):
         self.properties = []
         self.methods = []
         self.callbacks = []
+        self.mapped_types = []
 
     def load_element(self, element):
         if element.nodeName == "documentation":
@@ -462,6 +469,11 @@ class TClass(object):
             new_element = TCallback()
             new_element.load(element)
             self.callbacks.append(new_element)
+            return True
+        if element.nodeName == "mapped_type":
+            new_element = TMappedType()
+            new_element.load(element)
+            self.mapped_types.append(new_element)
             return True
         return False
 
@@ -990,6 +1002,69 @@ class TDocumentation(TGenericDocumentation):
 
     def load_attributes(self, dom_node):
         super().load_attributes(dom_node)
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
+
+class TMappedType(object):
+    def __init__(self):
+        self.all_items = []
+        self.name = ""
+        self.name_filled = False
+        self.wrap_type = ""
+        self.wrap_type_filled = False
+        self.c_type = ""
+        self.c_type_filled = False
+        self.implementation_type = ""
+        self.implementation_type_filled = False
+        self.wrap_2_c = "static_cast<{c_type}>({expression})"
+        self.wrap_2_c_filled = False
+        self.c_2_impl = "static_cast<{implementation_type}>({expression})"
+        self.c_2_impl_filled = False
+        self.impl_2_c = "static_cast<{c_type}>({expression})"
+        self.impl_2_c_filled = False
+        self.c_2_wrap = "static_cast<{wrap_type}>({expression})"
+        self.c_2_wrap_filled = False
+
+    def load_element(self, element):
+        return False
+
+    def load_attributes(self, dom_node):
+        if dom_node.hasAttribute("name"):
+            cur_attr = dom_node.getAttribute("name")
+            self.name = cur_attr
+            self.name_filled = True
+        if dom_node.hasAttribute("wrap_type"):
+            cur_attr = dom_node.getAttribute("wrap_type")
+            self.wrap_type = cur_attr
+            self.wrap_type_filled = True
+        if dom_node.hasAttribute("c_type"):
+            cur_attr = dom_node.getAttribute("c_type")
+            self.c_type = cur_attr
+            self.c_type_filled = True
+        if dom_node.hasAttribute("implementation_type"):
+            cur_attr = dom_node.getAttribute("implementation_type")
+            self.implementation_type = cur_attr
+            self.implementation_type_filled = True
+        if dom_node.hasAttribute("wrap_2_c"):
+            cur_attr = dom_node.getAttribute("wrap_2_c")
+            self.wrap_2_c = cur_attr
+            self.wrap_2_c_filled = True
+        if dom_node.hasAttribute("c_2_impl"):
+            cur_attr = dom_node.getAttribute("c_2_impl")
+            self.c_2_impl = cur_attr
+            self.c_2_impl_filled = True
+        if dom_node.hasAttribute("impl_2_c"):
+            cur_attr = dom_node.getAttribute("impl_2_c")
+            self.impl_2_c = cur_attr
+            self.impl_2_c_filled = True
+        if dom_node.hasAttribute("c_2_wrap"):
+            cur_attr = dom_node.getAttribute("c_2_wrap")
+            self.c_2_wrap = cur_attr
+            self.c_2_wrap_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:

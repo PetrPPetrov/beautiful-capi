@@ -23,8 +23,76 @@
 from FileGenerator import FileGenerator
 from FileCache import FileCache
 from NamespaceGenerator import NamespaceGenerator
-from Parser import TArgument
 from Helpers import bool_to_str
+
+
+class MappedTypeGenerator(object):
+    def __init__(self, mapped_type_object, parent_generator):
+        self.mapped_type_object = mapped_type_object
+        self.full_name = parent_generator.full_name + '::' + self.mapped_type_object.name
+
+    def format(self, casting_expression: str, expression_to_cast: str) -> str:
+        result = casting_expression.format(
+            expression=expression_to_cast,
+            c_type=self.mapped_type_object.c_type,
+            implementation_type=self.mapped_type_object.implementation_type,
+            wrap_type=self.mapped_type_object.wrap_type
+        )
+        return result
+
+    def wrap_return_type(self) -> str:
+        return self.mapped_type_object.wrap_type
+
+    def wrap_argument_declaration(self) -> str:
+        return self.mapped_type_object.wrap_type
+
+    def wrap_2_c(self, expression: str) -> str:
+        return self.wrap_2_c_var('', expression)[1]
+
+    def c_argument_declaration(self) -> str:
+        return self.mapped_type_object.c_type
+
+    def wrap_2_c_var(self, result_var: str, expression: str) -> ([str], str):
+        casting_expression = self.format(self.mapped_type_object.wrap_2_c, expression)
+        if result_var:
+            return ['{type_name} {result_var}({expression});'.format(
+                type_name=self.mapped_type_object.c_type,
+                result_var=result_var,
+                expression=casting_expression
+            )], result_var
+        else:
+            return [], casting_expression
+
+    def c_2_implementation(self, expression: str) -> str:
+        return self.format(self.mapped_type_object.c_2_impl, expression)
+
+    def implementation_2_c_var(self, result_var: str, expression: str) -> ([str], str):
+        casting_expression = self.format(self.mapped_type_object.impl_2_c, expression)
+        if result_var:
+            return ['{type_name} {result_var}{expression};'.format(
+                type_name=self.mapped_type_object.implementation_name,
+                expression=casting_expression,
+                result_var=result_var
+            )], result_var
+        else:
+            return [], casting_expression
+
+    def c_2_wrap_var(self, result_var: str, expression: str) -> ([str], str):
+        casting_expression = self.format(self.mapped_type_object.c_2_wrap, expression)
+        if result_var:
+            return ['{type_name} {result_var}({expression});'.format(
+                type_name=self.mapped_type_object.wrap_type,
+                result_var=result_var,
+                expression=casting_expression
+            )], result_var
+        else:
+            return [], casting_expression
+
+    def include_dependent_declaration_headers(self, file_generator: FileGenerator, file_cache: FileCache):
+        pass
+
+    def include_dependent_definition_headers(self, file_generator: FileGenerator, file_cache: FileCache):
+        pass
 
 
 class ClassTypeGenerator(object):
@@ -89,7 +157,8 @@ class ClassTypeGenerator(object):
             ))
 
     def c_2_implementation_var(self, result_var: str, expression: str) -> ([str], str):
-        expression = self.class_argument_generator.lifecycle_traits.c_2_impl_value().format(expression=expression)
+        expression = self.class_argument_generator.lifecycle_traits.c_2_impl_value().format(
+            casting_expression=expression)
         if result_var:
             return ['{impl_name} {result_var}({expression});'.format(
                 impl_name=self.snippet_implementation_declaration(),
@@ -277,7 +346,9 @@ class BuiltinTypeGenerator(object):
 
 
 class ArgumentGenerator(object):
-    def __init__(self, type_generator: ClassTypeGenerator or EnumTypeGenerator or BuiltinTypeGenerator, name: str):
+    def __init__(self,
+                 type_generator: ClassTypeGenerator or EnumTypeGenerator or BuiltinTypeGenerator or MappedTypeGenerator,
+                 name: str):
         self.type_generator = type_generator
         self.argument_object = None
         self.name = name
