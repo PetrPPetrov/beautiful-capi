@@ -374,7 +374,7 @@ class ClassGenerator(object):
                     with IndentScope(body):
                         body.put_line('return dynamic_cast<{cast_to}*>({cast_from});'.format(
                             cast_to=self.class_object.implementation_class_name,
-                            cast_from=base_class_argument_generator.c_2_implementation_to_pointer()))
+                            cast_from=base_class_argument_generator.c_2_implementation_pointer()))
                     body.put_line('else')
                     with IndentScope(body):
                         body.put_line('return 0;')

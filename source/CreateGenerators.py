@@ -133,8 +133,7 @@ class GeneratorCreator(object):
         raise BeautifulCapiException('reference could not be bound')
 
     def __bind_documentation_references_impl(self, documentation: TGenericDocumentation):
-        for i in range(len(documentation.all_items)):
-            doc_item = documentation.all_items[i]
+        for i, doc_item in enumerate(documentation.all_items):
             if type(doc_item) is TReference:
                 reference_as_text = ''.join(doc_item.all_items)
                 new_reference_to_replace = ReferenceGenerator()

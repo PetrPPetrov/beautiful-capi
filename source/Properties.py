@@ -40,8 +40,7 @@ class PropertiesProcessor(object):
 
     @staticmethod
     def __process_documentation_impl(documentation, get: bool):
-        for i in range(len(documentation.all_items)):
-            doc_item = documentation.all_items[i]
+        for i, doc_item in enumerate(documentation.all_items):
             if type(doc_item) is str:
                 documentation.all_items[i] = doc_item.format(Setget='Gets' if get else 'Sets')
             else:

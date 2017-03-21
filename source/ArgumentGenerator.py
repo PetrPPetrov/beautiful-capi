@@ -46,9 +46,6 @@ class MappedTypeGenerator(object):
     def wrap_argument_declaration(self) -> str:
         return self.mapped_type_object.wrap_type
 
-    def wrap_2_c(self, expression: str) -> str:
-        return self.wrap_2_c_var('', expression)[1]
-
     def c_argument_declaration(self) -> str:
         return self.mapped_type_object.c_type
 
@@ -106,10 +103,6 @@ class ClassTypeGenerator(object):
     def wrap_return_type(self) -> str:
         return self.class_argument_generator.full_wrap_name
 
-    def wrap_2_c(self, name: str) -> str:
-        return '{name}.{get_raw_pointer_method}()'.format(
-            name=name, get_raw_pointer_method=self.class_argument_generator.params.get_raw_pointer_method_name)
-
     @staticmethod
     def c_argument_declaration() -> str:
         return 'void*'
@@ -133,7 +126,7 @@ class ClassTypeGenerator(object):
     def wrap_2_c_var(self, result_var: str, expression: str) -> ([str], str):
         internal_expression = '{expression}.{get_raw_pointer_method}()'.format(
             expression=expression,
-            get_raw_pointer_method=self.class_argument_generator.params.get_get_raw_pointer_method)
+            get_raw_pointer_method=self.class_argument_generator.params.get_raw_pointer_method_name)
         if result_var:
             return ['void* {result_var}({internal_expression});'.format(
                 result_var=result_var,
@@ -149,7 +142,7 @@ class ClassTypeGenerator(object):
                 name=name
             ))
 
-    def c_2_implementation_to_pointer(self, name: str) -> str:
+    def c_2_implementation_pointer(self, name: str) -> str:
         return self.class_argument_generator.lifecycle_traits.c_2_impl_pointer(
             'static_cast<{implementation_class_name}*>({name})'.format(
                 implementation_class_name=self.class_argument_generator.class_object.implementation_class_name,
@@ -199,9 +192,6 @@ class EnumTypeGenerator(object):
 
     def wrap_return_type(self) -> str:
         return self.enum_argument_generator.full_wrap_name
-
-    def wrap_2_c(self, name: str) -> str:
-        return 'static_cast<{c_type}>({name})'.format(c_type=self.c_argument_declaration(), name=name)
 
     def c_argument_declaration(self) -> str:
         return self.enum_argument_generator.enum_object.underlying_type
@@ -281,10 +271,6 @@ class BuiltinTypeGenerator(object):
     def wrap_return_type(self) -> str:
         return self.wrap_argument_declaration()
 
-    @staticmethod
-    def wrap_2_c(name: str) -> str:
-        return name
-
     def c_argument_declaration(self) -> str:
         return self.wrap_argument_declaration()
 
@@ -357,7 +343,7 @@ class ArgumentGenerator(object):
         return self.type_generator.wrap_argument_declaration() + ' ' + self.name
 
     def wrap_2_c(self) -> str:
-        return self.type_generator.wrap_2_c(self.name)
+        return self.type_generator.wrap_2_c_var('', self.name)[1]
 
     def c_argument_declaration(self) -> str:
         return self.type_generator.c_argument_declaration() + ' ' + self.name
@@ -368,8 +354,8 @@ class ArgumentGenerator(object):
     def c_2_implementation(self) -> str:
         return self.type_generator.c_2_implementation(self.name)
 
-    def c_2_implementation_to_pointer(self) -> str:
-        return self.type_generator.c_2_implementation_to_pointer(self.name)
+    def c_2_implementation_pointer(self) -> str:
+        return self.type_generator.c_2_implementation_pointer(self.name)
 
     def snippet_implementation_declaration(self) -> str:
         return self.type_generator.snippet_implementation_declaration() + ' ' + self.name
@@ -397,7 +383,7 @@ class ThisArgumentGenerator(object):
         return 'void* object_pointer'
 
     def c_2_implementation(self) -> str:
-        return self.type_generator.c_2_implementation_to_pointer('object_pointer')
+        return self.type_generator.c_2_implementation_pointer('object_pointer')
 
     def implementation_2_c(self) -> str:
         return 'mObject'
