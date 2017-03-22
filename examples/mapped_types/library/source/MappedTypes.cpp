@@ -74,8 +74,8 @@ namespace MappedTypes
     {
         return isBusy;
     }
-    void DeviceImpl::SetBusy(bool Busy)
+    void DeviceImpl::SetBusy(bool busy)
     {
-        isBusy = Busy;
+        isBusy = busy;
     }
 }

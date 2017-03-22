@@ -29,6 +29,7 @@ from Helpers import bool_to_str
 class MappedTypeGenerator(object):
     def __init__(self, mapped_type_object, parent_generator):
         self.mapped_type_object = mapped_type_object
+        self.name = self.mapped_type_object.name
         self.full_name = parent_generator.full_name + '::' + self.mapped_type_object.name
 
     def format(self, casting_expression: str, expression_to_cast: str) -> str:
@@ -36,7 +37,8 @@ class MappedTypeGenerator(object):
             expression=expression_to_cast,
             c_type=self.mapped_type_object.c_type,
             implementation_type=self.mapped_type_object.implementation_type,
-            wrap_type=self.mapped_type_object.wrap_type
+            wrap_type=self.mapped_type_object.wrap_type,
+            argument_wrap_type=self.mapped_type_object.argument_wrap_type
         )
         return result
 
@@ -44,7 +46,8 @@ class MappedTypeGenerator(object):
         return self.mapped_type_object.wrap_type
 
     def wrap_argument_declaration(self) -> str:
-        return self.mapped_type_object.wrap_type
+        return self.mapped_type_object.argument_wrap_type if self.mapped_type_object.argument_wrap_type_filled \
+            else self.mapped_type_object.wrap_type
 
     def c_argument_declaration(self) -> str:
         return self.mapped_type_object.c_type
