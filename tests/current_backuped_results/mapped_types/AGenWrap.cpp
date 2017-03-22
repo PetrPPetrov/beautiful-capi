@@ -115,10 +115,10 @@ MAPPEDTYPES_API int32_t MAPPEDTYPES_API_CONVENTION mapped_types_person_get_age_c
     return static_cast<int32_t>(self->GetAge());
 }
 
-MAPPEDTYPES_API void MAPPEDTYPES_API_CONVENTION mapped_types_person_set_age(void* object_pointer, int32_t value)
+MAPPEDTYPES_API void MAPPEDTYPES_API_CONVENTION mapped_types_person_set_age(void* object_pointer, int32_t age)
 {
     MappedTypes::PersonImpl* self = static_cast<MappedTypes::PersonImpl*>(object_pointer);
-    self->SetAge(static_cast<int>(value));
+    self->SetAge(static_cast<int>(age));
 }
 
 MAPPEDTYPES_API const char* MAPPEDTYPES_API_CONVENTION mapped_types_person_get_first_name_const(void* object_pointer)
@@ -127,10 +127,10 @@ MAPPEDTYPES_API const char* MAPPEDTYPES_API_CONVENTION mapped_types_person_get_f
     return self->GetFirstName().c_str();
 }
 
-MAPPEDTYPES_API void MAPPEDTYPES_API_CONVENTION mapped_types_person_set_first_name(void* object_pointer, const char* value)
+MAPPEDTYPES_API void MAPPEDTYPES_API_CONVENTION mapped_types_person_set_first_name(void* object_pointer, const char* first_name)
 {
     MappedTypes::PersonImpl* self = static_cast<MappedTypes::PersonImpl*>(object_pointer);
-    self->SetFirstName(std::string(value));
+    self->SetFirstName(std::string(first_name));
 }
 
 MAPPEDTYPES_API const char* MAPPEDTYPES_API_CONVENTION mapped_types_person_get_second_name_const(void* object_pointer)
@@ -139,10 +139,10 @@ MAPPEDTYPES_API const char* MAPPEDTYPES_API_CONVENTION mapped_types_person_get_s
     return self->GetSecondName();
 }
 
-MAPPEDTYPES_API void MAPPEDTYPES_API_CONVENTION mapped_types_person_set_second_name(void* object_pointer, const char* value)
+MAPPEDTYPES_API void MAPPEDTYPES_API_CONVENTION mapped_types_person_set_second_name(void* object_pointer, const char* second_name)
 {
     MappedTypes::PersonImpl* self = static_cast<MappedTypes::PersonImpl*>(object_pointer);
-    self->SetSecondName(value);
+    self->SetSecondName(second_name);
 }
 
 MAPPEDTYPES_API void* MAPPEDTYPES_API_CONVENTION mapped_types_person_copy(void* object_pointer)
@@ -166,10 +166,10 @@ MAPPEDTYPES_API const char* MAPPEDTYPES_API_CONVENTION mapped_types_device_get_n
     return self->GetName().c_str();
 }
 
-MAPPEDTYPES_API void MAPPEDTYPES_API_CONVENTION mapped_types_device_set_name(void* object_pointer, const char* value)
+MAPPEDTYPES_API void MAPPEDTYPES_API_CONVENTION mapped_types_device_set_name(void* object_pointer, const char* name)
 {
     MappedTypes::DeviceImpl* self = static_cast<MappedTypes::DeviceImpl*>(object_pointer);
-    self->SetName(std::string(value));
+    self->SetName(std::string(name));
 }
 
 MAPPEDTYPES_API uint32_t MAPPEDTYPES_API_CONVENTION mapped_types_device_is_busy_const(void* object_pointer)
@@ -178,10 +178,10 @@ MAPPEDTYPES_API uint32_t MAPPEDTYPES_API_CONVENTION mapped_types_device_is_busy_
     return static_cast<uint32_t>(self->IsBusy());
 }
 
-MAPPEDTYPES_API void MAPPEDTYPES_API_CONVENTION mapped_types_device_set_busy(void* object_pointer, uint32_t value)
+MAPPEDTYPES_API void MAPPEDTYPES_API_CONVENTION mapped_types_device_set_busy(void* object_pointer, uint32_t busy)
 {
     MappedTypes::DeviceImpl* self = static_cast<MappedTypes::DeviceImpl*>(object_pointer);
-    self->SetBusy((value ? true : false));
+    self->SetBusy((busy ? true : false));
 }
 
 MAPPEDTYPES_API void* MAPPEDTYPES_API_CONVENTION mapped_types_device_copy(void* object_pointer)

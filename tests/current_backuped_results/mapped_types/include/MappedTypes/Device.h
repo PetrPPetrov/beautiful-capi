@@ -41,9 +41,9 @@ inline std::string MappedTypes::Device::GetName() const
     return std::string(mapped_types_device_get_name_const(GetRawPointer()));
 }
 
-inline void MappedTypes::Device::SetName(std::string value)
+inline void MappedTypes::Device::SetName(const std::string& name)
 {
-    mapped_types_device_set_name(GetRawPointer(), value.c_str());
+    mapped_types_device_set_name(GetRawPointer(), name.c_str());
 }
 
 inline bool MappedTypes::Device::IsBusy() const
@@ -51,9 +51,9 @@ inline bool MappedTypes::Device::IsBusy() const
     return (mapped_types_device_is_busy_const(GetRawPointer()) ? true : false);
 }
 
-inline void MappedTypes::Device::SetBusy(bool value)
+inline void MappedTypes::Device::SetBusy(bool busy)
 {
-    mapped_types_device_set_busy(GetRawPointer(), static_cast<uint32_t>(value));
+    mapped_types_device_set_busy(GetRawPointer(), static_cast<uint32_t>(busy));
 }
 
 inline MappedTypes::Device::Device(const Device& other)

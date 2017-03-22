@@ -92,7 +92,7 @@ enum beautiful_capi_callback_exception_code_t
 typedef void (EXAMPLE_API_CONVENTION *example_printer_print_const_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* text);
 typedef int (EXAMPLE_API_CONVENTION *example_printer_get_device_type_const_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
 typedef int (EXAMPLE_API_CONVENTION *example_printer_get_printing_quality_const_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
-typedef void (EXAMPLE_API_CONVENTION *example_printer_set_printing_quality_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, int value);
+typedef void (EXAMPLE_API_CONVENTION *example_printer_set_printing_quality_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, int printing_quality);
 
 int AutoGen_Internal_Callback_ExampleGetMajorVersionImpl()
 {
@@ -272,10 +272,10 @@ public:
         beautiful_capi_Callback::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
         return result;
     }
-    void SetPrintingQuality(Example::IPrinter::EQuality value)
+    void SetPrintingQuality(Example::IPrinter::EQuality printing_quality)
     {
         beautiful_capi_callback_exception_info_t exception_info;
-        set_printing_quality_callback(&exception_info, mObject, static_cast<int>(value));
+        set_printing_quality_callback(&exception_info, mObject, static_cast<int>(printing_quality));
         beautiful_capi_Callback::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
     }
 };
@@ -667,7 +667,7 @@ EXCEPTION_API int EXCEPTION_API_CONVENTION example_printer_get_printing_quality_
     return static_cast<int>(0);
 }
 
-EXCEPTION_API void EXCEPTION_API_CONVENTION example_printer_set_printing_quality(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, int value)
+EXCEPTION_API void EXCEPTION_API_CONVENTION example_printer_set_printing_quality(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, int printing_quality)
 {
     Example::IPrinter* self = static_cast<Example::IPrinter*>(object_pointer);
     beautiful_capi_callback_exception_info_t exception_info_default;
@@ -679,7 +679,7 @@ EXCEPTION_API void EXCEPTION_API_CONVENTION example_printer_set_printing_quality
     {
         exception_info->code = 0;
         exception_info->object_pointer = 0;
-        self->SetPrintingQuality(static_cast<Example::IPrinter::EQuality>(value));
+        self->SetPrintingQuality(static_cast<Example::IPrinter::EQuality>(printing_quality));
     }
     catch (Exception::NullArgumentImpl& exception_object)
     {

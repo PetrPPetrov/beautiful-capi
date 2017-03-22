@@ -51,9 +51,9 @@ inline int32_t MappedTypes::Person::GetAge() const
     return static_cast<int32_t>(mapped_types_person_get_age_const(GetRawPointer()));
 }
 
-inline void MappedTypes::Person::SetAge(int32_t value)
+inline void MappedTypes::Person::SetAge(int32_t age)
 {
-    mapped_types_person_set_age(GetRawPointer(), static_cast<int32_t>(value));
+    mapped_types_person_set_age(GetRawPointer(), static_cast<int32_t>(age));
 }
 
 inline std::string MappedTypes::Person::GetFirstName() const
@@ -61,9 +61,9 @@ inline std::string MappedTypes::Person::GetFirstName() const
     return std::string(mapped_types_person_get_first_name_const(GetRawPointer()));
 }
 
-inline void MappedTypes::Person::SetFirstName(std::string value)
+inline void MappedTypes::Person::SetFirstName(const std::string& first_name)
 {
-    mapped_types_person_set_first_name(GetRawPointer(), value.c_str());
+    mapped_types_person_set_first_name(GetRawPointer(), first_name.c_str());
 }
 
 inline std::string MappedTypes::Person::GetSecondName() const
@@ -71,9 +71,9 @@ inline std::string MappedTypes::Person::GetSecondName() const
     return std::string(mapped_types_person_get_second_name_const(GetRawPointer()));
 }
 
-inline void MappedTypes::Person::SetSecondName(std::string value)
+inline void MappedTypes::Person::SetSecondName(const std::string& second_name)
 {
-    mapped_types_person_set_second_name(GetRawPointer(), value.c_str());
+    mapped_types_person_set_second_name(GetRawPointer(), second_name.c_str());
 }
 
 inline MappedTypes::Person::Person(const Person& other)

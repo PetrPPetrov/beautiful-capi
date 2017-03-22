@@ -39,9 +39,9 @@ class Device
 public:
     inline Device();
     inline std::string GetName() const;
-    inline void SetName(std::string value);
+    inline void SetName(const std::string& name);
     inline bool IsBusy() const;
-    inline void SetBusy(bool value);
+    inline void SetBusy(bool busy);
 
     inline Device(const Device& other);
     #ifdef MAPPEDTYPES_CPP_COMPILER_HAS_RVALUE_REFERENCES

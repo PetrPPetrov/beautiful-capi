@@ -40,11 +40,11 @@ public:
     inline Name(const char* FirstName, const char* MiddleName, const char* LastName);
     inline const char* GetFullName();
     inline const char* GetFirstName() const;
-    inline void SetFirstName(const char* value);
+    inline void SetFirstName(const char* first_name);
     inline const char* GetMiddleName() const;
-    inline void SetMiddleName(const char* value);
+    inline void SetMiddleName(const char* middle_name);
     inline const char* GetLastName() const;
-    inline void SetLastName(const char* value);
+    inline void SetLastName(const char* last_name);
 
     inline Name(const Name& other);
     #ifdef UNITTEST_CPP_COMPILER_HAS_RVALUE_REFERENCES

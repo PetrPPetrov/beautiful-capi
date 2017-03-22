@@ -104,9 +104,9 @@
     EXAMPLE_API int EXAMPLE_API_CONVENTION example_get_patch_version();
     EXAMPLE_API void* EXAMPLE_API_CONVENTION example_page_default();
     EXAMPLE_API size_t EXAMPLE_API_CONVENTION example_page_get_width_const(void* object_pointer);
-    EXAMPLE_API void EXAMPLE_API_CONVENTION example_page_set_width(void* object_pointer, size_t value);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_page_set_width(void* object_pointer, size_t width);
     EXAMPLE_API size_t EXAMPLE_API_CONVENTION example_page_get_height_const(void* object_pointer);
-    EXAMPLE_API void EXAMPLE_API_CONVENTION example_page_set_height(void* object_pointer, size_t value);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_page_set_height(void* object_pointer, size_t height);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_page_add_ref(void* object_pointer);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_page_release(void* object_pointer);
     EXAMPLE_API void* EXAMPLE_API_CONVENTION example_document_default();
@@ -152,9 +152,9 @@
     typedef int (EXAMPLE_API_CONVENTION *example_get_patch_version_function_type)();
     typedef void* (EXAMPLE_API_CONVENTION *example_page_default_function_type)();
     typedef size_t (EXAMPLE_API_CONVENTION *example_page_get_width_const_function_type)(void* object_pointer);
-    typedef void (EXAMPLE_API_CONVENTION *example_page_set_width_function_type)(void* object_pointer, size_t value);
+    typedef void (EXAMPLE_API_CONVENTION *example_page_set_width_function_type)(void* object_pointer, size_t width);
     typedef size_t (EXAMPLE_API_CONVENTION *example_page_get_height_const_function_type)(void* object_pointer);
-    typedef void (EXAMPLE_API_CONVENTION *example_page_set_height_function_type)(void* object_pointer, size_t value);
+    typedef void (EXAMPLE_API_CONVENTION *example_page_set_height_function_type)(void* object_pointer, size_t height);
     typedef void (EXAMPLE_API_CONVENTION *example_page_add_ref_function_type)(void* object_pointer);
     typedef void (EXAMPLE_API_CONVENTION *example_page_release_function_type)(void* object_pointer);
     typedef void* (EXAMPLE_API_CONVENTION *example_document_default_function_type)();

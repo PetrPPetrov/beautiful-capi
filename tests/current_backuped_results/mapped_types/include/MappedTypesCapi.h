@@ -106,18 +106,18 @@
     MAPPEDTYPES_API uint8_t MAPPEDTYPES_API_CONVENTION mapped_types_person_is_man_const(void* object_pointer);
     MAPPEDTYPES_API void MAPPEDTYPES_API_CONVENTION mapped_types_person_set_sex(void* object_pointer, uint8_t Sex);
     MAPPEDTYPES_API int32_t MAPPEDTYPES_API_CONVENTION mapped_types_person_get_age_const(void* object_pointer);
-    MAPPEDTYPES_API void MAPPEDTYPES_API_CONVENTION mapped_types_person_set_age(void* object_pointer, int32_t value);
+    MAPPEDTYPES_API void MAPPEDTYPES_API_CONVENTION mapped_types_person_set_age(void* object_pointer, int32_t age);
     MAPPEDTYPES_API const char* MAPPEDTYPES_API_CONVENTION mapped_types_person_get_first_name_const(void* object_pointer);
-    MAPPEDTYPES_API void MAPPEDTYPES_API_CONVENTION mapped_types_person_set_first_name(void* object_pointer, const char* value);
+    MAPPEDTYPES_API void MAPPEDTYPES_API_CONVENTION mapped_types_person_set_first_name(void* object_pointer, const char* first_name);
     MAPPEDTYPES_API const char* MAPPEDTYPES_API_CONVENTION mapped_types_person_get_second_name_const(void* object_pointer);
-    MAPPEDTYPES_API void MAPPEDTYPES_API_CONVENTION mapped_types_person_set_second_name(void* object_pointer, const char* value);
+    MAPPEDTYPES_API void MAPPEDTYPES_API_CONVENTION mapped_types_person_set_second_name(void* object_pointer, const char* second_name);
     MAPPEDTYPES_API void* MAPPEDTYPES_API_CONVENTION mapped_types_person_copy(void* object_pointer);
     MAPPEDTYPES_API void MAPPEDTYPES_API_CONVENTION mapped_types_person_delete(void* object_pointer);
     MAPPEDTYPES_API void* MAPPEDTYPES_API_CONVENTION mapped_types_device_default();
     MAPPEDTYPES_API const char* MAPPEDTYPES_API_CONVENTION mapped_types_device_get_name_const(void* object_pointer);
-    MAPPEDTYPES_API void MAPPEDTYPES_API_CONVENTION mapped_types_device_set_name(void* object_pointer, const char* value);
+    MAPPEDTYPES_API void MAPPEDTYPES_API_CONVENTION mapped_types_device_set_name(void* object_pointer, const char* name);
     MAPPEDTYPES_API uint32_t MAPPEDTYPES_API_CONVENTION mapped_types_device_is_busy_const(void* object_pointer);
-    MAPPEDTYPES_API void MAPPEDTYPES_API_CONVENTION mapped_types_device_set_busy(void* object_pointer, uint32_t value);
+    MAPPEDTYPES_API void MAPPEDTYPES_API_CONVENTION mapped_types_device_set_busy(void* object_pointer, uint32_t busy);
     MAPPEDTYPES_API void* MAPPEDTYPES_API_CONVENTION mapped_types_device_copy(void* object_pointer);
     MAPPEDTYPES_API void MAPPEDTYPES_API_CONVENTION mapped_types_device_delete(void* object_pointer);
 
@@ -159,18 +159,18 @@
     typedef uint8_t (MAPPEDTYPES_API_CONVENTION *mapped_types_person_is_man_const_function_type)(void* object_pointer);
     typedef void (MAPPEDTYPES_API_CONVENTION *mapped_types_person_set_sex_function_type)(void* object_pointer, uint8_t Sex);
     typedef int32_t (MAPPEDTYPES_API_CONVENTION *mapped_types_person_get_age_const_function_type)(void* object_pointer);
-    typedef void (MAPPEDTYPES_API_CONVENTION *mapped_types_person_set_age_function_type)(void* object_pointer, int32_t value);
+    typedef void (MAPPEDTYPES_API_CONVENTION *mapped_types_person_set_age_function_type)(void* object_pointer, int32_t age);
     typedef const char* (MAPPEDTYPES_API_CONVENTION *mapped_types_person_get_first_name_const_function_type)(void* object_pointer);
-    typedef void (MAPPEDTYPES_API_CONVENTION *mapped_types_person_set_first_name_function_type)(void* object_pointer, const char* value);
+    typedef void (MAPPEDTYPES_API_CONVENTION *mapped_types_person_set_first_name_function_type)(void* object_pointer, const char* first_name);
     typedef const char* (MAPPEDTYPES_API_CONVENTION *mapped_types_person_get_second_name_const_function_type)(void* object_pointer);
-    typedef void (MAPPEDTYPES_API_CONVENTION *mapped_types_person_set_second_name_function_type)(void* object_pointer, const char* value);
+    typedef void (MAPPEDTYPES_API_CONVENTION *mapped_types_person_set_second_name_function_type)(void* object_pointer, const char* second_name);
     typedef void* (MAPPEDTYPES_API_CONVENTION *mapped_types_person_copy_function_type)(void* object_pointer);
     typedef void (MAPPEDTYPES_API_CONVENTION *mapped_types_person_delete_function_type)(void* object_pointer);
     typedef void* (MAPPEDTYPES_API_CONVENTION *mapped_types_device_default_function_type)();
     typedef const char* (MAPPEDTYPES_API_CONVENTION *mapped_types_device_get_name_const_function_type)(void* object_pointer);
-    typedef void (MAPPEDTYPES_API_CONVENTION *mapped_types_device_set_name_function_type)(void* object_pointer, const char* value);
+    typedef void (MAPPEDTYPES_API_CONVENTION *mapped_types_device_set_name_function_type)(void* object_pointer, const char* name);
     typedef uint32_t (MAPPEDTYPES_API_CONVENTION *mapped_types_device_is_busy_const_function_type)(void* object_pointer);
-    typedef void (MAPPEDTYPES_API_CONVENTION *mapped_types_device_set_busy_function_type)(void* object_pointer, uint32_t value);
+    typedef void (MAPPEDTYPES_API_CONVENTION *mapped_types_device_set_busy_function_type)(void* object_pointer, uint32_t busy);
     typedef void* (MAPPEDTYPES_API_CONVENTION *mapped_types_device_copy_function_type)(void* object_pointer);
     typedef void (MAPPEDTYPES_API_CONVENTION *mapped_types_device_delete_function_type)(void* object_pointer);
 

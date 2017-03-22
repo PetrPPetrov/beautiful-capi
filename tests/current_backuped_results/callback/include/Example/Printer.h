@@ -55,10 +55,10 @@ inline Example::PrinterPtr::EQuality Example::PrinterPtr::GetPrintingQuality() c
     return result;
 }
 
-inline void Example::PrinterPtr::SetPrintingQuality(Example::PrinterPtr::EQuality value)
+inline void Example::PrinterPtr::SetPrintingQuality(Example::PrinterPtr::EQuality printing_quality)
 {
     beautiful_capi_callback_exception_info_t exception_info;
-    example_printer_set_printing_quality(&exception_info, GetRawPointer(), static_cast<int>(value));
+    example_printer_set_printing_quality(&exception_info, GetRawPointer(), static_cast<int>(printing_quality));
     beautiful_capi_Callback::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
 }
 

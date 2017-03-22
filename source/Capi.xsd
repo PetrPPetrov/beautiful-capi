@@ -169,6 +169,7 @@
     <xs:attribute name="set_prefix" type="xs:string" use="optional" default="Set"/>
     <xs:attribute name="get_prefix" type="xs:string" use="optional" default="Get"/>
     <xs:attribute name="get_const" type="xs:boolean" use="optional" default="true"/>
+    <xs:attribute name="set_argument_name" type="xs:string" use="optional"/>
   </xs:complexType>
   <xs:complexType name="TPropertySetPrefix">
     <xs:attribute name="value" type="xs:string" use="optional" default="Set"/>

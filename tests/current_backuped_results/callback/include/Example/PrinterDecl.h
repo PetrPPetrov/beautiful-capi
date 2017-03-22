@@ -70,7 +70,7 @@ public:
     /**
      * @brief Sets the printing quality.
      */
-    inline void SetPrintingQuality(Example::PrinterPtr::EQuality value);
+    inline void SetPrintingQuality(Example::PrinterPtr::EQuality printing_quality);
 
     inline PrinterPtr(const PrinterPtr& other);
     #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES

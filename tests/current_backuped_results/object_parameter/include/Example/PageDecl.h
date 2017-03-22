@@ -39,9 +39,9 @@ class PagePtr
 public:
     inline PagePtr();
     inline size_t GetWidth() const;
-    inline void SetWidth(size_t value);
+    inline void SetWidth(size_t width);
     inline size_t GetHeight() const;
-    inline void SetHeight(size_t value);
+    inline void SetHeight(size_t height);
 
     inline PagePtr(const PagePtr& other);
     #ifdef EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES

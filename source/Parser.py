@@ -824,6 +824,8 @@ class TProperty(object):
         self.get_prefix_filled = False
         self.get_const = True
         self.get_const_filled = False
+        self.set_argument_name = ""
+        self.set_argument_name_filled = False
         self.documentations = []
 
     def load_element(self, element):
@@ -855,6 +857,10 @@ class TProperty(object):
             cur_attr = dom_node.getAttribute("get_const")
             self.get_const = string_to_bool(cur_attr)
             self.get_const_filled = True
+        if dom_node.hasAttribute("set_argument_name"):
+            cur_attr = dom_node.getAttribute("set_argument_name")
+            self.set_argument_name = cur_attr
+            self.set_argument_name_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:

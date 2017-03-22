@@ -47,17 +47,17 @@ public:
 
     inline PersonRawPtr();
     inline UnitTest::Name GetName() const;
-    inline void SetName(const UnitTest::Name& value);
+    inline void SetName(const UnitTest::Name& name);
     inline UnitTest::AddressPtr GetAddress() const;
-    inline void SetAddress(const UnitTest::AddressPtr& value);
+    inline void SetAddress(const UnitTest::AddressPtr& address);
     inline unsigned char GetAge() const;
-    inline void SetAge(unsigned char value);
+    inline void SetAge(unsigned char age);
     inline UnitTest::PersonRawPtr::Sex GetSex() const;
-    inline void SetSex(UnitTest::PersonRawPtr::Sex value);
+    inline void SetSex(UnitTest::PersonRawPtr::Sex sex);
     inline UnitTest::PersonRawPtr GetMother() const;
-    inline void SetMother(const UnitTest::PersonRawPtr& value);
+    inline void SetMother(const UnitTest::PersonRawPtr& mother);
     inline UnitTest::PersonRawPtr GetFather() const;
-    inline void SetFather(const UnitTest::PersonRawPtr& value);
+    inline void SetFather(const UnitTest::PersonRawPtr& father);
 
     inline PersonRawPtr(const PersonRawPtr& other);
     #ifdef UNITTEST_CPP_COMPILER_HAS_RVALUE_REFERENCES

@@ -41,11 +41,11 @@ public:
     inline bool IsMan() const;
     inline void SetSex(bool Sex);
     inline int32_t GetAge() const;
-    inline void SetAge(int32_t value);
+    inline void SetAge(int32_t age);
     inline std::string GetFirstName() const;
-    inline void SetFirstName(std::string value);
+    inline void SetFirstName(const std::string& first_name);
     inline std::string GetSecondName() const;
-    inline void SetSecondName(std::string value);
+    inline void SetSecondName(const std::string& second_name);
 
     inline Person(const Person& other);
     #ifdef MAPPEDTYPES_CPP_COMPILER_HAS_RVALUE_REFERENCES

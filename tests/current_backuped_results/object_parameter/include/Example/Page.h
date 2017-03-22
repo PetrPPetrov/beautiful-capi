@@ -41,9 +41,9 @@ inline size_t Example::PagePtr::GetWidth() const
     return example_page_get_width_const(GetRawPointer());
 }
 
-inline void Example::PagePtr::SetWidth(size_t value)
+inline void Example::PagePtr::SetWidth(size_t width)
 {
-    example_page_set_width(GetRawPointer(), value);
+    example_page_set_width(GetRawPointer(), width);
 }
 
 inline size_t Example::PagePtr::GetHeight() const
@@ -51,9 +51,9 @@ inline size_t Example::PagePtr::GetHeight() const
     return example_page_get_height_const(GetRawPointer());
 }
 
-inline void Example::PagePtr::SetHeight(size_t value)
+inline void Example::PagePtr::SetHeight(size_t height)
 {
-    example_page_set_height(GetRawPointer(), value);
+    example_page_set_height(GetRawPointer(), height);
 }
 
 inline Example::PagePtr::PagePtr(const PagePtr& other)

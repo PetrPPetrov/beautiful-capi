@@ -38,4 +38,4 @@ virtual ~IPrinter() {}
 virtual void Print(const char* text) const = 0;
 virtual Example::EPrintingDevice GetDeviceType() const = 0;
 virtual Example::IPrinter::EQuality GetPrintingQuality() const = 0;
-virtual void SetPrintingQuality(Example::IPrinter::EQuality value) = 0;
+virtual void SetPrintingQuality(Example::IPrinter::EQuality printing_quality) = 0;

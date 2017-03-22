@@ -23,6 +23,7 @@
 import copy
 from Parser import TClass, TMethod, TArgument, TNamespace, TBeautifulCapiRoot, TDocumentation
 from UnitTestGenerator import TestGenerator
+from Helpers import get_c_name
 
 
 class PropertiesDefaultValues(object):
@@ -67,6 +68,8 @@ class PropertiesProcessor(object):
             cur_set_prefix = cur_property.set_prefix if cur_property.set_prefix_filled else top.set_prefix_value
             cur_get_prefix = cur_property.get_prefix if cur_property.get_prefix_filled else top.get_prefix_value
             cur_get_const = cur_property.get_const if cur_property.get_const_filled else top.get_const_value
+            cur_argument_name = cur_property.set_argument_name if cur_property.set_argument_name \
+                else get_c_name(cur_property.name)
             new_get_method = TMethod()
             new_get_method.name = cur_get_prefix + cur_property.name
             new_get_method.const = cur_get_const
@@ -77,7 +80,7 @@ class PropertiesProcessor(object):
             new_set_method = TMethod()
             new_set_method.name = cur_set_prefix + cur_property.name
             set_input_argument = TArgument()
-            set_input_argument.name = 'value'
+            set_input_argument.name = cur_argument_name
             set_input_argument.type_name = cur_property.type_name
             new_set_method.arguments.append(set_input_argument)
             new_set_method.documentations = copy.deepcopy(cur_property.documentations)

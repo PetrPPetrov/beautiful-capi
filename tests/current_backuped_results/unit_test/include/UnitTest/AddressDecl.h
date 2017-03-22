@@ -39,13 +39,13 @@ class AddressPtr
 public:
     inline AddressPtr();
     inline const char* GetStreetName() const;
-    inline void SetStreetName(const char* value);
+    inline void SetStreetName(const char* street_name);
     inline const char* GetCity() const;
-    inline void SetCity(const char* value);
+    inline void SetCity(const char* city);
     inline unsigned int GetState() const;
-    inline void SetState(unsigned int value);
+    inline void SetState(unsigned int state);
     inline unsigned int GetZipCode() const;
-    inline void SetZipCode(unsigned int value);
+    inline void SetZipCode(unsigned int zip_code);
 
     inline AddressPtr(const AddressPtr& other);
     #ifdef UNITTEST_CPP_COMPILER_HAS_RVALUE_REFERENCES

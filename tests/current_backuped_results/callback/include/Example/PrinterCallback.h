@@ -219,7 +219,7 @@ template<typename ImplementationClass>
 int EXAMPLE_API_CONVENTION printer_get_printing_quality_const_callback(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
 
 template<typename ImplementationClass>
-void EXAMPLE_API_CONVENTION printer_set_printing_quality_callback(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, int value);
+void EXAMPLE_API_CONVENTION printer_set_printing_quality_callback(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, int printing_quality);
 
 template<typename ImplementationClass>
 Example::PrinterCallbackPtr create_callback_for_printer(ImplementationClass* implementation_class)
@@ -365,7 +365,7 @@ int EXAMPLE_API_CONVENTION printer_get_printing_quality_const_callback(beautiful
 }
 
 template<typename ImplementationClass>
-void EXAMPLE_API_CONVENTION printer_set_printing_quality_callback(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, int value)
+void EXAMPLE_API_CONVENTION printer_set_printing_quality_callback(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, int printing_quality)
 {
     ImplementationClass* self = static_cast<ImplementationClass*>(object_pointer);
     beautiful_capi_callback_exception_info_t exception_info_default;
@@ -377,7 +377,7 @@ void EXAMPLE_API_CONVENTION printer_set_printing_quality_callback(beautiful_capi
     {
         exception_info->code = 0;
         exception_info->object_pointer = 0;
-        self->SetPrintingQuality(Example::PrinterPtr::EQuality(static_cast<Example::PrinterPtr::EQuality>(value)));
+        self->SetPrintingQuality(Example::PrinterPtr::EQuality(static_cast<Example::PrinterPtr::EQuality>(printing_quality)));
     }
     catch (Exception::NullArgument& exception_object)
     {

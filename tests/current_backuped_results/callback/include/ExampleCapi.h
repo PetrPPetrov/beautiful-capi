@@ -123,7 +123,7 @@ enum beautiful_capi_callback_exception_code_t
     typedef void (EXAMPLE_API_CONVENTION *example_printer_print_const_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* text);
     typedef int (EXAMPLE_API_CONVENTION *example_printer_get_device_type_const_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
     typedef int (EXAMPLE_API_CONVENTION *example_printer_get_printing_quality_const_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
-    typedef void (EXAMPLE_API_CONVENTION *example_printer_set_printing_quality_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, int value);
+    typedef void (EXAMPLE_API_CONVENTION *example_printer_set_printing_quality_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, int printing_quality);
 
     EXAMPLE_API void* EXAMPLE_API_CONVENTION example_create_default_printer(beautiful_capi_callback_exception_info_t* exception_info, int printing_device);
     EXAMPLE_API int EXAMPLE_API_CONVENTION example_get_major_version();
@@ -132,7 +132,7 @@ enum beautiful_capi_callback_exception_code_t
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_print_const(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* text);
     EXAMPLE_API int EXAMPLE_API_CONVENTION example_printer_get_device_type_const(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
     EXAMPLE_API int EXAMPLE_API_CONVENTION example_printer_get_printing_quality_const(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
-    EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_set_printing_quality(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, int value);
+    EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_set_printing_quality(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, int printing_quality);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_add_ref(void* object_pointer);
     EXAMPLE_API void EXAMPLE_API_CONVENTION example_printer_release(void* object_pointer);
     EXAMPLE_API void* EXAMPLE_API_CONVENTION example_person_default(beautiful_capi_callback_exception_info_t* exception_info);
@@ -194,7 +194,7 @@ enum beautiful_capi_callback_exception_code_t
     typedef void (EXAMPLE_API_CONVENTION *example_printer_print_const_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* text);
     typedef int (EXAMPLE_API_CONVENTION *example_printer_get_device_type_const_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
     typedef int (EXAMPLE_API_CONVENTION *example_printer_get_printing_quality_const_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
-    typedef void (EXAMPLE_API_CONVENTION *example_printer_set_printing_quality_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, int value);
+    typedef void (EXAMPLE_API_CONVENTION *example_printer_set_printing_quality_callback_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, int printing_quality);
     typedef void* (EXAMPLE_API_CONVENTION *example_create_default_printer_function_type)(beautiful_capi_callback_exception_info_t* exception_info, int printing_device);
     typedef int (EXAMPLE_API_CONVENTION *example_get_major_version_function_type)();
     typedef int (EXAMPLE_API_CONVENTION *example_get_minor_version_function_type)();
@@ -202,7 +202,7 @@ enum beautiful_capi_callback_exception_code_t
     typedef void (EXAMPLE_API_CONVENTION *example_printer_print_const_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, const char* text);
     typedef int (EXAMPLE_API_CONVENTION *example_printer_get_device_type_const_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
     typedef int (EXAMPLE_API_CONVENTION *example_printer_get_printing_quality_const_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer);
-    typedef void (EXAMPLE_API_CONVENTION *example_printer_set_printing_quality_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, int value);
+    typedef void (EXAMPLE_API_CONVENTION *example_printer_set_printing_quality_function_type)(beautiful_capi_callback_exception_info_t* exception_info, void* object_pointer, int printing_quality);
     typedef void (EXAMPLE_API_CONVENTION *example_printer_add_ref_function_type)(void* object_pointer);
     typedef void (EXAMPLE_API_CONVENTION *example_printer_release_function_type)(void* object_pointer);
     typedef void* (EXAMPLE_API_CONVENTION *example_person_default_function_type)(beautiful_capi_callback_exception_info_t* exception_info);

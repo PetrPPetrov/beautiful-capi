@@ -44,9 +44,9 @@ inline UnitTest::Name UnitTest::PersonRawPtr::GetName() const
     return UnitTest::Name(UnitTest::Name::force_creating_from_raw_pointer, unit_test_person_get_name_const(GetRawPointer()), false);
 }
 
-inline void UnitTest::PersonRawPtr::SetName(const UnitTest::Name& value)
+inline void UnitTest::PersonRawPtr::SetName(const UnitTest::Name& name)
 {
-    unit_test_person_set_name(GetRawPointer(), value.GetRawPointer());
+    unit_test_person_set_name(GetRawPointer(), name.GetRawPointer());
 }
 
 inline UnitTest::AddressPtr UnitTest::PersonRawPtr::GetAddress() const
@@ -54,9 +54,9 @@ inline UnitTest::AddressPtr UnitTest::PersonRawPtr::GetAddress() const
     return UnitTest::AddressPtr(UnitTest::AddressPtr::force_creating_from_raw_pointer, unit_test_person_get_address_const(GetRawPointer()), false);
 }
 
-inline void UnitTest::PersonRawPtr::SetAddress(const UnitTest::AddressPtr& value)
+inline void UnitTest::PersonRawPtr::SetAddress(const UnitTest::AddressPtr& address)
 {
-    unit_test_person_set_address(GetRawPointer(), value.GetRawPointer());
+    unit_test_person_set_address(GetRawPointer(), address.GetRawPointer());
 }
 
 inline unsigned char UnitTest::PersonRawPtr::GetAge() const
@@ -64,9 +64,9 @@ inline unsigned char UnitTest::PersonRawPtr::GetAge() const
     return unit_test_person_get_age_const(GetRawPointer());
 }
 
-inline void UnitTest::PersonRawPtr::SetAge(unsigned char value)
+inline void UnitTest::PersonRawPtr::SetAge(unsigned char age)
 {
-    unit_test_person_set_age(GetRawPointer(), value);
+    unit_test_person_set_age(GetRawPointer(), age);
 }
 
 inline UnitTest::PersonRawPtr::Sex UnitTest::PersonRawPtr::GetSex() const
@@ -74,9 +74,9 @@ inline UnitTest::PersonRawPtr::Sex UnitTest::PersonRawPtr::GetSex() const
     return UnitTest::PersonRawPtr::Sex(static_cast<UnitTest::PersonRawPtr::Sex>(unit_test_person_get_sex_const(GetRawPointer())));
 }
 
-inline void UnitTest::PersonRawPtr::SetSex(UnitTest::PersonRawPtr::Sex value)
+inline void UnitTest::PersonRawPtr::SetSex(UnitTest::PersonRawPtr::Sex sex)
 {
-    unit_test_person_set_sex(GetRawPointer(), static_cast<unsigned int>(value));
+    unit_test_person_set_sex(GetRawPointer(), static_cast<unsigned int>(sex));
 }
 
 inline UnitTest::PersonRawPtr UnitTest::PersonRawPtr::GetMother() const
@@ -84,9 +84,9 @@ inline UnitTest::PersonRawPtr UnitTest::PersonRawPtr::GetMother() const
     return UnitTest::PersonRawPtr(UnitTest::PersonRawPtr::force_creating_from_raw_pointer, unit_test_person_get_mother_const(GetRawPointer()), false);
 }
 
-inline void UnitTest::PersonRawPtr::SetMother(const UnitTest::PersonRawPtr& value)
+inline void UnitTest::PersonRawPtr::SetMother(const UnitTest::PersonRawPtr& mother)
 {
-    unit_test_person_set_mother(GetRawPointer(), value.GetRawPointer());
+    unit_test_person_set_mother(GetRawPointer(), mother.GetRawPointer());
 }
 
 inline UnitTest::PersonRawPtr UnitTest::PersonRawPtr::GetFather() const
@@ -94,9 +94,9 @@ inline UnitTest::PersonRawPtr UnitTest::PersonRawPtr::GetFather() const
     return UnitTest::PersonRawPtr(UnitTest::PersonRawPtr::force_creating_from_raw_pointer, unit_test_person_get_father_const(GetRawPointer()), false);
 }
 
-inline void UnitTest::PersonRawPtr::SetFather(const UnitTest::PersonRawPtr& value)
+inline void UnitTest::PersonRawPtr::SetFather(const UnitTest::PersonRawPtr& father)
 {
-    unit_test_person_set_father(GetRawPointer(), value.GetRawPointer());
+    unit_test_person_set_father(GetRawPointer(), father.GetRawPointer());
 }
 
 inline UnitTest::PersonRawPtr::PersonRawPtr(const PersonRawPtr& other)

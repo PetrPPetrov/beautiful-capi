@@ -41,9 +41,9 @@ inline const char* UnitTest::AddressPtr::GetStreetName() const
     return unit_test_address_get_street_name_const(GetRawPointer());
 }
 
-inline void UnitTest::AddressPtr::SetStreetName(const char* value)
+inline void UnitTest::AddressPtr::SetStreetName(const char* street_name)
 {
-    unit_test_address_set_street_name(GetRawPointer(), value);
+    unit_test_address_set_street_name(GetRawPointer(), street_name);
 }
 
 inline const char* UnitTest::AddressPtr::GetCity() const
@@ -51,9 +51,9 @@ inline const char* UnitTest::AddressPtr::GetCity() const
     return unit_test_address_get_city_const(GetRawPointer());
 }
 
-inline void UnitTest::AddressPtr::SetCity(const char* value)
+inline void UnitTest::AddressPtr::SetCity(const char* city)
 {
-    unit_test_address_set_city(GetRawPointer(), value);
+    unit_test_address_set_city(GetRawPointer(), city);
 }
 
 inline unsigned int UnitTest::AddressPtr::GetState() const
@@ -61,9 +61,9 @@ inline unsigned int UnitTest::AddressPtr::GetState() const
     return unit_test_address_get_state_const(GetRawPointer());
 }
 
-inline void UnitTest::AddressPtr::SetState(unsigned int value)
+inline void UnitTest::AddressPtr::SetState(unsigned int state)
 {
-    unit_test_address_set_state(GetRawPointer(), value);
+    unit_test_address_set_state(GetRawPointer(), state);
 }
 
 inline unsigned int UnitTest::AddressPtr::GetZipCode() const
@@ -71,9 +71,9 @@ inline unsigned int UnitTest::AddressPtr::GetZipCode() const
     return unit_test_address_get_zip_code_const(GetRawPointer());
 }
 
-inline void UnitTest::AddressPtr::SetZipCode(unsigned int value)
+inline void UnitTest::AddressPtr::SetZipCode(unsigned int zip_code)
 {
-    unit_test_address_set_zip_code(GetRawPointer(), value);
+    unit_test_address_set_zip_code(GetRawPointer(), zip_code);
 }
 
 inline UnitTest::AddressPtr::AddressPtr(const AddressPtr& other)
