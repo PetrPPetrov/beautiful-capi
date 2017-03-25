@@ -1,0 +1,25 @@
+./mixed_semantic_client
+___std::cout___
+Fist Name: Jon
+Father Name: Edward
+Last Name: Snow
+Person birth day: 27
+Person birth year: 324
+Person birth month: 12
+Person street: Wall
+Person city: 
+Person state: 0
+
+Mutate 
+
+Fist Name: Jon
+Father Name: Edward_mutated
+Last Name: Snow_mutated
+Person birth day: 27
+Person birth year: 325
+Person birth month: 13
+Person street: Wall
+Person city: _mutated
+Person state: 1
+___std::cerr___
+___eof___
