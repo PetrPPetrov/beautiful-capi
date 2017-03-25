@@ -28,7 +28,8 @@ from collections import OrderedDict
 import ParamsParser
 import NamespaceGenerator
 import Parser
-from ArgumentGenerator import BuiltinTypeGenerator, EnumTypeGenerator
+from ArgumentGenerator import EnumTypeGenerator
+from BuiltinTypeGenerator import BuiltinTypeGenerator
 from ClassGenerator import ClassTypeGenerator as CClassTypeGenerator, ClassGenerator
 from FileGenerator import FileGenerator, IndentScope, WatchdogScope
 from Helpers import format_type

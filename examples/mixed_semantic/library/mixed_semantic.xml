@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<mixed_semantic:api xmlns:mixed_semantic="http://gkmsoft.ru/beautifulcapi" project_name="MixedSemantic" >
+  <namespace name="MixedSemantic" overload_suffix_mode="Silent">
+    <class name="Name" lifecycle="copy_semantic" implementation_class_name="MixedSemantic::NameImpl" implementation_class_header="NameImpl.h" >
+      <constructor name="FullName">
+        <argument name="FirstName" type="const char*"/>
+        <argument name="FatherName" type="const char*"/>
+        <argument name="LastName" type="const char*"/>
+      </constructor>      
+      <property name="FirstName" type="const char*"/>
+      <property name="LastName" type="const char*"/>
+    </class>
+    
+    <class name="Address" lifecycle="reference_counted" implementation_class_name="MixedSemantic::AddressImpl" implementation_class_header="AddressImpl.h">
+      <constructor name="Default"/>      
+      <property name="StreetName" type="const char*"/>
+      <property name="City" type="const char*"/>
+      <property name="State" type="unsigned int"/>
+    </class>
+    
+    <class name="Person" lifecycle="raw_pointer_semantic" implementation_class_name="MixedSemantic::PersonImpl" implementation_class_header="PersonImpl.h">
+      <constructor name="Default"/>      
+      <property name="Name" type="MixedSemantic::Name"/>
+      <method name="GetAddress" return="MixedSemantic::Address" const="true"/>
+      <method name="SetAddress">
+        <argument name="address" type="MixedSemantic::Address"/>
+      </method>
+      <property name="Day" type="unsigned int"/>
+      <property name="Month" type="unsigned int"/>
+      <property name="Year" type="unsigned int"/>
+    </class>
+      
+    <class name="Printer" lifecycle="copy_semantic" implementation_class_name="MixedSemantic::PrinterImpl" implementation_class_header="PrinterImpl.h">
+      <constructor name="Default"/>
+      <method name="Show">
+        <argument name="name" type="MixedSemantic::Name"/>
+      </method>
+
+      <method name="ShowByPointer">
+        <argument name="name" type="MixedSemantic::Name" c_2_impl_mode="to_pointer" />
+      </method>
+
+      <method name="ShowByReference">
+        <argument name="name" type="MixedSemantic::Name" c_2_impl_mode="to_value" />
+      </method>
+
+      <method name="Show">
+        <argument name="person" type="MixedSemantic::Person" c_2_impl="*static_cast&lt;{implementation_type}*&gt;({expression})"/>
+      </method>
+
+      <method name="ShowByPointer">
+        <argument name="person" type="MixedSemantic::Person" />
+      </method>
+
+      <method name="ShowByReference">
+        <argument name="person" type="MixedSemantic::Person" c_2_impl="*static_cast&lt;{implementation_type}*&gt;({expression})"/>
+      </method>
+
+      <method name="Show">
+        <argument name="address" type="MixedSemantic::Address" c_2_impl_mode="to_value"/>
+      </method>
+
+      <method name="ShowByPointer">
+        <argument name="address" type="MixedSemantic::Address"/>
+      </method>
+
+      <method name="ShowByReference">
+        <argument name="address" type="MixedSemantic::Address" c_2_impl_mode="to_value"/>
+      </method>
+    </class>
+
+    <class name="Mutator" lifecycle="copy_semantic" implementation_class_name="MixedSemantic::MutatorImpl" implementation_class_header="MutatorImpl.h">
+      <constructor name="Default"/>
+      <method name="Mutate" >
+        <argument name="name" type="MixedSemantic::Name"/>
+      </method>
+
+      <method name="MutateByPointer" >
+        <argument name="name" type="MixedSemantic::Name" c_2_impl_mode="to_pointer"/>
+      </method>
+
+      <method name="MutateByReference" >
+        <argument name="name" type="MixedSemantic::Name" c_2_impl_mode="to_value"/>
+      </method>
+
+      <method name="Mutate">
+        <argument name="person" type="MixedSemantic::Person" c_2_impl_mode="to_value"/>
+      </method>
+
+      <method name="MutateByPointer">
+        <argument name="person" type="MixedSemantic::Person" />
+      </method>
+
+      <method name="MutateByReference">
+        <argument name="person" type="MixedSemantic::Person" c_2_impl_mode="to_value"/>
+      </method>
+
+      <method name="Mutate">
+        <argument name="address" type="MixedSemantic::Address" c_2_impl_mode="to_value"/>
+      </method>
+
+      <method name="MutateByPointer">
+        <argument name="address" type="MixedSemantic::Address"/>
+      </method>
+
+      <method name="MutateByReference">
+        <argument name="address" type="MixedSemantic::Address" c_2_impl_mode="to_value"/>
+      </method>
+    </class>
+
+  </namespace>
+</mixed_semantic:api>

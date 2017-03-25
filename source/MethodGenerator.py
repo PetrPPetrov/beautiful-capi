@@ -27,7 +27,9 @@ from FileGenerator import FileGenerator, IndentScope
 from FileCache import FileCache
 from ClassGenerator import ClassGenerator
 from NamespaceGenerator import NamespaceGenerator
-from ArgumentGenerator import ClassTypeGenerator, ThisArgumentGenerator, BuiltinTypeGenerator
+from ArgumentGenerator import ClassTypeGenerator
+from ThisArgumentGenerator import ThisArgumentGenerator
+from BuiltinTypeGenerator import BuiltinTypeGenerator
 from CapiGenerator import CapiGenerator
 from LifecycleTraits import get_base_init
 from Helpers import get_c_name, get_full_method_name

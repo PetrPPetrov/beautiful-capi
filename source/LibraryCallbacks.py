@@ -21,7 +21,7 @@
 
 from Parser import TLifecycle
 from FileGenerator import FileGenerator, IndentScope, Unindent, Indent
-from ArgumentGenerator import BuiltinTypeGenerator
+from BuiltinTypeGenerator import BuiltinTypeGenerator
 from Callbacks import get_callback_impl_name, get_all_methods
 
 

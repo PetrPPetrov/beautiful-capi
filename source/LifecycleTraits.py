@@ -23,7 +23,8 @@
 from Parser import TLifecycle
 from ParamsParser import TBeautifulCapiParams
 from FileGenerator import FileGenerator, IndentScope, IfDefScope
-from ArgumentGenerator import BuiltinTypeGenerator, ThisArgumentGenerator
+from BuiltinTypeGenerator import BuiltinTypeGenerator
+from ThisArgumentGenerator import ThisArgumentGenerator
 from Helpers import BeautifulCapiException
 
 
@@ -193,12 +194,8 @@ class CopySemantic(LifecycleTraits):
         return instructions, return_expression
 
     @staticmethod
-    def c_2_impl_value(expression: str) -> str:
-        return '*' + expression
-
-    @staticmethod
-    def c_2_impl_pointer(expression: str) -> str:
-        return expression
+    def c_2_impl_default() -> str:
+        return '*static_cast<{implementation_type}*>({expression})'
 
     def generate_std_methods_declarations(self, out: FileGenerator, class_generator):
         super().generate_copy_constructor_declaration(out, class_generator)
@@ -372,12 +369,8 @@ class RawPointerSemantic(LifecycleTraits):
             return [], expression
 
     @staticmethod
-    def c_2_impl_value(expression: str) -> str:
-        return expression
-
-    @staticmethod
-    def c_2_impl_pointer(expression: str) -> str:
-        return expression
+    def c_2_impl_default() -> str:
+        return 'static_cast<{implementation_type}*>({expression})'
 
     def generate_std_methods_declarations(self, out: FileGenerator, class_generator):
         super().generate_copy_constructor_declaration(out, class_generator)
@@ -517,12 +510,8 @@ class RefCountedSemantic(LifecycleTraits):
             return [], expression
 
     @staticmethod
-    def c_2_impl_value(expression: str) -> str:
-        return expression
-
-    @staticmethod
-    def c_2_impl_pointer(expression: str) -> str:
-        return expression
+    def c_2_impl_default() -> str:
+        return 'static_cast<{implementation_type}*>({expression})'
 
     def generate_std_methods_declarations(self, out: FileGenerator, class_generator):
         super().generate_copy_constructor_declaration(out, class_generator)

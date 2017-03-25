@@ -22,6 +22,8 @@
 
 from FileGenerator import FileGenerator
 from FileCache import FileCache
+from LifecycleTraits import CopySemantic, RefCountedSemantic
+from Parser import TC2ImplMode
 from NamespaceGenerator import NamespaceGenerator
 from Helpers import bool_to_str
 
@@ -31,16 +33,24 @@ class MappedTypeGenerator(object):
         self.mapped_type_object = mapped_type_object
         self.name = self.mapped_type_object.name
         self.full_name = parent_generator.full_name + '::' + self.mapped_type_object.name
+        self.c_2_impl = ''
 
-    def format(self, casting_expression: str, expression_to_cast: str) -> str:
-        result = casting_expression.format(
+    def format(self, casting_expression: str, expression_to_cast: str, result_var: str, type_name: str) -> ([str], str):
+        result_expression = casting_expression.format(
             expression=expression_to_cast,
             c_type=self.mapped_type_object.c_type,
             implementation_type=self.mapped_type_object.implementation_type,
             wrap_type=self.mapped_type_object.wrap_type,
             argument_wrap_type=self.mapped_type_object.argument_wrap_type
         )
-        return result
+        if result_var:
+            return ['{type_name} {result_var}{expression};'.format(
+                type_name=type_name,
+                expression=result_expression,
+                result_var=result_var
+            )], result_var
+        else:
+            return [], result_expression
 
     def wrap_return_type(self) -> str:
         return self.mapped_type_object.wrap_type
@@ -53,40 +63,23 @@ class MappedTypeGenerator(object):
         return self.mapped_type_object.c_type
 
     def wrap_2_c_var(self, result_var: str, expression: str) -> ([str], str):
-        casting_expression = self.format(self.mapped_type_object.wrap_2_c, expression)
-        if result_var:
-            return ['{type_name} {result_var}({expression});'.format(
-                type_name=self.mapped_type_object.c_type,
-                result_var=result_var,
-                expression=casting_expression
-            )], result_var
-        else:
-            return [], casting_expression
+        return self.format(self.mapped_type_object.wrap_2_c, expression, result_var, self.mapped_type_object.c_type)
 
     def c_2_implementation(self, expression: str) -> str:
-        return self.format(self.mapped_type_object.c_2_impl, expression)
+        return self.c_2_implementation_var('', expression)[1]
+
+    def c_2_implementation_var(self, result_var: str, expression: str) -> ([str], str):
+        cur_c_2_impl = self.c_2_impl
+        if not cur_c_2_impl:
+            cur_c_2_impl = self.mapped_type_object.c_2_impl
+        return self.format(cur_c_2_impl, expression, result_var,
+                           self.mapped_type_object.implementation_type)
 
     def implementation_2_c_var(self, result_var: str, expression: str) -> ([str], str):
-        casting_expression = self.format(self.mapped_type_object.impl_2_c, expression)
-        if result_var:
-            return ['{type_name} {result_var}{expression};'.format(
-                type_name=self.mapped_type_object.implementation_name,
-                expression=casting_expression,
-                result_var=result_var
-            )], result_var
-        else:
-            return [], casting_expression
+        return self.format(self.mapped_type_object.impl_2_c, expression, result_var, self.mapped_type_object.c_type)
 
     def c_2_wrap_var(self, result_var: str, expression: str) -> ([str], str):
-        casting_expression = self.format(self.mapped_type_object.c_2_wrap, expression)
-        if result_var:
-            return ['{type_name} {result_var}({expression});'.format(
-                type_name=self.mapped_type_object.wrap_type,
-                result_var=result_var,
-                expression=casting_expression
-            )], result_var
-        else:
-            return [], casting_expression
+        return self.format(self.mapped_type_object.c_2_wrap, expression, result_var, self.mapped_type_object.wrap_type)
 
     def include_dependent_declaration_headers(self, file_generator: FileGenerator, file_cache: FileCache):
         pass
@@ -99,6 +92,7 @@ class ClassTypeGenerator(object):
     def __init__(self, class_argument_generator):
         self.class_argument_generator = class_argument_generator
         self.copy_or_add_ref_when_c_2_wrap = False
+        self.c_2_impl = ''
 
     def wrap_argument_declaration(self) -> str:
         return 'const {type_name}&'.format(type_name=self.class_argument_generator.full_wrap_name)
@@ -138,23 +132,20 @@ class ClassTypeGenerator(object):
         else:
             return [], internal_expression
 
-    def c_2_implementation(self, name: str) -> str:
-        return self.class_argument_generator.lifecycle_traits.c_2_impl_value(
-            'static_cast<{implementation_class_name}*>({name})'.format(
-                implementation_class_name=self.class_argument_generator.class_object.implementation_class_name,
-                name=name
-            ))
+    def c_2_implementation(self, expression: str) -> str:
+        cur_c_2_impl = self.c_2_impl
+        if not cur_c_2_impl:
+            cur_c_2_impl = self.class_argument_generator.lifecycle_traits.c_2_impl_default()
+        return cur_c_2_impl.format(
+            implementation_type=self.class_argument_generator.class_object.implementation_class_name,
+            expression=expression)
 
-    def c_2_implementation_pointer(self, name: str) -> str:
-        return self.class_argument_generator.lifecycle_traits.c_2_impl_pointer(
-            'static_cast<{implementation_class_name}*>({name})'.format(
-                implementation_class_name=self.class_argument_generator.class_object.implementation_class_name,
-                name=name
-            ))
+    def c_2_implementation_pointer(self, expression: str) -> str:
+        self.c_2_impl = RefCountedSemantic.c_2_impl_default()
+        return self.c_2_implementation(expression)
 
     def c_2_implementation_var(self, result_var: str, expression: str) -> ([str], str):
-        expression = self.class_argument_generator.lifecycle_traits.c_2_impl_value().format(
-            casting_expression=expression)
+        expression = self.c_2_implementation(expression)
         if result_var:
             return ['{impl_name} {result_var}({expression});'.format(
                 impl_name=self.snippet_implementation_declaration(),
@@ -189,6 +180,7 @@ class ClassTypeGenerator(object):
 class EnumTypeGenerator(object):
     def __init__(self, enum_argument_generator):
         self.enum_argument_generator = enum_argument_generator
+        self.c_2_impl = ''
 
     def wrap_argument_declaration(self) -> str:
         return self.enum_argument_generator.full_wrap_name
@@ -213,22 +205,24 @@ class EnumTypeGenerator(object):
     def wrap_2_c_var(self, result_var: str, expression: str) -> ([str], str):
         return self.implementation_2_c_var(result_var, expression)
 
-    def c_2_implementation(self, name: str) -> str:
-        return 'static_cast<{implementation_name}>({name})'.format(
-            implementation_name=self.enum_argument_generator.implementation_name,
-            name=name
+    def c_2_implementation(self, expression: str) -> str:
+        cur_c_2_impl = self.c_2_impl
+        if not cur_c_2_impl:
+            cur_c_2_impl = 'static_cast<{implementation_type}>({expression})'
+        return cur_c_2_impl.format(
+            implementation_type=self.enum_argument_generator.implementation_name,
+            expression=expression
         )
 
     def c_2_implementation_var(self, result_var: str, expression: str) -> ([str], str):
+        expression = self.c_2_implementation(expression)
         if result_var:
-            return ['{impl_name} {result_var}(static_cast<{impl_name}>({expression}));'.format(
+            return ['{impl_name} {result_var}({expression});'.format(
                 impl_name=self.snippet_implementation_declaration(),
                 result_var=result_var,
                 expression=expression)], result_var
         else:
-            return [], 'static_cast<{impl_name}>({expression})'.format(
-                impl_name=self.snippet_implementation_declaration(),
-                expression=expression)
+            return [], expression
 
     def snippet_implementation_declaration(self) -> str:
         return self.enum_argument_generator.implementation_name
@@ -260,80 +254,6 @@ class EnumTypeGenerator(object):
         pass
 
 
-class BuiltinTypeGenerator(object):
-    def __init__(self, type_name: str):
-        self.type_name = type_name
-
-    @property
-    def is_void(self):
-        return True if self.type_name == 'void' or not self.type_name else False
-
-    def wrap_argument_declaration(self) -> str:
-        return '{type_name}'.format(type_name='void' if self.is_void else self.type_name)
-
-    def wrap_return_type(self) -> str:
-        return self.wrap_argument_declaration()
-
-    def c_argument_declaration(self) -> str:
-        return self.wrap_argument_declaration()
-
-    def c_2_wrap_var(self, result_var: str, expression: str) -> ([str], str):
-        if not self.is_void:
-            if result_var:
-                return ['{type_name} {result_var}({expression});'.format(
-                    type_name=self.wrap_return_type(),
-                    result_var=result_var,
-                    expression=expression)], result_var
-            else:
-                return [], expression
-        else:
-            return [expression + ';'], ''
-
-    def wrap_2_c_var(self, result_var: str, expression: str) -> ([str], str):
-        return self.implementation_2_c_var(result_var, expression)
-
-    @staticmethod
-    def c_2_implementation(name: str) -> str:
-        return name
-
-    def c_2_implementation_var(self, result_var: str, expression: str) -> ([str], str):
-        if not self.is_void:
-            if result_var:
-                return ['{impl_name} {result_var}({expression});'.format(
-                    impl_name=self.snippet_implementation_declaration(),
-                    result_var=result_var,
-                    expression=expression)], result_var
-            else:
-                return [], expression
-        else:
-            return [expression + ';'], ''
-
-    def snippet_implementation_declaration(self) -> str:
-        return 'void' if self.is_void else self.type_name
-
-    def implementation_2_c_var(self, result_var: str, expression: str) -> ([str], str):
-        if not self.is_void:
-            if result_var:
-                return ['{type_name} {result_var}({expression});'.format(
-                    type_name=self.type_name,
-                    result_var=result_var,
-                    expression=expression)], result_var
-            else:
-                return [], expression
-        else:
-            return [expression + ';'], ''
-
-    def generate_c_default_return_value(self, out: FileGenerator):
-        if not self.is_void:
-            out.put_line('return static_cast<{type_name}>(0);'.format(type_name=self.type_name))
-
-    def include_dependent_declaration_headers(self, file_generator: FileGenerator, file_cache: FileCache):
-        pass
-
-    def include_dependent_definition_headers(self, file_generator: FileGenerator, file_cache: FileCache):
-        pass
-
-
 class ArgumentGenerator(object):
     def __init__(self,
                  type_generator: ClassTypeGenerator or EnumTypeGenerator or BuiltinTypeGenerator or MappedTypeGenerator,
@@ -355,6 +275,14 @@ class ArgumentGenerator(object):
         return self.type_generator.c_2_wrap_var('', self.name)[1]
 
     def c_2_implementation(self) -> str:
+        self.type_generator.c_2_impl = ''
+        if self.argument_object.c_2_impl_filled:
+            self.type_generator.c_2_impl = self.argument_object.c_2_impl
+        else:
+            if self.argument_object.c_2_impl_mode == TC2ImplMode.to_pointer:
+                self.type_generator.c_2_impl = RefCountedSemantic.c_2_impl_default()
+            elif self.argument_object.c_2_impl_mode == TC2ImplMode.to_value:
+                self.type_generator.c_2_impl = CopySemantic.c_2_impl_default()
         return self.type_generator.c_2_implementation(self.name)
 
     def c_2_implementation_pointer(self) -> str:
@@ -371,28 +299,3 @@ class ArgumentGenerator(object):
 
     def include_dependent_definition_headers(self, file_generator: FileGenerator, file_cache: FileCache):
         self.type_generator.include_dependent_definition_headers(file_generator, file_cache)
-
-
-class ThisArgumentGenerator(object):
-    def __init__(self, class_argument_generator):
-        self.type_generator = ClassTypeGenerator(class_argument_generator)
-
-    def wrap_2_c(self) -> str:
-        return '{get_raw_pointer_method}()'.format(
-            get_raw_pointer_method=self.type_generator.class_argument_generator.params.get_raw_pointer_method_name)
-
-    @staticmethod
-    def c_argument_declaration() -> str:
-        return 'void* object_pointer'
-
-    def c_2_implementation(self) -> str:
-        return self.type_generator.c_2_implementation_pointer('object_pointer')
-
-    def implementation_2_c(self) -> str:
-        return 'mObject'
-
-    def include_dependent_declaration_headers(self, file_generator: FileGenerator, file_cache: FileCache):
-        pass
-
-    def include_dependent_definition_headers(self, file_generator: FileGenerator, file_cache: FileCache):
-        pass

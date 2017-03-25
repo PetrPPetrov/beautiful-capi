@@ -18,26 +18,27 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-project(examples)
+project(mixed_semantic_client)
 
 cmake_minimum_required(VERSION 2.8)
 
-add_subdirectory(boost_shared_ptr)
-add_subdirectory(callback)
-add_subdirectory(circular_reference)
-add_subdirectory(clanguage)
-add_subdirectory(copy_semantic)
-add_subdirectory(custom_suffix)
-add_subdirectory(down_cast)
-add_subdirectory(exception)
-add_subdirectory(hello_world)
-add_subdirectory(mapped_types)
-add_subdirectory(mixed_semantic)
-add_subdirectory(object_parameter)
-add_subdirectory(overload_suffix)
-add_subdirectory(point_set)
-add_subdirectory(raw_pointer_semantic)
-add_subdirectory(reference_counted)
-add_subdirectory(template)
-add_subdirectory(unit_test)
-add_subdirectory(virtual_interface)
+find_package(Boost)
+
+if(NOT WIN32)
+  add_definitions(-fvisibility=default)
+endif()
+
+include_directories(
+  ${Boost_INCLUDE_DIR}/
+  ${mixed_semantic_client_SOURCE_DIR}/../library/include
+  ${mixed_semantic_client_SOURCE_DIR}/
+)
+
+add_executable(mixed_semantic_client
+  ${mixed_semantic_client_SOURCE_DIR}/Main.cpp
+)
+
+if(TARGET point_set)
+  add_dependencies(mixed_semantic_client mixed_semantic)
+endif()
+target_link_libraries(mixed_semantic_client mixed_semantic)

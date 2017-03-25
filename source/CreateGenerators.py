@@ -23,7 +23,7 @@
 from Parser import TClass, TEnumeration, TNamespace, TArgument, TBeautifulCapiRoot, TMappedType
 from Parser import TGenericDocumentation, TDocumentation, TReference
 from ParamsParser import TBeautifulCapiParams
-from NamespaceGenerator import NamespaceGenerator
+from BuiltinTypeGenerator import BuiltinTypeGenerator
 from TemplateGenerator import TemplateGenerator
 from ClassGenerator import ClassGenerator
 from MethodGenerator import MethodGenerator, FunctionGenerator, ConstructorGenerator

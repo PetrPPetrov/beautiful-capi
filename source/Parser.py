@@ -53,6 +53,22 @@ class TLifecycle(Enum):
         raise ValueError
 
 
+class TC2ImplMode(Enum):
+    default = 0
+    to_pointer = 1
+    to_value = 2
+
+    @staticmethod
+    def load(value):
+        if value == "default":
+            return TC2ImplMode.default
+        if value == "to_pointer":
+            return TC2ImplMode.to_pointer
+        if value == "to_value":
+            return TC2ImplMode.to_value
+        raise ValueError
+
+
 class TOverloadSuffixMode(Enum):
     Off = 0
     Notify = 1
@@ -754,6 +770,10 @@ class TArgument(object):
         self.type_name_filled = False
         self.is_builtin = False
         self.is_builtin_filled = False
+        self.c_2_impl = "static_cast<{implementation_type}*>({expression})"
+        self.c_2_impl_filled = False
+        self.c_2_impl_mode = TC2ImplMode.default
+        self.c_2_impl_mode_filled = False
         self.documentations = []
 
     def load_element(self, element):
@@ -777,6 +797,14 @@ class TArgument(object):
             cur_attr = dom_node.getAttribute("is_builtin")
             self.is_builtin = string_to_bool(cur_attr)
             self.is_builtin_filled = True
+        if dom_node.hasAttribute("c_2_impl"):
+            cur_attr = dom_node.getAttribute("c_2_impl")
+            self.c_2_impl = cur_attr
+            self.c_2_impl_filled = True
+        if dom_node.hasAttribute("c_2_impl_mode"):
+            cur_attr = dom_node.getAttribute("c_2_impl_mode")
+            self.c_2_impl_mode = TC2ImplMode.load(cur_attr)
+            self.c_2_impl_mode_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:

@@ -21,7 +21,7 @@
 
 from Parser import TLifecycle
 from FileGenerator import FileGenerator, IndentScope
-from ArgumentGenerator import BuiltinTypeGenerator
+from BuiltinTypeGenerator import BuiltinTypeGenerator
 from Helpers import if_required_then_add_empty_line
 from Callbacks import get_all_methods
 
