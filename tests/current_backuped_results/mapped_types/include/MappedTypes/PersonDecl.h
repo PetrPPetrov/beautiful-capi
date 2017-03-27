@@ -29,6 +29,7 @@
 
 #include "MappedTypesCapi.h"
 #include "MappedTypesFwd.h"
+#include <string>
 
 #ifdef __cplusplus
 

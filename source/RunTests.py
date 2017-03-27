@@ -107,6 +107,7 @@ def run_tests(input_folder, output_folder):
     process_example(input_folder, 'callback', base_backup_folder)
     process_example(input_folder, 'circular_reference', base_backup_folder)
     process_example(input_folder, 'clanguage', base_backup_folder)
+    process_example(input_folder, 'class_wrap_name', base_backup_folder)
     process_example(input_folder, 'copy_semantic', base_backup_folder)
     process_example(input_folder, 'custom_suffix', base_backup_folder)
     process_example(input_folder, 'down_cast', base_backup_folder)
