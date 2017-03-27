@@ -1,0 +1,18 @@
+Version 0.4
+    Added mapped types support, issue #6
+    Added ability to generate Boost.Test unit tests for properties, issue #22
+    Added support of custom C to implementation type-casting, issue #29
+    Added support of overloaded methods, issue #28
+    Added support of explicit constructors, issue #26
+    Extended properties for specifying set method argument name, issue #30
+
+Version 0.3
+    Added support of doxygen-style comment generation, issue #5
+    Fixed C mangling for upper-case words, issue #11
+    Moved down_cast functions to the current root namespace, issue #20
+
+Version 0.2
+    Big refactoring, introduced *Generator classes
+    
+Version 0.1
+    First technology preview release
