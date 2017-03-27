@@ -19,6 +19,9 @@
  *
  */
 
+#ifndef BEAUTIFUL_CAPI_MIXED_SEMANTIC_MUTATOR_H
+#define BEAUTIFUL_CAPI_MIXED_SEMANTIC_MUTATOR_H
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -86,3 +89,5 @@ namespace MixedSemantic
         }
     };
 }
+
+#endif /* BEAUTIFUL_CAPI_MIXED_SEMANTIC_MUTATOR_H */

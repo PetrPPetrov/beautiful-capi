@@ -19,6 +19,9 @@
  *
  */
 
+#ifndef BEAUTIFUL_CAPI_MIXED_SEMANTIC_PERSON_H
+#define BEAUTIFUL_CAPI_MIXED_SEMANTIC_PERSON_H
+
 #include <iostream>
 #include <vector>
 #include <stddef.h>
@@ -91,3 +94,5 @@ namespace MixedSemantic
         unsigned mYear;
     };
 }
+
+#endif /* BEAUTIFUL_CAPI_MIXED_SEMANTIC_PERSON_H */

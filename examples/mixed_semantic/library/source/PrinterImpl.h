@@ -19,6 +19,9 @@
  *
  */
 
+#ifndef BEAUTIFUL_CAPI_MIXED_SEMANTIC_PRINTER_H
+#define BEAUTIFUL_CAPI_MIXED_SEMANTIC_PRINTER_H
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -75,3 +78,5 @@ namespace MixedSemantic
         }
     };
 }
+
+#endif /* BEAUTIFUL_CAPI_MIXED_SEMANTIC_PRINTER_H */

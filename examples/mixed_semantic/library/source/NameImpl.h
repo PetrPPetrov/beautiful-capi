@@ -19,6 +19,9 @@
  *
  */
 
+#ifndef BEAUTIFUL_CAPI_MIXED_SEMANTIC_NAME_H
+#define BEAUTIFUL_CAPI_MIXED_SEMANTIC_NAME_H
+
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -75,3 +78,5 @@ namespace MixedSemantic
         }
     };
 }
+
+#endif /* BEAUTIFUL_CAPI_MIXED_SEMANTIC_NAME_H */

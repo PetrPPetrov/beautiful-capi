@@ -441,6 +441,8 @@ class TClass(object):
         self.delete_or_release_noexcept_filled = False
         self.overload_suffix_mode = TOverloadSuffixMode.Notify
         self.overload_suffix_mode_filled = False
+        self.wrap_name = "{class_name}{wrap_suffix}"
+        self.wrap_name_filled = False
         self.documentations = []
         self.include_headers = []
         self.enumerations = []
@@ -550,6 +552,10 @@ class TClass(object):
             cur_attr = dom_node.getAttribute("overload_suffix_mode")
             self.overload_suffix_mode = TOverloadSuffixMode.load(cur_attr)
             self.overload_suffix_mode_filled = True
+        if dom_node.hasAttribute("wrap_name"):
+            cur_attr = dom_node.getAttribute("wrap_name")
+            self.wrap_name = cur_attr
+            self.wrap_name_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:

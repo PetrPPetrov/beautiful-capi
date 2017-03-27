@@ -19,6 +19,9 @@
  *
  */
 
+#ifndef BEAUTIFUL_CAPI_MIXED_SEMANTIC_ADDRESS_H
+#define BEAUTIFUL_CAPI_MIXED_SEMANTIC_ADDRESS_H
+
 #include <string>
 #include <iostream>
 
@@ -95,3 +98,5 @@ namespace MixedSemantic
         }
     }
 }
+
+#endif /* BEAUTIFUL_CAPI_MIXED_SEMANTIC_ADDRESS_H */

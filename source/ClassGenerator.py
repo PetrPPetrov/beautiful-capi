@@ -90,6 +90,11 @@ class ClassGenerator(object):
 
     @property
     def wrap_name(self) -> str:
+        if self.class_object.wrap_name_filled:
+            return self.class_object.wrap_name.format(
+                class_name=self.class_object.name,
+                wrap_suffix=self.lifecycle_traits.suffix
+            )
         if self.is_template:
             self.__create_wrap_template_name()
             return self.cached_wrap_template_name
