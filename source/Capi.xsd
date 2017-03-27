@@ -228,5 +228,6 @@
     <xs:attribute name="c_2_impl" type="xs:string" use="optional" default="static_cast&lt;{implementation_type}&gt;({expression})"/>
     <xs:attribute name="impl_2_c" type="xs:string" use="optional" default="static_cast&lt;{c_type}&gt;({expression})"/>
     <xs:attribute name="c_2_wrap" type="xs:string" use="optional" default="static_cast&lt;{wrap_type}&gt;({expression})"/>
+    <xs:attribute name="include_header" type="xs:string" use="optional" default=""/>
   </xs:complexType>
 </xs:schema>

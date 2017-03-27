@@ -82,7 +82,8 @@ class MappedTypeGenerator(object):
         return self.format(self.mapped_type_object.c_2_wrap, expression, result_var, self.mapped_type_object.wrap_type)
 
     def include_dependent_declaration_headers(self, file_generator: FileGenerator, file_cache: FileCache):
-        pass
+        header = self.mapped_type_object.include_header
+        file_generator.include_header(header.strip('<">'), '<' in header)
 
     def include_dependent_definition_headers(self, file_generator: FileGenerator, file_cache: FileCache):
         pass

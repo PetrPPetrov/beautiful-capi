@@ -1082,6 +1082,8 @@ class TMappedType(object):
         self.impl_2_c_filled = False
         self.c_2_wrap = "static_cast<{wrap_type}>({expression})"
         self.c_2_wrap_filled = False
+        self.include_header = ""
+        self.include_header_filled = False
 
     def load_element(self, element):
         return False
@@ -1123,6 +1125,10 @@ class TMappedType(object):
             cur_attr = dom_node.getAttribute("c_2_wrap")
             self.c_2_wrap = cur_attr
             self.c_2_wrap_filled = True
+        if dom_node.hasAttribute("include_header"):
+            cur_attr = dom_node.getAttribute("include_header")
+            self.include_header = cur_attr
+            self.include_header_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:
