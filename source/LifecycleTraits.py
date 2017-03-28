@@ -176,21 +176,21 @@ class CopySemantic(LifecycleTraits):
         return self.params.value_implementation_2_c
 
     @staticmethod
-    def implementation_result_instructions(class_generator, result_var: str, expression: str) -> ([str], str):
-        instructions = ['{impl_class_name} result_implementation_copy({expression});'.format(
-            impl_class_name=class_generator.class_object.implementation_class_name,
-            result_var=result_var,
-            expression=expression
-        )]
+    def implementation_result_instructions(class_generator, impl_2_c: str,
+                                           result_var: str, expression: str) -> ([str], str):
+        cast_expr = (impl_2_c if impl_2_c else '{implementation_type}({expression})').format(
+                expression=expression,
+                implementation_type=class_generator.class_object.implementation_class_name
+        )
+        instructions = []
         if result_var:
-            instructions.append('void* {result_var}(new {impl_class_name}(result_implementation_copy));'.format(
+            instructions.append('void* {result_var}(new {cast_expr});'.format(
                 result_var=result_var,
-                impl_class_name=class_generator.class_object.implementation_class_name
+                cast_expr=cast_expr
             ))
             return_expression = result_var
         else:
-            return_expression = 'new {impl_class_name}(result_implementation_copy)'.format(
-                impl_class_name=class_generator.class_object.implementation_class_name)
+            return_expression = 'new {cast_expr}'.format(cast_expr=cast_expr)
         return instructions, return_expression
 
     @staticmethod
@@ -361,7 +361,11 @@ class RawPointerSemantic(LifecycleTraits):
         return self.params.raw_implementation_2_c
 
     @staticmethod
-    def implementation_result_instructions(class_generator, result_var: str, expression: str) -> ([str], str):
+    def implementation_result_instructions(class_generator, impl_2_c, result_var: str, expression: str) -> ([str], str):
+        expression = (impl_2_c if impl_2_c else '{expression}').format(
+                expression=expression,
+                implementation_type=class_generator.class_object.implementation_class_name
+        )
         if result_var:
             instructions = ['void* {result_var}({expression});'.format(result_var=result_var, expression=expression)]
             return instructions, result_var
@@ -502,12 +506,16 @@ class RefCountedSemantic(LifecycleTraits):
         return self.params.reference_counted_implementation_2_c
 
     @staticmethod
-    def implementation_result_instructions(class_generator, result_var: str, expression: str) -> ([str], str):
+    def implementation_result_instructions(class_generator, impl_2_c, result_var: str, expression: str) -> ([str], str):
+        expression = (impl_2_c if impl_2_c else '{expression}').format(
+                expression=expression,
+                implementation_type=class_generator.class_object.implementation_class_name
+        )
         if result_var:
             instructions = ['void* {result_var}({expression});'.format(result_var=result_var, expression=expression)]
             return instructions, result_var
         else:
-            return [], expression
+            return [],  expression
 
     @staticmethod
     def c_2_impl_default() -> str:

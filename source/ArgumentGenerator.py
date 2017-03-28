@@ -93,6 +93,8 @@ class ClassTypeGenerator(object):
         self.class_argument_generator = class_argument_generator
         self.copy_or_add_ref_when_c_2_wrap = False
         self.c_2_impl = ''
+        self.impl_2_c = ''
+        self.impl_2_c_filled = False
 
     def wrap_argument_declaration(self) -> str:
         return 'const {type_name}&'.format(type_name=self.class_argument_generator.full_wrap_name)
@@ -160,9 +162,10 @@ class ClassTypeGenerator(object):
         return self.class_argument_generator.snippet_implementation_declaration
 
     def implementation_2_c_var(self, result_var: str, expression: str) -> ([str], str):
+        impl_2_c = self.impl_2_c if self.impl_2_c_filled else ''
         expression = self.class_argument_generator.lifecycle_traits.implementation_2_c.format(
             implementation_expression=expression)
-        return self.class_argument_generator.implementation_result_instructions(result_var, expression)
+        return self.class_argument_generator.implementation_result_instructions(impl_2_c, result_var, expression)
 
     @staticmethod
     def generate_c_default_return_value(out: FileGenerator):

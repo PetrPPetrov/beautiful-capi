@@ -75,6 +75,10 @@ class PropertiesProcessor(object):
             new_get_method.const = cur_get_const
             new_get_method.return_type = cur_property.type_name
             new_get_method.documentations = copy.deepcopy(cur_property.documentations)
+            new_get_method.impl_2_c = cur_property.get_impl_2_c
+            new_get_method.impl_2_c_filled = cur_property.get_impl_2_c_filled
+            new_get_method.return_is_builtin = cur_property.is_builtin
+            new_get_method.return_is_builtin_filled = cur_property.is_builtin_filled
             PropertiesProcessor.__process_documentations(new_get_method, True)
             cur_class.methods.append(new_get_method)
             new_set_method = TMethod()
@@ -82,6 +86,12 @@ class PropertiesProcessor(object):
             set_input_argument = TArgument()
             set_input_argument.name = cur_argument_name
             set_input_argument.type_name = cur_property.type_name
+            set_input_argument.c_2_impl = cur_property.set_c_2_impl
+            set_input_argument.c_2_impl_filled = cur_property.set_c_2_impl_filled
+            set_input_argument.c_2_impl_mode = cur_property.set_c_2_impl_mode
+            set_input_argument.c_2_impl_mode_filled = cur_property.set_c_2_impl_mode_filled
+            set_input_argument.is_builtin = cur_property.is_builtin
+            set_input_argument.is_builtin_filled = cur_property.is_builtin_filled
             new_set_method.arguments.append(set_input_argument)
             new_set_method.documentations = copy.deepcopy(cur_property.documentations)
             PropertiesProcessor.__process_documentations(new_set_method, False)

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<return_value:api xmlns:return_value="http://gkmsoft.ru/beautifulcapi" project_name="ReturnValue" >
+  <namespace name="ReturnValue" overload_suffix_mode="Silent">
+    <class name="FirstName" lifecycle="copy_semantic" implementation_class_name="ReturnValue::FirstNameImpl" implementation_class_header="FirstNameImpl.h" >
+      <constructor name="Default"/>
+      <property name="FirstName" type="const char*"/>
+    </class>
+    <class name="MiddleName" lifecycle="reference_counted" implementation_class_name="ReturnValue::MiddleNameImpl" implementation_class_header="MiddleNameImpl.h">
+      <constructor name="Default"/>      
+      <property name="MiddleName" type="const char*"/>
+    </class>
+    <class name="LastName" lifecycle="raw_pointer_semantic" implementation_class_name="ReturnValue::LastNameImpl" implementation_class_header="LastNameImpl.h">
+      <constructor name="Default"/>
+      <property name="LastName" type="const char*"/>
+    </class>
+    <class name="Person" lifecycle="copy_semantic" implementation_class_name="ReturnValue::PersonImpl" implementation_class_header="PersonImpl.h">
+      <constructor name="Default"/>
+      <property name="FirstName" type="ReturnValue::FirstName" get_impl_2_c="{implementation_type}({expression})"/>
+      <property name="MiddleName" type="ReturnValue::MiddleName" get_impl_2_c="{expression}"/>
+      <property name="LastName" type="ReturnValue::LastName" get_impl_2_c="{expression}"/>
+    </class>
+    <class name="Printer" lifecycle="copy_semantic" implementation_class_name="ReturnValue::PrinterImpl" implementation_class_header="PrinterImpl.h">
+      <constructor name="Default"/>
+      <method name="ShowFirstName">
+        <argument name="first_name" type="ReturnValue::FirstName" />
+      </method>
+      <method name="ShowMiddleName">
+        <argument name="middle_name" type="ReturnValue::MiddleName" c_2_impl_mode="to_value"/>
+      </method>
+      <method name="ShowLastName">
+        <argument name="last_name" type="ReturnValue::LastName" c_2_impl_mode="to_value"/>
+      </method>
+    </class>
+  </namespace>
+</return_value:api>

@@ -174,6 +174,8 @@ class GeneratorCreator(object):
         method_generator.return_type_generator = self.__create_type_generator(
             method_generator.method_object.return_type,
             method_generator.method_object.return_is_builtin)
+        method_generator.return_type_generator.impl_2_c = method_generator.method_object.impl_2_c
+        method_generator.return_type_generator.impl_2_c_filled = method_generator.method_object.impl_2_c_filled
         self.__bind_documentation(method_generator.method_object)
 
     def __bind_function(self, function_generator: FunctionGenerator):

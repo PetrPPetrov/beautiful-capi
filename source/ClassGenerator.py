@@ -177,8 +177,8 @@ class ClassGenerator(object):
             )
             self.cached_wrap_template_name = format_type(raw_name)
 
-    def implementation_result_instructions(self, result_var: str, expression: str) -> ([str], str):
-        return self.lifecycle_traits.implementation_result_instructions(self, result_var, expression)
+    def implementation_result_instructions(self, impl_2_c: str, result_var: str, expression: str) -> ([str], str):
+        return self.lifecycle_traits.implementation_result_instructions(self, impl_2_c, result_var, expression)
 
     def __generate_enum_definitions(self, declaration_header):
         for enum_generator in self.enum_generators:

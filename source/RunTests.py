@@ -120,6 +120,7 @@ def run_tests(input_folder, output_folder):
     process_example(input_folder, 'point_set', base_backup_folder)
     process_example(input_folder, 'raw_pointer_semantic', base_backup_folder)
     process_example(input_folder, 'reference_counted', base_backup_folder)
+    process_example(input_folder, 'return_value', base_backup_folder)
     process_example(input_folder, 'template', base_backup_folder)
     process_example(input_folder, 'unit_test', base_backup_folder)
     process_example(input_folder, 'virtual_interface', base_backup_folder)

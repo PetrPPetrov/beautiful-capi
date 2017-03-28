@@ -686,6 +686,8 @@ class TMethodBase(TConstructorBase):
         self.return_is_builtin_filled = False
         self.overload_suffix = ""
         self.overload_suffix_filled = False
+        self.impl_2_c = "new {implementation_type}({expression})"
+        self.impl_2_c_filled = False
 
     def load_element(self, element):
         if super().load_element(element):
@@ -706,6 +708,10 @@ class TMethodBase(TConstructorBase):
             cur_attr = dom_node.getAttribute("overload_suffix")
             self.overload_suffix = cur_attr
             self.overload_suffix_filled = True
+        if dom_node.hasAttribute("impl_2_c"):
+            cur_attr = dom_node.getAttribute("impl_2_c")
+            self.impl_2_c = cur_attr
+            self.impl_2_c_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:
@@ -860,6 +866,14 @@ class TProperty(object):
         self.get_const_filled = False
         self.set_argument_name = ""
         self.set_argument_name_filled = False
+        self.is_builtin = False
+        self.is_builtin_filled = False
+        self.set_c_2_impl = "static_cast<{implementation_type}>({expression})"
+        self.set_c_2_impl_filled = False
+        self.set_c_2_impl_mode = TC2ImplMode.default
+        self.set_c_2_impl_mode_filled = False
+        self.get_impl_2_c = "new {implementation_type}({expression})"
+        self.get_impl_2_c_filled = False
         self.documentations = []
 
     def load_element(self, element):
@@ -895,6 +909,22 @@ class TProperty(object):
             cur_attr = dom_node.getAttribute("set_argument_name")
             self.set_argument_name = cur_attr
             self.set_argument_name_filled = True
+        if dom_node.hasAttribute("is_builtin"):
+            cur_attr = dom_node.getAttribute("is_builtin")
+            self.is_builtin = string_to_bool(cur_attr)
+            self.is_builtin_filled = True
+        if dom_node.hasAttribute("set_c_2_impl"):
+            cur_attr = dom_node.getAttribute("set_c_2_impl")
+            self.set_c_2_impl = cur_attr
+            self.set_c_2_impl_filled = True
+        if dom_node.hasAttribute("set_c_2_impl_mode"):
+            cur_attr = dom_node.getAttribute("set_c_2_impl_mode")
+            self.set_c_2_impl_mode = TC2ImplMode.load(cur_attr)
+            self.set_c_2_impl_mode_filled = True
+        if dom_node.hasAttribute("get_impl_2_c"):
+            cur_attr = dom_node.getAttribute("get_impl_2_c")
+            self.get_impl_2_c = cur_attr
+            self.get_impl_2_c_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:
