@@ -15,7 +15,7 @@ which is visibly suitable for human usage (not for computers or compilers).
 In today's modern software development environment, there are may
 C/C++ parsing techniques such as SWIG, web services and many more.
 
-This project is to ment write a new automatic code generation tool similar
+This project is meant to write a new automatic code generation tool similar
 to SWIG, except the output is not Java/Python, it is ANSI-C & C++.
 
 This is a little different than SWIG, generating pure C API output, formatted to be visually appealing.
@@ -29,7 +29,7 @@ using C API (allowing both forward and backward compatibility).
 Furthermore, the generation tool is written in Python, so is easily ported without compilation.
 
 The main goal of this project is to produce highly efficient code and design elegance.
-Knowing  Java  programmers prefer to write wrappers by hand to avoid sub-optimal SWIG outputs. 
+Knowing Java programmers prefer to write wrappers by hand to avoid sub-optimal SWIG outputs. 
 This prototype project will primarily be for C++ applications calling C++ library classes, but via a wrapped API.
 It's goal is not cross-language like SWIG.
 
