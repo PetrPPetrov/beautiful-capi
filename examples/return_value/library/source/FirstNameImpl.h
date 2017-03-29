@@ -32,14 +32,7 @@ namespace ReturnValue
     {
         std::string mFirstName;
 
-        void init_from_char(const char* value, std::string &result_string)
-        {
-            if (value)
-                result_string = value;
-        }
     public:
-        FirstNameImpl() {}
-
         const char* GetFirstName() const
         {
             return mFirstName.c_str();
@@ -47,7 +40,8 @@ namespace ReturnValue
 
         void SetFirstName(const char* value)
         {
-            init_from_char(value, mFirstName);
+            if (value)
+                mFirstName = value;
         }
     };
 }

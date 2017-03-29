@@ -33,12 +33,6 @@ namespace ReturnValue
         std::string mMiddleName;
         int mRefCount;
         
-        void init_from_char(const char* value, std::string &result_string)
-        {
-            if (value)
-                result_string = value;
-        }
-
     public:
         // By default newly created objects implies to have value 1 of reference counter
         MiddleNameImpl() : mRefCount(1) {}
@@ -50,7 +44,8 @@ namespace ReturnValue
 
         void SetMiddleName(const char* value)
         {
-            init_from_char(value, mMiddleName);
+            if (value)
+                mMiddleName = value;
         }
 
         void AddRef()

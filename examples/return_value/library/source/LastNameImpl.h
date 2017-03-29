@@ -31,16 +31,10 @@ namespace ReturnValue
 {
     class LastNameImpl
     {
+    private:
         std::string mLastName;
 
-        void init_from_char(const char* value, std::string &result_string)
-        {
-            if (value)
-                result_string = value;
-        }
     public:
-        LastNameImpl() {}
-
         const char* GetLastName() const
         {
             return mLastName.c_str();
@@ -48,7 +42,8 @@ namespace ReturnValue
 
         void SetLastName(const char* value)
         {
-            init_from_char(value, mLastName);
+            if (value)
+                mLastName = value;
         }
     };
 }

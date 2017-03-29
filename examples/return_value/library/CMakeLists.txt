@@ -27,17 +27,16 @@ find_package(PythonInterp 3.4 REQUIRED)
 include(../../../UseBCapi.cmake)
 
 include_directories(
-  ${Boost_INCLUDE_DIR}/
   ${return_value_SOURCE_DIR}/source/
 )
 
 add_library(return_value SHARED
   ${return_value_SOURCE_DIR}/source/AutoGenWrap.cpp
-  ${return_value_SOURCE_DIR}/source/NameImpl.h
+  ${return_value_SOURCE_DIR}/source/FirstNameImpl.h
+  ${return_value_SOURCE_DIR}/source/MiddleNameImpl.h
+  ${return_value_SOURCE_DIR}/source/LastNameImpl.h
   ${return_value_SOURCE_DIR}/source/PersonImpl.h
-  ${return_value_SOURCE_DIR}/source/AddressImpl.h
   ${return_value_SOURCE_DIR}/source/PrinterImpl.h
-  
 )
 
 add_bcapi_generation_with_test()

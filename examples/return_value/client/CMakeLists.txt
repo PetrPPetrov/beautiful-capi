@@ -22,14 +22,7 @@ project(return_value_client)
 
 cmake_minimum_required(VERSION 2.8)
 
-find_package(Boost)
-
-if(NOT WIN32)
-  add_definitions(-fvisibility=default)
-endif()
-
 include_directories(
-  ${Boost_INCLUDE_DIR}/
   ${return_value_client_SOURCE_DIR}/../library/include
   ${return_value_client_SOURCE_DIR}/
 )

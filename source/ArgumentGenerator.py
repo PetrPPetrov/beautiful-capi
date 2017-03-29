@@ -162,10 +162,20 @@ class ClassTypeGenerator(object):
         return self.class_argument_generator.snippet_implementation_declaration
 
     def implementation_2_c_var(self, result_var: str, expression: str) -> ([str], str):
-        impl_2_c = self.impl_2_c if self.impl_2_c_filled else ''
-        expression = self.class_argument_generator.lifecycle_traits.implementation_2_c.format(
-            implementation_expression=expression)
-        return self.class_argument_generator.implementation_result_instructions(impl_2_c, result_var, expression)
+        default_cast = self.class_argument_generator.lifecycle_traits.implementation_2_c_default()
+        cur_impl_2_c = self.impl_2_c if self.impl_2_c_filled else default_cast
+        result_expression = cur_impl_2_c.format(
+            expression=expression,
+            implementation_type=self.class_argument_generator.class_object.implementation_class_name,
+            c_type='void*',
+            result_var=result_var
+        )
+        if result_var:
+            return ['void* {result_var}({expression})'. format(
+                expression=result_expression,
+                result_var=result_var
+            )], result_var
+        return [], result_expression
 
     @staticmethod
     def generate_c_default_return_value(out: FileGenerator):

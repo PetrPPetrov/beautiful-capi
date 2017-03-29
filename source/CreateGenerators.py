@@ -184,6 +184,8 @@ class GeneratorCreator(object):
         function_generator.return_type_generator = self.__create_type_generator(
             function_generator.function_object.return_type,
             function_generator.function_object.return_is_builtin)
+        function_generator.return_type_generator.impl_2_c = function_generator.function_object.impl_2_c
+        function_generator.return_type_generator.impl_2_c_filled = function_generator.function_object.impl_2_c_filled
         self.__bind_documentation(function_generator.function_object)
 
     def __replace_template_implementation_class(self, class_generator):

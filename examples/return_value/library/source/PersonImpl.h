@@ -36,20 +36,21 @@ namespace ReturnValue
         ReturnValue::LastNameImpl* mLastName; 
         
     public:
-        PersonImpl() {}
+        PersonImpl(): mMiddleName(0), mLastName(0) {}
 
         ReturnValue::FirstNameImpl GetFirstName() const
         {
             return mFirstName;
         }
 
-        void SetFirstName(ReturnValue::FirstNameImpl first_name)
+        void SetFirstName(const ReturnValue::FirstNameImpl& first_name)
         {
             mFirstName = first_name;
         }
 
         ReturnValue::MiddleNameImpl* GetMiddleName() const
         {
+            intrusive_ptr_add_ref(mMiddleName);
             return mMiddleName;
         }
 

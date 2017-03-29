@@ -15,7 +15,7 @@
     </class>
     <class name="Person" lifecycle="copy_semantic" implementation_class_name="ReturnValue::PersonImpl" implementation_class_header="PersonImpl.h">
       <constructor name="Default"/>
-      <property name="FirstName" type="ReturnValue::FirstName" get_impl_2_c="{implementation_type}({expression})"/>
+      <property name="FirstName" type="ReturnValue::FirstName" get_impl_2_c="new {implementation_type}({expression})"/>
       <property name="MiddleName" type="ReturnValue::MiddleName" get_impl_2_c="{expression}"/>
       <property name="LastName" type="ReturnValue::LastName" get_impl_2_c="{expression}"/>
     </class>

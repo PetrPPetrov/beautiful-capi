@@ -123,7 +123,7 @@ class ClassGenerator(object):
 
     @property
     def snippet_implementation_declaration(self) -> str:
-        return self.lifecycle_traits.snippet_implementation_usage.format(implementation_name=self.implementation_name)
+        return self.lifecycle_traits.snippet_implementation_usage.format(implementation_type=self.implementation_type)
 
     @property
     def is_callback(self) -> bool:
@@ -176,9 +176,6 @@ class ClassGenerator(object):
                 name=name_prefix, template_arguments=', '.join(template_arguments)
             )
             self.cached_wrap_template_name = format_type(raw_name)
-
-    def implementation_result_instructions(self, impl_2_c: str, result_var: str, expression: str) -> ([str], str):
-        return self.lifecycle_traits.implementation_result_instructions(self, impl_2_c, result_var, expression)
 
     def __generate_enum_definitions(self, declaration_header):
         for enum_generator in self.enum_generators:
