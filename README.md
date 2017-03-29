@@ -19,7 +19,7 @@ This project is meant to write a new automatic code generation tool similar
 to SWIG, except the output is not Java/Python, it is ANSI-C & C++.
 
 This is a little different than SWIG, generating pure C API output, formatted to be visually appealing.
-Compiled  libs could be linked by another compiler or language (unlike
+Compiled libs could be linked by another compiler or language (unlike
 default C++ to C++ which requires the same compiler to be used on both
 sides).
 
