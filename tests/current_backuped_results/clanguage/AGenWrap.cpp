@@ -122,8 +122,7 @@ EXAMPLE_API void* EXAMPLE_API_CONVENTION example_dumper_new()
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_dumper_get_printer_const(void* object_pointer)
 {
     const Example::DumperImpl* self = static_cast<Example::DumperImpl*>(object_pointer);
-    Example::PrinterImpl result_implementation_copy(self->GetPrinter());
-    return new Example::PrinterImpl(result_implementation_copy);
+    return new Example::PrinterImpl(self->GetPrinter());
 }
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_dumper_set_printer(void* object_pointer, void* printer)

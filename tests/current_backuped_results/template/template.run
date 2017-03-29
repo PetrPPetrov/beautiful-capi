@@ -40,20 +40,12 @@ Position dtor
 Vector has 2 elements
 Position copy ctor
 Position4D copy ctor
-Position copy ctor
-Position4D copy ctor
-Position4D dtor
-Position dtor
 X: 0 Y: 0 Z: 0 
 W: 1 
 Position4D dtor
 Position dtor
 Position copy ctor
 Position4D copy ctor
-Position copy ctor
-Position4D copy ctor
-Position4D dtor
-Position dtor
 X: 0 Y: 0 Z: 0 
 W: 1 
 Position4D dtor
@@ -106,33 +98,15 @@ Position4D copy ctor
 Position copy ctor
 Position4D copy ctor
 Vector copy ctor
-Position copy ctor
-Position4D copy ctor
-Position copy ctor
-Position4D copy ctor
-Vector copy ctor
-Vector dtor
-Position4D dtor
-Position dtor
-Position4D dtor
-Position dtor
 Vector has 2 elements
 Position copy ctor
 Position4D copy ctor
-Position copy ctor
-Position4D copy ctor
-Position4D dtor
-Position dtor
 X: 0 Y: 0 Z: 0 
 W: 1 
 Position4D dtor
 Position dtor
 Position copy ctor
 Position4D copy ctor
-Position copy ctor
-Position4D copy ctor
-Position4D dtor
-Position dtor
 X: 0 Y: 0 Z: 0 
 W: 1 
 Position4D dtor
@@ -148,33 +122,15 @@ Position4D copy ctor
 Position copy ctor
 Position4D copy ctor
 Vector copy ctor
-Position copy ctor
-Position4D copy ctor
-Position copy ctor
-Position4D copy ctor
-Vector copy ctor
-Vector dtor
-Position4D dtor
-Position dtor
-Position4D dtor
-Position dtor
 Vector has 2 elements
 Position copy ctor
 Position4D copy ctor
-Position copy ctor
-Position4D copy ctor
-Position4D dtor
-Position dtor
 X: 0 Y: 0 Z: 0 
 W: 1 
 Position4D dtor
 Position dtor
 Position copy ctor
 Position4D copy ctor
-Position copy ctor
-Position4D copy ctor
-Position4D dtor
-Position dtor
 X: 0 Y: 0 Z: 0 
 W: 1 
 Position4D dtor
@@ -197,15 +153,11 @@ Vector has 2 elements
 Model
 name: model1
 Position copy ctor
-Position copy ctor
-Position dtor
 X: 0 Y: 0 Z: 0 
 Position dtor
 Model
 name: model2
 Position copy ctor
-Position copy ctor
-Position dtor
 X: 0 Y: 0 Z: 0 
 Position dtor
 

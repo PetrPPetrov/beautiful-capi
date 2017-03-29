@@ -12,8 +12,6 @@ Printer copy ctor
 Printer dtor
 print text: Dumper::Dump(): dump some text here
 Printer copy ctor
-Printer copy ctor
-Printer dtor
 print text: printer2
 Printer dtor
 Dumper dtor

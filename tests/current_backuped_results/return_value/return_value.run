@@ -1,0 +1,7 @@
+./return_value_client
+___std::cout___
+Fist Name: James
+Middle Name: Francis
+Last Name: Stuart
+___std::cerr___
+___eof___

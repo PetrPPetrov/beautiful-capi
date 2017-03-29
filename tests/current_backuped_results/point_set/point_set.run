@@ -19,18 +19,12 @@ Position dtor
 Position dtor
 PointSet 'Points'
 Position copy ctor
-Position copy ctor
-Position dtor
 	point #0 (1, 0, 0)
 Position dtor
 Position copy ctor
-Position copy ctor
-Position dtor
 	point #1 (0, 1, 0)
 Position dtor
 Position copy ctor
-Position copy ctor
-Position dtor
 	point #2 (0, 0, 1)
 Position dtor
 PointSet dtor

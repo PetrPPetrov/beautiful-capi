@@ -176,8 +176,7 @@ POINTSET_API void POINTSET_API_CONVENTION point_set_points_resize(void* object_p
 POINTSET_API void* POINTSET_API_CONVENTION point_set_points_get_element_const(void* object_pointer, size_t index)
 {
     const PointSet::PointsImpl* self = static_cast<PointSet::PointsImpl*>(object_pointer);
-    PointSet::PositionImpl result_implementation_copy(self->GetElement(index));
-    return new PointSet::PositionImpl(result_implementation_copy);
+    return new PointSet::PositionImpl(self->GetElement(index));
 }
 
 POINTSET_API void POINTSET_API_CONVENTION point_set_points_set_element(void* object_pointer, size_t index, void* value)

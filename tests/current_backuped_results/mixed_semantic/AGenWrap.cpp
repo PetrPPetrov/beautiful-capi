@@ -206,8 +206,7 @@ MIXEDSEMANTIC_API void MIXEDSEMANTIC_API_CONVENTION mixed_semantic_person_set_ad
 MIXEDSEMANTIC_API void* MIXEDSEMANTIC_API_CONVENTION mixed_semantic_person_get_name_const(void* object_pointer)
 {
     const MixedSemantic::PersonImpl* self = static_cast<MixedSemantic::PersonImpl*>(object_pointer);
-    MixedSemantic::NameImpl result_implementation_copy(self->GetName());
-    return new MixedSemantic::NameImpl(result_implementation_copy);
+    return new MixedSemantic::NameImpl(self->GetName());
 }
 
 MIXEDSEMANTIC_API void MIXEDSEMANTIC_API_CONVENTION mixed_semantic_person_set_name(void* object_pointer, void* name)

@@ -280,8 +280,7 @@ EXAMPLE_API void EXAMPLE_API_CONVENTION example_model_float_set_name(void* objec
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_model_float_get_position_const(void* object_pointer)
 {
     const Example::ModelImpl<float>* self = static_cast<Example::ModelImpl<float>*>(object_pointer);
-    Example::PositionImpl<float> result_implementation_copy(self->GetPosition());
-    return new Example::PositionImpl<float>(result_implementation_copy);
+    return new Example::PositionImpl<float>(self->GetPosition());
 }
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_model_float_set_position(void* object_pointer, void* position)
@@ -320,8 +319,7 @@ EXAMPLE_API void EXAMPLE_API_CONVENTION example_model_double_set_name(void* obje
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_model_double_get_position_const(void* object_pointer)
 {
     const Example::ModelImpl<double>* self = static_cast<Example::ModelImpl<double>*>(object_pointer);
-    Example::PositionImpl<double> result_implementation_copy(self->GetPosition());
-    return new Example::PositionImpl<double>(result_implementation_copy);
+    return new Example::PositionImpl<double>(self->GetPosition());
 }
 
 EXAMPLE_API void EXAMPLE_API_CONVENTION example_model_double_set_position(void* object_pointer, void* position)
@@ -444,8 +442,7 @@ EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_position_float
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position_float_get_item_const(void* object_pointer, int index)
 {
     const Example::VectorImpl<Example::PositionImpl<float> >* self = static_cast<Example::VectorImpl<Example::PositionImpl<float> >*>(object_pointer);
-    Example::PositionImpl<float> result_implementation_copy(self->GetItem(index));
-    return new Example::PositionImpl<float>(result_implementation_copy);
+    return new Example::PositionImpl<float>(self->GetItem(index));
 }
 
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position_float_copy(void* object_pointer)
@@ -484,8 +481,7 @@ EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_position_doubl
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position_double_get_item_const(void* object_pointer, int index)
 {
     const Example::VectorImpl<Example::PositionImpl<double> >* self = static_cast<Example::VectorImpl<Example::PositionImpl<double> >*>(object_pointer);
-    Example::PositionImpl<double> result_implementation_copy(self->GetItem(index));
-    return new Example::PositionImpl<double>(result_implementation_copy);
+    return new Example::PositionImpl<double>(self->GetItem(index));
 }
 
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position_double_copy(void* object_pointer)
@@ -524,8 +520,7 @@ EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_fl
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_float_get_item_const(void* object_pointer, int index)
 {
     const Example::VectorImpl<Example::Position4DImpl<float> >* self = static_cast<Example::VectorImpl<Example::Position4DImpl<float> >*>(object_pointer);
-    Example::Position4DImpl<float> result_implementation_copy(self->GetItem(index));
-    return new Example::Position4DImpl<float>(result_implementation_copy);
+    return new Example::Position4DImpl<float>(self->GetItem(index));
 }
 
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_float_copy(void* object_pointer)
@@ -564,8 +559,7 @@ EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_do
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_double_get_item_const(void* object_pointer, int index)
 {
     const Example::VectorImpl<Example::Position4DImpl<double> >* self = static_cast<Example::VectorImpl<Example::Position4DImpl<double> >*>(object_pointer);
-    Example::Position4DImpl<double> result_implementation_copy(self->GetItem(index));
-    return new Example::Position4DImpl<double>(result_implementation_copy);
+    return new Example::Position4DImpl<double>(self->GetItem(index));
 }
 
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_position4_d_double_copy(void* object_pointer)
@@ -604,8 +598,7 @@ EXAMPLE_API void EXAMPLE_API_CONVENTION example_vector_of_example_vector_of_exam
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_vector_of_example_position4_d_float_get_item_const(void* object_pointer, int index)
 {
     const Example::VectorImpl<Example::VectorImpl<Example::Position4DImpl<float> > >* self = static_cast<Example::VectorImpl<Example::VectorImpl<Example::Position4DImpl<float> > >*>(object_pointer);
-    Example::VectorImpl<Example::Position4DImpl<float> > result_implementation_copy(self->GetItem(index));
-    return new Example::VectorImpl<Example::Position4DImpl<float> >(result_implementation_copy);
+    return new Example::VectorImpl<Example::Position4DImpl<float> >(self->GetItem(index));
 }
 
 EXAMPLE_API void* EXAMPLE_API_CONVENTION example_vector_of_example_vector_of_example_position4_d_float_copy(void* object_pointer)

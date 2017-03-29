@@ -222,8 +222,7 @@ UNITTEST_API void* UNITTEST_API_CONVENTION unit_test_person_default()
 UNITTEST_API void* UNITTEST_API_CONVENTION unit_test_person_get_name_const(void* object_pointer)
 {
     const UnitTest::PersonImpl* self = static_cast<UnitTest::PersonImpl*>(object_pointer);
-    UnitTest::NameImpl result_implementation_copy(self->GetName());
-    return new UnitTest::NameImpl(result_implementation_copy);
+    return new UnitTest::NameImpl(self->GetName());
 }
 
 UNITTEST_API void UNITTEST_API_CONVENTION unit_test_person_set_name(void* object_pointer, void* name)
