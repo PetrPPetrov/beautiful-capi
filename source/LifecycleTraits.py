@@ -206,6 +206,16 @@ class CopySemantic(LifecycleTraits):
             with IndentScope(out):
                 out.put_line('SetObject(0);')
 
+    def generate_raw_copy_constructor_body_definition(self, out: FileGenerator, class_generator, copy_object):
+        out.put_line('if (object_pointer && {copy_object})'.format(copy_object=copy_object))
+        with IndentScope(out):
+            copy_result = self.init_method_exception_traits.generate_c_call(
+                out, BuiltinTypeGenerator('void*'), class_generator.copy_method, ['object_pointer'])
+            out.put_line('SetObject({copy_result});'.format(copy_result=copy_result))
+        out.put_line('else')
+        with IndentScope(out):
+            out.put_line('SetObject(object_pointer);')
+
     def __generate_raw_copy_constructor_definition(self, out: FileGenerator, class_generator):
         constructor_arguments = '{class_name}::ECreateFromRawPointer, void *object_pointer, bool copy_object'.format(
             class_name=class_generator.full_wrap_name
@@ -217,14 +227,7 @@ class CopySemantic(LifecycleTraits):
             base_init=get_base_init(class_generator))
         )
         with IndentScope(out):
-            out.put_line('if (object_pointer && copy_object)')
-            with IndentScope(out):
-                copy_result = self.init_method_exception_traits.generate_c_call(
-                    out, BuiltinTypeGenerator('void*'), class_generator.copy_method, ['object_pointer'])
-                out.put_line('SetObject({copy_result});'.format(copy_result=copy_result))
-            out.put_line('else')
-            with IndentScope(out):
-                out.put_line('SetObject(object_pointer);')
+            self.generate_raw_copy_constructor_body_definition(out, class_generator, 'copy_object')
 
     def __generate_deallocate(self, out: FileGenerator, class_generator):
         out.put_line('if ({get_raw}())'.format(
@@ -367,6 +370,10 @@ class RawPointerSemantic(LifecycleTraits):
             out.put_line('SetObject(other.{get_raw}());'.format(get_raw=self.params.get_raw_pointer_method_name))
 
     @staticmethod
+    def generate_raw_copy_constructor_body_definition(out: FileGenerator, class_generator, copy_object):
+        out.put_line('SetObject(object_pointer);')
+
+    @staticmethod
     def __generate_raw_copy_constructor_definition(out: FileGenerator, class_generator):
         constructor_arguments = '{class_name}::ECreateFromRawPointer, void *object_pointer, bool'.format(
             class_name=class_generator.full_wrap_name
@@ -378,7 +385,7 @@ class RawPointerSemantic(LifecycleTraits):
             base_init=get_base_init(class_generator))
         )
         with IndentScope(out):
-            out.put_line('SetObject(object_pointer);')
+            RawPointerSemantic.generate_raw_copy_constructor_body_definition(out, class_generator, '')
 
     def __generate_delete_method(self, out: FileGenerator, class_generator):
         out.put_line('inline void {class_name}::{delete_method}()'.format(
@@ -503,6 +510,13 @@ class RefCountedSemantic(LifecycleTraits):
                     out, BuiltinTypeGenerator('void'), class_generator.add_ref_method,
                     ['other.{get_raw}()'.format(get_raw=self.params.get_raw_pointer_method_name)])
 
+    def generate_raw_copy_constructor_body_definition(self, out: FileGenerator, class_generator, add_ref_object):
+        out.put_line('SetObject(object_pointer);')
+        out.put_line('if ({add_ref_object} && object_pointer)'.format(add_ref_object=add_ref_object))
+        with IndentScope(out):
+            self.init_method_exception_traits.generate_c_call(
+                out, BuiltinTypeGenerator('void'), class_generator.add_ref_method, ['object_pointer'])
+
     def __generate_raw_copy_constructor_definition(self, out: FileGenerator, class_generator):
         constructor_arguments = '{class_name}::ECreateFromRawPointer, void *object_pointer, bool add_ref_object'.format(
             class_name=class_generator.full_wrap_name
@@ -514,11 +528,7 @@ class RefCountedSemantic(LifecycleTraits):
             base_init=get_base_init(class_generator))
         )
         with IndentScope(out):
-            out.put_line('SetObject(object_pointer);')
-            out.put_line('if (add_ref_object && object_pointer)')
-            with IndentScope(out):
-                self.init_method_exception_traits.generate_c_call(
-                    out, BuiltinTypeGenerator('void'), class_generator.add_ref_method, ['object_pointer'])
+            self.generate_raw_copy_constructor_body_definition(out, class_generator, 'add_ref_object')
 
     def __generate_deallocate(self, out: FileGenerator, class_generator):
         out.put_line('if ({get_raw}())'.format(

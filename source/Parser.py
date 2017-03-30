@@ -451,6 +451,7 @@ class TClass(object):
         self.methods = []
         self.callbacks = []
         self.mapped_types = []
+        self.lifecycle_extensions = []
 
     def load_element(self, element):
         if element.nodeName == "documentation":
@@ -492,6 +493,11 @@ class TClass(object):
             new_element = TMappedType()
             new_element.load(element)
             self.mapped_types.append(new_element)
+            return True
+        if element.nodeName == "lifecycle_extension":
+            new_element = TLifecycleExtension()
+            new_element.load(element)
+            self.lifecycle_extensions.append(new_element)
             return True
         return False
 
@@ -817,6 +823,117 @@ class TArgument(object):
             cur_attr = dom_node.getAttribute("c_2_impl_mode")
             self.c_2_impl_mode = TC2ImplMode.load(cur_attr)
             self.c_2_impl_mode_filled = True
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
+
+class TLifecycleExtension(object):
+    def __init__(self):
+        self.all_items = []
+        self.name = ""
+        self.name_filled = False
+        self.wrap_name = ""
+        self.wrap_name_filled = False
+        self.lifecycle = TLifecycle.copy_semantic
+        self.lifecycle_filled = False
+        self.cast_tos = []
+        self.cast_froms = []
+
+    def load_element(self, element):
+        if element.nodeName == "cast_to":
+            new_element = TCastTo()
+            new_element.load(element)
+            self.cast_tos.append(new_element)
+            return True
+        if element.nodeName == "cast_from":
+            new_element = TCastFrom()
+            new_element.load(element)
+            self.cast_froms.append(new_element)
+            return True
+        return False
+
+    def load_attributes(self, dom_node):
+        if dom_node.hasAttribute("name"):
+            cur_attr = dom_node.getAttribute("name")
+            self.name = cur_attr
+            self.name_filled = True
+        if dom_node.hasAttribute("wrap_name"):
+            cur_attr = dom_node.getAttribute("wrap_name")
+            self.wrap_name = cur_attr
+            self.wrap_name_filled = True
+        if dom_node.hasAttribute("lifecycle"):
+            cur_attr = dom_node.getAttribute("lifecycle")
+            self.lifecycle = TLifecycle.load(cur_attr)
+            self.lifecycle_filled = True
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
+
+class TCastTo(object):
+    def __init__(self):
+        self.all_items = []
+        self.implicit = True
+        self.implicit_filled = False
+        self.target_type = ""
+        self.target_type_filled = False
+        self.cast_method = "To{target_type}"
+        self.cast_method_filled = False
+
+    def load_element(self, element):
+        return False
+
+    def load_attributes(self, dom_node):
+        if dom_node.hasAttribute("implicit"):
+            cur_attr = dom_node.getAttribute("implicit")
+            self.implicit = string_to_bool(cur_attr)
+            self.implicit_filled = True
+        if dom_node.hasAttribute("target_type"):
+            cur_attr = dom_node.getAttribute("target_type")
+            self.target_type = cur_attr
+            self.target_type_filled = True
+        if dom_node.hasAttribute("cast_method"):
+            cur_attr = dom_node.getAttribute("cast_method")
+            self.cast_method = cur_attr
+            self.cast_method_filled = True
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
+
+class TCastFrom(object):
+    def __init__(self):
+        self.all_items = []
+        self.implicit = True
+        self.implicit_filled = False
+        self.source_type = ""
+        self.source_type_filled = False
+        self.cast_method = "From{source_type}"
+        self.cast_method_filled = False
+
+    def load_element(self, element):
+        return False
+
+    def load_attributes(self, dom_node):
+        if dom_node.hasAttribute("implicit"):
+            cur_attr = dom_node.getAttribute("implicit")
+            self.implicit = string_to_bool(cur_attr)
+            self.implicit_filled = True
+        if dom_node.hasAttribute("source_type"):
+            cur_attr = dom_node.getAttribute("source_type")
+            self.source_type = cur_attr
+            self.source_type_filled = True
+        if dom_node.hasAttribute("cast_method"):
+            cur_attr = dom_node.getAttribute("cast_method")
+            self.cast_method = cur_attr
+            self.cast_method_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:

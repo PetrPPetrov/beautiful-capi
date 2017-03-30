@@ -21,6 +21,7 @@
 
 
 import os
+
 from Parser import TNamespace
 from Helpers import get_c_name, include_headers
 from FileGenerator import FileGenerator, WatchdogScope, IfDefScope, IndentScope

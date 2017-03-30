@@ -227,6 +227,26 @@ class GeneratorCreator(object):
             self.__bind_documentation(enum_generator.enum_object)
             for item in enum_generator.enum_object.items:
                 self.__bind_documentation(item)
+        if hasattr(class_generator.class_object, 'extension_base_class_name'):
+            extension_base_class_str = class_generator.class_object.extension_base_class_name.replace(' ', '')
+            if extension_base_class_str not in self.full_name_2_type_generator:
+                raise BeautifulCapiException(
+                    'extension base class {0} is not found'.format(
+                        class_generator.class_object.extension_base_class_name))
+            class_generator.extension_base_class_generator = self.full_name_2_type_generator[extension_base_class_str]
+        if hasattr(class_generator.class_object, 'lifecycle_extension'):
+            for index, cast_to in enumerate(class_generator.class_object.lifecycle_extension.cast_tos):
+                target_type_str = cast_to.target_type.replace(' ', '')
+                if target_type_str not in self.full_name_2_type_generator:
+                    raise BeautifulCapiException('target class {0} is not found'.format(cast_to.target_type))
+                result_cast_to = class_generator.class_object.lifecycle_extension.cast_tos[index]
+                result_cast_to.target_generator = self.full_name_2_type_generator[target_type_str]
+            for index, cast_from in enumerate(class_generator.class_object.lifecycle_extension.cast_froms):
+                source_type_str = cast_from.source_type.replace(' ', '')
+                if source_type_str not in self.full_name_2_type_generator:
+                    raise BeautifulCapiException('source class {0} is not found'.format(cast_from.source_type))
+                result_cast_from = class_generator.class_object.lifecycle_extension.cast_froms[index]
+                result_cast_from.source_generator = self.full_name_2_type_generator[source_type_str]
         self.__replace_template_implementation_class(class_generator)
         self.scope_stack.pop()
 

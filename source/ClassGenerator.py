@@ -199,6 +199,25 @@ class ClassGenerator(object):
                 method_declaration=method_generator.wrap_declaration(self.capi_generator)))
             method_generator.include_dependent_declaration_headers(declaration_header, self.file_cache)
 
+    def __generate_cast_name_declaration(self, out):
+        for cast in self.class_object.lifecycle_extension.cast_tos:
+            target_type = cast.target_generator.full_wrap_name
+            if cast.implicit:
+                out.put_line('inline operator {target_type}() const;'.format(target_type=target_type))
+            else:
+                out.put_line('inline {target_type} {cast_method}() const;'.format(
+                        target_type=target_type,
+                        cast_method=cast.cast_method.format(target_type=target_type.split('::')[-1])
+                    )
+                )
+        for cast in self.class_object.lifecycle_extension.cast_froms:
+            source_type = cast.source_generator.full_wrap_name
+            out.put_line('inline {class_name}(const {source_type}& value);'.format(
+                    class_name=self.wrap_short_name,
+                    source_type=source_type
+                )
+            )
+
     def __generate_class_body(self, declaration_header):
         with Unindent(declaration_header):
             declaration_header.put_line('public:')
@@ -208,6 +227,8 @@ class ClassGenerator(object):
         self.inheritance_traits = create_inheritance_traits(self.class_object.requires_cast_to_base)
         declaration_header.put_line('')
         self.lifecycle_traits.generate_std_methods_declarations(declaration_header, self)
+        if hasattr(self, 'extension_base_class_generator'):
+            self.__generate_cast_name_declaration(declaration_header)
         with Unindent(declaration_header):
             declaration_header.put_line('protected:')
         self.inheritance_traits.generate_set_object_declaration(declaration_header, self)
@@ -344,6 +365,69 @@ class ClassGenerator(object):
                 definition_header.put_line('')
                 definition_header.put_line(the_most_parent_namespace.one_line_namespace_end)
 
+    def __generate_cast_name_definition(self, out):
+        for cast in self.class_object.lifecycle_extension.cast_tos:
+            out.include_user_header(self.file_cache.class_header_decl(cast.target_generator.full_name_array))
+            target_type = cast.target_generator.full_wrap_name
+            return_instruction = 'return {0}({0}::force_creating_from_raw_pointer, {1}(), true);'.format(
+                target_type, self.params.get_raw_pointer_method_name
+            )
+            if cast.implicit:
+                out.put_line('inline {full_name}::operator {target_type}() const'.format(
+                        full_name=self.full_wrap_name,
+                        target_type=target_type
+                    )
+                )
+            else:
+                out.put_line('inline {target_type} {full_name}::{cast_method}() const'.format(
+                        target_type=target_type,
+                        full_name=self.full_wrap_name,
+                        cast_method=cast.cast_method.format(target_type=target_type.split('::')[-1])
+                    )
+                )
+            with IndentScope(out):
+                out.put_line(return_instruction)
+            out.put_line('')
+        for cast in self.class_object.lifecycle_extension.cast_froms:
+            source_type = cast.source_generator.full_wrap_name
+            out.put_line('inline {full_name}::{class_name}(const {source_type}& value)'.format(
+                    full_name=self.full_wrap_name,
+                    class_name=self.wrap_short_name,
+                    source_type=source_type
+                )
+            )
+            with IndentScope(out):
+                out.put_line('void* object_pointer = value.{get_raw_pointer}();'.format(
+                    get_raw_pointer=self.params.get_raw_pointer_method_name))
+                self.lifecycle_traits.generate_raw_copy_constructor_body_definition(out, self, 'true')
+            out.put_line('')
+        # def format_cast_name_definition(cast, expression: str) -> str:
+        #     return expression.format(
+        #         full_name=self.full_wrap_name,
+        #         class_name=self.wrap_name,
+        #         cast_method=cast.cast_method.split('::')[-1],
+        #         return_class_name=self.class_object.extansion_base_class.full_wrap_name,
+        #         get_raw=self.params.get_raw_pointer_method_name,
+        #     )
+        # for cast in self.class_object.cast_tos:
+        #
+        #     out.put_line(format_cast_name_definition('inline {full_name}::{class_name}(const {return_class_name}& value)'))
+        #     with IndentScope(out):
+        #         out.put_line(format_cast_name_definition('{full_name}({full_name}::'
+        #                                                  'force_creating_from_raw_pointer, value.{get_raw}(), true);'))
+        #     out.put_line('')
+        #     if cast.implicit:
+        #         out.put_line(format_cast_name_definition('inline {full_name}::operator {return_class_name}()'))
+        #         with IndentScope(out):
+        #             out.put_line(format_cast_name_definition('return {return_class_name}({return_class_name}::'
+        #                                                      'force_creating_from_raw_pointer, {get_raw}(), true);'))
+        #         out.put_line('')
+        #     else:
+        #         out.put_line(format_cast_name_definition('inline {return_class_name} {cast_method}()'))
+        #         with IndentScope(out):
+        #             out.put_line(format_cast_name_definition('return {return_class_name}({full_name}::'
+        #                                                      'force_creating_from_raw_pointer, {get_raw}(), true);'))
+
     def __generate_definition(self):
         definition_header = self.file_cache.get_file_for_class(self.full_name_array)
         definition_header.put_begin_cpp_comments(self.params)
@@ -360,6 +444,9 @@ class ClassGenerator(object):
                 self.__generate_method_definitions(definition_header, first_method)
                 definition_header.put_line('')
                 self.lifecycle_traits.generate_std_methods_definitions(definition_header, self)
+                if hasattr(self, 'extension_base_class_generator'):
+                    definition_header.put_line('')
+                    self.__generate_cast_name_definition(definition_header)
                 definition_header.put_line('')
                 self.inheritance_traits.generate_set_object_definition(definition_header, self)
                 self.__generate_down_cast_definitions(definition_header)

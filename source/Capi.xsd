@@ -76,6 +76,7 @@
         <xs:element name="method" minOccurs="0" maxOccurs="unbounded" type="TMethod"/>
         <xs:element name="callback" minOccurs="0" maxOccurs="1" type="TCallback"/>
         <xs:element name="mapped_type" minOccurs="0" maxOccurs="unbounded" type="TMappedType"/>
+        <xs:element name="lifecycle_extension" minOccurs="0" maxOccurs="unbounded" type="TLifecycleExtension"/>
       </xs:choice>
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required"/>
@@ -159,6 +160,25 @@
       <xs:enumeration value="reference_counted"/>
     </xs:restriction>
   </xs:simpleType>
+  <xs:complexType name="TLifecycleExtension">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="cast_to" minOccurs="0" maxOccurs="unbounded" type="TCastTo" />
+        <xs:element name="cast_from" minOccurs="0" maxOccurs="unbounded" type="TCastFrom" />
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" use="required" default=""/>
+    <xs:attribute name="wrap_name" type="xs:string" use="required" default=""/>
+    <xs:attribute name="lifecycle" type="TLifecycle" use="required" default="copy_semantic"/>
+  </xs:complexType>
+  <xs:complexType name="TCastTo" >
+    <xs:attribute name="implicit" type="xs:boolean" default="true" use="optional"/>
+    <xs:attribute name="target_type" type="xs:string" use="required"/>
+    <xs:attribute name="cast_method" type="xs:string" default="To{target_type}" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="TCastFrom" >
+    <xs:attribute name="source_type" type="xs:string" use="required"/>
+  </xs:complexType>
   <xs:simpleType name="TC2ImplMode">
     <xs:restriction base="xs:string">
       <xs:enumeration value="default"/>
