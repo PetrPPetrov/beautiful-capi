@@ -36,10 +36,7 @@
     
     <class name="Person" lifecycle="raw_pointer_semantic" implementation_class_name="MixedSemantic2::PersonImpl" implementation_class_header="PersonImpl.h">
       <constructor name="Default"/>
-       <method name="GetName" return="MixedSemantic2::NameRawPtr" impl_2_c="&amp;{expression}"/>
-      <method name="SetName">
-        <argument name="name" type="MixedSemantic2::Name"/>
-      </method>
+      <property name="Name" type="MixedSemantic2::Name" get_return_type="MixedSemantic2::NameRawPtr" get_impl_2_c="&amp;({expression})" get_const="false"/>
       <method name="GetAddress" return="MixedSemantic2::Address" const="true"/>
       <method name="SetAddress">
         <argument name="address" type="MixedSemantic2::Address"/>

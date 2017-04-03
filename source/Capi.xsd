@@ -204,6 +204,8 @@
     <xs:attribute name="set_c_2_impl" type="xs:string" use="optional" default="static_cast&lt;{implementation_type}&gt;({expression})"/>
     <xs:attribute name="set_c_2_impl_mode" type="TC2ImplMode" use="optional" default="default"/>
     <xs:attribute name="get_impl_2_c" type="xs:string" use="optional" default="new {implementation_type}({expression})"/>
+    <xs:attribute name="set_argument_type" type="xs:string" use="optional" default=""/>
+    <xs:attribute name="get_return_type" type="xs:string" use="optional" default=""/>
   </xs:complexType>
   <xs:complexType name="TPropertySetPrefix">
     <xs:attribute name="value" type="xs:string" use="optional" default="Set"/>

@@ -74,7 +74,8 @@ class PropertiesProcessor(object):
             new_get_method = TMethod()
             new_get_method.name = cur_get_prefix + cur_property.name
             new_get_method.const = cur_get_const
-            new_get_method.return_type = cur_property.type_name
+            new_get_method.return_type = cur_property.get_return_type if cur_property.get_return_type_filled \
+                else cur_property.type_name
             new_get_method.documentations = copy.deepcopy(cur_property.documentations)
             new_get_method.impl_2_c = cur_property.get_impl_2_c
             new_get_method.impl_2_c_filled = cur_property.get_impl_2_c_filled
@@ -86,7 +87,8 @@ class PropertiesProcessor(object):
             new_set_method.name = cur_set_prefix + cur_property.name
             set_input_argument = TArgument()
             set_input_argument.name = cur_argument_name
-            set_input_argument.type_name = cur_property.type_name
+            set_input_argument.type_name = cur_property.set_argument_type if cur_property.set_argument_type_filled \
+                else cur_property.type_name
             set_input_argument.c_2_impl = cur_property.set_c_2_impl
             set_input_argument.c_2_impl_filled = cur_property.set_c_2_impl_filled
             set_input_argument.c_2_impl_mode = cur_property.set_c_2_impl_mode
