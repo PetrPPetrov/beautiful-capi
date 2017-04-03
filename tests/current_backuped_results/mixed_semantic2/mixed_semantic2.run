@@ -1,0 +1,50 @@
+./mixed_semantic2_client
+___std::cout___
+Create address_ref.
+Create address_raw and address_copy appropriating them address_ref.
+
+Set address_ref name: Avenu N.5
+Names:
+street name (RefCount) = Avenu N.5
+street name (RawPtr) = Avenu N.5
+street name (Copy) = 
+
+Set address_raw name: Koshevogo
+Names:
+street name (RefCount) = Koshevogo
+street name (RawPtr) = Koshevogo
+street name (Copy) = 
+
+Set address_copy name: Lenina
+Names:
+street name (RefCount) = Koshevogo
+street name (RawPtr) = Koshevogo
+street name (Copy) = Lenina
+
+Create copy semantic name.
+
+name:
+First Name: default_name
+Create RawPtr semantic name_ptr, appropriating him name.
+change name_ptr
+name_ptr:
+First Name: changed_name
+
+Create RawPtr semantic Person:
+inplace modification
+Person birth day: 27
+Person birth year: 324
+Person birth month: 12
+
+Create copy semantic Person and appropriating him Person.
+Change person_copy
+Person birth day: 0
+Person birth year: 0
+Person birth month: 0
+
+original Person:
+Person birth day: 27
+Person birth year: 324
+Person birth month: 12
+___std::cerr___
+___eof___

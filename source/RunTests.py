@@ -115,6 +115,7 @@ def run_tests(input_folder, output_folder):
     process_example(input_folder, 'hello_world', base_backup_folder)
     process_example(input_folder, 'mapped_types', base_backup_folder)
     process_example(input_folder, 'mixed_semantic', base_backup_folder)
+    process_example(input_folder, 'mixed_semantic2', base_backup_folder)
     process_example(input_folder, 'object_parameter', base_backup_folder)
     process_example(input_folder, 'overload_suffix', base_backup_folder)
     process_example(input_folder, 'point_set', base_backup_folder)
