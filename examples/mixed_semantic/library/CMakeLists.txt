@@ -27,7 +27,6 @@ find_package(PythonInterp 3.4 REQUIRED)
 include(../../../UseBCapi.cmake)
 
 include_directories(
-  ${Boost_INCLUDE_DIR}/
   ${mixed_semantic_SOURCE_DIR}/source/
 )
 
@@ -40,4 +39,4 @@ add_library(mixed_semantic SHARED
   
 )
 
-add_bcapi_generation_with_test()
+add_bcapi_generation()

@@ -21,6 +21,7 @@
 
 
 import copy
+
 from Parser import TInstantiation, TConstructor, TMethod, TNamespace, TTemplate, TBeautifulCapiRoot
 from Helpers import BeautifulCapiException
 

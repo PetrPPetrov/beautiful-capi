@@ -25,6 +25,7 @@ import copy
 import random
 import uuid
 from collections import OrderedDict
+
 from Parser import TBeautifulCapiRoot
 from ParamsParser import TBeautifulCapiParams
 from FileGenerator import FileGenerator, WatchdogScope, IfDefScope, Indent

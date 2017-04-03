@@ -33,12 +33,12 @@ namespace MixedSemantic2
     public:
         PersonImpl(): mDay(0), mMonth(0), mYear(0), mName("1", "2", "3"), mAddress(0) {}
 
-        MixedSemantic2::NameImpl GetName() const
+        MixedSemantic2::NameImpl& GetName() 
         {
             return mName;
         }
 
-        void SetName(MixedSemantic2::NameImpl name)
+        void SetName(const MixedSemantic2::NameImpl& name)
         {
             mName = name;
         }

@@ -401,32 +401,6 @@ class ClassGenerator(object):
                     get_raw_pointer=self.params.get_raw_pointer_method_name))
                 self.lifecycle_traits.generate_raw_copy_constructor_body_definition(out, self, 'true')
             out.put_line('')
-        # def format_cast_name_definition(cast, expression: str) -> str:
-        #     return expression.format(
-        #         full_name=self.full_wrap_name,
-        #         class_name=self.wrap_name,
-        #         cast_method=cast.cast_method.split('::')[-1],
-        #         return_class_name=self.class_object.extansion_base_class.full_wrap_name,
-        #         get_raw=self.params.get_raw_pointer_method_name,
-        #     )
-        # for cast in self.class_object.cast_tos:
-        #
-        #     out.put_line(format_cast_name_definition('inline {full_name}::{class_name}(const {return_class_name}& value)'))
-        #     with IndentScope(out):
-        #         out.put_line(format_cast_name_definition('{full_name}({full_name}::'
-        #                                                  'force_creating_from_raw_pointer, value.{get_raw}(), true);'))
-        #     out.put_line('')
-        #     if cast.implicit:
-        #         out.put_line(format_cast_name_definition('inline {full_name}::operator {return_class_name}()'))
-        #         with IndentScope(out):
-        #             out.put_line(format_cast_name_definition('return {return_class_name}({return_class_name}::'
-        #                                                      'force_creating_from_raw_pointer, {get_raw}(), true);'))
-        #         out.put_line('')
-        #     else:
-        #         out.put_line(format_cast_name_definition('inline {return_class_name} {cast_method}()'))
-        #         with IndentScope(out):
-        #             out.put_line(format_cast_name_definition('return {return_class_name}({full_name}::'
-        #                                                      'force_creating_from_raw_pointer, {get_raw}(), true);'))
 
     def __generate_definition(self):
         definition_header = self.file_cache.get_file_for_class(self.full_name_array)

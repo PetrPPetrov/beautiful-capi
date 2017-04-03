@@ -39,4 +39,4 @@ add_library(mixed_semantic2 SHARED
   
 )
 
-add_bcapi_generation_with_test()
+add_bcapi_generation()

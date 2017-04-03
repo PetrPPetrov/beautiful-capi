@@ -39,4 +39,4 @@ add_library(return_value SHARED
   ${return_value_SOURCE_DIR}/source/PrinterImpl.h
 )
 
-add_bcapi_generation_with_test()
+add_bcapi_generation()

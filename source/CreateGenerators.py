@@ -203,13 +203,15 @@ class GeneratorCreator(object):
         class_generator.class_object.implementation_class_name = implementation_class_name
 
     def __bind_class(self, class_generator: ClassGenerator):
+        def name_to_class_generator(class_name: str, exception_class_type: str):
+            class_name = class_name.replace(' ', '')
+            if class_name not in self.full_name_2_type_generator:
+                raise BeautifulCapiException('{0} class {1} is not found'.format(exception_class_type, class_name))
+            return self.full_name_2_type_generator[class_name]
+
         self.scope_stack.append(class_generator)
         if class_generator.class_object.base:
-            base_class_str = class_generator.class_object.base.replace(' ', '')
-            if base_class_str not in self.full_name_2_type_generator:
-                raise BeautifulCapiException(
-                    'base class {0} is not found'.format(class_generator.class_object.base))
-            class_generator.base_class_generator = self.full_name_2_type_generator[base_class_str]
+            class_generator.base_class_generator = name_to_class_generator(class_generator.class_object.base, 'base')
             class_generator.base_class_generator.derived_class_generators.append(class_generator)
         if class_generator.class_object.exception:
             class_generator.exception_code = self.cur_exception_code
@@ -228,25 +230,15 @@ class GeneratorCreator(object):
             for item in enum_generator.enum_object.items:
                 self.__bind_documentation(item)
         if hasattr(class_generator.class_object, 'extension_base_class_name'):
-            extension_base_class_str = class_generator.class_object.extension_base_class_name.replace(' ', '')
-            if extension_base_class_str not in self.full_name_2_type_generator:
-                raise BeautifulCapiException(
-                    'extension base class {0} is not found'.format(
-                        class_generator.class_object.extension_base_class_name))
-            class_generator.extension_base_class_generator = self.full_name_2_type_generator[extension_base_class_str]
+            class_generator.extension_base_class_generator = \
+                name_to_class_generator(class_generator.class_object.extension_base_class_name, 'extension')
         if hasattr(class_generator.class_object, 'lifecycle_extension'):
             for index, cast_to in enumerate(class_generator.class_object.lifecycle_extension.cast_tos):
-                target_type_str = cast_to.target_type.replace(' ', '')
-                if target_type_str not in self.full_name_2_type_generator:
-                    raise BeautifulCapiException('target class {0} is not found'.format(cast_to.target_type))
                 result_cast_to = class_generator.class_object.lifecycle_extension.cast_tos[index]
-                result_cast_to.target_generator = self.full_name_2_type_generator[target_type_str]
+                result_cast_to.target_generator = name_to_class_generator(cast_to.target_type, 'target')
             for index, cast_from in enumerate(class_generator.class_object.lifecycle_extension.cast_froms):
-                source_type_str = cast_from.source_type.replace(' ', '')
-                if source_type_str not in self.full_name_2_type_generator:
-                    raise BeautifulCapiException('source class {0} is not found'.format(cast_from.source_type))
                 result_cast_from = class_generator.class_object.lifecycle_extension.cast_froms[index]
-                result_cast_from.source_generator = self.full_name_2_type_generator[source_type_str]
+                result_cast_from.source_generator = name_to_class_generator(cast_from.source_type, 'source')
         self.__replace_template_implementation_class(class_generator)
         self.scope_stack.pop()
 

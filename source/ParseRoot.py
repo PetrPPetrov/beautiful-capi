@@ -20,8 +20,9 @@
 #
 
 import os
-from Parser import load
 from xml.dom.minidom import parse as dom_parse
+
+from Parser import load
 
 
 def get_all_namespaces(root_namespaces: list):

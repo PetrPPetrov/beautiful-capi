@@ -911,29 +911,17 @@ class TCastTo(object):
 class TCastFrom(object):
     def __init__(self):
         self.all_items = []
-        self.implicit = True
-        self.implicit_filled = False
         self.source_type = ""
         self.source_type_filled = False
-        self.cast_method = "From{source_type}"
-        self.cast_method_filled = False
 
     def load_element(self, element):
         return False
 
     def load_attributes(self, dom_node):
-        if dom_node.hasAttribute("implicit"):
-            cur_attr = dom_node.getAttribute("implicit")
-            self.implicit = string_to_bool(cur_attr)
-            self.implicit_filled = True
         if dom_node.hasAttribute("source_type"):
             cur_attr = dom_node.getAttribute("source_type")
             self.source_type = cur_attr
             self.source_type_filled = True
-        if dom_node.hasAttribute("cast_method"):
-            cur_attr = dom_node.getAttribute("cast_method")
-            self.cast_method = cur_attr
-            self.cast_method_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:

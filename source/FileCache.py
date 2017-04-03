@@ -22,6 +22,7 @@
 
 import os
 import posixpath
+
 from ParamsParser import TBeautifulCapiParams
 from FileGenerator import FileGenerator
 from Helpers import replace_template_to_filename

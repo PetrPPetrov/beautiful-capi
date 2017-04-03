@@ -21,6 +21,7 @@
 
 
 from copy import deepcopy
+
 from Parser import TClass, TNamespace, TBeautifulCapiRoot
 
 

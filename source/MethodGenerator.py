@@ -21,6 +21,7 @@
 
 
 import copy
+
 from Parser import TMethod, TFunction, TConstructor
 from ParamsParser import TBeautifulCapiParams
 from FileGenerator import FileGenerator, IndentScope

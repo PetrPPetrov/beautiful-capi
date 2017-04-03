@@ -31,7 +31,7 @@ add_executable(mixed_semantic2_client
   ${mixed_semantic2_client_SOURCE_DIR}/Main.cpp
 )
 
-if(TARGET point_set)
+if(TARGET return_value)
   add_dependencies(mixed_semantic2_client mixed_semantic2)
 endif()
 target_link_libraries(mixed_semantic2_client mixed_semantic2)

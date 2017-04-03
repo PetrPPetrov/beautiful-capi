@@ -34,7 +34,7 @@ namespace MixedSemantic2
     public:
         void Show(MixedSemantic2::NameImpl name)
         {
-            std::cout << "Fist Name: " << name.GetFirstName() << std::endl;
+            std::cout << "First Name: " << name.GetFirstName() << std::endl;
         }
 
          void ShowByPointer(const MixedSemantic2::NameImpl* name)

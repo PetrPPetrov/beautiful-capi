@@ -21,6 +21,7 @@
 
 
 import copy
+
 from Parser import TClass, TMethod, TArgument, TNamespace, TBeautifulCapiRoot, TDocumentation
 from UnitTestGenerator import TestGenerator
 from Helpers import get_c_name

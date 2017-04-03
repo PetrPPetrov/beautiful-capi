@@ -31,7 +31,7 @@ add_executable(return_value_client
   ${return_value_client_SOURCE_DIR}/Main.cpp
 )
 
-if(TARGET point_set)
+if(TARGET return_value)
   add_dependencies(return_value_client return_value)
 endif()
 target_link_libraries(return_value_client return_value)
