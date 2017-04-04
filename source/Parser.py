@@ -981,8 +981,8 @@ class TProperty(object):
         self.get_impl_2_c_filled = False
         self.set_argument_type = ""
         self.set_argument_type_filled = False
-        self.get_return_type = ""
-        self.get_return_type_filled = False
+        self.return_type = ""
+        self.return_type_filled = False
         self.documentations = []
 
     def load_element(self, element):
@@ -1038,10 +1038,10 @@ class TProperty(object):
             cur_attr = dom_node.getAttribute("set_argument_type")
             self.set_argument_type = cur_attr
             self.set_argument_type_filled = True
-        if dom_node.hasAttribute("get_return_type"):
-            cur_attr = dom_node.getAttribute("get_return_type")
-            self.get_return_type = cur_attr
-            self.get_return_type_filled = True
+        if dom_node.hasAttribute("return_type"):
+            cur_attr = dom_node.getAttribute("return_type")
+            self.return_type = cur_attr
+            self.return_type_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:

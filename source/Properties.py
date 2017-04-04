@@ -74,7 +74,7 @@ class PropertiesProcessor(object):
             new_get_method = TMethod()
             new_get_method.name = cur_get_prefix + cur_property.name
             new_get_method.const = cur_get_const
-            new_get_method.return_type = cur_property.get_return_type if cur_property.get_return_type_filled \
+            new_get_method.return_type = cur_property.return_type if cur_property.return_type_filled \
                 else cur_property.type_name
             new_get_method.documentations = copy.deepcopy(cur_property.documentations)
             new_get_method.impl_2_c = cur_property.get_impl_2_c
