@@ -24,6 +24,7 @@
 #endif
 #include <iostream>
 #include <cstdlib>
+#include <stdint.h>
 #include "MappedTypes.h"
 
 int main()

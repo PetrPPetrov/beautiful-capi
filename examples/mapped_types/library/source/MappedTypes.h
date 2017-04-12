@@ -23,6 +23,7 @@
 #define BEAUTIFUL_CAPI_MAPPED_TYPES_H
 
 #include <string>
+#include <stdint.h>
 
 namespace MappedTypes
 {
