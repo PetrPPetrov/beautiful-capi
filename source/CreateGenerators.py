@@ -21,15 +21,17 @@
 
 
 from Parser import TClass, TEnumeration, TNamespace, TArgument, TBeautifulCapiRoot, TMappedType
-from Parser import TGenericDocumentation, TDocumentation, TReference
+from Parser import TGenericDocumentation, TDocumentation, TReference, TExternalClass, TExternalNamespace
 from ParamsParser import TBeautifulCapiParams
-from BuiltinTypeGenerator import BuiltinTypeGenerator
+from BuiltinTypeGenerator import BaseTypeGenerator
 from TemplateGenerator import TemplateGenerator
 from ClassGenerator import ClassGenerator
 from MethodGenerator import MethodGenerator, FunctionGenerator, ConstructorGenerator
 from ArgumentGenerator import *
 from EnumGenerator import EnumGenerator
 from DocumentationGenerator import ReferenceGenerator
+from ExternalClassGenerator import ExternalClassGenerator
+from ExternalNamespaceGenerator import ExternalNamespaceGenerator
 from Helpers import BeautifulCapiException
 from Helpers import get_template_arguments_count, get_template_argument, replace_template_argument
 
@@ -44,8 +46,10 @@ class GeneratorCreator(object):
         self.params = params
         self.cur_exception_code = 1
 
-    def __register_class_or_namespace_generator(
-            self, generator: ClassGenerator or NamespaceGenerator or EnumGenerator or MappedTypeGenerator):
+    def __register_class_or_namespace_generator(self, generator):
+        """
+        :param generator: Class, Namespace, Enum, MappedType, ExternalClass or ExternalNamespace generators
+        """
         self.full_name_2_type_generator.update({generator.full_name.replace(' ', ''): generator})
 
     def __create_enum_generator(self, cur_enum: TEnumeration, parent_generator) -> EnumGenerator:
@@ -77,12 +81,32 @@ class GeneratorCreator(object):
         new_mapped_type_generator = MappedTypeGenerator(cur_mapped_type, parent_generator)
         self.scope_2_mapped_types[parent_generator].update({cur_mapped_type.name: new_mapped_type_generator})
 
+    def __create_external_class_generator(self, cur_class: TExternalClass, parent):
+        new_class_generator = ExternalClassGenerator(cur_class, parent)
+        self.__register_class_or_namespace_generator(new_class_generator)
+        return new_class_generator
+
+    def __create_external_namespace_generator(self, namespace: TExternalNamespace, parent):
+        namespace_generator = ExternalNamespaceGenerator(namespace, parent)
+        for cur_class in namespace.classes:
+            namespace_generator.classes.append(self.__create_external_class_generator(cur_class, namespace_generator))
+        for cur_namespace in namespace.namespaces:
+            namespace_generator.nested_namespaces.append(
+                self.__create_external_namespace_generator(cur_namespace, namespace_generator)
+            )
+        self.__register_class_or_namespace_generator(namespace_generator)
+        return namespace_generator
+
     def create_namespace_generator(self, namespace: TNamespace) -> NamespaceGenerator:
         previous_namespace_generator = self.cur_namespace_generator
         new_namespace_generator = NamespaceGenerator(
             namespace, previous_namespace_generator, self.params)
         self.cur_namespace_generator = new_namespace_generator
         self.__register_class_or_namespace_generator(new_namespace_generator)
+        for external_namespace in namespace.external_namespaces:
+            new_namespace_generator.external_namespaces.append(
+                self.__create_external_namespace_generator(external_namespace, None)
+            )
         for nested_namespace in namespace.namespaces:
             new_namespace_generator.nested_namespaces.append(
                 self.create_namespace_generator(nested_namespace))
@@ -103,11 +127,7 @@ class GeneratorCreator(object):
         self.cur_namespace_generator = previous_namespace_generator
         return new_namespace_generator
 
-    def __create_type_generator(
-            self, type_name: str, is_builtin: bool) -> ClassTypeGenerator \
-                                     or EnumTypeGenerator \
-                                     or BuiltinTypeGenerator \
-                                     or MappedTypeGenerator:
+    def __create_type_generator(self, type_name: str, is_builtin: bool) -> BaseTypeGenerator:
         name = type_name.replace(' ', '')
         if name in self.full_name_2_type_generator:
             type_generator = self.full_name_2_type_generator[name]
@@ -115,6 +135,8 @@ class GeneratorCreator(object):
                 return ClassTypeGenerator(type_generator)
             elif type(type_generator) is EnumGenerator:
                 return EnumTypeGenerator(type_generator)
+            elif type(type_generator) is ExternalClassGenerator:
+                return ExternalClassTypeGenerator(type_generator)
             else:
                 raise BeautifulCapiException('namespace is used as type name')
         else:
@@ -266,7 +288,6 @@ def create_namespace_generators(root_node: TBeautifulCapiRoot,
     generator_creator = GeneratorCreator(params)
     created_namespace_generators = []
     for cur_namespace in root_node.namespaces:
-        created_namespace_generators.append(
-            generator_creator.create_namespace_generator(cur_namespace))
+        created_namespace_generators.append(generator_creator.create_namespace_generator(cur_namespace))
     generator_creator.bind_namespaces(created_namespace_generators)
     return created_namespace_generators

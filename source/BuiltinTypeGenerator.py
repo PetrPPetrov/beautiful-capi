@@ -24,7 +24,40 @@ from FileGenerator import FileGenerator
 from FileCache import FileCache
 
 
-class BuiltinTypeGenerator(object):
+# Empty base class for all type generator classes just for annotation usage
+class BaseTypeGenerator(object):
+    def wrap_argument_declaration(self) -> str:
+        pass
+
+    def c_argument_declaration(self) -> str:
+        pass
+
+    def c_2_wrap_var(self, result_var: str, expression: str) -> ([str], str):
+        pass
+
+    def wrap_2_c_var(self, result_var: str, expression: str) -> ([str], str):
+        pass
+
+    def c_2_implementation(self, expression: str) -> str:
+        pass
+
+    def c_2_implementation_pointer(self, expression: str) -> str:
+        pass
+
+    def snippet_implementation_declaration(self) -> str:
+        pass
+
+    def implementation_2_c_var(self, result_var: str, expression: str) -> ([str], str):
+        pass
+
+    def include_dependent_declaration_headers(self, file_generator: FileGenerator, file_cache: FileCache):
+        pass
+
+    def include_dependent_definition_headers(self, file_generator: FileGenerator, file_cache: FileCache):
+        pass
+
+
+class BuiltinTypeGenerator(BaseTypeGenerator):
     def __init__(self, type_name: str):
         self.type_name = type_name
         self.c_2_impl = ''
@@ -96,9 +129,3 @@ class BuiltinTypeGenerator(object):
     def generate_c_default_return_value(self, out: FileGenerator):
         if not self.is_void:
             out.put_line('return static_cast<{type_name}>(0);'.format(type_name=self.type_name))
-
-    def include_dependent_declaration_headers(self, file_generator: FileGenerator, file_cache: FileCache):
-        pass
-
-    def include_dependent_definition_headers(self, file_generator: FileGenerator, file_cache: FileCache):
-        pass

@@ -55,6 +55,24 @@ def backup_example(input_folder, example_name, base_backup_folder):
         shutil.copy(auto_gen_wrap_cpp, auto_gen_wrap_cpp_destination)
 
 
+def backup_external_class_example(input_folder, example_name, base_backup_folder):
+    def backup_library(input_library_folder, library_name, base_library_backup_folder):
+        base_example_library_folder = os.path.join(input_library_folder, library_name)
+        example_include_folder = os.path.join(base_example_library_folder, 'include')
+        backup_include_folder = os.path.join(base_library_backup_folder, library_name, 'include')
+        shutil.copytree(example_include_folder, backup_include_folder)
+        auto_gen_wrap_cpp = os.path.join(base_example_library_folder, 'source', 'AutoGenWrap.cpp')
+        auto_gen_wrap_cpp_destination = os.path.join(base_library_backup_folder, library_name, 'AGenWrap.cpp')
+        shutil.copy(auto_gen_wrap_cpp, auto_gen_wrap_cpp_destination)
+    base_example_folder = os.path.join(input_folder, 'examples', example_name, 'library')
+    backup_base_folder = os.path.join(base_backup_folder, example_name)
+    backup_library(base_example_folder, 'Classes', backup_base_folder)
+    backup_library(base_example_folder, 'Components', backup_base_folder)
+    backup_library(base_example_folder, 'CompC', backup_base_folder)
+    backup_library(base_example_folder, 'Printer', backup_base_folder)
+    run_example(input_folder, example_name, os.path.join(base_backup_folder, example_name, example_name))
+
+
 def backup_test(input_folder, test_family, test_name, base_backup_folder):
     base_test_library_folder = os.path.join(input_folder, 'tests', test_family, 'library')
     test_include_folder = os.path.join(base_test_library_folder, 'include', test_name)
@@ -125,6 +143,7 @@ def run_tests(input_folder, output_folder):
     process_example(input_folder, 'template', base_backup_folder)
     process_example(input_folder, 'unit_test', base_backup_folder)
     process_example(input_folder, 'virtual_interface', base_backup_folder)
+    backup_external_class_example(input_folder, 'external_class', base_backup_folder)
     process_test(input_folder, 'file_options', 'test00', base_backup_folder)
     process_test(input_folder, 'file_options', 'test01', base_backup_folder)
 

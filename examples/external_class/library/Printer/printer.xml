@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<printer:api xmlns:printer="http://gkmsoft.ru/beautifulcapi" project_name="Printer" >
+  <namespace name="PrinterNS" overload_suffix_mode="Silent">
+    <external_library input_xml_file="/Volumes/wdata/beautiful-capi/examples/external_class/library/Components/components.xml" params_xml_file="../Components/components_params.xml"/>
+    <external_namespace name="CompC" include="CompC.h" detach_method_name="DetachObject" get_raw_pointer_method_name="GetPtr">
+      <class name="ComponentC" wrap_name="ComponentCPtr"/>
+    </external_namespace>
+    <class name="Printer" lifecycle="copy_semantic" implementation_class_name="PrinterNS::PrinterImpl" implementation_class_header="PrinterImpl.h">
+      <constructor name="Default"/>
+      <method name="Show">
+        <argument name="name" type="Components::ComponentA"/>
+      </method>
+      <method name="Show">
+        <argument name="person" type="Components::ComponentB"/>
+      </method>
+      <method name="Show">
+        <argument name="address" type="CompC::ComponentC"/>
+      </method>
+      <method name="GetCompC" return="CompC::ComponentC" const="true"/>
+    </class>
+  </namespace>
+</printer:api>

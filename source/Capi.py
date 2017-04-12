@@ -27,18 +27,19 @@ from xml.dom.minidom import parse
 import ExceptionTraits
 from Helpers import BeautifulCapiException, format_type
 from CreateGenerators import create_namespace_generators
-from FileCache import FileCache
+from FileCache import FileCache, full_relative_path
 from CapiGenerator import CapiGenerator
 from FileGenerator import FileGenerator, Indent, IndentScope, Unindent, WatchdogScope, IfDefScope
 from Templates import process as process_templates
 from Callbacks import process as process_callbacks
 from Properties import process as process_properties
-from ExtensionSemantic import process as process_extansion_semantic
+from ExtensionSemantic import process as process_extension_semantic
 from CheckBinaryCompatibilityGenerator import process as process_check_binary_compatibility
 from ParamsParser import TBeautifulCapiParams, TExceptionHandlingMode, load
 from ParseRoot import parse_root
 from UnitTestGenerator import TestGenerator
 from OverloadSuffixes import process as process_overload_suffixes
+from Parser import TExternalNamespace, TExternalClass
 
 
 class Capi(object):
@@ -153,15 +154,53 @@ class Capi(object):
         for cur_class in namespace.classes:
             cur_class.implementation_class_name = format_type(cur_class.implementation_class_name)
 
-    def __generate(self):
+    def __load_external(self, namespace):
+        input_xml = os.path.realpath(self.input_xml)
+        for external_lib in namespace.external_libraries:
+            external_xml = full_relative_path(external_lib.input_xml_file, os.path.split(input_xml)[0])
+            external_params = full_relative_path(external_lib.params_xml_file, os.path.split(input_xml)[0])
+            new_capi = Capi(external_xml, external_params, None, None, None, None, None, None)
+            new_capi.params_description = load(new_capi.input_params)
+            new_params = new_capi.params_description
+            new_capi.api_description = parse_root(new_capi.input_xml)
+            new_capi.__substitute_project_name(new_capi.params_description)
+
+            def process_external_namespaces(namespaces: [object], external_namespaces: [object]):
+                for cur_namespace in namespaces:
+                    external_namespace = TExternalNamespace()
+                    external_namespace.name = cur_namespace.name
+                    external_namespace.detach_method_name = new_params.detach_method_name
+                    external_namespace.get_raw_pointer_method_name = new_params.get_raw_pointer_method_name
+                    file_cache = FileCache(new_params)
+                    external_namespace.include = file_cache.namespace_header(cur_namespace.full_name_array)
+                    process_external_namespaces(cur_namespace.nested_namespaces, external_namespace.namespaces)
+                    for cur_class in cur_namespace.classes:
+                        external_class = TExternalClass()
+                        external_class.name = cur_class.name
+                        external_class.wrap_name = cur_class.wrap_name
+                        external_class.include_declaration = file_cache.class_header_decl(cur_class.full_name_array)
+                        external_class.include_definition = file_cache.class_header(cur_class.full_name_array)
+                        external_namespace.classes.append(external_class)
+                    external_namespaces.append(external_namespace)
+            process_external_namespaces(new_capi.__process(), namespace.external_namespaces)
+        for nested_namespace in namespace.namespaces:
+            self.__load_external(nested_namespace)
+
+    def __process(self) -> [object]:
         process_check_binary_compatibility(self.api_description, self.params_description)
         process_properties(self.api_description, self.unit_tests_generator)
         process_overload_suffixes(self.api_description)
         process_templates(self.api_description)
-        process_extansion_semantic(self.api_description)
+        process_extension_semantic(self.api_description)
         first_namespace_generators = create_namespace_generators(
             self.api_description, self.params_description)
         process_callbacks(first_namespace_generators)
+        for namespace in self.api_description.namespaces:
+            self.__load_external(namespace)
+        return first_namespace_generators
+
+    def __generate(self):
+        self.__process()
         for namespace in self.api_description.namespaces:
             Capi.__substitute_implementation_class_name(namespace)
         namespace_generators = create_namespace_generators(

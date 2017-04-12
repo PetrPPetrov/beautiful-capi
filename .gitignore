@@ -4,7 +4,7 @@ __pycache__/
 *.user
 /build/
 /bin/
-/examples/*/library/include/
+/examples/*/library/**/include/
 /tests/file_options/library/include/
 AutoGen*
 auto_gen*

@@ -18,30 +18,36 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-project(examples)
+project(external_class_client)
 
 cmake_minimum_required(VERSION 2.8)
 
-add_subdirectory(boost_shared_ptr)
-add_subdirectory(callback)
-add_subdirectory(circular_reference)
-add_subdirectory(clanguage)
-add_subdirectory(class_wrap_name)
-add_subdirectory(copy_semantic)
-add_subdirectory(custom_suffix)
-add_subdirectory(down_cast)
-add_subdirectory(exception)
-add_subdirectory(external_class)
-add_subdirectory(hello_world)
-add_subdirectory(mapped_types)
-add_subdirectory(mixed_semantic)
-add_subdirectory(mixed_semantic2)
-add_subdirectory(object_parameter)
-add_subdirectory(overload_suffix)
-add_subdirectory(point_set)
-add_subdirectory(raw_pointer_semantic)
-add_subdirectory(reference_counted)
-add_subdirectory(return_value)
-add_subdirectory(template)
-add_subdirectory(unit_test)
-add_subdirectory(virtual_interface)
+include_directories(
+  ${external_class_client_SOURCE_DIR}/
+  ${classes_SOURCE_DIR}/include
+  ${components_SOURCE_DIR}/include
+  ${comp_c_SOURCE_DIR}/include
+  ${printer_SOURCE_DIR}/include
+)
+
+add_executable(external_class_client
+  ${external_class_client_SOURCE_DIR}/Main.cpp
+)
+
+if(TARGET classes)
+  add_dependencies(external_class_client classes)
+endif()
+if(TARGET components)
+  add_dependencies(external_class_client components)
+endif()
+if(TARGET component)
+  add_dependencies(external_class_client comp_c)
+endif()
+if(TARGET printer)
+  add_dependencies(external_class_client printer)
+endif()
+
+target_link_libraries(external_class_client classes)
+target_link_libraries(external_class_client components)
+target_link_libraries(external_class_client comp_c)
+target_link_libraries(external_class_client printer)

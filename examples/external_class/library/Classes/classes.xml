@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<classes:api xmlns:classes="http://gkmsoft.ru/beautifulcapi" project_name="Classes" >
+  <namespace name="Classes">
+    <class name="ClassA" lifecycle="copy_semantic" implementation_class_name="Classes::ClassA" implementation_class_header="ClassA.h" >
+      <constructor name="Default"/>
+      <property name="Value" type="int"/>
+    </class>
+    <class name="ClassB" lifecycle="raw_pointer_semantic" implementation_class_name="Classes::ClassB" implementation_class_header="ClassB.h" >
+      <constructor name="Default"/>
+      <property name="Value" type="const char*"/>
+    </class>
+      <class name="ClassC" lifecycle="reference_counted" implementation_class_name="Classes::ClassC" implementation_class_header="ClassC.h" >
+      <constructor name="Default"/>
+      <property name="Value" type="double"/>
+    </class>
+  </namespace>
+</classes:api>

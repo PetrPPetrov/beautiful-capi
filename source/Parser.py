@@ -130,6 +130,33 @@ class TBeautifulCapiRoot(object):
         self.load_attributes(dom_node)
 
 
+class TExternalLibrary(object):
+    def __init__(self):
+        self.all_items = []
+        self.input_xml_file = ""
+        self.input_xml_file_filled = False
+        self.params_xml_file = ""
+        self.params_xml_file_filled = False
+
+    def load_element(self, element):
+        return False
+
+    def load_attributes(self, dom_node):
+        if dom_node.hasAttribute("input_xml_file"):
+            cur_attr = dom_node.getAttribute("input_xml_file")
+            self.input_xml_file = cur_attr
+            self.input_xml_file_filled = True
+        if dom_node.hasAttribute("params_xml_file"):
+            cur_attr = dom_node.getAttribute("params_xml_file")
+            self.params_xml_file = cur_attr
+            self.params_xml_file_filled = True
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
+
 class TApiInclude(object):
     def __init__(self):
         self.all_items = []
@@ -151,6 +178,96 @@ class TApiInclude(object):
         self.load_attributes(dom_node)
 
 
+class TExternalNamespace(object):
+    def __init__(self):
+        self.all_items = []
+        self.include = ""
+        self.include_filled = False
+        self.name = ""
+        self.name_filled = False
+        self.detach_method_name = "Detach"
+        self.detach_method_name_filled = False
+        self.get_raw_pointer_method_name = "GetRawPointer"
+        self.get_raw_pointer_method_name_filled = False
+        self.classes = []
+        self.namespaces = []
+
+    def load_element(self, element):
+        if element.nodeName == "class":
+            new_element = TExternalClass()
+            new_element.load(element)
+            self.classes.append(new_element)
+            return True
+        if element.nodeName == "namespace":
+            new_element = TExternalNamespace()
+            new_element.load(element)
+            self.namespaces.append(new_element)
+            return True
+        return False
+
+    def load_attributes(self, dom_node):
+        if dom_node.hasAttribute("include"):
+            cur_attr = dom_node.getAttribute("include")
+            self.include = cur_attr
+            self.include_filled = True
+        if dom_node.hasAttribute("name"):
+            cur_attr = dom_node.getAttribute("name")
+            self.name = cur_attr
+            self.name_filled = True
+        if dom_node.hasAttribute("detach_method_name"):
+            cur_attr = dom_node.getAttribute("detach_method_name")
+            self.detach_method_name = cur_attr
+            self.detach_method_name_filled = True
+        if dom_node.hasAttribute("get_raw_pointer_method_name"):
+            cur_attr = dom_node.getAttribute("get_raw_pointer_method_name")
+            self.get_raw_pointer_method_name = cur_attr
+            self.get_raw_pointer_method_name_filled = True
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
+
+class TExternalClass(object):
+    def __init__(self):
+        self.all_items = []
+        self.name = ""
+        self.name_filled = False
+        self.wrap_name = ""
+        self.wrap_name_filled = False
+        self.include_declaration = ""
+        self.include_declaration_filled = False
+        self.include_definition = ""
+        self.include_definition_filled = False
+
+    def load_element(self, element):
+        return False
+
+    def load_attributes(self, dom_node):
+        if dom_node.hasAttribute("name"):
+            cur_attr = dom_node.getAttribute("name")
+            self.name = cur_attr
+            self.name_filled = True
+        if dom_node.hasAttribute("wrap_name"):
+            cur_attr = dom_node.getAttribute("wrap_name")
+            self.wrap_name = cur_attr
+            self.wrap_name_filled = True
+        if dom_node.hasAttribute("include_declaration"):
+            cur_attr = dom_node.getAttribute("include_declaration")
+            self.include_declaration = cur_attr
+            self.include_declaration_filled = True
+        if dom_node.hasAttribute("include_definition"):
+            cur_attr = dom_node.getAttribute("include_definition")
+            self.include_definition = cur_attr
+            self.include_definition_filled = True
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
+
 class TNamespace(object):
     def __init__(self):
         self.all_items = []
@@ -160,6 +277,8 @@ class TNamespace(object):
         self.implementation_header_filled = False
         self.overload_suffix_mode = TOverloadSuffixMode.Notify
         self.overload_suffix_mode_filled = False
+        self.external_namespaces = []
+        self.external_libraries = []
         self.includes = []
         self.namespaces = []
         self.include_headers = []
@@ -173,6 +292,16 @@ class TNamespace(object):
         self.mapped_types = []
 
     def load_element(self, element):
+        if element.nodeName == "external_namespace":
+            new_element = TExternalNamespace()
+            new_element.load(element)
+            self.external_namespaces.append(new_element)
+            return True
+        if element.nodeName == "external_library":
+            new_element = TExternalLibrary()
+            new_element.load(element)
+            self.external_libraries.append(new_element)
+            return True
         if element.nodeName == "include":
             new_element = TApiInclude()
             new_element.load(element)

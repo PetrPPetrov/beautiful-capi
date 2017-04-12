@@ -184,3 +184,7 @@ class FileCache(object):
 
     def check_and_throw_exception_header(self) -> str:
         return self.params.check_and_throw_exception_filename
+
+
+def full_relative_path(path: str, start=os.curdir) -> str:
+    return os.path.realpath(os.path.join(start, path))

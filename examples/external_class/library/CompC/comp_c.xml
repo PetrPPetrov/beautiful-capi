@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<comp_c:api xmlns:comp_c="http://gkmsoft.ru/beautifulcapi" project_name="CompC" >
+  <namespace name="CompC">    
+    <external_library input_xml_file="../Classes/classes.xml" params_xml_file="../Classes/classes_params.xml"/>
+    <class name="ComponentC" lifecycle="reference_counted" implementation_class_name="CompC::ComponentC" implementation_class_header="ComponentCImpl.h" >
+      <constructor name="Default"/>
+      <property name="A" type="Classes::ClassA"/>
+      <property name="B" type="Classes::ClassB"/>
+      <property name="C" type="Classes::ClassC"/>
+    </class> 
+  </namespace>
+</comp_c:api>

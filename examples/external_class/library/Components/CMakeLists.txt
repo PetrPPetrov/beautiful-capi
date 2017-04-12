@@ -18,30 +18,25 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-project(examples)
+project(components)
 
 cmake_minimum_required(VERSION 2.8)
 
-add_subdirectory(boost_shared_ptr)
-add_subdirectory(callback)
-add_subdirectory(circular_reference)
-add_subdirectory(clanguage)
-add_subdirectory(class_wrap_name)
-add_subdirectory(copy_semantic)
-add_subdirectory(custom_suffix)
-add_subdirectory(down_cast)
-add_subdirectory(exception)
-add_subdirectory(external_class)
-add_subdirectory(hello_world)
-add_subdirectory(mapped_types)
-add_subdirectory(mixed_semantic)
-add_subdirectory(mixed_semantic2)
-add_subdirectory(object_parameter)
-add_subdirectory(overload_suffix)
-add_subdirectory(point_set)
-add_subdirectory(raw_pointer_semantic)
-add_subdirectory(reference_counted)
-add_subdirectory(return_value)
-add_subdirectory(template)
-add_subdirectory(unit_test)
-add_subdirectory(virtual_interface)
+find_package(PythonInterp 3.4 REQUIRED)
+
+include(../../../../UseBCapi.cmake)
+
+include_directories(
+  ${classes_SOURCE_DIR}/include/
+)
+
+add_library(components SHARED
+  ${components_SOURCE_DIR}/source/AutoGenWrap.cpp
+  ${components_SOURCE_DIR}/source/ComponentAImpl.h
+  ${components_SOURCE_DIR}/source/ComponentBImpl.h
+)
+
+add_dependencies(components classes)
+target_link_libraries(components classes)
+
+add_bcapi_generation()

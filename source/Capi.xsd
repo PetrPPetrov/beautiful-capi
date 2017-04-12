@@ -10,12 +10,36 @@
     <xs:attribute name="minor_version" type="xs:integer" use="optional" default="0"/>
     <xs:attribute name="patch_version" type="xs:integer" use="optional" default="0"/>
   </xs:complexType>
+  <xs:complexType name="TExternalLibrary">
+    <xs:attribute name="input_xml_file" type="xs:string" use="required"/>
+    <xs:attribute name="params_xml_file" type="xs:string" use="required"/>
+  </xs:complexType>
   <xs:complexType name="TApiInclude">
     <xs:attribute name="path" type="xs:string" use="required"/>
+  </xs:complexType>
+  <xs:complexType name="TExternalNamespace">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="class" minOccurs="0" maxOccurs="unbounded" type="TExternalClass"/>
+        <xs:element name="namespace" minOccurs="0" maxOccurs="unbounded" type="TExternalNamespace"/>
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="include" type="xs:string" use="optional"/>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="detach_method_name" type="xs:string" use="optional" default="Detach"/>
+    <xs:attribute name="get_raw_pointer_method_name" type="xs:string" use="optional" default="GetRawPointer"/>
+  </xs:complexType>
+  <xs:complexType name="TExternalClass">
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="wrap_name" type="xs:string" use="required"/>
+    <xs:attribute name="include_declaration" type="xs:string" use="optional"/>
+    <xs:attribute name="include_definition" type="xs:string" use="optional"/>
   </xs:complexType>
   <xs:complexType name="TNamespace">
     <xs:sequence>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="external_namespace" minOccurs="0" maxOccurs="unbounded" type="TExternalNamespace"/>
+        <xs:element name="external_library" minOccurs="0" maxOccurs="unbounded" type="TExternalLibrary"/>
         <xs:element name="include" type="TApiInclude"/>
         <xs:element name="namespace" type="TNamespace"/>
         <xs:element name="include_header" type="THeaderInclude"/>

@@ -36,6 +36,7 @@ class NamespaceGenerator(object):
         self.parent_namespace = parent_namespace
         self.enum_generators = []
         self.nested_namespaces = []
+        self.external_namespaces = []
         self.templates = []
         self.classes = []
         self.functions = []

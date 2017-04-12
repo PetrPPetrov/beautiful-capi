@@ -25,7 +25,7 @@ from copy import deepcopy
 from Parser import TClass, TNamespace, TBeautifulCapiRoot
 
 
-class ExtansionSemanticProcessor(object):
+class ExtensionSemanticProcessor(object):
     def __init__(self, root_node: TBeautifulCapiRoot):
         self.root_node = root_node
         self.class_stack = []
@@ -43,8 +43,6 @@ class ExtansionSemanticProcessor(object):
             new_extension_class.lifecycle_extensions = []
             new_extension_class.lifecycle_extension = lifecycle_extension
             new_extension_class.extension_base_class_name = '::'.join(self.class_stack)
-            # new_extension_class.extansion_base_class = cur_class
-            # new_extension_class.extansion_base_class.full_wrap_name =
             cur_namespace.classes.append(new_extension_class)
         self.class_stack.pop()
 
@@ -62,5 +60,5 @@ class ExtansionSemanticProcessor(object):
 
 
 def process(root_node: TBeautifulCapiRoot):
-    semantic_processor = ExtansionSemanticProcessor(root_node)
+    semantic_processor = ExtensionSemanticProcessor(root_node)
     semantic_processor.process()

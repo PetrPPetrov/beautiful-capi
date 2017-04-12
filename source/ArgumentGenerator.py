@@ -25,10 +25,11 @@ from FileCache import FileCache
 from LifecycleTraits import CopySemantic, RefCountedSemantic
 from Parser import TC2ImplMode
 from NamespaceGenerator import NamespaceGenerator
+from BuiltinTypeGenerator import BuiltinTypeGenerator, BaseTypeGenerator
 from Helpers import bool_to_str, include_headers
 
 
-class MappedTypeGenerator(object):
+class MappedTypeGenerator(BaseTypeGenerator):
     def __init__(self, mapped_type_object, parent_generator):
         self.mapped_type_object = mapped_type_object
         self.name = self.mapped_type_object.name
@@ -88,7 +89,7 @@ class MappedTypeGenerator(object):
         pass
 
 
-class ClassTypeGenerator(object):
+class ClassTypeGenerator(BaseTypeGenerator):
     def __init__(self, class_argument_generator):
         self.class_argument_generator = class_argument_generator
         self.copy_or_add_ref_when_c_2_wrap = False
@@ -125,7 +126,7 @@ class ClassTypeGenerator(object):
     def wrap_2_c_var(self, result_var: str, expression: str) -> ([str], str):
         internal_expression = '{expression}.{get_raw_pointer_method}()'.format(
             expression=expression,
-            get_raw_pointer_method=self.class_argument_generator.params.get_raw_pointer_method_name)
+            get_raw_pointer_method=self.class_argument_generator.get_raw_pointer_method_name)
         if result_var:
             return ['void* {result_var}({internal_expression});'.format(
                 result_var=result_var,
@@ -190,7 +191,46 @@ class ClassTypeGenerator(object):
             file_cache.class_header(self.class_argument_generator.full_name_array))
 
 
-class EnumTypeGenerator(object):
+class ExternalClassTypeGenerator(ClassTypeGenerator):
+    def c_2_implementation(self, expression: str) -> str:
+        return '{impl_type}({impl_type}::force_creating_from_raw_pointer, {expression}, true)'.format(
+            impl_type=self.class_argument_generator.full_wrap_name,
+            expression=expression)
+
+    def snippet_implementation_declaration(self) -> str:
+        return self.class_argument_generator.full_wrap_name
+
+    def implementation_2_c_var(self, result_var: str, expression: str) -> ([str], str):
+        result_expression = '{full_wrap_name}({expression}).{detach_method_name}()'.format(
+            full_wrap_name=self.class_argument_generator.full_wrap_name,
+            expression=expression,
+            detach_method_name=self.class_argument_generator.parent_namespace.namespace_object.detach_method_name,
+            c_type='void*'
+        )
+        if result_var:
+            return ['void* {result_var}({expression})'. format(
+                expression=result_expression,
+                result_var=result_var
+            )], result_var
+        return [], result_expression
+
+    def __include_required_header(self, file_generator: FileGenerator, cur_header: str):
+        base_namespace = self.class_argument_generator.parent_namespace
+        while not cur_header:
+            if not base_namespace:
+                return
+            cur_header = base_namespace.namespace_object.include
+            base_namespace = base_namespace.parent_namespace
+        file_generator.include_user_header(cur_header)
+
+    def include_dependent_declaration_headers(self, file_generator: FileGenerator, file_cache: FileCache):
+        self.__include_required_header(file_generator, self.class_argument_generator.class_object.include_declaration)
+
+    def include_dependent_definition_headers(self, file_generator: FileGenerator, file_cache: FileCache):
+        self.__include_required_header(file_generator, self.class_argument_generator.class_object.include_definition)
+
+
+class EnumTypeGenerator(BaseTypeGenerator):
     def __init__(self, enum_argument_generator):
         self.enum_argument_generator = enum_argument_generator
         self.c_2_impl = ''
@@ -269,7 +309,7 @@ class EnumTypeGenerator(object):
 
 class ArgumentGenerator(object):
     def __init__(self,
-                 type_generator: ClassTypeGenerator or EnumTypeGenerator or BuiltinTypeGenerator or MappedTypeGenerator,
+                 type_generator: BaseTypeGenerator,
                  name: str):
         self.type_generator = type_generator
         self.argument_object = None

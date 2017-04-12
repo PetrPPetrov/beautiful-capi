@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<components:api xmlns:components="http://gkmsoft.ru/beautifulcapi" project_name="Components" >
+  <namespace name="Components">
+    <external_library input_xml_file="../Classes/classes.xml" params_xml_file="../Classes/classes_params.xml"/>
+    <class name="ComponentA" lifecycle="copy_semantic" implementation_class_name="Components::ComponentA" implementation_class_header="ComponentAImpl.h" >
+      <constructor name="Default"/>
+      <property name="A" type="Classes::ClassA"/>
+      <property name="B" type="Classes::ClassB"/>
+      <property name="C" type="Classes::ClassC"/>
+    </class>
+    <class name="ComponentB" lifecycle="raw_pointer_semantic" implementation_class_name="Components::ComponentB" implementation_class_header="ComponentBImpl.h" >
+      <constructor name="Default"/>
+      <property name="A" type="Classes::ClassA"/>
+      <property name="B" type="Classes::ClassB"/>
+      <property name="C" type="Classes::ClassC"/>
+    </class>      
+  </namespace>
+</components:api>

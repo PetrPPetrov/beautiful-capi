@@ -21,6 +21,7 @@
 
 
 import os
+
 from Parser import TClass, TLifecycle
 from ParamsParser import TBeautifulCapiParams
 from FileCache import FileCache
@@ -167,6 +168,10 @@ class ClassGenerator(object):
     @property
     def release_callback_type(self) -> str:
         return self.full_c_name + '_release_callback_type'
+
+    @property
+    def get_raw_pointer_method_name(self) -> str:
+        return self.params.get_raw_pointer_method_name
 
     def __create_wrap_template_name(self):
         if not self.cached_wrap_template_name:
