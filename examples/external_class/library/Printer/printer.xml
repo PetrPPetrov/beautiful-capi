@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <printer:api xmlns:printer="http://gkmsoft.ru/beautifulcapi" project_name="Printer" >
   <namespace name="PrinterNS" overload_suffix_mode="Silent">
-    <external_library input_xml_file="/Volumes/wdata/beautiful-capi/examples/external_class/library/Components/components.xml" params_xml_file="../Components/components_params.xml"/>
+    <external_library input_xml_file="../Components/components.xml" params_xml_file="../Components/components_params.xml"/>
     <external_namespace name="CompC" include="CompC.h" detach_method_name="DetachObject" get_raw_pointer_method_name="GetPtr">
       <class name="ComponentC" wrap_name="ComponentCPtr"/>
     </external_namespace>
