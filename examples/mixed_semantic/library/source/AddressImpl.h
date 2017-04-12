@@ -36,7 +36,7 @@ namespace MixedSemantic
 
     public:
         // By default newly created objects implies to have value 1 of reference counter
-        AddressImpl() : mRefCount(1) {}
+        AddressImpl() : mRefCount(1), mStreetName(""), mCity(""), mState(0) {}
 
         const char* GetStreetName() const
         {
