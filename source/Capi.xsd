@@ -37,6 +37,7 @@
   </xs:complexType>
   <xs:complexType name="TNamespace">
     <xs:sequence>
+      <xs:element name="documentation" minOccurs="0" maxOccurs="1" type="TDocumentation"/>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:element name="external_namespace" minOccurs="0" maxOccurs="unbounded" type="TExternalNamespace"/>
         <xs:element name="external_library" minOccurs="0" maxOccurs="unbounded" type="TExternalLibrary"/>

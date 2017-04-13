@@ -139,6 +139,7 @@ class NamespaceGenerator(object):
                     file_cache.class_header(class_generator.full_name_array))
             self.__generate_namespace_functions(capi_generator, file_cache, namespace_header)
             include_headers(namespace_header, self.namespace_object.include_headers)
+            DoxygenCppGenerator().generate_for_namespace(namespace_header, self.namespace_object, self.full_wrap_name)
 
     def __generate_forward_declarations_impl(self, out: FileGenerator):
         out.put_line('namespace {0}'.format(self.name))

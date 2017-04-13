@@ -290,6 +290,7 @@ class TNamespace(object):
         self.property_get_prefixes = []
         self.property_get_consts = []
         self.mapped_types = []
+        self.documentations = []
 
     def load_element(self, element):
         if element.nodeName == "external_namespace":
@@ -301,6 +302,11 @@ class TNamespace(object):
             new_element = TExternalLibrary()
             new_element.load(element)
             self.external_libraries.append(new_element)
+            return True
+        if element.nodeName == "documentation":
+            new_element = TDocumentation()
+            new_element.load(element)
+            self.documentations.append(new_element)
             return True
         if element.nodeName == "include":
             new_element = TApiInclude()

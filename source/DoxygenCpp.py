@@ -22,13 +22,13 @@
 
 from FileGenerator import FileGenerator
 from DocumentationGenerator import ReferenceGenerator
-from Parser import TGenericDocumentation, TDocumentation, TClass, TEnumeration
+from Parser import TGenericDocumentation, TDocumentation, TClass, TEnumeration, TNamespace
 
 
 class DoxygenCppGenerator(object):
     @staticmethod
     def __add_line(result_lines: [], line: str, need_eol: bool):
-        if line:
+        if line is not None:
             if need_eol or not result_lines:
                 result_lines.append(line)
             else:
@@ -45,6 +45,10 @@ class DoxygenCppGenerator(object):
             elif type(doc_item) is ReferenceGenerator:
                 need_eol = False
                 reference_as_text = '@ref ' + doc_item.text
+                DoxygenCppGenerator.__add_line(result_lines, reference_as_text, need_eol)
+            elif doc_item in doc.references:
+                need_eol = False
+                reference_as_text = '@ref ' + ' '.join(doc_item.all_items)
                 DoxygenCppGenerator.__add_line(result_lines, reference_as_text, need_eol)
             else:
                 need_eol = True
@@ -77,6 +81,16 @@ class DoxygenCppGenerator(object):
         if class_object.documentations:
             out.put_line('/**')
             for documentation in class_object.documentations:
+                for doc_line in DoxygenCppGenerator.__get_lines_for_documentation(documentation, False):
+                    out.put_line(' * {0}'.format(doc_line))
+            out.put_line(' */')
+
+    @staticmethod
+    def generate_for_namespace(out: FileGenerator, namespace_object: TNamespace, full_wrap_name: str):
+        if namespace_object.documentations:
+            out.put_line('/**')
+            out.put_line(' * @namespace ' + full_wrap_name)
+            for documentation in namespace_object.documentations:
                 for doc_line in DoxygenCppGenerator.__get_lines_for_documentation(documentation, False):
                     out.put_line(' * {0}'.format(doc_line))
             out.put_line(' */')
