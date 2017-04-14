@@ -124,7 +124,7 @@ class ClassGenerator(object):
 
     @property
     def snippet_implementation_declaration(self) -> str:
-        return self.lifecycle_traits.snippet_implementation_usage.format(implementation_type=self.implementation_type)
+        return self.lifecycle_traits.snippet_implementation_usage.format(implementation_type=self.implementation_name)
 
     @property
     def is_callback(self) -> bool:
@@ -211,16 +211,16 @@ class ClassGenerator(object):
                 out.put_line('inline operator {target_type}() const;'.format(target_type=target_type))
             else:
                 out.put_line('inline {target_type} {cast_method}() const;'.format(
-                        target_type=target_type,
-                        cast_method=cast.cast_method.format(target_type=target_type.split('::')[-1])
-                    )
+                    target_type=target_type,
+                    cast_method=cast.cast_method.format(target_type=target_type.split('::')[-1])
+                )
                 )
         for cast in self.class_object.lifecycle_extension.cast_froms:
             source_type = cast.source_generator.full_wrap_name
             out.put_line('inline {class_name}(const {source_type}& value);'.format(
-                    class_name=self.wrap_short_name,
-                    source_type=source_type
-                )
+                class_name=self.wrap_short_name,
+                source_type=source_type
+            )
             )
 
     def __generate_class_body(self, declaration_header):
@@ -379,16 +379,16 @@ class ClassGenerator(object):
             )
             if cast.implicit:
                 out.put_line('inline {full_name}::operator {target_type}() const'.format(
-                        full_name=self.full_wrap_name,
-                        target_type=target_type
-                    )
+                    full_name=self.full_wrap_name,
+                    target_type=target_type
+                )
                 )
             else:
                 out.put_line('inline {target_type} {full_name}::{cast_method}() const'.format(
-                        target_type=target_type,
-                        full_name=self.full_wrap_name,
-                        cast_method=cast.cast_method.format(target_type=target_type.split('::')[-1])
-                    )
+                    target_type=target_type,
+                    full_name=self.full_wrap_name,
+                    cast_method=cast.cast_method.format(target_type=target_type.split('::')[-1])
+                )
                 )
             with IndentScope(out):
                 out.put_line(return_instruction)
@@ -396,10 +396,10 @@ class ClassGenerator(object):
         for cast in self.class_object.lifecycle_extension.cast_froms:
             source_type = cast.source_generator.full_wrap_name
             out.put_line('inline {full_name}::{class_name}(const {source_type}& value)'.format(
-                    full_name=self.full_wrap_name,
-                    class_name=self.wrap_short_name,
-                    source_type=source_type
-                )
+                full_name=self.full_wrap_name,
+                class_name=self.wrap_short_name,
+                source_type=source_type
+            )
             )
             with IndentScope(out):
                 out.put_line('void* object_pointer = value.{get_raw_pointer}();'.format(
