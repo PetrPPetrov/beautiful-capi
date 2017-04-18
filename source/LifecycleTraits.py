@@ -175,11 +175,16 @@ class CopySemantic(LifecycleTraits):
         return self.params.value_implementation_2_c
 
     @staticmethod
+    def generate_copy_constructor(class_generator) -> bool:
+        return (not class_generator.class_object.abstract) and class_generator.class_object.generate_copy_constructor
+
+    @staticmethod
     def c_2_impl_default() -> str:
         return '*static_cast<{implementation_type}*>({expression})'
 
     def generate_std_methods_declarations(self, out: FileGenerator, class_generator):
-        super().generate_copy_constructor_declaration(out, class_generator)
+        if self.generate_copy_constructor(class_generator):
+            super().generate_copy_constructor_declaration(out, class_generator)
         super().generate_move_constructor_declaration(out, class_generator)
         out.put_line('enum ECreateFromRawPointer { force_creating_from_raw_pointer };')
         out.put_line('inline {class_name}(ECreateFromRawPointer, void *object_pointer, bool copy_object);'.format(
@@ -283,8 +288,9 @@ class CopySemantic(LifecycleTraits):
                     out.put_line('return *this;')
 
     def generate_std_methods_definitions(self, out: FileGenerator, class_generator):
-        self.__generate_copy_constructor_definition(out, class_generator)
-        out.put_line('')
+        if self.generate_copy_constructor(class_generator):
+            self.__generate_copy_constructor_definition(out, class_generator)
+            out.put_line('')
         super().generate_move_constructor_definition(out, class_generator)
         out.put_line('')
         self.__generate_raw_copy_constructor_definition(out, class_generator)

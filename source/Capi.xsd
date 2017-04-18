@@ -119,6 +119,7 @@
     <xs:attribute name="delete_or_release_noexcept" type="xs:boolean" use="optional" default="true"/>
     <xs:attribute name="overload_suffix_mode" type="TOverloadSuffixMode" use="optional" default="Notify"/>
     <xs:attribute name="wrap_name" type="xs:string" use="optional" default="{class_name}{wrap_suffix}"/>
+    <xs:attribute name="generate_copy_constructor" type="xs:boolean" use="optional" default="true"/>
   </xs:complexType>
   <xs:complexType name="TCallback">
     <xs:attribute name="lifecycle" type="TLifecycle" use="optional" default="reference_counted"/>

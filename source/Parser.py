@@ -578,6 +578,8 @@ class TClass(object):
         self.overload_suffix_mode_filled = False
         self.wrap_name = "{class_name}{wrap_suffix}"
         self.wrap_name_filled = False
+        self.generate_copy_constructor = True
+        self.generate_copy_constructor_filled = False
         self.documentations = []
         self.include_headers = []
         self.enumerations = []
@@ -697,6 +699,10 @@ class TClass(object):
             cur_attr = dom_node.getAttribute("wrap_name")
             self.wrap_name = cur_attr
             self.wrap_name_filled = True
+        if dom_node.hasAttribute("generate_copy_constructor"):
+            cur_attr = dom_node.getAttribute("generate_copy_constructor")
+            self.generate_copy_constructor = string_to_bool(cur_attr)
+            self.generate_copy_constructor_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:
