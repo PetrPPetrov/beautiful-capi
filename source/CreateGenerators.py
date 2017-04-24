@@ -276,6 +276,7 @@ class GeneratorCreator(object):
             self.__bind_documentation(enum_generator.enum_object)
             for item in enum_generator.enum_object.items:
                 self.__bind_documentation(item)
+        self.__bind_documentation(namespace_generator.namespace_object)
         self.scope_stack.pop()
 
     def bind_namespaces(self, namespace_generators: [NamespaceGenerator]):

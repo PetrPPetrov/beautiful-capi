@@ -46,7 +46,7 @@ class PropertiesProcessor(object):
             if type(doc_item) is str:
                 documentation.all_items[i] = doc_item.format(Setget='Gets' if get else 'Sets')
             else:
-                PropertiesProcessor.__process_documentation(doc_item)
+                PropertiesProcessor.__process_documentation(doc_item, get)
 
     @staticmethod
     def __process_documentation(documentation, get: bool):
