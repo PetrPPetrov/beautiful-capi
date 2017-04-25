@@ -107,6 +107,7 @@
     <xs:attribute name="name" type="xs:string" use="required"/>
     <xs:attribute name="base" type="xs:string" use="optional" default=""/>
     <xs:attribute name="implementation_class_name" type="xs:string" use="required"/>
+    <xs:attribute name="snippet_type" type="xs:string" use="optional" default=""/>
     <xs:attribute name="abstract" type="xs:boolean" use="optional" default="false"/>
     <xs:attribute name="implementation_class_header" type="xs:string" use="required"/>
     <xs:attribute name="lifecycle" type="TLifecycle" use="optional" default="reference_counted"/>
@@ -279,6 +280,7 @@
     <xs:attribute name="argument_wrap_type" type="xs:string" use="optional"/>
     <xs:attribute name="c_type" type="xs:string" use="required"/>
     <xs:attribute name="implementation_type" type="xs:string" use="required"/>
+    <xs:attribute name="snippet_type" type="xs:string" use="optional" default=""/>
     <xs:attribute name="wrap_2_c" type="xs:string" use="optional" default="static_cast&lt;{c_type}&gt;({expression})"/>
     <xs:attribute name="c_2_impl" type="xs:string" use="optional" default="static_cast&lt;{implementation_type}&gt;({expression})"/>
     <xs:attribute name="impl_2_c" type="xs:string" use="optional" default="static_cast&lt;{c_type}&gt;({expression})"/>

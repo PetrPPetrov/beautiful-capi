@@ -77,7 +77,10 @@ class MappedTypeGenerator(BaseTypeGenerator):
                            self.mapped_type_object.implementation_type)
 
     def snippet_implementation_declaration(self) -> str:
-        return self.mapped_type_object.implementation_type
+        if self.mapped_type_object.snippet_type_filled:
+            return self.mapped_type_object.snippet_type
+        else:
+            return self.mapped_type_object.implementation_type
 
     def implementation_2_c_var(self, result_var: str, expression: str) -> ([str], str):
         return self.format(self.mapped_type_object.impl_2_c, expression, result_var, self.mapped_type_object.c_type)

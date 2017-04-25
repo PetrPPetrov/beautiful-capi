@@ -277,6 +277,7 @@ class TNamespace(object):
         self.implementation_header_filled = False
         self.overload_suffix_mode = TOverloadSuffixMode.Notify
         self.overload_suffix_mode_filled = False
+        self.documentations = []
         self.external_namespaces = []
         self.external_libraries = []
         self.includes = []
@@ -290,9 +291,13 @@ class TNamespace(object):
         self.property_get_prefixes = []
         self.property_get_consts = []
         self.mapped_types = []
-        self.documentations = []
 
     def load_element(self, element):
+        if element.nodeName == "documentation":
+            new_element = TDocumentation()
+            new_element.load(element)
+            self.documentations.append(new_element)
+            return True
         if element.nodeName == "external_namespace":
             new_element = TExternalNamespace()
             new_element.load(element)
@@ -302,11 +307,6 @@ class TNamespace(object):
             new_element = TExternalLibrary()
             new_element.load(element)
             self.external_libraries.append(new_element)
-            return True
-        if element.nodeName == "documentation":
-            new_element = TDocumentation()
-            new_element.load(element)
-            self.documentations.append(new_element)
             return True
         if element.nodeName == "include":
             new_element = TApiInclude()
@@ -554,6 +554,8 @@ class TClass(object):
         self.base_filled = False
         self.implementation_class_name = ""
         self.implementation_class_name_filled = False
+        self.snippet_type = ""
+        self.snippet_type_filled = False
         self.abstract = False
         self.abstract_filled = False
         self.implementation_class_header = ""
@@ -651,6 +653,10 @@ class TClass(object):
             cur_attr = dom_node.getAttribute("implementation_class_name")
             self.implementation_class_name = cur_attr
             self.implementation_class_name_filled = True
+        if dom_node.hasAttribute("snippet_type"):
+            cur_attr = dom_node.getAttribute("snippet_type")
+            self.snippet_type = cur_attr
+            self.snippet_type_filled = True
         if dom_node.hasAttribute("abstract"):
             cur_attr = dom_node.getAttribute("abstract")
             self.abstract = string_to_bool(cur_attr)
@@ -1362,6 +1368,8 @@ class TMappedType(object):
         self.c_type_filled = False
         self.implementation_type = ""
         self.implementation_type_filled = False
+        self.snippet_type = ""
+        self.snippet_type_filled = False
         self.wrap_2_c = "static_cast<{c_type}>({expression})"
         self.wrap_2_c_filled = False
         self.c_2_impl = "static_cast<{implementation_type}>({expression})"
@@ -1401,6 +1409,10 @@ class TMappedType(object):
             cur_attr = dom_node.getAttribute("implementation_type")
             self.implementation_type = cur_attr
             self.implementation_type_filled = True
+        if dom_node.hasAttribute("snippet_type"):
+            cur_attr = dom_node.getAttribute("snippet_type")
+            self.snippet_type = cur_attr
+            self.snippet_type_filled = True
         if dom_node.hasAttribute("wrap_2_c"):
             cur_attr = dom_node.getAttribute("wrap_2_c")
             self.wrap_2_c = cur_attr
