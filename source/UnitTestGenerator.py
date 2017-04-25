@@ -28,7 +28,7 @@ from collections import OrderedDict
 import ParamsParser
 import NamespaceGenerator
 import Parser
-from ArgumentGenerator import EnumTypeGenerator
+from ArgumentGenerator import MappedTypeGenerator, EnumTypeGenerator
 from BuiltinTypeGenerator import BuiltinTypeGenerator
 from ClassGenerator import ClassTypeGenerator as CClassTypeGenerator, ClassGenerator
 from FileGenerator import FileGenerator, IndentScope, WatchdogScope
@@ -374,7 +374,7 @@ class TestGenerator(object):
 
                 need_raw_pointer = False
                 need_equal_method = (False, '')
-                if typeof_property_type in [BuiltinTypeGenerator, EnumTypeGenerator]:
+                if typeof_property_type in [MappedTypeGenerator, BuiltinTypeGenerator, EnumTypeGenerator]:
                     need_equal_method = (True, 'builtin_equal')
                 elif typeof_property_type is CClassTypeGenerator:
                     lifecycle_property_type = property_type.class_argument_generator.class_object.lifecycle

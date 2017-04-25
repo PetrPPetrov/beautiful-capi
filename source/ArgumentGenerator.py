@@ -45,7 +45,7 @@ class MappedTypeGenerator(BaseTypeGenerator):
             argument_wrap_type=self.mapped_type_object.argument_wrap_type
         )
         if result_var:
-            return ['{type_name} {result_var}{expression};'.format(
+            return ['{type_name} {result_var}({expression});'.format(
                 type_name=type_name,
                 expression=result_expression,
                 result_var=result_var
@@ -76,11 +76,17 @@ class MappedTypeGenerator(BaseTypeGenerator):
         return self.format(cur_c_2_impl, expression, result_var,
                            self.mapped_type_object.implementation_type)
 
+    def snippet_implementation_declaration(self) -> str:
+        return self.mapped_type_object.implementation_type
+
     def implementation_2_c_var(self, result_var: str, expression: str) -> ([str], str):
         return self.format(self.mapped_type_object.impl_2_c, expression, result_var, self.mapped_type_object.c_type)
 
     def c_2_wrap_var(self, result_var: str, expression: str) -> ([str], str):
         return self.format(self.mapped_type_object.c_2_wrap, expression, result_var, self.mapped_type_object.wrap_type)
+
+    def generate_c_default_return_value(self, out: FileGenerator):
+        out.put_line('return static_cast<{c_type}>(0);'.format(c_type=self.c_argument_declaration()))
 
     def include_dependent_declaration_headers(self, file_generator: FileGenerator, file_cache: FileCache):
         include_headers(file_generator, self.mapped_type_object.include_headers)

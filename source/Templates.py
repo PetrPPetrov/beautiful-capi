@@ -32,7 +32,7 @@ def instantiate_type(type_name: str, instantiation: TInstantiation):
     return type_name
 
 
-def instantiate_constructor(constructor: TConstructor, instantiation: TInstantiation):
+def instantiate_constructor(constructor: TConstructor or TMethod, instantiation: TInstantiation):
     for argument in constructor.arguments:
         argument.type_name = instantiate_type(argument.type_name, instantiation)
 
