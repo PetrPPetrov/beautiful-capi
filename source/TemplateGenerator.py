@@ -22,6 +22,7 @@
 from Parser import TTemplate
 from FileGenerator import FileGenerator
 from ClassGenerator import ClassGenerator
+from FileCache import FileCache
 
 
 class TemplateGenerator(object):
@@ -38,3 +39,14 @@ class TemplateGenerator(object):
             ['{0} {1}'.format(argument.type_name, argument.name) for argument in self.template_object.arguments])
         out.put_line('template<{0}>'.format(template_arguments))
         self.template_class_generator.generate_forward_declaration(out)
+
+
+class TemplateConstantArgumentGenerator(object):
+    def __init__(self, value):
+        self.value = value
+
+    def wrap_return_type(self) -> str:
+        return self.value
+
+    def include_dependent_declaration_headers(self, file_generator: FileGenerator, file_cache: FileCache):
+        pass

@@ -23,7 +23,6 @@
 from Parser import TClass, TEnumeration, TNamespace, TArgument, TBeautifulCapiRoot, TMappedType
 from Parser import TGenericDocumentation, TDocumentation, TReference, TExternalClass, TExternalNamespace
 from ParamsParser import TBeautifulCapiParams
-from BuiltinTypeGenerator import BaseTypeGenerator
 from TemplateGenerator import TemplateGenerator
 from ClassGenerator import ClassGenerator
 from MethodGenerator import MethodGenerator, FunctionGenerator, ConstructorGenerator
@@ -32,6 +31,7 @@ from EnumGenerator import EnumGenerator
 from DocumentationGenerator import ReferenceGenerator
 from ExternalClassGenerator import ExternalClassGenerator
 from ExternalNamespaceGenerator import ExternalNamespaceGenerator
+from TemplateGenerator import TemplateConstantArgumentGenerator
 from Helpers import BeautifulCapiException
 from Helpers import get_template_arguments_count, get_template_argument, replace_template_argument
 
@@ -241,7 +241,12 @@ class GeneratorCreator(object):
         template_arguments_count = get_template_arguments_count(class_generator.name)
         for index in range(template_arguments_count):
             template_argument = get_template_argument(class_generator.name, index)
-            class_generator.template_argument_generators.append(self.__create_type_generator(template_argument, False))
+            template_argument_type = class_generator.class_object.template_arguments[index].template_argument_type
+            if template_argument_type not in ['class', 'typename']:
+                template_argument_generator = TemplateConstantArgumentGenerator(template_argument)
+            else:
+                template_argument_generator = self.__create_type_generator(template_argument, False)
+            class_generator.template_argument_generators.append(template_argument_generator)
         for constructor_generator in class_generator.constructor_generators:
             self.__bind_constructor(constructor_generator)
         for method_generator in class_generator.method_generators:

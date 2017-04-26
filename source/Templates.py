@@ -26,6 +26,13 @@ from Parser import TInstantiation, TConstructor, TMethod, TNamespace, TTemplate,
 from Helpers import BeautifulCapiException
 
 
+class TemplateArgument(object):
+    def __init__(self, name, value, template_argument_type):
+        self.name = name
+        self.value = value
+        self.template_argument_type = template_argument_type
+
+
 def instantiate_type(type_name: str, instantiation: TInstantiation):
     for argument in instantiation.arguments:
         type_name = type_name.replace(argument.name, argument.value)
@@ -46,6 +53,9 @@ def generate_template_classes(namespace: TNamespace, template: TTemplate):
     if not template.classes:
         raise BeautifulCapiException('template have to contain a nested class')
     template_class = template.classes[0]
+    name2type = {}
+    for template_argument in template.arguments:
+        name2type.update({template_argument.name: template_argument.type_name})
     for instantiation in template.instantiations:
         new_class = copy.deepcopy(template_class)
         new_class.implementation_class_name = instantiate_type(new_class.implementation_class_name, instantiation)
@@ -56,8 +66,23 @@ def generate_template_classes(namespace: TNamespace, template: TTemplate):
             instantiate_constructor(constructor, instantiation)
         for method in new_class.methods:
             instantiate_method(method, instantiation)
+
+        name2value = {}
+        for instantiation_argument in instantiation.arguments:
+            name2value.update({instantiation_argument.name: instantiation_argument.value})
+        new_class.template_arguments = []
+        for template_argument in template.arguments:
+            if template_argument.name not in name2value:
+                raise BeautifulCapiException('The required template argument ({0}) is not specified'.format(
+                    template_argument.name))
+            template_argument_value = name2value[template_argument.name]
+            template_argument_type = name2type[template_argument.name]
+            new_template_argument = TemplateArgument(
+                template_argument.name, template_argument_value, template_argument_type)
+            new_class.template_arguments.append(new_template_argument)
+
         new_class.template_line = 'template<>'
-        class_suffix = ', '.join([argument.value for argument in instantiation.arguments])
+        class_suffix = ', '.join([argument.value for argument in new_class.template_arguments])
         new_class.name += '<{0}>'.format(class_suffix)
         namespace.classes.append(new_class)
 
