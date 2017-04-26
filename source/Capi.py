@@ -191,8 +191,8 @@ class Capi(object):
         process_check_binary_compatibility(self.api_description, self.params_description)
         process_properties(self.api_description, self.unit_tests_generator)
         process_overload_suffixes(self.api_description)
-        process_templates(self.api_description)
         process_extension_semantic(self.api_description)
+        process_templates(self.api_description)
         first_namespace_generators = create_namespace_generators(
             self.api_description, self.params_description)
         process_callbacks(first_namespace_generators)

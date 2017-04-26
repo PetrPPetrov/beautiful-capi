@@ -221,7 +221,10 @@ class GeneratorCreator(object):
                 if type(argument_generator) is ClassGenerator:
                     self.__replace_template_implementation_class(argument_generator)
                 implementation_class_name = replace_template_argument(
-                    implementation_class_name, index, argument_generator.implementation_name)
+                    implementation_class_name,
+                    index,
+                    argument_generator.lifecycle_traits.lifecycle_impl_name(argument_generator.implementation_name)
+                )
         class_generator.class_object.implementation_class_name = implementation_class_name
 
     def __bind_class(self, class_generator: ClassGenerator):

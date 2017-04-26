@@ -176,7 +176,12 @@ class CopySemantic(LifecycleTraits):
 
     @staticmethod
     def generate_copy_constructor(class_generator) -> bool:
-        return (not class_generator.class_object.abstract) and class_generator.class_object.generate_copy_constructor
+        result = (not class_generator.class_object.abstract) and class_generator.class_object.generate_copy_constructor
+        return result
+
+    @staticmethod
+    def lifecycle_impl_name(impl_name: str) -> str:
+        return impl_name
 
     @staticmethod
     def c_2_impl_default() -> str:
@@ -304,22 +309,23 @@ class CopySemantic(LifecycleTraits):
         super().generate_std_methods_definitions(out, class_generator)
 
     def generate_c_functions(self, class_generator):
-        copy_c_function_body = FileGenerator(None)
-        with IndentScope(copy_c_function_body):
-            copy_constructor_call = 'return new {impl_name}(*{to_impl_cast});'.format(
-                impl_name=class_generator.class_object.implementation_class_name,
-                to_impl_cast=ThisArgumentGenerator(class_generator).c_2_implementation()
-            )
-            self.init_method_exception_traits.generate_implementation_call(
-                copy_c_function_body, BuiltinTypeGenerator('void*'), [copy_constructor_call])
-        argument_list = ['void* object_pointer']
-        self.init_method_exception_traits.modify_c_arguments(argument_list)
-        class_generator.capi_generator.add_c_function(
-            class_generator.full_name_array,
-            'void*',
-            class_generator.copy_method,
-            ', '.join(argument_list),
-            copy_c_function_body)
+        if self.generate_copy_constructor(class_generator):
+            copy_c_function_body = FileGenerator(None)
+            with IndentScope(copy_c_function_body):
+                copy_constructor_call = 'return new {impl_name}(*{to_impl_cast});'.format(
+                    impl_name=class_generator.class_object.implementation_class_name,
+                    to_impl_cast=ThisArgumentGenerator(class_generator).c_2_implementation()
+                )
+                self.init_method_exception_traits.generate_implementation_call(
+                    copy_c_function_body, BuiltinTypeGenerator('void*'), [copy_constructor_call])
+            argument_list = ['void* object_pointer']
+            self.init_method_exception_traits.modify_c_arguments(argument_list)
+            class_generator.capi_generator.add_c_function(
+                class_generator.full_name_array,
+                'void*',
+                class_generator.copy_method,
+                ', '.join(argument_list),
+                copy_c_function_body)
 
         delete_c_function_body = FileGenerator(None)
         with IndentScope(delete_c_function_body):
@@ -348,6 +354,10 @@ class RawPointerSemantic(LifecycleTraits):
 
     def implementation_2_c_default(self) -> str:
         return self.params.raw_implementation_2_c
+
+    @staticmethod
+    def lifecycle_impl_name(impl_name: str) -> str:
+        return impl_name + '*'
 
     @staticmethod
     def c_2_impl_default() -> str:
@@ -484,6 +494,10 @@ class RefCountedSemantic(LifecycleTraits):
 
     def implementation_2_c_default(self) -> str:
         return self.params.reference_counted_implementation_2_c
+
+    @staticmethod
+    def lifecycle_impl_name(impl_name: str) -> str:
+        return impl_name + '*'
 
     @staticmethod
     def c_2_impl_default() -> str:

@@ -9,3 +9,6 @@ __pycache__/
 AutoGen*
 auto_gen*
 snippets/
+CMakeFiles
+source/internal_snippets
+CMakeCache.txt
