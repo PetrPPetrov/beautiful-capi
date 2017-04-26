@@ -265,8 +265,13 @@ class ClassGenerator(object):
     def __get_all_base_classes(self) -> []:
         return self.base_class_generator.__get_all_base_classes() + [self] if self.base_class_generator else [self]
 
+    def __should_generate_down_cast(self) -> bool:
+        lifecycle = self.class_object.lifecycle
+        base_lifecycle = self.base_class_generator.class_object.lifecycle if self.base_class_generator else lifecycle
+        return self.base_class_generator and lifecycle != TLifecycle.copy_semantic and lifecycle == base_lifecycle
+
     def __generate_down_cast_template_specializations(self, declaration_header, previous_ns):
-        if self.class_object.lifecycle != TLifecycle.copy_semantic and self.base_class_generator:
+        if self.__should_generate_down_cast():
             for cur_base_class_generator in self.base_class_generator.__get_all_base_classes():
                 the_most_parent_namespace = cur_base_class_generator.parent_namespace.the_most_parent
                 if the_most_parent_namespace is not previous_ns:
@@ -347,7 +352,7 @@ class ClassGenerator(object):
             method_generator.include_dependent_definition_headers(definition_header, self.file_cache)
 
     def __generate_down_cast_definitions(self, definition_header):
-        if self.class_object.lifecycle != TLifecycle.copy_semantic and self.base_class_generator:
+        if self.__should_generate_down_cast():
             for cur_base_class_generator in self.base_class_generator.__get_all_base_classes():
                 the_most_parent_namespace = cur_base_class_generator.parent_namespace.the_most_parent
                 definition_header.put_line('')
