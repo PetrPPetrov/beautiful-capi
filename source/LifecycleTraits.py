@@ -171,7 +171,7 @@ class CopySemantic(LifecycleTraits):
     def snippet_implementation_usage(self) -> str:
         return self.params.snippet_implementation_value_usage
 
-    def implementation_2_c_default(self) -> str:
+    def impl_2_c_default(self) -> str:
         return self.params.value_implementation_2_c
 
     @staticmethod
@@ -352,7 +352,7 @@ class RawPointerSemantic(LifecycleTraits):
     def snippet_implementation_usage(self) -> str:
         return self.params.snippet_implementation_raw_usage
 
-    def implementation_2_c_default(self) -> str:
+    def impl_2_c_default(self) -> str:
         return self.params.raw_implementation_2_c
 
     @staticmethod
@@ -492,7 +492,7 @@ class RefCountedSemantic(LifecycleTraits):
     def snippet_implementation_usage(self) -> str:
         return self.params.snippet_implementation_reference_counted_usage
 
-    def implementation_2_c_default(self) -> str:
+    def impl_2_c_default(self) -> str:
         return self.params.reference_counted_implementation_2_c
 
     @staticmethod

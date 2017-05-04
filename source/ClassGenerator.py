@@ -123,6 +123,18 @@ class ClassGenerator(object):
         return self.class_object.implementation_class_name
 
     @property
+    def impl_2_c(self) -> str:
+        if self.class_object.impl_2_c_filled:
+            return self.class_object.impl_2_c
+        return self.lifecycle_traits.impl_2_c_default()
+
+    @property
+    def c_2_impl(self) -> str:
+        if self.class_object.c_2_impl_filled:
+            return self.class_object.c_2_impl
+        return self.lifecycle_traits.c_2_impl_default()
+
+    @property
     def snippet_implementation_declaration(self) -> str:
         if self.class_object.snippet_type_filled:
             return self.class_object.snippet_type

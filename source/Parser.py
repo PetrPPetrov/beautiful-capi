@@ -582,6 +582,10 @@ class TClass(object):
         self.wrap_name_filled = False
         self.generate_copy_constructor = True
         self.generate_copy_constructor_filled = False
+        self.impl_2_c = ""
+        self.impl_2_c_filled = False
+        self.c_2_impl = ""
+        self.c_2_impl_filled = False
         self.documentations = []
         self.include_headers = []
         self.enumerations = []
@@ -709,6 +713,14 @@ class TClass(object):
             cur_attr = dom_node.getAttribute("generate_copy_constructor")
             self.generate_copy_constructor = string_to_bool(cur_attr)
             self.generate_copy_constructor_filled = True
+        if dom_node.hasAttribute("impl_2_c"):
+            cur_attr = dom_node.getAttribute("impl_2_c")
+            self.impl_2_c = cur_attr
+            self.impl_2_c_filled = True
+        if dom_node.hasAttribute("c_2_impl"):
+            cur_attr = dom_node.getAttribute("c_2_impl")
+            self.c_2_impl = cur_attr
+            self.c_2_impl_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:

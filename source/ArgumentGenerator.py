@@ -147,7 +147,7 @@ class ClassTypeGenerator(BaseTypeGenerator):
     def c_2_implementation(self, expression: str) -> str:
         cur_c_2_impl = self.c_2_impl
         if not cur_c_2_impl:
-            cur_c_2_impl = self.class_argument_generator.lifecycle_traits.c_2_impl_default()
+            cur_c_2_impl = self.class_argument_generator.c_2_impl
         return cur_c_2_impl.format(
             implementation_type=self.class_argument_generator.class_object.implementation_class_name,
             expression=expression)
@@ -172,8 +172,7 @@ class ClassTypeGenerator(BaseTypeGenerator):
         return self.class_argument_generator.snippet_implementation_declaration
 
     def implementation_2_c_var(self, result_var: str, expression: str) -> ([str], str):
-        default_cast = self.class_argument_generator.lifecycle_traits.implementation_2_c_default()
-        cur_impl_2_c = self.impl_2_c if self.impl_2_c_filled else default_cast
+        cur_impl_2_c = self.impl_2_c if self.impl_2_c_filled else self.class_argument_generator.impl_2_c
         result_expression = cur_impl_2_c.format(
             expression=expression,
             implementation_type=self.class_argument_generator.class_object.implementation_class_name,
