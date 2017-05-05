@@ -2,10 +2,10 @@ Beautiful-Capi Developer's Guide
 ================================
 
 1. [Introduction](#introduction)
-    * [C++ problems](#c++-problems)
-        * [C++ ABI](#c++-abi)
+    * [C++ problems](#c-problems)
+        * [C++ ABI](#c-abi)
         * [Name mangling](#name-mangling)
-        * [C++ STL ABI](#c++-stl-abi)
+        * [C++ STL ABI](#c-stl-abi)
         * [Exceptions](#exceptions)
     * [Basic solutions](#basic-solutions)
     * [Beautiful Capi solution](#beautiful-capi-solution)
@@ -22,7 +22,6 @@ Beautiful-Capi Developer's Guide
     * [Windows](#windows)
     * [Linux](#linux)
     * [MacOSX](#macosx)
-
 
 Introduction
 ------------
@@ -125,77 +124,80 @@ void HelloWorld::PrinterImpl::Show() const
 ~~~
 
 In fact _HelloWorld::PrinterImpl_ class is an internal class and it is not exposed directly
-for _HelloWorld_ library clients. Instead of _HelloWorld::PrinterImpl_ class an opaque _void*_ pointer by the following
-automatic generated plain C functions:
+for _HelloWorld_ library clients. Instead of _HelloWorld::PrinterImpl_ class an opaque _void*_ pointer is used
+by the following automatic generated plain C functions:
 ~~~
 void* hello_world_printer_default()
 {
     return new HelloWorld::PrinterImpl();
 }
-
 void hello_world_printer_show_const(void* object_pointer)
 {
     const HelloWorld::PrinterImpl* self = static_cast<HelloWorld::PrinterImpl*>(object_pointer);
     self->Show();
 }
-
 void* hello_world_printer_copy(void* object_pointer)
 {
     return new HelloWorld::PrinterImpl(*static_cast<HelloWorld::PrinterImpl*>(object_pointer));
 }
-
 void hello_world_printer_delete(void* object_pointer)
 {
     delete static_cast<HelloWorld::PrinterImpl*>(object_pointer);
 }
 ~~~
 
-And automatic generated C++ class:
+For simplicity we put down some details here, like calling conventions or C linkage option for these functions.
+
+Note that all plain C function names have *hello_world_* prefix which came from _HelloWorld_ namespace.
+The second part of all plain C function names is *printer_* which came from _Printer_ class name.
+And the rest parts are method names. You can note that there are some simple rules for conversion any C++ identifier
+to plain C function name.
+
+And automatic generated C++ wrapper class:
 ~~~
-namespace HelloWorld {
-
-class Printer
+namespace HelloWorld
 {
-public:
-    Printer()
+    class Printer
     {
-        SetObject(hello_world_printer_default());    
-    }
-    void Show() const
-    {
-        hello_world_printer_show_const(GetRawPointer());    
-    }
-    Printer(const Printer& other)
-    {
-        if (other.GetRawPointer())
+    public:
+        Printer()
         {
-            SetObject(hello_world_printer_copy(other.GetRawPointer()));
+            SetObject(hello_world_printer_default());
         }
-        else
+        void Show() const
         {
-            SetObject(0);
-        }    
-    }
-    ~Printer()
-    {
-        if (GetRawPointer())
+            hello_world_printer_show_const(GetRawPointer());
+        }
+        Printer(const Printer& other)
         {
-            hello_world_printer_delete(GetRawPointer());
-            SetObject(0);
-        }    
-    }
-    void* GetRawPointer() const
-    {
-        return mObject;
-    }
-protected:
-    void SetObject(void* object_pointer)
-    {
-        mObject = object_pointer;    
-    }
-    void* mObject;
-};
-
+            if (other.GetRawPointer())
+            {
+                SetObject(hello_world_printer_copy(other.GetRawPointer()));
+            }
+            else
+            {
+                SetObject(0);
+            }
+        }
+        ~Printer()
+        {
+            if (GetRawPointer())
+            {
+                hello_world_printer_delete(GetRawPointer());
+                SetObject(0);
+            }
+        }
+        void* GetRawPointer() const
+        {
+            return mObject;
+        }
+    protected:
+        void SetObject(void* object_pointer)
+        {
+            mObject = object_pointer;
+        }
+        void* mObject;
+    };
 }
 ~~~
 
@@ -212,34 +214,77 @@ Of course, you need to create manually the following XML API description file:
 </hello_world:api>
 ~~~
 
+And sample usage of this class from client side:
+~~~
+#include <iostream>
+#include <cstdlib>
+#include "HelloWorld.h"
+
+int main()
+{
+    HelloWorld::Printer printer;
+    printer.Show();
+
+    return EXIT_SUCCESS;
+}
+~~~
+
+In this example _HelloWorld::PrinterImpl_ is the __implementation class__,
+_HelloWorld::Printer_ is the __wrapper class__. In XML API description file _HelloWorld::Printer_ identifier could be
+used for referencing this wrapped class and it is called __API identifier__ or just __identifier__.
+In this example wrapper class name is the same as identifier, but, in general, they could be different.
+
+Note that _HelloWorld::PrinterImpl_ class has copy semantic. It means that the implementation class object instances
+are always copied when the wrapper class object instances are copied, and the implementation class object instances
+are deleted when the wrapper class object instances are deleted. There are possible other behaviours.
+In terms of Beautiful Capi tool a such behaviour is called __lifecycle semantic__.
+Beautiful Capi supports several typical lifecycle semantics.
+
 
 Lifecycle semantics
 -------------------
+TODO:
 
 ### Copy semantic
+TODO:
 
 ### Reference counted semantic
+TODO:
 
 ### Raw pointer semantic
+TODO:
 
 ### Mixing semantics
+TODO:
+
+XML API description schema reference
+------------------------------------
+TODO:
 
 Exceptions
 ----------
+TODO:
 
 Callbacks
 ---------
+TODO:
 
 Templates
 ---------
+TODO:
 
 Making compiler-independent libraries
 -------------------------------------
+TODO:
 
 ### Dynamic loader
+TODO:
 
 ### Windows
+TODO:
 
 ### Linux
+TODO:
 
 ### MacOSX
+TODO:
