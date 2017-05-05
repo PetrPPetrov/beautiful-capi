@@ -106,7 +106,7 @@ catching and rethrowing exceptions and some more.
 
 Consider [hello_world](https://github.com/PetrPPetrov/beautiful-capi/tree/master/examples/hello_world)
 Beautiful Capi example. It exposes the following class:
-~~~
+~~~C++
 #include <iostream>
 
 namespace HelloWorld
@@ -117,6 +117,7 @@ namespace HelloWorld
         void Show() const;
     };
 }
+
 void HelloWorld::PrinterImpl::Show() const
 {
     std::cout << "Hello Beautiful World!" << std::endl;
@@ -126,20 +127,23 @@ void HelloWorld::PrinterImpl::Show() const
 In fact _HelloWorld::PrinterImpl_ class is an internal class and it is not exposed directly
 for _HelloWorld_ library clients. Instead of _HelloWorld::PrinterImpl_ class an opaque _void*_ pointer is used
 by the following automatic generated plain C functions:
-~~~
+~~~C
 void* hello_world_printer_default()
 {
     return new HelloWorld::PrinterImpl();
 }
+
 void hello_world_printer_show_const(void* object_pointer)
 {
     const HelloWorld::PrinterImpl* self = static_cast<HelloWorld::PrinterImpl*>(object_pointer);
     self->Show();
 }
+
 void* hello_world_printer_copy(void* object_pointer)
 {
     return new HelloWorld::PrinterImpl(*static_cast<HelloWorld::PrinterImpl*>(object_pointer));
 }
+
 void hello_world_printer_delete(void* object_pointer)
 {
     delete static_cast<HelloWorld::PrinterImpl*>(object_pointer);
@@ -154,7 +158,7 @@ And the rest parts are method names. You can note that there are some simple rul
 to plain C function name.
 
 And automatic generated C++ wrapper class:
-~~~
+~~~C++
 namespace HelloWorld
 {
     class Printer
@@ -202,7 +206,7 @@ namespace HelloWorld
 ~~~
 
 Of course, you need to create manually the following XML API description file:
-~~~
+~~~XML
 <?xml version="1.0" encoding="utf-8" ?>
 <hello_world:api xmlns:hello_world="http://gkmsoft.ru/beautifulcapi" project_name="HelloWorld">
   <namespace name="HelloWorld">
@@ -215,7 +219,7 @@ Of course, you need to create manually the following XML API description file:
 ~~~
 
 And sample usage of this class from client side:
-~~~
+~~~C++
 #include <iostream>
 #include <cstdlib>
 #include "HelloWorld.h"
