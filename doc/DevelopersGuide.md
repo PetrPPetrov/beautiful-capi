@@ -13,11 +13,12 @@ Beautiful-Capi Developer's Guide
     * [Copy semantic](#copy-semantic)
     * [Reference counted semantic](#reference-counted-semantic)
     * [Raw pointer semantic](#raw-pointer-semantic)
-    * [Mixing semantics](#mixing-semantics)
-3. [Exceptions](#exceptions)
-4. [Callbacks](#callbacks)
-6. [Templates](#templates)
-5. [Making compiler-independent libraries](#making-compiler-independent-libraries)
+3. [Mixing semantics](#mixing-semantics)
+4. [XML API description schema reference](#xml-api-description-schema-reference)
+5. [Exceptions](#exceptions)
+6. [Callbacks](#callbacks)
+7. [Templates](#templates)
+8. [Making compiler-independent libraries](#making-compiler-independent-libraries)
     * [Dynamic loader](#dynamic-loader)
     * [Windows](#windows)
     * [Linux](#linux)
@@ -28,8 +29,10 @@ Introduction
 
 Beautiful Capi is a tool which automatizes the creation of compiler-independent
 and binary compatible (between different C++ compilers) C++ libraries.
-Any C++ library compiled once could be used many times by the other C++ compilers without recompilation.
-Of course, the compiled C++ libraries are compatible only on the same platforms and architectures where they were built.
+Prepared by Beautiful Capi C++ libraries compiled once could be used many times
+by the other C++ compilers without recompilation.
+Of course, the compiled C++ libraries are compatible only on the same platforms
+and architectures where they were built.
 
 Beautiful Capi is written in Python 3. It _does not parse_ the library source code to obtain its
 [API](https://en.wikipedia.org/wiki/Application_programming_interface) description.
@@ -266,6 +269,8 @@ Lifecycle semantics
 Beautiful Capi assumes that the implementation class object instances are always created on the heap.
 This fact is applied for all lifecycle semantics.
 
+You can specify lifecycle semantic for each wrapped class in the XML API description file.
+
 ### Copy semantic
 
 Copy semantics means that the implementation class object instance is always copied when
@@ -286,15 +291,110 @@ Currently such supposition is hard-coped inside Beautiful Capi and can not be ch
 The copy function is used both in the wrapper class copy constructor and the assignment operator.
 
 Copy semantic emulates objects by value, thus, the generated wrapper classes propose to use "." (the dot sign)
-for accessing the wrapped class methods.
+for accessing the wrapped class methods:
+~~~C++
+int main()
+{
+    // Creates the underlying implementation class on the heap of the C++ library
+    HelloWorld::Printer printer;
+    
+    // Calls copy function to allocate new PrinterImpl class on the heap
+    // of the C++ library by using PrinterImpl copy constructor.
+    // printer and printer2 are different objects which have
+    // different underlying implementation objects.
+    HelloWorld::Printer printer2 = printer;
+    
+    // You have to use "." sign to access the wrapped PrinterImpl methods
+    printer.Show();
+    
+    // At the end of this scope two PrinterImpl objects allocated on the heap
+    // will be deallocated by using _delete function.
+    // Please note that a heap manager of the C++ library will be used for that.
+    return EXIT_SUCCESS;
+}
+~~~
+
+The generated wrapper classes deallocate the underlying implementation class object instances by using a special
+delete function. This function has *_delete* suffix and looks like this:
+~~~C
+void namespace_prefix_class_name_delete(void* object_pointer)
+{
+    delete static_cast<ImplementationClass*>(object_pointer);
+}
+~~~
+
+Delete function is called at the wrapper class destructor, thus, there are not any memory leaks.
+There is [copy_semantic](https://github.com/PetrPPetrov/beautiful-capi/tree/master/examples/copy_semantic)
+example which demonstrates this lifecycle semantic.
 
 ### Reference counted semantic
-TODO:
+
+Reference counted semantics means that the implementation class has a reference counter.
+The value of reference counter of the newly created objects should be equal 1.
+When a new reference to the object is created then the reference counter should be increased by 1.
+When an existing reference to the object is destroyed then the reference counter should be decreased by 1.
+The objects should be deleted when the reference counter become 0.
+
+Beautiful Capi requires the availability of the following functions for the reference counted implementation classes:
+~~~C++
+void intrusive_ptr_add_ref(ImplementationClass* object);
+void intrusive_ptr_release(ImplementationClass* object);
+~~~
+
+Beautiful Capi generates *_addref* and *_release* special functions which use the above declarations:
+~~~C
+void namespace_prefix_class_name_addref(void* object_pointer)
+{
+    intrusive_ptr_add_ref(static_cast<ImplementationClass*>(object_pointer));
+}
+void namespace_prefix_class_name_release(void* object_pointer)
+{
+    intrusive_ptr_release(static_cast<ImplementationClass*>(object_pointer));
+}
+~~~
+
+The generated addref function is used both in the wrapper class copy constructor and the assignment operator.
+The wrapper class destructor calls the generated release function.
+
+Reference counted semantic does not require any copy constructors for the implementation classes.
+Thus, abstract C++ implementation classes could be used here.
+
+Reference counted semantic emulates object pointers (smart pointers). So, you should use "->" (the arrow)
+for accessing the wrapped class methods, also the generated wrapper classes have *Ptr* suffix by default:
+~~~C++
+int main()
+{
+    // Creates the underlying implementation class on the heap of the C++ library.
+    // Reference counter is 1.
+    HelloWorld::PrinterPtr printer;
+    
+    // Calls _addref function to create a new reference to the existing object.
+    // Reference counter is 2.
+    // Both printer and printer2 reference to the same underlying implementation object.
+    HelloWorld::PrinterPtr printer2 = printer;
+    
+    // You should use "->" to access wrapped PrinterImpl methods
+    // However, "." sign is also could be used here, i.e.: printer.Show(); instruction will be compiled fine.
+    // But we recommend you to always use "->".
+    printer->Show();
+    
+    // At the end of this scope the PrinterImpl underlying implementation object will be deallocated.
+    // This is because printer object destructor will decrease reference counter by 1 (from 2 to 1),
+    // and printer2 object destructor will decrease reference counter by 1 (from 1 to 0),
+    // and the underlying implementation object will be deallocated.
+    // Please note that a heap manager of the C++ library will be used for that.
+    return EXIT_SUCCESS;
+}
+~~~
+
+There is [reference_counted](https://github.com/PetrPPetrov/beautiful-capi/tree/master/examples/reference_counted)
+example which demonstrates this lifecycle semantic.
 
 ### Raw pointer semantic
 TODO:
 
-### Mixing semantics
+Mixing semantics
+----------------
 TODO:
 
 XML API description schema reference
