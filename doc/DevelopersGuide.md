@@ -30,10 +30,10 @@ Introduction
 Beautiful Capi is a tool which automatizes the creation of compiler-independent
 and binary compatible (between different C++ compilers) C++ libraries.
 Prepared by Beautiful Capi C++ libraries compiled once could be used many times
-by the other C++ compilers without recompilation.
+by the other C++ compilers without any recompilation.
 Of course, the compiled C++ libraries are compatible only on the same platforms
 and architectures where they were built. For instance, a shared library which was built by Visual Studio 2015
-C++ compiler could be wrapped and called by Mingw Clang C++ compiler
+C++ compiler could be wrapped and called by Mingw Clang C++ compiler on Windows operating system
 (allowing both forward and backward compatibility).
 
 This tool generates the required C++ and C code to wrap your C++ classes to use them in a compiler-independent way.
