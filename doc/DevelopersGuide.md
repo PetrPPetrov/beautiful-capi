@@ -13,12 +13,15 @@ Beautiful-Capi Developer's Guide
     * [Copy semantic](#copy-semantic)
     * [Reference counted semantic](#reference-counted-semantic)
     * [Raw pointer semantic](#raw-pointer-semantic)
-3. [Mixing semantics](#mixing-semantics)
+3. [Command-line arguments](#command-line-arguments)
 4. [XML API description schema reference](#xml-api-description-schema-reference)
-5. [Exceptions](#exceptions)
-6. [Callbacks](#callbacks)
-7. [Templates](#templates)
-8. [Making compiler-independent libraries](#making-compiler-independent-libraries)
+5. [Mixing semantics](#mixing-semantics)
+6. [Exceptions](#exceptions)
+7. [Callbacks](#callbacks)
+8. [Templates](#templates)
+9. [Snippets](#snippets)
+10. [Inheritance modes](#inheritance-modes)
+11. [Making compiler-independent libraries](#making-compiler-independent-libraries)
     * [Dynamic loader](#dynamic-loader)
     * [Windows](#windows)
     * [Linux](#linux)
@@ -406,12 +409,16 @@ example which demonstrates this lifecycle semantic.
 ### Raw pointer semantic
 TODO:
 
-Mixing semantics
-----------------
+Command-line arguments
+----------------------
 TODO:
 
 XML API description schema reference
 ------------------------------------
+TODO:
+
+Mixing semantics
+----------------
 TODO:
 
 Exceptions
@@ -424,6 +431,14 @@ TODO:
 
 Templates
 ---------
+TODO:
+
+Snippets
+--------
+TODO:
+
+Inheritance modes
+-----------------
 TODO:
 
 Making compiler-independent libraries
