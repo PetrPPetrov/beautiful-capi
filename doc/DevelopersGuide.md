@@ -150,7 +150,7 @@ void hello_world_printer_delete(void* object_pointer)
 }
 ~~~
 
-For simplicity we put down some details here, like calling conventions or C linkage option for these functions.
+For simplicity we put down some details here, like calling conventions or C linkage options for these functions.
 
 Note that all plain C function names have *hello_world_* prefix which came from _HelloWorld_ namespace.
 The second part of all plain C function names is *printer_* which came from _Printer_ class name.
@@ -244,13 +244,48 @@ are deleted when the wrapper class object instances are deleted. There are possi
 In terms of Beautiful Capi tool a such behaviour is called __lifecycle semantic__.
 Beautiful Capi supports several typical lifecycle semantics.
 
+We can designate the following three things:
+1. The __implementation side__. It means all code inside the C++ library, all classes,
+functions, methods and other types inside the C++ library. The implementation classes are used in the C++ library.
+Usually the C++ libraries are shared libraries which are intended to use by different C++ compilers.
+2. The tiny __C glue layer__. The bodies of C glue functions are located inside the C++ library, in automatic
+generated .cpp file. In fact these functions are written in C++ (to have access to the implementation classes)
+and just have C linkage option enabled. So, outside the C++ library these functions are seen as pure C functions.
+Beautiful Capi generates both bodies of these functions and their declarations. The declarations are visible outside
+of the C++ library.
+3. The __wrap side__. It means all code inside any client of the C++ library, all classes,
+functions, methods and other types inside any client of the C++ library. Clients of the C++ library
+could be executable files, static libraries and shared libraries. The clients could be written both in pure
+C language and in C++ language. The C++ clients usually use the generated wrapper classes. The C clients use pure
+C functions directly.
 
 Lifecycle semantics
 -------------------
-TODO:
+
+Beautiful Capi assumes that the implementation class object instances are always created on the heap.
+This fact is applied for all lifecycle semantics.
 
 ### Copy semantic
-TODO:
+
+Copy semantics means that the implementation class object instance is always copied when
+the wrapper class object instance is copied. In other words, copy semantics emulates objects by value,
+however, as we noted above, Beautiful Capi assumes that the implementation class object instances are always created
+on the heap. So, Beautiful Capi generates a special *_copy* function and the wrapper class calls the copy function.
+~~~C
+void* namespace_prefix_class_name_copy(void* object_pointer)
+{
+    return new ImplementationClass(*static_cast<ImplementationClass*>(object_pointer));
+}
+~~~
+
+It works only if copy constructor for implementation class is available. If a class has copy semantic
+then Beautiful Capi assumes that a copy constructor for implementation class is available.
+Currently such supposition is hard-coped inside Beautiful Capi and can not be changed.
+
+The copy function is used both in the wrapper class copy constructor and the assignment operator.
+
+Copy semantic emulates objects by value, thus, the generated wrapper classes propose to use "." (the dot sign)
+for accessing the wrapped class methods.
 
 ### Reference counted semantic
 TODO:
