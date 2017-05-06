@@ -10,6 +10,8 @@ could be used by vs2003 compiler or by any other C++ or C compiler.
 Another main concept is to generate a beautiful C API,
 which is visibly suitable for human usage (not for computers or compilers).
 
+The Beautiful Capi Developer's Guide could be found in doc folder, [here](https://github.com/PetrPPetrov/beautiful-capi/blob/master/doc/DevelopersGuide.md#beautiful-capi-developers-guide).
+
 *Background, Motivation*
 
 In today's modern software development environment, there are may
@@ -23,7 +25,7 @@ Compiled libs could be linked by another compiler or language (unlike
 default C++ to C++ which requires the same compiler to be used on both
 sides).
 
-For example, a C++ vs2015 lib could be wrapped and called by vs2008 by
+For example, a C++ VS2015 lib could be wrapped and called by VS2008 by
 using C API (allowing both forward and backward compatibility).
 
 Furthermore, the generation tool is written in Python, so is easily ported without compilation.
