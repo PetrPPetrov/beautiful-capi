@@ -13,8 +13,10 @@ Beautiful-Capi Developer's Guide
     * [Copy semantic](#copy-semantic)
     * [Reference counted semantic](#reference-counted-semantic)
     * [Raw pointer semantic](#raw-pointer-semantic)
+    * [Common methods of the wrapper classes](#common-methods-of-the-wrapper-classes)
 3. [Command-line arguments](#command-line-arguments)
-4. [XML API description schema reference](#xml-api-description-schema-reference)
+4. [XML API description schema reference](#xml-api-description-schema)
+    * [Generation parameters XML schema reference](#generation-parameters-xml-schema)
 5. [Mixing semantics](#mixing-semantics)
 6. [Exceptions](#exceptions)
 7. [Callbacks](#callbacks)
@@ -410,11 +412,11 @@ example which demonstrates this lifecycle semantic.
 ### Raw pointer semantic
 
 Raw pointer semantic does not have any special requirements to the implementation classes.
-It emulates pointers (just raw pointers, not smart pointers). The generated wrap classes do nothing at their
+It emulates pointers (just raw pointers, not smart pointers). The generated wrapper classes do nothing at their
 destructors. So, you need manually destroy the created underlying implementation objects to avoid memory leaks.
 
-The generated wrap classes have a special method for that, which usually has *Delete()* name by default.
-You can customize this name.
+The generated wrapper classes have a special method for that, which usually has *Delete()* name by default.
+You can customize this name, see [generation parameters XML schema](#generation-parameters-xml-schema).
 The special *Delete()* method uses a special generated *_delete* C API function. The generated *_delete* C API function
 is he same as the generated *_delete* C API function for copy semantic.
 
@@ -445,18 +447,46 @@ int main()
 }
 ~~~
 
-If you need to create a wrap class object which does not reference any underlying implementation object then
+There is [raw_pointer_semantic](https://github.com/PetrPPetrov/beautiful-capi/tree/master/examples/raw_pointer_semantic)
+example which demonstrates this lifecycle semantic.
+
+### Common methods of the wrapper classes
+
+If you need to create a wrapper class object which does not reference any underlying implementation object then
 you can use *Null()* static method:
 ~~~C++
     HelloWorld::PrinterRawPtr null_pointer = HelloWorld::PrinterRawPtr::Null();
+~~~
+
+The same thing could be applied for all other semantics. This is because the underlying implementation objects are
+always created on the library heap, and the wrapper classes just hold pointers:
+~~~C++
+    // Copy semantic
+    HelloWorld::Printer null_printer = HelloWorld::Printer::Null();
+    
+    // Reference counted semantic
+    HelloWorld::PrinterPtr null_printer_ptr = HelloWorld::PrinterPtr::Null();
+~~~
+
+There is *IsNull()* method which returns _true_ if an internal pointer to the underlying implementation object is null.
+For convenience, there is an overloaded *operator!* in the wrapper classes, so, you can write the following code:
+~~~C++
+    HelloWorld::PrinterPtr printer_ptr = HelloWorld::PrinterPtr::Null();
+    if (!printer)
+    {
+        std::cout << "printer_ptr is NULL" << std::endl;
+    }
 ~~~
 
 Command-line arguments
 ----------------------
 TODO:
 
-XML API description schema reference
-------------------------------------
+XML API description schema
+--------------------------
+TODO:
+
+### Generation parameters XML schema
 TODO:
 
 Mixing semantics
