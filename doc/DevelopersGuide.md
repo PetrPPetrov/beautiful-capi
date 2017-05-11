@@ -292,7 +292,8 @@ You can specify lifecycle semantic for each wrapped class in the XML API descrip
 Copy semantics means that the implementation class object instance is always copied when
 the wrapper class object instance is copied. In other words, copy semantics emulates objects by value,
 however, as we noted above, Beautiful Capi assumes that the implementation class object instances are always created
-on the heap. So, Beautiful Capi generates a special *_copy* function and the wrapper class calls the copy function.
+on the heap. So, Beautiful Capi generates a special *_copy* C API function and
+the wrapper class calls the copy function.
 ~~~C
 void* namespace_prefix_class_name_copy(void* object_pointer)
 {
@@ -304,7 +305,7 @@ It works only if copy constructor for implementation class is available. If a cl
 then Beautiful Capi assumes that a copy constructor for implementation class is available.
 Currently such supposition is hard-coped inside Beautiful Capi and can not be changed.
 
-The copy function is used both in the wrapper class copy constructor and the assignment operator.
+The copy C API function is used both in the wrapper class copy constructor and the assignment operator.
 
 Copy semantic emulates objects by value, thus, the generated wrapper classes propose to use "." (the dot sign)
 for accessing the wrapped class methods:
@@ -331,7 +332,7 @@ int main()
 ~~~
 
 The generated wrapper classes deallocate the underlying implementation class object instances by using a special
-delete function. This function has *_delete* suffix and looks like this:
+generated *_delete* C API function. This function has *_delete* suffix and looks like this:
 ~~~C
 void namespace_prefix_class_name_delete(void* object_pointer)
 {
@@ -339,7 +340,7 @@ void namespace_prefix_class_name_delete(void* object_pointer)
 }
 ~~~
 
-Delete function is called at the wrapper class destructor, thus, there are not any memory leaks.
+Delete C API function is called at the wrapper class destructor, thus, there are not any memory leaks.
 There is [copy_semantic](https://github.com/PetrPPetrov/beautiful-capi/tree/master/examples/copy_semantic)
 example which demonstrates this lifecycle semantic.
 
@@ -357,7 +358,7 @@ void intrusive_ptr_add_ref(ImplementationClass* object);
 void intrusive_ptr_release(ImplementationClass* object);
 ~~~
 
-Beautiful Capi generates *_addref* and *_release* special functions which use the above declarations:
+Beautiful Capi generates *_addref* and *_release* special C API functions which use the above declarations:
 ~~~C
 void namespace_prefix_class_name_addref(void* object_pointer)
 {
@@ -369,8 +370,8 @@ void namespace_prefix_class_name_release(void* object_pointer)
 }
 ~~~
 
-The generated addref function is used both in the wrapper class copy constructor and the assignment operator.
-The wrapper class destructor calls the generated release function.
+The generated *_addref* C API function is used both in the wrapper class copy constructor and the assignment operator.
+The wrapper class destructor calls the generated *_release* C API function.
 
 Reference counted semantic does not require any copy constructors for the implementation classes.
 Thus, abstract C++ implementation classes could be used here.
@@ -407,7 +408,48 @@ There is [reference_counted](https://github.com/PetrPPetrov/beautiful-capi/tree/
 example which demonstrates this lifecycle semantic.
 
 ### Raw pointer semantic
-TODO:
+
+Raw pointer semantic does not have any special requirements to the implementation classes.
+It emulates pointers (just raw pointers, not smart pointers). The generated wrap classes do nothing at their
+destructors. So, you need manually destroy the created underlying implementation objects to avoid memory leaks.
+
+The generated wrap classes have a special method for that, which usually has *Delete()* name by default.
+You can customize this name.
+The special *Delete()* method uses a special generated *_delete* C API function. The generated *_delete* C API function
+is he same as the generated *_delete* C API function for copy semantic.
+
+Raw pointer semantic emulates non-owning pointers. So, you should use "->" (the arrow)
+for accessing the wrapped class methods, also the generated wrapper classes have *RawPtr* suffix by default:
+~~~C++
+int main()
+{
+    // Creates the underlying implementation class on the heap of the C++ library.
+    HelloWorld::PrinterRawPtr printer;
+    
+    // Both printer and printer2 reference to the same underlying implementation object.
+    HelloWorld::PrinterRawPtr printer2 = printer;
+    
+    // You should use "->" to access wrapped PrinterImpl methods
+    // However, "." sign is also could be used here, i.e.: printer.Show(); instruction will be compiled fine.
+    // But we recommend you to always use "->".
+    printer->Show();
+    
+    // You need to manually deallocate the previously allocated PrinterImpl object.
+    // Note that you need to deallocate it once by using either printer or printer2 object.
+    // Here we used printer2 for deallocation, we could use printer instead, but not both.
+    // This is because a double deallocation will happen in such a case.
+    // Please note that a heap manager of the C++ library will be used for deallocation.
+    printer2->Delete();
+    
+    return EXIT_SUCCESS;
+}
+~~~
+
+If you need to create a wrap class object which does not reference any underlying implementation object then
+you can use *Null()* static method:
+~~~C++
+    HelloWorld::PrinterRawPtr null_pointer = HelloWorld::PrinterRawPtr::Null();
+~~~
 
 Command-line arguments
 ----------------------
