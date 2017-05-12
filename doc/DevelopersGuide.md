@@ -16,14 +16,17 @@ Beautiful-Capi Developer's Guide
     * [Common methods of the wrapper classes](#common-methods-of-the-wrapper-classes)
 3. [Command-line arguments](#command-line-arguments)
 4. [XML API description schema reference](#xml-api-description-schema)
+    * [*TBeautifulCapiRoot*](#tbeautiful-capi-root)
+    * [*TNamespace*](#tnamespace)
     * [Generation parameters XML schema reference](#generation-parameters-xml-schema)
 5. [Mixing semantics](#mixing-semantics)
 6. [Exceptions](#exceptions)
 7. [Callbacks](#callbacks)
-8. [Templates](#templates)
-9. [Snippets](#snippets)
-10. [Inheritance modes](#inheritance-modes)
-11. [Making compiler-independent libraries](#making-compiler-independent-libraries)
+8. [Dynamic casts](#dynamic-casts)
+9. [Templates](#templates)
+10. [Snippets](#snippets)
+11. [Inheritance modes](#inheritance-modes)
+12. [Making compiler-independent libraries](#making-compiler-independent-libraries)
     * [Dynamic loader](#dynamic-loader)
     * [Windows](#windows)
     * [Linux](#linux)
@@ -484,7 +487,59 @@ TODO:
 
 XML API description schema
 --------------------------
-TODO:
+
+The wrapped C++ library API should be described in XML format
+by using [this schema](https://github.com/PetrPPetrov/beautiful-capi/blob/master/source/Capi.xsd).
+This schema uses *http://gkmsoft.ru/beautifulcapi* namespace.
+
+The root element is *api* which has [*TBeautifulCapiRoot*](#tbeautiful-capi-root) XSD type.
+
+### TBeautifulCapiRoot
+
+The purpose of *TBeautifulCapiRoot* node is to specify the project name, major, minor and patch versions.
+Also it specifies a several root namespaces.
+
+TBeautifulCapiRoot, list of attributes.
+| Attribute     | Type         | Description                         |
+|---------------|--------------|-------------------------------------|
+| project_name  | xs:string    | Specifies the project name          |
+| major_version | xs:integer   | Specifies the project major version |
+| minor_version | xs:integer   | Specifies the project minor version |
+| patch_version | xs:integer   | Specifies the project patch version |
+
+TBeautifulCapiRoot, list of elements.
+| Element       | Multiplicity | Type       | Description                  |
+|---------------|--------------|------------|------------------------------|
+| namespace     | 1..N         | [TNamespace](#tnamespace) | Specifies the root namespace |
+
+### TNamespace
+
+The purpose of *TNamespace* node is to describe namespace.
+
+TNamespace, list of attributes.
+| Attribute             | Type                | Description                             |
+|-----------------------|---------------------|-----------------------------------------|
+| name                  | xs:string           | Specifies the namespace name            |
+| implementation_header | xs:string           | Specifies an implementation header file |
+| overload_suffix_mode  | TOverloadSuffixMode | Specifies overload suffix mode          |
+
+TNamespace, list of elements.
+| Element             | Multiplicity | Type               | Description                                       |
+|---------------------|--------------|--------------------|---------------------------------------------------|
+| documentation       | 0..1         | TDocumentation     | Specifies the namespace doxygen documentation     |
+| external_namespace  | 0..N         | TExternalNamespace | Specifies an external namespace                   |
+| external_library    | 0..N         | TExternalLibrary   | Specifies an external library                     |
+| include             | 0..N         | TApiInclude        | Included another XML API description file         |
+| namespace           | 0..N         | TNamespace         | Specifies the nested namespace                    |
+| include_header      | 0..N         | THeaderInclude     | Specifies a header to include from wrapper side   |
+| enumeration         | 0..N         | TEnumeration       | Specifies an enumeration type                     |
+| class               | 0..N         | TClass             | Specifies a class                                 |
+| function            | 0..N         | TFunction          | Specifies a stand-alone function                  |
+| template            | 0..N         | TNamespace         | Specifies a new template                          |
+| property_set_prefix | 0..N         | TPropertySetPrefix | Specifies default value for property set prefix   |
+| property_get_prefix | 0..N         | TPropertyGetPrefix | Specifies default value for property get prefix   |
+| property_get_const  | 0..N         | TPropertyGetConst  | Specifies default value for property get cont     |
+| mapped_type         | 0..N         | TMappedType        | Specifies a new mapped type                       |
 
 ### Generation parameters XML schema
 TODO:
@@ -499,6 +554,10 @@ TODO:
 
 Callbacks
 ---------
+TODO:
+
+Dynamic casts
+-------------
 TODO:
 
 Templates
