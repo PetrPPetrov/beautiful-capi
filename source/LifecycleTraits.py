@@ -81,6 +81,10 @@ class LifecycleTraits(object):
             class_short_name=class_generator.wrap_short_name,
             class_name=class_generator.wrap_name))
 
+    @staticmethod
+    def lifecycle_impl_name(impl_name: str) -> str:
+        return impl_name
+
     def generate_move_constructor_declaration(self, out: FileGenerator, class_generator):
         if self.params.enable_cpp11_features_in_wrap_code:
             with IfDefScope(out, get_has_rvalue_references(class_generator), False):
