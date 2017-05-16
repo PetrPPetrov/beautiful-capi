@@ -2,244 +2,70 @@
 <callback:api xmlns:callback="http://gkmsoft.ru/beautifulcapi" project_name="Callback">
   <namespace name="Example">
     <enumeration name="EPrintingDevice" underlying_type="int">
-      <documentation>
-        <brief>Represents a printing device.</brief>
-      </documentation>
-      <item name="printer" value="1">
-        <documentation>
-          Specifies printer device.
-        </documentation>
-      </item>
-      <item name="plotter" value="2">
-        <documentation>
-          Specifies plotter device.
-        </documentation>
-      </item>
+      <item name="printer" value="1"/>
+      <item name="plotter" value="2"/>
     </enumeration>
     <class name="Printer" lifecycle="reference_counted" abstract="true" implementation_class_name="Example::IPrinter" implementation_class_header="IPrinter.h">
-      <documentation>
-        <brief>Represents an abstract printing device.</brief>
-      </documentation>
       <enumeration name="EQuality" underlying_type="int">
-        <documentation>
-          <brief>Represents a printing quality.</brief>
-        </documentation>
-        <item name="draft">
-          <documentation>
-            Specifies the draft quality.
-          </documentation>
-        </item>
-        <item name="normal">
-          <documentation>
-            Specifies the normal quality.
-          </documentation>
-        </item>
-        <item name="high">
-          <documentation>
-            Specifies the high quality.
-          </documentation>
-        </item>
+        <item name="draft"/>
+        <item name="normal"/>
+        <item name="high"/>
       </enumeration>
       <method name="Print" const="true">
-        <documentation>
-          <brief>Prints the specified text.</brief>
-          The passed argument could be null.
-          In a such case the printer implementation could throw an exception.
-        </documentation>
         <argument type="const char*" name="text"/>
       </method>
-      <property name="PrintingQuality" type="Example::Printer::EQuality">
-        <documentation>
-          <brief>{Setget} the printing quality.</brief>
-        </documentation>
-      </property>
-      <method name="GetDeviceType" return="Example::EPrintingDevice" const="true">
-        <documentation>
-          <brief>Gets the printing device type.</brief>
-          <returns>Printing device type.</returns>
-        </documentation>
-      </method>
+      <property name="PrintingQuality" type="Example::Printer::EQuality"/>
+      <method name="GetDeviceType" return="Example::EPrintingDevice" const="true"/>
       <callback lifecycle="raw_pointer_semantic" implementation_class_name="Example::PrinterBaseImpl" implementation_class_header="DefaultPrinterImpl.h"/>
     </class>
     <function name="CreateDefaultPrinter" return="Example::Printer" return_copy_or_add_ref="false" implementation_name="Example::CreateDefaultPrinterImpl" implementation_header="DefaultPrinterImpl.h">
-      <documentation>
-        <brief>Creates a default printing device.</brief>
-      </documentation>
-      <argument type="Example::EPrintingDevice" name="printing_device">
-        <documentation>
-          specifies the printing device type.
-        </documentation>
-      </argument>
+      <argument type="Example::EPrintingDevice" name="printing_device"/>
     </function>
     <class name="Person" lifecycle="copy_semantic" implementation_class_name="Example::PersonImpl" implementation_class_header="PersonImpl.h">
-      <documentation>
-        <brief>Represents a person.</brief>
-      </documentation>
       <enumeration name="ESex" underlying_type="char">
-        <documentation>
-          <brief>Represents the sex of a person.</brief>
-        </documentation>
-        <item name="male">
-          <documentation>
-            Specifies the male sex.
-          </documentation>
-        </item>
-        <item name="female">
-          <documentation>
-            Specifies the female sex.
-          </documentation>
-        </item>
+        <item name="male"/>
+        <item name="female"/>
       </enumeration>
-      <constructor name="Default">
-        <documentation>
-          <brief>Creates a default person.</brief>
-        </documentation>
-      </constructor>
+      <constructor name="Default"/>
       <method name="SetFirstName">
-        <documentation>
-          <brief>Sets the first name of the person.</brief>
-        </documentation>
-        <argument type="const char*" name="first_name">
-          <documentation>
-            specifies the first name.
-          </documentation>
-        </argument>
+        <argument type="const char*" name="first_name"/>
       </method>
-      <method name="GetFirstName" return="const char*" const="true">
-        <documentation>
-          <brief>Gets the first name of the person.</brief>
-          <returns>The first name of the person.</returns>
-        </documentation>
-      </method>
+      <method name="GetFirstName" return="const char*" const="true"/>
       <method name="SetSecondName">
-        <documentation>
-          <brief>Sets the second name of the person.</brief>
-        </documentation>
-        <argument type="const char*" name="second_name">
-          <documentation>
-            specifies the second name.
-          </documentation>
-        </argument>
+        <argument type="const char*" name="second_name"/>
       </method>
-      <method name="GetSecondName" return="const char*" const="true">
-        <documentation>
-          <brief>Gets the second name of the person.</brief>
-          <returns>The second name of the person.</returns>
-        </documentation>
-      </method>
+      <method name="GetSecondName" return="const char*" const="true"/>
       <method name="SetAge">
-        <documentation>
-          <brief>Sets age of the person.</brief>
-        </documentation>
-        <argument type="unsigned int" name="age">
-          <documentation>
-            specifies age.
-          </documentation>
-        </argument>
+        <argument type="unsigned int" name="age"/>
       </method>
-      <method name="GetAge" return="unsigned int" const="true">
-        <documentation>
-          <brief>Gets age of the person.</brief>
-          <returns>Age of the person.</returns>
-        </documentation>
-      </method>
+      <method name="GetAge" return="unsigned int" const="true"/>
       <method name="SetSex">
-        <documentation>
-          <brief>Sets sex of the person.</brief>
-        </documentation>
-        <argument type="Example::Person::ESex" name="sex">
-          <documentation>
-            specifies sex.
-          </documentation>
-        </argument>
+        <argument type="Example::Person::ESex" name="sex"/>
       </method>
-      <method name="GetSex" return="Example::Person::ESex" const="true">
-        <documentation>
-          <brief>Gets sex of the person.</brief>
-          <returns>Sex of the person.</returns>
-        </documentation>
-      </method>
+      <method name="GetSex" return="Example::Person::ESex" const="true"/>
       <method name="Dump" const="true">
-        <documentation>
-          <brief>Dumps the person data to a printing device.</brief>
-        </documentation>
-        <argument type="Example::Printer" name="printer">
-          <documentation>
-            specifies a printing device for dumping.
-          </documentation>
-        </argument>
+        <argument type="Example::Printer" name="printer"/>
       </method>
       <method name="Print" const="true">
-        <documentation>
-          <brief>Prints the specified text of the specified printing device.</brief>
-        </documentation>
-        <argument type="Example::Printer" name="printer">
-          <documentation>
-            specifies a printing device.
-          </documentation>
-        </argument>
-        <argument type="const char*" name="text">
-          <documentation>
-            specifies text to print.
-          </documentation>
-        </argument>
+        <argument type="Example::Printer" name="printer"/>
+        <argument type="const char*" name="text"/>
       </method>
     </class>
   </namespace>
   <namespace name="Exception">
     <class name="Generic" exception="true" lifecycle="copy_semantic" implementation_class_name="Exception::GenericImpl" implementation_class_header="Exception/GenericImpl.h">
-      <documentation>
-        <brief>Represents a generic exception.</brief>
-        Note that this exception object could be thrown at <reference>Example::Person</reference>
-        and <reference>Example::Printer</reference> class implementations.
-      </documentation>
-      <constructor name="New">
-        <documentation>
-          <brief>Creates a default exception instance.</brief>
-        </documentation>
-      </constructor>
-      <method name="GetErrorText" return="const char*" noexcept="true" const="true">
-        <documentation>
-          <brief>Gets the error text.</brief>
-          <returns>The error text.</returns>
-        </documentation>
-      </method>
+      <constructor name="New"/>
+      <method name="GetErrorText" return="const char*" noexcept="true" const="true"/>
     </class>
     <class name="BadArgument" base="Exception::Generic" exception="true" lifecycle="copy_semantic" implementation_class_name="Exception::BadArgumentImpl" implementation_class_header="Exception/BadArgumentImpl.h">
-      <documentation>
-        <brief>Represents the derived exception to indicate that an argument in invalid.</brief>
-      </documentation>
-      <constructor name="New">
-        <documentation>
-          <brief>Creates a default exception instance.</brief>
-        </documentation>
-      </constructor>
-      <method name="GetArgumentName" return="const char*" noexcept="true" const="true">
-        <documentation>
-          <brief>Gets the invalid argument name.</brief>
-          <returns>The invalid argument name.</returns>
-        </documentation>
-      </method>
+      <constructor name="New"/>
+      <method name="GetArgumentName" return="const char*" noexcept="true" const="true"/>
     </class>
     <class name="NullArgument" base="Exception::BadArgument" exception="true" lifecycle="copy_semantic" implementation_class_name="Exception::NullArgumentImpl" implementation_class_header="Exception/NullArgumentImpl.h">
-      <documentation>
-        <brief>Represents the derived exception to indicate null argument.</brief>
-      </documentation>
-      <constructor name="New">
-        <documentation>
-          <brief>Creates a default exception instance.</brief>
-        </documentation>
-      </constructor>
+      <constructor name="New"/>
     </class>
     <class name="DivisionByZero" base="Exception::Generic" exception="true" lifecycle="copy_semantic" implementation_class_name="Exception::DivisionByZeroImpl" implementation_class_header="Exception/DivisionByZeroImpl.h">
-      <documentation>
-        <brief>Represents the derived exception to indicate division by zero.</brief>
-      </documentation>
-      <constructor name="New">
-        <documentation>
-          <brief>Creates a default exception instance.</brief>
-        </documentation>
-      </constructor>
+      <constructor name="New"/>
     </class>
   </namespace>
 </callback:api>
