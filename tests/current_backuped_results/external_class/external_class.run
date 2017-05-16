@@ -1,0 +1,11 @@
+./external_class_client
+___std::cout___
+3 str 7.2
+3 str 7.2
+3 str 7.2
+Change values to '8', 'another string' and '3.14':
+3 another string 3.14
+3 another string 3.14
+3 another string 3.14
+___std::cerr___
+___eof___

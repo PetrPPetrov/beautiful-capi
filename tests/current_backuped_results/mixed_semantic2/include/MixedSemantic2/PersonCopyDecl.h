@@ -38,10 +38,10 @@ class PersonCopy
 {
 public:
     inline PersonCopy();
-    inline MixedSemantic2::NameRawPtr GetName();
-    inline void SetName(const MixedSemantic2::Name& name);
     inline MixedSemantic2::AddressPtr GetAddress() const;
     inline void SetAddress(const MixedSemantic2::AddressPtr& address);
+    inline MixedSemantic2::NameRawPtr GetName();
+    inline void SetName(const MixedSemantic2::Name& name);
     inline unsigned int GetDay() const;
     inline void SetDay(unsigned int day);
     inline unsigned int GetMonth() const;

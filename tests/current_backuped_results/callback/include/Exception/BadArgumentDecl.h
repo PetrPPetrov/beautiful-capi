@@ -35,20 +35,10 @@
 
 namespace Exception {
 
-/**
- * @brief Represents the derived exception to indicate that an argument in invalid.
- */
 class BadArgument : public Exception::Generic
 {
 public:
-    /**
-     * @brief Creates a default exception instance.
-     */
     inline BadArgument();
-    /**
-     * @brief Gets the invalid argument name.
-     * @returns The invalid argument name.
-     */
     inline const char* GetArgumentName() const;
 
     inline BadArgument(const BadArgument& other);

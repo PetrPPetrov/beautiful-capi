@@ -35,15 +35,9 @@
 
 namespace Exception {
 
-/**
- * @brief Represents the derived exception to indicate null argument.
- */
 class NullArgument : public Exception::BadArgument
 {
 public:
-    /**
-     * @brief Creates a default exception instance.
-     */
     inline NullArgument();
 
     inline NullArgument(const NullArgument& other);

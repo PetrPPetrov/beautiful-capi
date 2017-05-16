@@ -190,18 +190,6 @@ MIXEDSEMANTIC2_API void* MIXEDSEMANTIC2_API_CONVENTION mixed_semantic2_person_de
     return new MixedSemantic2::PersonImpl();
 }
 
-MIXEDSEMANTIC2_API void* MIXEDSEMANTIC2_API_CONVENTION mixed_semantic2_person_get_name(void* object_pointer)
-{
-    MixedSemantic2::PersonImpl* self = static_cast<MixedSemantic2::PersonImpl*>(object_pointer);
-    return &self->GetName();
-}
-
-MIXEDSEMANTIC2_API void MIXEDSEMANTIC2_API_CONVENTION mixed_semantic2_person_set_name(void* object_pointer, void* name)
-{
-    MixedSemantic2::PersonImpl* self = static_cast<MixedSemantic2::PersonImpl*>(object_pointer);
-    self->SetName(*static_cast<MixedSemantic2::NameImpl*>(name));
-}
-
 MIXEDSEMANTIC2_API void* MIXEDSEMANTIC2_API_CONVENTION mixed_semantic2_person_get_address_const(void* object_pointer)
 {
     const MixedSemantic2::PersonImpl* self = static_cast<MixedSemantic2::PersonImpl*>(object_pointer);
@@ -212,6 +200,18 @@ MIXEDSEMANTIC2_API void MIXEDSEMANTIC2_API_CONVENTION mixed_semantic2_person_set
 {
     MixedSemantic2::PersonImpl* self = static_cast<MixedSemantic2::PersonImpl*>(object_pointer);
     self->SetAddress(static_cast<MixedSemantic2::AddressImpl*>(address));
+}
+
+MIXEDSEMANTIC2_API void* MIXEDSEMANTIC2_API_CONVENTION mixed_semantic2_person_get_name(void* object_pointer)
+{
+    MixedSemantic2::PersonImpl* self = static_cast<MixedSemantic2::PersonImpl*>(object_pointer);
+    return &(self->GetName());
+}
+
+MIXEDSEMANTIC2_API void MIXEDSEMANTIC2_API_CONVENTION mixed_semantic2_person_set_name(void* object_pointer, void* name)
+{
+    MixedSemantic2::PersonImpl* self = static_cast<MixedSemantic2::PersonImpl*>(object_pointer);
+    self->SetName(*static_cast<MixedSemantic2::NameImpl*>(name));
 }
 
 MIXEDSEMANTIC2_API unsigned int MIXEDSEMANTIC2_API_CONVENTION mixed_semantic2_person_get_day_const(void* object_pointer)
@@ -460,18 +460,6 @@ MIXEDSEMANTIC2_API void* MIXEDSEMANTIC2_API_CONVENTION mixed_semantic2_person_co
     return new MixedSemantic2::PersonImpl();
 }
 
-MIXEDSEMANTIC2_API void* MIXEDSEMANTIC2_API_CONVENTION mixed_semantic2_person_copy_get_name(void* object_pointer)
-{
-    MixedSemantic2::PersonImpl* self = static_cast<MixedSemantic2::PersonImpl*>(object_pointer);
-    return &self->GetName();
-}
-
-MIXEDSEMANTIC2_API void MIXEDSEMANTIC2_API_CONVENTION mixed_semantic2_person_copy_set_name(void* object_pointer, void* name)
-{
-    MixedSemantic2::PersonImpl* self = static_cast<MixedSemantic2::PersonImpl*>(object_pointer);
-    self->SetName(*static_cast<MixedSemantic2::NameImpl*>(name));
-}
-
 MIXEDSEMANTIC2_API void* MIXEDSEMANTIC2_API_CONVENTION mixed_semantic2_person_copy_get_address_const(void* object_pointer)
 {
     const MixedSemantic2::PersonImpl* self = static_cast<MixedSemantic2::PersonImpl*>(object_pointer);
@@ -482,6 +470,18 @@ MIXEDSEMANTIC2_API void MIXEDSEMANTIC2_API_CONVENTION mixed_semantic2_person_cop
 {
     MixedSemantic2::PersonImpl* self = static_cast<MixedSemantic2::PersonImpl*>(object_pointer);
     self->SetAddress(static_cast<MixedSemantic2::AddressImpl*>(address));
+}
+
+MIXEDSEMANTIC2_API void* MIXEDSEMANTIC2_API_CONVENTION mixed_semantic2_person_copy_get_name(void* object_pointer)
+{
+    MixedSemantic2::PersonImpl* self = static_cast<MixedSemantic2::PersonImpl*>(object_pointer);
+    return &(self->GetName());
+}
+
+MIXEDSEMANTIC2_API void MIXEDSEMANTIC2_API_CONVENTION mixed_semantic2_person_copy_set_name(void* object_pointer, void* name)
+{
+    MixedSemantic2::PersonImpl* self = static_cast<MixedSemantic2::PersonImpl*>(object_pointer);
+    self->SetName(*static_cast<MixedSemantic2::NameImpl*>(name));
 }
 
 MIXEDSEMANTIC2_API unsigned int MIXEDSEMANTIC2_API_CONVENTION mixed_semantic2_person_copy_get_day_const(void* object_pointer)

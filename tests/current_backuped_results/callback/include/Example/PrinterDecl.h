@@ -36,40 +36,19 @@
 
 namespace Example {
 
-/**
- * @brief Represents an abstract printing device.
- */
 class PrinterPtr
 {
 public:
-    /**
-     * @brief Represents a printing quality.
-     */
     enum EQuality
     {
-        draft, /**< Specifies the draft quality. */
-        normal, /**< Specifies the normal quality. */
-        high /**< Specifies the high quality. */
+        draft,
+        normal,
+        high
     };
 
-    /**
-     * @brief Prints the specified text.
-     * The passed argument could be null.
-     * In a such case the printer implementation could throw an exception.
-     */
     inline void Print(const char* text) const;
-    /**
-     * @brief Gets the printing device type.
-     * @returns Printing device type.
-     */
     inline Example::EPrintingDevice GetDeviceType() const;
-    /**
-     * @brief Gets the printing quality.
-     */
     inline Example::PrinterPtr::EQuality GetPrintingQuality() const;
-    /**
-     * @brief Sets the printing quality.
-     */
     inline void SetPrintingQuality(Example::PrinterPtr::EQuality printing_quality);
 
     inline PrinterPtr(const PrinterPtr& other);

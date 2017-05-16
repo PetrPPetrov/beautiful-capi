@@ -119,10 +119,10 @@
     MIXEDSEMANTIC2_API void MIXEDSEMANTIC2_API_CONVENTION mixed_semantic2_address_add_ref(void* object_pointer);
     MIXEDSEMANTIC2_API void MIXEDSEMANTIC2_API_CONVENTION mixed_semantic2_address_release(void* object_pointer);
     MIXEDSEMANTIC2_API void* MIXEDSEMANTIC2_API_CONVENTION mixed_semantic2_person_default();
-    MIXEDSEMANTIC2_API void* MIXEDSEMANTIC2_API_CONVENTION mixed_semantic2_person_get_name(void* object_pointer);
-    MIXEDSEMANTIC2_API void MIXEDSEMANTIC2_API_CONVENTION mixed_semantic2_person_set_name(void* object_pointer, void* name);
     MIXEDSEMANTIC2_API void* MIXEDSEMANTIC2_API_CONVENTION mixed_semantic2_person_get_address_const(void* object_pointer);
     MIXEDSEMANTIC2_API void MIXEDSEMANTIC2_API_CONVENTION mixed_semantic2_person_set_address(void* object_pointer, void* address);
+    MIXEDSEMANTIC2_API void* MIXEDSEMANTIC2_API_CONVENTION mixed_semantic2_person_get_name(void* object_pointer);
+    MIXEDSEMANTIC2_API void MIXEDSEMANTIC2_API_CONVENTION mixed_semantic2_person_set_name(void* object_pointer, void* name);
     MIXEDSEMANTIC2_API unsigned int MIXEDSEMANTIC2_API_CONVENTION mixed_semantic2_person_get_day_const(void* object_pointer);
     MIXEDSEMANTIC2_API void MIXEDSEMANTIC2_API_CONVENTION mixed_semantic2_person_set_day(void* object_pointer, unsigned int day);
     MIXEDSEMANTIC2_API unsigned int MIXEDSEMANTIC2_API_CONVENTION mixed_semantic2_person_get_month_const(void* object_pointer);
@@ -166,10 +166,10 @@
     MIXEDSEMANTIC2_API void* MIXEDSEMANTIC2_API_CONVENTION mixed_semantic2_address_copy_copy(void* object_pointer);
     MIXEDSEMANTIC2_API void MIXEDSEMANTIC2_API_CONVENTION mixed_semantic2_address_copy_delete(void* object_pointer);
     MIXEDSEMANTIC2_API void* MIXEDSEMANTIC2_API_CONVENTION mixed_semantic2_person_copy_default();
-    MIXEDSEMANTIC2_API void* MIXEDSEMANTIC2_API_CONVENTION mixed_semantic2_person_copy_get_name(void* object_pointer);
-    MIXEDSEMANTIC2_API void MIXEDSEMANTIC2_API_CONVENTION mixed_semantic2_person_copy_set_name(void* object_pointer, void* name);
     MIXEDSEMANTIC2_API void* MIXEDSEMANTIC2_API_CONVENTION mixed_semantic2_person_copy_get_address_const(void* object_pointer);
     MIXEDSEMANTIC2_API void MIXEDSEMANTIC2_API_CONVENTION mixed_semantic2_person_copy_set_address(void* object_pointer, void* address);
+    MIXEDSEMANTIC2_API void* MIXEDSEMANTIC2_API_CONVENTION mixed_semantic2_person_copy_get_name(void* object_pointer);
+    MIXEDSEMANTIC2_API void MIXEDSEMANTIC2_API_CONVENTION mixed_semantic2_person_copy_set_name(void* object_pointer, void* name);
     MIXEDSEMANTIC2_API unsigned int MIXEDSEMANTIC2_API_CONVENTION mixed_semantic2_person_copy_get_day_const(void* object_pointer);
     MIXEDSEMANTIC2_API void MIXEDSEMANTIC2_API_CONVENTION mixed_semantic2_person_copy_set_day(void* object_pointer, unsigned int day);
     MIXEDSEMANTIC2_API unsigned int MIXEDSEMANTIC2_API_CONVENTION mixed_semantic2_person_copy_get_month_const(void* object_pointer);
@@ -230,10 +230,10 @@
     typedef void (MIXEDSEMANTIC2_API_CONVENTION *mixed_semantic2_address_add_ref_function_type)(void* object_pointer);
     typedef void (MIXEDSEMANTIC2_API_CONVENTION *mixed_semantic2_address_release_function_type)(void* object_pointer);
     typedef void* (MIXEDSEMANTIC2_API_CONVENTION *mixed_semantic2_person_default_function_type)();
-    typedef void* (MIXEDSEMANTIC2_API_CONVENTION *mixed_semantic2_person_get_name_function_type)(void* object_pointer);
-    typedef void (MIXEDSEMANTIC2_API_CONVENTION *mixed_semantic2_person_set_name_function_type)(void* object_pointer, void* name);
     typedef void* (MIXEDSEMANTIC2_API_CONVENTION *mixed_semantic2_person_get_address_const_function_type)(void* object_pointer);
     typedef void (MIXEDSEMANTIC2_API_CONVENTION *mixed_semantic2_person_set_address_function_type)(void* object_pointer, void* address);
+    typedef void* (MIXEDSEMANTIC2_API_CONVENTION *mixed_semantic2_person_get_name_function_type)(void* object_pointer);
+    typedef void (MIXEDSEMANTIC2_API_CONVENTION *mixed_semantic2_person_set_name_function_type)(void* object_pointer, void* name);
     typedef unsigned int (MIXEDSEMANTIC2_API_CONVENTION *mixed_semantic2_person_get_day_const_function_type)(void* object_pointer);
     typedef void (MIXEDSEMANTIC2_API_CONVENTION *mixed_semantic2_person_set_day_function_type)(void* object_pointer, unsigned int day);
     typedef unsigned int (MIXEDSEMANTIC2_API_CONVENTION *mixed_semantic2_person_get_month_const_function_type)(void* object_pointer);
@@ -277,10 +277,10 @@
     typedef void* (MIXEDSEMANTIC2_API_CONVENTION *mixed_semantic2_address_copy_copy_function_type)(void* object_pointer);
     typedef void (MIXEDSEMANTIC2_API_CONVENTION *mixed_semantic2_address_copy_delete_function_type)(void* object_pointer);
     typedef void* (MIXEDSEMANTIC2_API_CONVENTION *mixed_semantic2_person_copy_default_function_type)();
-    typedef void* (MIXEDSEMANTIC2_API_CONVENTION *mixed_semantic2_person_copy_get_name_function_type)(void* object_pointer);
-    typedef void (MIXEDSEMANTIC2_API_CONVENTION *mixed_semantic2_person_copy_set_name_function_type)(void* object_pointer, void* name);
     typedef void* (MIXEDSEMANTIC2_API_CONVENTION *mixed_semantic2_person_copy_get_address_const_function_type)(void* object_pointer);
     typedef void (MIXEDSEMANTIC2_API_CONVENTION *mixed_semantic2_person_copy_set_address_function_type)(void* object_pointer, void* address);
+    typedef void* (MIXEDSEMANTIC2_API_CONVENTION *mixed_semantic2_person_copy_get_name_function_type)(void* object_pointer);
+    typedef void (MIXEDSEMANTIC2_API_CONVENTION *mixed_semantic2_person_copy_set_name_function_type)(void* object_pointer, void* name);
     typedef unsigned int (MIXEDSEMANTIC2_API_CONVENTION *mixed_semantic2_person_copy_get_day_const_function_type)(void* object_pointer);
     typedef void (MIXEDSEMANTIC2_API_CONVENTION *mixed_semantic2_person_copy_set_day_function_type)(void* object_pointer, unsigned int day);
     typedef unsigned int (MIXEDSEMANTIC2_API_CONVENTION *mixed_semantic2_person_copy_get_month_const_function_type)(void* object_pointer);
@@ -392,16 +392,6 @@
         #else
             mixed_semantic2_person_default_function_type mixed_semantic2_person_default = 0;
         #endif
-        #ifdef mixed_semantic2_person_get_name_define_function_pointer_var
-            mixed_semantic2_person_get_name_define_function_pointer_var
-        #else
-            mixed_semantic2_person_get_name_function_type mixed_semantic2_person_get_name = 0;
-        #endif
-        #ifdef mixed_semantic2_person_set_name_define_function_pointer_var
-            mixed_semantic2_person_set_name_define_function_pointer_var
-        #else
-            mixed_semantic2_person_set_name_function_type mixed_semantic2_person_set_name = 0;
-        #endif
         #ifdef mixed_semantic2_person_get_address_const_define_function_pointer_var
             mixed_semantic2_person_get_address_const_define_function_pointer_var
         #else
@@ -411,6 +401,16 @@
             mixed_semantic2_person_set_address_define_function_pointer_var
         #else
             mixed_semantic2_person_set_address_function_type mixed_semantic2_person_set_address = 0;
+        #endif
+        #ifdef mixed_semantic2_person_get_name_define_function_pointer_var
+            mixed_semantic2_person_get_name_define_function_pointer_var
+        #else
+            mixed_semantic2_person_get_name_function_type mixed_semantic2_person_get_name = 0;
+        #endif
+        #ifdef mixed_semantic2_person_set_name_define_function_pointer_var
+            mixed_semantic2_person_set_name_define_function_pointer_var
+        #else
+            mixed_semantic2_person_set_name_function_type mixed_semantic2_person_set_name = 0;
         #endif
         #ifdef mixed_semantic2_person_get_day_const_define_function_pointer_var
             mixed_semantic2_person_get_day_const_define_function_pointer_var
@@ -627,16 +627,6 @@
         #else
             mixed_semantic2_person_copy_default_function_type mixed_semantic2_person_copy_default = 0;
         #endif
-        #ifdef mixed_semantic2_person_copy_get_name_define_function_pointer_var
-            mixed_semantic2_person_copy_get_name_define_function_pointer_var
-        #else
-            mixed_semantic2_person_copy_get_name_function_type mixed_semantic2_person_copy_get_name = 0;
-        #endif
-        #ifdef mixed_semantic2_person_copy_set_name_define_function_pointer_var
-            mixed_semantic2_person_copy_set_name_define_function_pointer_var
-        #else
-            mixed_semantic2_person_copy_set_name_function_type mixed_semantic2_person_copy_set_name = 0;
-        #endif
         #ifdef mixed_semantic2_person_copy_get_address_const_define_function_pointer_var
             mixed_semantic2_person_copy_get_address_const_define_function_pointer_var
         #else
@@ -646,6 +636,16 @@
             mixed_semantic2_person_copy_set_address_define_function_pointer_var
         #else
             mixed_semantic2_person_copy_set_address_function_type mixed_semantic2_person_copy_set_address = 0;
+        #endif
+        #ifdef mixed_semantic2_person_copy_get_name_define_function_pointer_var
+            mixed_semantic2_person_copy_get_name_define_function_pointer_var
+        #else
+            mixed_semantic2_person_copy_get_name_function_type mixed_semantic2_person_copy_get_name = 0;
+        #endif
+        #ifdef mixed_semantic2_person_copy_set_name_define_function_pointer_var
+            mixed_semantic2_person_copy_set_name_define_function_pointer_var
+        #else
+            mixed_semantic2_person_copy_set_name_function_type mixed_semantic2_person_copy_set_name = 0;
         #endif
         #ifdef mixed_semantic2_person_copy_get_day_const_define_function_pointer_var
             mixed_semantic2_person_copy_get_day_const_define_function_pointer_var
@@ -710,10 +710,10 @@
         extern mixed_semantic2_address_add_ref_function_type mixed_semantic2_address_add_ref;
         extern mixed_semantic2_address_release_function_type mixed_semantic2_address_release;
         extern mixed_semantic2_person_default_function_type mixed_semantic2_person_default;
-        extern mixed_semantic2_person_get_name_function_type mixed_semantic2_person_get_name;
-        extern mixed_semantic2_person_set_name_function_type mixed_semantic2_person_set_name;
         extern mixed_semantic2_person_get_address_const_function_type mixed_semantic2_person_get_address_const;
         extern mixed_semantic2_person_set_address_function_type mixed_semantic2_person_set_address;
+        extern mixed_semantic2_person_get_name_function_type mixed_semantic2_person_get_name;
+        extern mixed_semantic2_person_set_name_function_type mixed_semantic2_person_set_name;
         extern mixed_semantic2_person_get_day_const_function_type mixed_semantic2_person_get_day_const;
         extern mixed_semantic2_person_set_day_function_type mixed_semantic2_person_set_day;
         extern mixed_semantic2_person_get_month_const_function_type mixed_semantic2_person_get_month_const;
@@ -757,10 +757,10 @@
         extern mixed_semantic2_address_copy_copy_function_type mixed_semantic2_address_copy_copy;
         extern mixed_semantic2_address_copy_delete_function_type mixed_semantic2_address_copy_delete;
         extern mixed_semantic2_person_copy_default_function_type mixed_semantic2_person_copy_default;
-        extern mixed_semantic2_person_copy_get_name_function_type mixed_semantic2_person_copy_get_name;
-        extern mixed_semantic2_person_copy_set_name_function_type mixed_semantic2_person_copy_set_name;
         extern mixed_semantic2_person_copy_get_address_const_function_type mixed_semantic2_person_copy_get_address_const;
         extern mixed_semantic2_person_copy_set_address_function_type mixed_semantic2_person_copy_set_address;
+        extern mixed_semantic2_person_copy_get_name_function_type mixed_semantic2_person_copy_get_name;
+        extern mixed_semantic2_person_copy_set_name_function_type mixed_semantic2_person_copy_set_name;
         extern mixed_semantic2_person_copy_get_day_const_function_type mixed_semantic2_person_copy_get_day_const;
         extern mixed_semantic2_person_copy_set_day_function_type mixed_semantic2_person_copy_set_day;
         extern mixed_semantic2_person_copy_get_month_const_function_type mixed_semantic2_person_copy_get_month_const;
@@ -923,16 +923,6 @@
                 #else /* mixed_semantic2_person_default_load_function_call */
                     load_function<mixed_semantic2_person_default_function_type>(mixed_semantic2_person_default, "mixed_semantic2_person_default");
                 #endif /* mixed_semantic2_person_default_load_function_call */
-                #ifdef mixed_semantic2_person_get_name_load_function_call
-                    mixed_semantic2_person_get_name_load_function_call
-                #else /* mixed_semantic2_person_get_name_load_function_call */
-                    load_function<mixed_semantic2_person_get_name_function_type>(mixed_semantic2_person_get_name, "mixed_semantic2_person_get_name");
-                #endif /* mixed_semantic2_person_get_name_load_function_call */
-                #ifdef mixed_semantic2_person_set_name_load_function_call
-                    mixed_semantic2_person_set_name_load_function_call
-                #else /* mixed_semantic2_person_set_name_load_function_call */
-                    load_function<mixed_semantic2_person_set_name_function_type>(mixed_semantic2_person_set_name, "mixed_semantic2_person_set_name");
-                #endif /* mixed_semantic2_person_set_name_load_function_call */
                 #ifdef mixed_semantic2_person_get_address_const_load_function_call
                     mixed_semantic2_person_get_address_const_load_function_call
                 #else /* mixed_semantic2_person_get_address_const_load_function_call */
@@ -943,6 +933,16 @@
                 #else /* mixed_semantic2_person_set_address_load_function_call */
                     load_function<mixed_semantic2_person_set_address_function_type>(mixed_semantic2_person_set_address, "mixed_semantic2_person_set_address");
                 #endif /* mixed_semantic2_person_set_address_load_function_call */
+                #ifdef mixed_semantic2_person_get_name_load_function_call
+                    mixed_semantic2_person_get_name_load_function_call
+                #else /* mixed_semantic2_person_get_name_load_function_call */
+                    load_function<mixed_semantic2_person_get_name_function_type>(mixed_semantic2_person_get_name, "mixed_semantic2_person_get_name");
+                #endif /* mixed_semantic2_person_get_name_load_function_call */
+                #ifdef mixed_semantic2_person_set_name_load_function_call
+                    mixed_semantic2_person_set_name_load_function_call
+                #else /* mixed_semantic2_person_set_name_load_function_call */
+                    load_function<mixed_semantic2_person_set_name_function_type>(mixed_semantic2_person_set_name, "mixed_semantic2_person_set_name");
+                #endif /* mixed_semantic2_person_set_name_load_function_call */
                 #ifdef mixed_semantic2_person_get_day_const_load_function_call
                     mixed_semantic2_person_get_day_const_load_function_call
                 #else /* mixed_semantic2_person_get_day_const_load_function_call */
@@ -1158,16 +1158,6 @@
                 #else /* mixed_semantic2_person_copy_default_load_function_call */
                     load_function<mixed_semantic2_person_copy_default_function_type>(mixed_semantic2_person_copy_default, "mixed_semantic2_person_copy_default");
                 #endif /* mixed_semantic2_person_copy_default_load_function_call */
-                #ifdef mixed_semantic2_person_copy_get_name_load_function_call
-                    mixed_semantic2_person_copy_get_name_load_function_call
-                #else /* mixed_semantic2_person_copy_get_name_load_function_call */
-                    load_function<mixed_semantic2_person_copy_get_name_function_type>(mixed_semantic2_person_copy_get_name, "mixed_semantic2_person_copy_get_name");
-                #endif /* mixed_semantic2_person_copy_get_name_load_function_call */
-                #ifdef mixed_semantic2_person_copy_set_name_load_function_call
-                    mixed_semantic2_person_copy_set_name_load_function_call
-                #else /* mixed_semantic2_person_copy_set_name_load_function_call */
-                    load_function<mixed_semantic2_person_copy_set_name_function_type>(mixed_semantic2_person_copy_set_name, "mixed_semantic2_person_copy_set_name");
-                #endif /* mixed_semantic2_person_copy_set_name_load_function_call */
                 #ifdef mixed_semantic2_person_copy_get_address_const_load_function_call
                     mixed_semantic2_person_copy_get_address_const_load_function_call
                 #else /* mixed_semantic2_person_copy_get_address_const_load_function_call */
@@ -1178,6 +1168,16 @@
                 #else /* mixed_semantic2_person_copy_set_address_load_function_call */
                     load_function<mixed_semantic2_person_copy_set_address_function_type>(mixed_semantic2_person_copy_set_address, "mixed_semantic2_person_copy_set_address");
                 #endif /* mixed_semantic2_person_copy_set_address_load_function_call */
+                #ifdef mixed_semantic2_person_copy_get_name_load_function_call
+                    mixed_semantic2_person_copy_get_name_load_function_call
+                #else /* mixed_semantic2_person_copy_get_name_load_function_call */
+                    load_function<mixed_semantic2_person_copy_get_name_function_type>(mixed_semantic2_person_copy_get_name, "mixed_semantic2_person_copy_get_name");
+                #endif /* mixed_semantic2_person_copy_get_name_load_function_call */
+                #ifdef mixed_semantic2_person_copy_set_name_load_function_call
+                    mixed_semantic2_person_copy_set_name_load_function_call
+                #else /* mixed_semantic2_person_copy_set_name_load_function_call */
+                    load_function<mixed_semantic2_person_copy_set_name_function_type>(mixed_semantic2_person_copy_set_name, "mixed_semantic2_person_copy_set_name");
+                #endif /* mixed_semantic2_person_copy_set_name_load_function_call */
                 #ifdef mixed_semantic2_person_copy_get_day_const_load_function_call
                     mixed_semantic2_person_copy_get_day_const_load_function_call
                 #else /* mixed_semantic2_person_copy_get_day_const_load_function_call */
@@ -1348,16 +1348,6 @@
                 #else /* mixed_semantic2_person_default_zero_function_pointer */
                     mixed_semantic2_person_default = 0;
                 #endif /* mixed_semantic2_person_default_zero_function_pointer */
-                #ifdef mixed_semantic2_person_get_name_zero_function_pointer
-                    mixed_semantic2_person_get_name_zero_function_pointer
-                #else /* mixed_semantic2_person_get_name_zero_function_pointer */
-                    mixed_semantic2_person_get_name = 0;
-                #endif /* mixed_semantic2_person_get_name_zero_function_pointer */
-                #ifdef mixed_semantic2_person_set_name_zero_function_pointer
-                    mixed_semantic2_person_set_name_zero_function_pointer
-                #else /* mixed_semantic2_person_set_name_zero_function_pointer */
-                    mixed_semantic2_person_set_name = 0;
-                #endif /* mixed_semantic2_person_set_name_zero_function_pointer */
                 #ifdef mixed_semantic2_person_get_address_const_zero_function_pointer
                     mixed_semantic2_person_get_address_const_zero_function_pointer
                 #else /* mixed_semantic2_person_get_address_const_zero_function_pointer */
@@ -1368,6 +1358,16 @@
                 #else /* mixed_semantic2_person_set_address_zero_function_pointer */
                     mixed_semantic2_person_set_address = 0;
                 #endif /* mixed_semantic2_person_set_address_zero_function_pointer */
+                #ifdef mixed_semantic2_person_get_name_zero_function_pointer
+                    mixed_semantic2_person_get_name_zero_function_pointer
+                #else /* mixed_semantic2_person_get_name_zero_function_pointer */
+                    mixed_semantic2_person_get_name = 0;
+                #endif /* mixed_semantic2_person_get_name_zero_function_pointer */
+                #ifdef mixed_semantic2_person_set_name_zero_function_pointer
+                    mixed_semantic2_person_set_name_zero_function_pointer
+                #else /* mixed_semantic2_person_set_name_zero_function_pointer */
+                    mixed_semantic2_person_set_name = 0;
+                #endif /* mixed_semantic2_person_set_name_zero_function_pointer */
                 #ifdef mixed_semantic2_person_get_day_const_zero_function_pointer
                     mixed_semantic2_person_get_day_const_zero_function_pointer
                 #else /* mixed_semantic2_person_get_day_const_zero_function_pointer */
@@ -1583,16 +1583,6 @@
                 #else /* mixed_semantic2_person_copy_default_zero_function_pointer */
                     mixed_semantic2_person_copy_default = 0;
                 #endif /* mixed_semantic2_person_copy_default_zero_function_pointer */
-                #ifdef mixed_semantic2_person_copy_get_name_zero_function_pointer
-                    mixed_semantic2_person_copy_get_name_zero_function_pointer
-                #else /* mixed_semantic2_person_copy_get_name_zero_function_pointer */
-                    mixed_semantic2_person_copy_get_name = 0;
-                #endif /* mixed_semantic2_person_copy_get_name_zero_function_pointer */
-                #ifdef mixed_semantic2_person_copy_set_name_zero_function_pointer
-                    mixed_semantic2_person_copy_set_name_zero_function_pointer
-                #else /* mixed_semantic2_person_copy_set_name_zero_function_pointer */
-                    mixed_semantic2_person_copy_set_name = 0;
-                #endif /* mixed_semantic2_person_copy_set_name_zero_function_pointer */
                 #ifdef mixed_semantic2_person_copy_get_address_const_zero_function_pointer
                     mixed_semantic2_person_copy_get_address_const_zero_function_pointer
                 #else /* mixed_semantic2_person_copy_get_address_const_zero_function_pointer */
@@ -1603,6 +1593,16 @@
                 #else /* mixed_semantic2_person_copy_set_address_zero_function_pointer */
                     mixed_semantic2_person_copy_set_address = 0;
                 #endif /* mixed_semantic2_person_copy_set_address_zero_function_pointer */
+                #ifdef mixed_semantic2_person_copy_get_name_zero_function_pointer
+                    mixed_semantic2_person_copy_get_name_zero_function_pointer
+                #else /* mixed_semantic2_person_copy_get_name_zero_function_pointer */
+                    mixed_semantic2_person_copy_get_name = 0;
+                #endif /* mixed_semantic2_person_copy_get_name_zero_function_pointer */
+                #ifdef mixed_semantic2_person_copy_set_name_zero_function_pointer
+                    mixed_semantic2_person_copy_set_name_zero_function_pointer
+                #else /* mixed_semantic2_person_copy_set_name_zero_function_pointer */
+                    mixed_semantic2_person_copy_set_name = 0;
+                #endif /* mixed_semantic2_person_copy_set_name_zero_function_pointer */
                 #ifdef mixed_semantic2_person_copy_get_day_const_zero_function_pointer
                     mixed_semantic2_person_copy_get_day_const_zero_function_pointer
                 #else /* mixed_semantic2_person_copy_get_day_const_zero_function_pointer */

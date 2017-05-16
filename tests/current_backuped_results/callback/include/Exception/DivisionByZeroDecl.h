@@ -35,15 +35,9 @@
 
 namespace Exception {
 
-/**
- * @brief Represents the derived exception to indicate division by zero.
- */
 class DivisionByZero : public Exception::Generic
 {
 public:
-    /**
-     * @brief Creates a default exception instance.
-     */
     inline DivisionByZero();
 
     inline DivisionByZero(const DivisionByZero& other);

@@ -28,9 +28,9 @@
 #define MIXEDSEMANTIC2_PERSONCOPY_DEFINITION_INCLUDED
 
 #include "MixedSemantic2/PersonCopyDecl.h"
+#include "MixedSemantic2/Address.h"
 #include "MixedSemantic2/NameRawPtr.h"
 #include "MixedSemantic2/Name.h"
-#include "MixedSemantic2/Address.h"
 #include "MixedSemantic2/PersonDecl.h"
 
 #ifdef __cplusplus
@@ -38,16 +38,6 @@
 inline MixedSemantic2::PersonCopy::PersonCopy()
 {
     SetObject(mixed_semantic2_person_copy_default());
-}
-
-inline MixedSemantic2::NameRawPtr MixedSemantic2::PersonCopy::GetName()
-{
-    return MixedSemantic2::NameRawPtr(MixedSemantic2::NameRawPtr::force_creating_from_raw_pointer, mixed_semantic2_person_copy_get_name(GetRawPointer()), false);
-}
-
-inline void MixedSemantic2::PersonCopy::SetName(const MixedSemantic2::Name& name)
-{
-    mixed_semantic2_person_copy_set_name(GetRawPointer(), name.GetRawPointer());
 }
 
 inline MixedSemantic2::AddressPtr MixedSemantic2::PersonCopy::GetAddress() const
@@ -58,6 +48,16 @@ inline MixedSemantic2::AddressPtr MixedSemantic2::PersonCopy::GetAddress() const
 inline void MixedSemantic2::PersonCopy::SetAddress(const MixedSemantic2::AddressPtr& address)
 {
     mixed_semantic2_person_copy_set_address(GetRawPointer(), address.GetRawPointer());
+}
+
+inline MixedSemantic2::NameRawPtr MixedSemantic2::PersonCopy::GetName()
+{
+    return MixedSemantic2::NameRawPtr(MixedSemantic2::NameRawPtr::force_creating_from_raw_pointer, mixed_semantic2_person_copy_get_name(GetRawPointer()), false);
+}
+
+inline void MixedSemantic2::PersonCopy::SetName(const MixedSemantic2::Name& name)
+{
+    mixed_semantic2_person_copy_set_name(GetRawPointer(), name.GetRawPointer());
 }
 
 inline unsigned int MixedSemantic2::PersonCopy::GetDay() const

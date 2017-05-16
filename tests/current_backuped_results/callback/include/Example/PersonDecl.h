@@ -35,75 +35,25 @@
 
 namespace Example {
 
-/**
- * @brief Represents a person.
- */
 class Person
 {
 public:
-    /**
-     * @brief Represents the sex of a person.
-     */
     enum ESex
     {
-        male, /**< Specifies the male sex. */
-        female /**< Specifies the female sex. */
+        male,
+        female
     };
 
-    /**
-     * @brief Creates a default person.
-     */
     inline Person();
-    /**
-     * @brief Sets the first name of the person.
-     * @param first_name specifies the first name.
-     */
     inline void SetFirstName(const char* first_name);
-    /**
-     * @brief Gets the first name of the person.
-     * @returns The first name of the person.
-     */
     inline const char* GetFirstName() const;
-    /**
-     * @brief Sets the second name of the person.
-     * @param second_name specifies the second name.
-     */
     inline void SetSecondName(const char* second_name);
-    /**
-     * @brief Gets the second name of the person.
-     * @returns The second name of the person.
-     */
     inline const char* GetSecondName() const;
-    /**
-     * @brief Sets age of the person.
-     * @param age specifies age.
-     */
     inline void SetAge(unsigned int age);
-    /**
-     * @brief Gets age of the person.
-     * @returns Age of the person.
-     */
     inline unsigned int GetAge() const;
-    /**
-     * @brief Sets sex of the person.
-     * @param sex specifies sex.
-     */
     inline void SetSex(Example::Person::ESex sex);
-    /**
-     * @brief Gets sex of the person.
-     * @returns Sex of the person.
-     */
     inline Example::Person::ESex GetSex() const;
-    /**
-     * @brief Dumps the person data to a printing device.
-     * @param printer specifies a printing device for dumping.
-     */
     inline void Dump(const Example::PrinterPtr& printer) const;
-    /**
-     * @brief Prints the specified text of the specified printing device.
-     * @param printer specifies a printing device.
-     * @param text specifies text to print.
-     */
     inline void Print(const Example::PrinterPtr& printer, const char* text) const;
 
     inline Person(const Person& other);

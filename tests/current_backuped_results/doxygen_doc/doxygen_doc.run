@@ -1,0 +1,13 @@
+./doxygen_doc_client
+___std::cout___
+First Name: Jon
+First Name: Jon
+Last Name: Snow
+Person birth day: 27
+Person birth year: 324
+Person birth month: 12
+Person street: Wall
+Person city: 
+Person state: 0
+___std::cerr___
+___eof___

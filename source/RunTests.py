@@ -129,6 +129,7 @@ def run_tests(input_folder, output_folder):
     process_example(input_folder, 'copy_semantic', base_backup_folder)
     process_example(input_folder, 'custom_suffix', base_backup_folder)
     process_example(input_folder, 'down_cast', base_backup_folder)
+    process_example(input_folder, 'doxygen_doc', base_backup_folder)
     process_example(input_folder, 'exception', base_backup_folder)
     process_example(input_folder, 'hello_world', base_backup_folder)
     process_example(input_folder, 'mapped_types', base_backup_folder)
