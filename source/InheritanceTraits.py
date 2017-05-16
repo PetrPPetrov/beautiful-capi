@@ -59,7 +59,10 @@ class RequiresCastToBase(object):
         if class_generator.base_class_generator:
             body = FileGenerator(None)
             with IndentScope(body):
-                body.put_line('return static_cast<{base_type}*>(static_cast<{this_type}*>(object_pointer));'.format(
+                cast_str = 'return static_cast<{base_type}*>(static_cast<{this_type}*>(object_pointer));'
+                if class_generator.class_object.custom_cast_to_base_filled:
+                    cast_str = class_generator.class_object.custom_cast_to_base
+                body.put_line(cast_str.format(
                     base_type=class_generator.base_class_generator.class_object.implementation_class_name,
                     this_type=class_generator.class_object.implementation_class_name
                 ))

@@ -81,10 +81,6 @@ class LifecycleTraits(object):
             class_short_name=class_generator.wrap_short_name,
             class_name=class_generator.wrap_name))
 
-    @staticmethod
-    def lifecycle_impl_name(impl_name: str) -> str:
-        return impl_name
-
     def generate_move_constructor_declaration(self, out: FileGenerator, class_generator):
         if self.params.enable_cpp11_features_in_wrap_code:
             with IfDefScope(out, get_has_rvalue_references(class_generator), False):
@@ -180,8 +176,7 @@ class CopySemantic(LifecycleTraits):
 
     @staticmethod
     def generate_copy_constructor(class_generator) -> bool:
-        result = (not class_generator.class_object.abstract) and class_generator.class_object.generate_copy_constructor
-        return result
+        return not class_generator.class_object.abstract and class_generator.class_object.generate_copy_constructor
 
     @staticmethod
     def c_2_impl_default() -> str:

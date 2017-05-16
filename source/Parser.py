@@ -586,6 +586,10 @@ class TClass(object):
         self.impl_2_c_filled = False
         self.c_2_impl = ""
         self.c_2_impl_filled = False
+        self.custom_cast_to_base = ""
+        self.custom_cast_to_base_filled = False
+        self.custom_down_cast = ""
+        self.custom_down_cast_filled = False
         self.documentations = []
         self.include_headers = []
         self.enumerations = []
@@ -721,6 +725,14 @@ class TClass(object):
             cur_attr = dom_node.getAttribute("c_2_impl")
             self.c_2_impl = cur_attr
             self.c_2_impl_filled = True
+        if dom_node.hasAttribute("custom_cast_to_base"):
+            cur_attr = dom_node.getAttribute("custom_cast_to_base")
+            self.custom_cast_to_base = cur_attr
+            self.custom_cast_to_base_filled = True
+        if dom_node.hasAttribute("custom_down_cast"):
+            cur_attr = dom_node.getAttribute("custom_down_cast")
+            self.custom_down_cast = cur_attr
+            self.custom_down_cast_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:

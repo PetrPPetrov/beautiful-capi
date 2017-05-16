@@ -123,6 +123,9 @@
     <xs:attribute name="generate_copy_constructor" type="xs:boolean" use="optional" default="true"/>
     <xs:attribute name="impl_2_c" type="xs:string" use="optional"/>
     <xs:attribute name="c_2_impl" type="xs:string" use="optional"/>
+    <xs:attribute name="custom_cast_to_base" type="xs:string" use="optional"/>
+    <xs:attribute name="custom_down_cast" type="xs:string" use="optional"/>
+
   </xs:complexType>
   <xs:complexType name="TCallback">
     <xs:attribute name="lifecycle" type="TLifecycle" use="optional" default="reference_counted"/>
@@ -179,7 +182,7 @@
     <xs:attribute name="name" type="xs:string" use="required"/>
     <xs:attribute name="type" type="xs:string" use="required"/>
     <xs:attribute name="is_builtin" type="xs:boolean" use="optional" default="false"/>
-    <xs:attribute name="c_2_impl" type="xs:string" use="optional" default="static_cast&lt;{implementation_type}*&gt;({expression})"/>
+    <xs:attribute name="c_2_impl" type="xs:string" use="optional" default="static_cast&lt;{implementation_type}*>({expression})"/>
     <xs:attribute name="c_2_impl_mode" type="TC2ImplMode" use="optional" default="default"/>
   </xs:complexType>
   <xs:simpleType name="TLifecycle">
@@ -230,7 +233,7 @@
     <xs:attribute name="get_const" type="xs:boolean" use="optional" default="true"/>
     <xs:attribute name="set_argument_name" type="xs:string" use="optional" default=""/>
     <xs:attribute name="is_builtin" type="xs:boolean" use="optional" default="false"/>
-    <xs:attribute name="set_c_2_impl" type="xs:string" use="optional" default="static_cast&lt;{implementation_type}&gt;({expression})"/>
+    <xs:attribute name="set_c_2_impl" type="xs:string" use="optional" default="static_cast&lt;{implementation_type}>({expression})"/>
     <xs:attribute name="set_c_2_impl_mode" type="TC2ImplMode" use="optional" default="default"/>
     <xs:attribute name="get_impl_2_c" type="xs:string" use="optional" default="new {implementation_type}({expression})"/>
     <xs:attribute name="set_argument_type" type="xs:string" use="optional" default=""/>
@@ -283,9 +286,9 @@
     <xs:attribute name="c_type" type="xs:string" use="required"/>
     <xs:attribute name="implementation_type" type="xs:string" use="required"/>
     <xs:attribute name="snippet_type" type="xs:string" use="optional" default=""/>
-    <xs:attribute name="wrap_2_c" type="xs:string" use="optional" default="static_cast&lt;{c_type}&gt;({expression})"/>
-    <xs:attribute name="c_2_impl" type="xs:string" use="optional" default="static_cast&lt;{implementation_type}&gt;({expression})"/>
-    <xs:attribute name="impl_2_c" type="xs:string" use="optional" default="static_cast&lt;{c_type}&gt;({expression})"/>
-    <xs:attribute name="c_2_wrap" type="xs:string" use="optional" default="static_cast&lt;{wrap_type}&gt;({expression})"/>
+    <xs:attribute name="wrap_2_c" type="xs:string" use="optional" default="static_cast&lt;{c_type}>({expression})"/>
+    <xs:attribute name="c_2_impl" type="xs:string" use="optional" default="static_cast&lt;{implementation_type}>({expression})"/>
+    <xs:attribute name="impl_2_c" type="xs:string" use="optional" default="static_cast&lt;{c_type}>({expression})"/>
+    <xs:attribute name="c_2_wrap" type="xs:string" use="optional" default="static_cast&lt;{wrap_type}>({expression})"/>
   </xs:complexType>
 </xs:schema>

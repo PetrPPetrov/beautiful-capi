@@ -461,7 +461,10 @@ class ClassGenerator(object):
                 with IndentScope(body):
                     body.put_line('if ({base_object})'.format(base_object=base_class_argument_generator.name))
                     with IndentScope(body):
-                        body.put_line('return dynamic_cast<{cast_to}*>({cast_from});'.format(
+                        cast_str = 'return dynamic_cast<{cast_to}*>({cast_from});'
+                        if base_class_argument_generator.type_generator.class_argument_generator.class_object.custom_down_cast_filled:
+                            cast_str = base_class_argument_generator.type_generator.class_argument_generator.class_object.custom_down_cast
+                        body.put_line(cast_str.format(
                             cast_to=self.class_object.implementation_class_name,
                             cast_from=base_class_argument_generator.c_2_implementation_pointer()))
                     body.put_line('else')
