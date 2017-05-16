@@ -312,7 +312,7 @@ class ClassGenerator(object):
             declaration_header.put_line(previous_ns.one_line_namespace_end)
 
     def __generate_class_declaration(self, declaration_header: FileGenerator):
-        DoxygenCppGenerator().generate_for_class(declaration_header, self.class_object)
+        DoxygenCppGenerator().generate_for_class(declaration_header, self)
         put_template_line(declaration_header, self.class_object)
         if self.base_class_generator:
             declaration_header.put_line('class {name} : public {base_class}'.format(

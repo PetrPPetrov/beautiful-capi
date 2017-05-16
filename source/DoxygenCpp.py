@@ -22,7 +22,7 @@
 
 from FileGenerator import FileGenerator
 from DocumentationGenerator import ReferenceGenerator
-from Parser import TGenericDocumentation, TDocumentation, TClass, TEnumeration, TNamespace
+from Parser import TGenericDocumentation, TDocumentation, TEnumeration, TNamespace
 
 
 class DoxygenCppGenerator(object):
@@ -77,12 +77,15 @@ class DoxygenCppGenerator(object):
         return result_lines
 
     @staticmethod
-    def generate_for_class(out: FileGenerator, class_object: TClass):
-        if class_object.documentations:
+    def generate_for_class(out: FileGenerator, class_generator):
+        if class_generator.class_object.documentations:
             out.put_line('/**')
-            for documentation in class_object.documentations:
+            for documentation in class_generator.class_object.documentations:
                 for doc_line in DoxygenCppGenerator.__get_lines_for_documentation(documentation, False):
-                    out.put_line(' * {0}'.format(doc_line))
+                    out.put_line(' * {0}'.format(doc_line.format(
+                        file=class_generator.file_cache.class_header(class_generator.full_name_array),
+                        file_decl=class_generator.file_cache.class_header_decl(class_generator.full_name_array)
+                    )))
             out.put_line(' */')
 
     @staticmethod
