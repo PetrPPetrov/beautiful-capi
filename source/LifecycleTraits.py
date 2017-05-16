@@ -180,10 +180,6 @@ class CopySemantic(LifecycleTraits):
         return result
 
     @staticmethod
-    def lifecycle_impl_name(impl_name: str) -> str:
-        return impl_name
-
-    @staticmethod
     def c_2_impl_default() -> str:
         return '*static_cast<{implementation_type}*>({expression})'
 
@@ -356,10 +352,6 @@ class RawPointerSemantic(LifecycleTraits):
         return self.params.raw_implementation_2_c
 
     @staticmethod
-    def lifecycle_impl_name(impl_name: str) -> str:
-        return impl_name + '*'
-
-    @staticmethod
     def c_2_impl_default() -> str:
         return 'static_cast<{implementation_type}*>({expression})'
 
@@ -494,10 +486,6 @@ class RefCountedSemantic(LifecycleTraits):
 
     def impl_2_c_default(self) -> str:
         return self.params.reference_counted_implementation_2_c
-
-    @staticmethod
-    def lifecycle_impl_name(impl_name: str) -> str:
-        return impl_name + '*'
 
     @staticmethod
     def c_2_impl_default() -> str:

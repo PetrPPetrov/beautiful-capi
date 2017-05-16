@@ -223,7 +223,7 @@ class GeneratorCreator(object):
                 implementation_class_name = replace_template_argument(
                     implementation_class_name,
                     index,
-                    argument_generator.lifecycle_traits.lifecycle_impl_name(argument_generator.implementation_name)
+                    argument_generator.implementation_name
                 )
         class_generator.class_object.implementation_class_name = implementation_class_name
 
