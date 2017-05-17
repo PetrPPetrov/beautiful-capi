@@ -127,6 +127,8 @@ class TBeautifulCapiParams(object):
         self.root_header_initializer_filled = False
         self.shared_library_name = ""
         self.shared_library_name_filled = False
+        self.doxygen_class_pattern = ""
+        self.doxygen_class_pattern_filled = False
         self.copyright_headers = []
         self.automatic_generated_warnings = []
 
@@ -294,6 +296,10 @@ class TBeautifulCapiParams(object):
             cur_attr = dom_node.getAttribute("shared_library_name")
             self.shared_library_name = cur_attr
             self.shared_library_name_filled = True
+        if dom_node.hasAttribute("doxygen_class_pattern"):
+            cur_attr = dom_node.getAttribute("doxygen_class_pattern")
+            self.doxygen_class_pattern = cur_attr
+            self.doxygen_class_pattern_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:

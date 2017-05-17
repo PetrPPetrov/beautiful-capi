@@ -49,5 +49,6 @@
     <xs:attribute name="root_header_namespace" type="xs:string" use="optional" default=""/>
     <xs:attribute name="root_header_initializer" type="xs:string" use="optional" default=""/>
     <xs:attribute name="shared_library_name" type="xs:string" use="optional" default=""/>
+    <xs:attribute name="doxygen_class_pattern" type="xs:string" use="optional"/>
   </xs:complexType>
 </xs:schema>

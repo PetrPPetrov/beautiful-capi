@@ -80,12 +80,17 @@ class DoxygenCppGenerator(object):
     def generate_for_class(out: FileGenerator, class_generator):
         if class_generator.class_object.documentations:
             out.put_line('/**')
+            docs = []
+            if class_generator.params.doxygen_class_pattern:
+                docs.append(class_generator.params.doxygen_class_pattern)
             for documentation in class_generator.class_object.documentations:
-                for doc_line in DoxygenCppGenerator.__get_lines_for_documentation(documentation, False):
-                    out.put_line(' * {0}'.format(doc_line.format(
-                        file=class_generator.file_cache.class_header(class_generator.full_name_array),
-                        file_decl=class_generator.file_cache.class_header_decl(class_generator.full_name_array)
-                    )))
+                docs += DoxygenCppGenerator.__get_lines_for_documentation(documentation, False)
+            for doc_line in docs:
+                out.put_line(' * {0}'.format(doc_line.format(
+                    file=class_generator.file_cache.class_header(class_generator.full_name_array),
+                    file_decl=class_generator.file_cache.class_header_decl(class_generator.full_name_array),
+                    wrap_name=class_generator.wrap_name
+                )))
             out.put_line(' */')
 
     @staticmethod
