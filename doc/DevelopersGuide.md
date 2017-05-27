@@ -500,12 +500,33 @@ The purpose of *TBeautifulCapiRoot* node is to specify the project name, major, 
 Also it specifies a several root namespaces.
 
 TBeautifulCapiRoot, list of attributes.
-| Attribute     | Type         | Description                         |
-|---------------|--------------|-------------------------------------|
-| project_name  | xs:string    | Specifies the project name          |
-| major_version | xs:integer   | Specifies the project major version |
-| minor_version | xs:integer   | Specifies the project minor version |
-| patch_version | xs:integer   | Specifies the project patch version |
+<table>
+  <tr>
+    <td>Attribute</td>
+    <td>Type</td>
+    <td>Description</td>
+  </tr>
+  <tr>
+    <td>project_name</td>
+    <td>xs:string</td>
+    <td>Specifies the project name</td>
+  </tr>
+  <tr>
+    <td>major_version</td>
+    <td>xs:string</td>
+    <td>Specifies the project major version</td>
+  </tr>
+  <tr>
+    <td>minor_version</td>
+    <td>xs:string</td>
+    <td>Specifies the project minor version</td>
+  </tr>
+  <tr>
+    <td>patch_version</td>
+    <td>xs:string</td>
+    <td>Specifies the project patch version</td>
+  </tr>
+</table>
 
 TBeautifulCapiRoot, list of elements.
 | Element       | Multiplicity | Type       | Description                  |
