@@ -499,8 +499,8 @@ The root element is *api* which has [*TBeautifulCapiRoot*](#tbeautiful-capi-root
 The purpose of *TBeautifulCapiRoot* node is to specify the project name, major, minor and patch versions.
 Also it specifies a several root namespaces.
 
-TBeautifulCapiRoot, list of attributes.
 <table>
+  <caption>TBeautifulCapiRoot, attributes</caption>
   <tr>
     <td>Attribute</td>
     <td>Type</td>
@@ -528,39 +528,143 @@ TBeautifulCapiRoot, list of attributes.
   </tr>
 </table>
 
-TBeautifulCapiRoot, list of elements.
-| Element       | Multiplicity | Type       | Description                  |
-|---------------|--------------|------------|------------------------------|
-| namespace     | 1..N         | [TNamespace](#tnamespace) | Specifies the root namespace |
+<table>
+  <caption>TBeautifulCapiRoot, elements</caption>
+  <tr>
+    <td>Element</td>
+    <td>Multiplicity</td>
+    <td>Type</td>
+    <td>Description</td>
+  </tr>
+  <tr>
+    <td>namespace</td>
+    <td>1..N</td>
+    <td>[TNamespace](#tnamespace)</td>
+    <td>Specifies the root namespace</td>
+  </tr>
+</table>
 
 ### TNamespace
 
 The purpose of *TNamespace* node is to describe namespace.
 
-TNamespace, list of attributes.
-| Attribute             | Type                | Description                             |
-|-----------------------|---------------------|-----------------------------------------|
-| name                  | xs:string           | Specifies the namespace name            |
-| implementation_header | xs:string           | Specifies an implementation header file |
-| overload_suffix_mode  | TOverloadSuffixMode | Specifies overload suffix mode          |
+<table>
+  <caption>TNamespace, attributes</caption>
+  <tr>
+    <td>Attribute</td>
+    <td>Type</td>
+    <td>Description</td>
+  </tr>
+  <tr>
+    <td>name</td>
+    <td>xs:string</td>
+    <td>Specifies the namespace name</td>
+  </tr>
+  <tr>
+    <td>implementation_header</td>
+    <td>xs:string</td>
+    <td>Specifies an implementation header file</td>
+  </tr>
+  <tr>
+    <td>overload_suffix_mode</td>
+    <td>TOverloadSuffixMode</td>
+    <td>Specifies overload suffix mode</td>
+  </tr>
+</table>
 
-TNamespace, list of elements.
-| Element             | Multiplicity | Type               | Description                                       |
-|---------------------|--------------|--------------------|---------------------------------------------------|
-| documentation       | 0..1         | TDocumentation     | Specifies the namespace doxygen documentation     |
-| external_namespace  | 0..N         | TExternalNamespace | Specifies an external namespace                   |
-| external_library    | 0..N         | TExternalLibrary   | Specifies an external library                     |
-| include             | 0..N         | TApiInclude        | Included another XML API description file         |
-| namespace           | 0..N         | TNamespace         | Specifies the nested namespace                    |
-| include_header      | 0..N         | THeaderInclude     | Specifies a header to include from wrapper side   |
-| enumeration         | 0..N         | TEnumeration       | Specifies an enumeration type                     |
-| class               | 0..N         | TClass             | Specifies a class                                 |
-| function            | 0..N         | TFunction          | Specifies a stand-alone function                  |
-| template            | 0..N         | TNamespace         | Specifies a new template                          |
-| property_set_prefix | 0..N         | TPropertySetPrefix | Specifies default value for property set prefix   |
-| property_get_prefix | 0..N         | TPropertyGetPrefix | Specifies default value for property get prefix   |
-| property_get_const  | 0..N         | TPropertyGetConst  | Specifies default value for property get cont     |
-| mapped_type         | 0..N         | TMappedType        | Specifies a new mapped type                       |
+<table>
+  <caption>TNamespace, elements</caption>
+  <tr>
+    <td>Element</td>
+    <td>Multiplicity</td>
+    <td>Type</td>
+    <td>Description</td>
+  </tr>
+  <tr>
+    <td>documentation</td>
+    <td>0..1</td>
+    <td>TDocumentation</td>
+    <td>Specifies the namespace doxygen documentation</td>
+  </tr>
+  <tr>
+    <td>external_namespace</td>
+    <td>0..N</td>
+    <td>TExternalNamespace</td>
+    <td>Specifies an external namespace</td>
+  </tr>
+  <tr>
+    <td>external_library</td>
+    <td>0..N</td>
+    <td>TExternalLibrary</td>
+    <td>Specifies an external library</td>
+  </tr>
+  <tr>
+    <td>include</td>
+    <td>0..N</td>
+    <td>TApiInclude</td>
+    <td>Included another XML API description file</td>
+  </tr>
+  <tr>
+    <td>namespace</td>
+    <td>0..N</td>
+    <td>TNamespace</td>
+    <td>Specifies the nested namespace</td>
+  </tr>
+  <tr>
+    <td>include_header</td>
+    <td>0..N</td>
+    <td>THeaderInclude</td>
+    <td>Specifies a header to include from wrapper side</td>
+  </tr>
+  <tr>
+    <td>enumeration</td>
+    <td>0..N</td>
+    <td>TEnumeration</td>
+    <td>Specifies an enumeration type</td>
+  </tr>
+  <tr>
+    <td>class</td>
+    <td>0..N</td>
+    <td>TClass</td>
+    <td>Specifies a class</td>
+  </tr>
+  <tr>
+    <td>function</td>
+    <td>0..N</td>
+    <td>TFunction</td>
+    <td>Specifies a stand-alone function</td>
+  </tr>
+  <tr>
+    <td>template</td>
+    <td>0..N</td>
+    <td>TNamespace</td>
+    <td>Specifies a new template</td>
+  </tr>
+  <tr>
+    <td>property_set_prefix</td>
+    <td>0..N</td>
+    <td>TPropertySetPrefix</td>
+    <td>Specifies default value for property set prefix</td>
+  </tr>
+  <tr>
+    <td>property_get_prefix</td>
+    <td>0..N</td>
+    <td>TPropertyGetPrefix</td>
+    <td>Specifies default value for property get prefix</td>
+  </tr>
+  <tr>
+    <td>property_get_const</td>
+    <td>0..N</td>
+    <td>TPropertyGetConst</td>
+    <td>Specifies default value for property get cont</td>
+  </tr>
+  <tr>
+    <td>mapped_type</td>
+    <td>0..N</td>
+    <td>TMappedType</td>
+    <td>Specifies a new mapped type</td>
+  </tr>
+</table>
 
 ### Generation parameters XML schema
 TODO:
