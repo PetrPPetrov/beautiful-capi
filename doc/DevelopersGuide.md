@@ -16,7 +16,7 @@ Beautiful-Capi Developer's Guide
     * [Common methods of the wrapper classes](#common-methods-of-the-wrapper-classes)
 3. [Command-line arguments](#command-line-arguments)
 4. [XML API description schema reference](#xml-api-description-schema)
-    * [*TBeautifulCapiRoot*](#tbeautiful-capi-root)
+    * [*TBeautifulCapiRoot*](#tbeautifulcapiroot)
     * [*TNamespace*](#tnamespace)
     * [Generation parameters XML schema reference](#generation-parameters-xml-schema)
 5. [Mixing semantics](#mixing-semantics)
@@ -602,7 +602,7 @@ The purpose of *TNamespace* node is to describe namespace.
     <td>include</td>
     <td>0..N</td>
     <td>TApiInclude</td>
-    <td>Included another XML API description file</td>
+    <td>Includes another XML API description file</td>
   </tr>
   <tr>
     <td>namespace</td>
