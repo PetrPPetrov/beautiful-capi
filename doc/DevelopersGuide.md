@@ -545,7 +545,7 @@ Also it specifies a several root namespaces.
   <tr>
     <td>namespace</td>
     <td>1..N</td>
-    <td>[TNamespace](#tnamespace)</td>
+    <td><a href="#tnamespace">TNamespace</a></td>
     <td>Specifies the root namespace</td>
   </tr>
 </table>
