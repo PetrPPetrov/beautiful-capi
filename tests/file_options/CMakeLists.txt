@@ -63,7 +63,7 @@ function(bcapi_add_test test_name)
   )
   add_dependencies(file_options_${test_name}_client file_options_${test_name})
   set_property(TARGET file_options_${test_name}_client APPEND PROPERTY INCLUDE_DIRECTORIES ${file_option_SOURCE_DIR}/library/include/${test_name})
-  set_property(TARGET file_options_${test_name}_client APPEND PROPERTY COMPILE_DEFINITIONS -D${test_name})
+  set_property(TARGET file_options_${test_name}_client APPEND PROPERTY COMPILE_DEFINITIONS "-D${test_name}")
   target_link_libraries(file_options_${test_name}_client file_options_${test_name})
 endfunction()
 
