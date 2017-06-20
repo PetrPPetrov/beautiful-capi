@@ -9,7 +9,7 @@ script:
   - cmake -G "Unix Makefiles" && make
 
 install:
-  - pip install .
+  - pip --version
 
 os:
   - linux
