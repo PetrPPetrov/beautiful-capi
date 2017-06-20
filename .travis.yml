@@ -1,11 +1,10 @@
 language: cpp
 
-branches:
-  only:
-    - master
-
 compiler:
   - gcc
+
+script:
+  - cmake -G "Unix Makefiles" && make
 
 os:
   - linux
