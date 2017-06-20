@@ -8,5 +8,8 @@ compiler:
 script:
   - cmake -G "Unix Makefiles" && make
 
+install:
+  - pip install .
+
 os:
   - linux
