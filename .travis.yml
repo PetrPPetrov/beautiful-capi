@@ -3,9 +3,11 @@ dist: trusty
 
 compiler:
   - gcc
+  - clang
 
 script:
   - cmake --version && python3 --version && cmake -G "Unix Makefiles" && make
 
 os:
   - linux
+  - osx
