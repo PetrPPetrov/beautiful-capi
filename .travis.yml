@@ -2,10 +2,6 @@ sudo: required
 language: cpp
 dist: trusty
 
-before_script:
-  - sudo apt-get update -qq
-  - sudo apt-get install libboost-all-dev
-
 compiler:
   - gcc
 
@@ -14,3 +10,10 @@ script:
 
 os:
   - linux
+
+addons:
+  apt:
+    sources:
+      - boost-latest
+    packages:
+      - libboost-test-dev
