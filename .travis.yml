@@ -5,6 +5,8 @@ dist: trusty
 before_script:
   - sudo apt-get update -qq
   - sudo apt-get install libboost-all-dev
+  - sudo apt-get install python3
+  - sudo apt-get update python3
 
 compiler:
   - gcc
