@@ -22,7 +22,7 @@ project(file_option)
 
 if(CMAKE_MAJOR_VERSION GREATER 2)
 
-  find_package(PythonInterp 3.2 REQUIRED)
+  find_package(PythonInterp 3.4 REQUIRED)
 
   function(bcapi_add_test test_name)
     add_custom_command(

@@ -22,7 +22,7 @@ project(components)
 
 cmake_minimum_required(VERSION 2.8)
 
-find_package(PythonInterp 3.2 REQUIRED)
+find_package(PythonInterp 3.4 REQUIRED)
 
 include(../../../../UseBCapi.cmake)
 
