@@ -1,11 +1,15 @@
 language: cpp
 dist: trusty
 
+before_script:
+  - sudo apt-get update -qq
+  - sudo apt-get install libboost-dev
+
 compiler:
   - gcc
 
 script:
-  - cmake -G "Unix Makefiles" && make
+  - cmake --version && python3 --version && cmake -G "Unix Makefiles" && make
 
 os:
   - linux
