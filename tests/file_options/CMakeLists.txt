@@ -20,50 +20,54 @@
 
 project(file_option)
 
-cmake_minimum_required(VERSION 2.8)
+if(CMAKE_MAJOR_VERSION GREATER 2)
 
-find_package(PythonInterp 3.4 REQUIRED)
+  find_package(PythonInterp 3.4 REQUIRED)
 
-function(bcapi_add_test test_name)
-  add_custom_command(
-    OUTPUT
+  function(bcapi_add_test test_name)
+    add_custom_command(
+      OUTPUT
+        ${file_option_SOURCE_DIR}/library/source/AutoGenWrap_${test_name}.cpp
+      COMMAND
+        ${PYTHON_EXECUTABLE}
+        ${tests_SOURCE_DIR}/../source/Capi.py
+        -i ${file_option_SOURCE_DIR}/library/file_options.xml
+        -p ${file_option_SOURCE_DIR}/library/${test_name}_params.xml
+        -o ${file_option_SOURCE_DIR}/library/include/${test_name}
+        -w ${file_option_SOURCE_DIR}/library/source/AutoGenWrap_${test_name}.cpp
+        -s ${file_option_SOURCE_DIR}/library/source/snippets_${test_name}
+      MAIN_DEPENDENCY
+        ${file_option_SOURCE_DIR}/library/file_options.xml
+      DEPENDS
+        ${file_option_SOURCE_DIR}/library/${test_name}_params.xml
+      WORKING_DIRECTORY
+        ${file_option_SOURCE_DIR}
+    )
+    add_library(file_options_${test_name} SHARED
       ${file_option_SOURCE_DIR}/library/source/AutoGenWrap_${test_name}.cpp
-    COMMAND
-      ${PYTHON_EXECUTABLE}
-      ${tests_SOURCE_DIR}/../source/Capi.py
-      -i ${file_option_SOURCE_DIR}/library/file_options.xml
-      -p ${file_option_SOURCE_DIR}/library/${test_name}_params.xml
-      -o ${file_option_SOURCE_DIR}/library/include/${test_name}
-      -w ${file_option_SOURCE_DIR}/library/source/AutoGenWrap_${test_name}.cpp
-      -s ${file_option_SOURCE_DIR}/library/source/snippets_${test_name}
-    MAIN_DEPENDENCY
-      ${file_option_SOURCE_DIR}/library/file_options.xml
-    DEPENDS
-      ${file_option_SOURCE_DIR}/library/${test_name}_params.xml
-    WORKING_DIRECTORY
-      ${file_option_SOURCE_DIR}
-  )
-  add_library(file_options_${test_name} SHARED
-    ${file_option_SOURCE_DIR}/library/source/AutoGenWrap_${test_name}.cpp
-    ${file_option_SOURCE_DIR}/library/source/PrinterImpl.h
-    ${file_option_SOURCE_DIR}/library/source/PrinterImpl.cpp
-    ${file_option_SOURCE_DIR}/library/source/SphereImpl.h
-    ${file_option_SOURCE_DIR}/library/source/SphereImpl.cpp
-    ${file_option_SOURCE_DIR}/library/source/BodyImpl.h
-    ${file_option_SOURCE_DIR}/library/source/BodyImpl.cpp
-    ${file_option_SOURCE_DIR}/library/source/NodeImpl.h
-    ${file_option_SOURCE_DIR}/library/source/NodeImpl.cpp
-    ${file_option_SOURCE_DIR}/library/source/DataImpl.h
-    ${file_option_SOURCE_DIR}/library/source/DataImpl.cpp
-  )
-  add_executable(file_options_${test_name}_client
-    ${file_option_SOURCE_DIR}/clients/Main.cpp
-  )
-  add_dependencies(file_options_${test_name}_client file_options_${test_name})
-  set_property(TARGET file_options_${test_name}_client APPEND PROPERTY COMPILE_OPTIONS "-I${file_option_SOURCE_DIR}/library/include/${test_name}")
-  set_property(TARGET file_options_${test_name}_client APPEND PROPERTY COMPILE_DEFINITIONS ${test_name})
-  target_link_libraries(file_options_${test_name}_client file_options_${test_name})
-endfunction()
+      ${file_option_SOURCE_DIR}/library/source/PrinterImpl.h
+      ${file_option_SOURCE_DIR}/library/source/PrinterImpl.cpp
+      ${file_option_SOURCE_DIR}/library/source/SphereImpl.h
+      ${file_option_SOURCE_DIR}/library/source/SphereImpl.cpp
+      ${file_option_SOURCE_DIR}/library/source/BodyImpl.h
+      ${file_option_SOURCE_DIR}/library/source/BodyImpl.cpp
+      ${file_option_SOURCE_DIR}/library/source/NodeImpl.h
+      ${file_option_SOURCE_DIR}/library/source/NodeImpl.cpp
+      ${file_option_SOURCE_DIR}/library/source/DataImpl.h
+      ${file_option_SOURCE_DIR}/library/source/DataImpl.cpp
+    )
+    add_executable(file_options_${test_name}_client
+      ${file_option_SOURCE_DIR}/clients/Main.cpp
+    )
+    add_dependencies(file_options_${test_name}_client file_options_${test_name})
+    target_link_libraries(file_options_${test_name}_client file_options_${test_name})
+    target_include_directories(file_options_${test_name}_client PRIVATE ${file_option_SOURCE_DIR}/library/include/${test_name})
+    target_compile_definitions(file_options_${test_name}_client PRIVATE -D${test_name})
+  endfunction()
 
-bcapi_add_test(test00)
-bcapi_add_test(test01)
+  bcapi_add_test(test00)
+  bcapi_add_test(test01)
+
+else()
+  message(STATUS "CMake 2.x detected, skipping file_options tests")
+endif()
