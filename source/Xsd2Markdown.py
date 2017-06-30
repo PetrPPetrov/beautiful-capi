@@ -181,7 +181,7 @@ class MarkDownGenerator(object):
                             self.output_file.put_line(cell)
                         self.output_file.put_line('</td>')
                 self.output_file.put_line('</tr>')
-        self.output_file.put_line('</table>')
+        self.output_file.put_line('</table>\n')
 
     def put_automatic_generation_warning(self):
         self.output_file.put_line(

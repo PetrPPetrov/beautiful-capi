@@ -84,6 +84,7 @@ The purpose of *TBeautifulCapiRoot* node is to specify the project name, major, 
     </td>
   </tr>
 </table>
+
 <table>
   <caption>TBeautifulCapiRoot, list of elements</caption>
   <tr>
@@ -107,6 +108,7 @@ The purpose of *TBeautifulCapiRoot* node is to specify the project name, major, 
     </td>
   </tr>
 </table>
+
 ### TNamespace
 
 &quot;Work in progress&quot;
@@ -172,6 +174,7 @@ The purpose of *TBeautifulCapiRoot* node is to specify the project name, major, 
     </td>
   </tr>
 </table>
+
 <table>
   <caption>TNamespace, list of elements</caption>
   <tr>
@@ -377,6 +380,7 @@ The purpose of *TBeautifulCapiRoot* node is to specify the project name, major, 
     </td>
   </tr>
 </table>
+
 ### TDocumentation
 
 The purpose of *TDocumentation* node is to specify
@@ -419,6 +423,7 @@ TDocumentation is Inherited from TGenericDocumentation
     </td>
   </tr>
 </table>
+
 ### TReference
 
 &quot;Work in progress&quot;
@@ -464,6 +469,7 @@ TDocumentation is Inherited from TGenericDocumentation
     </td>
   </tr>
 </table>
+
 ### TExternalNamespace
 
 &quot;Work in progress&quot;
@@ -546,6 +552,7 @@ TDocumentation is Inherited from TGenericDocumentation
     </td>
   </tr>
 </table>
+
 <table>
   <caption>TExternalNamespace, list of elements</caption>
   <tr>
@@ -583,6 +590,7 @@ TDocumentation is Inherited from TGenericDocumentation
     </td>
   </tr>
 </table>
+
 ### TExternalClass
 
 &quot;Work in progress&quot;
@@ -665,6 +673,7 @@ TDocumentation is Inherited from TGenericDocumentation
     </td>
   </tr>
 </table>
+
 ### TExternalLibrary
 
 &quot;Work in progress&quot;
@@ -713,6 +722,7 @@ TDocumentation is Inherited from TGenericDocumentation
     </td>
   </tr>
 </table>
+
 ### TApiInclude
 
 &quot;Work in progress&quot;
@@ -744,6 +754,7 @@ TDocumentation is Inherited from TGenericDocumentation
     </td>
   </tr>
 </table>
+
 ### TEnumerationItem
 
 &quot;Work in progress&quot;
@@ -792,6 +803,7 @@ TDocumentation is Inherited from TGenericDocumentation
     </td>
   </tr>
 </table>
+
 <table>
   <caption>TEnumerationItem, list of elements</caption>
   <tr>
@@ -815,6 +827,7 @@ TDocumentation is Inherited from TGenericDocumentation
     </td>
   </tr>
 </table>
+
 ### TEnumeration
 
 &quot;Work in progress&quot;
@@ -863,6 +876,7 @@ TDocumentation is Inherited from TGenericDocumentation
     </td>
   </tr>
 </table>
+
 <table>
   <caption>TEnumeration, list of elements</caption>
   <tr>
@@ -900,6 +914,7 @@ TDocumentation is Inherited from TGenericDocumentation
     </td>
   </tr>
 </table>
+
 ### TTemplate
 
 &quot;Work in progress&quot;
@@ -955,6 +970,7 @@ TDocumentation is Inherited from TGenericDocumentation
     </td>
   </tr>
 </table>
+
 ### TInstantiation
 
 &quot;Work in progress&quot;
@@ -986,6 +1002,7 @@ TDocumentation is Inherited from TGenericDocumentation
     </td>
   </tr>
 </table>
+
 <table>
   <caption>TInstantiation, list of elements</caption>
   <tr>
@@ -1009,6 +1026,7 @@ TDocumentation is Inherited from TGenericDocumentation
     </td>
   </tr>
 </table>
+
 ### TInstantiationArgument
 
 &quot;Work in progress&quot;
@@ -1057,6 +1075,7 @@ TDocumentation is Inherited from TGenericDocumentation
     </td>
   </tr>
 </table>
+
 ### TClass
 
 &quot;Work in progress&quot;
@@ -1428,6 +1447,7 @@ TDocumentation is Inherited from TGenericDocumentation
     </td>
   </tr>
 </table>
+
 <table>
   <caption>TClass, list of elements</caption>
   <tr>
@@ -1563,6 +1583,7 @@ TDocumentation is Inherited from TGenericDocumentation
     </td>
   </tr>
 </table>
+
 ### TCallback
 
 &quot;Work in progress&quot;
@@ -1662,6 +1683,7 @@ TDocumentation is Inherited from TGenericDocumentation
     </td>
   </tr>
 </table>
+
 ### TConstructorBase
 
 &quot;Work in progress&quot;
@@ -1727,6 +1749,7 @@ TDocumentation is Inherited from TGenericDocumentation
     </td>
   </tr>
 </table>
+
 <table>
   <caption>TConstructorBase, list of elements</caption>
   <tr>
@@ -1764,6 +1787,7 @@ TDocumentation is Inherited from TGenericDocumentation
     </td>
   </tr>
 </table>
+
 ### TConstructor
 
 &quot;Work in progress&quot;
@@ -1796,6 +1820,7 @@ TConstructor is Inherited from TConstructorBase
     </td>
   </tr>
 </table>
+
 ### TMethodBase
 
 &quot;Work in progress&quot;
@@ -1879,6 +1904,7 @@ TMethodBase is Inherited from TConstructorBase
     </td>
   </tr>
 </table>
+
 ### TMethod
 
 &quot;Work in progress&quot;
@@ -1911,6 +1937,7 @@ TMethod is Inherited from TMethodBase
     </td>
   </tr>
 </table>
+
 ### TFunction
 
 &quot;Work in progress&quot;
@@ -1960,6 +1987,7 @@ TFunction is Inherited from TMethodBase
     </td>
   </tr>
 </table>
+
 ### TArgument
 
 &quot;Work in progress&quot;
@@ -2059,6 +2087,7 @@ TFunction is Inherited from TMethodBase
     </td>
   </tr>
 </table>
+
 <table>
   <caption>TArgument, list of elements</caption>
   <tr>
@@ -2082,6 +2111,7 @@ TFunction is Inherited from TMethodBase
     </td>
   </tr>
 </table>
+
 ### TLifecycleExtension
 
 &quot;Work in progress&quot;
@@ -2147,6 +2177,7 @@ TFunction is Inherited from TMethodBase
     </td>
   </tr>
 </table>
+
 <table>
   <caption>TLifecycleExtension, list of elements</caption>
   <tr>
@@ -2184,6 +2215,7 @@ TFunction is Inherited from TMethodBase
     </td>
   </tr>
 </table>
+
 ### TCastTo
 
 &quot;Work in progress&quot;
@@ -2249,6 +2281,7 @@ TFunction is Inherited from TMethodBase
     </td>
   </tr>
 </table>
+
 ### TCastFrom
 
 &quot;Work in progress&quot;
@@ -2280,6 +2313,7 @@ TFunction is Inherited from TMethodBase
     </td>
   </tr>
 </table>
+
 ### THeaderInclude
 
 &quot;Work in progress&quot;
@@ -2328,6 +2362,7 @@ TFunction is Inherited from TMethodBase
     </td>
   </tr>
 </table>
+
 ### TProperty
 
 &quot;Work in progress&quot;
@@ -2546,6 +2581,7 @@ TFunction is Inherited from TMethodBase
     </td>
   </tr>
 </table>
+
 <table>
   <caption>TProperty, list of elements</caption>
   <tr>
@@ -2569,6 +2605,7 @@ TFunction is Inherited from TMethodBase
     </td>
   </tr>
 </table>
+
 ### TPropertySetPrefix
 
 &quot;Work in progress&quot;
@@ -2600,6 +2637,7 @@ TFunction is Inherited from TMethodBase
     </td>
   </tr>
 </table>
+
 ### TPropertyGetPrefix
 
 &quot;Work in progress&quot;
@@ -2631,6 +2669,7 @@ TFunction is Inherited from TMethodBase
     </td>
   </tr>
 </table>
+
 ### TPropertyGetConst
 
 &quot;Work in progress&quot;
@@ -2662,6 +2701,7 @@ TFunction is Inherited from TMethodBase
     </td>
   </tr>
 </table>
+
 ### TMappedType
 
 &quot;Work in progress&quot;
@@ -2846,6 +2886,7 @@ TFunction is Inherited from TMethodBase
     </td>
   </tr>
 </table>
+
 <table>
   <caption>TMappedType, list of elements</caption>
   <tr>
@@ -2869,6 +2910,7 @@ TFunction is Inherited from TMethodBase
     </td>
   </tr>
 </table>
+
 ### TLifecycle
 
 &quot;Work in progress&quot;
@@ -2905,6 +2947,7 @@ TLifecycle is enumeration of xs:string
     </td>
   </tr>
 </table>
+
 ### TC2ImplMode
 
 &quot;Work in progress&quot;
@@ -2941,6 +2984,7 @@ TC2ImplMode is enumeration of xs:string
     </td>
   </tr>
 </table>
+
 ### TOverloadSuffixMode
 
 &quot;Work in progress&quot;
@@ -2977,3 +3021,4 @@ TOverloadSuffixMode is enumeration of xs:string
     </td>
   </tr>
 </table>
+

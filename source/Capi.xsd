@@ -39,7 +39,7 @@
   </xs:complexType>
   <xs:complexType name="TNamespace">
     <xs:annotation>
-      <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+      <xs:documentation>The purpose of TNamespace node is to describe namespace.</xs:documentation>
     </xs:annotation>
     <xs:sequence>
       <xs:choice maxOccurs="unbounded" minOccurs="0">

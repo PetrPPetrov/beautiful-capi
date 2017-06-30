@@ -16,9 +16,6 @@ Beautiful-Capi Developer's Guide
     * [Common methods of the wrapper classes](#common-methods-of-the-wrapper-classes)
 3. [Command-line arguments](#command-line-arguments)
 4. [XML API description schema reference](#xml-api-description-schema)
-    * [*TBeautifulCapiRoot*](#tbeautifulcapiroot)
-    * [*TNamespace*](#tnamespace)
-    * [Generation parameters XML schema reference](#generation-parameters-xml-schema)
 5. [Mixing semantics](#mixing-semantics)
 6. [Exceptions](#exceptions)
 7. [Callbacks](#callbacks)
@@ -500,9 +497,6 @@ This schema uses *http://gkmsoft.ru/beautifulcapi* namespace.
 
 [__A detailed description of this Schema__](DescriptionSchema.md).
 The root element is *api* which has [*TBeautifulCapiRoot*](DescriptionSchema.md#tbeautifulcapiroot) XSD type.
-
-## Generation parameters XML schema
-TODO:
 
 Mixing semantics
 ----------------
