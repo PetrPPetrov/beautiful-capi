@@ -71,10 +71,10 @@ class MarkDownGenerator(object):
             self.__build_simple_type(simple_type)
 
     def __build_simple_type(self, simple_type):
-        self.output_file.put_line('### {type}'.format(type=simple_type.getAttribute('name')))
+        self.output_file.put_line('### {type}\n'.format(type=simple_type.getAttribute('name')))
         doc = get_documentation(simple_type)
         if doc:
-            self.output_file.put_line(doc)
+            self.output_file.put_line('{doc}\n'.format(doc=doc))
         restriction = get_children_by_tag(simple_type, 'xs:restriction')[0]
         if restriction:
             enums = restriction.getElementsByTagName('xs:enumeration')
@@ -94,10 +94,10 @@ class MarkDownGenerator(object):
             # TODO: also add another possible values
 
     def __build_complex_type(self, complex_type):
-        self.output_file.put_line('### {type}'.format(type=complex_type.getAttribute('name')))
+        self.output_file.put_line('### {type}\n'.format(type=complex_type.getAttribute('name')))
         doc = get_documentation(complex_type)
         if doc:
-            self.output_file.put_line(doc)
+            self.output_file.put_line('{doc}\n'.format(doc=doc))
         complex_content = get_children_by_tag(complex_type, 'xs:complexContent')
         if complex_content:
             extension = get_children_by_tag(complex_content[0], 'xs:extension')
