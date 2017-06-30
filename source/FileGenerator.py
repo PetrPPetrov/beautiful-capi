@@ -61,6 +61,7 @@ class FileGenerator(object):
         self.lines = []
         self.included_files = []
         self.included_files_were_included = False
+        self.indent_size = 4
 
     def __del__(self):
         self.__write()
@@ -97,10 +98,10 @@ class FileGenerator(object):
         return result
 
     def increase_indent(self):
-        self.cur_indent += 4
+        self.cur_indent += self.indent_size
 
     def decrease_indent(self):
-        self.cur_indent -= 4
+        self.cur_indent -= self.indent_size
         if self.cur_indent < 0:
             raise IndentationError
 
