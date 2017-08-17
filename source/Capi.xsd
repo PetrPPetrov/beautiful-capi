@@ -2,7 +2,7 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://gkmsoft.ru/beautifulcapi" targetNamespace="http://gkmsoft.ru/beautifulcapi">
   <xs:element name="api" type="TBeautifulCapiRoot">
     <xs:annotation>
-      <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+      <xs:documentation>Specifies root element describing API.</xs:documentation>
     </xs:annotation>
   </xs:element>
   <xs:complexType name="TBeautifulCapiRoot">
@@ -39,13 +39,13 @@
   </xs:complexType>
   <xs:complexType name="TNamespace">
     <xs:annotation>
-      <xs:documentation>The purpose of TNamespace node is to describe namespace.</xs:documentation>
+      <xs:documentation>The purpose of *TNamespace* node is to describe namespace.</xs:documentation>
     </xs:annotation>
     <xs:sequence>
       <xs:choice maxOccurs="unbounded" minOccurs="0">
         <xs:element maxOccurs="1" minOccurs="0" name="documentation" type="TDocumentation">
           <xs:annotation>
-            <xs:documentation>Specifies the namespace doxygen documentation</xs:documentation>
+            <xs:documentation>Specifies documentation for the current namespace</xs:documentation>
           </xs:annotation>
         </xs:element>
         <xs:element maxOccurs="unbounded" minOccurs="0" name="external_namespace" type="TExternalNamespace">
@@ -60,7 +60,7 @@
         </xs:element>
         <xs:element name="include" type="TApiInclude">
           <xs:annotation>
-            <xs:documentation>Included another XML API description file</xs:documentation>
+            <xs:documentation>Includes another XML API description file</xs:documentation>
           </xs:annotation>
         </xs:element>
         <xs:element name="namespace" type="TNamespace">
@@ -70,7 +70,7 @@
         </xs:element>
         <xs:element name="include_header" type="THeaderInclude">
           <xs:annotation>
-            <xs:documentation>Specifies a header to include from wrapper side</xs:documentation>
+            <xs:documentation>Specifies a header to include from the wrapper side</xs:documentation>
           </xs:annotation>
         </xs:element>
         <xs:element name="enumeration" type="TEnumeration">
@@ -95,17 +95,17 @@
         </xs:element>
         <xs:element name="property_set_prefix" type="TPropertySetPrefix">
           <xs:annotation>
-            <xs:documentation>Specifies default value for property set prefix</xs:documentation>
+            <xs:documentation>Specifies default value for setter's prefix</xs:documentation>
           </xs:annotation>
         </xs:element>
         <xs:element name="property_get_prefix" type="TPropertyGetPrefix">
           <xs:annotation>
-            <xs:documentation>Specifies default value for property get prefix</xs:documentation>
+            <xs:documentation>Specifies default value for getter's prefix</xs:documentation>
           </xs:annotation>
         </xs:element>
         <xs:element name="property_get_const" type="TPropertyGetConst">
           <xs:annotation>
-            <xs:documentation>Specifies default value for property get cont</xs:documentation>
+            <xs:documentation>Specifies default value for getter's constant property</xs:documentation>
           </xs:annotation>
         </xs:element>
         <xs:element name="mapped_type" type="TMappedType">
@@ -131,9 +131,9 @@
       </xs:annotation>
     </xs:attribute>
   </xs:complexType>
-  <xs:complexType name="TDocumentation">
+  <xs:complexType name="TDocumentation" mixed="true">
     <xs:annotation>
-      <xs:documentation>The purpose of *TDocumentation* node is to specify</xs:documentation>
+      <xs:documentation>The purpose of *TDocumentation* node is to specify documentation for functions and methods. The documentation will be inserted as doxygen comments in the generated source code.</xs:documentation>
     </xs:annotation>
     <xs:complexContent>
       <xs:extension base="TGenericDocumentation">
@@ -141,12 +141,12 @@
           <xs:choice maxOccurs="unbounded" minOccurs="0">
             <xs:element name="brief" type="TGenericDocumentation">
               <xs:annotation>
-                <xs:documentation>&amp;quot;Work in Progress&amp;quot;</xs:documentation>
+                <xs:documentation>Specifies documentation which will be used as *@brief* doxygen documentation</xs:documentation>
               </xs:annotation>
             </xs:element>
             <xs:element name="returns" type="TGenericDocumentation">
               <xs:annotation>
-                <xs:documentation>&amp;quot;Work in Progress&amp;quot;</xs:documentation>
+                <xs:documentation>Specifies documentation for return values, this documentation will be used as *@returns* doxygen documentation</xs:documentation>
               </xs:annotation>
             </xs:element>
           </xs:choice>
@@ -154,25 +154,25 @@
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  <xs:complexType mixed="true" name="TReference">
+  <xs:complexType name="TReference" mixed="true">
     <xs:annotation>
-      <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+      <xs:documentation>In documentation specifies reference to another class, function, enumeration or namespace, it will be used as *@ref* doxygen documentation.</xs:documentation>
     </xs:annotation>
   </xs:complexType>
-  <xs:complexType mixed="true" name="TGenericDocumentation">
+  <xs:complexType name="TGenericDocumentation" mixed="true">
     <xs:annotation>
-      <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+      <xs:documentation>The purpose of *TGenericDocumentation* node is to specify documentation for all objects which can have documentation. The documentation will be inserted as doxygen comments in the generated source code.</xs:documentation>
     </xs:annotation>
     <xs:sequence>
       <xs:choice maxOccurs="unbounded" minOccurs="0">
         <xs:element name="reference" type="TReference">
           <xs:annotation>
-            <xs:documentation>&amp;quot;Work in Progress&amp;quot;</xs:documentation>
+            <xs:documentation>Specifies documentation reference for another documentation object</xs:documentation>
           </xs:annotation>
         </xs:element>
         <xs:element name="see_also" type="TGenericDocumentation">
           <xs:annotation>
-            <xs:documentation>&amp;quot;Work in Progress&amp;quot;</xs:documentation>
+            <xs:documentation>Specifies *@see* doxygen documentation</xs:documentation>
           </xs:annotation>
         </xs:element>
       </xs:choice>
@@ -180,46 +180,46 @@
   </xs:complexType>
   <xs:complexType name="TExternalNamespace">
     <xs:annotation>
-      <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+      <xs:documentation>Specifies an external namespace. External namespace is a namespace of 3rd party library which also uses Beautiful Capi. The classes from the external library could be used as arguments in the current library API.</xs:documentation>
     </xs:annotation>
     <xs:sequence>
       <xs:choice maxOccurs="unbounded" minOccurs="0">
         <xs:element maxOccurs="unbounded" minOccurs="0" name="class" type="TExternalClass">
           <xs:annotation>
-            <xs:documentation>Specifies a external class</xs:documentation>
+            <xs:documentation>Specifies an external class which is a part of 3rd party library which also uses Beautiful Capi</xs:documentation>
           </xs:annotation>
         </xs:element>
         <xs:element maxOccurs="unbounded" minOccurs="0" name="namespace" type="TExternalNamespace">
           <xs:annotation>
-            <xs:documentation>Specifies a external namespace</xs:documentation>
+            <xs:documentation>Specifies an nested external namespace</xs:documentation>
           </xs:annotation>
         </xs:element>
       </xs:choice>
     </xs:sequence>
     <xs:attribute name="include" type="xs:string" use="optional">
       <xs:annotation>
-        <xs:documentation>Path to the include file. Can be absolute or relative to .xml file</xs:documentation>
+        <xs:documentation>Specifies path to the include file, can be absolute or relative path to .xml file</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute name="name" type="xs:string" use="required">
       <xs:annotation>
-        <xs:documentation>Specifies the namespace name</xs:documentation>
+        <xs:documentation>Specifies the external namespace name</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="Detach" name="detach_method_name" type="xs:string" use="optional">
       <xs:annotation>
-        <xs:documentation>Specifies the name of detach method</xs:documentation>
+        <xs:documentation>Specifies the name of *detach* method</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="GetRawPointer" name="get_raw_pointer_method_name" type="xs:string" use="optional">
       <xs:annotation>
-        <xs:documentation>Specifies the name of GetRawPointer method</xs:documentation>
+        <xs:documentation>Specifies the name of *GetRawPointer* method</xs:documentation>
       </xs:annotation>
     </xs:attribute>
   </xs:complexType>
   <xs:complexType name="TExternalClass">
     <xs:annotation>
-      <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+      <xs:documentation>Specifies an external class. External class is a part of 3rd party library which also uses Beautiful Capi. This class could be used as argument in the current library API.</xs:documentation>
     </xs:annotation>
     <xs:attribute name="name" type="xs:string" use="required">
       <xs:annotation>
@@ -233,373 +233,373 @@
     </xs:attribute>
     <xs:attribute name="include_declaration" type="xs:string" use="optional">
       <xs:annotation>
-        <xs:documentation>“Work in Progress”</xs:documentation>
+        <xs:documentation>Specifies header file name which should be included to find the class declaration</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute name="include_definition" type="xs:string" use="optional">
       <xs:annotation>
-        <xs:documentation>“Work in Progress”</xs:documentation>
+        <xs:documentation>Specifies header file name which should be included to find the class definition</xs:documentation>
       </xs:annotation>
     </xs:attribute>
   </xs:complexType>
   <xs:complexType name="TExternalLibrary">
     <xs:annotation>
-      <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+      <xs:documentation>Specifies a 3rd party library which also uses Beautiful Capi. The classes from such library could be used as arguments in the current library API.</xs:documentation>
     </xs:annotation>
     <xs:attribute name="input_xml_file" type="xs:string" use="required">
       <xs:annotation>
-        <xs:documentation>Path to another B-Capi XML API description file. Can be absolute or relative to .xml file</xs:documentation>
+        <xs:documentation>Specifies path to another Beautiful Capi XML API description file, it can be absolute or relative path to .xml file</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute name="params_xml_file" type="xs:string" use="required">
       <xs:annotation>
-        <xs:documentation>Path to another B-Capi params XML file. Can be absolute or relative to .xml file</xs:documentation>
+        <xs:documentation>Specifies path to another Beautiful Capi params XML file, it can be absolute or relative path to .xml file</xs:documentation>
       </xs:annotation>
     </xs:attribute>
   </xs:complexType>
   <xs:complexType name="TApiInclude">
     <xs:annotation>
-      <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+      <xs:documentation>Includes another XML API description file. The content of the included XML API description file is inserted as is to the current XML file.</xs:documentation>
     </xs:annotation>
     <xs:attribute name="path" type="xs:string" use="required">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies path to another Beautiful Capi XML API description file, it can be absolute or relative path to .xml file</xs:documentation>
       </xs:annotation>
     </xs:attribute>
   </xs:complexType>
   <xs:complexType name="TEnumerationItem">
     <xs:annotation>
-      <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+      <xs:documentation>Specifies enumeration item.</xs:documentation>
     </xs:annotation>
     <xs:sequence>
       <xs:element maxOccurs="1" minOccurs="0" name="documentation" type="TGenericDocumentation">
         <xs:annotation>
-          <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+          <xs:documentation>Specifies documentation for the current enumeration item</xs:documentation>
         </xs:annotation>
       </xs:element>
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies name of the current enumeration item</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute name="value" type="xs:string" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies value of the current enumeration item</xs:documentation>
       </xs:annotation>
     </xs:attribute>
   </xs:complexType>
   <xs:complexType name="TEnumeration">
     <xs:annotation>
-      <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+      <xs:documentation>Specifies enumeration type.</xs:documentation>
     </xs:annotation>
     <xs:sequence>
       <xs:element maxOccurs="1" minOccurs="0" name="documentation" type="TDocumentation">
         <xs:annotation>
-          <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+          <xs:documentation>Specifies documentation of the current enumeration type.</xs:documentation>
         </xs:annotation>
       </xs:element>
       <xs:element maxOccurs="unbounded" minOccurs="1" name="item" type="TEnumerationItem">
         <xs:annotation>
-          <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+          <xs:documentation>Specifies enumeration item</xs:documentation>
         </xs:annotation>
       </xs:element>
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies name of the current enumeration type</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute name="underlying_type" type="xs:string" use="required">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies *underlying_type* for the current enumeration type, for instance, *uint16_t* which will be used in C language layer</xs:documentation>
       </xs:annotation>
     </xs:attribute>
   </xs:complexType>
   <xs:complexType name="TTemplate">
     <xs:annotation>
-      <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+      <xs:documentation>Specifies class template. Class template will be converted to several instantiated classes.</xs:documentation>
     </xs:annotation>
     <xs:sequence>
       <xs:element maxOccurs="unbounded" minOccurs="0" name="argument" type="TArgument">
         <xs:annotation>
-          <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+          <xs:documentation>Specifies template argument</xs:documentation>
         </xs:annotation>
       </xs:element>
       <xs:element maxOccurs="unbounded" minOccurs="1" name="instantiation" type="TInstantiation">
         <xs:annotation>
-          <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+          <xs:documentation>Specifies template instantiation</xs:documentation>
         </xs:annotation>
       </xs:element>
       <xs:element maxOccurs="1" minOccurs="1" name="class" type="TClass">
         <xs:annotation>
-          <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+          <xs:documentation>Specifies template class</xs:documentation>
         </xs:annotation>
       </xs:element>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="TInstantiation">
     <xs:annotation>
-      <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+      <xs:documentation>Specifies template class instantiation.</xs:documentation>
     </xs:annotation>
     <xs:sequence>
       <xs:element maxOccurs="unbounded" minOccurs="1" name="argument" type="TInstantiationArgument">
         <xs:annotation>
-          <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+          <xs:documentation>Specifies a particular value for the specified template argument</xs:documentation>
         </xs:annotation>
       </xs:element>
     </xs:sequence>
     <xs:attribute default="" name="typedef_name" type="xs:string" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies typedef name for the instantiated template class</xs:documentation>
       </xs:annotation>
     </xs:attribute>
   </xs:complexType>
   <xs:complexType name="TInstantiationArgument">
     <xs:annotation>
-      <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+      <xs:documentation>Specifies a value for a particular template argument.</xs:documentation>
     </xs:annotation>
     <xs:attribute name="name" type="xs:string" use="required">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies template argument name</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute name="value" type="xs:string" use="required">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies template argument value</xs:documentation>
       </xs:annotation>
     </xs:attribute>
   </xs:complexType>
   <xs:complexType name="TClass">
     <xs:annotation>
-      <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+      <xs:documentation>Specifies a class.</xs:documentation>
     </xs:annotation>
     <xs:sequence>
       <xs:choice maxOccurs="unbounded" minOccurs="0">
         <xs:element maxOccurs="1" minOccurs="0" name="documentation" type="TDocumentation">
           <xs:annotation>
-            <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+            <xs:documentation>Specifies documentation for the class</xs:documentation>
           </xs:annotation>
         </xs:element>
         <xs:element maxOccurs="unbounded" minOccurs="0" name="include_header" type="THeaderInclude">
           <xs:annotation>
-            <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+            <xs:documentation>Specifies C or C++ header to include in wrapper class declaration header</xs:documentation>
           </xs:annotation>
         </xs:element>
         <xs:element maxOccurs="unbounded" minOccurs="0" name="enumeration" type="TEnumeration">
           <xs:annotation>
-            <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+            <xs:documentation>Specifies enumeration type inside the class</xs:documentation>
           </xs:annotation>
         </xs:element>
         <xs:element maxOccurs="unbounded" minOccurs="0" name="constructor" type="TConstructor">
           <xs:annotation>
-            <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+            <xs:documentation>Specifies constructor of the class</xs:documentation>
           </xs:annotation>
         </xs:element>
         <xs:element maxOccurs="unbounded" minOccurs="0" name="property" type="TProperty">
           <xs:annotation>
-            <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+            <xs:documentation>Specifies property of the class, for each property getter and setter methods should be generated</xs:documentation>
           </xs:annotation>
         </xs:element>
         <xs:element maxOccurs="unbounded" minOccurs="0" name="method" type="TMethod">
           <xs:annotation>
-            <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+            <xs:documentation>Specifies method of the class</xs:documentation>
           </xs:annotation>
         </xs:element>
         <xs:element maxOccurs="1" minOccurs="0" name="callback" type="TCallback">
           <xs:annotation>
-            <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+            <xs:documentation>Enables callback mode for the class</xs:documentation>
           </xs:annotation>
         </xs:element>
         <xs:element maxOccurs="unbounded" minOccurs="0" name="mapped_type" type="TMappedType">
           <xs:annotation>
-            <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+            <xs:documentation>Specifies mapped type for the class</xs:documentation>
           </xs:annotation>
         </xs:element>
         <xs:element maxOccurs="unbounded" minOccurs="0" name="lifecycle_extension" type="TLifecycleExtension">
           <xs:annotation>
-            <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+            <xs:documentation>Specifies lifecycle extension for the class</xs:documentation>
           </xs:annotation>
         </xs:element>
       </xs:choice>
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies class name</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="" name="base" type="xs:string" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies base class name</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute name="implementation_class_name" type="xs:string" use="required">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies implementation class name</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="" name="snippet_type" type="xs:string" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies snippet type name</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="false" name="abstract" type="xs:boolean" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies abstract class flag</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute name="implementation_class_header" type="xs:string" use="required">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies C or C++ header file name where implementation class is defined</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="reference_counted" name="lifecycle" type="TLifecycle" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies lifecycle semantic of the class</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="true" name="requires_cast_to_base" type="xs:boolean" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies requirement for casting to base class</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="false" name="pointer_access" type="xs:boolean" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies the pointer access flag, *-&gt;* instead of *.* will be used for accessing the implementation class</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="false" name="exception" type="xs:boolean" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies if the class could be used as exception</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="" name="template_line" type="xs:string" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Do not use, for internal usage only</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="" name="typedef_name" type="xs:string" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Do not use, for internal usage only</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="false" name="copy_or_add_ref_noexcept" type="xs:boolean" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies *noexcept* flag for copy constructor or increment reference counter function</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="true" name="delete_or_release_noexcept" type="xs:boolean" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies *noexcept* flag for destructor or release function</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="Notify" name="overload_suffix_mode" type="TOverloadSuffixMode" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies overload suffix mode for the class</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="{class_name}{wrap_suffix}" name="wrap_name" type="xs:string" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies wrap name for the class</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="true" name="generate_copy_constructor" type="xs:boolean" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies to generate copy constructor</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute name="impl_2_c" type="xs:string" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies casting expression from the implementation class to C language layer</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute name="c_2_impl" type="xs:string" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies casting expression from C language layer to the implementation class</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute name="custom_cast_to_base" type="xs:string" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies custom casting expression from the current class to its base class</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute name="custom_down_cast" type="xs:string" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies custom casting down expression from the current class to a derived class</xs:documentation>
       </xs:annotation>
     </xs:attribute>
   </xs:complexType>
   <xs:complexType name="TCallback">
     <xs:annotation>
-      <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+      <xs:documentation>Enables callback generation for the current class</xs:documentation>
     </xs:annotation>
     <xs:attribute default="reference_counted" name="lifecycle" type="TLifecycle" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies lifecycle semantic for the custom implementations of this callback</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="false" name="copy_or_add_ref_noexcept" type="xs:boolean" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies *noexcept* flag for copy or increment reference counter functions</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="true" name="delete_or_release_noexcept" type="xs:boolean" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies *noexcept* flag for delete of release functions</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute name="implementation_class_name" type="xs:string" use="required">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies implementation class name</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute name="implementation_class_header" type="xs:string" use="required">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies implementation class header</xs:documentation>
       </xs:annotation>
     </xs:attribute>
   </xs:complexType>
   <xs:complexType name="TConstructorBase">
     <xs:annotation>
-      <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+      <xs:documentation>Specifies base properties for constructors or methods.</xs:documentation>
     </xs:annotation>
     <xs:sequence>
       <xs:element maxOccurs="1" minOccurs="0" name="documentation" type="TDocumentation">
         <xs:annotation>
-          <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+          <xs:documentation>Specifies documentation for the current constructor or method</xs:documentation>
         </xs:annotation>
       </xs:element>
       <xs:element maxOccurs="unbounded" minOccurs="0" name="argument" type="TArgument">
         <xs:annotation>
-          <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+          <xs:documentation>Specifies argument for the current constructor or method</xs:documentation>
         </xs:annotation>
       </xs:element>
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies name of the current constructor or method</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="false" name="return_copy_or_add_ref" type="xs:boolean" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies to copy or increase reference counter for returned objects</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="false" name="noexcept" type="xs:boolean" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies *noexcept* flag for the current constructor or method</xs:documentation>
       </xs:annotation>
     </xs:attribute>
   </xs:complexType>
   <xs:complexType name="TConstructor">
     <xs:annotation>
-      <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+      <xs:documentation>Specifies a constructor.</xs:documentation>
     </xs:annotation>
     <xs:complexContent>
       <xs:extension base="TConstructorBase">
         <xs:attribute default="false" name="explicit" type="xs:boolean" use="optional">
           <xs:annotation>
-            <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+            <xs:documentation>Specifies *explicit* flag for the constructor</xs:documentation>
           </xs:annotation>
         </xs:attribute>
       </xs:extension>
@@ -607,28 +607,28 @@
   </xs:complexType>
   <xs:complexType name="TMethodBase">
     <xs:annotation>
-      <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+      <xs:documentation>Specifies base properties for methods or functions.</xs:documentation>
     </xs:annotation>
     <xs:complexContent>
       <xs:extension base="TConstructorBase">
         <xs:attribute default="" name="return" type="xs:string" use="optional">
           <xs:annotation>
-            <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+            <xs:documentation>Specifies return type for the current method or function</xs:documentation>
           </xs:annotation>
         </xs:attribute>
         <xs:attribute default="false" name="return_is_builtin" type="xs:boolean" use="optional">
           <xs:annotation>
-            <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+            <xs:documentation>Specifies flag if the return type is built-in type</xs:documentation>
           </xs:annotation>
         </xs:attribute>
         <xs:attribute default="" name="overload_suffix" type="xs:string" use="optional">
           <xs:annotation>
-            <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+            <xs:documentation>Specifies overload suffix for the current method or function</xs:documentation>
           </xs:annotation>
         </xs:attribute>
         <xs:attribute default="new {implementation_type}({expression})" name="impl_2_c" type="xs:string" use="optional">
           <xs:annotation>
-            <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+            <xs:documentation>Specifies casting expression from the implementation class to C language layer, for return objects</xs:documentation>
           </xs:annotation>
         </xs:attribute>
       </xs:extension>
@@ -636,13 +636,13 @@
   </xs:complexType>
   <xs:complexType name="TMethod">
     <xs:annotation>
-      <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+      <xs:documentation>Specifies properties for methods.</xs:documentation>
     </xs:annotation>
     <xs:complexContent>
       <xs:extension base="TMethodBase">
         <xs:attribute default="false" name="const" type="xs:boolean" use="optional">
           <xs:annotation>
-            <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+            <xs:documentation>Specifies *const* property of the current method</xs:documentation>
           </xs:annotation>
         </xs:attribute>
       </xs:extension>
@@ -650,18 +650,18 @@
   </xs:complexType>
   <xs:complexType name="TFunction">
     <xs:annotation>
-      <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+      <xs:documentation>Specifies properties for functions.</xs:documentation>
     </xs:annotation>
     <xs:complexContent>
       <xs:extension base="TMethodBase">
         <xs:attribute default="" name="implementation_name" type="xs:string" use="optional">
           <xs:annotation>
-            <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+            <xs:documentation>Specifies implementation name for the current function</xs:documentation>
           </xs:annotation>
         </xs:attribute>
         <xs:attribute default="" name="implementation_header" type="xs:string" use="optional">
           <xs:annotation>
-            <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+            <xs:documentation>Specifies implementation header name for the current function</xs:documentation>
           </xs:annotation>
         </xs:attribute>
       </xs:extension>
@@ -669,347 +669,347 @@
   </xs:complexType>
   <xs:complexType name="TArgument">
     <xs:annotation>
-      <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+      <xs:documentation>Specifies properties for argument.</xs:documentation>
     </xs:annotation>
     <xs:sequence>
       <xs:element maxOccurs="1" minOccurs="0" name="documentation" type="TGenericDocumentation">
         <xs:annotation>
-          <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+          <xs:documentation>Specifies documentation for the current argument</xs:documentation>
         </xs:annotation>
       </xs:element>
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies name of the current argument</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute name="type" type="xs:string" use="required">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies type of the current argument</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="false" name="is_builtin" type="xs:boolean" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies flag if the current argument type is built-in type</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="static_cast&amp;lt;{implementation_type}*&amp;gt;({expression})" name="c_2_impl" type="xs:string" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies casting expression from C language layer to implementation side</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="default" name="c_2_impl_mode" type="TC2ImplMode" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies casting mode from C language layer to implementation side</xs:documentation>
       </xs:annotation>
     </xs:attribute>
   </xs:complexType>
   <xs:simpleType name="TLifecycle">
     <xs:annotation>
-      <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+      <xs:documentation>Specifies lifecycle semantic for classes or callback implementations.</xs:documentation>
     </xs:annotation>
     <xs:restriction base="xs:string">
       <xs:enumeration value="copy_semantic">
         <xs:annotation>
-          <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+          <xs:documentation>Specifies *copy semantic*</xs:documentation>
         </xs:annotation>
       </xs:enumeration>
       <xs:enumeration value="raw_pointer_semantic">
         <xs:annotation>
-          <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+          <xs:documentation>Specifies *raw pointer semantic*</xs:documentation>
         </xs:annotation>
       </xs:enumeration>
       <xs:enumeration value="reference_counted">
         <xs:annotation>
-          <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+          <xs:documentation>Specifies *reference counted semantic*</xs:documentation>
         </xs:annotation>
       </xs:enumeration>
     </xs:restriction>
   </xs:simpleType>
   <xs:complexType name="TLifecycleExtension">
     <xs:annotation>
-      <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+      <xs:documentation>Specifies lifecycle extension for the current class.</xs:documentation>
     </xs:annotation>
     <xs:sequence>
       <xs:choice maxOccurs="unbounded" minOccurs="0">
         <xs:element maxOccurs="unbounded" minOccurs="0" name="cast_to" type="TCastTo">
           <xs:annotation>
-            <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+            <xs:documentation>Specifies casting operator to the specified lifecycle semantic</xs:documentation>
           </xs:annotation>
         </xs:element>
         <xs:element maxOccurs="unbounded" minOccurs="0" name="cast_from" type="TCastFrom">
           <xs:annotation>
-            <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+            <xs:documentation>Specifies casting constructor from the specified lifecycle semantic</xs:documentation>
           </xs:annotation>
         </xs:element>
       </xs:choice>
     </xs:sequence>
     <xs:attribute default="" name="name" type="xs:string" use="required">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies name of the current lifecycle extension</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="" name="wrap_name" type="xs:string" use="required">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies wrap class name for the current lifecycle extension</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="copy_semantic" name="lifecycle" type="TLifecycle" use="required">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies extended lifecycle semantic type</xs:documentation>
       </xs:annotation>
     </xs:attribute>
   </xs:complexType>
   <xs:complexType name="TCastTo">
     <xs:annotation>
-      <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+      <xs:documentation>Specifies casting operator to the specified lifecycle semantic.</xs:documentation>
     </xs:annotation>
     <xs:attribute default="true" name="implicit" type="xs:boolean" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies flag if casting operator will be implicit or explicit, by using a separate method</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute name="target_type" type="xs:string" use="required">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies the target type of the casting</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="To{target_type}" name="cast_method" type="xs:string" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies casting method name in case of explicit casting</xs:documentation>
       </xs:annotation>
     </xs:attribute>
   </xs:complexType>
   <xs:complexType name="TCastFrom">
     <xs:annotation>
-      <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+      <xs:documentation>Specifies casting constructor for the specified lifecycle semantic</xs:documentation>
     </xs:annotation>
     <xs:attribute name="source_type" type="xs:string" use="required">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies the source type of the casting</xs:documentation>
       </xs:annotation>
     </xs:attribute>
   </xs:complexType>
   <xs:simpleType name="TC2ImplMode">
     <xs:annotation>
-      <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+      <xs:documentation>Specifies mode of conversion from C language layer to the implementation side.</xs:documentation>
     </xs:annotation>
     <xs:restriction base="xs:string">
       <xs:enumeration value="default">
         <xs:annotation>
-          <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+          <xs:documentation>Specifies the default conversion mode of the current object type</xs:documentation>
         </xs:annotation>
       </xs:enumeration>
       <xs:enumeration value="to_pointer">
         <xs:annotation>
-          <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+          <xs:documentation>Specifies conversion to pointer</xs:documentation>
         </xs:annotation>
       </xs:enumeration>
       <xs:enumeration value="to_value">
         <xs:annotation>
-          <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+          <xs:documentation>Specifies conversion to value (implemented as reference)</xs:documentation>
         </xs:annotation>
       </xs:enumeration>
     </xs:restriction>
   </xs:simpleType>
   <xs:complexType name="THeaderInclude">
     <xs:annotation>
-      <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+      <xs:documentation>Specifies to include a particular C or C++ header to the generated files on the wrap side.</xs:documentation>
     </xs:annotation>
     <xs:attribute name="file" type="xs:string" use="required">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies file name for C or C++ header to include</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="false" name="system" type="xs:boolean" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies flag if the file should be included by using #include &lt;*file_name*&gt; preprocessor directive</xs:documentation>
       </xs:annotation>
     </xs:attribute>
   </xs:complexType>
   <xs:complexType name="TProperty">
     <xs:annotation>
-      <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+      <xs:documentation>Specifies property for the current class. Each property will be translated into two methods: getter method and setter method.</xs:documentation>
     </xs:annotation>
     <xs:sequence>
       <xs:element maxOccurs="1" minOccurs="0" name="documentation" type="TDocumentation">
         <xs:annotation>
-          <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+          <xs:documentation>Specifies documentation for the property, the same documentation will be used both for getter and setter methods</xs:documentation>
         </xs:annotation>
       </xs:element>
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies name of the property</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute name="type" type="xs:string" use="required">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies type of the property</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="Set" name="set_prefix" type="xs:string" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies setter's prefix</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="Get" name="get_prefix" type="xs:string" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies getter's prefix</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="true" name="get_const" type="xs:boolean" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies flag if getter method has *const* specifier</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="" name="set_argument_name" type="xs:string" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies argument name for setter method</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="false" name="is_builtin" type="xs:boolean" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies flag if type of the current property is built-in</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="static_cast&amp;lt;{implementation_type}&amp;gt;({expression})" name="set_c_2_impl" type="xs:string" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies casting expression for setter method from C language layer to the implementation side</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="default" name="set_c_2_impl_mode" type="TC2ImplMode" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies conversion mode for setter method from C language layer to the implementation side</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="new {implementation_type}({expression})" name="get_impl_2_c" type="xs:string" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies casting expression for getter method from the implementation side to C language layer</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="" name="set_argument_type" type="xs:string" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies setter method argument type</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="" name="return_type" type="xs:string" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies getter method return type</xs:documentation>
       </xs:annotation>
     </xs:attribute>
   </xs:complexType>
   <xs:complexType name="TPropertySetPrefix">
     <xs:annotation>
-      <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+      <xs:documentation>Specifies default setter method prefix.</xs:documentation>
     </xs:annotation>
     <xs:attribute default="Set" name="value" type="xs:string" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies default setter method prefix</xs:documentation>
       </xs:annotation>
     </xs:attribute>
   </xs:complexType>
   <xs:complexType name="TPropertyGetPrefix">
     <xs:annotation>
-      <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+      <xs:documentation>Specifies default getter method prefix.</xs:documentation>
     </xs:annotation>
     <xs:attribute default="Get" name="value" type="xs:string" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies default getter method prefix</xs:documentation>
       </xs:annotation>
     </xs:attribute>
   </xs:complexType>
   <xs:complexType name="TPropertyGetConst">
     <xs:annotation>
-      <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+      <xs:documentation>Specifies default getter method const property.</xs:documentation>
     </xs:annotation>
     <xs:attribute default="true" name="value" type="xs:boolean" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies default getter method const property</xs:documentation>
       </xs:annotation>
     </xs:attribute>
   </xs:complexType>
   <xs:simpleType name="TOverloadSuffixMode">
     <xs:annotation>
-      <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+      <xs:documentation>Specifies overload suffix mode for overloaded method and functions.</xs:documentation>
     </xs:annotation>
     <xs:restriction base="xs:string">
       <xs:enumeration value="Off">
         <xs:annotation>
-          <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+          <xs:documentation>Specifies to disable automatic suffix generation for overloaded methods and functions</xs:documentation>
         </xs:annotation>
       </xs:enumeration>
       <xs:enumeration value="Notify">
         <xs:annotation>
-          <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+          <xs:documentation>Specifies to automatically generate suffix for overloaded methods and functions and notify user about this</xs:documentation>
         </xs:annotation>
       </xs:enumeration>
       <xs:enumeration value="Silent">
         <xs:annotation>
-          <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+          <xs:documentation>Specifies to automatically silently generate suffix for overloaded methods and functions</xs:documentation>
         </xs:annotation>
       </xs:enumeration>
     </xs:restriction>
   </xs:simpleType>
   <xs:complexType name="TMappedType">
     <xs:annotation>
-      <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+      <xs:documentation>Specifies mapped type</xs:documentation>
     </xs:annotation>
     <xs:sequence>
       <xs:element maxOccurs="unbounded" minOccurs="0" name="include_header" type="THeaderInclude">
         <xs:annotation>
-          <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+          <xs:documentation>Specifies C or C++ header file name to include</xs:documentation>
         </xs:annotation>
       </xs:element>
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies name</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute name="wrap_type" type="xs:string" use="required">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies wrap type name</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute name="argument_wrap_type" type="xs:string" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies wrap type name which should be used as argument types</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute name="c_type" type="xs:string" use="required">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies C language layer type name</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute name="implementation_type" type="xs:string" use="required">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies the implementation side type</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="" name="snippet_type" type="xs:string" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies snippet type name</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="static_cast&amp;lt;{c_type}&amp;gt;({expression})" name="wrap_2_c" type="xs:string" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies casting expression from wrap type to C language layer type</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="static_cast&amp;lt;{implementation_type}&amp;gt;({expression})" name="c_2_impl" type="xs:string" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies casting expression from C language layer type to the implementation side type</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="static_cast&amp;lt;{c_type}&amp;gt;({expression})" name="impl_2_c" type="xs:string" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies casting expression from the implementation side type to C language layer type</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="static_cast&amp;lt;{wrap_type}&amp;gt;({expression})" name="c_2_wrap" type="xs:string" use="optional">
       <xs:annotation>
-        <xs:documentation>&amp;quot;Work in progress&amp;quot;</xs:documentation>
+        <xs:documentation>Specifies casting expression from C language layer type to the wrap side type</xs:documentation>
       </xs:annotation>
     </xs:attribute>
   </xs:complexType>

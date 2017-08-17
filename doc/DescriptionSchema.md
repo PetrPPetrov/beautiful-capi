@@ -111,7 +111,7 @@ The purpose of *TBeautifulCapiRoot* node is to specify the project name, major, 
 
 ### TNamespace
 
-&quot;Work in progress&quot;
+The purpose of *TNamespace* node is to describe namespace.
 
 <table>
   <caption>TNamespace, list of attributes</caption>
@@ -194,7 +194,7 @@ The purpose of *TBeautifulCapiRoot* node is to specify the project name, major, 
       <a href="#tdocumentation">TDocumentation</a>
     </td>
     <td>
-      Specifies the namespace doxygen documentation
+      Specifies documentation for the current namespace
     </td>
   </tr>
   <tr>
@@ -236,7 +236,7 @@ The purpose of *TBeautifulCapiRoot* node is to specify the project name, major, 
       <a href="#tapiinclude">TApiInclude</a>
     </td>
     <td>
-      Included another XML API description file
+      Includes another XML API description file
     </td>
   </tr>
   <tr>
@@ -264,7 +264,7 @@ The purpose of *TBeautifulCapiRoot* node is to specify the project name, major, 
       <a href="#theaderinclude">THeaderInclude</a>
     </td>
     <td>
-      Specifies a header to include from wrapper side
+      Specifies a header to include from the wrapper side
     </td>
   </tr>
   <tr>
@@ -334,7 +334,7 @@ The purpose of *TBeautifulCapiRoot* node is to specify the project name, major, 
       <a href="#tpropertysetprefix">TPropertySetPrefix</a>
     </td>
     <td>
-      Specifies default value for property set prefix
+      Specifies default value for setter's prefix
     </td>
   </tr>
   <tr>
@@ -348,7 +348,7 @@ The purpose of *TBeautifulCapiRoot* node is to specify the project name, major, 
       <a href="#tpropertygetprefix">TPropertyGetPrefix</a>
     </td>
     <td>
-      Specifies default value for property get prefix
+      Specifies default value for getter's prefix
     </td>
   </tr>
   <tr>
@@ -362,7 +362,7 @@ The purpose of *TBeautifulCapiRoot* node is to specify the project name, major, 
       <a href="#tpropertygetconst">TPropertyGetConst</a>
     </td>
     <td>
-      Specifies default value for property get cont
+      Specifies default value for getter's constant property
     </td>
   </tr>
   <tr>
@@ -383,7 +383,7 @@ The purpose of *TBeautifulCapiRoot* node is to specify the project name, major, 
 
 ### TDocumentation
 
-The purpose of *TDocumentation* node is to specify
+The purpose of *TDocumentation* node is to specify documentation for functions and methods. The documentation will be inserted as doxygen comments in the generated source code.
 
 TDocumentation is Inherited from TGenericDocumentation
 <table>
@@ -405,7 +405,7 @@ TDocumentation is Inherited from TGenericDocumentation
       <a href="#tgenericdocumentation">TGenericDocumentation</a>
     </td>
     <td>
-      &quot;Work in Progress&quot;
+      Specifies documentation which will be used as *@brief* doxygen documentation
     </td>
   </tr>
   <tr>
@@ -419,18 +419,18 @@ TDocumentation is Inherited from TGenericDocumentation
       <a href="#tgenericdocumentation">TGenericDocumentation</a>
     </td>
     <td>
-      &quot;Work in Progress&quot;
+      Specifies documentation for return values, this documentation will be used as *@returns* doxygen documentation
     </td>
   </tr>
 </table>
 
 ### TReference
 
-&quot;Work in progress&quot;
+In documentation specifies reference to another class, function, enumeration or namespace, it will be used as *@ref* doxygen documentation.
 
 ### TGenericDocumentation
 
-&quot;Work in progress&quot;
+The purpose of *TGenericDocumentation* node is to specify documentation for all objects which can have documentation. The documentation will be inserted as doxygen comments in the generated source code.
 
 <table>
   <caption>TGenericDocumentation, list of elements</caption>
@@ -451,7 +451,7 @@ TDocumentation is Inherited from TGenericDocumentation
       <a href="#treference">TReference</a>
     </td>
     <td>
-      &quot;Work in Progress&quot;
+      Specifies documentation reference for another documentation object
     </td>
   </tr>
   <tr>
@@ -465,14 +465,14 @@ TDocumentation is Inherited from TGenericDocumentation
       <a href="#tgenericdocumentation">TGenericDocumentation</a>
     </td>
     <td>
-      &quot;Work in Progress&quot;
+      Specifies *@see* doxygen documentation
     </td>
   </tr>
 </table>
 
 ### TExternalNamespace
 
-&quot;Work in progress&quot;
+Specifies an external namespace. External namespace is a namespace of 3rd party library which also uses Beautiful Capi. The classes from the external library could be used as arguments in the current library API.
 
 <table>
   <caption>TExternalNamespace, list of attributes</caption>
@@ -494,7 +494,7 @@ TDocumentation is Inherited from TGenericDocumentation
       optional
     </td>
     <td>
-      Path to the include file. Can be absolute or relative to .xml file
+      Specifies path to the include file, can be absolute or relative path to .xml file
     </td>
     <td>
       ""
@@ -511,7 +511,7 @@ TDocumentation is Inherited from TGenericDocumentation
       required
     </td>
     <td>
-      Specifies the namespace name
+      Specifies the external namespace name
     </td>
     <td>
       ""
@@ -528,7 +528,7 @@ TDocumentation is Inherited from TGenericDocumentation
       optional
     </td>
     <td>
-      Specifies the name of detach method
+      Specifies the name of *detach* method
     </td>
     <td>
       Detach
@@ -545,7 +545,7 @@ TDocumentation is Inherited from TGenericDocumentation
       optional
     </td>
     <td>
-      Specifies the name of GetRawPointer method
+      Specifies the name of *GetRawPointer* method
     </td>
     <td>
       GetRawPointer
@@ -572,7 +572,7 @@ TDocumentation is Inherited from TGenericDocumentation
       <a href="#texternalclass">TExternalClass</a>
     </td>
     <td>
-      Specifies a external class
+      Specifies an external class which is a part of 3rd party library which also uses Beautiful Capi
     </td>
   </tr>
   <tr>
@@ -586,14 +586,14 @@ TDocumentation is Inherited from TGenericDocumentation
       <a href="#texternalnamespace">TExternalNamespace</a>
     </td>
     <td>
-      Specifies a external namespace
+      Specifies an nested external namespace
     </td>
   </tr>
 </table>
 
 ### TExternalClass
 
-&quot;Work in progress&quot;
+Specifies an external class. External class is a part of 3rd party library which also uses Beautiful Capi. This class could be used as argument in the current library API.
 
 <table>
   <caption>TExternalClass, list of attributes</caption>
@@ -649,7 +649,7 @@ TDocumentation is Inherited from TGenericDocumentation
       optional
     </td>
     <td>
-      “Work in Progress”
+      Specifies header file name which should be included to find the class declaration
     </td>
     <td>
       ""
@@ -666,7 +666,7 @@ TDocumentation is Inherited from TGenericDocumentation
       optional
     </td>
     <td>
-      “Work in Progress”
+      Specifies header file name which should be included to find the class definition
     </td>
     <td>
       ""
@@ -676,7 +676,7 @@ TDocumentation is Inherited from TGenericDocumentation
 
 ### TExternalLibrary
 
-&quot;Work in progress&quot;
+Specifies a 3rd party library which also uses Beautiful Capi. The classes from such library could be used as arguments in the current library API.
 
 <table>
   <caption>TExternalLibrary, list of attributes</caption>
@@ -698,7 +698,7 @@ TDocumentation is Inherited from TGenericDocumentation
       required
     </td>
     <td>
-      Path to another B-Capi XML API description file. Can be absolute or relative to .xml file
+      Specifies path to another Beautiful Capi XML API description file, it can be absolute or relative path to .xml file
     </td>
     <td>
       ""
@@ -715,7 +715,7 @@ TDocumentation is Inherited from TGenericDocumentation
       required
     </td>
     <td>
-      Path to another B-Capi params XML file. Can be absolute or relative to .xml file
+      Specifies path to another Beautiful Capi params XML file, it can be absolute or relative path to .xml file
     </td>
     <td>
       ""
@@ -725,7 +725,7 @@ TDocumentation is Inherited from TGenericDocumentation
 
 ### TApiInclude
 
-&quot;Work in progress&quot;
+Includes another XML API description file. The content of the included XML API description file is inserted as is to the current XML file.
 
 <table>
   <caption>TApiInclude, list of attributes</caption>
@@ -747,7 +747,7 @@ TDocumentation is Inherited from TGenericDocumentation
       required
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies path to another Beautiful Capi XML API description file, it can be absolute or relative path to .xml file
     </td>
     <td>
       ""
@@ -757,7 +757,7 @@ TDocumentation is Inherited from TGenericDocumentation
 
 ### TEnumerationItem
 
-&quot;Work in progress&quot;
+Specifies enumeration item.
 
 <table>
   <caption>TEnumerationItem, list of attributes</caption>
@@ -779,7 +779,7 @@ TDocumentation is Inherited from TGenericDocumentation
       required
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies name of the current enumeration item
     </td>
     <td>
       ""
@@ -796,7 +796,7 @@ TDocumentation is Inherited from TGenericDocumentation
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies value of the current enumeration item
     </td>
     <td>
       ""
@@ -823,14 +823,14 @@ TDocumentation is Inherited from TGenericDocumentation
       <a href="#tgenericdocumentation">TGenericDocumentation</a>
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies documentation for the current enumeration item
     </td>
   </tr>
 </table>
 
 ### TEnumeration
 
-&quot;Work in progress&quot;
+Specifies enumeration type.
 
 <table>
   <caption>TEnumeration, list of attributes</caption>
@@ -852,7 +852,7 @@ TDocumentation is Inherited from TGenericDocumentation
       required
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies name of the current enumeration type
     </td>
     <td>
       ""
@@ -869,7 +869,7 @@ TDocumentation is Inherited from TGenericDocumentation
       required
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies *underlying_type* for the current enumeration type, for instance, *uint16_t* which will be used in C language layer
     </td>
     <td>
       ""
@@ -896,7 +896,7 @@ TDocumentation is Inherited from TGenericDocumentation
       <a href="#tdocumentation">TDocumentation</a>
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies documentation of the current enumeration type.
     </td>
   </tr>
   <tr>
@@ -910,14 +910,14 @@ TDocumentation is Inherited from TGenericDocumentation
       <a href="#tenumerationitem">TEnumerationItem</a>
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies enumeration item
     </td>
   </tr>
 </table>
 
 ### TTemplate
 
-&quot;Work in progress&quot;
+Specifies class template. Class template will be converted to several instantiated classes.
 
 <table>
   <caption>TTemplate, list of elements</caption>
@@ -938,7 +938,7 @@ TDocumentation is Inherited from TGenericDocumentation
       <a href="#targument">TArgument</a>
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies template argument
     </td>
   </tr>
   <tr>
@@ -952,7 +952,7 @@ TDocumentation is Inherited from TGenericDocumentation
       <a href="#tinstantiation">TInstantiation</a>
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies template instantiation
     </td>
   </tr>
   <tr>
@@ -966,14 +966,14 @@ TDocumentation is Inherited from TGenericDocumentation
       <a href="#tclass">TClass</a>
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies template class
     </td>
   </tr>
 </table>
 
 ### TInstantiation
 
-&quot;Work in progress&quot;
+Specifies template class instantiation.
 
 <table>
   <caption>TInstantiation, list of attributes</caption>
@@ -995,7 +995,7 @@ TDocumentation is Inherited from TGenericDocumentation
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies typedef name for the instantiated template class
     </td>
     <td>
       ""
@@ -1022,14 +1022,14 @@ TDocumentation is Inherited from TGenericDocumentation
       <a href="#tinstantiationargument">TInstantiationArgument</a>
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies a particular value for the specified template argument
     </td>
   </tr>
 </table>
 
 ### TInstantiationArgument
 
-&quot;Work in progress&quot;
+Specifies a value for a particular template argument.
 
 <table>
   <caption>TInstantiationArgument, list of attributes</caption>
@@ -1051,7 +1051,7 @@ TDocumentation is Inherited from TGenericDocumentation
       required
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies template argument name
     </td>
     <td>
       ""
@@ -1068,7 +1068,7 @@ TDocumentation is Inherited from TGenericDocumentation
       required
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies template argument value
     </td>
     <td>
       ""
@@ -1078,7 +1078,7 @@ TDocumentation is Inherited from TGenericDocumentation
 
 ### TClass
 
-&quot;Work in progress&quot;
+Specifies a class.
 
 <table>
   <caption>TClass, list of attributes</caption>
@@ -1100,7 +1100,7 @@ TDocumentation is Inherited from TGenericDocumentation
       required
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies class name
     </td>
     <td>
       ""
@@ -1117,7 +1117,7 @@ TDocumentation is Inherited from TGenericDocumentation
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies base class name
     </td>
     <td>
       ""
@@ -1134,7 +1134,7 @@ TDocumentation is Inherited from TGenericDocumentation
       required
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies implementation class name
     </td>
     <td>
       ""
@@ -1151,7 +1151,7 @@ TDocumentation is Inherited from TGenericDocumentation
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies snippet type name
     </td>
     <td>
       ""
@@ -1168,7 +1168,7 @@ TDocumentation is Inherited from TGenericDocumentation
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies abstract class flag
     </td>
     <td>
       false
@@ -1185,7 +1185,7 @@ TDocumentation is Inherited from TGenericDocumentation
       required
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies C or C++ header file name where implementation class is defined
     </td>
     <td>
       ""
@@ -1202,7 +1202,7 @@ TDocumentation is Inherited from TGenericDocumentation
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies lifecycle semantic of the class
     </td>
     <td>
       reference_counted
@@ -1219,7 +1219,7 @@ TDocumentation is Inherited from TGenericDocumentation
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies requirement for casting to base class
     </td>
     <td>
       true
@@ -1236,7 +1236,7 @@ TDocumentation is Inherited from TGenericDocumentation
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies the pointer access flag, *->* instead of *.* will be used for accessing the implementation class
     </td>
     <td>
       false
@@ -1253,7 +1253,7 @@ TDocumentation is Inherited from TGenericDocumentation
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies if the class could be used as exception
     </td>
     <td>
       false
@@ -1270,7 +1270,7 @@ TDocumentation is Inherited from TGenericDocumentation
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Do not use, for internal usage only
     </td>
     <td>
       ""
@@ -1287,7 +1287,7 @@ TDocumentation is Inherited from TGenericDocumentation
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Do not use, for internal usage only
     </td>
     <td>
       ""
@@ -1304,7 +1304,7 @@ TDocumentation is Inherited from TGenericDocumentation
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies *noexcept* flag for copy constructor or increment reference counter function
     </td>
     <td>
       false
@@ -1321,7 +1321,7 @@ TDocumentation is Inherited from TGenericDocumentation
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies *noexcept* flag for destructor or release function
     </td>
     <td>
       true
@@ -1338,7 +1338,7 @@ TDocumentation is Inherited from TGenericDocumentation
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies overload suffix mode for the class
     </td>
     <td>
       Notify
@@ -1355,7 +1355,7 @@ TDocumentation is Inherited from TGenericDocumentation
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies wrap name for the class
     </td>
     <td>
       {class_name}{wrap_suffix}
@@ -1372,7 +1372,7 @@ TDocumentation is Inherited from TGenericDocumentation
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies to generate copy constructor
     </td>
     <td>
       true
@@ -1389,7 +1389,7 @@ TDocumentation is Inherited from TGenericDocumentation
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies casting expression from the implementation class to C language layer
     </td>
     <td>
       ""
@@ -1406,7 +1406,7 @@ TDocumentation is Inherited from TGenericDocumentation
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies casting expression from C language layer to the implementation class
     </td>
     <td>
       ""
@@ -1423,7 +1423,7 @@ TDocumentation is Inherited from TGenericDocumentation
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies custom casting expression from the current class to its base class
     </td>
     <td>
       ""
@@ -1440,7 +1440,7 @@ TDocumentation is Inherited from TGenericDocumentation
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies custom casting down expression from the current class to a derived class
     </td>
     <td>
       ""
@@ -1467,7 +1467,7 @@ TDocumentation is Inherited from TGenericDocumentation
       <a href="#tdocumentation">TDocumentation</a>
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies documentation for the class
     </td>
   </tr>
   <tr>
@@ -1481,7 +1481,7 @@ TDocumentation is Inherited from TGenericDocumentation
       <a href="#theaderinclude">THeaderInclude</a>
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies C or C++ header to include in wrapper class declaration header
     </td>
   </tr>
   <tr>
@@ -1495,7 +1495,7 @@ TDocumentation is Inherited from TGenericDocumentation
       <a href="#tenumeration">TEnumeration</a>
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies enumeration type inside the class
     </td>
   </tr>
   <tr>
@@ -1509,7 +1509,7 @@ TDocumentation is Inherited from TGenericDocumentation
       <a href="#tconstructor">TConstructor</a>
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies constructor of the class
     </td>
   </tr>
   <tr>
@@ -1523,7 +1523,7 @@ TDocumentation is Inherited from TGenericDocumentation
       <a href="#tproperty">TProperty</a>
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies property of the class, for each property getter and setter methods should be generated
     </td>
   </tr>
   <tr>
@@ -1537,7 +1537,7 @@ TDocumentation is Inherited from TGenericDocumentation
       <a href="#tmethod">TMethod</a>
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies method of the class
     </td>
   </tr>
   <tr>
@@ -1551,7 +1551,7 @@ TDocumentation is Inherited from TGenericDocumentation
       <a href="#tcallback">TCallback</a>
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Enables callback mode for the class
     </td>
   </tr>
   <tr>
@@ -1565,7 +1565,7 @@ TDocumentation is Inherited from TGenericDocumentation
       <a href="#tmappedtype">TMappedType</a>
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies mapped type for the class
     </td>
   </tr>
   <tr>
@@ -1579,14 +1579,14 @@ TDocumentation is Inherited from TGenericDocumentation
       <a href="#tlifecycleextension">TLifecycleExtension</a>
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies lifecycle extension for the class
     </td>
   </tr>
 </table>
 
 ### TCallback
 
-&quot;Work in progress&quot;
+Enables callback generation for the current class
 
 <table>
   <caption>TCallback, list of attributes</caption>
@@ -1608,7 +1608,7 @@ TDocumentation is Inherited from TGenericDocumentation
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies lifecycle semantic for the custom implementations of this callback
     </td>
     <td>
       reference_counted
@@ -1625,7 +1625,7 @@ TDocumentation is Inherited from TGenericDocumentation
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies *noexcept* flag for copy or increment reference counter functions
     </td>
     <td>
       false
@@ -1642,7 +1642,7 @@ TDocumentation is Inherited from TGenericDocumentation
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies *noexcept* flag for delete of release functions
     </td>
     <td>
       true
@@ -1659,7 +1659,7 @@ TDocumentation is Inherited from TGenericDocumentation
       required
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies implementation class name
     </td>
     <td>
       ""
@@ -1676,7 +1676,7 @@ TDocumentation is Inherited from TGenericDocumentation
       required
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies implementation class header
     </td>
     <td>
       ""
@@ -1686,7 +1686,7 @@ TDocumentation is Inherited from TGenericDocumentation
 
 ### TConstructorBase
 
-&quot;Work in progress&quot;
+Specifies base properties for constructors or methods.
 
 <table>
   <caption>TConstructorBase, list of attributes</caption>
@@ -1708,7 +1708,7 @@ TDocumentation is Inherited from TGenericDocumentation
       required
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies name of the current constructor or method
     </td>
     <td>
       ""
@@ -1725,7 +1725,7 @@ TDocumentation is Inherited from TGenericDocumentation
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies to copy or increase reference counter for returned objects
     </td>
     <td>
       false
@@ -1742,7 +1742,7 @@ TDocumentation is Inherited from TGenericDocumentation
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies *noexcept* flag for the current constructor or method
     </td>
     <td>
       false
@@ -1769,7 +1769,7 @@ TDocumentation is Inherited from TGenericDocumentation
       <a href="#tdocumentation">TDocumentation</a>
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies documentation for the current constructor or method
     </td>
   </tr>
   <tr>
@@ -1783,14 +1783,14 @@ TDocumentation is Inherited from TGenericDocumentation
       <a href="#targument">TArgument</a>
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies argument for the current constructor or method
     </td>
   </tr>
 </table>
 
 ### TConstructor
 
-&quot;Work in progress&quot;
+Specifies a constructor.
 
 TConstructor is Inherited from TConstructorBase
 <table>
@@ -1813,7 +1813,7 @@ TConstructor is Inherited from TConstructorBase
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies *explicit* flag for the constructor
     </td>
     <td>
       false
@@ -1823,7 +1823,7 @@ TConstructor is Inherited from TConstructorBase
 
 ### TMethodBase
 
-&quot;Work in progress&quot;
+Specifies base properties for methods or functions.
 
 TMethodBase is Inherited from TConstructorBase
 <table>
@@ -1846,7 +1846,7 @@ TMethodBase is Inherited from TConstructorBase
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies return type for the current method or function
     </td>
     <td>
       ""
@@ -1863,7 +1863,7 @@ TMethodBase is Inherited from TConstructorBase
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies flag if the return type is built-in type
     </td>
     <td>
       false
@@ -1880,7 +1880,7 @@ TMethodBase is Inherited from TConstructorBase
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies overload suffix for the current method or function
     </td>
     <td>
       ""
@@ -1897,7 +1897,7 @@ TMethodBase is Inherited from TConstructorBase
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies casting expression from the implementation class to C language layer, for return objects
     </td>
     <td>
       new {implementation_type}({expression})
@@ -1907,7 +1907,7 @@ TMethodBase is Inherited from TConstructorBase
 
 ### TMethod
 
-&quot;Work in progress&quot;
+Specifies properties for methods.
 
 TMethod is Inherited from TMethodBase
 <table>
@@ -1930,7 +1930,7 @@ TMethod is Inherited from TMethodBase
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies *const* property of the current method
     </td>
     <td>
       false
@@ -1940,7 +1940,7 @@ TMethod is Inherited from TMethodBase
 
 ### TFunction
 
-&quot;Work in progress&quot;
+Specifies properties for functions.
 
 TFunction is Inherited from TMethodBase
 <table>
@@ -1963,7 +1963,7 @@ TFunction is Inherited from TMethodBase
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies implementation name for the current function
     </td>
     <td>
       ""
@@ -1980,7 +1980,7 @@ TFunction is Inherited from TMethodBase
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies implementation header name for the current function
     </td>
     <td>
       ""
@@ -1990,7 +1990,7 @@ TFunction is Inherited from TMethodBase
 
 ### TArgument
 
-&quot;Work in progress&quot;
+Specifies properties for argument.
 
 <table>
   <caption>TArgument, list of attributes</caption>
@@ -2012,7 +2012,7 @@ TFunction is Inherited from TMethodBase
       required
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies name of the current argument
     </td>
     <td>
       ""
@@ -2029,7 +2029,7 @@ TFunction is Inherited from TMethodBase
       required
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies type of the current argument
     </td>
     <td>
       ""
@@ -2046,7 +2046,7 @@ TFunction is Inherited from TMethodBase
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies flag if the current argument type is built-in type
     </td>
     <td>
       false
@@ -2063,7 +2063,7 @@ TFunction is Inherited from TMethodBase
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies casting expression from C language layer to implementation side
     </td>
     <td>
       static_cast&lt;{implementation_type}*&gt;({expression})
@@ -2080,7 +2080,7 @@ TFunction is Inherited from TMethodBase
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies casting mode from C language layer to implementation side
     </td>
     <td>
       default
@@ -2107,14 +2107,14 @@ TFunction is Inherited from TMethodBase
       <a href="#tgenericdocumentation">TGenericDocumentation</a>
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies documentation for the current argument
     </td>
   </tr>
 </table>
 
 ### TLifecycleExtension
 
-&quot;Work in progress&quot;
+Specifies lifecycle extension for the current class.
 
 <table>
   <caption>TLifecycleExtension, list of attributes</caption>
@@ -2136,7 +2136,7 @@ TFunction is Inherited from TMethodBase
       required
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies name of the current lifecycle extension
     </td>
     <td>
       ""
@@ -2153,7 +2153,7 @@ TFunction is Inherited from TMethodBase
       required
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies wrap class name for the current lifecycle extension
     </td>
     <td>
       ""
@@ -2170,7 +2170,7 @@ TFunction is Inherited from TMethodBase
       required
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies extended lifecycle semantic type
     </td>
     <td>
       copy_semantic
@@ -2197,7 +2197,7 @@ TFunction is Inherited from TMethodBase
       <a href="#tcastto">TCastTo</a>
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies casting operator to the specified lifecycle semantic
     </td>
   </tr>
   <tr>
@@ -2211,14 +2211,14 @@ TFunction is Inherited from TMethodBase
       <a href="#tcastfrom">TCastFrom</a>
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies casting constructor from the specified lifecycle semantic
     </td>
   </tr>
 </table>
 
 ### TCastTo
 
-&quot;Work in progress&quot;
+Specifies casting operator to the specified lifecycle semantic.
 
 <table>
   <caption>TCastTo, list of attributes</caption>
@@ -2240,7 +2240,7 @@ TFunction is Inherited from TMethodBase
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies flag if casting operator will be implicit or explicit, by using a separate method
     </td>
     <td>
       true
@@ -2257,7 +2257,7 @@ TFunction is Inherited from TMethodBase
       required
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies the target type of the casting
     </td>
     <td>
       ""
@@ -2274,7 +2274,7 @@ TFunction is Inherited from TMethodBase
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies casting method name in case of explicit casting
     </td>
     <td>
       To{target_type}
@@ -2284,7 +2284,7 @@ TFunction is Inherited from TMethodBase
 
 ### TCastFrom
 
-&quot;Work in progress&quot;
+Specifies casting constructor for the specified lifecycle semantic
 
 <table>
   <caption>TCastFrom, list of attributes</caption>
@@ -2306,7 +2306,7 @@ TFunction is Inherited from TMethodBase
       required
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies the source type of the casting
     </td>
     <td>
       ""
@@ -2316,7 +2316,7 @@ TFunction is Inherited from TMethodBase
 
 ### THeaderInclude
 
-&quot;Work in progress&quot;
+Specifies to include a particular C or C++ header to the generated files on the wrap side.
 
 <table>
   <caption>THeaderInclude, list of attributes</caption>
@@ -2338,7 +2338,7 @@ TFunction is Inherited from TMethodBase
       required
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies file name for C or C++ header to include
     </td>
     <td>
       ""
@@ -2355,7 +2355,7 @@ TFunction is Inherited from TMethodBase
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies flag if the file should be included by using #include <*file_name*> preprocessor directive
     </td>
     <td>
       false
@@ -2365,7 +2365,7 @@ TFunction is Inherited from TMethodBase
 
 ### TProperty
 
-&quot;Work in progress&quot;
+Specifies property for the current class. Each property will be translated into two methods: getter method and setter method.
 
 <table>
   <caption>TProperty, list of attributes</caption>
@@ -2387,7 +2387,7 @@ TFunction is Inherited from TMethodBase
       required
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies name of the property
     </td>
     <td>
       ""
@@ -2404,7 +2404,7 @@ TFunction is Inherited from TMethodBase
       required
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies type of the property
     </td>
     <td>
       ""
@@ -2421,7 +2421,7 @@ TFunction is Inherited from TMethodBase
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies setter's prefix
     </td>
     <td>
       Set
@@ -2438,7 +2438,7 @@ TFunction is Inherited from TMethodBase
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies getter's prefix
     </td>
     <td>
       Get
@@ -2455,7 +2455,7 @@ TFunction is Inherited from TMethodBase
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies flag if getter method has *const* specifier
     </td>
     <td>
       true
@@ -2472,7 +2472,7 @@ TFunction is Inherited from TMethodBase
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies argument name for setter method
     </td>
     <td>
       ""
@@ -2489,7 +2489,7 @@ TFunction is Inherited from TMethodBase
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies flag if type of the current property is built-in
     </td>
     <td>
       false
@@ -2506,7 +2506,7 @@ TFunction is Inherited from TMethodBase
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies casting expression for setter method from C language layer to the implementation side
     </td>
     <td>
       static_cast&lt;{implementation_type}&gt;({expression})
@@ -2523,7 +2523,7 @@ TFunction is Inherited from TMethodBase
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies conversion mode for setter method from C language layer to the implementation side
     </td>
     <td>
       default
@@ -2540,7 +2540,7 @@ TFunction is Inherited from TMethodBase
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies casting expression for getter method from the implementation side to C language layer
     </td>
     <td>
       new {implementation_type}({expression})
@@ -2557,7 +2557,7 @@ TFunction is Inherited from TMethodBase
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies setter method argument type
     </td>
     <td>
       ""
@@ -2574,7 +2574,7 @@ TFunction is Inherited from TMethodBase
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies getter method return type
     </td>
     <td>
       ""
@@ -2601,14 +2601,14 @@ TFunction is Inherited from TMethodBase
       <a href="#tdocumentation">TDocumentation</a>
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies documentation for the property, the same documentation will be used both for getter and setter methods
     </td>
   </tr>
 </table>
 
 ### TPropertySetPrefix
 
-&quot;Work in progress&quot;
+Specifies default setter method prefix.
 
 <table>
   <caption>TPropertySetPrefix, list of attributes</caption>
@@ -2630,7 +2630,7 @@ TFunction is Inherited from TMethodBase
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies default setter method prefix
     </td>
     <td>
       Set
@@ -2640,7 +2640,7 @@ TFunction is Inherited from TMethodBase
 
 ### TPropertyGetPrefix
 
-&quot;Work in progress&quot;
+Specifies default getter method prefix.
 
 <table>
   <caption>TPropertyGetPrefix, list of attributes</caption>
@@ -2662,7 +2662,7 @@ TFunction is Inherited from TMethodBase
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies default getter method prefix
     </td>
     <td>
       Get
@@ -2672,7 +2672,7 @@ TFunction is Inherited from TMethodBase
 
 ### TPropertyGetConst
 
-&quot;Work in progress&quot;
+Specifies default getter method const property.
 
 <table>
   <caption>TPropertyGetConst, list of attributes</caption>
@@ -2694,7 +2694,7 @@ TFunction is Inherited from TMethodBase
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies default getter method const property
     </td>
     <td>
       true
@@ -2704,7 +2704,7 @@ TFunction is Inherited from TMethodBase
 
 ### TMappedType
 
-&quot;Work in progress&quot;
+Specifies mapped type
 
 <table>
   <caption>TMappedType, list of attributes</caption>
@@ -2726,7 +2726,7 @@ TFunction is Inherited from TMethodBase
       required
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies name
     </td>
     <td>
       ""
@@ -2743,7 +2743,7 @@ TFunction is Inherited from TMethodBase
       required
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies wrap type name
     </td>
     <td>
       ""
@@ -2760,7 +2760,7 @@ TFunction is Inherited from TMethodBase
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies wrap type name which should be used as argument types
     </td>
     <td>
       ""
@@ -2777,7 +2777,7 @@ TFunction is Inherited from TMethodBase
       required
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies C language layer type name
     </td>
     <td>
       ""
@@ -2794,7 +2794,7 @@ TFunction is Inherited from TMethodBase
       required
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies the implementation side type
     </td>
     <td>
       ""
@@ -2811,7 +2811,7 @@ TFunction is Inherited from TMethodBase
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies snippet type name
     </td>
     <td>
       ""
@@ -2828,7 +2828,7 @@ TFunction is Inherited from TMethodBase
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies casting expression from wrap type to C language layer type
     </td>
     <td>
       static_cast&lt;{c_type}&gt;({expression})
@@ -2845,7 +2845,7 @@ TFunction is Inherited from TMethodBase
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies casting expression from C language layer type to the implementation side type
     </td>
     <td>
       static_cast&lt;{implementation_type}&gt;({expression})
@@ -2862,7 +2862,7 @@ TFunction is Inherited from TMethodBase
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies casting expression from the implementation side type to C language layer type
     </td>
     <td>
       static_cast&lt;{c_type}&gt;({expression})
@@ -2879,7 +2879,7 @@ TFunction is Inherited from TMethodBase
       optional
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies casting expression from C language layer type to the wrap side type
     </td>
     <td>
       static_cast&lt;{wrap_type}&gt;({expression})
@@ -2906,14 +2906,14 @@ TFunction is Inherited from TMethodBase
       <a href="#theaderinclude">THeaderInclude</a>
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies C or C++ header file name to include
     </td>
   </tr>
 </table>
 
 ### TLifecycle
 
-&quot;Work in progress&quot;
+Specifies lifecycle semantic for classes or callback implementations.
 
 TLifecycle is enumeration of xs:string
 <table>
@@ -2927,7 +2927,7 @@ TLifecycle is enumeration of xs:string
       copy_semantic
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies *copy semantic*
     </td>
   </tr>
   <tr>
@@ -2935,7 +2935,7 @@ TLifecycle is enumeration of xs:string
       raw_pointer_semantic
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies *raw pointer semantic*
     </td>
   </tr>
   <tr>
@@ -2943,14 +2943,14 @@ TLifecycle is enumeration of xs:string
       reference_counted
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies *reference counted semantic*
     </td>
   </tr>
 </table>
 
 ### TC2ImplMode
 
-&quot;Work in progress&quot;
+Specifies mode of conversion from C language layer to the implementation side.
 
 TC2ImplMode is enumeration of xs:string
 <table>
@@ -2964,7 +2964,7 @@ TC2ImplMode is enumeration of xs:string
       default
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies the default conversion mode of the current object type
     </td>
   </tr>
   <tr>
@@ -2972,7 +2972,7 @@ TC2ImplMode is enumeration of xs:string
       to_pointer
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies conversion to pointer
     </td>
   </tr>
   <tr>
@@ -2980,14 +2980,14 @@ TC2ImplMode is enumeration of xs:string
       to_value
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies conversion to value (implemented as reference)
     </td>
   </tr>
 </table>
 
 ### TOverloadSuffixMode
 
-&quot;Work in progress&quot;
+Specifies overload suffix mode for overloaded method and functions.
 
 TOverloadSuffixMode is enumeration of xs:string
 <table>
@@ -3001,7 +3001,7 @@ TOverloadSuffixMode is enumeration of xs:string
       Off
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies to disable automatic suffix generation for overloaded methods and functions
     </td>
   </tr>
   <tr>
@@ -3009,7 +3009,7 @@ TOverloadSuffixMode is enumeration of xs:string
       Notify
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies to automatically generate suffix for overloaded methods and functions and notify user about this
     </td>
   </tr>
   <tr>
@@ -3017,7 +3017,7 @@ TOverloadSuffixMode is enumeration of xs:string
       Silent
     </td>
     <td>
-      &quot;Work in progress&quot;
+      Specifies to automatically silently generate suffix for overloaded methods and functions
     </td>
   </tr>
 </table>
