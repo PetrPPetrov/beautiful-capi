@@ -405,7 +405,7 @@ TDocumentation is Inherited from TGenericDocumentation
       <a href="#tgenericdocumentation">TGenericDocumentation</a>
     </td>
     <td>
-      Specifies documentation which will be used as *@brief* doxygen documentation
+      Specifies documentation which will be used as @brief doxygen documentation
     </td>
   </tr>
   <tr>
@@ -419,14 +419,14 @@ TDocumentation is Inherited from TGenericDocumentation
       <a href="#tgenericdocumentation">TGenericDocumentation</a>
     </td>
     <td>
-      Specifies documentation for return values, this documentation will be used as *@returns* doxygen documentation
+      Specifies documentation for return values, this documentation will be used as @returns doxygen documentation
     </td>
   </tr>
 </table>
 
 ### TReference
 
-In documentation specifies reference to another class, function, enumeration or namespace, it will be used as *@ref* doxygen documentation.
+In documentation specifies reference to another class, function, enumeration or namespace, it will be used as @ref doxygen documentation.
 
 ### TGenericDocumentation
 
@@ -465,7 +465,7 @@ The purpose of *TGenericDocumentation* node is to specify documentation for all 
       <a href="#tgenericdocumentation">TGenericDocumentation</a>
     </td>
     <td>
-      Specifies *@see* doxygen documentation
+      Specifies @see doxygen documentation
     </td>
   </tr>
 </table>

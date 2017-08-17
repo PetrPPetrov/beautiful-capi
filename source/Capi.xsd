@@ -141,12 +141,12 @@
           <xs:choice maxOccurs="unbounded" minOccurs="0">
             <xs:element name="brief" type="TGenericDocumentation">
               <xs:annotation>
-                <xs:documentation>Specifies documentation which will be used as *@brief* doxygen documentation</xs:documentation>
+                <xs:documentation>Specifies documentation which will be used as @brief doxygen documentation</xs:documentation>
               </xs:annotation>
             </xs:element>
             <xs:element name="returns" type="TGenericDocumentation">
               <xs:annotation>
-                <xs:documentation>Specifies documentation for return values, this documentation will be used as *@returns* doxygen documentation</xs:documentation>
+                <xs:documentation>Specifies documentation for return values, this documentation will be used as @returns doxygen documentation</xs:documentation>
               </xs:annotation>
             </xs:element>
           </xs:choice>
@@ -156,7 +156,7 @@
   </xs:complexType>
   <xs:complexType name="TReference" mixed="true">
     <xs:annotation>
-      <xs:documentation>In documentation specifies reference to another class, function, enumeration or namespace, it will be used as *@ref* doxygen documentation.</xs:documentation>
+      <xs:documentation>In documentation specifies reference to another class, function, enumeration or namespace, it will be used as @ref doxygen documentation.</xs:documentation>
     </xs:annotation>
   </xs:complexType>
   <xs:complexType name="TGenericDocumentation" mixed="true">
@@ -172,7 +172,7 @@
         </xs:element>
         <xs:element name="see_also" type="TGenericDocumentation">
           <xs:annotation>
-            <xs:documentation>Specifies *@see* doxygen documentation</xs:documentation>
+            <xs:documentation>Specifies @see doxygen documentation</xs:documentation>
           </xs:annotation>
         </xs:element>
       </xs:choice>
