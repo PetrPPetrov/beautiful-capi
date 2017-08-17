@@ -28,8 +28,8 @@ from FileGenerator import FileGenerator, Indent
 def get_attribute(node, attribute):
     if node.hasAttribute(attribute):
         attr = node.getAttribute(attribute)
-        return attr if attr else '""'
-    return '""'
+        return attr if attr else '*empty string*'
+    return '*empty string*'
 
 
 def get_children_by_tag(node, tag: str):
