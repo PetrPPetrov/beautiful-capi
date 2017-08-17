@@ -102,10 +102,13 @@ class MarkDownGenerator(object):
         if complex_content:
             extension = get_children_by_tag(complex_content[0], 'xs:extension')
             if extension[0]:
-                self.output_file.put_line('{type} is Inherited from {basic_type}'.format(
-                    type=complex_type.getAttribute('name'),
-                    basic_type=extension[0].getAttribute('base')
-                ))
+                self.output_file.put_line(
+                    '{type} is inherited from <a href="#{lower_basic_type}">{basic_type}</a>'.format(
+                        type=complex_type.getAttribute('name'),
+                        basic_type=extension[0].getAttribute('base'),
+                        lower_basic_type=extension[0].getAttribute('base').lower()
+                    )
+                )
                 extension[0].setAttribute('name', complex_type.getAttribute('name'))
                 self.__build_attribute_table(extension[0])
                 self.__build_element_table(extension[0])

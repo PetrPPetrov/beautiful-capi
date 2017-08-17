@@ -385,7 +385,7 @@ The purpose of *TNamespace* node is to describe namespace.
 
 The purpose of *TDocumentation* node is to specify documentation for functions and methods. The documentation will be inserted as doxygen comments in the generated source code.
 
-TDocumentation is Inherited from TGenericDocumentation
+TDocumentation is inherited from <a href="#tgenericdocumentation">TGenericDocumentation</a>
 <table>
   <caption>TDocumentation, list of elements</caption>
   <tr>
@@ -1304,7 +1304,7 @@ Specifies a class.
       optional
     </td>
     <td>
-      Specifies *noexcept* flag for copy constructor or increment reference counter function
+      Specifies noexcept flag for copy constructor or increment reference counter function
     </td>
     <td>
       false
@@ -1321,7 +1321,7 @@ Specifies a class.
       optional
     </td>
     <td>
-      Specifies *noexcept* flag for destructor or release function
+      Specifies noexcept flag for destructor or release function
     </td>
     <td>
       true
@@ -1625,7 +1625,7 @@ Enables callback generation for the current class
       optional
     </td>
     <td>
-      Specifies *noexcept* flag for copy or increment reference counter functions
+      Specifies noexcept flag for copy or increment reference counter functions
     </td>
     <td>
       false
@@ -1642,7 +1642,7 @@ Enables callback generation for the current class
       optional
     </td>
     <td>
-      Specifies *noexcept* flag for delete of release functions
+      Specifies noexcept flag for delete of release functions
     </td>
     <td>
       true
@@ -1742,7 +1742,7 @@ Specifies base properties for constructors or methods.
       optional
     </td>
     <td>
-      Specifies *noexcept* flag for the current constructor or method
+      Specifies noexcept flag for the current constructor or method
     </td>
     <td>
       false
@@ -1792,7 +1792,7 @@ Specifies base properties for constructors or methods.
 
 Specifies a constructor.
 
-TConstructor is Inherited from TConstructorBase
+TConstructor is inherited from <a href="#tconstructorbase">TConstructorBase</a>
 <table>
   <caption>TConstructor, list of attributes</caption>
   <tr>
@@ -1825,7 +1825,7 @@ TConstructor is Inherited from TConstructorBase
 
 Specifies base properties for methods or functions.
 
-TMethodBase is Inherited from TConstructorBase
+TMethodBase is inherited from <a href="#tconstructorbase">TConstructorBase</a>
 <table>
   <caption>TMethodBase, list of attributes</caption>
   <tr>
@@ -1909,7 +1909,7 @@ TMethodBase is Inherited from TConstructorBase
 
 Specifies properties for methods.
 
-TMethod is Inherited from TMethodBase
+TMethod is inherited from <a href="#tmethodbase">TMethodBase</a>
 <table>
   <caption>TMethod, list of attributes</caption>
   <tr>
@@ -1942,7 +1942,7 @@ TMethod is Inherited from TMethodBase
 
 Specifies properties for functions.
 
-TFunction is Inherited from TMethodBase
+TFunction is inherited from <a href="#tmethodbase">TMethodBase</a>
 <table>
   <caption>TFunction, list of attributes</caption>
   <tr>

@@ -485,12 +485,12 @@
     </xs:attribute>
     <xs:attribute default="false" name="copy_or_add_ref_noexcept" type="xs:boolean" use="optional">
       <xs:annotation>
-        <xs:documentation>Specifies *noexcept* flag for copy constructor or increment reference counter function</xs:documentation>
+        <xs:documentation>Specifies noexcept flag for copy constructor or increment reference counter function</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="true" name="delete_or_release_noexcept" type="xs:boolean" use="optional">
       <xs:annotation>
-        <xs:documentation>Specifies *noexcept* flag for destructor or release function</xs:documentation>
+        <xs:documentation>Specifies noexcept flag for destructor or release function</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="Notify" name="overload_suffix_mode" type="TOverloadSuffixMode" use="optional">
@@ -540,12 +540,12 @@
     </xs:attribute>
     <xs:attribute default="false" name="copy_or_add_ref_noexcept" type="xs:boolean" use="optional">
       <xs:annotation>
-        <xs:documentation>Specifies *noexcept* flag for copy or increment reference counter functions</xs:documentation>
+        <xs:documentation>Specifies noexcept flag for copy or increment reference counter functions</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="true" name="delete_or_release_noexcept" type="xs:boolean" use="optional">
       <xs:annotation>
-        <xs:documentation>Specifies *noexcept* flag for delete of release functions</xs:documentation>
+        <xs:documentation>Specifies noexcept flag for delete of release functions</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute name="implementation_class_name" type="xs:string" use="required">
@@ -587,7 +587,7 @@
     </xs:attribute>
     <xs:attribute default="false" name="noexcept" type="xs:boolean" use="optional">
       <xs:annotation>
-        <xs:documentation>Specifies *noexcept* flag for the current constructor or method</xs:documentation>
+        <xs:documentation>Specifies noexcept flag for the current constructor or method</xs:documentation>
       </xs:annotation>
     </xs:attribute>
   </xs:complexType>
