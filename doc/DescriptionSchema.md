@@ -29,7 +29,7 @@ The purpose of *TBeautifulCapiRoot* node is to specify the project name, major, 
       Specifies the project name
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
   <tr>
@@ -136,7 +136,7 @@ The purpose of *TNamespace* node is to describe namespace.
       Specifies the namespace name
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
   <tr>
@@ -153,7 +153,7 @@ The purpose of *TNamespace* node is to describe namespace.
       Specifies an implementation header file
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
   <tr>
@@ -497,7 +497,7 @@ Specifies an external namespace. External namespace is a namespace of 3rd party 
       Specifies path to the include file, can be absolute or relative path to .xml file
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
   <tr>
@@ -514,7 +514,7 @@ Specifies an external namespace. External namespace is a namespace of 3rd party 
       Specifies the external namespace name
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
   <tr>
@@ -618,7 +618,7 @@ Specifies an external class. External class is a part of 3rd party library which
       Specifies the class name
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
   <tr>
@@ -635,7 +635,7 @@ Specifies an external class. External class is a part of 3rd party library which
       Specifies the wrapped class name
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
   <tr>
@@ -652,7 +652,7 @@ Specifies an external class. External class is a part of 3rd party library which
       Specifies header file name which should be included to find the class declaration
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
   <tr>
@@ -669,7 +669,7 @@ Specifies an external class. External class is a part of 3rd party library which
       Specifies header file name which should be included to find the class definition
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
 </table>
@@ -701,7 +701,7 @@ Specifies a 3rd party library which also uses Beautiful Capi. The classes from s
       Specifies path to another Beautiful Capi XML API description file, it can be absolute or relative path to .xml file
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
   <tr>
@@ -718,7 +718,7 @@ Specifies a 3rd party library which also uses Beautiful Capi. The classes from s
       Specifies path to another Beautiful Capi params XML file, it can be absolute or relative path to .xml file
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
 </table>
@@ -750,7 +750,7 @@ Includes another XML API description file. The content of the included XML API d
       Specifies path to another Beautiful Capi XML API description file, it can be absolute or relative path to .xml file
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
 </table>
@@ -782,7 +782,7 @@ Specifies enumeration item.
       Specifies name of the current enumeration item
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
   <tr>
@@ -799,7 +799,7 @@ Specifies enumeration item.
       Specifies value of the current enumeration item
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
 </table>
@@ -855,7 +855,7 @@ Specifies enumeration type.
       Specifies name of the current enumeration type
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
   <tr>
@@ -872,7 +872,7 @@ Specifies enumeration type.
       Specifies *underlying_type* for the current enumeration type, for instance, *uint16_t* which will be used in C language layer
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
 </table>
@@ -998,7 +998,7 @@ Specifies template class instantiation.
       Specifies typedef name for the instantiated template class
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
 </table>
@@ -1054,7 +1054,7 @@ Specifies a value for a particular template argument.
       Specifies template argument name
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
   <tr>
@@ -1071,7 +1071,7 @@ Specifies a value for a particular template argument.
       Specifies template argument value
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
 </table>
@@ -1103,7 +1103,7 @@ Specifies a class.
       Specifies class name
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
   <tr>
@@ -1120,7 +1120,7 @@ Specifies a class.
       Specifies base class name
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
   <tr>
@@ -1137,7 +1137,7 @@ Specifies a class.
       Specifies implementation class name
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
   <tr>
@@ -1154,7 +1154,7 @@ Specifies a class.
       Specifies snippet type name
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
   <tr>
@@ -1188,7 +1188,7 @@ Specifies a class.
       Specifies C or C++ header file name where implementation class is defined
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
   <tr>
@@ -1273,7 +1273,7 @@ Specifies a class.
       Do not use, for internal usage only
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
   <tr>
@@ -1290,7 +1290,7 @@ Specifies a class.
       Do not use, for internal usage only
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
   <tr>
@@ -1392,7 +1392,7 @@ Specifies a class.
       Specifies casting expression from the implementation class to C language layer
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
   <tr>
@@ -1409,7 +1409,7 @@ Specifies a class.
       Specifies casting expression from C language layer to the implementation class
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
   <tr>
@@ -1426,7 +1426,7 @@ Specifies a class.
       Specifies custom casting expression from the current class to its base class
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
   <tr>
@@ -1443,7 +1443,7 @@ Specifies a class.
       Specifies custom casting down expression from the current class to a derived class
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
 </table>
@@ -1662,7 +1662,7 @@ Enables callback generation for the current class
       Specifies implementation class name
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
   <tr>
@@ -1679,7 +1679,7 @@ Enables callback generation for the current class
       Specifies implementation class header
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
 </table>
@@ -1711,7 +1711,7 @@ Specifies base properties for constructors or methods.
       Specifies name of the current constructor or method
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
   <tr>
@@ -1849,7 +1849,7 @@ TMethodBase is Inherited from TConstructorBase
       Specifies return type for the current method or function
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
   <tr>
@@ -1883,7 +1883,7 @@ TMethodBase is Inherited from TConstructorBase
       Specifies overload suffix for the current method or function
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
   <tr>
@@ -1966,7 +1966,7 @@ TFunction is Inherited from TMethodBase
       Specifies implementation name for the current function
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
   <tr>
@@ -1983,7 +1983,7 @@ TFunction is Inherited from TMethodBase
       Specifies implementation header name for the current function
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
 </table>
@@ -2015,7 +2015,7 @@ Specifies properties for argument.
       Specifies name of the current argument
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
   <tr>
@@ -2032,7 +2032,7 @@ Specifies properties for argument.
       Specifies type of the current argument
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
   <tr>
@@ -2139,7 +2139,7 @@ Specifies lifecycle extension for the current class.
       Specifies name of the current lifecycle extension
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
   <tr>
@@ -2156,7 +2156,7 @@ Specifies lifecycle extension for the current class.
       Specifies wrap class name for the current lifecycle extension
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
   <tr>
@@ -2260,7 +2260,7 @@ Specifies casting operator to the specified lifecycle semantic.
       Specifies the target type of the casting
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
   <tr>
@@ -2309,7 +2309,7 @@ Specifies casting constructor for the specified lifecycle semantic
       Specifies the source type of the casting
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
 </table>
@@ -2341,7 +2341,7 @@ Specifies to include a particular C or C++ header to the generated files on the 
       Specifies file name for C or C++ header to include
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
   <tr>
@@ -2390,7 +2390,7 @@ Specifies property for the current class. Each property will be translated into 
       Specifies name of the property
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
   <tr>
@@ -2407,7 +2407,7 @@ Specifies property for the current class. Each property will be translated into 
       Specifies type of the property
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
   <tr>
@@ -2475,7 +2475,7 @@ Specifies property for the current class. Each property will be translated into 
       Specifies argument name for setter method
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
   <tr>
@@ -2560,7 +2560,7 @@ Specifies property for the current class. Each property will be translated into 
       Specifies setter method argument type
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
   <tr>
@@ -2577,7 +2577,7 @@ Specifies property for the current class. Each property will be translated into 
       Specifies getter method return type
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
 </table>
@@ -2729,7 +2729,7 @@ Specifies mapped type
       Specifies name
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
   <tr>
@@ -2746,7 +2746,7 @@ Specifies mapped type
       Specifies wrap type name
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
   <tr>
@@ -2763,7 +2763,7 @@ Specifies mapped type
       Specifies wrap type name which should be used as argument types
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
   <tr>
@@ -2780,7 +2780,7 @@ Specifies mapped type
       Specifies C language layer type name
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
   <tr>
@@ -2797,7 +2797,7 @@ Specifies mapped type
       Specifies the implementation side type
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
   <tr>
@@ -2814,7 +2814,7 @@ Specifies mapped type
       Specifies snippet type name
     </td>
     <td>
-      *empty string*
+      <i>empty string</i>
     </td>
   </tr>
   <tr>
