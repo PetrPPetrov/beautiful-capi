@@ -56,7 +56,7 @@ def pascal_to_stl(pascal_name: str) -> str:
                 result += '_' + letter.lower()
             else:
                 result += letter.lower()
-        previous_symbol_is_upper_case = letter.isupper()
+        previous_symbol_is_upper_case = letter.isupper() or letter.isdigit()
     return result
 
 
