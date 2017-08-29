@@ -22,7 +22,7 @@
 
 import copy
 
-from Parser import TClass, TMethod, TArgument, TNamespace, TBeautifulCapiRoot, TDocumentation
+from Parser import TClass, TMethod, TArgument, TNamespace, TTemplate, TBeautifulCapiRoot, TDocumentation
 from UnitTestGenerator import TestGenerator
 from Helpers import get_c_name
 
@@ -104,6 +104,10 @@ class PropertiesProcessor(object):
                 self.unittest_generator.add_property(cur_class, cur_property, new_set_method, new_get_method)
         self.properties_stack.append(top)
 
+    def process_template(self, template: TTemplate):
+        for cur_class in template.classes:
+            self.process_class(cur_class)
+
     def process_namespace(self, namespace: TNamespace):
         top = self.properties_stack.pop()
         self.properties_stack.append(top)
@@ -117,6 +121,8 @@ class PropertiesProcessor(object):
         self.properties_stack.append(top)
         for nested_namespace in namespace.namespaces:
             self.process_namespace(nested_namespace)
+        for cur_template in namespace.templates:
+            self.process_template(cur_template)
         for cur_class in namespace.classes:
             self.process_class(cur_class)
         self.properties_stack.pop()
