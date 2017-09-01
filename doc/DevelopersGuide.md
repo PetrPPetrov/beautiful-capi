@@ -550,7 +550,7 @@ please see [unit tests](#unit-tests) section.
 Integration with CMake
 ----------------------
 
-Basically integration with CMake could be done by using *add_custom_command*.
+Basically integration with [CMake](https://cmake.org/) could be done by using *add_custom_command*.
 ```
     add_custom_command(
         OUTPUT
