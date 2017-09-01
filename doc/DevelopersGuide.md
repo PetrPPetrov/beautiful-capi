@@ -15,7 +15,7 @@ Beautiful-Capi Developer's Guide
     * [Raw pointer semantic](#raw-pointer-semantic)
     * [Common methods of the wrapper classes](#common-methods-of-the-wrapper-classes)
 3. [Command-line arguments](#command-line-arguments)
-4. [Integration with CMake][#integration-with-cmake]
+4. [Integration with CMake](#integration-with-cmake)
 5. [XML API description schema reference](#xml-api-description-schema)
 6. [XML generation parameters schema](#xml-generation-parameters-schema)
 7. [Mixing semantics](#mixing-semantics)
