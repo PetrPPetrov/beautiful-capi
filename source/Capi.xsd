@@ -7,7 +7,7 @@
   </xs:element>
   <xs:complexType name="TBeautifulCapiRoot">
     <xs:annotation>
-      <xs:documentation>The purpose of *TBeautifulCapiRoot* node is to specify the project name, major, minor and patch versions. Also it specifies a several root namespaces.</xs:documentation>
+      <xs:documentation>The purpose of *TBeautifulCapiRoot* node is to specify the project name, major, minor and patch versions. Also it specifies several root namespaces.</xs:documentation>
     </xs:annotation>
     <xs:sequence>
       <xs:element maxOccurs="unbounded" minOccurs="1" name="namespace" type="TNamespace">
@@ -70,7 +70,7 @@
         </xs:element>
         <xs:element name="include_header" type="THeaderInclude">
           <xs:annotation>
-            <xs:documentation>Specifies a header to include from the wrapper side</xs:documentation>
+            <xs:documentation>Specifies a header file name to include from the wrapper side</xs:documentation>
           </xs:annotation>
         </xs:element>
         <xs:element name="enumeration" type="TEnumeration">

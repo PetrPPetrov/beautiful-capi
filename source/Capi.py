@@ -251,11 +251,11 @@ def main():
         description='This program generates C and C++ wrappers for your C++ classes.')
 
     parser.add_argument(
-        '-i', '--input', nargs=None, default='input.xml', dest='input',
+        '-i', '--input', nargs=None, dest='input',
         help='specifies input API description file')
     parser.add_argument(
         '-p', '--params', nargs=None, default='params.xml', dest='params',
-        help='specifies wrapper generation parameters input file')
+        help='specifies generation parameters input file')
     parser.add_argument(
         '-o', '--output-folder', nargs=None, default='./output', dest='output_folder',
         help='specifies output folder for generated files')
@@ -271,10 +271,19 @@ def main():
     parser.add_argument('-c', '--clean', dest='clean', action='store_true',
                         help='cleans input and snippets directories')
     parser.set_defaults(clean=False)
+    parser.add_argument('-v', '--version', dest='version', action='store_true',
+                        help='shows version number')
+    parser.set_defaults(version=False)
     parser.add_argument('-t', '--tests-file', nargs=None, default="", dest='unit_tests_file',
                         help='generates unit tests for properties into specified file')
 
     args = parser.parse_args()
+
+    if args.version:
+        print('Beautiful Capi version 0.4.\n')
+
+    if not args.input:
+        return
 
     capi = Capi(
         args.input,
