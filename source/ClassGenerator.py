@@ -460,7 +460,7 @@ class ClassGenerator(object):
                 generate_callbacks_on_client_side_definitions(definition_header, self)
 
     def __generate_down_cast_c_function(self):
-        if self.class_object.lifecycle != TLifecycle.copy_semantic and self.base_class_generator:
+        if self.__should_generate_down_cast():
             for cur_base_class_generator in self.base_class_generator.__get_all_base_classes():
                 base_class_argument_generator = ArgumentGenerator(
                     ClassTypeGenerator(cur_base_class_generator), 'source_object')
