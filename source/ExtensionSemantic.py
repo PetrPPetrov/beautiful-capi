@@ -43,6 +43,9 @@ class ExtensionSemanticProcessor(object):
             new_extension_class.lifecycle_extensions = []
             new_extension_class.lifecycle_extension = lifecycle_extension
             new_extension_class.extension_base_class_name = '::'.join(self.class_stack)
+            new_extension_class.down_cast = lifecycle_extension.down_cast
+            new_extension_class.down_cast_filled = True
+
             cur_namespace.classes.append(new_extension_class)
         self.class_stack.pop()
 

@@ -261,8 +261,13 @@ class ClassGenerator(object):
             self.callback_lifecycle_traits = create_lifecycle_traits(callback.lifecycle, self.params)
             self.callback_lifecycle_traits.create_exception_traits(callback, self.capi_generator)
 
+    def __generate_down_cast(self) -> bool:
+        if self.class_object.down_cast_filled:
+            return self.class_object.down_cast
+        return self.lifecycle_traits.generate_down_cast_by_default
+
     def __generate_down_cast_template_declaration(self, declaration_header):
-        if self.class_object.lifecycle != TLifecycle.copy_semantic and self.derived_class_generators:
+        if self.__generate_down_cast() and self.derived_class_generators:
             this_class_argument_generator = ArgumentGenerator(ClassTypeGenerator(self), 'source_object')
             declaration_header.put_line('')
             declaration_header.put_line(self.parent_namespace.the_most_parent.one_line_namespace_begin)
@@ -278,9 +283,11 @@ class ClassGenerator(object):
         return self.base_class_generator.__get_all_base_classes() + [self] if self.base_class_generator else [self]
 
     def __should_generate_down_cast(self) -> bool:
+        if not self.base_class_generator:
+            return False
         lifecycle = self.class_object.lifecycle
         base_lifecycle = self.base_class_generator.class_object.lifecycle if self.base_class_generator else lifecycle
-        return self.base_class_generator and lifecycle != TLifecycle.copy_semantic and lifecycle == base_lifecycle
+        return self.__generate_down_cast() and lifecycle == base_lifecycle
 
     def __generate_down_cast_template_specializations(self, declaration_header, previous_ns):
         if self.__should_generate_down_cast():

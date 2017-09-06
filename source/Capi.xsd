@@ -131,6 +131,25 @@
       </xs:annotation>
     </xs:attribute>
   </xs:complexType>
+  <xs:complexType name="TGenericDocumentation" mixed="true">
+    <xs:annotation>
+      <xs:documentation>The purpose of *TGenericDocumentation* node is to specify documentation for all objects which can have documentation. The documentation will be inserted as doxygen comments in the generated source code.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice maxOccurs="unbounded" minOccurs="0">
+        <xs:element name="reference" type="TReference">
+          <xs:annotation>
+            <xs:documentation>Specifies documentation reference for another documentation object</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="see_also" type="TGenericDocumentation">
+          <xs:annotation>
+            <xs:documentation>Specifies @see doxygen documentation</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
   <xs:complexType name="TDocumentation" mixed="true">
     <xs:annotation>
       <xs:documentation>The purpose of *TDocumentation* node is to specify documentation for functions and methods. The documentation will be inserted as doxygen comments in the generated source code.</xs:documentation>
@@ -158,25 +177,6 @@
     <xs:annotation>
       <xs:documentation>In documentation specifies reference to another class, function, enumeration or namespace, it will be used as @ref doxygen documentation.</xs:documentation>
     </xs:annotation>
-  </xs:complexType>
-  <xs:complexType name="TGenericDocumentation" mixed="true">
-    <xs:annotation>
-      <xs:documentation>The purpose of *TGenericDocumentation* node is to specify documentation for all objects which can have documentation. The documentation will be inserted as doxygen comments in the generated source code.</xs:documentation>
-    </xs:annotation>
-    <xs:sequence>
-      <xs:choice maxOccurs="unbounded" minOccurs="0">
-        <xs:element name="reference" type="TReference">
-          <xs:annotation>
-            <xs:documentation>Specifies documentation reference for another documentation object</xs:documentation>
-          </xs:annotation>
-        </xs:element>
-        <xs:element name="see_also" type="TGenericDocumentation">
-          <xs:annotation>
-            <xs:documentation>Specifies @see doxygen documentation</xs:documentation>
-          </xs:annotation>
-        </xs:element>
-      </xs:choice>
-    </xs:sequence>
   </xs:complexType>
   <xs:complexType name="TExternalNamespace">
     <xs:annotation>
@@ -528,6 +528,11 @@
         <xs:documentation>Specifies custom casting down expression from the current class to a derived class</xs:documentation>
       </xs:annotation>
     </xs:attribute>
+    <xs:attribute default="true" name="down_cast" type="xs:boolean" use="optional">
+      <xs:annotation>
+        <xs:documentation>Specifies flag to generate down_cast template functions</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
   </xs:complexType>
   <xs:complexType name="TCallback">
     <xs:annotation>
@@ -693,7 +698,7 @@
         <xs:documentation>Specifies flag if the current argument type is built-in type</xs:documentation>
       </xs:annotation>
     </xs:attribute>
-    <xs:attribute default="static_cast&amp;lt;{implementation_type}*&amp;gt;({expression})" name="c_2_impl" type="xs:string" use="optional">
+    <xs:attribute default="static_cast&lt;{implementation_type}*&gt;({expression})" name="c_2_impl" type="xs:string" use="optional">
       <xs:annotation>
         <xs:documentation>Specifies casting expression from C language layer to implementation side</xs:documentation>
       </xs:annotation>
@@ -757,6 +762,11 @@
     <xs:attribute default="copy_semantic" name="lifecycle" type="TLifecycle" use="required">
       <xs:annotation>
         <xs:documentation>Specifies extended lifecycle semantic type</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="down_cast" type="xs:boolean" use="optional">
+      <xs:annotation>
+        <xs:documentation>Specifies flag to generate down_cast template functions for the lifecycle extension</xs:documentation>
       </xs:annotation>
     </xs:attribute>
   </xs:complexType>
@@ -873,7 +883,7 @@
         <xs:documentation>Specifies flag if type of the current property is built-in</xs:documentation>
       </xs:annotation>
     </xs:attribute>
-    <xs:attribute default="static_cast&amp;lt;{implementation_type}&amp;gt;({expression})" name="set_c_2_impl" type="xs:string" use="optional">
+    <xs:attribute default="static_cast&lt;{implementation_type}&gt;({expression})" name="set_c_2_impl" type="xs:string" use="optional">
       <xs:annotation>
         <xs:documentation>Specifies casting expression for setter method from C language layer to the implementation side</xs:documentation>
       </xs:annotation>
@@ -992,22 +1002,22 @@
         <xs:documentation>Specifies snippet type name</xs:documentation>
       </xs:annotation>
     </xs:attribute>
-    <xs:attribute default="static_cast&amp;lt;{c_type}&amp;gt;({expression})" name="wrap_2_c" type="xs:string" use="optional">
+    <xs:attribute default="static_cast&lt;{c_type}&gt;({expression})" name="wrap_2_c" type="xs:string" use="optional">
       <xs:annotation>
         <xs:documentation>Specifies casting expression from wrap type to C language layer type</xs:documentation>
       </xs:annotation>
     </xs:attribute>
-    <xs:attribute default="static_cast&amp;lt;{implementation_type}&amp;gt;({expression})" name="c_2_impl" type="xs:string" use="optional">
+    <xs:attribute default="static_cast&lt;{implementation_type}&gt;({expression})" name="c_2_impl" type="xs:string" use="optional">
       <xs:annotation>
         <xs:documentation>Specifies casting expression from C language layer type to the implementation side type</xs:documentation>
       </xs:annotation>
     </xs:attribute>
-    <xs:attribute default="static_cast&amp;lt;{c_type}&amp;gt;({expression})" name="impl_2_c" type="xs:string" use="optional">
+    <xs:attribute default="static_cast&lt;{c_type}&gt;({expression})" name="impl_2_c" type="xs:string" use="optional">
       <xs:annotation>
         <xs:documentation>Specifies casting expression from the implementation side type to C language layer type</xs:documentation>
       </xs:annotation>
     </xs:attribute>
-    <xs:attribute default="static_cast&amp;lt;{wrap_type}&amp;gt;({expression})" name="c_2_wrap" type="xs:string" use="optional">
+    <xs:attribute default="static_cast&lt;{wrap_type}&gt;({expression})" name="c_2_wrap" type="xs:string" use="optional">
       <xs:annotation>
         <xs:documentation>Specifies casting expression from C language layer type to the wrap side type</xs:documentation>
       </xs:annotation>

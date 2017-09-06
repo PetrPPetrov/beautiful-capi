@@ -61,6 +61,10 @@ class LifecycleTraits(object):
     def access_operator(self) -> str:
         return '->'
 
+    @property
+    def generate_down_cast_by_default(self) -> bool:
+        return True
+
     def create_exception_traits(self, properties_container, capi_generator):
         init_method_no_except = self.default_value_for_init_noexcept
         if properties_container.copy_or_add_ref_noexcept_filled:
@@ -166,6 +170,10 @@ class CopySemantic(LifecycleTraits):
     @property
     def access_operator(self) -> str:
         return '.'
+
+    @property
+    def generate_down_cast_by_default(self) -> bool:
+        return False
 
     @property
     def snippet_implementation_usage(self) -> str:

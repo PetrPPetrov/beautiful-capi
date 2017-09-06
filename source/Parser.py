@@ -130,144 +130,6 @@ class TBeautifulCapiRoot(object):
         self.load_attributes(dom_node)
 
 
-class TExternalLibrary(object):
-    def __init__(self):
-        self.all_items = []
-        self.input_xml_file = ""
-        self.input_xml_file_filled = False
-        self.params_xml_file = ""
-        self.params_xml_file_filled = False
-
-    def load_element(self, element):
-        return False
-
-    def load_attributes(self, dom_node):
-        if dom_node.hasAttribute("input_xml_file"):
-            cur_attr = dom_node.getAttribute("input_xml_file")
-            self.input_xml_file = cur_attr
-            self.input_xml_file_filled = True
-        if dom_node.hasAttribute("params_xml_file"):
-            cur_attr = dom_node.getAttribute("params_xml_file")
-            self.params_xml_file = cur_attr
-            self.params_xml_file_filled = True
-
-    def load(self, dom_node):
-        for element in dom_node.childNodes:
-            self.load_element(element)
-        self.load_attributes(dom_node)
-
-
-class TApiInclude(object):
-    def __init__(self):
-        self.all_items = []
-        self.path = ""
-        self.path_filled = False
-
-    def load_element(self, element):
-        return False
-
-    def load_attributes(self, dom_node):
-        if dom_node.hasAttribute("path"):
-            cur_attr = dom_node.getAttribute("path")
-            self.path = cur_attr
-            self.path_filled = True
-
-    def load(self, dom_node):
-        for element in dom_node.childNodes:
-            self.load_element(element)
-        self.load_attributes(dom_node)
-
-
-class TExternalNamespace(object):
-    def __init__(self):
-        self.all_items = []
-        self.include = ""
-        self.include_filled = False
-        self.name = ""
-        self.name_filled = False
-        self.detach_method_name = "Detach"
-        self.detach_method_name_filled = False
-        self.get_raw_pointer_method_name = "GetRawPointer"
-        self.get_raw_pointer_method_name_filled = False
-        self.classes = []
-        self.namespaces = []
-
-    def load_element(self, element):
-        if element.nodeName == "class":
-            new_element = TExternalClass()
-            new_element.load(element)
-            self.classes.append(new_element)
-            return True
-        if element.nodeName == "namespace":
-            new_element = TExternalNamespace()
-            new_element.load(element)
-            self.namespaces.append(new_element)
-            return True
-        return False
-
-    def load_attributes(self, dom_node):
-        if dom_node.hasAttribute("include"):
-            cur_attr = dom_node.getAttribute("include")
-            self.include = cur_attr
-            self.include_filled = True
-        if dom_node.hasAttribute("name"):
-            cur_attr = dom_node.getAttribute("name")
-            self.name = cur_attr
-            self.name_filled = True
-        if dom_node.hasAttribute("detach_method_name"):
-            cur_attr = dom_node.getAttribute("detach_method_name")
-            self.detach_method_name = cur_attr
-            self.detach_method_name_filled = True
-        if dom_node.hasAttribute("get_raw_pointer_method_name"):
-            cur_attr = dom_node.getAttribute("get_raw_pointer_method_name")
-            self.get_raw_pointer_method_name = cur_attr
-            self.get_raw_pointer_method_name_filled = True
-
-    def load(self, dom_node):
-        for element in dom_node.childNodes:
-            self.load_element(element)
-        self.load_attributes(dom_node)
-
-
-class TExternalClass(object):
-    def __init__(self):
-        self.all_items = []
-        self.name = ""
-        self.name_filled = False
-        self.wrap_name = ""
-        self.wrap_name_filled = False
-        self.include_declaration = ""
-        self.include_declaration_filled = False
-        self.include_definition = ""
-        self.include_definition_filled = False
-
-    def load_element(self, element):
-        return False
-
-    def load_attributes(self, dom_node):
-        if dom_node.hasAttribute("name"):
-            cur_attr = dom_node.getAttribute("name")
-            self.name = cur_attr
-            self.name_filled = True
-        if dom_node.hasAttribute("wrap_name"):
-            cur_attr = dom_node.getAttribute("wrap_name")
-            self.wrap_name = cur_attr
-            self.wrap_name_filled = True
-        if dom_node.hasAttribute("include_declaration"):
-            cur_attr = dom_node.getAttribute("include_declaration")
-            self.include_declaration = cur_attr
-            self.include_declaration_filled = True
-        if dom_node.hasAttribute("include_definition"):
-            cur_attr = dom_node.getAttribute("include_definition")
-            self.include_definition = cur_attr
-            self.include_definition_filled = True
-
-    def load(self, dom_node):
-        for element in dom_node.childNodes:
-            self.load_element(element)
-        self.load_attributes(dom_node)
-
-
 class TNamespace(object):
     def __init__(self):
         self.all_items = []
@@ -378,6 +240,252 @@ class TNamespace(object):
             cur_attr = dom_node.getAttribute("overload_suffix_mode")
             self.overload_suffix_mode = TOverloadSuffixMode.load(cur_attr)
             self.overload_suffix_mode_filled = True
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
+
+class TGenericDocumentation(object):
+    def __init__(self):
+        self.all_items = []
+        self.references = []
+        self.see_alsos = []
+
+    def load_element(self, element):
+        if element.nodeName == "reference":
+            new_element = TReference()
+            new_element.load(element)
+            self.references.append(new_element)
+            self.all_items.append(new_element)
+            return True
+        if element.nodeName == "see_also":
+            new_element = TGenericDocumentation()
+            new_element.load(element)
+            self.see_alsos.append(new_element)
+            self.all_items.append(new_element)
+            return True
+        if element.nodeType == element.TEXT_NODE:
+            cur_texts = [text.strip() for text in element.data.split('\n')]
+            first = True
+            for text in cur_texts:
+                if first and self.all_items and type(self.all_items[-1]) is str:
+                    self.all_items[-1] += text
+                else:
+                    self.all_items.append(text)
+                first = False
+            return True
+        return False
+
+    def load_attributes(self, dom_node):
+        pass
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
+
+class TDocumentation(TGenericDocumentation):
+    def __init__(self):
+        super().__init__()
+        self.briefs = []
+        self.returns = []
+
+    def load_element(self, element):
+        if super().load_element(element):
+            return True
+        if element.nodeName == "brief":
+            new_element = TGenericDocumentation()
+            new_element.load(element)
+            self.briefs.append(new_element)
+            self.all_items.append(new_element)
+            return True
+        if element.nodeName == "returns":
+            new_element = TGenericDocumentation()
+            new_element.load(element)
+            self.returns.append(new_element)
+            self.all_items.append(new_element)
+            return True
+        if element.nodeType == element.TEXT_NODE:
+            cur_texts = [text.strip() for text in element.data.split('\n')]
+            first = True
+            for text in cur_texts:
+                if first and self.all_items and type(self.all_items[-1]) is str:
+                    self.all_items[-1] += text
+                else:
+                    self.all_items.append(text)
+                first = False
+            return True
+        return False
+
+    def load_attributes(self, dom_node):
+        super().load_attributes(dom_node)
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
+
+class TReference(object):
+    def __init__(self):
+        self.all_items = []
+
+    def load_element(self, element):
+        if element.nodeType == element.TEXT_NODE:
+            cur_texts = [text.strip() for text in element.data.split('\n')]
+            first = True
+            for text in cur_texts:
+                if first and self.all_items and type(self.all_items[-1]) is str:
+                    self.all_items[-1] += text
+                else:
+                    self.all_items.append(text)
+                first = False
+            return True
+        return False
+
+    def load_attributes(self, dom_node):
+        pass
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
+
+class TExternalNamespace(object):
+    def __init__(self):
+        self.all_items = []
+        self.include = ""
+        self.include_filled = False
+        self.name = ""
+        self.name_filled = False
+        self.detach_method_name = "Detach"
+        self.detach_method_name_filled = False
+        self.get_raw_pointer_method_name = "GetRawPointer"
+        self.get_raw_pointer_method_name_filled = False
+        self.classes = []
+        self.namespaces = []
+
+    def load_element(self, element):
+        if element.nodeName == "class":
+            new_element = TExternalClass()
+            new_element.load(element)
+            self.classes.append(new_element)
+            return True
+        if element.nodeName == "namespace":
+            new_element = TExternalNamespace()
+            new_element.load(element)
+            self.namespaces.append(new_element)
+            return True
+        return False
+
+    def load_attributes(self, dom_node):
+        if dom_node.hasAttribute("include"):
+            cur_attr = dom_node.getAttribute("include")
+            self.include = cur_attr
+            self.include_filled = True
+        if dom_node.hasAttribute("name"):
+            cur_attr = dom_node.getAttribute("name")
+            self.name = cur_attr
+            self.name_filled = True
+        if dom_node.hasAttribute("detach_method_name"):
+            cur_attr = dom_node.getAttribute("detach_method_name")
+            self.detach_method_name = cur_attr
+            self.detach_method_name_filled = True
+        if dom_node.hasAttribute("get_raw_pointer_method_name"):
+            cur_attr = dom_node.getAttribute("get_raw_pointer_method_name")
+            self.get_raw_pointer_method_name = cur_attr
+            self.get_raw_pointer_method_name_filled = True
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
+
+class TExternalClass(object):
+    def __init__(self):
+        self.all_items = []
+        self.name = ""
+        self.name_filled = False
+        self.wrap_name = ""
+        self.wrap_name_filled = False
+        self.include_declaration = ""
+        self.include_declaration_filled = False
+        self.include_definition = ""
+        self.include_definition_filled = False
+
+    def load_element(self, element):
+        return False
+
+    def load_attributes(self, dom_node):
+        if dom_node.hasAttribute("name"):
+            cur_attr = dom_node.getAttribute("name")
+            self.name = cur_attr
+            self.name_filled = True
+        if dom_node.hasAttribute("wrap_name"):
+            cur_attr = dom_node.getAttribute("wrap_name")
+            self.wrap_name = cur_attr
+            self.wrap_name_filled = True
+        if dom_node.hasAttribute("include_declaration"):
+            cur_attr = dom_node.getAttribute("include_declaration")
+            self.include_declaration = cur_attr
+            self.include_declaration_filled = True
+        if dom_node.hasAttribute("include_definition"):
+            cur_attr = dom_node.getAttribute("include_definition")
+            self.include_definition = cur_attr
+            self.include_definition_filled = True
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
+
+class TExternalLibrary(object):
+    def __init__(self):
+        self.all_items = []
+        self.input_xml_file = ""
+        self.input_xml_file_filled = False
+        self.params_xml_file = ""
+        self.params_xml_file_filled = False
+
+    def load_element(self, element):
+        return False
+
+    def load_attributes(self, dom_node):
+        if dom_node.hasAttribute("input_xml_file"):
+            cur_attr = dom_node.getAttribute("input_xml_file")
+            self.input_xml_file = cur_attr
+            self.input_xml_file_filled = True
+        if dom_node.hasAttribute("params_xml_file"):
+            cur_attr = dom_node.getAttribute("params_xml_file")
+            self.params_xml_file = cur_attr
+            self.params_xml_file_filled = True
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
+
+class TApiInclude(object):
+    def __init__(self):
+        self.all_items = []
+        self.path = ""
+        self.path_filled = False
+
+    def load_element(self, element):
+        return False
+
+    def load_attributes(self, dom_node):
+        if dom_node.hasAttribute("path"):
+            cur_attr = dom_node.getAttribute("path")
+            self.path = cur_attr
+            self.path_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:
@@ -590,6 +698,8 @@ class TClass(object):
         self.custom_cast_to_base_filled = False
         self.custom_down_cast = ""
         self.custom_down_cast_filled = False
+        self.down_cast = True
+        self.down_cast_filled = False
         self.documentations = []
         self.include_headers = []
         self.enumerations = []
@@ -733,6 +843,10 @@ class TClass(object):
             cur_attr = dom_node.getAttribute("custom_down_cast")
             self.custom_down_cast = cur_attr
             self.custom_down_cast_filled = True
+        if dom_node.hasAttribute("down_cast"):
+            cur_attr = dom_node.getAttribute("down_cast")
+            self.down_cast = string_to_bool(cur_attr)
+            self.down_cast_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:
@@ -1010,6 +1124,8 @@ class TLifecycleExtension(object):
         self.wrap_name_filled = False
         self.lifecycle = TLifecycle.copy_semantic
         self.lifecycle_filled = False
+        self.down_cast = False
+        self.down_cast_filled = False
         self.cast_tos = []
         self.cast_froms = []
 
@@ -1039,6 +1155,10 @@ class TLifecycleExtension(object):
             cur_attr = dom_node.getAttribute("lifecycle")
             self.lifecycle = TLifecycle.load(cur_attr)
             self.lifecycle_filled = True
+        if dom_node.hasAttribute("down_cast"):
+            cur_attr = dom_node.getAttribute("down_cast")
+            self.down_cast = string_to_bool(cur_attr)
+            self.down_cast_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:
@@ -1276,102 +1396,6 @@ class TPropertyGetConst(object):
             cur_attr = dom_node.getAttribute("value")
             self.value = string_to_bool(cur_attr)
             self.value_filled = True
-
-    def load(self, dom_node):
-        for element in dom_node.childNodes:
-            self.load_element(element)
-        self.load_attributes(dom_node)
-
-
-class TReference(object):
-    def __init__(self):
-        self.all_items = []
-
-    def load_element(self, element):
-        if element.nodeType == element.TEXT_NODE:
-            cur_texts = [text.strip() for text in element.data.split('\n')]
-            first = True
-            for text in cur_texts:
-                if first and self.all_items and type(self.all_items[-1]) is str:
-                    self.all_items[-1] += text
-                else:
-                    self.all_items.append(text)
-                first = False
-            return True
-        return False
-
-    def load_attributes(self, dom_node):
-        pass
-
-    def load(self, dom_node):
-        for element in dom_node.childNodes:
-            self.load_element(element)
-        self.load_attributes(dom_node)
-
-
-class TGenericDocumentation(object):
-    def __init__(self):
-        self.all_items = []
-        self.references = []
-        self.see_alsos = []
-
-    def load_element(self, element):
-        if element.nodeName == "reference":
-            new_element = TReference()
-            new_element.load(element)
-            self.references.append(new_element)
-            self.all_items.append(new_element)
-            return True
-        if element.nodeName == "see_also":
-            new_element = TGenericDocumentation()
-            new_element.load(element)
-            self.see_alsos.append(new_element)
-            self.all_items.append(new_element)
-            return True
-        if element.nodeType == element.TEXT_NODE:
-            cur_texts = [text.strip() for text in element.data.split('\n')]
-            first = True
-            for text in cur_texts:
-                if first and self.all_items and type(self.all_items[-1]) is str:
-                    self.all_items[-1] += text
-                else:
-                    self.all_items.append(text)
-                first = False
-            return True
-        return False
-
-    def load_attributes(self, dom_node):
-        pass
-
-    def load(self, dom_node):
-        for element in dom_node.childNodes:
-            self.load_element(element)
-        self.load_attributes(dom_node)
-
-
-class TDocumentation(TGenericDocumentation):
-    def __init__(self):
-        super().__init__()
-        self.briefs = []
-        self.returns = []
-
-    def load_element(self, element):
-        if super().load_element(element):
-            return True
-        if element.nodeName == "brief":
-            new_element = TGenericDocumentation()
-            new_element.load(element)
-            self.briefs.append(new_element)
-            return True
-        if element.nodeName == "returns":
-            new_element = TGenericDocumentation()
-            new_element.load(element)
-            self.returns.append(new_element)
-            return True
-        return False
-
-    def load_attributes(self, dom_node):
-        super().load_attributes(dom_node)
 
     def load(self, dom_node):
         for element in dom_node.childNodes:
