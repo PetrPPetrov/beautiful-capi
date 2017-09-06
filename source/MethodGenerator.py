@@ -220,9 +220,12 @@ class MethodGenerator(object):
             self_access = 'self->'
             if self.parent_class_generator.class_object.pointer_access:
                 self_access = '(*self)->'
+            method_name = self.method_object.implementation_name
+            if not method_name:
+                method_name = self.method_object.name
             implementation_call = '{self_access}{method_name}({arguments})'.format(
                 self_access=self_access,
-                method_name=self.method_object.name,
+                method_name=method_name,
                 arguments=implementation_arguments
             )
             calling_instructions, return_expression = self.return_type_generator.implementation_2_c_var(
@@ -323,8 +326,11 @@ class FunctionGenerator(object):
             [argument_generator.c_2_implementation() for argument_generator in self.argument_generators])
         c_function_body = FileGenerator(None)
         with IndentScope(c_function_body):
-            implementation_call = '{method_name}({arguments})'.format(
-                method_name=self.function_object.implementation_name,
+            function_name = self.function_object.implementation_name
+            if not function_name:
+                function_name = self.function_object.name
+            implementation_call = '{function_name}({arguments})'.format(
+                function_name=function_name,
                 arguments=implementation_arguments
             )
             calling_instructions, return_expression = self.return_type_generator.implementation_2_c_var(

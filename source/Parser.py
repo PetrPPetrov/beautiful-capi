@@ -979,6 +979,8 @@ class TMethodBase(TConstructorBase):
         self.overload_suffix_filled = False
         self.impl_2_c = "new {implementation_type}({expression})"
         self.impl_2_c_filled = False
+        self.implementation_name = ""
+        self.implementation_name_filled = False
 
     def load_element(self, element):
         if super().load_element(element):
@@ -1003,6 +1005,10 @@ class TMethodBase(TConstructorBase):
             cur_attr = dom_node.getAttribute("impl_2_c")
             self.impl_2_c = cur_attr
             self.impl_2_c_filled = True
+        if dom_node.hasAttribute("implementation_name"):
+            cur_attr = dom_node.getAttribute("implementation_name")
+            self.implementation_name = cur_attr
+            self.implementation_name_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:
@@ -1037,8 +1043,6 @@ class TMethod(TMethodBase):
 class TFunction(TMethodBase):
     def __init__(self):
         super().__init__()
-        self.implementation_name = ""
-        self.implementation_name_filled = False
         self.implementation_header = ""
         self.implementation_header_filled = False
 
@@ -1049,10 +1053,6 @@ class TFunction(TMethodBase):
 
     def load_attributes(self, dom_node):
         super().load_attributes(dom_node)
-        if dom_node.hasAttribute("implementation_name"):
-            cur_attr = dom_node.getAttribute("implementation_name")
-            self.implementation_name = cur_attr
-            self.implementation_name_filled = True
         if dom_node.hasAttribute("implementation_header"):
             cur_attr = dom_node.getAttribute("implementation_header")
             self.implementation_header = cur_attr

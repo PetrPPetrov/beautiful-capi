@@ -636,6 +636,11 @@
             <xs:documentation>Specifies casting expression from the implementation class to C language layer, for return objects</xs:documentation>
           </xs:annotation>
         </xs:attribute>
+        <xs:attribute default="" name="implementation_name" type="xs:string" use="optional">
+          <xs:annotation>
+            <xs:documentation>Specifies implementation name for the current function or method</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -659,11 +664,6 @@
     </xs:annotation>
     <xs:complexContent>
       <xs:extension base="TMethodBase">
-        <xs:attribute default="" name="implementation_name" type="xs:string" use="optional">
-          <xs:annotation>
-            <xs:documentation>Specifies implementation name for the current function</xs:documentation>
-          </xs:annotation>
-        </xs:attribute>
         <xs:attribute default="" name="implementation_header" type="xs:string" use="optional">
           <xs:annotation>
             <xs:documentation>Specifies implementation header name for the current function</xs:documentation>
