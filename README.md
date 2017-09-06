@@ -1,6 +1,7 @@
 # Beautiful Capi
 
 [![Build Status](https://travis-ci.org/PetrPPetrov/beautiful-capi.svg?branch=master)](https://travis-ci.org/PetrPPetrov/beautiful-capi)
+[https://ci.appveyor.com/api/projects/status/6d82b9dwcai584cc?svg=true](https://ci.appveyor.com/api/projects/status/6d82b9dwcai584cc?svg=true)  
 
 Beautiful Capi is a tool which automates the creation of compiler-independent
 and binary compatible C++ libraries across different C++ compilers.
