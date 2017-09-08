@@ -27,6 +27,7 @@
 #include <string>
 #include <cstdlib>
 #include <algorithm>
+#include <stdint.h>
 #include "Example.h"
 
 class CustomPrinterImplementation

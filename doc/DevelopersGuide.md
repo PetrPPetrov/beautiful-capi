@@ -19,7 +19,7 @@ Beautiful-Capi Developer's Guide
 5. [XML API description schema reference](#xml-api-description-schema)
 6. [XML generation parameters schema](#xml-generation-parameters-schema)
 7. [Mixing semantics](#mixing-semantics)
-8. [Exception processing](#exception-processing)
+8. [Exceptions processing](#exceptions-processing)
 9. [Callbacks](#callbacks)
 10. [Dynamic casts](#dynamic-casts)
 11. [Templates](#templates)
@@ -612,7 +612,7 @@ Mixing semantics
 ----------------
 TODO:
 
-Exception processing
+Exceptions processing
 --------------------
 
 Beautiful Capi takes care about exceptions. As described above, in [C++ problems](#exceptions) section,
@@ -635,7 +635,7 @@ struct beautiful_capi_exception_exception_info_t
 
 The *object_pointer* field stores a pointer to exception object which was thrown. If no exception was thrown
 then this field should contain 0.
-Beautiful Capi assign a code for each exception class. Exception class is a class which could be thrown as exception.
+Beautiful Capi assigns a code for each exception class. Exception class is a class which could be thrown as exception.
 So, you need tell to Beautiful Capi which classes could be thrown as exceptions. In class description there is
 *exception* boolean attribute and *true* means that a particular class could be thrown as exception.
 The *code* field contains code of the thrown exception. Zero value means no exception,
