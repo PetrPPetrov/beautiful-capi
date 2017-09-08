@@ -19,7 +19,7 @@ Beautiful-Capi Developer's Guide
 5. [XML API description schema reference](#xml-api-description-schema)
 6. [XML generation parameters schema](#xml-generation-parameters-schema)
 7. [Mixing semantics](#mixing-semantics)
-8. [Exceptions](#exceptions)
+8. [Exception processing](#exception-processing)
 9. [Callbacks](#callbacks)
 10. [Dynamic casts](#dynamic-casts)
 11. [Templates](#templates)
@@ -612,8 +612,8 @@ Mixing semantics
 ----------------
 TODO:
 
-Exceptions
-----------
+Exception processing
+--------------------
 
 Beautiful Capi takes care about exceptions. As described above, in [C++ problems](#exceptions) section,
 different C++ compilers have different exception throwing and catching schemas, also C language does not support
