@@ -639,7 +639,7 @@ Beautiful Capi assigns a code for each exception class. Exception class is a cla
 So, you need tell to Beautiful Capi which classes could be thrown as exceptions. In class description there is
 *exception* boolean attribute and *true* means that a particular class could be thrown as exception.
 The *code* field contains code of the thrown exception. Zero value means no exception,
-*-1* value means unknown exception. Example of such codes:
+*-2* value means unknown exception. Example of such codes:
 ~~~C
 enum beautiful_capi_exception_exception_code_t
 {
@@ -744,8 +744,13 @@ inline Example::Printer::Printer()
 In method and function descriptions there is *noexcept* flag which indicates that the specified method or function
 does not throw any exceptions at all. Default value of this flag is *false*, but for destructors the default value of
 this flag is *true*, because usually in C++ destructors don't throw any exceptions. If *noexcept* flag is *true*
-then the specified function or method is processed in *no_handling* mode. There are plans
-(see [issue 12](https://github.com/PetrPPetrov/beautiful-capi/issues/12)) to mark functions and methods
+then the specified function or method is processed in *no_handling* mode.
+
+Also there are *copy_or_add_ref_noexcept* and *delete_or_release_noexcept* flags which indicate *noexcept* property
+for Beautiful Capi generated *_copy* or *_add_ref* functions and *_delete* or *_release* functions respectively. These
+flags could be used for class and callback descriptions.
+
+There are plans (see [issue 12](https://github.com/PetrPPetrov/beautiful-capi/issues/12)) to mark functions and methods
 which don't throw exceptions with C++ 11 *noexcept* keyword at the wrap side. However, such C++ 11 keyword
 should be avoided for C++ compilers which don't support C++ 11 standard, because the wrap code could be compiled
 by any C++ compiler.
