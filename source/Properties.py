@@ -81,6 +81,8 @@ class PropertiesProcessor(object):
             new_get_method.impl_2_c_filled = cur_property.get_impl_2_c_filled
             new_get_method.return_is_builtin = cur_property.is_builtin
             new_get_method.return_is_builtin_filled = cur_property.is_builtin_filled
+            new_get_method.return_copy_or_add_ref = cur_property.return_copy_or_add_ref
+            new_get_method.return_copy_or_add_ref_filled = True
             PropertiesProcessor.__process_documentations(new_get_method, True)
             cur_class.methods.append(new_get_method)
             new_set_method = TMethod()

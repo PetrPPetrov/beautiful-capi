@@ -908,6 +908,11 @@
         <xs:documentation>Specifies getter method return type</xs:documentation>
       </xs:annotation>
     </xs:attribute>
+    <xs:attribute default="false" name="return_copy_or_add_ref" type="xs:boolean" use="optional">
+      <xs:annotation>
+        <xs:documentation>Specifies to copy or increase reference counter for returned objects in getter method</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
   </xs:complexType>
   <xs:complexType name="TPropertySetPrefix">
     <xs:annotation>

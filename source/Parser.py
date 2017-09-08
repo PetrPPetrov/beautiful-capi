@@ -1274,6 +1274,8 @@ class TProperty(object):
         self.set_argument_type_filled = False
         self.return_type = ""
         self.return_type_filled = False
+        self.return_copy_or_add_ref = False
+        self.return_copy_or_add_ref_filled = False
         self.documentations = []
 
     def load_element(self, element):
@@ -1333,6 +1335,10 @@ class TProperty(object):
             cur_attr = dom_node.getAttribute("return_type")
             self.return_type = cur_attr
             self.return_type_filled = True
+        if dom_node.hasAttribute("return_copy_or_add_ref"):
+            cur_attr = dom_node.getAttribute("return_copy_or_add_ref")
+            self.return_copy_or_add_ref = string_to_bool(cur_attr)
+            self.return_copy_or_add_ref_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:

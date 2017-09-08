@@ -381,6 +381,48 @@ The purpose of *TNamespace* node is to describe namespace.
   </tr>
 </table>
 
+### TGenericDocumentation
+
+The purpose of *TGenericDocumentation* node is to specify documentation for all objects which can have documentation. The documentation will be inserted as doxygen comments in the generated source code.
+
+<table>
+  <caption>TGenericDocumentation, list of elements</caption>
+  <tr>
+    <td> Element </td>
+    <td> Multiplicity </td>
+    <td> Type </td>
+    <td> Description </td>
+  </tr>
+  <tr>
+    <td>
+      reference
+    </td>
+    <td>
+      0..unbounded
+    </td>
+    <td>
+      <a href="#treference">TReference</a>
+    </td>
+    <td>
+      Specifies documentation reference for another documentation object
+    </td>
+  </tr>
+  <tr>
+    <td>
+      see_also
+    </td>
+    <td>
+      0..unbounded
+    </td>
+    <td>
+      <a href="#tgenericdocumentation">TGenericDocumentation</a>
+    </td>
+    <td>
+      Specifies @see doxygen documentation
+    </td>
+  </tr>
+</table>
+
 ### TDocumentation
 
 The purpose of *TDocumentation* node is to specify documentation for functions and methods. The documentation will be inserted as doxygen comments in the generated source code.
@@ -427,48 +469,6 @@ TDocumentation is inherited from <a href="#tgenericdocumentation">TGenericDocume
 ### TReference
 
 In documentation specifies reference to another class, function, enumeration or namespace, it will be used as @ref doxygen documentation.
-
-### TGenericDocumentation
-
-The purpose of *TGenericDocumentation* node is to specify documentation for all objects which can have documentation. The documentation will be inserted as doxygen comments in the generated source code.
-
-<table>
-  <caption>TGenericDocumentation, list of elements</caption>
-  <tr>
-    <td> Element </td>
-    <td> Multiplicity </td>
-    <td> Type </td>
-    <td> Description </td>
-  </tr>
-  <tr>
-    <td>
-      reference
-    </td>
-    <td>
-      0..unbounded
-    </td>
-    <td>
-      <a href="#treference">TReference</a>
-    </td>
-    <td>
-      Specifies documentation reference for another documentation object
-    </td>
-  </tr>
-  <tr>
-    <td>
-      see_also
-    </td>
-    <td>
-      0..unbounded
-    </td>
-    <td>
-      <a href="#tgenericdocumentation">TGenericDocumentation</a>
-    </td>
-    <td>
-      Specifies @see doxygen documentation
-    </td>
-  </tr>
-</table>
 
 ### TExternalNamespace
 
@@ -1446,6 +1446,23 @@ Specifies a class.
       <i>empty string</i>
     </td>
   </tr>
+  <tr>
+    <td>
+      down_cast
+    </td>
+    <td>
+      xs:boolean
+    </td>
+    <td>
+      optional
+    </td>
+    <td>
+      Specifies flag to generate down_cast template functions
+    </td>
+    <td>
+      true
+    </td>
+  </tr>
 </table>
 
 <table>
@@ -1903,6 +1920,23 @@ TMethodBase is inherited from <a href="#tconstructorbase">TConstructorBase</a>
       new {implementation_type}({expression})
     </td>
   </tr>
+  <tr>
+    <td>
+      implementation_name
+    </td>
+    <td>
+      xs:string
+    </td>
+    <td>
+      optional
+    </td>
+    <td>
+      Specifies implementation name for the current function or method
+    </td>
+    <td>
+      <i>empty string</i>
+    </td>
+  </tr>
 </table>
 
 ### TMethod
@@ -1951,23 +1985,6 @@ TFunction is inherited from <a href="#tmethodbase">TMethodBase</a>
     <td> Use </td>
     <td> Description </td>
     <td> Default </td>
-  </tr>
-  <tr>
-    <td>
-      implementation_name
-    </td>
-    <td>
-      xs:string
-    </td>
-    <td>
-      optional
-    </td>
-    <td>
-      Specifies implementation name for the current function
-    </td>
-    <td>
-      <i>empty string</i>
-    </td>
   </tr>
   <tr>
     <td>
@@ -2066,7 +2083,7 @@ Specifies properties for argument.
       Specifies casting expression from C language layer to implementation side
     </td>
     <td>
-      static_cast&lt;{implementation_type}*&gt;({expression})
+      static_cast<{implementation_type}*>({expression})
     </td>
   </tr>
   <tr>
@@ -2174,6 +2191,23 @@ Specifies lifecycle extension for the current class.
     </td>
     <td>
       copy_semantic
+    </td>
+  </tr>
+  <tr>
+    <td>
+      down_cast
+    </td>
+    <td>
+      xs:boolean
+    </td>
+    <td>
+      optional
+    </td>
+    <td>
+      Specifies flag to generate down_cast template functions for the lifecycle extension
+    </td>
+    <td>
+      false
     </td>
   </tr>
 </table>
@@ -2509,7 +2543,7 @@ Specifies property for the current class. Each property will be translated into 
       Specifies casting expression for setter method from C language layer to the implementation side
     </td>
     <td>
-      static_cast&lt;{implementation_type}&gt;({expression})
+      static_cast<{implementation_type}>({expression})
     </td>
   </tr>
   <tr>
@@ -2578,6 +2612,23 @@ Specifies property for the current class. Each property will be translated into 
     </td>
     <td>
       <i>empty string</i>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      return_copy_or_add_ref
+    </td>
+    <td>
+      xs:boolean
+    </td>
+    <td>
+      optional
+    </td>
+    <td>
+      Specifies to copy or increase reference counter for returned objects in getter method
+    </td>
+    <td>
+      false
     </td>
   </tr>
 </table>
@@ -2831,7 +2882,7 @@ Specifies mapped type
       Specifies casting expression from wrap type to C language layer type
     </td>
     <td>
-      static_cast&lt;{c_type}&gt;({expression})
+      static_cast<{c_type}>({expression})
     </td>
   </tr>
   <tr>
@@ -2848,7 +2899,7 @@ Specifies mapped type
       Specifies casting expression from C language layer type to the implementation side type
     </td>
     <td>
-      static_cast&lt;{implementation_type}&gt;({expression})
+      static_cast<{implementation_type}>({expression})
     </td>
   </tr>
   <tr>
@@ -2865,7 +2916,7 @@ Specifies mapped type
       Specifies casting expression from the implementation side type to C language layer type
     </td>
     <td>
-      static_cast&lt;{c_type}&gt;({expression})
+      static_cast<{c_type}>({expression})
     </td>
   </tr>
   <tr>
@@ -2882,7 +2933,7 @@ Specifies mapped type
       Specifies casting expression from C language layer type to the wrap side type
     </td>
     <td>
-      static_cast&lt;{wrap_type}&gt;({expression})
+      static_cast<{wrap_type}>({expression})
     </td>
   </tr>
 </table>
