@@ -102,8 +102,8 @@ class ByFirstArgument(object):
                 self.params.beautiful_capi_namespace.upper())):
             out.put_line('struct {0}'.format(self.__exception_info_t()))
             with IndentScope(out, '};'):
-                out.put_line('int code; /* value from {0} enumeration */'.format(self.__exception_code_t()))
-                out.put_line('void* object_pointer;')
+                out.put_line('int32_t code; /* value from {0} enumeration */'.format(self.__exception_code_t()))
+                out.put_line('void* object_pointer; /* exception object pointer */')
             out.put_line('')
             out.put_line('enum {0}'.format(self.__exception_code_t()))
             with IndentScope(out, '};'):
@@ -112,7 +112,8 @@ class ByFirstArgument(object):
                                      in self.exception_classes}
                 for code, exception_class in code_to_exception.items():
                     out.put_line('{0} = {1},'.format(exception_class.full_c_name, code))
-                out.put_line('unknown_exception = -1')
+                out.put_line('copy_exception_error = -1,')
+                out.put_line('unknown_exception = -2')
 
     def generate_check_and_throw_exception_forward_declaration(self, out: FileGenerator):
         watchdog_string = '{0}_CHECK_AND_THROW_EXCEPTION_FORWARD_DECLARATION'.format(
@@ -153,12 +154,16 @@ class ByFirstArgument(object):
                 out.put_line('case {0}:'.format(code))
                 with Indent(out):
                     throw_generator(out, exception_class)
+            out.put_line('case -1:')
+            with Indent(out):
+                out.put_line('throw std::runtime_error("exception during copying exception object");')
+            out.put_line('case -2:')
+            with Indent(out):
+                out.put_line('throw std::runtime_error("unknown exception");')
             out.put_line('default:')
             with Indent(out):
                 out.put_line('assert(false);')
-            out.put_line('case -1:')
-            with Indent(out):
-                out.put_line('throw std::runtime_error("unknown exception");')
+                out.put_line('throw std::runtime_error("unknown exception code");')
 
     def generate_check_and_throw_exception(self, file_cache: FileCache):
         out = file_cache.get_file_for_check_and_throw_exception()

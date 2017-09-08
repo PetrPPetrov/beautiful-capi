@@ -617,9 +617,138 @@ Exceptions
 
 Beautiful Capi takes care about exceptions. As described above, in [C++ problems](#exceptions) section,
 different C++ compilers have different exception throwing and catching schemas, also C language does not support
-exceptions. The *exception_handling_mode* attribute in XML parameters file specifies mode for exception handling.
-Value *no_handling* means that no special handling is done, so, any exception from the C++ library could crash
+exceptions. The [*exception_handling_mode*](DescriptionParams.md#texceptionhandlingmode) attribute
+in XML parameters file specifies mode for exception handling. Value *no_handling* means
+that no special handling is done, so, any exception from the C++ library could crash
 the client application in general, unless the client application and the C++ library use the same C++ compiler.
+
+When *by_first_argument* value is used then exception information is passed in a special structure.
+A pointer to this structure is added as the first argument to each function or method which could,
+potentially, throw an exception. This structure has a following definition:
+~~~C
+struct beautiful_capi_exception_exception_info_t
+{
+    int32_t code; /* value from beautiful_capi_exception_exception_code_t enumeration */
+    void* object_pointer; /* exception object pointer */
+};
+~~~
+
+The *object_pointer* field stores a pointer to exception object which was thrown. If no exception was thrown
+then this field should contain 0.
+Beautiful Capi assign a code for each exception class. Exception class is a class which could be thrown as exception.
+So, you need tell to Beautiful Capi which classes could be thrown as exceptions. In class description there is
+*exception* boolean attribute and *true* means that a particular class could be thrown as exception.
+The *code* field contains code of the thrown exception. Zero value means no exception,
+*-1* value means unknown exception. Example of such codes:
+~~~C
+enum beautiful_capi_exception_exception_code_t
+{
+    no_exception = 0,
+    exception_generic = 1,
+    exception_bad_argument = 2,
+    exception_null_argument = 3,
+    exception_division_by_zero = 4,
+    copy_exception_error = -1,
+    unknown_exception = -2
+};
+~~~
+
+There is [exception](https://github.com/PetrPPetrov/beautiful-capi/tree/master/examples/exception) example which
+demonstrates exception information passing though dynamic library boundaries with different C runtime and compiler
+environments and re-throwing exception on the client side.
+
+Basically Beautiful Capi catches exception inside the C++ library in the following manner:
+~~~C++
+EXCEPTION_API void* EXCEPTION_API_CONVENTION example_printer_new(beautiful_capi_exception_exception_info_t* exception_info)
+{
+    beautiful_capi_exception_exception_info_t exception_info_default;
+    if (!exception_info)
+    {
+        exception_info = &exception_info_default;
+    }
+    try
+    {
+        exception_info->code = 0;
+        exception_info->object_pointer = 0;
+        return new Example::PrinterImpl();
+    }
+    catch (Exception::NullArgumentImpl* exception_object)
+    {
+        exception_info->code = 3;
+        exception_info->object_pointer = exception_object;
+    }
+    catch (Exception::BadArgumentImpl* exception_object)
+    {
+        exception_info->code = 2;
+        exception_info->object_pointer = exception_object;
+    }
+    catch (Exception::DivisionByZeroImpl* exception_object)
+    {
+        exception_info->code = 4;
+        exception_info->object_pointer = exception_object;
+    }
+    catch (Exception::GenericImpl* exception_object)
+    {
+        exception_info->code = 1;
+        exception_info->object_pointer = exception_object;
+    }
+    catch (...)
+    {
+        exception_info->code = -2;
+    }
+    return static_cast<void*>(0);
+}
+~~~
+
+And the generated code at the client side re-throws exception again, but using the wrap classes:
+~~~C++
+namespace beautiful_capi_Exception
+{
+    inline void check_and_throw_exception(int exception_code, void* exception_object)
+    {
+        switch (exception_code)
+        {
+            case 0:
+                return;
+            case 1:
+                throw Exception::Generic(Exception::Generic::force_creating_from_raw_pointer, exception_object, false);
+            case 2:
+                throw Exception::BadArgument(Exception::BadArgument::force_creating_from_raw_pointer, exception_object, false);
+            case 3:
+                throw Exception::NullArgument(Exception::NullArgument::force_creating_from_raw_pointer, exception_object, false);
+            case 4:
+                throw Exception::DivisionByZero(Exception::DivisionByZero::force_creating_from_raw_pointer, exception_object, false);
+            case -1:
+                throw std::runtime_error("exception during copying exception object");
+            case -2:
+                throw std::runtime_error("unknown exception");
+            default:
+                assert(false);
+                throw std::runtime_error("unknown exception code");
+        }
+    }
+}
+~~~
+
+The generated above function is called each time in the generated wrap code:
+~~~C++
+inline Example::Printer::Printer()
+{
+    beautiful_capi_exception_exception_info_t exception_info;
+    void* result(example_printer_new(&exception_info));
+    beautiful_capi_Exception::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
+    SetObject(result);
+}
+~~~
+
+In method and function descriptions there is *noexcept* flag which indicates that the specified method or function
+does not throw any exceptions at all. Default value of this flag is *false*, but for destructors the default value of
+this flag is *true*, because usually in C++ destructors don't throw any exceptions. If *noexcept* flag is *true*
+then the specified function or method is processed in *no_handling* mode. There are plans
+(see [issue 12](https://github.com/PetrPPetrov/beautiful-capi/issues/12)) to mark functions and methods
+which don't throw exceptions with C++ 11 *noexcept* keyword at the wrap side. However, such C++ 11 keyword
+should be avoided for C++ compilers which don't support C++ 11 standard, because the wrap code could be compiled
+by any C++ compiler.
 
 Callbacks
 ---------
