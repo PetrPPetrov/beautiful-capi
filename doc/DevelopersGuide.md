@@ -19,6 +19,8 @@ Beautiful-Capi Developer's Guide
 5. [XML API description schema reference](#xml-api-description-schema)
 6. [XML generation parameters schema](#xml-generation-parameters-schema)
 7. [Mixing semantics](#mixing-semantics)
+    * [Casting attributes](#casting-attributes)
+    * [Lifecycle extensions](#lifecycle-extensions)
 8. [Exception handling](#exception-handling)
 9. [Callbacks](#callbacks)
 10. [Dynamic casts](#dynamic-casts)
@@ -610,6 +612,19 @@ The root element is *params* which has [*TBeautifulCapiParams*](DescriptionParam
 
 Mixing semantics
 ----------------
+
+In real C++ programs some class could be used by different ways. These ways could be pointers to this class,
+references, smart pointers and values. For each class Beautiful Capi XML API description specifies a semantic.
+Sometimes it is not enough, because some implementation methods could accept references to this class,
+other implementation methods could accept pointers to this class etc.
+
+Beautiful Capi proposes two ways to solve this problem: the first way is [casting attributes](#casting-attributes),
+and the second way is [lifecycle extensions](#lifecycle-extensions).
+
+### Casting attributes
+TODO:
+
+### Lifecycle extensions
 TODO:
 
 Exception handling
