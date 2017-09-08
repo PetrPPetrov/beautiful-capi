@@ -34,6 +34,9 @@ class NoHandling(object):
     def include_dependent_definition_headers(self, file_generator: FileGenerator, file_cache: FileCache):
         pass
 
+    def include_wrap_cpp_headers(self, file_generator: FileGenerator):
+        pass
+
     def generate_exception_info(self, out: FileGenerator):
         pass
 
@@ -97,23 +100,30 @@ class ByFirstArgument(object):
     def include_dependent_definition_headers(file_generator: FileGenerator, file_cache: FileCache):
         file_generator.include_user_header(file_cache.check_and_throw_exception_header())
 
+    @staticmethod
+    def include_wrap_cpp_headers(file_generator: FileGenerator):
+        file_generator.include_system_header('stdint.h')
+
     def generate_exception_info(self, out: FileGenerator):
         with WatchdogScope(out, '{0}_EXCEPTION_INFO_DEFINED'.format(
                 self.params.beautiful_capi_namespace.upper())):
             out.put_line('struct {0}'.format(self.__exception_info_t()))
             with IndentScope(out, '};'):
-                out.put_line('int32_t code; /* value from {0} enumeration */'.format(self.__exception_code_t()))
+                out.put_line('uint32_t code; /* value from {0} enumeration */'.format(self.__exception_code_t()))
                 out.put_line('void* object_pointer; /* exception object pointer */')
             out.put_line('')
             out.put_line('enum {0}'.format(self.__exception_code_t()))
             with IndentScope(out, '};'):
                 out.put_line('no_exception = 0,')
-                code_to_exception = {exception_class.exception_code: exception_class for exception_class
-                                     in self.exception_classes}
-                for code, exception_class in code_to_exception.items():
-                    out.put_line('{0} = {1},'.format(exception_class.full_c_name, code))
-                out.put_line('copy_exception_error = -1,')
-                out.put_line('unknown_exception = -2')
+                out.put_line('unknown_exception = 1,')
+                out.put_line('copy_exception_error = 2,')
+                code_to_exception = [[exception_class.exception_code, exception_class] for exception_class
+                                     in self.exception_classes]
+                code_to_exception.sort(key=lambda except_info: except_info[0])
+                for exception_info in code_to_exception[:-1]:
+                    out.put_line('{0} = {1},'.format(exception_info[1].full_c_name, exception_info[0]))
+                exception_info = code_to_exception[-1]
+                out.put_line('{0} = {1}'.format(exception_info[1].full_c_name, exception_info[0]))
 
     def generate_check_and_throw_exception_forward_declaration(self, out: FileGenerator):
         watchdog_string = '{0}_CHECK_AND_THROW_EXCEPTION_FORWARD_DECLARATION'.format(
@@ -122,7 +132,7 @@ class ByFirstArgument(object):
             out.put_line('namespace ' + self.params.beautiful_capi_namespace)
             with IndentScope(out):
                 out.put_line(
-                    'inline void check_and_throw_exception(int exception_code, void* exception_object);'
+                    'inline void check_and_throw_exception(uint32_t exception_code, void* exception_object);'
                 )
 
     @staticmethod
@@ -148,18 +158,18 @@ class ByFirstArgument(object):
             out.put_line('case 0:')
             with Indent(out):
                 out.put_line('return;')
+            out.put_line('case 1:')
+            with Indent(out):
+                out.put_line('throw std::runtime_error("unknown exception");')
+            out.put_line('case 2:')
+            with Indent(out):
+                out.put_line('throw std::runtime_error("exception during copying exception object");')
             code_to_exception = {exception_class.exception_code: exception_class for exception_class
                                  in self.exception_classes}
             for code, exception_class in code_to_exception.items():
                 out.put_line('case {0}:'.format(code))
                 with Indent(out):
                     throw_generator(out, exception_class)
-            out.put_line('case -1:')
-            with Indent(out):
-                out.put_line('throw std::runtime_error("exception during copying exception object");')
-            out.put_line('case -2:')
-            with Indent(out):
-                out.put_line('throw std::runtime_error("unknown exception");')
             out.put_line('default:')
             with Indent(out):
                 out.put_line('assert(false);')
@@ -180,7 +190,7 @@ class ByFirstArgument(object):
                 out.put_line('namespace {0}'.format(self.params.beautiful_capi_namespace))
                 with IndentScope(out):
                     out.put_line(
-                        'inline void check_and_throw_exception(int exception_code, void* exception_object)')
+                        'inline void check_and_throw_exception(uint32_t exception_code, void* exception_object)')
                     with IndentScope(out):
                         self.__create_check_and_throw_exceptions_body(out, ByFirstArgument.__generate_throw_wrap)
 
@@ -188,7 +198,7 @@ class ByFirstArgument(object):
         out.put_line('namespace {0}'.format(self.params.beautiful_capi_namespace))
         with IndentScope(out):
             out.put_line(
-                'inline void check_and_throw_exception(int exception_code, void* exception_object)')
+                'inline void check_and_throw_exception(uint32_t exception_code, void* exception_object)')
             with IndentScope(out):
                 self.__create_check_and_throw_exceptions_body(out, ByFirstArgument.__generate_throw_impl)
 
@@ -258,7 +268,7 @@ class ByFirstArgument(object):
                 ))
             out.put_line('catch (...)')
             with IndentScope(out):
-                out.put_line('{exception_info}->code = -1;'.format(
+                out.put_line('{exception_info}->code = 2;'.format(
                     exception_info=self.params.exception_info_argument_name))
                 out.put_line('assert(false);')
 
@@ -312,7 +322,7 @@ class ByFirstArgument(object):
             catch_generator(out, exception_class_generator)
         out.put_line('catch (...)')
         with IndentScope(out):
-            out.put_line('{exception_info}->code = -2;'.format(
+            out.put_line('{exception_info}->code = 1;'.format(
                 exception_info=self.params.exception_info_argument_name))
         return_type.generate_c_default_return_value(out)
 

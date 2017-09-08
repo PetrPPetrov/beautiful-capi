@@ -73,6 +73,7 @@ class CapiGenerator(object):
         self.additional_includes.put_include_files()
         self.additional_includes.include_system_header('stdexcept')
         self.additional_includes.include_system_header('cassert')
+        self.main_exception_traits.include_wrap_cpp_headers(self.additional_includes)
         self.callback_implementations = []
         self.cur_api_define = None
         self.cur_capi_prefix = None

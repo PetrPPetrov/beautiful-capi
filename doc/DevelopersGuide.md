@@ -19,7 +19,7 @@ Beautiful-Capi Developer's Guide
 5. [XML API description schema reference](#xml-api-description-schema)
 6. [XML generation parameters schema](#xml-generation-parameters-schema)
 7. [Mixing semantics](#mixing-semantics)
-8. [Exceptions processing](#exceptions-processing)
+8. [Exception handling](#exception-handling)
 9. [Callbacks](#callbacks)
 10. [Dynamic casts](#dynamic-casts)
 11. [Templates](#templates)
@@ -612,8 +612,8 @@ Mixing semantics
 ----------------
 TODO:
 
-Exceptions processing
---------------------
+Exception handling
+------------------
 
 Beautiful Capi takes care about exceptions. As described above, in [C++ problems](#exceptions) section,
 different C++ compilers have different exception throwing and catching schemas, also C language does not support
@@ -628,34 +628,41 @@ potentially, throw an exception. This structure has a following definition:
 ~~~C
 struct beautiful_capi_exception_exception_info_t
 {
-    int32_t code; /* value from beautiful_capi_exception_exception_code_t enumeration */
+    uint32_t code; /* value from beautiful_capi_exception_exception_code_t enumeration */
     void* object_pointer; /* exception object pointer */
 };
 ~~~
 
 The *object_pointer* field stores a pointer to exception object which was thrown. If no exception was thrown
-then this field should contain 0.
+then this field should contain zero.
 Beautiful Capi assigns a code for each exception class. Exception class is a class which could be thrown as exception.
 So, you need tell to Beautiful Capi which classes could be thrown as exceptions. In class description there is
 *exception* boolean attribute and *true* means that a particular class could be thrown as exception.
-The *code* field contains code of the thrown exception. Zero value means no exception,
-*-2* value means unknown exception. Example of such codes:
+The *code* field contains code of the thrown exception. Values below *100* are reserved by Beautiful Capi,
+user exception classes have codes starting from *100*. Zero value means no exception,
+*1* value means unknown exception, *2* value means unknown exception which raised during exception object copying.
+
+Example of such codes:
 ~~~C
 enum beautiful_capi_exception_exception_code_t
 {
     no_exception = 0,
-    exception_generic = 1,
-    exception_bad_argument = 2,
-    exception_null_argument = 3,
-    exception_division_by_zero = 4,
-    copy_exception_error = -1,
-    unknown_exception = -2
+    unknown_exception = 1,
+    copy_exception_error = 2,
+    exception_generic = 100,
+    exception_bad_argument = 101,
+    exception_null_argument = 102,
+    exception_division_by_zero = 103
 };
 ~~~
 
 There is [exception](https://github.com/PetrPPetrov/beautiful-capi/tree/master/examples/exception) example which
 demonstrates exception information passing though dynamic library boundaries with different C runtime and compiler
-environments and re-throwing exception on the client side.
+environments and re-throwing exception on the client side. This example has four exception classes, one basic exception
+class *Exception::Generic* (implementation name is *Exception::GenericImpl*, wrap name is *Exception::Generic*),
+and three derived classes: *Exception::BadArgument* (implementation name is *Exception::BadArgumentImpl*),
+*Exception::NullArgument* (implementation name is *Exception::NullArgumentImpl*) and *Exception::DivisionByZero*
+(implementation name is *Exception::DivisionByZeroImpl*).
 
 Basically Beautiful Capi catches exception inside the C++ library in the following manner:
 ~~~C++
@@ -672,29 +679,49 @@ EXCEPTION_API void* EXCEPTION_API_CONVENTION example_printer_new(beautiful_capi_
         exception_info->object_pointer = 0;
         return new Example::PrinterImpl();
     }
-    catch (Exception::NullArgumentImpl* exception_object)
+    catch (Exception::NullArgumentImpl& exception_object) // By reference
     {
-        exception_info->code = 3;
+        exception_info->code = 102;
+        ...
+    }
+    catch (Exception::NullArgumentImpl* exception_object) // By pointer
+    {
+        exception_info->code = 102;
         exception_info->object_pointer = exception_object;
     }
-    catch (Exception::BadArgumentImpl* exception_object)
+    catch (Exception::BadArgumentImpl& exception_object) // By reference
     {
-        exception_info->code = 2;
+        exception_info->code = 101;
+        ...
+    }
+    catch (Exception::BadArgumentImpl* exception_object) // By pointer
+    {
+        exception_info->code = 101;
         exception_info->object_pointer = exception_object;
     }
-    catch (Exception::DivisionByZeroImpl* exception_object)
+    catch (Exception::DivisionByZeroImpl& exception_object) // By value
     {
-        exception_info->code = 4;
+        exception_info->code = 103;
+        ...
+    }
+    catch (Exception::DivisionByZeroImpl* exception_object) // By pointer
+    {
+        exception_info->code = 103;
         exception_info->object_pointer = exception_object;
     }
-    catch (Exception::GenericImpl* exception_object)
+    catch (Exception::GenericImpl& exception_object) // By value
     {
-        exception_info->code = 1;
+        exception_info->code = 100;
+        ...
+    }
+    catch (Exception::GenericImpl* exception_object) // By pointer
+    {
+        exception_info->code = 100;
         exception_info->object_pointer = exception_object;
     }
     catch (...)
     {
-        exception_info->code = -2;
+        exception_info->code = 1;
     }
     return static_cast<void*>(0);
 }
@@ -704,24 +731,24 @@ And the generated code at the client side re-throws exception again, but using t
 ~~~C++
 namespace beautiful_capi_Exception
 {
-    inline void check_and_throw_exception(int exception_code, void* exception_object)
+    inline void check_and_throw_exception(uint32_t exception_code, void* exception_object)
     {
         switch (exception_code)
         {
             case 0:
                 return;
             case 1:
-                throw Exception::Generic(Exception::Generic::force_creating_from_raw_pointer, exception_object, false);
-            case 2:
-                throw Exception::BadArgument(Exception::BadArgument::force_creating_from_raw_pointer, exception_object, false);
-            case 3:
-                throw Exception::NullArgument(Exception::NullArgument::force_creating_from_raw_pointer, exception_object, false);
-            case 4:
-                throw Exception::DivisionByZero(Exception::DivisionByZero::force_creating_from_raw_pointer, exception_object, false);
-            case -1:
-                throw std::runtime_error("exception during copying exception object");
-            case -2:
                 throw std::runtime_error("unknown exception");
+            case 2:
+                throw std::runtime_error("exception during copying exception object");
+            case 100:
+                throw Exception::Generic(Exception::Generic::force_creating_from_raw_pointer, exception_object, false);
+            case 101:
+                throw Exception::BadArgument(Exception::BadArgument::force_creating_from_raw_pointer, exception_object, false);
+            case 102:
+                throw Exception::NullArgument(Exception::NullArgument::force_creating_from_raw_pointer, exception_object, false);
+            case 103:
+                throw Exception::DivisionByZero(Exception::DivisionByZero::force_creating_from_raw_pointer, exception_object, false);
             default:
                 assert(false);
                 throw std::runtime_error("unknown exception code");
@@ -740,6 +767,12 @@ inline Example::Printer::Printer()
     SetObject(result);
 }
 ~~~
+
+For instance, if the C++ library will throw *Exception::NullArgumentImpl* class, it will be caught in the C glue layer,
+and *code* field of the exception information structure will contain *exception_null_argument* (*102*) value,
+*object_pointer* field will contain pointer to the exception object instance. Then *check_and_throw_exception()*
+function will throw *Exception::NullArgument* wrap class on the client side, and, finally, this exception on the client
+side could be caught as *Exception::Generic* or *Exception::NullArgument*.
 
 In method and function descriptions there is *noexcept* flag which indicates that the specified method or function
 does not throw any exceptions at all. Default value of this flag is *false*, but for destructors the default value of

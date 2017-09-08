@@ -44,7 +44,7 @@ class GeneratorCreator(object):
         self.scope_stack = []  # NamespaceGenerator or ClassGenerator
         self.cur_namespace_generator = None
         self.params = params
-        self.cur_exception_code = 1
+        self.cur_exception_code = 100
 
     def __register_class_or_namespace_generator(self, generator):
         """
