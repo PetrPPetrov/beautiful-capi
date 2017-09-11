@@ -116,14 +116,17 @@ class ByFirstArgument(object):
             with IndentScope(out, '};'):
                 out.put_line('no_exception = 0,')
                 out.put_line('unknown_exception = 1,')
-                out.put_line('copy_exception_error = 2,')
                 code_to_exception = [[exception_class.exception_code, exception_class] for exception_class
                                      in self.exception_classes]
-                code_to_exception.sort(key=lambda except_info: except_info[0])
-                for exception_info in code_to_exception[:-1]:
-                    out.put_line('{0} = {1},'.format(exception_info[1].full_c_name, exception_info[0]))
-                exception_info = code_to_exception[-1]
-                out.put_line('{0} = {1}'.format(exception_info[1].full_c_name, exception_info[0]))
+                if code_to_exception:
+                    out.put_line('copy_exception_error = 2,')
+                    code_to_exception.sort(key=lambda except_info: except_info[0])
+                    for exception_info in code_to_exception[:-1]:
+                        out.put_line('{0} = {1},'.format(exception_info[1].full_c_name, exception_info[0]))
+                    exception_info = code_to_exception[-1]
+                    out.put_line('{0} = {1}'.format(exception_info[1].full_c_name, exception_info[0]))
+                else:
+                    out.put_line('copy_exception_error = 2')
 
     def generate_check_and_throw_exception_forward_declaration(self, out: FileGenerator):
         watchdog_string = '{0}_CHECK_AND_THROW_EXCEPTION_FORWARD_DECLARATION'.format(
