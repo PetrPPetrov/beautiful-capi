@@ -90,8 +90,9 @@ class ConstructorGenerator(object):
         ))
         with IndentScope(out):
             result_expression = self.exception_traits.generate_c_call(
-                out, BuiltinTypeGenerator('void*'), self.full_c_name, arguments_call)
-            out.put_line('SetObject({result_expression});'.format(result_expression=result_expression))
+                out, self.parent_class_as_argument_type, self.full_c_name, arguments_call)
+            out.put_line('SetObject({result_expression}.{detach}());'.format(
+                result_expression=result_expression, detach=self.params.detach_method_name))
 
     def generate_c_function(self, capi_generator: CapiGenerator):
         argument_declaration_list = [
