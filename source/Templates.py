@@ -58,7 +58,10 @@ def generate_template_classes(namespace: TNamespace, template: TTemplate):
         name2type.update({template_argument.name: template_argument.type_name})
     for instantiation in template.instantiations:
         new_class = copy.deepcopy(template_class)
-        new_class.implementation_class_name = instantiate_type(new_class.implementation_class_name, instantiation)
+        if instantiation.implementation_class_name_filled:
+            new_class.implementation_class_name = instantiation.implementation_class_name
+        else:
+            new_class.implementation_class_name = instantiate_type(new_class.implementation_class_name, instantiation)
         if instantiation.typedef_name:
             new_class.typedef_name = instantiation.typedef_name
         new_class.base = instantiate_type(new_class.base, instantiation)

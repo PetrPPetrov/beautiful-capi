@@ -604,6 +604,8 @@ class TInstantiation(object):
         self.all_items = []
         self.typedef_name = ""
         self.typedef_name_filled = False
+        self.implementation_class_name = ""
+        self.implementation_class_name_filled = False
         self.arguments = []
 
     def load_element(self, element):
@@ -619,6 +621,10 @@ class TInstantiation(object):
             cur_attr = dom_node.getAttribute("typedef_name")
             self.typedef_name = cur_attr
             self.typedef_name_filled = True
+        if dom_node.hasAttribute("implementation_class_name"):
+            cur_attr = dom_node.getAttribute("implementation_class_name")
+            self.implementation_class_name = cur_attr
+            self.implementation_class_name_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:

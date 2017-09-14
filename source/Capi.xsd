@@ -354,6 +354,11 @@
         <xs:documentation>Specifies typedef name for the instantiated template class</xs:documentation>
       </xs:annotation>
     </xs:attribute>
+    <xs:attribute default="" name="implementation_class_name" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>Specifies implementation class name when template is instantiated by these arguments</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
   </xs:complexType>
   <xs:complexType name="TInstantiationArgument">
     <xs:annotation>

@@ -210,8 +210,7 @@ class GeneratorCreator(object):
         function_generator.return_type_generator.impl_2_c_filled = function_generator.function_object.impl_2_c_filled
         self.__bind_documentation(function_generator.function_object)
 
-    def __replace_template_implementation_class(self, class_generator):
-        implementation_class_name = class_generator.class_object.implementation_class_name
+    def __replace_template_implementation_class_plain(self, implementation_class_name: str):
         template_arguments_count = get_template_arguments_count(implementation_class_name)
         for index in range(template_arguments_count):
             original_template_argument = get_template_argument(implementation_class_name, index)
@@ -225,7 +224,19 @@ class GeneratorCreator(object):
                     index,
                     argument_generator.implementation_name
                 )
-        class_generator.class_object.implementation_class_name = implementation_class_name
+            else:
+                new_template_argument = self.__replace_template_implementation_class_plain(original_template_argument)
+                implementation_class_name = replace_template_argument(
+                    implementation_class_name,
+                    index,
+                    new_template_argument
+                )
+        return implementation_class_name
+
+    def __replace_template_implementation_class(self, class_generator):
+        class_generator.class_object.implementation_class_name = self.__replace_template_implementation_class_plain(
+            class_generator.class_object.implementation_class_name
+        )
 
     def __bind_class(self, class_generator: ClassGenerator):
         def name_to_class_generator(class_name: str, exception_class_type: str):
