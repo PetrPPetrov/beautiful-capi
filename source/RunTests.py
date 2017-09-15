@@ -132,6 +132,7 @@ def run_tests(input_folder, output_folder):
     process_example(input_folder, 'doxygen_doc', base_backup_folder)
     process_example(input_folder, 'exception', base_backup_folder)
     process_example(input_folder, 'hello_world', base_backup_folder)
+    process_example(input_folder, 'implementation_code', base_backup_folder)
     process_example(input_folder, 'mapped_types', base_backup_folder)
     process_example(input_folder, 'mixed_semantic', base_backup_folder)
     process_example(input_folder, 'mixed_semantic2', base_backup_folder)

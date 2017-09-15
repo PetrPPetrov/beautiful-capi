@@ -22,18 +22,36 @@
 
 import copy
 
-from Parser import TMethod, TFunction, TConstructor
+from Parser import TMethod, TFunction, TConstructor, TImplementationCode
 from ParamsParser import TBeautifulCapiParams
 from FileGenerator import FileGenerator, IndentScope
 from FileCache import FileCache
 from ClassGenerator import ClassGenerator
 from NamespaceGenerator import NamespaceGenerator
-from ArgumentGenerator import ClassTypeGenerator
+from ArgumentGenerator import ClassTypeGenerator, ArgumentGenerator
 from ThisArgumentGenerator import ThisArgumentGenerator
 from BuiltinTypeGenerator import BuiltinTypeGenerator
 from CapiGenerator import CapiGenerator
 from LifecycleTraits import get_base_init
 from Helpers import get_c_name, get_full_method_name
+
+
+def generate_custom_implementation_code(implementation_code: TImplementationCode,
+                                        argument_generators: [ArgumentGenerator],
+                                        return_type_generator) -> [str]:
+    substitute_map = {}
+    for argument in argument_generators:
+        substitute_map.update({argument.name + '_c_2_impl': argument.c_2_implementation()})
+        substitute_map.update({argument.name + '_impl_type': argument.snippet_implementation_declaration()})
+        substitute_map.update({argument.name + '_c_type': argument.c_argument_declaration()})
+    substitute_map.update({'return_c_type': return_type_generator.c_argument_declaration()})
+    substitute_map.update({'return_impl_type': return_type_generator.snippet_implementation_declaration()})
+    calling_instructions = []
+    for line in implementation_code.all_items:
+        prepared_line = line.format_map(substitute_map)
+        if prepared_line:
+            calling_instructions.append(prepared_line)
+    return calling_instructions
 
 
 class ConstructorGenerator(object):
@@ -218,22 +236,28 @@ class MethodGenerator(object):
                 self_impl_class=self.parent_class_generator.class_object.implementation_class_name,
                 to_impl_cast=self.c_arguments_list[0].c_2_implementation()
             ))
-            self_access = 'self->'
-            if self.parent_class_generator.class_object.pointer_access:
-                self_access = '(*self)->'
-            method_name = self.method_object.implementation_name
-            if not method_name:
-                method_name = self.method_object.name
-            implementation_call = '{self_access}{method_name}({arguments})'.format(
-                self_access=self_access,
-                method_name=method_name,
-                arguments=implementation_arguments
-            )
-            calling_instructions, return_expression = self.return_type_generator.implementation_2_c_var(
-                '', implementation_call
-            )
-            if return_expression:
-                calling_instructions.append('return {0};'.format(return_expression))
+            if self.method_object.implementation_codes:
+                calling_instructions = generate_custom_implementation_code(
+                    self.method_object.implementation_codes[0],
+                    self.argument_generators,
+                    self.return_type_generator)
+            else:
+                self_access = 'self->'
+                if self.parent_class_generator.class_object.pointer_access:
+                    self_access = '(*self)->'
+                method_name = self.method_object.implementation_name
+                if not method_name:
+                    method_name = self.method_object.name
+                implementation_call = '{self_access}{method_name}({arguments})'.format(
+                    self_access=self_access,
+                    method_name=method_name,
+                    arguments=implementation_arguments
+                )
+                calling_instructions, return_expression = self.return_type_generator.implementation_2_c_var(
+                    '', implementation_call
+                )
+                if return_expression:
+                    calling_instructions.append('return {0};'.format(return_expression))
             self.exception_traits.generate_implementation_call(
                 c_function_body, self.return_type_generator, calling_instructions)
         capi_generator.add_c_function(
@@ -334,11 +358,18 @@ class FunctionGenerator(object):
                 function_name=function_name,
                 arguments=implementation_arguments
             )
-            calling_instructions, return_expression = self.return_type_generator.implementation_2_c_var(
-                '', implementation_call
-            )
-            if return_expression:
-                calling_instructions.append('return {0};'.format(return_expression))
+            if self.function_object.implementation_codes:
+                calling_instructions = generate_custom_implementation_code(
+                    self.function_object.implementation_codes[0],
+                    self.argument_generators,
+                    self.return_type_generator
+                )
+            else:
+                calling_instructions, return_expression = self.return_type_generator.implementation_2_c_var(
+                    '', implementation_call
+                )
+                if return_expression:
+                    calling_instructions.append('return {0};'.format(return_expression))
             self.exception_traits.generate_implementation_call(
                 c_function_body, self.return_type_generator, calling_instructions)
         capi_generator.add_c_function(

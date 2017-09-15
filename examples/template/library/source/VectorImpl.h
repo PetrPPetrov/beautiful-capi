@@ -63,6 +63,37 @@ namespace Example
         }
     };
 
+    class CharDummyVector
+    {
+    public:
+        CharDummyVector()
+        {
+            std::cout << "CharDummyVector ctor" << std::endl;
+        }
+        CharDummyVector(const CharDummyVector& other)
+        {
+            std::cout << "CharDummyVector copy ctor" << std::endl;
+        }
+        ~CharDummyVector()
+        {
+            std::cout << "CharDummyVector dtor" << std::endl;
+        }
+        int GetSize() const
+        {
+            return 3;
+        }
+        void Clear()
+        {
+        }
+        void PushBack(char value)
+        {
+        }
+        char GetItem(int index) const
+        {
+            return 'A';
+        }
+    };
+
     template<typename T>
     struct smart_ptr : public boost::intrusive_ptr<T>
     {

@@ -137,5 +137,8 @@ int main()
 
     std::cout << model_vector.GetA() << std::endl;
 
+    Example::VectorOf<char> dummy;
+    dump(dummy);
+
     return EXIT_SUCCESS;
 }

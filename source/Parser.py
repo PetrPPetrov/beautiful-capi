@@ -974,6 +974,32 @@ class TConstructor(TConstructorBase):
         self.load_attributes(dom_node)
 
 
+class TImplementationCode(object):
+    def __init__(self):
+        self.all_items = []
+
+    def load_element(self, element):
+        if element.nodeType == element.TEXT_NODE:
+            cur_texts = [text.strip() for text in element.data.split('\n')]
+            first = True
+            for text in cur_texts:
+                if first and self.all_items and type(self.all_items[-1]) is str:
+                    self.all_items[-1] += text
+                else:
+                    self.all_items.append(text)
+                first = False
+            return True
+        return False
+
+    def load_attributes(self, dom_node):
+        pass
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
+
 class TMethodBase(TConstructorBase):
     def __init__(self):
         super().__init__()
@@ -987,9 +1013,15 @@ class TMethodBase(TConstructorBase):
         self.impl_2_c_filled = False
         self.implementation_name = ""
         self.implementation_name_filled = False
+        self.implementation_codes = []
 
     def load_element(self, element):
         if super().load_element(element):
+            return True
+        if element.nodeName == "implementation_code":
+            new_element = TImplementationCode()
+            new_element.load(element)
+            self.implementation_codes.append(new_element)
             return True
         return False
 

@@ -84,6 +84,9 @@
       <instantiation>
         <argument name="T" value="Example::VectorOf&lt;Example::Position4D&lt;float>>"/>
       </instantiation>
+      <instantiation implementation_class_name="Example::CharDummyVector">
+        <argument name="T" value="char"/>
+      </instantiation>
       <class name="VectorOf" lifecycle="copy_semantic" implementation_class_name="Example::VectorImpl&lt;T>" implementation_class_header="VectorImpl.h">
         <constructor name="Default"/>
         <method name="GetSize" return="int" const="true"/>

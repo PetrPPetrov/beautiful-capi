@@ -615,12 +615,20 @@
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
+  <xs:complexType name="TImplementationCode" mixed="true">
+    <xs:annotation>
+      <xs:documentation>Specifies C++ code line to perform implementation calls.</xs:documentation>
+    </xs:annotation>
+  </xs:complexType>
   <xs:complexType name="TMethodBase">
     <xs:annotation>
       <xs:documentation>Specifies base properties for methods or functions.</xs:documentation>
     </xs:annotation>
     <xs:complexContent>
       <xs:extension base="TConstructorBase">
+        <xs:sequence>
+          <xs:element type="TImplementationCode" name="implementation_code" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
         <xs:attribute default="" name="return" type="xs:string" use="optional">
           <xs:annotation>
             <xs:documentation>Specifies return type for the current method or function</xs:documentation>

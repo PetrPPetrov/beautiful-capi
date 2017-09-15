@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<implementation_code:api xmlns:implementation_code="http://gkmsoft.ru/beautifulcapi" project_name="ImplementationCode">
+  <namespace name="STL">
+    <class name="Exception" implementation_class_name="std::exception" lifecycle="copy_semantic" implementation_class_header="exception" exception="true">
+      <method name="What" return="const char*" const="true" implementation_name="what"/>
+    </class>
+    <template>
+      <argument name="T" type="class"/>
+      <instantiation>
+        <argument name="T" value="int"/>
+      </instantiation>
+      <instantiation>
+        <argument name="T" value="char"/>
+      </instantiation>
+      <instantiation>
+        <argument name="T" value="double"/>
+      </instantiation>
+      <class name="Vector" lifecycle="copy_semantic" implementation_class_name="std::vector&lt;T&gt;" implementation_class_header="vector">
+        <constructor name="Default"/>
+        <method name="GetSize" const="true" return="size_t" implementation_name="size"/>
+        <method name="GetElement" const="true" return="T">
+          <argument name="index" type="size_t"/>
+          <implementation_code>
+            return self->at(index);
+          </implementation_code>
+        </method>
+        <method name="SetElement">
+          <argument name="index" type="size_t"/>
+          <argument name="value" type="T"/>
+          <implementation_code>
+            self->at(index) = value;
+          </implementation_code>
+        </method>
+        <method name="PushBack" implementation_name="push_back">
+          <argument name="value" type="T"/>
+        </method>
+      </class>
+    </template>
+    <function name="SinDegree" return="double" implementation_header="cmath">
+      <argument name="angle_in_degree" type="double"/>
+      <implementation_code>
+        const double pi = std::acos(-1);
+        return std::sin(angle_in_degree * pi / 180.0);
+      </implementation_code>
+    </function>
+  </namespace>
+</implementation_code:api>
