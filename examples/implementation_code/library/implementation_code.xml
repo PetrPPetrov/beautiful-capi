@@ -54,7 +54,7 @@
             return const_cast&lt;{return_impl_type}*&gt;(&amp;self->at(index));
           </implementation_code>
         </method>
-        <method name="Element" const="true" return="STL::PersonRawPtr">
+        <method name="Element" const="true" return="ElementTypeRawPtr">
           <argument name="index" type="size_t"/>
           <implementation_code>
             return const_cast&lt;{return_impl_type}&gt;(&amp;self->at(index));
