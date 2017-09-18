@@ -30,7 +30,7 @@ template<typename T>
 void dump(const STL::Vector<T>& vector)
 {
     std::cout << "Vector has " << vector.GetSize() << " elements" << std::endl;
-    for (int i = 0; i < vector.GetSize(); ++i)
+    for (size_t i = 0; i < vector.GetSize(); ++i)
     {
         std::cout << vector.GetElement(i) << " ";
     }
