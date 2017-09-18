@@ -23,6 +23,7 @@
 #include <crtdbg.h>
 #endif
 #include <iostream>
+#include <cstdlib>
 #include <stdint.h>
 #include "DoxygenDoc.h"
 

@@ -26,6 +26,7 @@
 #include <iostream>
 #include <string>
 #include <algorithm>
+#include <cstdlib>
 #include <stdint.h>
 #include "Example.h"
 
