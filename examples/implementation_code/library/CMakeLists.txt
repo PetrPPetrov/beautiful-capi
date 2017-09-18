@@ -30,6 +30,7 @@ include_directories(${implementation_code_SOURCE_DIR}/source/)
 
 add_library(implementation_code SHARED
   ${implementation_code_SOURCE_DIR}/source/AutoGenWrap.cpp
+  ${implementation_code_SOURCE_DIR}/source/PersonImpl.h
 )
 
 add_bcapi_generation()

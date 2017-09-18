@@ -584,6 +584,11 @@
           <xs:documentation>Specifies argument for the current constructor or method</xs:documentation>
         </xs:annotation>
       </xs:element>
+      <xs:element type="TImplementationCode" name="implementation_code" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Specifies custom implementation code</xs:documentation>
+        </xs:annotation>
+      </xs:element>
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required">
       <xs:annotation>
@@ -626,9 +631,6 @@
     </xs:annotation>
     <xs:complexContent>
       <xs:extension base="TConstructorBase">
-        <xs:sequence>
-          <xs:element type="TImplementationCode" name="implementation_code" minOccurs="0" maxOccurs="1"/>
-        </xs:sequence>
         <xs:attribute default="" name="return" type="xs:string" use="optional">
           <xs:annotation>
             <xs:documentation>Specifies return type for the current method or function</xs:documentation>
@@ -652,6 +654,16 @@
         <xs:attribute default="" name="implementation_name" type="xs:string" use="optional">
           <xs:annotation>
             <xs:documentation>Specifies implementation name for the current function or method</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute default="" name="setter_field_name" type="xs:string" use="optional">
+          <xs:annotation>
+            <xs:documentation>Specifies field name to automatically generate setter function</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute default="" name="getter_field_name" type="xs:string" use="optional">
+          <xs:annotation>
+            <xs:documentation>Specifies field name to automatically generate getter function</xs:documentation>
           </xs:annotation>
         </xs:attribute>
       </xs:extension>
@@ -924,6 +936,11 @@
     <xs:attribute default="false" name="return_copy_or_add_ref" type="xs:boolean" use="optional">
       <xs:annotation>
         <xs:documentation>Specifies to copy or increase reference counter for returned objects in getter method</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="" name="field_name" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>Specifies a public field name to automatically generate getter and setter functions</xs:documentation>
       </xs:annotation>
     </xs:attribute>
   </xs:complexType>

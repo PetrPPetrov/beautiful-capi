@@ -916,6 +916,7 @@ class TConstructorBase(object):
         self.noexcept_filled = False
         self.documentations = []
         self.arguments = []
+        self.implementation_codes = []
 
     def load_element(self, element):
         if element.nodeName == "documentation":
@@ -927,6 +928,11 @@ class TConstructorBase(object):
             new_element = TArgument()
             new_element.load(element)
             self.arguments.append(new_element)
+            return True
+        if element.nodeName == "implementation_code":
+            new_element = TImplementationCode()
+            new_element.load(element)
+            self.implementation_codes.append(new_element)
             return True
         return False
 
@@ -1013,15 +1019,13 @@ class TMethodBase(TConstructorBase):
         self.impl_2_c_filled = False
         self.implementation_name = ""
         self.implementation_name_filled = False
-        self.implementation_codes = []
+        self.setter_field_name = ""
+        self.setter_field_name_filled = False
+        self.getter_field_name = ""
+        self.getter_field_name_filled = False
 
     def load_element(self, element):
         if super().load_element(element):
-            return True
-        if element.nodeName == "implementation_code":
-            new_element = TImplementationCode()
-            new_element.load(element)
-            self.implementation_codes.append(new_element)
             return True
         return False
 
@@ -1047,6 +1051,14 @@ class TMethodBase(TConstructorBase):
             cur_attr = dom_node.getAttribute("implementation_name")
             self.implementation_name = cur_attr
             self.implementation_name_filled = True
+        if dom_node.hasAttribute("setter_field_name"):
+            cur_attr = dom_node.getAttribute("setter_field_name")
+            self.setter_field_name = cur_attr
+            self.setter_field_name_filled = True
+        if dom_node.hasAttribute("getter_field_name"):
+            cur_attr = dom_node.getAttribute("getter_field_name")
+            self.getter_field_name = cur_attr
+            self.getter_field_name_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:
@@ -1314,6 +1326,8 @@ class TProperty(object):
         self.return_type_filled = False
         self.return_copy_or_add_ref = False
         self.return_copy_or_add_ref_filled = False
+        self.field_name = ""
+        self.field_name_filled = False
         self.documentations = []
 
     def load_element(self, element):
@@ -1377,6 +1391,10 @@ class TProperty(object):
             cur_attr = dom_node.getAttribute("return_copy_or_add_ref")
             self.return_copy_or_add_ref = string_to_bool(cur_attr)
             self.return_copy_or_add_ref_filled = True
+        if dom_node.hasAttribute("field_name"):
+            cur_attr = dom_node.getAttribute("field_name")
+            self.field_name = cur_attr
+            self.field_name_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:

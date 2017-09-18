@@ -122,12 +122,19 @@ class ConstructorGenerator(object):
             [argument_generator.c_2_implementation() for argument_generator in self.argument_generators])
         c_function_body = FileGenerator(None)
         with IndentScope(c_function_body):
-            implementation_call = 'return new {impl_class}({arguments});'.format(
-                impl_class=self.parent_class_generator.class_object.implementation_class_name,
-                arguments=implementation_arguments
-            )
+            if self.constructor_object.implementation_codes:
+                calling_instructions = generate_custom_implementation_code(
+                    self.constructor_object.implementation_codes[0],
+                    self.argument_generators,
+                    self.parent_class_as_argument_type)
+            else:
+                implementation_call = 'return new {impl_class}({arguments});'.format(
+                    impl_class=self.parent_class_generator.class_object.implementation_class_name,
+                    arguments=implementation_arguments
+                )
+                calling_instructions = [implementation_call]
             self.exception_traits.generate_implementation_call(
-                c_function_body, self.parent_class_as_argument_type, [implementation_call])
+                c_function_body, self.parent_class_as_argument_type, calling_instructions)
         capi_generator.add_c_function(
             self.parent_class_generator.full_name_array,
             self.parent_class_as_argument_type.c_argument_declaration(),
@@ -248,11 +255,20 @@ class MethodGenerator(object):
                 method_name = self.method_object.implementation_name
                 if not method_name:
                     method_name = self.method_object.name
-                implementation_call = '{self_access}{method_name}({arguments})'.format(
-                    self_access=self_access,
-                    method_name=method_name,
-                    arguments=implementation_arguments
-                )
+                if self.method_object.getter_field_name_filled:
+                    implementation_call = '{self_access}{field_name}'.format(
+                        self_access=self_access, field_name=self.method_object.getter_field_name)
+                elif self.method_object.setter_field_name_filled:
+                    implementation_call = '{self_access}{field_name} = {arguments}'.format(
+                        self_access=self_access, field_name=self.method_object.setter_field_name,
+                        arguments=implementation_arguments
+                    )
+                else:
+                    implementation_call = '{self_access}{method_name}({arguments})'.format(
+                        self_access=self_access,
+                        method_name=method_name,
+                        arguments=implementation_arguments
+                    )
                 calling_instructions, return_expression = self.return_type_generator.implementation_2_c_var(
                     '', implementation_call
                 )

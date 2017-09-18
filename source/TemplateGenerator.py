@@ -23,6 +23,7 @@ from Parser import TTemplate
 from FileGenerator import FileGenerator
 from ClassGenerator import ClassGenerator
 from FileCache import FileCache
+from Helpers import get_template_name
 
 
 class TemplateGenerator(object):
@@ -39,6 +40,9 @@ class TemplateGenerator(object):
             ['{0} {1}'.format(argument.type_name, argument.name) for argument in self.template_object.arguments])
         out.put_line('template<{0}>'.format(template_arguments))
         self.template_class_generator.generate_forward_declaration(out)
+        for lifecycle_extension in self.template_object.classes[0].lifecycle_extensions:
+            out.put_line('template<{0}>'.format(template_arguments))
+            out.put_line('class {0};'.format(get_template_name(lifecycle_extension.wrap_name)))
 
 
 class TemplateConstantArgumentGenerator(object):

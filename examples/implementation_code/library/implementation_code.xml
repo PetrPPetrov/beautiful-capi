@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <implementation_code:api xmlns:implementation_code="http://gkmsoft.ru/beautifulcapi" project_name="ImplementationCode">
   <namespace name="STL">
-    <class name="Exception" implementation_class_name="std::exception" lifecycle="copy_semantic" implementation_class_header="exception" exception="true">
+    <class name="Exception" implementation_class_name="std::exception" lifecycle="copy_semantic" implementation_class_header="stdexcept" exception="true">
+      <constructor name="RangeError">
+        <argument name="error_text" type="STL::String"/>
+        <implementation_code>return new std::range_error({error_text_c_2_impl});</implementation_code>
+      </constructor>
       <method name="What" return="const char*" const="true" implementation_name="what"/>
     </class>
     <template>
@@ -36,6 +40,73 @@
         </method>
       </class>
     </template>
+    <template>
+      <argument name="ElementType" type="class"/>
+      <instantiation>
+        <argument name="ElementType" value="STL::Person"/>
+      </instantiation>
+      <class name="VectorOfStructures" lifecycle="copy_semantic" implementation_class_name="std::vector&lt;ElementType&gt;" implementation_class_header="vector">
+        <constructor name="Default"/>
+        <method name="GetSize" const="true" return="size_t" implementation_name="size"/>
+        <method name="GetElement" const="true" return="ElementType" return_copy_or_add_ref="true">
+          <argument name="index" type="size_t"/>
+          <implementation_code>
+            return const_cast&lt;{return_impl_type}*&gt;(&amp;self->at(index));
+          </implementation_code>
+        </method>
+        <method name="Element" const="true" return="STL::PersonRawPtr">
+          <argument name="index" type="size_t"/>
+          <implementation_code>
+            return const_cast&lt;{return_impl_type}&gt;(&amp;self->at(index));
+          </implementation_code>
+        </method>
+        <method name="SetElement">
+          <argument name="index" type="size_t"/>
+          <argument name="value" type="ElementType"/>
+          <implementation_code>
+            self->at(index) = {value_c_2_impl};
+          </implementation_code>
+        </method>
+        <method name="PushBack" implementation_name="push_back">
+          <argument name="value" type="ElementType"/>
+        </method>
+        <lifecycle_extension name="VectorOfStructuresRawPtr&lt;ElementType&gt;" wrap_name="VectorOfStructuresRawPtr&lt;ElementType&gt;" lifecycle="raw_pointer_semantic">
+          <cast_from source_type="STL::VectorOfStructures&lt;ElementType&gt;"/>
+          <cast_to target_type="STL::VectorOfStructures&lt;ElementType&gt;" implicit="true"/>
+        </lifecycle_extension>
+      </class>
+    </template>
+    <class name="String" lifecycle="copy_semantic" implementation_class_name="std::string" implementation_class_header="string">
+      <constructor name="FromCStr">
+        <argument name="value" type="const char*"/>
+      </constructor>
+      <method name="GetSize" implementation_name="size" return="size_t" const="true"/>
+      <method name="CStr" implementation_name="c_str" return="const char*" const="true"/>
+      <method name="SetValue">
+        <argument name="value" type="const char*"/>
+        <implementation_code>
+          *self = value;
+        </implementation_code>
+      </method>
+    </class>
+    <class name="Person" lifecycle="copy_semantic" implementation_class_name="Structures::PersonImpl" implementation_class_header="PersonImpl.h">
+      <constructor name="Default"/>
+      <property name="Age" type="unsigned int" field_name="age"/>
+      <property name="FirstName" type="STL::String" field_name="first_name"/>
+      <property name="SecondName" type="STL::String" field_name="second_name"/>
+      <lifecycle_extension name="PersonRawPtr" wrap_name="PersonRawPtr" lifecycle="raw_pointer_semantic">
+        <cast_from source_type="STL::Person"/>
+        <cast_to target_type="STL::Person" implicit="true"/>
+      </lifecycle_extension>
+    </class>
+    <class name="Community" lifecycle="copy_semantic" implementation_class_name="Structures::CommunityImpl" implementation_class_header="PersonImpl.h">
+      <constructor name="Default"/>
+      <property name="Title" type="STL::String" field_name="title"/>
+      <property name="Members" type="STL::VectorOfStructures&lt;STL::Person&gt;" field_name="members"/>
+      <method name="Members" return="STL::VectorOfStructuresRawPtr&lt;STL::Person&gt;">
+        <implementation_code>return &amp;self->members;</implementation_code>
+      </method>
+    </class>
     <function name="SinDegree" return="double" implementation_header="cmath">
       <argument name="angle_in_degree" type="double"/>
       <implementation_code>

@@ -37,6 +37,25 @@ void dump(const STL::Vector<T>& vector)
     std::cout << std::endl;
 }
 
+void dump(const STL::Person& person)
+{
+    std::cout << "==========" << std::endl;
+    std::cout << "Name: " << person.GetFirstName().CStr() << std::endl;
+    std::cout << "Surname: " << person.GetSecondName().CStr() << std::endl;
+    std::cout << "Age: " << person.GetAge() << std::endl;
+}
+
+void dump(STL::Community& community)
+{
+    std::cout << "====================" << std::endl;
+    std::cout << "Title: " << community.GetTitle().CStr() << std::endl;
+    std::cout << "this community has " << community.Members()->GetSize() << " members." << std::endl;
+    for (size_t i = 0; i < community.Members()->GetSize(); ++i)
+    {
+        dump(community.Members()->GetElement(i));
+    }
+}
+
 int main()
 {
 #if defined(_WIN32) && defined(_DEBUG)
@@ -52,6 +71,30 @@ int main()
     dump(numbers);
 
     std::cout << "sin(90 degrees) = " << STL::SinDegree(90) << std::endl;
+
+    try
+    {
+        throw STL::Exception(STL::String("range error exception"));
+    }
+    catch (const STL::Exception& exception)
+    {
+        std::cout << "Expected exception was caught, error text: " << exception.What() << std::endl;
+    }
+
+    STL::Person man;
+    man.SetAge(32);
+    man.SetFirstName(STL::String("John"));
+    man.SetSecondName(STL::String("Watson"));
+    dump(man);
+
+    STL::Community soccer_community;
+    soccer_community.SetTitle("Soccer Community");
+    soccer_community.Members()->PushBack(man);
+    soccer_community.Members()->PushBack(man);
+    soccer_community.Members()->Element(1)->SetFirstName(STL::String("Bill"));
+    soccer_community.Members()->Element(1)->SetSecondName(STL::String("Johnson"));
+    soccer_community.Members()->Element(1)->SetAge(29);
+    dump(soccer_community);
 
     return EXIT_SUCCESS;
 }

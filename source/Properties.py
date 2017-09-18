@@ -22,7 +22,7 @@
 
 import copy
 
-from Parser import TClass, TMethod, TArgument, TNamespace, TTemplate, TBeautifulCapiRoot, TDocumentation
+from Parser import TClass, TMethod, TArgument, TNamespace, TTemplate, TBeautifulCapiRoot, TDocumentation, TImplementationCode
 from UnitTestGenerator import TestGenerator
 from Helpers import get_c_name
 
@@ -83,6 +83,9 @@ class PropertiesProcessor(object):
             new_get_method.return_is_builtin_filled = cur_property.is_builtin_filled
             new_get_method.return_copy_or_add_ref = cur_property.return_copy_or_add_ref
             new_get_method.return_copy_or_add_ref_filled = True
+            if cur_property.field_name_filled:
+                new_get_method.getter_field_name = cur_property.field_name
+                new_get_method.getter_field_name_filled = True
             PropertiesProcessor.__process_documentations(new_get_method, True)
             cur_class.methods.append(new_get_method)
             new_set_method = TMethod()
@@ -98,6 +101,9 @@ class PropertiesProcessor(object):
             set_input_argument.is_builtin = cur_property.is_builtin
             set_input_argument.is_builtin_filled = cur_property.is_builtin_filled
             new_set_method.arguments.append(set_input_argument)
+            if cur_property.field_name_filled:
+                new_set_method.setter_field_name = cur_property.field_name
+                new_set_method.setter_field_name_filled = True
             new_set_method.documentations = copy.deepcopy(cur_property.documentations)
             PropertiesProcessor.__process_documentations(new_set_method, False)
             cur_class.methods.append(new_set_method)

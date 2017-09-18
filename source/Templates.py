@@ -69,6 +69,13 @@ def generate_template_classes(namespace: TNamespace, template: TTemplate):
             instantiate_constructor(constructor, instantiation)
         for method in new_class.methods:
             instantiate_method(method, instantiation)
+        for lifecycle_extension in new_class.lifecycle_extensions:
+            lifecycle_extension.name = instantiate_type(lifecycle_extension.name, instantiation)
+            lifecycle_extension.wrap_name = instantiate_type(lifecycle_extension.wrap_name, instantiation)
+            for cast_to in lifecycle_extension.cast_tos:
+                cast_to.target_type = instantiate_type(cast_to.target_type, instantiation)
+            for cast_from in lifecycle_extension.cast_froms:
+                cast_from.source_type = instantiate_type(cast_from.source_type, instantiation)
 
         name2value = {}
         for instantiation_argument in instantiation.arguments:
