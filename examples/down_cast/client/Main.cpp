@@ -23,7 +23,7 @@
 #include <crtdbg.h>
 #endif
 #include <iostream>
-#include <cstdlib>
+#include <stdint.h>
 
 #define EXAMPLE_CAPI_USE_DYNAMIC_LOADER
 #define EXAMPLE_CAPI_DEFINE_FUNCTION_POINTERS

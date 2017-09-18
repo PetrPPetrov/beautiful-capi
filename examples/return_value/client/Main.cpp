@@ -23,7 +23,7 @@
 #include <crtdbg.h>
 #endif
 #include <iostream>
-#include <cstdlib>
+#include <stdint.h>
 #include "ReturnValue.h"
 
 int main()

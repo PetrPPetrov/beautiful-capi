@@ -23,7 +23,7 @@
 #include <crtdbg.h>
 #endif
 #include <iostream>
-#include <cstdlib>
+#include <stdint.h>
 #include "Template.h"
 
 template<typename SimpleType>

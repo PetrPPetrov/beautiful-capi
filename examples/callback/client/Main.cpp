@@ -25,7 +25,6 @@
 #include <cctype>
 #include <iostream>
 #include <string>
-#include <cstdlib>
 #include <algorithm>
 #include <stdint.h>
 #include "Example.h"

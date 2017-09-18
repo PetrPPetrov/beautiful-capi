@@ -20,4 +20,5 @@
  */
  
 #define BOOST_TEST_MODULE Beautiful Capi Unit Testing
+#include <stdint.h>
 #include "AutoGenUnitTests.h"
