@@ -42,8 +42,8 @@ def generate_custom_implementation_code(implementation_code: TImplementationCode
     substitute_map = {}
     for argument in argument_generators:
         substitute_map.update({argument.name + '_c_2_impl': argument.c_2_implementation()})
-        substitute_map.update({argument.name + '_impl_type': argument.snippet_implementation_declaration()})
-        substitute_map.update({argument.name + '_c_type': argument.c_argument_declaration()})
+        substitute_map.update({argument.name + '_impl_type': argument.type_generator.snippet_implementation_declaration()})
+        substitute_map.update({argument.name + '_c_type': argument.type_generator.c_argument_declaration()})
     substitute_map.update({'return_c_type': return_type_generator.c_argument_declaration()})
     substitute_map.update({'return_impl_type': return_type_generator.snippet_implementation_declaration()})
     calling_instructions = []
