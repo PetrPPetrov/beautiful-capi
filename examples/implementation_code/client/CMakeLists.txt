@@ -24,11 +24,11 @@ cmake_minimum_required(VERSION 2.8)
 
 include_directories(${implementation_code_client_SOURCE_DIR}/../library/include)
 
-add_executable(implementation_code_client_client
+add_executable(implementation_code_client
   ${implementation_code_client_SOURCE_DIR}/Main.cpp
 )
 
 if(TARGET implementation_code)
-  add_dependencies(implementation_code_client_client implementation_code)
+  add_dependencies(implementation_code_client implementation_code)
 endif()
-target_link_libraries(implementation_code_client_client implementation_code)
+target_link_libraries(implementation_code_client implementation_code)

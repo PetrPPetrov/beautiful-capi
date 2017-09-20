@@ -22,7 +22,7 @@
 
 import os
 
-from Helpers import fix_name
+from Helpers import fix_name, replace_double_greater
 
 
 class AtomicString(object):
@@ -120,6 +120,7 @@ class FileGenerator(object):
 
     def put_line(self, line, eol='\n'):
         result_line = self.get_indent_str() + line if line else ''
+        result_line = replace_double_greater(result_line)
         self.lines.append(AtomicString(result_line + eol))
 
     def put_lines(self, lines: [str], eol='\n'):

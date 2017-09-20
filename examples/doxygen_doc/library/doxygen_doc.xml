@@ -7,6 +7,7 @@
     <class name="Name" lifecycle="copy_semantic" implementation_class_name="DoxygenDoc::NameImpl" implementation_class_header="NameImpl.h" >
       <documentation>
         <brief>Represents a name.</brief>
+        <see_also>For person address see also <reference>DoxygenDoc::Address</reference></see_also>
       </documentation>
       <constructor name="FullName">
         <documentation>

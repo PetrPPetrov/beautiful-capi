@@ -44,13 +44,15 @@ class DoxygenCppGenerator(object):
                 need_eol = True
             elif type(doc_item) is ReferenceGenerator:
                 need_eol = False
-                reference_as_text = '@ref ' + doc_item.text
-                DoxygenCppGenerator.__add_line(result_lines, reference_as_text, need_eol)
+                text = doc_item.text.strip()
+                if text:
+                    reference_as_text = '@ref ' + text
+                    DoxygenCppGenerator.__add_line(result_lines, reference_as_text, need_eol)
             elif doc_item in doc.references:
                 need_eol = False
                 reference_as_text = '@ref ' + ' '.join(doc_item.all_items)
                 DoxygenCppGenerator.__add_line(result_lines, reference_as_text, need_eol)
-            else:
+            elif doc_item in doc.see_alsos:
                 need_eol = True
                 see_also = '@see '
                 DoxygenCppGenerator.__add_line(result_lines, see_also, need_eol)
@@ -67,11 +69,15 @@ class DoxygenCppGenerator(object):
         if issubclass(type(some_doc), TDocumentation):
             for brief in some_doc.briefs:
                 for brief_line in DoxygenCppGenerator.__get_lines_for_generic_documentation(brief):
-                    result_lines.append('@brief {0}'.format(brief_line))
+                    brief_text = brief_line.strip()
+                    if brief_text:
+                        result_lines.append('@brief {0}'.format(brief_text))
             if generate_doc_return:
                 for returns in some_doc.returns:
                     for return_line in DoxygenCppGenerator.__get_lines_for_generic_documentation(returns):
-                        result_lines.append('@returns {0}'.format(return_line))
+                        return_text = return_line.strip()
+                        if return_text:
+                            result_lines.append('@returns {0}'.format(return_text))
         for generic_line in DoxygenCppGenerator.__get_lines_for_generic_documentation(some_doc):
             result_lines.append(generic_line)
         return result_lines
