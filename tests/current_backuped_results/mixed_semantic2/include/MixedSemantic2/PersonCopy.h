@@ -37,7 +37,7 @@
 
 inline MixedSemantic2::PersonCopy::PersonCopy()
 {
-    SetObject(mixed_semantic2_person_copy_default());
+    SetObject(MixedSemantic2::PersonCopy(MixedSemantic2::PersonCopy::force_creating_from_raw_pointer, mixed_semantic2_person_copy_default(), false).Detach());
 }
 
 inline MixedSemantic2::AddressPtr MixedSemantic2::PersonCopy::GetAddress() const
@@ -171,7 +171,7 @@ inline MixedSemantic2::PersonCopy& MixedSemantic2::PersonCopy::operator=(MixedSe
 
 inline MixedSemantic2::PersonCopy MixedSemantic2::PersonCopy::Null()
 {
-    return MixedSemantic2::PersonCopy(MixedSemantic2::PersonCopy::force_creating_from_raw_pointer, 0, false);
+    return MixedSemantic2::PersonCopy(MixedSemantic2::PersonCopy::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool MixedSemantic2::PersonCopy::IsNull() const

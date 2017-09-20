@@ -34,7 +34,7 @@
 
 inline Example::ModelPtr<float>::ModelPtr()
 {
-    SetObject(example_model_float_default());
+    SetObject(Example::ModelPtr<float>(Example::ModelPtr<float>::force_creating_from_raw_pointer, example_model_float_default(), false).Detach());
 }
 
 inline const char* Example::ModelPtr<float>::GetName() const
@@ -129,7 +129,7 @@ inline Example::ModelPtr<float>& Example::ModelPtr<float>::operator=(Example::Mo
 
 inline Example::ModelPtr<float> Example::ModelPtr<float>::Null()
 {
-    return Example::ModelPtr<float>(Example::ModelPtr<float>::force_creating_from_raw_pointer, 0, false);
+    return Example::ModelPtr<float>(Example::ModelPtr<float>::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool Example::ModelPtr<float>::IsNull() const

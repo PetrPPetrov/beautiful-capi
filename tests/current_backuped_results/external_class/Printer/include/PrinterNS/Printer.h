@@ -36,7 +36,7 @@
 
 inline PrinterNS::Printer::Printer()
 {
-    SetObject(printer_ns_printer_default());
+    SetObject(PrinterNS::Printer(PrinterNS::Printer::force_creating_from_raw_pointer, printer_ns_printer_default(), false).Detach());
 }
 
 inline void PrinterNS::Printer::Show(const Components::ComponentA& name)
@@ -140,7 +140,7 @@ inline PrinterNS::Printer& PrinterNS::Printer::operator=(PrinterNS::Printer&& ot
 
 inline PrinterNS::Printer PrinterNS::Printer::Null()
 {
-    return PrinterNS::Printer(PrinterNS::Printer::force_creating_from_raw_pointer, 0, false);
+    return PrinterNS::Printer(PrinterNS::Printer::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool PrinterNS::Printer::IsNull() const

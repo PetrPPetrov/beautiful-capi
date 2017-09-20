@@ -36,7 +36,7 @@
 
 inline ReturnValue::Printer::Printer()
 {
-    SetObject(return_value_printer_default());
+    SetObject(ReturnValue::Printer(ReturnValue::Printer::force_creating_from_raw_pointer, return_value_printer_default(), false).Detach());
 }
 
 inline void ReturnValue::Printer::ShowFirstName(const ReturnValue::FirstName& first_name)
@@ -135,7 +135,7 @@ inline ReturnValue::Printer& ReturnValue::Printer::operator=(ReturnValue::Printe
 
 inline ReturnValue::Printer ReturnValue::Printer::Null()
 {
-    return ReturnValue::Printer(ReturnValue::Printer::force_creating_from_raw_pointer, 0, false);
+    return ReturnValue::Printer(ReturnValue::Printer::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool ReturnValue::Printer::IsNull() const

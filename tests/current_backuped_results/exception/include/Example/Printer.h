@@ -35,9 +35,9 @@
 inline Example::Printer::Printer()
 {
     beautiful_capi_exception_exception_info_t exception_info;
-    void* result(example_printer_new(&exception_info));
+    Example::Printer result(Example::Printer::force_creating_from_raw_pointer, example_printer_new(&exception_info), false);
     beautiful_capi_Exception::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
-    SetObject(result);
+    SetObject(result.Detach());
 }
 
 inline const char* Example::Printer::Show(const char* text)
@@ -150,7 +150,7 @@ inline Example::Printer& Example::Printer::operator=(Example::Printer&& other)
 
 inline Example::Printer Example::Printer::Null()
 {
-    return Example::Printer(Example::Printer::force_creating_from_raw_pointer, 0, false);
+    return Example::Printer(Example::Printer::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool Example::Printer::IsNull() const

@@ -33,7 +33,7 @@
 
 inline Example::Geometry::Brep::Body::Body()
 {
-    SetObject(example_geometry_brep_body_new());
+    SetObject(Example::Geometry::Brep::Body(Example::Geometry::Brep::Body::force_creating_from_raw_pointer, example_geometry_brep_body_new(), false).Detach());
 }
 
 inline const char* Example::Geometry::Brep::Body::GetName()
@@ -127,7 +127,7 @@ inline Example::Geometry::Brep::Body& Example::Geometry::Brep::Body::operator=(E
 
 inline Example::Geometry::Brep::Body Example::Geometry::Brep::Body::Null()
 {
-    return Example::Geometry::Brep::Body(Example::Geometry::Brep::Body::force_creating_from_raw_pointer, 0, false);
+    return Example::Geometry::Brep::Body(Example::Geometry::Brep::Body::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool Example::Geometry::Brep::Body::IsNull() const

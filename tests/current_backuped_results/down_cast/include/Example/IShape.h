@@ -108,7 +108,7 @@ inline Example::IShapePtr& Example::IShapePtr::operator=(Example::IShapePtr&& ot
 
 inline Example::IShapePtr Example::IShapePtr::Null()
 {
-    return Example::IShapePtr(Example::IShapePtr::force_creating_from_raw_pointer, 0, false);
+    return Example::IShapePtr(Example::IShapePtr::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool Example::IShapePtr::IsNull() const

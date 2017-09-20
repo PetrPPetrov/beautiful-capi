@@ -34,7 +34,7 @@
 
 inline Example::VectorOf<Example::Position<float> >::VectorOf()
 {
-    SetObject(example_vector_of_example_position_float_default());
+    SetObject(Example::VectorOf<Example::Position<float> >(Example::VectorOf<Example::Position<float> >::force_creating_from_raw_pointer, example_vector_of_example_position_float_default(), false).Detach());
 }
 
 inline int Example::VectorOf<Example::Position<float> >::GetSize() const
@@ -138,7 +138,7 @@ inline Example::VectorOf<Example::Position<float> >& Example::VectorOf<Example::
 
 inline Example::VectorOf<Example::Position<float> > Example::VectorOf<Example::Position<float> >::Null()
 {
-    return Example::VectorOf<Example::Position<float> >(Example::VectorOf<Example::Position<float> >::force_creating_from_raw_pointer, 0, false);
+    return Example::VectorOf<Example::Position<float> >(Example::VectorOf<Example::Position<float> >::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool Example::VectorOf<Example::Position<float> >::IsNull() const

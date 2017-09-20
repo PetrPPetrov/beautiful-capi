@@ -33,7 +33,7 @@
 
 inline MappedTypes::Device::Device()
 {
-    SetObject(mapped_types_device_default());
+    SetObject(MappedTypes::Device(MappedTypes::Device::force_creating_from_raw_pointer, mapped_types_device_default(), false).Detach());
 }
 
 inline std::string MappedTypes::Device::GetName() const
@@ -137,7 +137,7 @@ inline MappedTypes::Device& MappedTypes::Device::operator=(MappedTypes::Device&&
 
 inline MappedTypes::Device MappedTypes::Device::Null()
 {
-    return MappedTypes::Device(MappedTypes::Device::force_creating_from_raw_pointer, 0, false);
+    return MappedTypes::Device(MappedTypes::Device::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool MappedTypes::Device::IsNull() const

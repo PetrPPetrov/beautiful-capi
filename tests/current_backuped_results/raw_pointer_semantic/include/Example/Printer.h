@@ -33,7 +33,7 @@
 
 inline Example::PrinterRawPtr::PrinterRawPtr()
 {
-    SetObject(example_printer_new());
+    SetObject(Example::PrinterRawPtr(Example::PrinterRawPtr::force_creating_from_raw_pointer, example_printer_new(), false).Detach());
 }
 
 inline void Example::PrinterRawPtr::Show(const char* text)
@@ -91,7 +91,7 @@ inline Example::PrinterRawPtr& Example::PrinterRawPtr::operator=(Example::Printe
 
 inline Example::PrinterRawPtr Example::PrinterRawPtr::Null()
 {
-    return Example::PrinterRawPtr(Example::PrinterRawPtr::force_creating_from_raw_pointer, 0, false);
+    return Example::PrinterRawPtr(Example::PrinterRawPtr::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool Example::PrinterRawPtr::IsNull() const

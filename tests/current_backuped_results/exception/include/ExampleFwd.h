@@ -36,7 +36,7 @@
 
 namespace beautiful_capi_Exception
 {
-    inline void check_and_throw_exception(int exception_code, void* exception_object);
+    inline void check_and_throw_exception(uint32_t exception_code, void* exception_object);
 }
 
 #endif /* BEAUTIFUL_CAPI_EXCEPTION_CHECK_AND_THROW_EXCEPTION_FORWARD_DECLARATION */

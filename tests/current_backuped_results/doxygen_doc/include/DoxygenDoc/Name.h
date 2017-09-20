@@ -33,7 +33,7 @@
 
 inline DoxygenDoc::Name::Name(const char* FirstName, const char* LastName)
 {
-    SetObject(doxygen_doc_name_full_name(FirstName, LastName));
+    SetObject(DoxygenDoc::Name(DoxygenDoc::Name::force_creating_from_raw_pointer, doxygen_doc_name_full_name(FirstName, LastName), false).Detach());
 }
 
 inline const char* DoxygenDoc::Name::GetFirstName() const
@@ -137,7 +137,7 @@ inline DoxygenDoc::Name& DoxygenDoc::Name::operator=(DoxygenDoc::Name&& other)
 
 inline DoxygenDoc::Name DoxygenDoc::Name::Null()
 {
-    return DoxygenDoc::Name(DoxygenDoc::Name::force_creating_from_raw_pointer, 0, false);
+    return DoxygenDoc::Name(DoxygenDoc::Name::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool DoxygenDoc::Name::IsNull() const

@@ -34,7 +34,7 @@
 
 inline Example::DocumentPtr::DocumentPtr()
 {
-    SetObject(example_document_default());
+    SetObject(Example::DocumentPtr(Example::DocumentPtr::force_creating_from_raw_pointer, example_document_default(), false).Detach());
 }
 
 inline void Example::DocumentPtr::Show() const
@@ -124,7 +124,7 @@ inline Example::DocumentPtr& Example::DocumentPtr::operator=(Example::DocumentPt
 
 inline Example::DocumentPtr Example::DocumentPtr::Null()
 {
-    return Example::DocumentPtr(Example::DocumentPtr::force_creating_from_raw_pointer, 0, false);
+    return Example::DocumentPtr(Example::DocumentPtr::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool Example::DocumentPtr::IsNull() const

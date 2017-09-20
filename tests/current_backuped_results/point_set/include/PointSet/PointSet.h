@@ -34,7 +34,7 @@
 
 inline PointSet::PointSetPtr::PointSetPtr()
 {
-    SetObject(point_set_point_set_default());
+    SetObject(PointSet::PointSetPtr(PointSet::PointSetPtr::force_creating_from_raw_pointer, point_set_point_set_default(), false).Detach());
 }
 
 inline const char* PointSet::PointSetPtr::GetName() const
@@ -129,7 +129,7 @@ inline PointSet::PointSetPtr& PointSet::PointSetPtr::operator=(PointSet::PointSe
 
 inline PointSet::PointSetPtr PointSet::PointSetPtr::Null()
 {
-    return PointSet::PointSetPtr(PointSet::PointSetPtr::force_creating_from_raw_pointer, 0, false);
+    return PointSet::PointSetPtr(PointSet::PointSetPtr::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool PointSet::PointSetPtr::IsNull() const

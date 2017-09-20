@@ -36,7 +36,7 @@
 
 inline DoxygenDoc::Printer::Printer()
 {
-    SetObject(doxygen_doc_printer_default());
+    SetObject(DoxygenDoc::Printer(DoxygenDoc::Printer::force_creating_from_raw_pointer, doxygen_doc_printer_default(), false).Detach());
 }
 
 inline void DoxygenDoc::Printer::Show(const DoxygenDoc::Name& name)
@@ -165,7 +165,7 @@ inline DoxygenDoc::Printer& DoxygenDoc::Printer::operator=(DoxygenDoc::Printer&&
 
 inline DoxygenDoc::Printer DoxygenDoc::Printer::Null()
 {
-    return DoxygenDoc::Printer(DoxygenDoc::Printer::force_creating_from_raw_pointer, 0, false);
+    return DoxygenDoc::Printer(DoxygenDoc::Printer::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool DoxygenDoc::Printer::IsNull() const

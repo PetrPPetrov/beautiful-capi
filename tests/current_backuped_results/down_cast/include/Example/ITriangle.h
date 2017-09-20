@@ -37,7 +37,7 @@ inline void Example::ITrianglePtr::SetPoints(double x1, double y1, double x2, do
     example_itriangle_set_points(GetRawPointer(), x1, y1, x2, y2, x3, y3);
 }
 
-inline Example::ITrianglePtr::ITrianglePtr(const ITrianglePtr& other) : Example::IPolygonPtr(Example::IPolygonPtr::force_creating_from_raw_pointer, 0, false)
+inline Example::ITrianglePtr::ITrianglePtr(const ITrianglePtr& other) : Example::IPolygonPtr(Example::IPolygonPtr::force_creating_from_raw_pointer, static_cast<void*>(0), false)
 {
     SetObject(other.GetRawPointer());
     if (other.GetRawPointer())
@@ -54,7 +54,7 @@ inline Example::ITrianglePtr::ITrianglePtr(ITrianglePtr&& other) : Example::IPol
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
 
-inline Example::ITrianglePtr::ITrianglePtr(Example::ITrianglePtr::ECreateFromRawPointer, void *object_pointer, bool add_ref_object) : Example::IPolygonPtr(Example::IPolygonPtr::force_creating_from_raw_pointer, 0, false)
+inline Example::ITrianglePtr::ITrianglePtr(Example::ITrianglePtr::ECreateFromRawPointer, void *object_pointer, bool add_ref_object) : Example::IPolygonPtr(Example::IPolygonPtr::force_creating_from_raw_pointer, static_cast<void*>(0), false)
 {
     SetObject(object_pointer);
     if (add_ref_object && object_pointer)
@@ -110,7 +110,7 @@ inline Example::ITrianglePtr& Example::ITrianglePtr::operator=(Example::ITriangl
 
 inline Example::ITrianglePtr Example::ITrianglePtr::Null()
 {
-    return Example::ITrianglePtr(Example::ITrianglePtr::force_creating_from_raw_pointer, 0, false);
+    return Example::ITrianglePtr(Example::ITrianglePtr::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool Example::ITrianglePtr::IsNull() const

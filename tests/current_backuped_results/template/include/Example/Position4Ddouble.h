@@ -32,26 +32,26 @@
 
 #ifdef __cplusplus
 
-inline Example::Position4D<double>::Position4D() : Example::Position<double>(Example::Position<double>::force_creating_from_raw_pointer, 0, false)
+inline Example::Position4D<double>::Position4D() : Example::Position<double>(Example::Position<double>::force_creating_from_raw_pointer, static_cast<void*>(0), false)
 {
-    SetObject(example_position4_d_double_default());
+    SetObject(Example::Position4D<double>(Example::Position4D<double>::force_creating_from_raw_pointer, example_position4d_double_default(), false).Detach());
 }
 
 inline double Example::Position4D<double>::GetW() const
 {
-    return example_position4_d_double_get_w_const(GetRawPointer());
+    return example_position4d_double_get_w_const(GetRawPointer());
 }
 
 inline void Example::Position4D<double>::SetW(double x)
 {
-    example_position4_d_double_set_w(GetRawPointer(), x);
+    example_position4d_double_set_w(GetRawPointer(), x);
 }
 
-inline Example::Position4D<double>::Position4D(const Position4D<double>& other) : Example::Position<double>(Example::Position<double>::force_creating_from_raw_pointer, 0, false)
+inline Example::Position4D<double>::Position4D(const Position4D<double>& other) : Example::Position<double>(Example::Position<double>::force_creating_from_raw_pointer, static_cast<void*>(0), false)
 {
     if (other.GetRawPointer())
     {
-        SetObject(example_position4_d_double_copy(other.GetRawPointer()));
+        SetObject(example_position4d_double_copy(other.GetRawPointer()));
     }
     else
     {
@@ -67,11 +67,11 @@ inline Example::Position4D<double>::Position4D(Position4D<double>&& other) : Exa
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
 
-inline Example::Position4D<double>::Position4D(Example::Position4D<double>::ECreateFromRawPointer, void *object_pointer, bool copy_object) : Example::Position<double>(Example::Position<double>::force_creating_from_raw_pointer, 0, false)
+inline Example::Position4D<double>::Position4D(Example::Position4D<double>::ECreateFromRawPointer, void *object_pointer, bool copy_object) : Example::Position<double>(Example::Position<double>::force_creating_from_raw_pointer, static_cast<void*>(0), false)
 {
     if (object_pointer && copy_object)
     {
-        SetObject(example_position4_d_double_copy(object_pointer));
+        SetObject(example_position4d_double_copy(object_pointer));
     }
     else
     {
@@ -83,7 +83,7 @@ inline Example::Position4D<double>::~Position4D()
 {
     if (GetRawPointer())
     {
-        example_position4_d_double_delete(GetRawPointer());
+        example_position4d_double_delete(GetRawPointer());
         SetObject(0);
     }
 }
@@ -94,12 +94,12 @@ inline Example::Position4D<double>& Example::Position4D<double>::operator=(const
     {
         if (GetRawPointer())
         {
-            example_position4_d_double_delete(GetRawPointer());
+            example_position4d_double_delete(GetRawPointer());
             SetObject(0);
         }
         if (other.GetRawPointer())
         {
-            SetObject(example_position4_d_double_copy(other.mObject));
+            SetObject(example_position4d_double_copy(other.mObject));
         }
         else
         {
@@ -116,7 +116,7 @@ inline Example::Position4D<double>& Example::Position4D<double>::operator=(Examp
     {
         if (GetRawPointer())
         {
-            example_position4_d_double_delete(GetRawPointer());
+            example_position4d_double_delete(GetRawPointer());
             SetObject(0);
         }
         Example::Position<double>::operator=(std::move(other));
@@ -129,7 +129,7 @@ inline Example::Position4D<double>& Example::Position4D<double>::operator=(Examp
 
 inline Example::Position4D<double> Example::Position4D<double>::Null()
 {
-    return Example::Position4D<double>(Example::Position4D<double>::force_creating_from_raw_pointer, 0, false);
+    return Example::Position4D<double>(Example::Position4D<double>::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool Example::Position4D<double>::IsNull() const
@@ -164,7 +164,7 @@ inline void Example::Position4D<double>::SetObject(void* object_pointer)
     mObject = object_pointer;
     if (mObject)
     {
-        Example::Position<double>::SetObject(example_position4_d_double_cast_to_base(mObject));
+        Example::Position<double>::SetObject(example_position4d_double_cast_to_base(mObject));
     }
     else
     {

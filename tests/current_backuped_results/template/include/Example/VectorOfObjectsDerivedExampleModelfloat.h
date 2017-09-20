@@ -32,9 +32,9 @@
 
 #ifdef __cplusplus
 
-inline Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<float> >::VectorOfObjectsDerivedPtr() : Example::VectorOfObjectsPtr<Example::ModelPtr<float> >(Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::force_creating_from_raw_pointer, 0, false)
+inline Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<float> >::VectorOfObjectsDerivedPtr() : Example::VectorOfObjectsPtr<Example::ModelPtr<float> >(Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::force_creating_from_raw_pointer, static_cast<void*>(0), false)
 {
-    SetObject(example_vector_of_objects_derived_example_model_float_default());
+    SetObject(Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<float> >(Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<float> >::force_creating_from_raw_pointer, example_vector_of_objects_derived_example_model_float_default(), false).Detach());
 }
 
 inline int Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<float> >::GetA() const
@@ -42,7 +42,7 @@ inline int Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<float> >::GetA()
     return example_vector_of_objects_derived_example_model_float_get_a_const(GetRawPointer());
 }
 
-inline Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<float> >::VectorOfObjectsDerivedPtr(const VectorOfObjectsDerivedPtr<Example::ModelPtr<float> >& other) : Example::VectorOfObjectsPtr<Example::ModelPtr<float> >(Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::force_creating_from_raw_pointer, 0, false)
+inline Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<float> >::VectorOfObjectsDerivedPtr(const VectorOfObjectsDerivedPtr<Example::ModelPtr<float> >& other) : Example::VectorOfObjectsPtr<Example::ModelPtr<float> >(Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::force_creating_from_raw_pointer, static_cast<void*>(0), false)
 {
     SetObject(other.GetRawPointer());
     if (other.GetRawPointer())
@@ -59,7 +59,7 @@ inline Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<float> >::VectorOfOb
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
 
-inline Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<float> >::VectorOfObjectsDerivedPtr(Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<float> >::ECreateFromRawPointer, void *object_pointer, bool add_ref_object) : Example::VectorOfObjectsPtr<Example::ModelPtr<float> >(Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::force_creating_from_raw_pointer, 0, false)
+inline Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<float> >::VectorOfObjectsDerivedPtr(Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<float> >::ECreateFromRawPointer, void *object_pointer, bool add_ref_object) : Example::VectorOfObjectsPtr<Example::ModelPtr<float> >(Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::force_creating_from_raw_pointer, static_cast<void*>(0), false)
 {
     SetObject(object_pointer);
     if (add_ref_object && object_pointer)
@@ -115,7 +115,7 @@ inline Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<float> >& Example::V
 
 inline Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<float> > Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<float> >::Null()
 {
-    return Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<float> >(Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<float> >::force_creating_from_raw_pointer, 0, false);
+    return Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<float> >(Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<float> >::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<float> >::IsNull() const

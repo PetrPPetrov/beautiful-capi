@@ -33,7 +33,7 @@
 
 inline OverloadSuffix::Printer::Printer()
 {
-    SetObject(overload_suffix_printer_default());
+    SetObject(OverloadSuffix::Printer(OverloadSuffix::Printer::force_creating_from_raw_pointer, overload_suffix_printer_default(), false).Detach());
 }
 
 inline void OverloadSuffix::Printer::Show()
@@ -137,7 +137,7 @@ inline OverloadSuffix::Printer& OverloadSuffix::Printer::operator=(OverloadSuffi
 
 inline OverloadSuffix::Printer OverloadSuffix::Printer::Null()
 {
-    return OverloadSuffix::Printer(OverloadSuffix::Printer::force_creating_from_raw_pointer, 0, false);
+    return OverloadSuffix::Printer(OverloadSuffix::Printer::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool OverloadSuffix::Printer::IsNull() const

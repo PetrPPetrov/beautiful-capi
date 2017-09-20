@@ -34,34 +34,34 @@
 
 inline Example::VectorOf<Example::Position4D<double> >::VectorOf()
 {
-    SetObject(example_vector_of_example_position4_d_double_default());
+    SetObject(Example::VectorOf<Example::Position4D<double> >(Example::VectorOf<Example::Position4D<double> >::force_creating_from_raw_pointer, example_vector_of_example_position4d_double_default(), false).Detach());
 }
 
 inline int Example::VectorOf<Example::Position4D<double> >::GetSize() const
 {
-    return example_vector_of_example_position4_d_double_get_size_const(GetRawPointer());
+    return example_vector_of_example_position4d_double_get_size_const(GetRawPointer());
 }
 
 inline void Example::VectorOf<Example::Position4D<double> >::Clear()
 {
-    example_vector_of_example_position4_d_double_clear(GetRawPointer());
+    example_vector_of_example_position4d_double_clear(GetRawPointer());
 }
 
 inline void Example::VectorOf<Example::Position4D<double> >::PushBack(const Example::Position4D<double>& value)
 {
-    example_vector_of_example_position4_d_double_push_back(GetRawPointer(), value.GetRawPointer());
+    example_vector_of_example_position4d_double_push_back(GetRawPointer(), value.GetRawPointer());
 }
 
 inline Example::Position4D<double> Example::VectorOf<Example::Position4D<double> >::GetItem(int index) const
 {
-    return Example::Position4D<double>(Example::Position4D<double>::force_creating_from_raw_pointer, example_vector_of_example_position4_d_double_get_item_const(GetRawPointer(), index), false);
+    return Example::Position4D<double>(Example::Position4D<double>::force_creating_from_raw_pointer, example_vector_of_example_position4d_double_get_item_const(GetRawPointer(), index), false);
 }
 
 inline Example::VectorOf<Example::Position4D<double> >::VectorOf(const VectorOf<Example::Position4D<double> >& other)
 {
     if (other.GetRawPointer())
     {
-        SetObject(example_vector_of_example_position4_d_double_copy(other.GetRawPointer()));
+        SetObject(example_vector_of_example_position4d_double_copy(other.GetRawPointer()));
     }
     else
     {
@@ -81,7 +81,7 @@ inline Example::VectorOf<Example::Position4D<double> >::VectorOf(Example::Vector
 {
     if (object_pointer && copy_object)
     {
-        SetObject(example_vector_of_example_position4_d_double_copy(object_pointer));
+        SetObject(example_vector_of_example_position4d_double_copy(object_pointer));
     }
     else
     {
@@ -93,7 +93,7 @@ inline Example::VectorOf<Example::Position4D<double> >::~VectorOf()
 {
     if (GetRawPointer())
     {
-        example_vector_of_example_position4_d_double_delete(GetRawPointer());
+        example_vector_of_example_position4d_double_delete(GetRawPointer());
         SetObject(0);
     }
 }
@@ -104,12 +104,12 @@ inline Example::VectorOf<Example::Position4D<double> >& Example::VectorOf<Exampl
     {
         if (GetRawPointer())
         {
-            example_vector_of_example_position4_d_double_delete(GetRawPointer());
+            example_vector_of_example_position4d_double_delete(GetRawPointer());
             SetObject(0);
         }
         if (other.GetRawPointer())
         {
-            SetObject(example_vector_of_example_position4_d_double_copy(other.mObject));
+            SetObject(example_vector_of_example_position4d_double_copy(other.mObject));
         }
         else
         {
@@ -126,7 +126,7 @@ inline Example::VectorOf<Example::Position4D<double> >& Example::VectorOf<Exampl
     {
         if (GetRawPointer())
         {
-            example_vector_of_example_position4_d_double_delete(GetRawPointer());
+            example_vector_of_example_position4d_double_delete(GetRawPointer());
             SetObject(0);
         }
         mObject = other.mObject;
@@ -138,7 +138,7 @@ inline Example::VectorOf<Example::Position4D<double> >& Example::VectorOf<Exampl
 
 inline Example::VectorOf<Example::Position4D<double> > Example::VectorOf<Example::Position4D<double> >::Null()
 {
-    return Example::VectorOf<Example::Position4D<double> >(Example::VectorOf<Example::Position4D<double> >::force_creating_from_raw_pointer, 0, false);
+    return Example::VectorOf<Example::Position4D<double> >(Example::VectorOf<Example::Position4D<double> >::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool Example::VectorOf<Example::Position4D<double> >::IsNull() const

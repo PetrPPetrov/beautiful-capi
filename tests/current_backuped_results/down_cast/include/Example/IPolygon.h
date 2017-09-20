@@ -37,7 +37,7 @@ inline int Example::IPolygonPtr::GetPointsCount() const
     return example_ipolygon_get_points_count_const(GetRawPointer());
 }
 
-inline Example::IPolygonPtr::IPolygonPtr(const IPolygonPtr& other) : Example::IShapePtr(Example::IShapePtr::force_creating_from_raw_pointer, 0, false)
+inline Example::IPolygonPtr::IPolygonPtr(const IPolygonPtr& other) : Example::IShapePtr(Example::IShapePtr::force_creating_from_raw_pointer, static_cast<void*>(0), false)
 {
     SetObject(other.GetRawPointer());
     if (other.GetRawPointer())
@@ -54,7 +54,7 @@ inline Example::IPolygonPtr::IPolygonPtr(IPolygonPtr&& other) : Example::IShapeP
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
 
-inline Example::IPolygonPtr::IPolygonPtr(Example::IPolygonPtr::ECreateFromRawPointer, void *object_pointer, bool add_ref_object) : Example::IShapePtr(Example::IShapePtr::force_creating_from_raw_pointer, 0, false)
+inline Example::IPolygonPtr::IPolygonPtr(Example::IPolygonPtr::ECreateFromRawPointer, void *object_pointer, bool add_ref_object) : Example::IShapePtr(Example::IShapePtr::force_creating_from_raw_pointer, static_cast<void*>(0), false)
 {
     SetObject(object_pointer);
     if (add_ref_object && object_pointer)
@@ -110,7 +110,7 @@ inline Example::IPolygonPtr& Example::IPolygonPtr::operator=(Example::IPolygonPt
 
 inline Example::IPolygonPtr Example::IPolygonPtr::Null()
 {
-    return Example::IPolygonPtr(Example::IPolygonPtr::force_creating_from_raw_pointer, 0, false);
+    return Example::IPolygonPtr(Example::IPolygonPtr::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool Example::IPolygonPtr::IsNull() const

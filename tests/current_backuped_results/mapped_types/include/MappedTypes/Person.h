@@ -33,7 +33,7 @@
 
 inline MappedTypes::Person::Person()
 {
-    SetObject(mapped_types_person_default());
+    SetObject(MappedTypes::Person(MappedTypes::Person::force_creating_from_raw_pointer, mapped_types_person_default(), false).Detach());
 }
 
 inline bool MappedTypes::Person::IsMan() const
@@ -157,7 +157,7 @@ inline MappedTypes::Person& MappedTypes::Person::operator=(MappedTypes::Person&&
 
 inline MappedTypes::Person MappedTypes::Person::Null()
 {
-    return MappedTypes::Person(MappedTypes::Person::force_creating_from_raw_pointer, 0, false);
+    return MappedTypes::Person(MappedTypes::Person::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool MappedTypes::Person::IsNull() const

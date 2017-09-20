@@ -33,7 +33,7 @@
 
 inline hello_world::printer::printer()
 {
-    SetObject(hello_world_printer_default());
+    SetObject(hello_world::printer(hello_world::printer::force_creating_from_raw_pointer, hello_world_printer_default(), false).detach());
 }
 
 inline void hello_world::printer::show() const
@@ -122,7 +122,7 @@ inline hello_world::printer& hello_world::printer::operator=(hello_world::printe
 
 inline hello_world::printer hello_world::printer::null()
 {
-    return hello_world::printer(hello_world::printer::force_creating_from_raw_pointer, 0, false);
+    return hello_world::printer(hello_world::printer::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool hello_world::printer::is_null() const

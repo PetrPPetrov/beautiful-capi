@@ -33,7 +33,7 @@
 
 inline Sample::Data::Data()
 {
-    SetObject(sample_data_new());
+    SetObject(Sample::Data(Sample::Data::force_creating_from_raw_pointer, sample_data_new(), false).Detach());
 }
 
 inline int Sample::Data::GetData()
@@ -127,7 +127,7 @@ inline Sample::Data& Sample::Data::operator=(Sample::Data&& other)
 
 inline Sample::Data Sample::Data::Null()
 {
-    return Sample::Data(Sample::Data::force_creating_from_raw_pointer, 0, false);
+    return Sample::Data(Sample::Data::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool Sample::Data::IsNull() const

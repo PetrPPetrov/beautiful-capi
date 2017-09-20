@@ -34,7 +34,7 @@
 
 inline Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::VectorOfObjectsPtr()
 {
-    SetObject(example_vector_of_objects_example_model_float_default());
+    SetObject(Example::VectorOfObjectsPtr<Example::ModelPtr<float> >(Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::force_creating_from_raw_pointer, example_vector_of_objects_example_model_float_default(), false).Detach());
 }
 
 inline int Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::GetSize() const
@@ -129,7 +129,7 @@ inline Example::VectorOfObjectsPtr<Example::ModelPtr<float> >& Example::VectorOf
 
 inline Example::VectorOfObjectsPtr<Example::ModelPtr<float> > Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::Null()
 {
-    return Example::VectorOfObjectsPtr<Example::ModelPtr<float> >(Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::force_creating_from_raw_pointer, 0, false);
+    return Example::VectorOfObjectsPtr<Example::ModelPtr<float> >(Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool Example::VectorOfObjectsPtr<Example::ModelPtr<float> >::IsNull() const

@@ -35,7 +35,7 @@
 
 inline DoxygenDoc::PersonRawPtr::PersonRawPtr()
 {
-    SetObject(doxygen_doc_person_default());
+    SetObject(DoxygenDoc::PersonRawPtr(DoxygenDoc::PersonRawPtr::force_creating_from_raw_pointer, doxygen_doc_person_default(), false).Detach());
 }
 
 inline DoxygenDoc::Name DoxygenDoc::PersonRawPtr::GetName() const
@@ -138,7 +138,7 @@ inline DoxygenDoc::PersonRawPtr& DoxygenDoc::PersonRawPtr::operator=(DoxygenDoc:
 
 inline DoxygenDoc::PersonRawPtr DoxygenDoc::PersonRawPtr::Null()
 {
-    return DoxygenDoc::PersonRawPtr(DoxygenDoc::PersonRawPtr::force_creating_from_raw_pointer, 0, false);
+    return DoxygenDoc::PersonRawPtr(DoxygenDoc::PersonRawPtr::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool DoxygenDoc::PersonRawPtr::IsNull() const

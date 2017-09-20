@@ -39,12 +39,14 @@ namespace DoxygenDoc {
  * 
  * 
  * 
+ * 
  */
 class AddressPtr
 {
 public:
     /**
      * @brief Creates a default address.
+     * 
      * 
      * 
      * 
@@ -55,10 +57,12 @@ public:
      * 
      * 
      * 
+     * 
      */
     inline const char* GetStreetName() const;
     /**
      * @brief Sets the street name.
+     * 
      * 
      * 
      * 
@@ -69,10 +73,12 @@ public:
      * 
      * 
      * 
+     * 
      */
     inline const char* GetCity() const;
     /**
      * @brief Sets the city.
+     * 
      * 
      * 
      * 
@@ -83,10 +89,12 @@ public:
      * 
      * 
      * 
+     * 
      */
     inline unsigned int GetState() const;
     /**
      * @brief Sets the state.
+     * 
      * 
      * 
      * 

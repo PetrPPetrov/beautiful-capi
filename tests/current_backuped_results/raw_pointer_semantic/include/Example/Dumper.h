@@ -34,7 +34,7 @@
 
 inline Example::Dumper::Dumper()
 {
-    SetObject(example_dumper_new());
+    SetObject(Example::Dumper(Example::Dumper::force_creating_from_raw_pointer, example_dumper_new(), false).Detach());
 }
 
 inline Example::PrinterRawPtr Example::Dumper::GetPrinter() const
@@ -133,7 +133,7 @@ inline Example::Dumper& Example::Dumper::operator=(Example::Dumper&& other)
 
 inline Example::Dumper Example::Dumper::Null()
 {
-    return Example::Dumper(Example::Dumper::force_creating_from_raw_pointer, 0, false);
+    return Example::Dumper(Example::Dumper::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool Example::Dumper::IsNull() const

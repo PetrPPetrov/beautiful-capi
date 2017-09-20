@@ -33,7 +33,7 @@
 
 inline MixedSemantic::AddressPtr::AddressPtr()
 {
-    SetObject(mixed_semantic_address_default());
+    SetObject(MixedSemantic::AddressPtr(MixedSemantic::AddressPtr::force_creating_from_raw_pointer, mixed_semantic_address_default(), false).Detach());
 }
 
 inline const char* MixedSemantic::AddressPtr::GetStreetName() const
@@ -138,7 +138,7 @@ inline MixedSemantic::AddressPtr& MixedSemantic::AddressPtr::operator=(MixedSema
 
 inline MixedSemantic::AddressPtr MixedSemantic::AddressPtr::Null()
 {
-    return MixedSemantic::AddressPtr(MixedSemantic::AddressPtr::force_creating_from_raw_pointer, 0, false);
+    return MixedSemantic::AddressPtr(MixedSemantic::AddressPtr::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool MixedSemantic::AddressPtr::IsNull() const

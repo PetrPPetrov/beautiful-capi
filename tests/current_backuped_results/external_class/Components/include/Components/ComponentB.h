@@ -36,7 +36,7 @@
 
 inline Components::ComponentBRawPtr::ComponentBRawPtr()
 {
-    SetObject(components_component_b_default());
+    SetObject(Components::ComponentBRawPtr(Components::ComponentBRawPtr::force_creating_from_raw_pointer, components_component_b_default(), false).Detach());
 }
 
 inline Classes::ClassA Components::ComponentBRawPtr::GetA() const
@@ -119,7 +119,7 @@ inline Components::ComponentBRawPtr& Components::ComponentBRawPtr::operator=(Com
 
 inline Components::ComponentBRawPtr Components::ComponentBRawPtr::Null()
 {
-    return Components::ComponentBRawPtr(Components::ComponentBRawPtr::force_creating_from_raw_pointer, 0, false);
+    return Components::ComponentBRawPtr(Components::ComponentBRawPtr::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool Components::ComponentBRawPtr::IsNull() const

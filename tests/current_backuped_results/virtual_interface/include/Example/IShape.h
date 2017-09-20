@@ -86,7 +86,7 @@ inline Example::IShapeRawPtr& Example::IShapeRawPtr::operator=(Example::IShapeRa
 
 inline Example::IShapeRawPtr Example::IShapeRawPtr::Null()
 {
-    return Example::IShapeRawPtr(Example::IShapeRawPtr::force_creating_from_raw_pointer, 0, false);
+    return Example::IShapeRawPtr(Example::IShapeRawPtr::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool Example::IShapeRawPtr::IsNull() const

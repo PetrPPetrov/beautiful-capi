@@ -36,7 +36,7 @@
 
 inline MixedSemantic::Mutator::Mutator()
 {
-    SetObject(mixed_semantic_mutator_default());
+    SetObject(MixedSemantic::Mutator(MixedSemantic::Mutator::force_creating_from_raw_pointer, mixed_semantic_mutator_default(), false).Detach());
 }
 
 inline void MixedSemantic::Mutator::Mutate(const MixedSemantic::Name& name)
@@ -165,7 +165,7 @@ inline MixedSemantic::Mutator& MixedSemantic::Mutator::operator=(MixedSemantic::
 
 inline MixedSemantic::Mutator MixedSemantic::Mutator::Null()
 {
-    return MixedSemantic::Mutator(MixedSemantic::Mutator::force_creating_from_raw_pointer, 0, false);
+    return MixedSemantic::Mutator(MixedSemantic::Mutator::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool MixedSemantic::Mutator::IsNull() const

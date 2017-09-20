@@ -33,7 +33,7 @@
 
 inline hello_world::plotter_ptr::plotter_ptr()
 {
-    SetObject(hello_world_plotter_default());
+    SetObject(hello_world::plotter_ptr(hello_world::plotter_ptr::force_creating_from_raw_pointer, hello_world_plotter_default(), false).detach());
 }
 
 inline void hello_world::plotter_ptr::draw() const
@@ -113,7 +113,7 @@ inline hello_world::plotter_ptr& hello_world::plotter_ptr::operator=(hello_world
 
 inline hello_world::plotter_ptr hello_world::plotter_ptr::null()
 {
-    return hello_world::plotter_ptr(hello_world::plotter_ptr::force_creating_from_raw_pointer, 0, false);
+    return hello_world::plotter_ptr(hello_world::plotter_ptr::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool hello_world::plotter_ptr::is_null() const

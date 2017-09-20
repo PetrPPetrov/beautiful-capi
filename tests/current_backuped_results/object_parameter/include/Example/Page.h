@@ -33,7 +33,7 @@
 
 inline Example::PagePtr::PagePtr()
 {
-    SetObject(example_page_default());
+    SetObject(Example::PagePtr(Example::PagePtr::force_creating_from_raw_pointer, example_page_default(), false).Detach());
 }
 
 inline size_t Example::PagePtr::GetWidth() const
@@ -128,7 +128,7 @@ inline Example::PagePtr& Example::PagePtr::operator=(Example::PagePtr&& other)
 
 inline Example::PagePtr Example::PagePtr::Null()
 {
-    return Example::PagePtr(Example::PagePtr::force_creating_from_raw_pointer, 0, false);
+    return Example::PagePtr(Example::PagePtr::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool Example::PagePtr::IsNull() const

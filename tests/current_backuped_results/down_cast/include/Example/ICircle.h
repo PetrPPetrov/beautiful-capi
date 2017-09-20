@@ -37,7 +37,7 @@ inline void Example::ICirclePtr::SetRadius(double radius)
     example_icircle_set_radius(GetRawPointer(), radius);
 }
 
-inline Example::ICirclePtr::ICirclePtr(const ICirclePtr& other) : Example::IShapePtr(Example::IShapePtr::force_creating_from_raw_pointer, 0, false)
+inline Example::ICirclePtr::ICirclePtr(const ICirclePtr& other) : Example::IShapePtr(Example::IShapePtr::force_creating_from_raw_pointer, static_cast<void*>(0), false)
 {
     SetObject(other.GetRawPointer());
     if (other.GetRawPointer())
@@ -54,7 +54,7 @@ inline Example::ICirclePtr::ICirclePtr(ICirclePtr&& other) : Example::IShapePtr(
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
 
-inline Example::ICirclePtr::ICirclePtr(Example::ICirclePtr::ECreateFromRawPointer, void *object_pointer, bool add_ref_object) : Example::IShapePtr(Example::IShapePtr::force_creating_from_raw_pointer, 0, false)
+inline Example::ICirclePtr::ICirclePtr(Example::ICirclePtr::ECreateFromRawPointer, void *object_pointer, bool add_ref_object) : Example::IShapePtr(Example::IShapePtr::force_creating_from_raw_pointer, static_cast<void*>(0), false)
 {
     SetObject(object_pointer);
     if (add_ref_object && object_pointer)
@@ -110,7 +110,7 @@ inline Example::ICirclePtr& Example::ICirclePtr::operator=(Example::ICirclePtr&&
 
 inline Example::ICirclePtr Example::ICirclePtr::Null()
 {
-    return Example::ICirclePtr(Example::ICirclePtr::force_creating_from_raw_pointer, 0, false);
+    return Example::ICirclePtr(Example::ICirclePtr::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool Example::ICirclePtr::IsNull() const

@@ -33,7 +33,7 @@
 
 inline Example::VectorOf<int>::VectorOf()
 {
-    SetObject(example_vector_of_int_default());
+    SetObject(Example::VectorOf<int>(Example::VectorOf<int>::force_creating_from_raw_pointer, example_vector_of_int_default(), false).Detach());
 }
 
 inline int Example::VectorOf<int>::GetSize() const
@@ -137,7 +137,7 @@ inline Example::VectorOf<int>& Example::VectorOf<int>::operator=(Example::Vector
 
 inline Example::VectorOf<int> Example::VectorOf<int>::Null()
 {
-    return Example::VectorOf<int>(Example::VectorOf<int>::force_creating_from_raw_pointer, 0, false);
+    return Example::VectorOf<int>(Example::VectorOf<int>::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool Example::VectorOf<int>::IsNull() const

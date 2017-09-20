@@ -33,7 +33,7 @@
 
 inline Classes::ClassBRawPtr::ClassBRawPtr()
 {
-    SetObject(classes_class_b_default());
+    SetObject(Classes::ClassBRawPtr(Classes::ClassBRawPtr::force_creating_from_raw_pointer, classes_class_b_default(), false).detach());
 }
 
 inline const char* Classes::ClassBRawPtr::GetValue() const
@@ -96,7 +96,7 @@ inline Classes::ClassBRawPtr& Classes::ClassBRawPtr::operator=(Classes::ClassBRa
 
 inline Classes::ClassBRawPtr Classes::ClassBRawPtr::Null()
 {
-    return Classes::ClassBRawPtr(Classes::ClassBRawPtr::force_creating_from_raw_pointer, 0, false);
+    return Classes::ClassBRawPtr(Classes::ClassBRawPtr::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool Classes::ClassBRawPtr::IsNull() const

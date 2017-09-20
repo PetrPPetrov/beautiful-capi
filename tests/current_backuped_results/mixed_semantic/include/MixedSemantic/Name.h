@@ -33,7 +33,7 @@
 
 inline MixedSemantic::Name::Name(const char* FirstName, const char* FatherName, const char* LastName)
 {
-    SetObject(mixed_semantic_name_full_name(FirstName, FatherName, LastName));
+    SetObject(MixedSemantic::Name(MixedSemantic::Name::force_creating_from_raw_pointer, mixed_semantic_name_full_name(FirstName, FatherName, LastName), false).Detach());
 }
 
 inline const char* MixedSemantic::Name::GetFirstName() const
@@ -137,7 +137,7 @@ inline MixedSemantic::Name& MixedSemantic::Name::operator=(MixedSemantic::Name&&
 
 inline MixedSemantic::Name MixedSemantic::Name::Null()
 {
-    return MixedSemantic::Name(MixedSemantic::Name::force_creating_from_raw_pointer, 0, false);
+    return MixedSemantic::Name(MixedSemantic::Name::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool MixedSemantic::Name::IsNull() const

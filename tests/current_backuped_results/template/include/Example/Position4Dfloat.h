@@ -32,26 +32,26 @@
 
 #ifdef __cplusplus
 
-inline Example::Position4D<float>::Position4D() : Example::Position<float>(Example::Position<float>::force_creating_from_raw_pointer, 0, false)
+inline Example::Position4D<float>::Position4D() : Example::Position<float>(Example::Position<float>::force_creating_from_raw_pointer, static_cast<void*>(0), false)
 {
-    SetObject(example_position4_d_float_default());
+    SetObject(Example::Position4D<float>(Example::Position4D<float>::force_creating_from_raw_pointer, example_position4d_float_default(), false).Detach());
 }
 
 inline float Example::Position4D<float>::GetW() const
 {
-    return example_position4_d_float_get_w_const(GetRawPointer());
+    return example_position4d_float_get_w_const(GetRawPointer());
 }
 
 inline void Example::Position4D<float>::SetW(float x)
 {
-    example_position4_d_float_set_w(GetRawPointer(), x);
+    example_position4d_float_set_w(GetRawPointer(), x);
 }
 
-inline Example::Position4D<float>::Position4D(const Position4D<float>& other) : Example::Position<float>(Example::Position<float>::force_creating_from_raw_pointer, 0, false)
+inline Example::Position4D<float>::Position4D(const Position4D<float>& other) : Example::Position<float>(Example::Position<float>::force_creating_from_raw_pointer, static_cast<void*>(0), false)
 {
     if (other.GetRawPointer())
     {
-        SetObject(example_position4_d_float_copy(other.GetRawPointer()));
+        SetObject(example_position4d_float_copy(other.GetRawPointer()));
     }
     else
     {
@@ -67,11 +67,11 @@ inline Example::Position4D<float>::Position4D(Position4D<float>&& other) : Examp
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
 
-inline Example::Position4D<float>::Position4D(Example::Position4D<float>::ECreateFromRawPointer, void *object_pointer, bool copy_object) : Example::Position<float>(Example::Position<float>::force_creating_from_raw_pointer, 0, false)
+inline Example::Position4D<float>::Position4D(Example::Position4D<float>::ECreateFromRawPointer, void *object_pointer, bool copy_object) : Example::Position<float>(Example::Position<float>::force_creating_from_raw_pointer, static_cast<void*>(0), false)
 {
     if (object_pointer && copy_object)
     {
-        SetObject(example_position4_d_float_copy(object_pointer));
+        SetObject(example_position4d_float_copy(object_pointer));
     }
     else
     {
@@ -83,7 +83,7 @@ inline Example::Position4D<float>::~Position4D()
 {
     if (GetRawPointer())
     {
-        example_position4_d_float_delete(GetRawPointer());
+        example_position4d_float_delete(GetRawPointer());
         SetObject(0);
     }
 }
@@ -94,12 +94,12 @@ inline Example::Position4D<float>& Example::Position4D<float>::operator=(const E
     {
         if (GetRawPointer())
         {
-            example_position4_d_float_delete(GetRawPointer());
+            example_position4d_float_delete(GetRawPointer());
             SetObject(0);
         }
         if (other.GetRawPointer())
         {
-            SetObject(example_position4_d_float_copy(other.mObject));
+            SetObject(example_position4d_float_copy(other.mObject));
         }
         else
         {
@@ -116,7 +116,7 @@ inline Example::Position4D<float>& Example::Position4D<float>::operator=(Example
     {
         if (GetRawPointer())
         {
-            example_position4_d_float_delete(GetRawPointer());
+            example_position4d_float_delete(GetRawPointer());
             SetObject(0);
         }
         Example::Position<float>::operator=(std::move(other));
@@ -129,7 +129,7 @@ inline Example::Position4D<float>& Example::Position4D<float>::operator=(Example
 
 inline Example::Position4D<float> Example::Position4D<float>::Null()
 {
-    return Example::Position4D<float>(Example::Position4D<float>::force_creating_from_raw_pointer, 0, false);
+    return Example::Position4D<float>(Example::Position4D<float>::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool Example::Position4D<float>::IsNull() const
@@ -164,7 +164,7 @@ inline void Example::Position4D<float>::SetObject(void* object_pointer)
     mObject = object_pointer;
     if (mObject)
     {
-        Example::Position<float>::SetObject(example_position4_d_float_cast_to_base(mObject));
+        Example::Position<float>::SetObject(example_position4d_float_cast_to_base(mObject));
     }
     else
     {

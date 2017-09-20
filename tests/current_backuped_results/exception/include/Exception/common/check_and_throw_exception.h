@@ -38,24 +38,27 @@
 
 namespace beautiful_capi_Exception
 {
-    inline void check_and_throw_exception(int exception_code, void* exception_object)
+    inline void check_and_throw_exception(uint32_t exception_code, void* exception_object)
     {
         switch (exception_code)
         {
             case 0:
                 return;
             case 1:
-                throw Exception::Generic(Exception::Generic::force_creating_from_raw_pointer, exception_object, false);
+                throw std::runtime_error("unknown exception");
             case 2:
+                throw std::runtime_error("exception during copying exception object");
+            case 100:
+                throw Exception::Generic(Exception::Generic::force_creating_from_raw_pointer, exception_object, false);
+            case 101:
                 throw Exception::BadArgument(Exception::BadArgument::force_creating_from_raw_pointer, exception_object, false);
-            case 3:
+            case 102:
                 throw Exception::NullArgument(Exception::NullArgument::force_creating_from_raw_pointer, exception_object, false);
-            case 4:
+            case 103:
                 throw Exception::DivisionByZero(Exception::DivisionByZero::force_creating_from_raw_pointer, exception_object, false);
             default:
                 assert(false);
-            case -1:
-                throw std::runtime_error("unknown exception");
+                throw std::runtime_error("unknown exception code");
         }
     }
 }

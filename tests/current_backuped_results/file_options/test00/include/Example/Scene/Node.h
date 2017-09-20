@@ -33,7 +33,7 @@
 
 inline Example::Scene::Node::Node()
 {
-    SetObject(example_scene_node_new());
+    SetObject(Example::Scene::Node(Example::Scene::Node::force_creating_from_raw_pointer, example_scene_node_new(), false).Detach());
 }
 
 inline const char* Example::Scene::Node::GetName()
@@ -127,7 +127,7 @@ inline Example::Scene::Node& Example::Scene::Node::operator=(Example::Scene::Nod
 
 inline Example::Scene::Node Example::Scene::Node::Null()
 {
-    return Example::Scene::Node(Example::Scene::Node::force_creating_from_raw_pointer, 0, false);
+    return Example::Scene::Node(Example::Scene::Node::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool Example::Scene::Node::IsNull() const

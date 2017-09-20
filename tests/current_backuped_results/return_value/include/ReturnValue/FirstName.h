@@ -33,7 +33,7 @@
 
 inline ReturnValue::FirstName::FirstName()
 {
-    SetObject(return_value_first_name_default());
+    SetObject(ReturnValue::FirstName(ReturnValue::FirstName::force_creating_from_raw_pointer, return_value_first_name_default(), false).Detach());
 }
 
 inline const char* ReturnValue::FirstName::GetFirstName() const
@@ -127,7 +127,7 @@ inline ReturnValue::FirstName& ReturnValue::FirstName::operator=(ReturnValue::Fi
 
 inline ReturnValue::FirstName ReturnValue::FirstName::Null()
 {
-    return ReturnValue::FirstName(ReturnValue::FirstName::force_creating_from_raw_pointer, 0, false);
+    return ReturnValue::FirstName(ReturnValue::FirstName::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool ReturnValue::FirstName::IsNull() const

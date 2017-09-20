@@ -34,7 +34,7 @@
 
 inline Example::ModelPtr<double>::ModelPtr()
 {
-    SetObject(example_model_double_default());
+    SetObject(Example::ModelPtr<double>(Example::ModelPtr<double>::force_creating_from_raw_pointer, example_model_double_default(), false).Detach());
 }
 
 inline const char* Example::ModelPtr<double>::GetName() const
@@ -129,7 +129,7 @@ inline Example::ModelPtr<double>& Example::ModelPtr<double>::operator=(Example::
 
 inline Example::ModelPtr<double> Example::ModelPtr<double>::Null()
 {
-    return Example::ModelPtr<double>(Example::ModelPtr<double>::force_creating_from_raw_pointer, 0, false);
+    return Example::ModelPtr<double>(Example::ModelPtr<double>::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool Example::ModelPtr<double>::IsNull() const

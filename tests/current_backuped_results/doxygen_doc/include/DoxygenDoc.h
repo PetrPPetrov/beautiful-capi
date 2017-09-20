@@ -60,6 +60,7 @@ inline int GetPatchVersion()
  * 
  * 
  * 
+ * 
  */
 
 #endif /* DOXYGENDOC_INCLUDED */

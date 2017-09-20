@@ -33,7 +33,7 @@
 
 inline Classes::ClassCPtr::ClassCPtr()
 {
-    SetObject(classes_class_c_default());
+    SetObject(Classes::ClassCPtr(Classes::ClassCPtr::force_creating_from_raw_pointer, classes_class_c_default(), false).detach());
 }
 
 inline double Classes::ClassCPtr::GetValue() const
@@ -118,7 +118,7 @@ inline Classes::ClassCPtr& Classes::ClassCPtr::operator=(Classes::ClassCPtr&& ot
 
 inline Classes::ClassCPtr Classes::ClassCPtr::Null()
 {
-    return Classes::ClassCPtr(Classes::ClassCPtr::force_creating_from_raw_pointer, 0, false);
+    return Classes::ClassCPtr(Classes::ClassCPtr::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool Classes::ClassCPtr::IsNull() const

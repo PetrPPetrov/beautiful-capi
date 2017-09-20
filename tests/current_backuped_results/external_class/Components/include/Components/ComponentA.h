@@ -36,7 +36,7 @@
 
 inline Components::ComponentA::ComponentA()
 {
-    SetObject(components_component_a_default());
+    SetObject(Components::ComponentA(Components::ComponentA::force_creating_from_raw_pointer, components_component_a_default(), false).Detach());
 }
 
 inline Classes::ClassA Components::ComponentA::GetA() const
@@ -150,7 +150,7 @@ inline Components::ComponentA& Components::ComponentA::operator=(Components::Com
 
 inline Components::ComponentA Components::ComponentA::Null()
 {
-    return Components::ComponentA(Components::ComponentA::force_creating_from_raw_pointer, 0, false);
+    return Components::ComponentA(Components::ComponentA::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool Components::ComponentA::IsNull() const

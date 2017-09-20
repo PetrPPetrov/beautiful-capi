@@ -33,7 +33,7 @@
 
 inline ReturnValue::LastNameRawPtr::LastNameRawPtr()
 {
-    SetObject(return_value_last_name_default());
+    SetObject(ReturnValue::LastNameRawPtr(ReturnValue::LastNameRawPtr::force_creating_from_raw_pointer, return_value_last_name_default(), false).Detach());
 }
 
 inline const char* ReturnValue::LastNameRawPtr::GetLastName() const
@@ -96,7 +96,7 @@ inline ReturnValue::LastNameRawPtr& ReturnValue::LastNameRawPtr::operator=(Retur
 
 inline ReturnValue::LastNameRawPtr ReturnValue::LastNameRawPtr::Null()
 {
-    return ReturnValue::LastNameRawPtr(ReturnValue::LastNameRawPtr::force_creating_from_raw_pointer, 0, false);
+    return ReturnValue::LastNameRawPtr(ReturnValue::LastNameRawPtr::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool ReturnValue::LastNameRawPtr::IsNull() const

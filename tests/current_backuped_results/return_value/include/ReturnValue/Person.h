@@ -36,7 +36,7 @@
 
 inline ReturnValue::Person::Person()
 {
-    SetObject(return_value_person_default());
+    SetObject(ReturnValue::Person(ReturnValue::Person::force_creating_from_raw_pointer, return_value_person_default(), false).Detach());
 }
 
 inline ReturnValue::FirstName ReturnValue::Person::GetFirstName() const
@@ -150,7 +150,7 @@ inline ReturnValue::Person& ReturnValue::Person::operator=(ReturnValue::Person&&
 
 inline ReturnValue::Person ReturnValue::Person::Null()
 {
-    return ReturnValue::Person(ReturnValue::Person::force_creating_from_raw_pointer, 0, false);
+    return ReturnValue::Person(ReturnValue::Person::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool ReturnValue::Person::IsNull() const

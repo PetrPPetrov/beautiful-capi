@@ -33,12 +33,12 @@
 
 #ifdef __cplusplus
 
-inline Exception::BadArgument::BadArgument() : Exception::Generic(Exception::Generic::force_creating_from_raw_pointer, 0, false)
+inline Exception::BadArgument::BadArgument() : Exception::Generic(Exception::Generic::force_creating_from_raw_pointer, static_cast<void*>(0), false)
 {
     beautiful_capi_callback_exception_info_t exception_info;
-    void* result(exception_bad_argument_new(&exception_info));
+    Exception::BadArgument result(Exception::BadArgument::force_creating_from_raw_pointer, exception_bad_argument_new(&exception_info), false);
     beautiful_capi_Callback::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
-    SetObject(result);
+    SetObject(result.Detach());
 }
 
 inline const char* Exception::BadArgument::GetArgumentName() const
@@ -46,7 +46,7 @@ inline const char* Exception::BadArgument::GetArgumentName() const
     return exception_bad_argument_get_argument_name_const(GetRawPointer());
 }
 
-inline Exception::BadArgument::BadArgument(const BadArgument& other) : Exception::Generic(Exception::Generic::force_creating_from_raw_pointer, 0, false)
+inline Exception::BadArgument::BadArgument(const BadArgument& other) : Exception::Generic(Exception::Generic::force_creating_from_raw_pointer, static_cast<void*>(0), false)
 {
     if (other.GetRawPointer())
     {
@@ -69,7 +69,7 @@ inline Exception::BadArgument::BadArgument(BadArgument&& other) : Exception::Gen
 }
 #endif /* EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES */
 
-inline Exception::BadArgument::BadArgument(Exception::BadArgument::ECreateFromRawPointer, void *object_pointer, bool copy_object) : Exception::Generic(Exception::Generic::force_creating_from_raw_pointer, 0, false)
+inline Exception::BadArgument::BadArgument(Exception::BadArgument::ECreateFromRawPointer, void *object_pointer, bool copy_object) : Exception::Generic(Exception::Generic::force_creating_from_raw_pointer, static_cast<void*>(0), false)
 {
     if (object_pointer && copy_object)
     {
@@ -137,7 +137,7 @@ inline Exception::BadArgument& Exception::BadArgument::operator=(Exception::BadA
 
 inline Exception::BadArgument Exception::BadArgument::Null()
 {
-    return Exception::BadArgument(Exception::BadArgument::force_creating_from_raw_pointer, 0, false);
+    return Exception::BadArgument(Exception::BadArgument::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool Exception::BadArgument::IsNull() const

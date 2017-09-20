@@ -34,7 +34,7 @@
 
 inline Circular::ClassARawPtr::ClassARawPtr()
 {
-    SetObject(circular_class_a_default());
+    SetObject(Circular::ClassARawPtr(Circular::ClassARawPtr::force_creating_from_raw_pointer, circular_class_a_default(), false).Detach());
 }
 
 inline void Circular::ClassARawPtr::SetB(const Circular::ClassBRawPtr& value)
@@ -97,7 +97,7 @@ inline Circular::ClassARawPtr& Circular::ClassARawPtr::operator=(Circular::Class
 
 inline Circular::ClassARawPtr Circular::ClassARawPtr::Null()
 {
-    return Circular::ClassARawPtr(Circular::ClassARawPtr::force_creating_from_raw_pointer, 0, false);
+    return Circular::ClassARawPtr(Circular::ClassARawPtr::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool Circular::ClassARawPtr::IsNull() const

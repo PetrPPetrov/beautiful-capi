@@ -33,15 +33,15 @@
 
 #ifdef __cplusplus
 
-inline Exception::DivisionByZero::DivisionByZero() : Exception::Generic(Exception::Generic::force_creating_from_raw_pointer, 0, false)
+inline Exception::DivisionByZero::DivisionByZero() : Exception::Generic(Exception::Generic::force_creating_from_raw_pointer, static_cast<void*>(0), false)
 {
     beautiful_capi_callback_exception_info_t exception_info;
-    void* result(exception_division_by_zero_new(&exception_info));
+    Exception::DivisionByZero result(Exception::DivisionByZero::force_creating_from_raw_pointer, exception_division_by_zero_new(&exception_info), false);
     beautiful_capi_Callback::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
-    SetObject(result);
+    SetObject(result.Detach());
 }
 
-inline Exception::DivisionByZero::DivisionByZero(const DivisionByZero& other) : Exception::Generic(Exception::Generic::force_creating_from_raw_pointer, 0, false)
+inline Exception::DivisionByZero::DivisionByZero(const DivisionByZero& other) : Exception::Generic(Exception::Generic::force_creating_from_raw_pointer, static_cast<void*>(0), false)
 {
     if (other.GetRawPointer())
     {
@@ -64,7 +64,7 @@ inline Exception::DivisionByZero::DivisionByZero(DivisionByZero&& other) : Excep
 }
 #endif /* EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES */
 
-inline Exception::DivisionByZero::DivisionByZero(Exception::DivisionByZero::ECreateFromRawPointer, void *object_pointer, bool copy_object) : Exception::Generic(Exception::Generic::force_creating_from_raw_pointer, 0, false)
+inline Exception::DivisionByZero::DivisionByZero(Exception::DivisionByZero::ECreateFromRawPointer, void *object_pointer, bool copy_object) : Exception::Generic(Exception::Generic::force_creating_from_raw_pointer, static_cast<void*>(0), false)
 {
     if (object_pointer && copy_object)
     {
@@ -132,7 +132,7 @@ inline Exception::DivisionByZero& Exception::DivisionByZero::operator=(Exception
 
 inline Exception::DivisionByZero Exception::DivisionByZero::Null()
 {
-    return Exception::DivisionByZero(Exception::DivisionByZero::force_creating_from_raw_pointer, 0, false);
+    return Exception::DivisionByZero(Exception::DivisionByZero::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool Exception::DivisionByZero::IsNull() const

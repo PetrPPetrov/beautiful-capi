@@ -33,7 +33,7 @@
 
 inline Example::PrinterSharedPtr::PrinterSharedPtr()
 {
-    SetObject(example_printer_shared_ptr_default());
+    SetObject(Example::PrinterSharedPtr(Example::PrinterSharedPtr::force_creating_from_raw_pointer, example_printer_shared_ptr_default(), false).Detach());
 }
 
 inline void Example::PrinterSharedPtr::Show(const char* text) const
@@ -122,7 +122,7 @@ inline Example::PrinterSharedPtr& Example::PrinterSharedPtr::operator=(Example::
 
 inline Example::PrinterSharedPtr Example::PrinterSharedPtr::Null()
 {
-    return Example::PrinterSharedPtr(Example::PrinterSharedPtr::force_creating_from_raw_pointer, 0, false);
+    return Example::PrinterSharedPtr(Example::PrinterSharedPtr::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool Example::PrinterSharedPtr::IsNull() const

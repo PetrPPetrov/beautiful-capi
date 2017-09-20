@@ -37,7 +37,7 @@ inline void Example::ISquarePtr::SetSize(double size)
     example_isquare_set_size(GetRawPointer(), size);
 }
 
-inline Example::ISquarePtr::ISquarePtr(const ISquarePtr& other) : Example::IPolygonPtr(Example::IPolygonPtr::force_creating_from_raw_pointer, 0, false)
+inline Example::ISquarePtr::ISquarePtr(const ISquarePtr& other) : Example::IPolygonPtr(Example::IPolygonPtr::force_creating_from_raw_pointer, static_cast<void*>(0), false)
 {
     SetObject(other.GetRawPointer());
     if (other.GetRawPointer())
@@ -54,7 +54,7 @@ inline Example::ISquarePtr::ISquarePtr(ISquarePtr&& other) : Example::IPolygonPt
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
 
-inline Example::ISquarePtr::ISquarePtr(Example::ISquarePtr::ECreateFromRawPointer, void *object_pointer, bool add_ref_object) : Example::IPolygonPtr(Example::IPolygonPtr::force_creating_from_raw_pointer, 0, false)
+inline Example::ISquarePtr::ISquarePtr(Example::ISquarePtr::ECreateFromRawPointer, void *object_pointer, bool add_ref_object) : Example::IPolygonPtr(Example::IPolygonPtr::force_creating_from_raw_pointer, static_cast<void*>(0), false)
 {
     SetObject(object_pointer);
     if (add_ref_object && object_pointer)
@@ -110,7 +110,7 @@ inline Example::ISquarePtr& Example::ISquarePtr::operator=(Example::ISquarePtr&&
 
 inline Example::ISquarePtr Example::ISquarePtr::Null()
 {
-    return Example::ISquarePtr(Example::ISquarePtr::force_creating_from_raw_pointer, 0, false);
+    return Example::ISquarePtr(Example::ISquarePtr::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool Example::ISquarePtr::IsNull() const

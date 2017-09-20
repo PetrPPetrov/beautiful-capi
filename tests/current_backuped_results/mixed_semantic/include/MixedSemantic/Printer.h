@@ -36,7 +36,7 @@
 
 inline MixedSemantic::Printer::Printer()
 {
-    SetObject(mixed_semantic_printer_default());
+    SetObject(MixedSemantic::Printer(MixedSemantic::Printer::force_creating_from_raw_pointer, mixed_semantic_printer_default(), false).Detach());
 }
 
 inline void MixedSemantic::Printer::Show(const MixedSemantic::Name& name)
@@ -165,7 +165,7 @@ inline MixedSemantic::Printer& MixedSemantic::Printer::operator=(MixedSemantic::
 
 inline MixedSemantic::Printer MixedSemantic::Printer::Null()
 {
-    return MixedSemantic::Printer(MixedSemantic::Printer::force_creating_from_raw_pointer, 0, false);
+    return MixedSemantic::Printer(MixedSemantic::Printer::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool MixedSemantic::Printer::IsNull() const

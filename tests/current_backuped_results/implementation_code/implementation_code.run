@@ -1,0 +1,25 @@
+./implementation_code_client
+___std::cout___
+Vector has 2 elements
+3.14 2.72 
+Vector has 2 elements
+333 2.72 
+sin(90 degrees) = 1
+Expected exception was caught, error text: range error exception
+==========
+Name: John
+Surname: Watson
+Age: 32
+====================
+Title: Soccer Community
+this community has 2 members.
+==========
+Name: John
+Surname: Watson
+Age: 32
+==========
+Name: Bill
+Surname: Johnson
+Age: 29
+___std::cerr___
+___eof___

@@ -33,7 +33,7 @@
 
 inline HelloWorld::Printer::Printer()
 {
-    SetObject(hello_world_printer_default());
+    SetObject(HelloWorld::Printer(HelloWorld::Printer::force_creating_from_raw_pointer, hello_world_printer_default(), false).Detach());
 }
 
 inline void HelloWorld::Printer::Show() const
@@ -122,7 +122,7 @@ inline HelloWorld::Printer& HelloWorld::Printer::operator=(HelloWorld::Printer&&
 
 inline HelloWorld::Printer HelloWorld::Printer::Null()
 {
-    return HelloWorld::Printer(HelloWorld::Printer::force_creating_from_raw_pointer, 0, false);
+    return HelloWorld::Printer(HelloWorld::Printer::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool HelloWorld::Printer::IsNull() const

@@ -35,9 +35,9 @@
 inline Example::ScannerPtr::ScannerPtr()
 {
     beautiful_capi_exception_exception_info_t exception_info;
-    void* result(example_scanner_new(&exception_info));
+    Example::ScannerPtr result(Example::ScannerPtr::force_creating_from_raw_pointer, example_scanner_new(&exception_info), false);
     beautiful_capi_Exception::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
-    SetObject(result);
+    SetObject(result.Detach());
 }
 
 inline const char* Example::ScannerPtr::ScanText()
@@ -132,7 +132,7 @@ inline Example::ScannerPtr& Example::ScannerPtr::operator=(Example::ScannerPtr&&
 
 inline Example::ScannerPtr Example::ScannerPtr::Null()
 {
-    return Example::ScannerPtr(Example::ScannerPtr::force_creating_from_raw_pointer, 0, false);
+    return Example::ScannerPtr(Example::ScannerPtr::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool Example::ScannerPtr::IsNull() const

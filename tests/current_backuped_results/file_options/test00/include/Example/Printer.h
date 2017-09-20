@@ -33,7 +33,7 @@
 
 inline Example::Printer::Printer()
 {
-    SetObject(example_printer_new());
+    SetObject(Example::Printer(Example::Printer::force_creating_from_raw_pointer, example_printer_new(), false).Detach());
 }
 
 inline void Example::Printer::Show(const char* text)
@@ -122,7 +122,7 @@ inline Example::Printer& Example::Printer::operator=(Example::Printer&& other)
 
 inline Example::Printer Example::Printer::Null()
 {
-    return Example::Printer(Example::Printer::force_creating_from_raw_pointer, 0, false);
+    return Example::Printer(Example::Printer::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool Example::Printer::IsNull() const

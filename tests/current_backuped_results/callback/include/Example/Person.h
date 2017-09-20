@@ -36,9 +36,9 @@
 inline Example::Person::Person()
 {
     beautiful_capi_callback_exception_info_t exception_info;
-    void* result(example_person_default(&exception_info));
+    Example::Person result(Example::Person::force_creating_from_raw_pointer, example_person_default(&exception_info), false);
     beautiful_capi_Callback::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
-    SetObject(result);
+    SetObject(result.Detach());
 }
 
 inline void Example::Person::SetFirstName(const char* first_name)
@@ -205,7 +205,7 @@ inline Example::Person& Example::Person::operator=(Example::Person&& other)
 
 inline Example::Person Example::Person::Null()
 {
-    return Example::Person(Example::Person::force_creating_from_raw_pointer, 0, false);
+    return Example::Person(Example::Person::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool Example::Person::IsNull() const

@@ -33,12 +33,12 @@
 
 #ifdef __cplusplus
 
-inline Example::PrinterCallbackPtr::PrinterCallbackPtr() : Example::PrinterPtr(Example::PrinterPtr::force_creating_from_raw_pointer, 0, false)
+inline Example::PrinterCallbackPtr::PrinterCallbackPtr() : Example::PrinterPtr(Example::PrinterPtr::force_creating_from_raw_pointer, static_cast<void*>(0), false)
 {
     beautiful_capi_callback_exception_info_t exception_info;
-    void* result(example_printer_callback_default(&exception_info));
+    Example::PrinterCallbackPtr result(Example::PrinterCallbackPtr::force_creating_from_raw_pointer, example_printer_callback_default(&exception_info), false);
     beautiful_capi_Callback::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
-    SetObject(result);
+    SetObject(result.Detach());
 }
 
 inline void Example::PrinterCallbackPtr::SetObjectPointer(void* custom_object)
@@ -71,7 +71,7 @@ inline void Example::PrinterCallbackPtr::SetCFunctionForSetPrintingQuality(examp
     example_printer_callback_set_cfunction_for_set_printing_quality(GetRawPointer(), c_function_pointer);
 }
 
-inline Example::PrinterCallbackPtr::PrinterCallbackPtr(const PrinterCallbackPtr& other) : Example::PrinterPtr(Example::PrinterPtr::force_creating_from_raw_pointer, 0, false)
+inline Example::PrinterCallbackPtr::PrinterCallbackPtr(const PrinterCallbackPtr& other) : Example::PrinterPtr(Example::PrinterPtr::force_creating_from_raw_pointer, static_cast<void*>(0), false)
 {
     SetObject(other.GetRawPointer());
     if (other.GetRawPointer())
@@ -88,7 +88,7 @@ inline Example::PrinterCallbackPtr::PrinterCallbackPtr(PrinterCallbackPtr&& othe
 }
 #endif /* EXAMPLE_CPP_COMPILER_HAS_RVALUE_REFERENCES */
 
-inline Example::PrinterCallbackPtr::PrinterCallbackPtr(Example::PrinterCallbackPtr::ECreateFromRawPointer, void *object_pointer, bool add_ref_object) : Example::PrinterPtr(Example::PrinterPtr::force_creating_from_raw_pointer, 0, false)
+inline Example::PrinterCallbackPtr::PrinterCallbackPtr(Example::PrinterCallbackPtr::ECreateFromRawPointer, void *object_pointer, bool add_ref_object) : Example::PrinterPtr(Example::PrinterPtr::force_creating_from_raw_pointer, static_cast<void*>(0), false)
 {
     SetObject(object_pointer);
     if (add_ref_object && object_pointer)
@@ -144,7 +144,7 @@ inline Example::PrinterCallbackPtr& Example::PrinterCallbackPtr::operator=(Examp
 
 inline Example::PrinterCallbackPtr Example::PrinterCallbackPtr::Null()
 {
-    return Example::PrinterCallbackPtr(Example::PrinterCallbackPtr::force_creating_from_raw_pointer, 0, false);
+    return Example::PrinterCallbackPtr(Example::PrinterCallbackPtr::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool Example::PrinterCallbackPtr::IsNull() const
@@ -256,27 +256,27 @@ void EXAMPLE_API_CONVENTION printer_print_const_callback(beautiful_capi_callback
     }
     catch (Exception::NullArgument& exception_object)
     {
-        exception_info->code = 3;
+        exception_info->code = 102;
         exception_info->object_pointer = exception_object.Detach();
     }
     catch (Exception::BadArgument& exception_object)
     {
-        exception_info->code = 2;
+        exception_info->code = 101;
         exception_info->object_pointer = exception_object.Detach();
     }
     catch (Exception::DivisionByZero& exception_object)
     {
-        exception_info->code = 4;
+        exception_info->code = 103;
         exception_info->object_pointer = exception_object.Detach();
     }
     catch (Exception::Generic& exception_object)
     {
-        exception_info->code = 1;
+        exception_info->code = 100;
         exception_info->object_pointer = exception_object.Detach();
     }
     catch (...)
     {
-        exception_info->code = -2;
+        exception_info->code = 1;
     }
 }
 
@@ -297,27 +297,27 @@ int EXAMPLE_API_CONVENTION printer_get_device_type_const_callback(beautiful_capi
     }
     catch (Exception::NullArgument& exception_object)
     {
-        exception_info->code = 3;
+        exception_info->code = 102;
         exception_info->object_pointer = exception_object.Detach();
     }
     catch (Exception::BadArgument& exception_object)
     {
-        exception_info->code = 2;
+        exception_info->code = 101;
         exception_info->object_pointer = exception_object.Detach();
     }
     catch (Exception::DivisionByZero& exception_object)
     {
-        exception_info->code = 4;
+        exception_info->code = 103;
         exception_info->object_pointer = exception_object.Detach();
     }
     catch (Exception::Generic& exception_object)
     {
-        exception_info->code = 1;
+        exception_info->code = 100;
         exception_info->object_pointer = exception_object.Detach();
     }
     catch (...)
     {
-        exception_info->code = -2;
+        exception_info->code = 1;
     }
     return static_cast<int>(0);
 }
@@ -339,27 +339,27 @@ int EXAMPLE_API_CONVENTION printer_get_printing_quality_const_callback(beautiful
     }
     catch (Exception::NullArgument& exception_object)
     {
-        exception_info->code = 3;
+        exception_info->code = 102;
         exception_info->object_pointer = exception_object.Detach();
     }
     catch (Exception::BadArgument& exception_object)
     {
-        exception_info->code = 2;
+        exception_info->code = 101;
         exception_info->object_pointer = exception_object.Detach();
     }
     catch (Exception::DivisionByZero& exception_object)
     {
-        exception_info->code = 4;
+        exception_info->code = 103;
         exception_info->object_pointer = exception_object.Detach();
     }
     catch (Exception::Generic& exception_object)
     {
-        exception_info->code = 1;
+        exception_info->code = 100;
         exception_info->object_pointer = exception_object.Detach();
     }
     catch (...)
     {
-        exception_info->code = -2;
+        exception_info->code = 1;
     }
     return static_cast<int>(0);
 }
@@ -381,27 +381,27 @@ void EXAMPLE_API_CONVENTION printer_set_printing_quality_callback(beautiful_capi
     }
     catch (Exception::NullArgument& exception_object)
     {
-        exception_info->code = 3;
+        exception_info->code = 102;
         exception_info->object_pointer = exception_object.Detach();
     }
     catch (Exception::BadArgument& exception_object)
     {
-        exception_info->code = 2;
+        exception_info->code = 101;
         exception_info->object_pointer = exception_object.Detach();
     }
     catch (Exception::DivisionByZero& exception_object)
     {
-        exception_info->code = 4;
+        exception_info->code = 103;
         exception_info->object_pointer = exception_object.Detach();
     }
     catch (Exception::Generic& exception_object)
     {
-        exception_info->code = 1;
+        exception_info->code = 100;
         exception_info->object_pointer = exception_object.Detach();
     }
     catch (...)
     {
-        exception_info->code = -2;
+        exception_info->code = 1;
     }
 }
 

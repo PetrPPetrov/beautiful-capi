@@ -33,7 +33,7 @@
 
 inline hello_world::scanner_raw_ptr::scanner_raw_ptr()
 {
-    SetObject(hello_world_scanner_default());
+    SetObject(hello_world::scanner_raw_ptr(hello_world::scanner_raw_ptr::force_creating_from_raw_pointer, hello_world_scanner_default(), false).detach());
 }
 
 inline void hello_world::scanner_raw_ptr::scan() const
@@ -91,7 +91,7 @@ inline hello_world::scanner_raw_ptr& hello_world::scanner_raw_ptr::operator=(hel
 
 inline hello_world::scanner_raw_ptr hello_world::scanner_raw_ptr::null()
 {
-    return hello_world::scanner_raw_ptr(hello_world::scanner_raw_ptr::force_creating_from_raw_pointer, 0, false);
+    return hello_world::scanner_raw_ptr(hello_world::scanner_raw_ptr::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool hello_world::scanner_raw_ptr::is_null() const

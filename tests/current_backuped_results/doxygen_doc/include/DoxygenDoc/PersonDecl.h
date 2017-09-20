@@ -39,6 +39,7 @@ namespace DoxygenDoc {
  * 
  * 
  * 
+ * 
  */
 class PersonRawPtr
 {
@@ -48,93 +49,84 @@ public:
      * 
      * 
      * 
+     * 
      */
     inline PersonRawPtr();
     /**
-     * @brief 
      * @brief Gets the @ref DoxygenDoc::Name .
-     * @brief 
+     * 
      * 
      * 
      * 
      */
     inline DoxygenDoc::Name GetName() const;
     /**
-     * @brief 
      * @brief Sets the @ref DoxygenDoc::Name .
-     * @brief 
+     * 
      * 
      * 
      * 
      */
     inline void SetName(const DoxygenDoc::Name& name);
     /**
-     * @brief 
      * @brief Gets the @ref DoxygenDoc::AddressPtr .
-     * @brief 
+     * 
      * 
      * 
      * 
      */
     inline DoxygenDoc::AddressPtr GetAddress() const;
     /**
-     * @brief 
      * @brief Sets the @ref DoxygenDoc::AddressPtr .
-     * @brief 
+     * 
      * 
      * 
      * 
      */
     inline void SetAddress(const DoxygenDoc::AddressPtr& address);
     /**
-     * @brief 
      * @brief Gets the day.
-     * @brief 
+     * 
      * 
      * 
      * 
      */
     inline unsigned int GetDay() const;
     /**
-     * @brief 
      * @brief Sets the day.
-     * @brief 
+     * 
      * 
      * 
      * 
      */
     inline void SetDay(unsigned int day);
     /**
-     * @brief 
      * @brief Gets the month.
-     * @brief 
+     * 
      * 
      * 
      * 
      */
     inline unsigned int GetMonth() const;
     /**
-     * @brief 
      * @brief Sets the month.
-     * @brief 
+     * 
      * 
      * 
      * 
      */
     inline void SetMonth(unsigned int month);
     /**
-     * @brief 
      * @brief Gets the year.
-     * @brief 
+     * 
      * 
      * 
      * 
      */
     inline unsigned int GetYear() const;
     /**
-     * @brief 
      * @brief Sets the year.
-     * @brief 
+     * 
      * 
      * 
      * 

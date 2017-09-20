@@ -134,7 +134,7 @@ inline Example::PrinterPtr& Example::PrinterPtr::operator=(Example::PrinterPtr&&
 
 inline Example::PrinterPtr Example::PrinterPtr::Null()
 {
-    return Example::PrinterPtr(Example::PrinterPtr::force_creating_from_raw_pointer, 0, false);
+    return Example::PrinterPtr(Example::PrinterPtr::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool Example::PrinterPtr::IsNull() const

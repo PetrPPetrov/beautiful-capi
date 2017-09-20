@@ -33,7 +33,7 @@
 
 inline Example::Geometry::Sphere::Sphere()
 {
-    SetObject(example_geometry_sphere_new());
+    SetObject(Example::Geometry::Sphere(Example::Geometry::Sphere::force_creating_from_raw_pointer, example_geometry_sphere_new(), false).Detach());
 }
 
 inline double Example::Geometry::Sphere::GetRadius()
@@ -127,7 +127,7 @@ inline Example::Geometry::Sphere& Example::Geometry::Sphere::operator=(Example::
 
 inline Example::Geometry::Sphere Example::Geometry::Sphere::Null()
 {
-    return Example::Geometry::Sphere(Example::Geometry::Sphere::force_creating_from_raw_pointer, 0, false);
+    return Example::Geometry::Sphere(Example::Geometry::Sphere::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool Example::Geometry::Sphere::IsNull() const

@@ -42,6 +42,7 @@
 #include "Example/VectorOfExamplePosition4Dfloat.h"
 #include "Example/VectorOfExamplePosition4Ddouble.h"
 #include "Example/VectorOfExampleVectorOfExamplePosition4Dfloat.h"
+#include "Example/VectorOfchar.h"
 #include "Example/VectorOfObjectsExampleModelfloat.h"
 #include "Example/VectorOfObjectsExampleModeldouble.h"
 #include "Example/VectorOfObjectsDerivedExampleModelfloat.h"

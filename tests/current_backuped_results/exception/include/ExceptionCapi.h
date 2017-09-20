@@ -34,18 +34,19 @@
 
 struct beautiful_capi_exception_exception_info_t
 {
-    int code; /* value from beautiful_capi_exception_exception_code_t enumeration */
-    void* object_pointer;
+    uint32_t code; /* value from beautiful_capi_exception_exception_code_t enumeration */
+    void* object_pointer; /* exception object pointer */
 };
 
 enum beautiful_capi_exception_exception_code_t
 {
     no_exception = 0,
-    exception_generic = 1,
-    exception_bad_argument = 2,
-    exception_null_argument = 3,
-    exception_division_by_zero = 4,
-    unknown_exception = -1
+    unknown_exception = 1,
+    copy_exception_error = 2,
+    exception_generic = 100,
+    exception_bad_argument = 101,
+    exception_null_argument = 102,
+    exception_division_by_zero = 103
 };
 
 #endif /* BEAUTIFUL_CAPI_EXCEPTION_EXCEPTION_INFO_DEFINED */

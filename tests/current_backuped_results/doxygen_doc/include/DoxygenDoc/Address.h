@@ -33,7 +33,7 @@
 
 inline DoxygenDoc::AddressPtr::AddressPtr()
 {
-    SetObject(doxygen_doc_address_default());
+    SetObject(DoxygenDoc::AddressPtr(DoxygenDoc::AddressPtr::force_creating_from_raw_pointer, doxygen_doc_address_default(), false).Detach());
 }
 
 inline const char* DoxygenDoc::AddressPtr::GetStreetName() const
@@ -138,7 +138,7 @@ inline DoxygenDoc::AddressPtr& DoxygenDoc::AddressPtr::operator=(DoxygenDoc::Add
 
 inline DoxygenDoc::AddressPtr DoxygenDoc::AddressPtr::Null()
 {
-    return DoxygenDoc::AddressPtr(DoxygenDoc::AddressPtr::force_creating_from_raw_pointer, 0, false);
+    return DoxygenDoc::AddressPtr(DoxygenDoc::AddressPtr::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool DoxygenDoc::AddressPtr::IsNull() const

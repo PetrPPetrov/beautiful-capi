@@ -33,7 +33,7 @@
 
 inline Classes::ClassA::ClassA()
 {
-    SetObject(classes_class_a_default());
+    SetObject(Classes::ClassA(Classes::ClassA::force_creating_from_raw_pointer, classes_class_a_default(), false).detach());
 }
 
 inline int Classes::ClassA::GetValue() const
@@ -127,7 +127,7 @@ inline Classes::ClassA& Classes::ClassA::operator=(Classes::ClassA&& other)
 
 inline Classes::ClassA Classes::ClassA::Null()
 {
-    return Classes::ClassA(Classes::ClassA::force_creating_from_raw_pointer, 0, false);
+    return Classes::ClassA(Classes::ClassA::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool Classes::ClassA::IsNull() const

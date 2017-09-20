@@ -33,7 +33,7 @@
 
 inline ClassWrapName::WrapPrinter::WrapPrinter()
 {
-    SetObject(class_wrap_name_printer_default());
+    SetObject(ClassWrapName::WrapPrinter(ClassWrapName::WrapPrinter::force_creating_from_raw_pointer, class_wrap_name_printer_default(), false).Detach());
 }
 
 inline void ClassWrapName::WrapPrinter::Show() const
@@ -122,7 +122,7 @@ inline ClassWrapName::WrapPrinter& ClassWrapName::WrapPrinter::operator=(ClassWr
 
 inline ClassWrapName::WrapPrinter ClassWrapName::WrapPrinter::Null()
 {
-    return ClassWrapName::WrapPrinter(ClassWrapName::WrapPrinter::force_creating_from_raw_pointer, 0, false);
+    return ClassWrapName::WrapPrinter(ClassWrapName::WrapPrinter::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool ClassWrapName::WrapPrinter::IsNull() const

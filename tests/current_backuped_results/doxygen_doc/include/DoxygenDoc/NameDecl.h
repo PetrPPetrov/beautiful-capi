@@ -39,12 +39,16 @@ namespace DoxygenDoc {
  * 
  * 
  * 
+ * 
+ * @see  For person address see also @ref DoxygenDoc::AddressPtr 
+ * 
  */
 class Name
 {
 public:
     /**
      * @brief Creates a name
+     * 
      * 
      * 
      * 
@@ -57,10 +61,12 @@ public:
      * 
      * 
      * 
+     * 
      */
     inline const char* GetFirstName() const;
     /**
      * @brief Sets the first name.
+     * 
      * 
      * 
      * 
@@ -71,10 +77,12 @@ public:
      * 
      * 
      * 
+     * 
      */
     inline const char* GetLastName() const;
     /**
      * @brief Sets the last name.
+     * 
      * 
      * 
      * 

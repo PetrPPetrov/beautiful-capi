@@ -33,7 +33,7 @@
 
 inline Example::Position<float>::Position()
 {
-    SetObject(example_position_float_default());
+    SetObject(Example::Position<float>(Example::Position<float>::force_creating_from_raw_pointer, example_position_float_default(), false).Detach());
 }
 
 inline float Example::Position<float>::GetX() const
@@ -147,7 +147,7 @@ inline Example::Position<float>& Example::Position<float>::operator=(Example::Po
 
 inline Example::Position<float> Example::Position<float>::Null()
 {
-    return Example::Position<float>(Example::Position<float>::force_creating_from_raw_pointer, 0, false);
+    return Example::Position<float>(Example::Position<float>::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool Example::Position<float>::IsNull() const

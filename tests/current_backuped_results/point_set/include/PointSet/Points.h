@@ -34,7 +34,7 @@
 
 inline PointSet::PointsPtr::PointsPtr()
 {
-    SetObject(point_set_points_default());
+    SetObject(PointSet::PointsPtr(PointSet::PointsPtr::force_creating_from_raw_pointer, point_set_points_default(), false).Detach());
 }
 
 inline size_t PointSet::PointsPtr::Size() const
@@ -144,7 +144,7 @@ inline PointSet::PointsPtr& PointSet::PointsPtr::operator=(PointSet::PointsPtr&&
 
 inline PointSet::PointsPtr PointSet::PointsPtr::Null()
 {
-    return PointSet::PointsPtr(PointSet::PointsPtr::force_creating_from_raw_pointer, 0, false);
+    return PointSet::PointsPtr(PointSet::PointsPtr::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool PointSet::PointsPtr::IsNull() const

@@ -33,15 +33,15 @@
 
 #ifdef __cplusplus
 
-inline Exception::NullArgument::NullArgument() : Exception::BadArgument(Exception::BadArgument::force_creating_from_raw_pointer, 0, false)
+inline Exception::NullArgument::NullArgument() : Exception::BadArgument(Exception::BadArgument::force_creating_from_raw_pointer, static_cast<void*>(0), false)
 {
     beautiful_capi_exception_exception_info_t exception_info;
-    void* result(exception_null_argument_new(&exception_info));
+    Exception::NullArgument result(Exception::NullArgument::force_creating_from_raw_pointer, exception_null_argument_new(&exception_info), false);
     beautiful_capi_Exception::check_and_throw_exception(exception_info.code, exception_info.object_pointer);
-    SetObject(result);
+    SetObject(result.Detach());
 }
 
-inline Exception::NullArgument::NullArgument(const NullArgument& other) : Exception::BadArgument(Exception::BadArgument::force_creating_from_raw_pointer, 0, false)
+inline Exception::NullArgument::NullArgument(const NullArgument& other) : Exception::BadArgument(Exception::BadArgument::force_creating_from_raw_pointer, static_cast<void*>(0), false)
 {
     if (other.GetRawPointer())
     {
@@ -64,7 +64,7 @@ inline Exception::NullArgument::NullArgument(NullArgument&& other) : Exception::
 }
 #endif /* EXCEPTION_CPP_COMPILER_HAS_RVALUE_REFERENCES */
 
-inline Exception::NullArgument::NullArgument(Exception::NullArgument::ECreateFromRawPointer, void *object_pointer, bool copy_object) : Exception::BadArgument(Exception::BadArgument::force_creating_from_raw_pointer, 0, false)
+inline Exception::NullArgument::NullArgument(Exception::NullArgument::ECreateFromRawPointer, void *object_pointer, bool copy_object) : Exception::BadArgument(Exception::BadArgument::force_creating_from_raw_pointer, static_cast<void*>(0), false)
 {
     if (object_pointer && copy_object)
     {
@@ -132,7 +132,7 @@ inline Exception::NullArgument& Exception::NullArgument::operator=(Exception::Nu
 
 inline Exception::NullArgument Exception::NullArgument::Null()
 {
-    return Exception::NullArgument(Exception::NullArgument::force_creating_from_raw_pointer, 0, false);
+    return Exception::NullArgument(Exception::NullArgument::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool Exception::NullArgument::IsNull() const

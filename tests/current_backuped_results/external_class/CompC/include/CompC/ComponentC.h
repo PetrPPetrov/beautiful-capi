@@ -36,7 +36,7 @@
 
 inline CompC::ComponentCPtr::ComponentCPtr()
 {
-    SetObject(comp_c_component_c_default());
+    SetObject(CompC::ComponentCPtr(CompC::ComponentCPtr::force_creating_from_raw_pointer, comp_c_component_c_default(), false).DetachObject());
 }
 
 inline Classes::ClassA CompC::ComponentCPtr::GetA() const
@@ -141,7 +141,7 @@ inline CompC::ComponentCPtr& CompC::ComponentCPtr::operator=(CompC::ComponentCPt
 
 inline CompC::ComponentCPtr CompC::ComponentCPtr::Null()
 {
-    return CompC::ComponentCPtr(CompC::ComponentCPtr::force_creating_from_raw_pointer, 0, false);
+    return CompC::ComponentCPtr(CompC::ComponentCPtr::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool CompC::ComponentCPtr::IsNull() const

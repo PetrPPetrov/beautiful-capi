@@ -33,12 +33,12 @@
 
 inline PointSet::Position::Position()
 {
-    SetObject(point_set_position_default());
+    SetObject(PointSet::Position(PointSet::Position::force_creating_from_raw_pointer, point_set_position_default(), false).Detach());
 }
 
 inline PointSet::Position::Position(double X, double Y, double Z)
 {
-    SetObject(point_set_position_initialized(X, Y, Z));
+    SetObject(PointSet::Position(PointSet::Position::force_creating_from_raw_pointer, point_set_position_initialized(X, Y, Z), false).Detach());
 }
 
 inline double PointSet::Position::GetX() const
@@ -152,7 +152,7 @@ inline PointSet::Position& PointSet::Position::operator=(PointSet::Position&& ot
 
 inline PointSet::Position PointSet::Position::Null()
 {
-    return PointSet::Position(PointSet::Position::force_creating_from_raw_pointer, 0, false);
+    return PointSet::Position(PointSet::Position::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool PointSet::Position::IsNull() const

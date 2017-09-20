@@ -43,11 +43,13 @@ public:
      * 
      * 
      * 
+     * 
      * @param name  @ref DoxygenDoc::Name 
      */
     inline void Show(const DoxygenDoc::Name& name);
     /**
      * @brief Prints the @ref DoxygenDoc::Name by pointer.
+     * 
      * 
      * 
      * 
@@ -59,11 +61,13 @@ public:
      * 
      * 
      * 
+     * 
      * @param name The reference on @ref DoxygenDoc::Name .
      */
     inline void ShowByReference(const DoxygenDoc::Name& name);
     /**
      * @brief Prints the @ref DoxygenDoc::PersonRawPtr by value.
+     * 
      * 
      * 
      * 
@@ -75,11 +79,13 @@ public:
      * 
      * 
      * 
+     * 
      * @param person The pointer on @ref DoxygenDoc::PersonRawPtr .
      */
     inline void ShowByPointer(const DoxygenDoc::PersonRawPtr& person);
     /**
      * @brief Prints the @ref DoxygenDoc::PersonRawPtr by reference.
+     * 
      * 
      * 
      * 
@@ -91,6 +97,7 @@ public:
      * 
      * 
      * 
+     * 
      * @param address  @ref DoxygenDoc::AddressPtr 
      */
     inline void Show(const DoxygenDoc::AddressPtr& address);
@@ -99,11 +106,13 @@ public:
      * 
      * 
      * 
+     * 
      * @param address The pointer on @ref DoxygenDoc::AddressPtr .
      */
     inline void ShowByPointer(const DoxygenDoc::AddressPtr& address);
     /**
      * @brief Prints the @ref DoxygenDoc::AddressPtr by reference.
+     * 
      * 
      * 
      * 

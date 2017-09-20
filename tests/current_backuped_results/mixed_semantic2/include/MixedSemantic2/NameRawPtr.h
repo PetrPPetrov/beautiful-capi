@@ -34,7 +34,7 @@
 
 inline MixedSemantic2::NameRawPtr::NameRawPtr(const char* FirstName, const char* FatherName, const char* LastName)
 {
-    SetObject(mixed_semantic2_name_raw_ptr_full_name(FirstName, FatherName, LastName));
+    SetObject(MixedSemantic2::NameRawPtr(MixedSemantic2::NameRawPtr::force_creating_from_raw_pointer, mixed_semantic2_name_raw_ptr_full_name(FirstName, FatherName, LastName), false).Detach());
 }
 
 inline const char* MixedSemantic2::NameRawPtr::GetFirstName() const
@@ -107,7 +107,7 @@ inline MixedSemantic2::NameRawPtr& MixedSemantic2::NameRawPtr::operator=(MixedSe
 
 inline MixedSemantic2::NameRawPtr MixedSemantic2::NameRawPtr::Null()
 {
-    return MixedSemantic2::NameRawPtr(MixedSemantic2::NameRawPtr::force_creating_from_raw_pointer, 0, false);
+    return MixedSemantic2::NameRawPtr(MixedSemantic2::NameRawPtr::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool MixedSemantic2::NameRawPtr::IsNull() const

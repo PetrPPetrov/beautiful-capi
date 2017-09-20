@@ -36,7 +36,7 @@
 
 inline MixedSemantic2::PersonRawPtr::PersonRawPtr()
 {
-    SetObject(mixed_semantic2_person_default());
+    SetObject(MixedSemantic2::PersonRawPtr(MixedSemantic2::PersonRawPtr::force_creating_from_raw_pointer, mixed_semantic2_person_default(), false).Detach());
 }
 
 inline MixedSemantic2::AddressPtr MixedSemantic2::PersonRawPtr::GetAddress() const
@@ -139,7 +139,7 @@ inline MixedSemantic2::PersonRawPtr& MixedSemantic2::PersonRawPtr::operator=(Mix
 
 inline MixedSemantic2::PersonRawPtr MixedSemantic2::PersonRawPtr::Null()
 {
-    return MixedSemantic2::PersonRawPtr(MixedSemantic2::PersonRawPtr::force_creating_from_raw_pointer, 0, false);
+    return MixedSemantic2::PersonRawPtr(MixedSemantic2::PersonRawPtr::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool MixedSemantic2::PersonRawPtr::IsNull() const

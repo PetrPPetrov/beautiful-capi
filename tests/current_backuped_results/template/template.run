@@ -29,10 +29,10 @@ Position copy ctor
 Position4D copy ctor
 Position copy ctor
 Position4D copy ctor
-Position copy ctor
-Position4D copy ctor
 Position4D dtor
 Position dtor
+Position copy ctor
+Position4D copy ctor
 Position4D dtor
 Position dtor
 Position4D dtor
@@ -77,16 +77,16 @@ Position4D copy ctor
 Position copy ctor
 Position4D copy ctor
 Vector copy ctor
-Position copy ctor
-Position4D copy ctor
-Position copy ctor
-Position4D copy ctor
-Vector copy ctor
 Vector dtor
 Position4D dtor
 Position dtor
 Position4D dtor
 Position dtor
+Position copy ctor
+Position4D copy ctor
+Position copy ctor
+Position4D copy ctor
+Vector copy ctor
 Vector dtor
 Position4D dtor
 Position dtor
@@ -162,6 +162,10 @@ X: 0 Y: 0 Z: 0
 Position dtor
 
 2
+CharDummyVector ctor
+Vector has 3 elements
+A A A 
+CharDummyVector dtor
 VectorOfObjectsDerivedImpl dtor
 VectorOfObjects dtor
 Model dtor

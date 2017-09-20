@@ -33,7 +33,7 @@
 
 inline ReturnValue::MiddleNamePtr::MiddleNamePtr()
 {
-    SetObject(return_value_middle_name_default());
+    SetObject(ReturnValue::MiddleNamePtr(ReturnValue::MiddleNamePtr::force_creating_from_raw_pointer, return_value_middle_name_default(), false).Detach());
 }
 
 inline const char* ReturnValue::MiddleNamePtr::GetMiddleName() const
@@ -118,7 +118,7 @@ inline ReturnValue::MiddleNamePtr& ReturnValue::MiddleNamePtr::operator=(ReturnV
 
 inline ReturnValue::MiddleNamePtr ReturnValue::MiddleNamePtr::Null()
 {
-    return ReturnValue::MiddleNamePtr(ReturnValue::MiddleNamePtr::force_creating_from_raw_pointer, 0, false);
+    return ReturnValue::MiddleNamePtr(ReturnValue::MiddleNamePtr::force_creating_from_raw_pointer, static_cast<void*>(0), false);
 }
 
 inline bool ReturnValue::MiddleNamePtr::IsNull() const
