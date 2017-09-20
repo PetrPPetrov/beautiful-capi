@@ -20,7 +20,7 @@
 #
 
 
-from Parser import TClass, TEnumeration, TNamespace, TArgument, TBeautifulCapiRoot, TMappedType
+from Parser import TClass, TEnumeration, TNamespace, TArgument, TBeautifulCapiRoot, TMappedType, TLifecycle
 from Parser import TGenericDocumentation, TDocumentation, TReference, TExternalClass, TExternalNamespace
 from ParamsParser import TBeautifulCapiParams
 from TemplateGenerator import TemplateGenerator
@@ -127,8 +127,40 @@ class GeneratorCreator(object):
         self.cur_namespace_generator = previous_namespace_generator
         return new_namespace_generator
 
+    def __apply_semantic_operator(self, type_name: str, operator_name: str, semantic_type: TLifecycle) -> str:
+        begin_operator_str = operator_name + '('
+        found_start_index = type_name.rfind(begin_operator_str)
+        while found_start_index != -1:
+            found_end_index = type_name.find(')', found_start_index)
+            argument_type = type_name[found_start_index + len(begin_operator_str):found_end_index]
+            result_type = ''
+            # TODO: Linear search
+            for class_name, class_generator in self.full_name_2_type_generator.items():
+                if type(class_generator) is ClassGenerator:
+                    if hasattr(class_generator.class_object, 'extension_base_class_name'):
+                        if class_generator.class_object.extension_base_class_name == argument_type:
+                            if class_generator.class_object.lifecycle == semantic_type:
+                                result_type = class_name
+                                break
+            if not result_type:
+                raise BeautifulCapiException(
+                    'could not find semantic extension "{0}" for {1} class'.find(operator_name, argument_type))
+            begin_str = type_name[:found_start_index]
+            end_str = type_name[found_end_index + 1:]
+            type_name = begin_str + result_type + end_str
+            found_start_index = type_name.rfind(begin_operator_str)
+        return type_name
+
+    def __apply_semantic_operators(self, type_name: str) -> str:
+        type_name = self.__apply_semantic_operator(type_name, 'raw_pointer_semantic', TLifecycle.raw_pointer_semantic)
+        type_name = self.__apply_semantic_operator(
+            type_name, 'reference_counted_semantic', TLifecycle.reference_counted)
+        type_name = self.__apply_semantic_operator(type_name, 'copy_semantic', TLifecycle.copy_semantic)
+        return type_name
+
     def __create_type_generator(self, type_name: str, is_builtin: bool) -> BaseTypeGenerator:
         name = type_name.replace(' ', '')
+        name = self.__apply_semantic_operators(name)
         if name in self.full_name_2_type_generator:
             type_generator = self.full_name_2_type_generator[name]
             if type(type_generator) is ClassGenerator:
@@ -241,6 +273,7 @@ class GeneratorCreator(object):
     def __bind_class(self, class_generator: ClassGenerator):
         def name_to_class_generator(class_name: str, exception_class_type: str):
             class_name = class_name.replace(' ', '')
+            class_name = self.__apply_semantic_operators(class_name)
             if class_name not in self.full_name_2_type_generator:
                 raise BeautifulCapiException('{0} class {1} is not found'.format(exception_class_type, class_name))
             return self.full_name_2_type_generator[class_name]
