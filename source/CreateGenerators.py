@@ -134,14 +134,13 @@ class GeneratorCreator(object):
             found_end_index = type_name.find(')', found_start_index)
             argument_type = type_name[found_start_index + len(begin_operator_str):found_end_index]
             result_type = ''
-            # TODO: Linear search
-            for class_name, class_generator in self.full_name_2_type_generator.items():
+            if argument_type in self.full_name_2_type_generator:
+                class_generator = self.full_name_2_type_generator[argument_type]
                 if type(class_generator) is ClassGenerator:
-                    if hasattr(class_generator.class_object, 'extension_base_class_name'):
-                        if class_generator.class_object.extension_base_class_name == argument_type:
-                            if class_generator.class_object.lifecycle == semantic_type:
-                                result_type = class_name
-                                break
+                    for lifecycle_extension in class_generator.class_object.lifecycle_extensions:
+                        if lifecycle_extension.lifecycle == semantic_type:
+                            result_type = class_generator.parent_namespace.full_name + '::' + lifecycle_extension.name
+                            break
             if not result_type:
                 raise BeautifulCapiException(
                     'could not find semantic extension "{0}" for {1} class'.find(operator_name, argument_type))
@@ -152,10 +151,12 @@ class GeneratorCreator(object):
         return type_name
 
     def __apply_semantic_operators(self, type_name: str) -> str:
-        type_name = self.__apply_semantic_operator(type_name, 'raw_pointer_semantic', TLifecycle.raw_pointer_semantic)
         type_name = self.__apply_semantic_operator(
-            type_name, 'reference_counted_semantic', TLifecycle.reference_counted)
-        type_name = self.__apply_semantic_operator(type_name, 'copy_semantic', TLifecycle.copy_semantic)
+            type_name, 'raw_pointer_semantic_extension', TLifecycle.raw_pointer_semantic)
+        type_name = self.__apply_semantic_operator(
+            type_name, 'reference_counted_semantic_extension', TLifecycle.reference_counted)
+        type_name = self.__apply_semantic_operator(
+            type_name, 'copy_semantic_extension', TLifecycle.copy_semantic)
         return type_name
 
     def __create_type_generator(self, type_name: str, is_builtin: bool) -> BaseTypeGenerator:
