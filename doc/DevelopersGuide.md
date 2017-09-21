@@ -105,7 +105,7 @@ For instance, the size of _std::string_ class is implementation specific and cou
 from one C++ compiler to another, and even from one build configuration to another.
 
 #### Exceptions
- 
+
 Different C++ compilers implement different exception throwing and catching schemas.
 An exception thrown from one C++ compiler runtime, in general,
 could not be caught and managed by another C++ compiler runtime.
@@ -333,16 +333,16 @@ int main()
 {
     // Creates the underlying implementation class on the heap of the C++ library
     HelloWorld::Printer printer;
-    
+
     // Calls copy function to allocate new PrinterImpl class on the heap
     // of the C++ library by using PrinterImpl copy constructor.
     // printer and printer2 are different objects which have
     // different underlying implementation objects.
     HelloWorld::Printer printer2 = printer;
-    
+
     // You have to use "." sign to access the wrapped PrinterImpl methods
     printer.Show();
-    
+
     // At the end of this scope two PrinterImpl objects allocated on the heap
     // will be deallocated by using _delete function.
     // Please note that a heap manager of the C++ library will be used for that.
@@ -403,17 +403,17 @@ int main()
     // Creates the underlying implementation class on the heap of the C++ library.
     // Reference counter is 1.
     HelloWorld::PrinterPtr printer;
-    
+
     // Calls _addref function to create a new reference to the existing object.
     // Reference counter is 2.
     // Both printer and printer2 reference to the same underlying implementation object.
     HelloWorld::PrinterPtr printer2 = printer;
-    
+
     // You should use "->" to access wrapped PrinterImpl methods
     // However, "." sign is also could be used here, i.e.: printer.Show(); instruction will be compiled fine.
     // But we recommend you to always use "->".
     printer->Show();
-    
+
     // At the end of this scope the PrinterImpl underlying implementation object will be deallocated.
     // This is because printer object destructor will decrease reference counter by 1 (from 2 to 1),
     // and printer2 object destructor will decrease reference counter by 1 (from 1 to 0),
@@ -444,22 +444,22 @@ int main()
 {
     // Creates the underlying implementation class on the heap of the C++ library.
     HelloWorld::PrinterRawPtr printer;
-    
+
     // Both printer and printer2 reference to the same underlying implementation object.
     HelloWorld::PrinterRawPtr printer2 = printer;
-    
+
     // You should use "->" to access wrapped PrinterImpl methods
     // However, "." sign is also could be used here, i.e.: printer.Show(); instruction will be compiled fine.
     // But we recommend you to always use "->".
     printer->Show();
-    
+
     // You need to manually deallocate the previously allocated PrinterImpl object.
     // Note that you need to deallocate it once by using either printer or printer2 object.
     // Here we used printer2 for deallocation, we could use printer instead, but not both.
     // This is because a double deallocation will happen in such a case.
     // Please note that a heap manager of the C++ library will be used for deallocation.
     printer2->Delete();
-    
+
     return EXIT_SUCCESS;
 }
 ~~~
@@ -480,7 +480,7 @@ always created on the library heap, and the wrapper classes just hold pointers:
 ~~~C++
     // Copy semantic
     HelloWorld::Printer null_printer = HelloWorld::Printer::Null();
-    
+
     // Reference counted semantic
     HelloWorld::PrinterPtr null_printer_ptr = HelloWorld::PrinterPtr::Null();
 ~~~
