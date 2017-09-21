@@ -1,10 +1,32 @@
 Version 0.4
     Added mapped types support, issue #6
     Added ability to generate Boost.Test unit tests for properties, issue #22
-    Added support of custom C to implementation type-casting, issue #29
     Added support of overloaded methods, issue #28
     Added support of explicit constructors, issue #26
+    Allowed wrapping const char* as std::string (in C++), issue #25
     Extended properties for specifying set method argument name, issue #30
+    Added support of custom C to implementation type-casting, issue #29
+    Added wrap_name attribute to classes, issue #32
+    Added include_header tag for TMappedType, issue #34
+    Added impl_2_c attribute for methods, issue #33
+    Added support of different life cycles for the same class, issue #31
+    Added set_argument_type and get_argument_type attributes to TProperty, issue #38
+    Implemented case when one Beautiful Capi library uses another Beautiful Capi library, issue #8
+    Tested with different library/client compilers (library compiler was MSVC 2015, client compilers were GCC and Clang on Cygwin), issue #16
+    Tested on Linuxes, issue #19
+    Tested on macOS, issue #18
+    Added snippet_type to mapped_types, issue #44
+    Added template constant arguments, issue #40
+    Added c_2_impl and impl_2_c fields to classes, issue #45
+    Added {file} tag support to doxygen documentation, issue #46
+    Added doxygen_doc example, issue #42
+    Added option to class for disabling dynamic casts, issue #49
+    Added implementation name for methods and functions, issue #47
+    Use ABI types in Beautiful Capi generated service routines instead of int, issue #50
+    Use positive only codes for exceptions, issue #51
+    Added return_add_ref attribute to properties, issue #52
+    Added automatic setter/getter generation for structure fields, issue #53
+    Added support of raw_pointer_semantic_extension, reference_counted_semantic_extension, copy_semantic_extension, issue #54
 
 Version 0.3
     Added support of doxygen-style comment generation, issue #5
