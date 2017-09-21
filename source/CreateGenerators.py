@@ -143,7 +143,7 @@ class GeneratorCreator(object):
                             break
             if not result_type:
                 raise BeautifulCapiException(
-                    'could not find semantic extension "{0}" for {1} class'.find(operator_name, argument_type))
+                    'could not find semantic extension "{0}" for {1} class'.format(operator_name, argument_type))
             begin_str = type_name[:found_start_index]
             end_str = type_name[found_end_index + 1:]
             type_name = begin_str + result_type + end_str
