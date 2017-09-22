@@ -91,6 +91,14 @@ class MappedTypeGenerator(BaseTypeGenerator):
     def generate_c_default_return_value(self, out: FileGenerator):
         out.put_line('return static_cast<{c_type}>(0);'.format(c_type=self.c_argument_declaration()))
 
+    @staticmethod
+    def value_2_c(expression: str) -> str:
+        return expression
+
+    @staticmethod
+    def pointer_2_c(expression: str) -> str:
+        return '*' + expression
+
     def include_dependent_declaration_headers(self, file_generator: FileGenerator, file_cache: FileCache):
         include_headers(file_generator, self.mapped_type_object.include_headers)
 
@@ -190,6 +198,14 @@ class ClassTypeGenerator(BaseTypeGenerator):
     def generate_c_default_return_value(out: FileGenerator):
         out.put_line('return static_cast<void*>(0);')
 
+    @staticmethod
+    def value_2_c(expression: str) -> str:
+        return '&' + expression
+
+    @staticmethod
+    def pointer_2_c(expression: str) -> str:
+        return expression
+
     def include_dependent_declaration_headers(self, file_generator: FileGenerator, file_cache: FileCache):
         file_generator.include_user_header(
             file_cache.fwd_header(self.class_argument_generator.full_name_array))
@@ -230,6 +246,15 @@ class ExternalClassTypeGenerator(ClassTypeGenerator):
             cur_header = base_namespace.namespace_object.include
             base_namespace = base_namespace.parent_namespace
         file_generator.include_user_header(cur_header)
+
+    def value_2_c(self, expression: str) -> str:
+        return '{expression}.{detach_method_name}()'.format(
+            expression=expression,
+            detach_method_name=self.class_argument_generator.parent_namespace.namespace_object.detach_method_name)
+
+    @staticmethod
+    def pointer_2_c(expression: str) -> str:
+        return expression
 
     def include_dependent_declaration_headers(self, file_generator: FileGenerator, file_cache: FileCache):
         self.__include_required_header(file_generator, self.class_argument_generator.class_object.include_declaration)
@@ -302,6 +327,14 @@ class EnumTypeGenerator(BaseTypeGenerator):
 
     def generate_c_default_return_value(self, out: FileGenerator):
         out.put_line('return static_cast<{c_type}>(0);'.format(c_type=self.c_argument_declaration()))
+
+    @staticmethod
+    def value_2_c(expression: str) -> str:
+        return expression
+
+    @staticmethod
+    def pointer_2_c(expression: str) -> str:
+        return '*' + expression
 
     def include_dependent_declaration_headers(self, file_generator: FileGenerator, file_cache: FileCache):
         parent_generator = self.enum_argument_generator.parent_generator

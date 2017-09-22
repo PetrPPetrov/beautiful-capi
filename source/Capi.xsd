@@ -620,10 +620,47 @@
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
+  <xs:complexType name="TReturnImplementation2C" mixed="true">
+    <xs:annotation>
+      <xs:documentation>Specifies conversion of return type from the implementation type to return C glue layer type</xs:documentation>
+    </xs:annotation>
+  </xs:complexType>
+  <xs:complexType name="TReturnImplementationValue2C" mixed="true">
+    <xs:annotation>
+      <xs:documentation>Specifies conversion of return value from the implementation type to return C glue layer type</xs:documentation>
+    </xs:annotation>
+  </xs:complexType>
+  <xs:complexType name="TReturnImplementationPointer2C" mixed="true">
+    <xs:annotation>
+      <xs:documentation>Specifies conversion of return type from the implementation pointer type to return C glue layer type</xs:documentation>
+    </xs:annotation>
+  </xs:complexType>
   <xs:complexType name="TImplementationCode" mixed="true">
     <xs:annotation>
       <xs:documentation>Specifies C++ code line to perform implementation calls.</xs:documentation>
     </xs:annotation>
+    <xs:sequence>
+      <xs:choice maxOccurs="unbounded" minOccurs="0">
+        <xs:element name="return_implementation_2_c" type="TReturnImplementation2C"
+                    minOccurs="0" maxOccurs="unbounded">
+          <xs:annotation>
+            <xs:documentation>Specifies conversion of return value from the implementation type to return C glue layer type</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="return_implementation_value_2_c" type="TReturnImplementationValue2C"
+                    minOccurs="0" maxOccurs="unbounded">
+          <xs:annotation>
+            <xs:documentation>Specifies conversion of return value from the implementation type to return C glue layer type</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="return_implementation_pointer_2_c" type="TReturnImplementationPointer2C"
+                    minOccurs="0" maxOccurs="unbounded">
+          <xs:annotation>
+            <xs:documentation>Specifies conversion of return type from the implementation pointer type to return C glue layer type</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
   </xs:complexType>
   <xs:complexType name="TMethodBase">
     <xs:annotation>

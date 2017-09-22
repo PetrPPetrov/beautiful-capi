@@ -1001,6 +1001,23 @@ Specifies template class instantiation.
       <i>empty string</i>
     </td>
   </tr>
+  <tr>
+    <td>
+      implementation_class_name
+    </td>
+    <td>
+      xs:string
+    </td>
+    <td>
+      optional
+    </td>
+    <td>
+      Specifies implementation class name when template is instantiated by these arguments
+    </td>
+    <td>
+      <i>empty string</i>
+    </td>
+  </tr>
 </table>
 
 <table>
@@ -1803,6 +1820,20 @@ Specifies base properties for constructors or methods.
       Specifies argument for the current constructor or method
     </td>
   </tr>
+  <tr>
+    <td>
+      implementation_code
+    </td>
+    <td>
+      0..1
+    </td>
+    <td>
+      <a href="#timplementationcode">TImplementationCode</a>
+    </td>
+    <td>
+      Specifies custom implementation code
+    </td>
+  </tr>
 </table>
 
 ### TConstructor
@@ -1834,6 +1865,74 @@ TConstructor is inherited from <a href="#tconstructorbase">TConstructorBase</a>
     </td>
     <td>
       false
+    </td>
+  </tr>
+</table>
+
+### TReturnImplementation2C
+
+Specifies conversion of return type from the implementation type to return C glue layer type
+
+### TReturnImplementationValue2C
+
+Specifies conversion of return value from the implementation type to return C glue layer type
+
+### TReturnImplementationPointer2C
+
+Specifies conversion of return type from the implementation pointer type to return C glue layer type
+
+### TImplementationCode
+
+Specifies C++ code line to perform implementation calls.
+
+<table>
+  <caption>TImplementationCode, list of elements</caption>
+  <tr>
+    <td> Element </td>
+    <td> Multiplicity </td>
+    <td> Type </td>
+    <td> Description </td>
+  </tr>
+  <tr>
+    <td>
+      return_implementation_2_c
+    </td>
+    <td>
+      0..unbounded
+    </td>
+    <td>
+      <a href="#treturnimplementation2c">TReturnImplementation2C</a>
+    </td>
+    <td>
+      Specifies conversion of return value from the implementation type to return C glue layer type
+    </td>
+  </tr>
+  <tr>
+    <td>
+      return_implementation_value_2_c
+    </td>
+    <td>
+      0..unbounded
+    </td>
+    <td>
+      <a href="#treturnimplementationvalue2c">TReturnImplementationValue2C</a>
+    </td>
+    <td>
+      Specifies conversion of return value from the implementation type to return C glue layer type
+    </td>
+  </tr>
+  <tr>
+    <td>
+      return_implementation_pointer_2_c
+    </td>
+    <td>
+      0..unbounded
+    </td>
+    <td>
+      <a href="#treturnimplementationpointer2c">TReturnImplementationPointer2C</a>
+    </td>
+    <td>
+      Specifies conversion of return type from the implementation pointer type to return C glue layer type
     </td>
   </tr>
 </table>
@@ -1932,6 +2031,40 @@ TMethodBase is inherited from <a href="#tconstructorbase">TConstructorBase</a>
     </td>
     <td>
       Specifies implementation name for the current function or method
+    </td>
+    <td>
+      <i>empty string</i>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      setter_field_name
+    </td>
+    <td>
+      xs:string
+    </td>
+    <td>
+      optional
+    </td>
+    <td>
+      Specifies field name to automatically generate setter function
+    </td>
+    <td>
+      <i>empty string</i>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      getter_field_name
+    </td>
+    <td>
+      xs:string
+    </td>
+    <td>
+      optional
+    </td>
+    <td>
+      Specifies field name to automatically generate getter function
     </td>
     <td>
       <i>empty string</i>
@@ -2629,6 +2762,23 @@ Specifies property for the current class. Each property will be translated into 
     </td>
     <td>
       false
+    </td>
+  </tr>
+  <tr>
+    <td>
+      field_name
+    </td>
+    <td>
+      xs:string
+    </td>
+    <td>
+      optional
+    </td>
+    <td>
+      Specifies a public field name to automatically generate getter and setter functions
+    </td>
+    <td>
+      <i>empty string</i>
     </td>
   </tr>
 </table>

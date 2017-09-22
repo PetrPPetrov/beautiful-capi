@@ -980,11 +980,110 @@ class TConstructor(TConstructorBase):
         self.load_attributes(dom_node)
 
 
-class TImplementationCode(object):
+class TReturnImplementation2C(object):
     def __init__(self):
         self.all_items = []
 
     def load_element(self, element):
+        if element.nodeType == element.TEXT_NODE:
+            cur_texts = [text.strip() for text in element.data.split('\n')]
+            first = True
+            for text in cur_texts:
+                if first and self.all_items and type(self.all_items[-1]) is str:
+                    self.all_items[-1] += text
+                else:
+                    self.all_items.append(text)
+                first = False
+            return True
+        return False
+
+    def load_attributes(self, dom_node):
+        pass
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
+
+class TReturnImplementationValue2C(object):
+    def __init__(self):
+        self.all_items = []
+
+    def load_element(self, element):
+        if element.nodeType == element.TEXT_NODE:
+            cur_texts = [text.strip() for text in element.data.split('\n')]
+            first = True
+            for text in cur_texts:
+                if first and self.all_items and type(self.all_items[-1]) is str:
+                    self.all_items[-1] += text
+                else:
+                    self.all_items.append(text)
+                first = False
+            return True
+        return False
+
+    def load_attributes(self, dom_node):
+        pass
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
+
+class TReturnImplementationPointer2C(object):
+    def __init__(self):
+        self.all_items = []
+
+    def load_element(self, element):
+        if element.nodeType == element.TEXT_NODE:
+            cur_texts = [text.strip() for text in element.data.split('\n')]
+            first = True
+            for text in cur_texts:
+                if first and self.all_items and type(self.all_items[-1]) is str:
+                    self.all_items[-1] += text
+                else:
+                    self.all_items.append(text)
+                first = False
+            return True
+        return False
+
+    def load_attributes(self, dom_node):
+        pass
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
+
+class TImplementationCode(object):
+    def __init__(self):
+        self.all_items = []
+        self.return_implementation_2_cs = []
+        self.return_implementation_value_2_cs = []
+        self.return_implementation_pointer_2_cs = []
+
+    def load_element(self, element):
+        if element.nodeName == "return_implementation_2_c":
+            new_element = TReturnImplementation2C()
+            new_element.load(element)
+            self.return_implementation_2_cs.append(new_element)
+            self.all_items.append(new_element)
+            return True
+        if element.nodeName == "return_implementation_value_2_c":
+            new_element = TReturnImplementationValue2C()
+            new_element.load(element)
+            self.return_implementation_value_2_cs.append(new_element)
+            self.all_items.append(new_element)
+            return True
+        if element.nodeName == "return_implementation_pointer_2_c":
+            new_element = TReturnImplementationPointer2C()
+            new_element.load(element)
+            self.return_implementation_pointer_2_cs.append(new_element)
+            self.all_items.append(new_element)
+            return True
         if element.nodeType == element.TEXT_NODE:
             cur_texts = [text.strip() for text in element.data.split('\n')]
             first = True

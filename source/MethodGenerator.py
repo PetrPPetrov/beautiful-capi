@@ -23,6 +23,7 @@
 import copy
 
 from Parser import TMethod, TFunction, TConstructor, TImplementationCode
+from Parser import TReturnImplementation2C, TReturnImplementationValue2C, TReturnImplementationPointer2C
 from ParamsParser import TBeautifulCapiParams
 from FileGenerator import FileGenerator, IndentScope
 from FileCache import FileCache
@@ -30,7 +31,6 @@ from ClassGenerator import ClassGenerator
 from NamespaceGenerator import NamespaceGenerator
 from ArgumentGenerator import ClassTypeGenerator, ArgumentGenerator
 from ThisArgumentGenerator import ThisArgumentGenerator
-from BuiltinTypeGenerator import BuiltinTypeGenerator
 from CapiGenerator import CapiGenerator
 from LifecycleTraits import get_base_init
 from Helpers import get_c_name, get_full_method_name
@@ -42,15 +42,32 @@ def generate_custom_implementation_code(implementation_code: TImplementationCode
     substitute_map = {}
     for argument in argument_generators:
         substitute_map.update({argument.name + '_c_2_impl': argument.c_2_implementation()})
-        substitute_map.update({argument.name + '_impl_type': argument.type_generator.snippet_implementation_declaration()})
+        substitute_map.update(
+            {argument.name + '_impl_type': argument.type_generator.snippet_implementation_declaration()})
         substitute_map.update({argument.name + '_c_type': argument.type_generator.c_argument_declaration()})
     substitute_map.update({'return_c_type': return_type_generator.c_argument_declaration()})
     substitute_map.update({'return_impl_type': return_type_generator.snippet_implementation_declaration()})
+
+    def generate_implementation_2_c(implementation_2_c) -> str:
+        expression = ''
+        for sub_line in implementation_2_c.all_items:
+            prepared_sub_line = sub_line.format_map(substitute_map)
+            expression += prepared_sub_line
+        result_lines, return_expression = return_type_generator.implementation_2_c_var('', expression)
+        return return_expression
+
     calling_instructions = []
     for line in implementation_code.all_items:
-        prepared_line = line.format_map(substitute_map)
-        if prepared_line:
-            calling_instructions.append(prepared_line)
+        if type(line) is TReturnImplementation2C:
+            calling_instructions.append(generate_implementation_2_c(line))
+        elif type(line) is TReturnImplementationValue2C:
+            calling_instructions.append(return_type_generator.value_2_c(generate_implementation_2_c(line)))
+        elif type(line) is TReturnImplementationPointer2C:
+            calling_instructions.append(return_type_generator.pointer_2_c(generate_implementation_2_c(line)))
+        else:
+            prepared_line = line.format_map(substitute_map)
+            if prepared_line:
+                calling_instructions.append(prepared_line)
     return calling_instructions
 
 

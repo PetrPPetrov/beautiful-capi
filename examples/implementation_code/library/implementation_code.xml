@@ -57,7 +57,7 @@
         <method name="Element" const="true" return="raw_pointer_semantic_extension(ElementType)">
           <argument name="index" type="size_t"/>
           <implementation_code>
-            return const_cast&lt;{return_impl_type}&gt;(&amp;self->at(index));
+            return <return_implementation_pointer_2_c>const_cast&lt;{return_impl_type}&gt;(&amp;self->at(index))</return_implementation_pointer_2_c>;
           </implementation_code>
         </method>
         <method name="SetElement">
