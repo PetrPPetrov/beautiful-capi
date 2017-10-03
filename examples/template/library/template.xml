@@ -6,7 +6,7 @@
       <instantiation>
         <argument name="WorkType" value="float"/>
       </instantiation>
-      <instantiation>
+      <instantiation typedef_name="Pos3D">
         <argument name="WorkType" value="double"/>
       </instantiation>
       <class name="Position" lifecycle="copy_semantic" implementation_class_name="Example::PositionImpl&lt;WorkType>" implementation_class_header="PositionImpl.h">
@@ -73,7 +73,7 @@
         <argument name="T" value="Example::Position&lt;float>"/>
       </instantiation>
       <instantiation>
-        <argument name="T" value="Example::Position&lt;double>"/>
+        <argument name="T" value="Example::Pos3D"/>
       </instantiation>
       <instantiation>
         <argument name="T" value="Example::Position4D&lt;float>"/>

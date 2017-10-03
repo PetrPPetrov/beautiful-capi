@@ -27,6 +27,7 @@ Version 0.4
     Added return_add_ref attribute to properties, issue #52
     Added automatic setter/getter generation for structure fields, issue #53
     Added support of raw_pointer_semantic_extension, reference_counted_semantic_extension, copy_semantic_extension, issue #54
+    Implemented ability of using template typedefs in XML description
 
 Version 0.3
     Added support of doxygen-style comment generation, issue #5

@@ -51,6 +51,9 @@ class GeneratorCreator(object):
         :param generator: Class, Namespace, Enum, MappedType, ExternalClass or ExternalNamespace generators
         """
         self.full_name_2_type_generator.update({generator.full_name.replace(' ', ''): generator})
+        if type(generator) is ClassGenerator and generator.class_object.typedef_name:
+            full_name = generator.parent_namespace.full_name + '::' + generator.class_object.typedef_name
+            self.full_name_2_type_generator.update({full_name.replace(' ', ''): generator})
 
     def __create_enum_generator(self, cur_enum: TEnumeration, parent_generator) -> EnumGenerator:
         new_enum_generator = EnumGenerator(cur_enum, parent_generator)
