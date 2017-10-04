@@ -48,26 +48,43 @@ def generate_custom_implementation_code(implementation_code: TImplementationCode
     substitute_map.update({'return_c_type': return_type_generator.c_argument_declaration()})
     substitute_map.update({'return_impl_type': return_type_generator.snippet_implementation_declaration()})
 
-    def generate_implementation_2_c(implementation_2_c) -> str:
-        expression = ''
-        for sub_line in implementation_2_c.all_items:
-            prepared_sub_line = sub_line.format_map(substitute_map)
-            expression += prepared_sub_line
-        result_lines, return_expression = return_type_generator.implementation_2_c_var('', expression)
+    def substitute_return(expression: str, start_keyword: str, end_keyword: str, func: callable) -> str:
+        result = ''
+        cur_index = 0
+        found_start_index = expression.find(start_keyword, cur_index)
+        while found_start_index != -1:
+            result += expression[cur_index:found_start_index]
+            next_index_to_find = found_start_index + len(start_keyword)
+            cur_index = next_index_to_find
+            found_end_index = expression.find(end_keyword, next_index_to_find)
+            if found_end_index != -1:
+                sub_expression = expression[found_start_index + len(start_keyword):found_end_index]
+                modified_line = func(sub_expression)
+                result += modified_line
+                cur_index = found_end_index + len(end_keyword)
+            found_start_index = expression.find(start_keyword, cur_index)
+        result += expression[cur_index:]
+        return result
+
+    def return_generic(expression: str) -> str:
+        prepared_expression = expression.format_map(substitute_map)
+        result_lines, return_expression = return_type_generator.implementation_2_c_var('', prepared_expression)
         return return_expression
+
+    def return_value(expression: str) -> str:
+        return return_type_generator.value_2_c(return_generic(expression))
+
+    def return_pointer(expression: str) -> str:
+        return return_type_generator.pointer_2_c(return_generic(expression))
 
     calling_instructions = []
     for line in implementation_code.all_items:
-        if type(line) is TReturnImplementation2C:
-            calling_instructions.append(generate_implementation_2_c(line))
-        elif type(line) is TReturnImplementationValue2C:
-            calling_instructions.append(return_type_generator.value_2_c(generate_implementation_2_c(line)))
-        elif type(line) is TReturnImplementationPointer2C:
-            calling_instructions.append(return_type_generator.pointer_2_c(generate_implementation_2_c(line)))
-        else:
-            prepared_line = line.format_map(substitute_map)
-            if prepared_line:
-                calling_instructions.append(prepared_line)
+        processed_return = substitute_return(line, '@ret@', '@', return_generic)
+        processed_return_val = substitute_return(processed_return, '@retval@', '@', return_value)
+        processed_return_ptr = substitute_return(processed_return_val, '@retptr@', '@', return_pointer)
+        prepared_line = processed_return_ptr.format_map(substitute_map)
+        if prepared_line:
+            calling_instructions.append(prepared_line)
     return calling_instructions
 
 

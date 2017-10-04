@@ -1061,29 +1061,8 @@ class TReturnImplementationPointer2C(object):
 class TImplementationCode(object):
     def __init__(self):
         self.all_items = []
-        self.return_implementation_2_cs = []
-        self.return_implementation_value_2_cs = []
-        self.return_implementation_pointer_2_cs = []
 
     def load_element(self, element):
-        if element.nodeName == "return_implementation_2_c":
-            new_element = TReturnImplementation2C()
-            new_element.load(element)
-            self.return_implementation_2_cs.append(new_element)
-            self.all_items.append(new_element)
-            return True
-        if element.nodeName == "return_implementation_value_2_c":
-            new_element = TReturnImplementationValue2C()
-            new_element.load(element)
-            self.return_implementation_value_2_cs.append(new_element)
-            self.all_items.append(new_element)
-            return True
-        if element.nodeName == "return_implementation_pointer_2_c":
-            new_element = TReturnImplementationPointer2C()
-            new_element.load(element)
-            self.return_implementation_pointer_2_cs.append(new_element)
-            self.all_items.append(new_element)
-            return True
         if element.nodeType == element.TEXT_NODE:
             cur_texts = [text.strip() for text in element.data.split('\n')]
             first = True

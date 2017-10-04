@@ -38,6 +38,17 @@ void dump(const STL::Vector<T>& vector)
     std::cout << std::endl;
 }
 
+template<typename T>
+void dump(const STL::VectorOfStructures<T>& vector)
+{
+    std::cout << "Vector has " << vector.GetSize() << " elements" << std::endl;
+    for (size_t i = 0; i < vector.GetSize(); ++i)
+    {
+        std::cout << vector.GetElement(i) << " ";
+    }
+    std::cout << std::endl;
+}
+
 void dump(const STL::Person& person)
 {
     std::cout << "==========" << std::endl;
@@ -96,6 +107,14 @@ int main()
     soccer_community.Members()->Element(1)->SetSecondName(STL::String("Johnson"));
     soccer_community.Members()->Element(1)->SetAge(29);
     dump(soccer_community);
+
+    STL::VectorOfStructures<int32_t> integers;
+    integers.PushBack(1);
+    integers.PushBack(2);
+    integers.PushBack(2);
+    dump(integers);
+    *integers.Element(2) = 3;
+    dump(integers);
 
     return EXIT_SUCCESS;
 }

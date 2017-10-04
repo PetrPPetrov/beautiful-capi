@@ -145,8 +145,17 @@ class GeneratorCreator(object):
                             result_type = class_generator.parent_namespace.full_name + '::' + lifecycle_extension.name
                             break
             if not result_type:
-                raise BeautifulCapiException(
-                    'could not find semantic extension "{0}" for {1} class'.format(operator_name, argument_type))
+                is_pointer = argument_type[-1] == '*'
+                if semantic_type == TLifecycle.copy_semantic:
+                    if is_pointer:
+                        result_type = argument_type[:-1]
+                    else:
+                        result_type = argument_type
+                else:
+                    if not is_pointer:
+                        result_type = argument_type + '*'
+                    else:
+                        result_type = argument_type
             begin_str = type_name[:found_start_index]
             end_str = type_name[found_end_index + 1:]
             type_name = begin_str + result_type + end_str
@@ -165,6 +174,7 @@ class GeneratorCreator(object):
     def __create_type_generator(self, type_name: str, is_builtin: bool) -> BaseTypeGenerator:
         name = type_name.replace(' ', '')
         name = self.__apply_semantic_operators(name)
+        type_name = self.__apply_semantic_operators(type_name)
         if name in self.full_name_2_type_generator:
             type_generator = self.full_name_2_type_generator[name]
             if type(type_generator) is ClassGenerator:

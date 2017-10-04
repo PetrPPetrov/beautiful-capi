@@ -1885,58 +1885,6 @@ Specifies conversion of return type from the implementation pointer type to retu
 
 Specifies C++ code line to perform implementation calls.
 
-<table>
-  <caption>TImplementationCode, list of elements</caption>
-  <tr>
-    <td> Element </td>
-    <td> Multiplicity </td>
-    <td> Type </td>
-    <td> Description </td>
-  </tr>
-  <tr>
-    <td>
-      return_implementation_2_c
-    </td>
-    <td>
-      0..unbounded
-    </td>
-    <td>
-      <a href="#treturnimplementation2c">TReturnImplementation2C</a>
-    </td>
-    <td>
-      Specifies conversion of return value from the implementation type to return C glue layer type
-    </td>
-  </tr>
-  <tr>
-    <td>
-      return_implementation_value_2_c
-    </td>
-    <td>
-      0..unbounded
-    </td>
-    <td>
-      <a href="#treturnimplementationvalue2c">TReturnImplementationValue2C</a>
-    </td>
-    <td>
-      Specifies conversion of return value from the implementation type to return C glue layer type
-    </td>
-  </tr>
-  <tr>
-    <td>
-      return_implementation_pointer_2_c
-    </td>
-    <td>
-      0..unbounded
-    </td>
-    <td>
-      <a href="#treturnimplementationpointer2c">TReturnImplementationPointer2C</a>
-    </td>
-    <td>
-      Specifies conversion of return type from the implementation pointer type to return C glue layer type
-    </td>
-  </tr>
-</table>
-
 ### TMethodBase
 
 Specifies base properties for methods or functions.
