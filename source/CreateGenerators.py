@@ -51,9 +51,9 @@ class GeneratorCreator(object):
         :param generator: Class, Namespace, Enum, MappedType, ExternalClass or ExternalNamespace generators
         """
         self.full_name_2_type_generator.update({generator.full_name.replace(' ', ''): generator})
-        if type(generator) is ClassGenerator:
+        if type(generator) is ClassGenerator and generator.class_object.typedef_name:
             # If the current generator class has typedef name and this class is not a lifecycle extension
-            if generator.class_object.typedef_name and not generator.class_object.extension_base_class_name:
+            if not hasattr(generator.class_object, 'extension_base_class_generator'):
                 full_name = generator.parent_namespace.full_name + '::' + generator.class_object.typedef_name
                 self.full_name_2_type_generator.update({full_name.replace(' ', ''): generator})
 
