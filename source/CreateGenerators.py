@@ -145,6 +145,7 @@ class GeneratorCreator(object):
                     for lifecycle_extension in class_generator.class_object.lifecycle_extensions:
                         if lifecycle_extension.lifecycle == semantic_type:
                             result_type = class_generator.parent_namespace.full_name + '::' + lifecycle_extension.name
+                            result_type = result_type.replace(' ', '')
                             break
             if not result_type:
                 is_pointer = argument_type[-1] == '*'

@@ -92,12 +92,17 @@ class ClassGenerator(object):
     @property
     def wrap_name(self) -> str:
         if self.class_object.wrap_name_filled:
-            return self.class_object.wrap_name.format(
+            base_name = self.class_object.wrap_name.format(
                 class_name=self.class_object.name,
                 wrap_suffix=self.lifecycle_traits.suffix
             )
+            if self.is_template:
+                self.__create_wrap_template_name(get_template_name(base_name))
+                return self.cached_wrap_template_name
+            else:
+                return base_name
         if self.is_template:
-            self.__create_wrap_template_name()
+            self.__create_wrap_template_name(get_template_name(self.name) + self.lifecycle_traits.suffix)
             return self.cached_wrap_template_name
         else:
             return self.name + self.lifecycle_traits.suffix
@@ -189,9 +194,8 @@ class ClassGenerator(object):
     def get_raw_pointer_method_name(self) -> str:
         return self.params.get_raw_pointer_method_name
 
-    def __create_wrap_template_name(self):
+    def __create_wrap_template_name(self, name_prefix: str):
         if not self.cached_wrap_template_name:
-            name_prefix = get_template_name(self.name) + self.lifecycle_traits.suffix
             template_arguments = [t_arg.wrap_return_type() for t_arg in self.template_argument_generators]
             raw_name = '{name}<{template_arguments}>'.format(
                 name=name_prefix, template_arguments=', '.join(template_arguments)
