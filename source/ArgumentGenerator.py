@@ -345,7 +345,7 @@ class EnumTypeGenerator(BaseTypeGenerator):
         file_generator.include_user_header(header_to_include)
 
     def include_dependent_definition_headers(self, file_generator: FileGenerator, file_cache: FileCache):
-        pass
+        self.include_dependent_declaration_headers(file_generator, file_cache)
 
 
 class ArgumentGenerator(object):
