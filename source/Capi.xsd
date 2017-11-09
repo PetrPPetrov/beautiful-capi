@@ -256,6 +256,11 @@
         <xs:documentation>Specifies path to another Beautiful Capi params XML file, it can be absolute or relative path to .xml file</xs:documentation>
       </xs:annotation>
     </xs:attribute>
+    <xs:attribute name="lib_main_header" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>Specifies path to main header of an external library</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
   </xs:complexType>
   <xs:complexType name="TApiInclude">
     <xs:annotation>

@@ -63,6 +63,7 @@ class Capi(object):
         self.api_description = None
         self.params_description = None
         self.unit_tests_file = unit_tests_file
+        self.external_libs_headers = []
         if clean:
             if os.path.exists(self.output_folder):
                 shutil.rmtree(self.output_folder)
@@ -156,15 +157,23 @@ class Capi(object):
             cur_class.implementation_class_name = format_type(cur_class.implementation_class_name)
 
     def __load_external(self, namespace):
-        input_xml = os.path.realpath(self.input_xml)
+        input_xml_folder = os.path.split(os.path.realpath(self.input_xml))[0]
         for external_lib in namespace.external_libraries:
-            external_xml = full_relative_path(external_lib.input_xml_file, os.path.split(input_xml)[0])
-            external_params = full_relative_path(external_lib.params_xml_file, os.path.split(input_xml)[0])
+            external_xml = full_relative_path(external_lib.input_xml_file, input_xml_folder)
+            external_params = full_relative_path(external_lib.params_xml_file, input_xml_folder)
             new_capi = Capi(external_xml, external_params, None, None, None, None, None, None)
             new_capi.params_description = load(new_capi.input_params)
             new_params = new_capi.params_description
             new_capi.api_description = parse_root(new_capi.input_xml)
             new_capi.__substitute_project_name(new_capi.params_description)
+            # set the path relative to the wrap file
+            # if external_lib.lib_main_header:
+            #     wrap_folder = os.path.split(self.output_wrap_file_name)[0]
+            #     abs_header_path = external_lib.lib_main_header if os.path.isabs(external_lib.lib_main_header) \
+            #         else os.path.join(input_xml_folder, external_lib.lib_main_header)
+            #     self.external_libs_headers.append(os.path.relpath(abs_header_path, wrap_folder))
+            if external_lib.lib_main_header:
+                self.external_libs_headers.append(external_lib.lib_main_header)
 
             def process_external_namespaces(namespaces: [object], external_namespaces: [object]):
                 for cur_namespace in namespaces:
@@ -218,6 +227,8 @@ class Capi(object):
         file_cache = FileCache(self.params_description)
         for namespace_generator in namespace_generators:
             namespace_generator.generate(file_cache, capi_generator)
+        for header_path in self.external_libs_headers:
+            capi_generator.additional_includes.include_user_header(header_path)
         capi_generator.generate(file_cache)
         self.__generate_root_header(namespace_generators, file_cache)
 

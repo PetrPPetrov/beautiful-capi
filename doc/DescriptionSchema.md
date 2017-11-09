@@ -721,6 +721,23 @@ Specifies a 3rd party library which also uses Beautiful Capi. The classes from s
       <i>empty string</i>
     </td>
   </tr>
+  <tr>
+    <td>
+      lib_main_header
+    </td>
+    <td>
+      xs:string
+    </td>
+    <td>
+      optional
+    </td>
+    <td>
+      Specifies path to main header of an external library
+    </td>
+    <td>
+      <i>empty string</i>
+    </td>
+  </tr>
 </table>
 
 ### TApiInclude
