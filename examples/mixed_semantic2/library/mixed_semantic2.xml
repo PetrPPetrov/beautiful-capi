@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <mixed_semantic2:api xmlns:mixed_semantic2="http://gkmsoft.ru/beautifulcapi" project_name="MixedSemantic2" >
   <namespace name="MixedSemantic2" overload_suffix_mode="Silent">
-	<class name="AbstractClass" lifecycle="copy_semantic" implementation_class_name="MixedSemantic2::AbstractClassImpl" implementation_class_header="AbstractClassImpl.h">
-		<lifecycle_extension name="AbstractClassRawPtr" wrap_name="AbstractClassRawPtr" lifecycle="raw_pointer_semantic">
-			 <cast_to target_type="MixedSemantic2::NameRawPtr" />
-			<cast_from source_type="MixedSemantic2::NameRawPtr" />
-		</lifecycle_extension>
-	</class>
-    <class name="Name" lifecycle="copy_semantic" implementation_class_name="MixedSemantic2::NameImpl" implementation_class_header="NameImpl.h" base="MixedSemantic2::AbstractClass">
+  <class name="BaseClass" lifecycle="copy_semantic" implementation_class_name="MixedSemantic2::BaseClassImpl" implementation_class_header="BaseClassImpl.h">
+    <constructor name="Default"/>
+    <lifecycle_extension name="BaseClassRawPtr" wrap_name="BaseClassRawPtr" lifecycle="raw_pointer_semantic">
+      <cast_to target_type="MixedSemantic2::BaseClass" />
+      <cast_from source_type="MixedSemantic2::BaseClass" />
+    </lifecycle_extension>
+  </class>
+    <class name="Name" lifecycle="copy_semantic" implementation_class_name="MixedSemantic2::NameImpl" implementation_class_header="NameImpl.h" base="MixedSemantic2::BaseClass">
       <constructor name="FullName">
         <argument name="FirstName" type="const char*"/>
         <argument name="FatherName" type="const char*"/>

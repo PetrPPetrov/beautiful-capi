@@ -27,9 +27,9 @@
 
 namespace MixedSemantic2
 {
-    class AbstractClassImpl
+    class BaseClassImpl
     {
-	};
+    };
 }
 
 #endif /* BEAUTIFUL_CAPI_MIXED_SEMANTIC2_ABSTRACT_CLASS_H */

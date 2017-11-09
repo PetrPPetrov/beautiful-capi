@@ -25,11 +25,11 @@
 #include <iostream>
 #include <string>
 #include <sstream>
-#include "AbstractClassImpl.h"
+#include "BaseClassImpl.h"
 
 namespace MixedSemantic2
 {
-    class NameImpl : public AbstractClassImpl
+    class NameImpl : public BaseClassImpl
     {
         std::string mFirstName;
         std::string mFatherName;        
@@ -41,7 +41,7 @@ namespace MixedSemantic2
                 result_string = value;
         }
     public:
-        NameImpl(const char* first_name, const char* father_name, const char* last_name) 
+        NameImpl(const char* first_name, const char* father_name, const char* last_name)
         {
             init_from_char(first_name, mFirstName);
             init_from_char(father_name, mFatherName);
