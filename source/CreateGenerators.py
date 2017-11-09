@@ -330,6 +330,16 @@ class GeneratorCreator(object):
             for index, cast_from in enumerate(class_generator.class_object.lifecycle_extension.cast_froms):
                 result_cast_from = class_generator.class_object.lifecycle_extension.cast_froms[index]
                 result_cast_from.source_generator = name_to_class_generator(cast_from.source_type, 'source')
+            if class_generator.base_class_generator:
+                base = class_generator.base_class_generator.class_object
+                class_lifecycle = class_generator.class_object.lifecycle
+                lifecycle_extensions = [ext for ext in base.lifecycle_extensions if class_lifecycle == ext.lifecycle]
+                if base and lifecycle_extensions:
+                    extension_name = "{namespace}::{base_class}".format(
+                        namespace=class_generator.base_class_generator.parent_namespace.full_name,
+                        base_class=lifecycle_extensions[0].name
+                    )
+                    class_generator.class_object.base = extension_name
         self.__replace_template_implementation_class(class_generator)
         self.scope_stack.pop()
 

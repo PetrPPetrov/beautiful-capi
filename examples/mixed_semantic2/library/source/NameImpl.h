@@ -25,10 +25,11 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include "AbstractClassImpl.h"
 
 namespace MixedSemantic2
 {
-    class NameImpl
+    class NameImpl : public AbstractClassImpl
     {
         std::string mFirstName;
         std::string mFatherName;        
