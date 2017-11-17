@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<api_include:api xmlns:api_include="http://gkmsoft.ru/beautifulcapi" project_name="ApiInclude" >
+  <namespace name="ApiInclude" overload_suffix_mode="Silent">
+    <include path="../Included/included.xml" use_content_without_root_namespaces="true"/>
+    <namespace name="ExistingNS">
+      <function name="SayHello" return="void" implementation_name="ApiInclude::ExistingNS::SayHello" implementation_header="IncludedImpl.h"/>
+    </namespace>
+    <class name="ExistingClass" lifecycle="copy_semantic" implementation_class_name="ApiInclude::ExistingClassImpl" implementation_class_header="ExistingImpl.h">
+      <constructor name="Default"/>
+      <method name="SayHello" return="void"/>
+    </class>
+    <function name="ExistingFunc" return="void" implementation_name="ApiInclude::ExistingFunc" implementation_header="ExistingImpl.h"/>
+  </namespace>
+</api_include:api>

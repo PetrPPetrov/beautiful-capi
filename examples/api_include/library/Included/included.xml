@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<included:api xmlns:included="http://gkmsoft.ru/beautifulcapi" project_name="Included" >
+  <namespace name="Included" overload_suffix_mode="Silent">
+    <class name="Printer" lifecycle="copy_semantic" implementation_class_name="Included::PrinterImpl" implementation_class_header="IncludedImpl.h">
+      <constructor name="Default"/>
+      <method name="SayHello" return="void"/>
+    </class>
+    <function name="SayHello" return="void" implementation_name="Included::SayHello" implementation_header="IncludedImpl.h"/>
+
+    <namespace name="ExistingNS">
+      <function name="SayHello" return="void" implementation_name="Included::ExistingNS::SayHello" implementation_header="IncludedImpl.h"/>
+    </namespace>
+    <class name="ExistingClass" lifecycle="copy_semantic" implementation_class_name="Included::ExistingClassImpl" implementation_class_header="IncludedImpl.h">
+      <constructor name="Default"/>
+      <method name="SayHello" return="void"/>
+    </class>
+    <function name="ExistingFunc" return="void" implementation_name="Included::ExistingFunc" implementation_header="IncludedImpl.h"/>
+  </namespace>
+</included:api>

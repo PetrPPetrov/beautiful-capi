@@ -22,6 +22,7 @@ project(examples)
 
 cmake_minimum_required(VERSION 2.8)
 
+add_subdirectory(api_include)
 add_subdirectory(boost_shared_ptr)
 add_subdirectory(callback)
 add_subdirectory(circular_reference)
