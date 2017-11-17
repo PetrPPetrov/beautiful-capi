@@ -31,7 +31,6 @@ def get_all_namespaces(root_namespaces: list):
         result += get_all_namespaces(namespace.namespaces)
     return result
 
-
 def parse_root(root_api_xml_path: str):
     root_api = load(dom_parse(root_api_xml_path))
     namespaces = get_all_namespaces(root_api.namespaces)
@@ -42,15 +41,29 @@ def parse_root(root_api_xml_path: str):
             path = os.path.normpath(os.path.join(cur_dir, include.path))
             if os.path.exists(path):
                 sub_api = parse_root(path)
-                used_names = [ns.name for ns in namespace.namespaces]
-                for sub_namespace in sub_api.namespaces:
-                    sub_name = sub_namespace.name
-                    if sub_name in used_names:
-                        print("WARNING: {path} namespace {root} already contains {sub} namespace; "
-                              "skipping import from {include}".format(
-                                root=namespace.name, sub=sub_name, path=root_api_xml_path, include=path
-                        ))
-                    else:
-                        namespace.namespaces.append(sub_namespace)
-                        used_names.append(sub_name)
+
+                def update_attr(source, destination, attr_name: str):
+                    if hasattr(source, attr_name) and hasattr(destination, attr_name):
+                        dst_attr = getattr(destination, attr_name)
+                        used_names = [element.name for element in dst_attr]
+                        src_attr = getattr(source, attr_name)
+                        for sub_element in src_attr:
+                            sub_name = sub_element.name
+                            if sub_name in used_names:
+                                print("WARNING: {path} namespace {root} already contains {sub}; "
+                                      "skipping import from {include}".format(
+                                    root=destination.name, sub=sub_name, path=root_api_xml_path, include=path
+                                ))
+                            else:
+                                dst_attr.append(sub_element)
+                                used_names.append(sub_name)
+
+                if include.use_content_without_root_namespaces:
+                    for sub_api_nested_ns in sub_api.namespaces:
+                        update_attr(sub_api_nested_ns, namespace, 'namespaces')
+                        update_attr(sub_api_nested_ns, namespace, 'classes')
+                        update_attr(sub_api_nested_ns, namespace, 'functions')
+                else:
+                    update_attr(sub_api, namespace, 'namespaces')
+
     return root_api

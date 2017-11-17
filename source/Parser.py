@@ -483,6 +483,8 @@ class TApiInclude(object):
         self.all_items = []
         self.path = ""
         self.path_filled = False
+        self.use_content_without_root_namespaces = False
+        self.use_content_without_root_namespaces_filled = False
 
     def load_element(self, element):
         return False
@@ -492,6 +494,10 @@ class TApiInclude(object):
             cur_attr = dom_node.getAttribute("path")
             self.path = cur_attr
             self.path_filled = True
+        if dom_node.hasAttribute("use_content_without_root_namespaces"):
+            cur_attr = dom_node.getAttribute("use_content_without_root_namespaces")
+            self.use_content_without_root_namespaces = string_to_bool(cur_attr)
+            self.use_content_without_root_namespaces_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:

@@ -58,7 +58,7 @@
             <xs:documentation>Specifies an external library</xs:documentation>
           </xs:annotation>
         </xs:element>
-        <xs:element name="include" type="TApiInclude">
+        <xs:element name="include" maxOccurs="unbounded" minOccurs="0" type="TApiInclude">
           <xs:annotation>
             <xs:documentation>Includes another XML API description file</xs:documentation>
           </xs:annotation>
@@ -269,6 +269,11 @@
     <xs:attribute name="path" type="xs:string" use="required">
       <xs:annotation>
         <xs:documentation>Specifies path to another Beautiful Capi XML API description file, it can be absolute or relative path to .xml file</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="use_content_without_root_namespaces" type="xs:boolean" default="false" use="optional">
+       <xs:annotation>
+        <xs:documentation>Add classes and functions from root namespaces instead of using namespaces. This can be useful when using files with parts of namespaces shared between different projects</xs:documentation>
       </xs:annotation>
     </xs:attribute>
   </xs:complexType>
