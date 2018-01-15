@@ -170,7 +170,9 @@ class Capi(object):
             new_capi.api_description = parse_root(new_capi.input_xml, new_params)
             new_capi.__substitute_project_name(new_capi.params_description)
             if external_lib.main_header:
-                self.external_libs_headers.append(external_lib.main_header)
+                for define in external_lib.defines:
+                    self.external_libs_headers.append(('define', define.value))
+                self.external_libs_headers.append(('include', external_lib.main_header))
             print('loaded external library: {0}'.format(external_xml))
 
             def process_external_namespaces(namespaces: [object], external_namespaces: [object]):
@@ -225,8 +227,12 @@ class Capi(object):
         file_cache = FileCache(self.params_description)
         for namespace_generator in namespace_generators:
             namespace_generator.generate(file_cache, capi_generator)
-        for header_path in self.external_libs_headers:
-            capi_generator.additional_includes.include_user_header(header_path)
+        for command, value in self.external_libs_headers:
+            if command == 'include':
+                capi_generator.additional_includes.include_user_header(value)
+            elif command == 'define':
+                capi_generator.additional_defines.put_line('#define {0}'.format(value))
+
         capi_generator.generate(file_cache)
         self.__generate_root_header(namespace_generators, file_cache)
 

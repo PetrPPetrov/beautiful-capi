@@ -740,6 +740,30 @@ Specifies a 3rd party library which also uses Beautiful Capi. The classes from s
   </tr>
 </table>
 
+<table>
+  <caption>TExternalLibrary, list of elements</caption>
+  <tr>
+    <td> Element </td>
+    <td> Multiplicity </td>
+    <td> Type </td>
+    <td> Description </td>
+  </tr>
+  <tr>
+    <td>
+      define
+    </td>
+    <td>
+      0..unbounded
+    </td>
+    <td>
+      <a href="#tdefine">TDefine</a>
+    </td>
+    <td>
+      Specifies preprocessor definition before inclusion of the 3rd party library header
+    </td>
+  </tr>
+</table>
+
 ### TApiInclude
 
 Includes another XML API description file. The content of the included XML API description file is inserted as is to the current XML file.
@@ -2525,6 +2549,38 @@ Specifies to include a particular C or C++ header to the generated files on the 
     </td>
     <td>
       false
+    </td>
+  </tr>
+</table>
+
+### TDefine
+
+Specifies preprocessor definition.
+
+<table>
+  <caption>TDefine, list of attributes</caption>
+  <tr>
+    <td> Attribute </td>
+    <td> Type </td>
+    <td> Use </td>
+    <td> Description </td>
+    <td> Default </td>
+  </tr>
+  <tr>
+    <td>
+      value
+    </td>
+    <td>
+      xs:string
+    </td>
+    <td>
+      required
+    </td>
+    <td>
+      Specifies preprocessor definition
+    </td>
+    <td>
+      <i>empty string</i>
     </td>
   </tr>
 </table>

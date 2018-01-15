@@ -246,6 +246,13 @@
     <xs:annotation>
       <xs:documentation>Specifies a 3rd party library which also uses Beautiful Capi. The classes from such library could be used as arguments in the current library API.</xs:documentation>
     </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="define" type="TDefine">
+        <xs:annotation>
+          <xs:documentation>Specifies preprocessor definition before inclusion of the 3rd party library header</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
     <xs:attribute name="input_xml_file" type="xs:string" use="required">
       <xs:annotation>
         <xs:documentation>Specifies path to another Beautiful Capi XML API description file, it can be absolute or relative path to .xml file</xs:documentation>
@@ -892,6 +899,16 @@
       </xs:annotation>
     </xs:attribute>
   </xs:complexType>
+  <xs:complexType name="TDefine">
+    <xs:annotation>
+      <xs:documentation>Specifies preprocessor definition.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="value" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Specifies preprocessor definition</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>TDefine
   <xs:complexType name="TProperty">
     <xs:annotation>
       <xs:documentation>Specifies property for the current class. Each property will be translated into two methods: getter method and setter method.</xs:documentation>

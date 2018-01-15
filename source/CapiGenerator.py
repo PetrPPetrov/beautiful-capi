@@ -69,6 +69,7 @@ class CapiGenerator(object):
         self.namespace_name_2_info = {}
         self.main_exception_traits = main_exception_traits
         self.no_handling_exception_traits = no_handling_exception_traits
+        self.additional_defines = FileGenerator(None)
         self.additional_includes = FileGenerator(None)
         self.additional_includes.put_include_files()
         self.additional_includes.include_system_header('stdexcept')
@@ -406,6 +407,7 @@ class CapiGenerator(object):
 
         output_capi_impl = FileGenerator(self.params.output_wrap_file_name)
         output_capi_impl.put_begin_cpp_comments(self.params)
+        output_capi_impl.put_file(self.additional_defines)
         output_capi_impl.put_file(self.additional_includes)
         self.main_exception_traits.generate_exception_info(output_capi_impl)
 

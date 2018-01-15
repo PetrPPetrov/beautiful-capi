@@ -454,8 +454,14 @@ class TExternalLibrary(object):
         self.params_xml_file_filled = False
         self.main_header = ""
         self.main_header_filled = False
+        self.defines = []
 
     def load_element(self, element):
+        if element.nodeName == "define":
+            new_element = TDefine()
+            new_element.load(element)
+            self.defines.append(new_element)
+            return True
         return False
 
     def load_attributes(self, dom_node):
@@ -1386,6 +1392,27 @@ class THeaderInclude(object):
             cur_attr = dom_node.getAttribute("system")
             self.system = string_to_bool(cur_attr)
             self.system_filled = True
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
+
+class TDefine(object):
+    def __init__(self):
+        self.all_items = []
+        self.value = ""
+        self.value_filled = False
+
+    def load_element(self, element):
+        return False
+
+    def load_attributes(self, dom_node):
+        if dom_node.hasAttribute("value"):
+            cur_attr = dom_node.getAttribute("value")
+            self.value = cur_attr
+            self.value_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:
