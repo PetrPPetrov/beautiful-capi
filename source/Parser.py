@@ -452,8 +452,8 @@ class TExternalLibrary(object):
         self.input_xml_file_filled = False
         self.params_xml_file = ""
         self.params_xml_file_filled = False
-        self.lib_main_header = ""
-        self.lib_main_header_filled = False
+        self.main_header = ""
+        self.main_header_filled = False
 
     def load_element(self, element):
         return False
@@ -467,10 +467,10 @@ class TExternalLibrary(object):
             cur_attr = dom_node.getAttribute("params_xml_file")
             self.params_xml_file = cur_attr
             self.params_xml_file_filled = True
-        if dom_node.hasAttribute("lib_main_header"):
-            cur_attr = dom_node.getAttribute("lib_main_header")
-            self.lib_main_header = cur_attr
-            self.lib_main_header_filled = True
+        if dom_node.hasAttribute("main_header"):
+            cur_attr = dom_node.getAttribute("main_header")
+            self.main_header = cur_attr
+            self.main_header_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:

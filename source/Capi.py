@@ -169,8 +169,8 @@ class Capi(object):
             new_params = new_capi.params_description
             new_capi.api_description = parse_root(new_capi.input_xml, new_params)
             new_capi.__substitute_project_name(new_capi.params_description)
-            if external_lib.lib_main_header:
-                self.external_libs_headers.append(external_lib.lib_main_header)
+            if external_lib.main_header:
+                self.external_libs_headers.append(external_lib.main_header)
             print('loaded external library: {0}'.format(external_xml))
 
             def process_external_namespaces(namespaces: [object], external_namespaces: [object]):

@@ -723,7 +723,7 @@ Specifies a 3rd party library which also uses Beautiful Capi. The classes from s
   </tr>
   <tr>
     <td>
-      lib_main_header
+      main_header
     </td>
     <td>
       xs:string
@@ -768,6 +768,23 @@ Includes another XML API description file. The content of the included XML API d
     </td>
     <td>
       <i>empty string</i>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      use_content_without_root_namespaces
+    </td>
+    <td>
+      xs:boolean
+    </td>
+    <td>
+      optional
+    </td>
+    <td>
+      Add classes and functions from root namespaces instead of using namespaces. This can be useful when using files with parts of namespaces shared between different projects
+    </td>
+    <td>
+      false
     </td>
   </tr>
 </table>
