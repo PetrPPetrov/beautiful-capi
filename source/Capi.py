@@ -28,7 +28,7 @@ from xml.dom.minidom import parse
 import ExceptionTraits
 from Helpers import BeautifulCapiException, format_type
 from CreateGenerators import create_namespace_generators
-from FileCache import FileCache, full_relative_path
+from FileCache import FileCache, full_relative_path_from_candidates
 from CapiGenerator import CapiGenerator
 from FileGenerator import FileGenerator, Indent, IndentScope, Unindent, WatchdogScope, IfDefScope
 from Templates import process as process_templates
@@ -159,21 +159,19 @@ class Capi(object):
     def __load_external(self, namespace):
         input_xml_folder = os.path.split(os.path.realpath(self.input_xml))[0]
         for external_lib in namespace.external_libraries:
-            external_xml = full_relative_path(external_lib.input_xml_file, input_xml_folder)
-            external_params = full_relative_path(external_lib.params_xml_file, input_xml_folder)
+            external_xml = full_relative_path_from_candidates(
+                external_lib.input_xml_file, input_xml_folder, self.params_description.additional_include_directories)
+            print('loading external library: {0}'.format(external_xml))
+            external_params = full_relative_path_from_candidates(
+                external_lib.params_xml_file, input_xml_folder, self.params_description.additional_include_directories)
             new_capi = Capi(external_xml, external_params, None, None, None, None, None, None)
             new_capi.params_description = load(new_capi.input_params)
             new_params = new_capi.params_description
-            new_capi.api_description = parse_root(new_capi.input_xml)
+            new_capi.api_description = parse_root(new_capi.input_xml, new_params)
             new_capi.__substitute_project_name(new_capi.params_description)
-            # set the path relative to the wrap file
-            # if external_lib.lib_main_header:
-            #     wrap_folder = os.path.split(self.output_wrap_file_name)[0]
-            #     abs_header_path = external_lib.lib_main_header if os.path.isabs(external_lib.lib_main_header) \
-            #         else os.path.join(input_xml_folder, external_lib.lib_main_header)
-            #     self.external_libs_headers.append(os.path.relpath(abs_header_path, wrap_folder))
             if external_lib.lib_main_header:
                 self.external_libs_headers.append(external_lib.lib_main_header)
+            print('loaded external library: {0}'.format(external_xml))
 
             def process_external_namespaces(namespaces: [object], external_namespaces: [object]):
                 for cur_namespace in namespaces:
@@ -241,7 +239,7 @@ class Capi(object):
         self.params_description.internal_snippets_folder = self.internal_snippets_folder
         self.params_description.api_keys_folder = self.api_keys_folder
         self.params_description.output_wrap_file_name = self.output_wrap_file_name
-        self.api_description = parse_root(self.input_xml)
+        self.api_description = parse_root(self.input_xml, self.params_description)
         self.__substitute_project_name(self.params_description)
 
         if self.unit_tests_file:
@@ -307,6 +305,7 @@ def main():
         args.unit_tests_file
     )
     capi.generate()
+
 
 if __name__ == '__main__':
     main()

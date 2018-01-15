@@ -37,6 +37,11 @@
           <xs:documentation>Specifies text to insert in the generated files to inform that file was automatically generated</xs:documentation>
         </xs:annotation>
       </xs:element>
+      <xs:element name="additional_include_directory" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Specifies additional directory to use in the search directory list</xs:documentation>
+        </xs:annotation>
+      </xs:element>
     </xs:sequence>
     <xs:attribute name="namespace_header_at_parent_folder" type="xs:boolean" use="optional" default="true">
       <xs:annotation>

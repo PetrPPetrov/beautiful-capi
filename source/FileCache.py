@@ -186,5 +186,18 @@ class FileCache(object):
         return self.params.check_and_throw_exception_filename
 
 
-def full_relative_path(path: str, start=os.curdir) -> str:
-    return os.path.realpath(os.path.join(start, path))
+def full_relative_path_from_candidates(path: str, start=os.curdir, additional_directories: [str]=[]) -> str:
+    candidate_list = [os.path.normpath(os.path.join(start, path))]
+    for additional_directory in additional_directories:
+        candidate_path = ''
+        if not os.path.isabs(additional_directory):
+            candidate_path = start
+        candidate_path = os.path.join(candidate_path, additional_directory, path)
+        candidate_list.append(os.path.normpath(candidate_path))
+
+    for path in candidate_list:
+        # print('probing {0} path'.format(path))
+        if os.path.exists(path):
+            # print('selected {0} path'.format(path))
+            return path
+    return candidate_list[0]

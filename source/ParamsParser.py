@@ -53,14 +53,6 @@ class TExceptionHandlingMode(Enum):
 class TBeautifulCapiParams(object):
     def __init__(self):
         self.all_items = []
-        self.output_folder = ""
-        self.output_folder_filled = False
-        self.output_wrap_file_name = ""
-        self.output_wrap_file_name_filled = False
-        self.internal_snippets_folder = ""
-        self.internal_snippets_folder_filled = False
-        self.api_keys_folder = ""
-        self.api_keys_folder_filled = False
         self.namespace_header_at_parent_folder = True
         self.namespace_header_at_parent_folder_filled = False
         self.capi_header_suffix = "Capi"
@@ -129,8 +121,17 @@ class TBeautifulCapiParams(object):
         self.shared_library_name_filled = False
         self.doxygen_class_pattern = ""
         self.doxygen_class_pattern_filled = False
+        self.output_folder = ""
+        self.output_folder_filled = False
+        self.output_wrap_file_name = ""
+        self.output_wrap_file_name_filled = False
+        self.internal_snippets_folder = ""
+        self.internal_snippets_folder_filled = False
+        self.api_keys_folder = ""
+        self.api_keys_folder_filled = False
         self.copyright_headers = []
         self.automatic_generated_warnings = []
+        self.additional_include_directories = []
 
     def load_element(self, element):
         if element.nodeName == "copyright_header":
@@ -145,25 +146,15 @@ class TBeautifulCapiParams(object):
                 new_element += text.nodeValue
             self.automatic_generated_warnings.append(new_element)
             return True
+        if element.nodeName == "additional_include_directory":
+            new_element = ""
+            for text in [text for text in element.childNodes if text.nodeType == text.TEXT_NODE]:
+                new_element += text.nodeValue
+            self.additional_include_directories.append(new_element)
+            return True
         return False
 
     def load_attributes(self, dom_node):
-        if dom_node.hasAttribute("output_folder"):
-            cur_attr = dom_node.getAttribute("output_folder")
-            self.output_folder = cur_attr
-            self.output_folder_filled = True
-        if dom_node.hasAttribute("output_wrap_file_name"):
-            cur_attr = dom_node.getAttribute("output_wrap_file_name")
-            self.output_wrap_file_name = cur_attr
-            self.output_wrap_file_name_filled = True
-        if dom_node.hasAttribute("internal_snippets_folder"):
-            cur_attr = dom_node.getAttribute("internal_snippets_folder")
-            self.internal_snippets_folder = cur_attr
-            self.internal_snippets_folder_filled = True
-        if dom_node.hasAttribute("api_keys_folder"):
-            cur_attr = dom_node.getAttribute("api_keys_folder")
-            self.api_keys_folder = cur_attr
-            self.api_keys_folder_filled = True
         if dom_node.hasAttribute("namespace_header_at_parent_folder"):
             cur_attr = dom_node.getAttribute("namespace_header_at_parent_folder")
             self.namespace_header_at_parent_folder = string_to_bool(cur_attr)
@@ -300,6 +291,22 @@ class TBeautifulCapiParams(object):
             cur_attr = dom_node.getAttribute("doxygen_class_pattern")
             self.doxygen_class_pattern = cur_attr
             self.doxygen_class_pattern_filled = True
+        if dom_node.hasAttribute("output_folder"):
+            cur_attr = dom_node.getAttribute("output_folder")
+            self.output_folder = cur_attr
+            self.output_folder_filled = True
+        if dom_node.hasAttribute("output_wrap_file_name"):
+            cur_attr = dom_node.getAttribute("output_wrap_file_name")
+            self.output_wrap_file_name = cur_attr
+            self.output_wrap_file_name_filled = True
+        if dom_node.hasAttribute("internal_snippets_folder"):
+            cur_attr = dom_node.getAttribute("internal_snippets_folder")
+            self.internal_snippets_folder = cur_attr
+            self.internal_snippets_folder_filled = True
+        if dom_node.hasAttribute("api_keys_folder"):
+            cur_attr = dom_node.getAttribute("api_keys_folder")
+            self.api_keys_folder = cur_attr
+            self.api_keys_folder_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:

@@ -699,6 +699,20 @@ Specifies various generation parameters.
       Specifies text to insert in the generated files to inform that file was automatically generated
     </td>
   </tr>
+  <tr>
+    <td>
+      additional_include_directory
+    </td>
+    <td>
+      0..unbounded
+    </td>
+    <td>
+      xs:string
+    </td>
+    <td>
+      Specifies additional directory to use in the search directory list
+    </td>
+  </tr>
 </table>
 
 ### TExceptionHandlingMode
