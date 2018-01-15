@@ -114,19 +114,19 @@ class ByFirstArgument(object):
             out.put_line('')
             out.put_line('enum {0}'.format(self.__exception_code_t()))
             with IndentScope(out, '};'):
-                out.put_line('no_exception = 0,')
-                out.put_line('unknown_exception = 1,')
+                out.put_line(self.params.beautiful_capi_namespace.lower() + '_no_exception = 0,')
+                out.put_line(self.params.beautiful_capi_namespace.lower() + '_unknown_exception = 1,')
                 code_to_exception = [[exception_class.exception_code, exception_class] for exception_class
                                      in self.exception_classes]
                 if code_to_exception:
-                    out.put_line('copy_exception_error = 2,')
+                    out.put_line(self.params.beautiful_capi_namespace.lower() + '_copy_exception_error = 2,')
                     code_to_exception.sort(key=lambda except_info: except_info[0])
                     for exception_info in code_to_exception[:-1]:
                         out.put_line('{0} = {1},'.format(exception_info[1].full_c_name, exception_info[0]))
                     exception_info = code_to_exception[-1]
                     out.put_line('{0} = {1}'.format(exception_info[1].full_c_name, exception_info[0]))
                 else:
-                    out.put_line('copy_exception_error = 2')
+                    out.put_line(self.params.beautiful_capi_namespace.lower() + '_copy_exception_error = 2')
 
     def generate_check_and_throw_exception_forward_declaration(self, out: FileGenerator):
         watchdog_string = '{0}_CHECK_AND_THROW_EXCEPTION_FORWARD_DECLARATION'.format(
@@ -211,10 +211,12 @@ class ByFirstArgument(object):
             exception_info=self.params.exception_info_argument_name))
         casting_instructions, return_expression = instructions
         out.put_lines(casting_instructions)
-        out.put_line('{namespace}::check_and_throw_exception({exception_info}.code, {exception_info}.object_pointer);'.format(
-            namespace=self.params.beautiful_capi_namespace,
-            exception_info=self.params.exception_info_argument_name
-        ))
+        out.put_line(
+            '{namespace}::check_and_throw_exception({exception_info}.code, {exception_info}.object_pointer);'.format(
+                namespace=self.params.beautiful_capi_namespace,
+                exception_info=self.params.exception_info_argument_name
+            )
+        )
         return return_expression
 
     def __get_c_function_call(self, c_function_name: str, arguments: [str]) -> str:
