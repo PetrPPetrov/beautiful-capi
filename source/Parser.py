@@ -694,6 +694,8 @@ class TClass(object):
         self.pointer_access_filled = False
         self.exception = False
         self.exception_filled = False
+        self.exception_code = 1000
+        self.exception_code_filled = False
         self.template_line = ""
         self.template_line_filled = False
         self.typedef_name = ""
@@ -817,6 +819,10 @@ class TClass(object):
             cur_attr = dom_node.getAttribute("exception")
             self.exception = string_to_bool(cur_attr)
             self.exception_filled = True
+        if dom_node.hasAttribute("exception_code"):
+            cur_attr = dom_node.getAttribute("exception_code")
+            self.exception_code = string_to_int(cur_attr)
+            self.exception_code_filled = True
         if dom_node.hasAttribute("template_line"):
             cur_attr = dom_node.getAttribute("template_line")
             self.template_line = cur_attr

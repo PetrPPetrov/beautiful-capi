@@ -28,7 +28,7 @@
     <class name="NullArgument" base="Exception::BadArgument" exception="true" lifecycle="copy_semantic" implementation_class_name="Exception::NullArgumentImpl" implementation_class_header="Exception/NullArgumentImpl.h">
       <constructor name="New"/>
     </class>
-    <class name="DivisionByZero" base="Exception::Generic" exception="true" lifecycle="copy_semantic" implementation_class_name="Exception::DivisionByZeroImpl" implementation_class_header="Exception/DivisionByZeroImpl.h">
+    <class name="DivisionByZero" base="Exception::Generic" exception="true" exception_code="555" lifecycle="copy_semantic" implementation_class_name="Exception::DivisionByZeroImpl" implementation_class_header="Exception/DivisionByZeroImpl.h">
       <constructor name="New"/>
     </class>
   </namespace>

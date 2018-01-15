@@ -488,6 +488,11 @@
         <xs:documentation>Specifies if the class could be used as exception</xs:documentation>
       </xs:annotation>
     </xs:attribute>
+    <xs:attribute default="1000" name="exception_code" type="xs:integer" use="optional">
+      <xs:annotation>
+        <xs:documentation>Specifies code of the current exception (useful if the current class is an exception)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
     <xs:attribute default="" name="template_line" type="xs:string" use="optional">
       <xs:annotation>
         <xs:documentation>Do not use, for internal usage only</xs:documentation>

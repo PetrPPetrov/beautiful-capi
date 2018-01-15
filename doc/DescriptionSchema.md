@@ -1312,6 +1312,23 @@ Specifies a class.
   </tr>
   <tr>
     <td>
+      exception_code
+    </td>
+    <td>
+      xs:integer
+    </td>
+    <td>
+      optional
+    </td>
+    <td>
+      Specifies code of the current exception (useful if the current class is an exception)
+    </td>
+    <td>
+      1000
+    </td>
+  </tr>
+  <tr>
+    <td>
       template_line
     </td>
     <td>

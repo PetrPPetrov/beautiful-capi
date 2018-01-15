@@ -44,7 +44,7 @@ class GeneratorCreator(object):
         self.scope_stack = []  # NamespaceGenerator or ClassGenerator
         self.cur_namespace_generator = None
         self.params = params
-        self.cur_exception_code = 100
+        self.cur_exception_code = 100000
 
     def __register_class_or_namespace_generator(self, generator):
         """
@@ -300,8 +300,11 @@ class GeneratorCreator(object):
             class_generator.base_class_generator = name_to_class_generator(class_generator.class_object.base, 'base')
             class_generator.base_class_generator.derived_class_generators.append(class_generator)
         if class_generator.class_object.exception:
-            class_generator.exception_code = self.cur_exception_code
-            self.cur_exception_code += 1
+            if class_generator.class_object.exception_code_filled:
+                class_generator.exception_code = class_generator.class_object.exception_code
+            else:
+                class_generator.exception_code = self.cur_exception_code
+                self.cur_exception_code += 1
         template_arguments_count = get_template_arguments_count(class_generator.name)
         for index in range(template_arguments_count):
             template_argument = get_template_argument(class_generator.name, index)
