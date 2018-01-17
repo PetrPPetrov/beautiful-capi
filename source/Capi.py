@@ -197,6 +197,8 @@ class Capi(object):
             self.__load_external(nested_namespace)
 
     def __process(self) -> [object]:
+        for namespace in self.api_description.namespaces:
+            self.__load_external(namespace)
         process_check_binary_compatibility(self.api_description, self.params_description)
         process_properties(self.api_description, self.unit_tests_generator)
         process_overload_suffixes(self.api_description)
@@ -205,8 +207,6 @@ class Capi(object):
         first_namespace_generators = create_namespace_generators(
             self.api_description, self.params_description)
         process_callbacks(first_namespace_generators)
-        for namespace in self.api_description.namespaces:
-            self.__load_external(namespace)
         return first_namespace_generators
 
     def __generate(self):
