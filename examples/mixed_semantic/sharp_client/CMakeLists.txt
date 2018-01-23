@@ -18,10 +18,19 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-project(mixed_semantic_example)
+project(mixed_semantic_sharp_client LANGUAGES CSharp)
+cmake_minimum_required(VERSION 3.8.2)
 
-cmake_minimum_required(VERSION 2.8)
+file(GLOB_RECURSE SRCS ${mixed_semantic_sharp_client_SOURCE_DIR}/../library/sharp_output/*.cs) 
 
-add_subdirectory(library)
-add_subdirectory(client)
-add_subdirectory(sharp_client)
+add_executable(mixed_semantic_sharp_client
+  ${mixed_semantic_sharp_client_SOURCE_DIR}/Program.cs
+  ${mixed_semantic_sharp_client_SOURCE_DIR}/Properties/AssemblyInfo.cs
+  ${SRCS}
+)
+
+target_compile_options(mixed_semantic_sharp_client PRIVATE "/unsafe")
+SET_TARGET_PROPERTIES(mixed_semantic_sharp_client PROPERTIES LINKER_LANGUAGE CSharp)
+if(TARGET mixed_semantic)
+  add_dependencies(mixed_semantic_sharp_client mixed_semantic)
+endif()

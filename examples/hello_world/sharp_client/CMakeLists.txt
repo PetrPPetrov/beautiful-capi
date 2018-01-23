@@ -18,10 +18,20 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-project(mixed_semantic_example)
+project(hello_world_sharp_client LANGUAGES CSharp)
+cmake_minimum_required(VERSION 3.8.2)
 
-cmake_minimum_required(VERSION 2.8)
+file(GLOB_RECURSE SRCS ../library/sharp_output/*.cs) 
 
-add_subdirectory(library)
-add_subdirectory(client)
-add_subdirectory(sharp_client)
+add_executable(hello_world_sharp_client
+  ${hello_world_sharp_client_SOURCE_DIR}/Program.cs
+  ${hello_world_sharp_client_SOURCE_DIR}/Properties/AssemblyInfo.cs
+  ${SRCS}
+)
+
+target_compile_options(hello_world_sharp_client PRIVATE "/unsafe")
+SET_TARGET_PROPERTIES(hello_world_sharp_client PROPERTIES LINKER_LANGUAGE CSharp)
+
+if(TARGET hello_world)
+  add_dependencies(hello_world_sharp_client hello_world)
+endif()
