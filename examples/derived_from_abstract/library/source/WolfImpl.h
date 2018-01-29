@@ -38,4 +38,4 @@ namespace DerivedFromAbstract
     };
 }
 
-#endif /* BEAUTIFUL_CAPI_MIXED_SEMANTIC2_PERSON_H */
+#endif /* BEAUTIFUL_CAPI_DERIVED_FROM_ABSTRACT_WOLF_NAME_H */

@@ -37,4 +37,4 @@ namespace DerivedFromAbstract
     };
 }
 
-#endif /* BEAUTIFUL_CAPI_MIXED_SEMANTIC2_ABSTRACT_CLASS_H */
+#endif /* BEAUTIFUL_CAPI_DERIVED_FROM_ABSTRACT_ANIMAL_NAME_H */

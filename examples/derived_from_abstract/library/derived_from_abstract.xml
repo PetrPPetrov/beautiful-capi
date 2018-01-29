@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<copy_semantic:api xmlns:copy_semantic="http://gkmsoft.ru/beautifulcapi" project_name="CopySemantic">
+<derived_from_abstract:api xmlns:derived_from_abstract="http://gkmsoft.ru/beautifulcapi" project_name="DerivedFromAbstract">
   <namespace name="DerivedFromAbstract">
     <class name="Animal" lifecycle="raw_pointer_semantic" abstract="true" implementation_class_name="DerivedFromAbstract::AnimalImpl" implementation_class_header="AnimalImpl.h">
       <method name="Move"/>
@@ -20,4 +20,4 @@
       <method name="Sound"/>
     </class>
   </namespace>
-</copy_semantic:api>
+</derived_from_abstract:api>

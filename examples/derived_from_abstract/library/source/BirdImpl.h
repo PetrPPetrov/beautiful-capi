@@ -38,4 +38,4 @@ namespace DerivedFromAbstract
     };
 }
 
-#endif /* BEAUTIFUL_CAPI_MIXED_SEMANTIC2_NAME_H */
+#endif /* BEAUTIFUL_CAPI_DERIVED_FROM_ABSTRACT_BIRD_NAME_H */
