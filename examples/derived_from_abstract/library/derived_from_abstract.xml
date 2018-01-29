@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<copy_semantic:api xmlns:copy_semantic="http://gkmsoft.ru/beautifulcapi" project_name="CopySemantic">
+  <namespace name="DerivedFromAbstract">
+    <class name="Animal" lifecycle="raw_pointer_semantic" abstract="true" implementation_class_name="DerivedFromAbstract::AnimalImpl" implementation_class_header="AnimalImpl.h">
+      <method name="Move"/>
+      <method name="Sound"/>
+    </class>
+    <class name="Bird" base="DerivedFromAbstract::Animal" lifecycle="copy_semantic" implementation_class_name="DerivedFromAbstract::BirdImpl" implementation_class_header="BirdImpl.h">
+      <constructor name="New">
+        <argument name="food" type="const char*"/>
+      </constructor>
+      <method name="Move"/>
+      <method name="Sound"/>
+    </class>
+    <class name="Wolf" base="DerivedFromAbstract::Animal" lifecycle="copy_semantic" implementation_class_name="DerivedFromAbstract::WolfImpl" implementation_class_header="WolfImpl.h">
+      <constructor name="New">
+        <argument name="food" type="const char*"/>
+      </constructor>
+      <method name="Move"/>
+      <method name="Sound"/>
+    </class>
+  </namespace>
+</copy_semantic:api>
