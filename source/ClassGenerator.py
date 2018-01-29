@@ -28,7 +28,7 @@ from FileCache import FileCache
 from FileGenerator import FileGenerator, IfDefScope, WatchdogScope, IndentScope, Unindent
 from CapiGenerator import CapiGenerator
 from NamespaceGenerator import NamespaceGenerator
-from LifecycleTraits import create_lifecycle_traits
+from LifecycleTraits import create_lifecycle_traits, get_base_init
 from InheritanceTraits import create_inheritance_traits
 from ArgumentGenerator import ClassTypeGenerator, ArgumentGenerator
 from CustomerCallbacks import generate_callbacks_on_client_side_definitions
@@ -427,10 +427,11 @@ class ClassGenerator(object):
             out.put_line('')
         for cast in self.class_object.lifecycle_extension.cast_froms:
             source_type = cast.source_generator.full_wrap_name
-            out.put_line('inline {full_name}::{class_name}(const {source_type}& value)'.format(
+            out.put_line('inline {full_name}::{class_name}(const {source_type}& value){base_init}'.format(
                     full_name=self.full_wrap_name,
                     class_name=self.wrap_short_name,
-                    source_type=source_type
+                    source_type=source_type,
+                    base_init=get_base_init(self)
                 )
             )
             with IndentScope(out):
