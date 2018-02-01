@@ -52,7 +52,10 @@ class EnumGenerator(object):
 
     @property
     def implementation_name(self) -> str:
-        return '::'.join([self.parent_generator.implementation_name, self.name])
+        if self.enum_object.implementation_type_filled:
+            return self.enum_object.implementation_type
+        else:
+            return '::'.join([self.parent_generator.implementation_name, self.name])
 
     @staticmethod
     def __get_enum_item_definition(enum_item: TEnumerationItem) -> str:

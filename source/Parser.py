@@ -551,6 +551,8 @@ class TEnumeration(object):
         self.name_filled = False
         self.underlying_type = ""
         self.underlying_type_filled = False
+        self.implementation_type = ""
+        self.implementation_type_filled = False
         self.documentations = []
         self.items = []
 
@@ -576,6 +578,10 @@ class TEnumeration(object):
             cur_attr = dom_node.getAttribute("underlying_type")
             self.underlying_type = cur_attr
             self.underlying_type_filled = True
+        if dom_node.hasAttribute("implementation_type"):
+            cur_attr = dom_node.getAttribute("implementation_type")
+            self.implementation_type = cur_attr
+            self.implementation_type_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:
@@ -997,84 +1003,6 @@ class TConstructor(TConstructorBase):
             cur_attr = dom_node.getAttribute("explicit")
             self.explicit = string_to_bool(cur_attr)
             self.explicit_filled = True
-
-    def load(self, dom_node):
-        for element in dom_node.childNodes:
-            self.load_element(element)
-        self.load_attributes(dom_node)
-
-
-class TReturnImplementation2C(object):
-    def __init__(self):
-        self.all_items = []
-
-    def load_element(self, element):
-        if element.nodeType == element.TEXT_NODE:
-            cur_texts = [text.strip() for text in element.data.split('\n')]
-            first = True
-            for text in cur_texts:
-                if first and self.all_items and type(self.all_items[-1]) is str:
-                    self.all_items[-1] += text
-                else:
-                    self.all_items.append(text)
-                first = False
-            return True
-        return False
-
-    def load_attributes(self, dom_node):
-        pass
-
-    def load(self, dom_node):
-        for element in dom_node.childNodes:
-            self.load_element(element)
-        self.load_attributes(dom_node)
-
-
-class TReturnImplementationValue2C(object):
-    def __init__(self):
-        self.all_items = []
-
-    def load_element(self, element):
-        if element.nodeType == element.TEXT_NODE:
-            cur_texts = [text.strip() for text in element.data.split('\n')]
-            first = True
-            for text in cur_texts:
-                if first and self.all_items and type(self.all_items[-1]) is str:
-                    self.all_items[-1] += text
-                else:
-                    self.all_items.append(text)
-                first = False
-            return True
-        return False
-
-    def load_attributes(self, dom_node):
-        pass
-
-    def load(self, dom_node):
-        for element in dom_node.childNodes:
-            self.load_element(element)
-        self.load_attributes(dom_node)
-
-
-class TReturnImplementationPointer2C(object):
-    def __init__(self):
-        self.all_items = []
-
-    def load_element(self, element):
-        if element.nodeType == element.TEXT_NODE:
-            cur_texts = [text.strip() for text in element.data.split('\n')]
-            first = True
-            for text in cur_texts:
-                if first and self.all_items and type(self.all_items[-1]) is str:
-                    self.all_items[-1] += text
-                else:
-                    self.all_items.append(text)
-                first = False
-            return True
-        return False
-
-    def load_attributes(self, dom_node):
-        pass
 
     def load(self, dom_node):
         for element in dom_node.childNodes:

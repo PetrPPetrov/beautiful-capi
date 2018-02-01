@@ -332,6 +332,11 @@
         <xs:documentation>Specifies *underlying_type* for the current enumeration type, for instance, *uint16_t* which will be used in C language layer</xs:documentation>
       </xs:annotation>
     </xs:attribute>
+    <xs:attribute name="implementation_type" type="xs:string" use="optional" default="">
+      <xs:annotation>
+        <xs:documentation>Specifies *implementation_type* for the current enumeration type, for instance, some enumeration type on *the implementation side*</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
   </xs:complexType>
   <xs:complexType name="TTemplate">
     <xs:annotation>

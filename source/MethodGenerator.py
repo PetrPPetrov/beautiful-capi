@@ -23,7 +23,6 @@
 import copy
 
 from Parser import TMethod, TFunction, TConstructor, TImplementationCode
-from Parser import TReturnImplementation2C, TReturnImplementationValue2C, TReturnImplementationPointer2C
 from ParamsParser import TBeautifulCapiParams
 from FileGenerator import FileGenerator, IndentScope
 from FileCache import FileCache
