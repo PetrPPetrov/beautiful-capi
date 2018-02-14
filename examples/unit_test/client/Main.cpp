@@ -21,4 +21,11 @@
  
 #define BOOST_TEST_MODULE Beautiful Capi Unit Testing
 #include <stdint.h>
+#include <iostream>
 #include "AutoGenUnitTests.h"
+
+int main()
+{
+    run_tests();
+    return 0;
+}

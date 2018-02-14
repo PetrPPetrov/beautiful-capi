@@ -22,9 +22,6 @@ project(unit_test_client)
 
 cmake_minimum_required(VERSION 2.8)
 
-set(Boost_USE_STATIC_LIBS ON)
-find_package(Boost COMPONENTS unit_test_framework REQUIRED)
-
 if(NOT WIN32)
   add_definitions(-fvisibility=default)
 endif()
@@ -42,4 +39,4 @@ add_executable(unit_test_client
 if(TARGET unit_test)
   add_dependencies(unit_test_client unit_test)
 endif()
-target_link_libraries(unit_test_client unit_test ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+target_link_libraries(unit_test_client unit_test)

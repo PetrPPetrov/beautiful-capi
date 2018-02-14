@@ -185,9 +185,15 @@ class TestGenerator(object):
     def __gen_test_for_simple_value(self, c_property: ClassToProperties.Properties, value: str):
         self.file.current.put_line('test_class{sep}{method_name}({value});'.format(
             method_name=c_property.set_method.name, value=value, sep=c_property.set_method_generator.access_operator))
-        check_str = 'if (test_class{sep}{method_name}() != {value}) report_error("{error}");'.format(
-            method_name=c_property.get_method.name, value=value, sep=c_property.get_method_generator.access_operator,
-            error=c_property.set_method_generator.parent_class_generator.full_wrap_name + '::' + c_property.property.name)
+        error = c_property.set_method_generator.parent_class_generator.full_wrap_name + '::' + c_property.property.name
+        if '"' in value:
+            check_str = 'if (strcmp(test_class{sep}{method_name}(), {value}) != 0) report_error("{error}");'.format(
+                method_name=c_property.get_method.name, value=value,
+                sep=c_property.get_method_generator.access_operator, error=error)
+        else:
+            check_str = 'if (test_class{sep}{method_name}() != {value}) report_error("{error}");'.format(
+                method_name=c_property.get_method.name, value=value,
+                sep=c_property.get_method_generator.access_operator, error=error)
         self.file.current.put_line(check_str)
 
     @staticmethod
@@ -522,6 +528,7 @@ class TestGenerator(object):
         self.file.current.include_header('StaticEqual.h', False)
         self.file.current.include_header('string', True)
         self.file.current.include_header('iostream', True)
+        self.file.current.include_header('cstring', True)
 
         root_namespaces = [namespace_generator.full_wrap_name for namespace_generator in namespace_generators]
         for namespace in root_namespaces:
