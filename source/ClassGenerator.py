@@ -71,7 +71,7 @@ class ClassGenerator(object):
 
     @property
     def is_template(self) -> bool:
-        return self.class_object.template_line
+        return bool(self.class_object.template_line)
 
     @property
     def the_most_basic(self):
@@ -94,6 +94,17 @@ class ClassGenerator(object):
     @property
     def full_name_array(self) -> [str]:
         return self.parent_namespace.full_name_array + [self.name] if self.parent_namespace else [self.name]
+
+    @property
+    def template_name(self):
+        return self.class_object.typedef_name if self.class_object.typedef_name else self.name
+
+    @property
+    def full_template_name_array(self) -> [str]:
+        if self.parent_namespace:
+            return self.parent_namespace.full_name_array + [self.template_name]
+        else:
+            return [self.template_name]
 
     @property
     def wrap_name(self) -> str:
@@ -423,7 +434,8 @@ class ClassGenerator(object):
                     target_type=target_type,
                     full_name=self.full_wrap_name,
                     cast_method=cast.cast_method.format(target_type=target_type.split('::')[-1])
-                ))
+                )
+            )
             with IndentScope(out):
                 out.put_line(return_instruction)
             out.put_line('')

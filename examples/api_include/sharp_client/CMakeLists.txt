@@ -25,12 +25,14 @@ file(GLOB_RECURSE SRCS ${api_include_sharp_client_SOURCE_DIR}/../library/Example
 
 add_executable(api_include_sharp_client
   ${api_include_sharp_client_SOURCE_DIR}/Program.cs
-  ${api_include_sharp_client_SOURCE_DIR}/Properties/AssemblyInfo.cs
+  ${api_include_sharp_client_SOURCE_DIR}/Properties/AssemblyInfo.cs  
+  ${api_include_sharp_client_SOURCE_DIR}/Properties/Program.cs
   ${SRCS}
 )
 
 target_compile_options(api_include_sharp_client PRIVATE "/unsafe")
 SET_TARGET_PROPERTIES(api_include_sharp_client PROPERTIES LINKER_LANGUAGE CSharp)
 if(TARGET api_include)
+    
   add_dependencies(api_include_sharp_client api_include)
 endif()

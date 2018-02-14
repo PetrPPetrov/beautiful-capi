@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <template:api xmlns:template="http://gkmsoft.ru/beautifulcapi" project_name="Template">
   <namespace name="Example">
+    <mapped_type name="const char*" wrap_type="const char*" c_type="const char*" implementation_type="const char*" sharp_wrap_type="string" wrap_2_c="{expression}" c_2_wrap="{expression}"/>
     <template>
       <argument name="WorkType" type="typename"/>
       <instantiation>
@@ -132,5 +133,17 @@
         <method name="GetA" return="int" const="true"/>
       </class>
     </template>
+    <!--<template>-->
+      <!--<argument name="T" type="typename"/>-->
+      <!--<argument name="Count" type="int"/>-->
+      <!--<instantiation>-->
+        <!--<argument name="T" value="double"/>-->
+        <!--<argument name="Count" value="2"/>-->
+      <!--</instantiation>-->
+      <!--<class name="Test" lifecycle="copy_semantic" implementation_class_name="Example::Test&lt;T, Count>" implementation_class_header="TestImpl.h">-->
+        <!--<constructor name="Default"/>-->
+        <!--<method name="GetCount" return="int" const="true"/>-->
+      <!--</class>-->
+    <!--</template>-->
   </namespace>
 </template:api>

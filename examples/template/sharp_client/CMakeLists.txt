@@ -18,15 +18,19 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-project(template_example)
+project(template_sharp_client LANGUAGES CSharp)
+cmake_minimum_required(VERSION 3.8.2)
 
-cmake_minimum_required(VERSION 2.8)
-find_package(Boost)
+file(GLOB_RECURSE SRCS ${template_sharp_client_SOURCE_DIR}/../library/sharp_output/*.cs) 
 
-if(Boost_FOUND)
-  add_subdirectory(library)
-  add_subdirectory(client)
-  add_subdirectory(sharp_client)
-else()
-  message(STATUS "Boost is not found, it's required to build template example.")
+add_executable(template_sharp_client 
+  ${template_sharp_client_SOURCE_DIR}/Program.cs
+  ${template_sharp_client_SOURCE_DIR}/Properties/AssemblyInfo.cs
+  ${SRCS}
+)
+
+target_compile_options(template_sharp_client PRIVATE "/unsafe")
+SET_TARGET_PROPERTIES(template_sharp_client PROPERTIES LINKER_LANGUAGE CSharp)
+if(TARGET template)
+  add_dependencies(template_sharp_client template)
 endif()
