@@ -30,7 +30,7 @@ class AtomicString(object):
         self.value = string_value
 
     def get_lines(self) -> [str]:
-        return self.value
+        return [self.value]
 
 
 class IncludeHeaders(object):
