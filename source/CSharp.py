@@ -288,13 +288,15 @@ class SharpArgument(object):
         self.argument_generator = argument_generator
 
     def wrap_argument_declaration(self) -> str:
-        if isinstance(self.argument_generator.type_generator, ClassTypeGenerator):
-            argument_type = self.argument_generator.type_generator.class_argument_generator.wrap_short_name
-        elif isinstance(self.argument_generator.type_generator, MappedTypeGenerator):
-            if self.argument_generator.type_generator.mapped_type_object.sharp_wrap_type:
-                argument_type = self.argument_generator.type_generator.mapped_type_object.sharp_wrap_type
+        generator = self.argument_generator.type_generator
+        if isinstance(generator, ClassTypeGenerator):
+            argument_type = '.'.join(generator.class_argument_generator.parent_namespace.full_name_array) \
+                            + '.' + generator.class_argument_generator.wrap_name
+        elif isinstance(generator, MappedTypeGenerator):
+            if generator.mapped_type_object.sharp_wrap_type:
+                argument_type = generator.mapped_type_object.sharp_wrap_type
             else:
-                argument_type = self.argument_generator.type_generator.wrap_argument_declaration()
+                argument_type = generator.wrap_argument_declaration()
         else:
             argument_type = self.argument_generator.type_generator.wrap_argument_declaration()
         return argument_type + ((' ' + self.argument_generator.name) if self.argument_generator.name else '')
@@ -312,33 +314,35 @@ class SharpArgument(object):
         return argument_type + ((' ' + self.argument_generator.name) if self.argument_generator.name else '')
 
     def c_2_wrap_var(self, result_var: str, expression: str) -> ([str], str):
-        if isinstance(self.argument_generator.type_generator, MappedTypeGenerator):
-            return self.argument_generator.type_generator.format(
-                self.argument_generator.type_generator.mapped_type_object.c_2_wrap,
+        generator = self.argument_generator.type_generator
+        if isinstance(generator, MappedTypeGenerator):
+            return generator.format(
+                generator.mapped_type_object.c_2_wrap,
                 expression,
                 result_var,
-                self.argument_generator.type_generator.mapped_type_object.wrap_type
+                generator.mapped_type_object.wrap_type
             )
-        elif isinstance(self.argument_generator.type_generator, ClassTypeGenerator):
+        elif isinstance(generator, ClassTypeGenerator):
+            parent_full_name = '.'.join(generator.class_argument_generator.parent_namespace.full_name_array)
             internal_expression = '{type_name}.{create_from_ptr_expression}, {expression}, {copy_or_add_ref}'.format(
                 create_from_ptr_expression='ECreateFromRawPointer.force_creating_from_raw_pointer',
-                type_name=self.argument_generator.type_generator.class_argument_generator.wrap_name,
+                type_name=parent_full_name + '.' + generator.class_argument_generator.wrap_name,
                 expression=expression,
-                copy_or_add_ref=bool_to_str(self.argument_generator.type_generator.copy_or_add_ref_when_c_2_wrap)
+                copy_or_add_ref=bool_to_str(generator.copy_or_add_ref_when_c_2_wrap)
             )
             if result_var:
                 return ['new {type_name} {result_var}({internal_expression});'.format(
-                    type_name=self.argument_generator.type_generator.wrap_return_type(),
+                    type_name=parent_full_name + '.' + generator.class_argument_generator.wrap_name,
                     result_var=result_var,
                     internal_expression=internal_expression
                 )], result_var
             else:
                 return [], 'new {type_name}({internal_expression})'.format(
-                    type_name=self.argument_generator.type_generator.class_argument_generator.wrap_name,
+                    type_name=parent_full_name + '.' + generator.class_argument_generator.wrap_name,
                     internal_expression=internal_expression
                 )
         else:
-                return self.argument_generator.type_generator.c_2_wrap_var(result_var, expression)
+                return generator.c_2_wrap_var(result_var, expression)
 
 
 class SharpMethod(object):

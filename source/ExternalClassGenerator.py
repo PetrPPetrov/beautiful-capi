@@ -37,6 +37,10 @@ class ExternalClassGenerator(object):
         return '::'.join([self.parent_namespace.full_name, self.name]) if self.parent_namespace else self.name
 
     @property
+    def full_name_array(self) -> [str]:
+        return self.parent_namespace.full_name_array + [self.name] if self.parent_namespace else [self.name]
+
+    @property
     def wrap_name(self) -> str:
         return self.class_object.wrap_name
 

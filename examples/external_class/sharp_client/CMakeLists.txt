@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 #
 # Beautiful Capi generates beautiful C API wrappers for your C++ classes
 # Copyright (C) 2015 Petr Petrovich Petrov
@@ -19,25 +18,19 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+project(external_class_sharp_client LANGUAGES CSharp)
+cmake_minimum_required(VERSION 3.8.2)
 
-from Parser import TExternalNamespace
+file(GLOB_RECURSE SRCS ${external_class_sharp_client_SOURCE_DIR}/../library/*.cs) 
 
+add_executable(external_class_sharp_client
+  ${external_class_sharp_client_SOURCE_DIR}/Program.cs
+  ${external_class_sharp_client_SOURCE_DIR}/Properties/AssemblyInfo.cs
+  ${SRCS}
+)
 
-class ExternalNamespaceGenerator(object):
-    def __init__(self, namespace_object: TExternalNamespace, parent_namespace):
-        self.namespace_object = namespace_object
-        self.parent_namespace = parent_namespace
-        self.nested_namespaces = []
-        self.classes = []
-
-    @property
-    def name(self) -> str:
-        return self.namespace_object.name
-
-    @property
-    def full_name(self) -> str:
-        return '::'.join([self.parent_namespace.full_name, self.name]) if self.parent_namespace else self.name
-
-    @property
-    def full_name_array(self) -> [str]:
-        return self.parent_namespace.full_name_array + [self.name] if self.parent_namespace else [self.name]
+target_compile_options(external_class_sharp_client PRIVATE "/unsafe")
+SET_TARGET_PROPERTIES(external_class_sharp_client PROPERTIES LINKER_LANGUAGE CSharp)
+if(TARGET external_class)
+  add_dependencies(external_class_sharp_client external_class)
+endif()
