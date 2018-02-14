@@ -20,7 +20,8 @@
 #
 
 
-from Parser import TEnumeration, TEnumerationItem
+from Parser import TEnumeration, TEnumerationItem, TNamespace, TBeautifulCapiRoot, TFunction, TClass, TArgument, \
+    TImplementationCode
 from FileGenerator import FileGenerator, IndentScope
 from DoxygenCpp import DoxygenCppGenerator
 
@@ -74,3 +75,57 @@ class EnumGenerator(object):
                 items_definitions_with_comma.append(items_definitions[-1])
             for item_definition, item in zip(items_definitions_with_comma, self.enum_object.items):
                 out.put_line(item_definition + DoxygenCppGenerator().get_for_enum_item(item))
+
+
+class EnumProcessor(object):
+    def __init__(self, api_description: TBeautifulCapiRoot):
+        self.namespaces = api_description.namespaces
+        self.namespace_stack = []
+
+    def add_function(self, enum: TEnumeration, parent_class: TClass = None):
+        if enum.implementation_type_filled:
+            func = TFunction()
+            class_name = parent_class.implementation_class_name.split('::')[-1] if parent_class else ''
+            func.name = 'GetImplementationValueFor' + class_name + enum.name
+            func.return_type = 'size_t'
+            argument = TArgument()
+            argument.name = 'index'
+            argument.type_name = 'size_t'
+            func.arguments.append(argument)
+            implementation_code = TImplementationCode()
+            implementation_code.all_items.append('switch(index)')
+            implementation_code.all_items.append('{{')
+            name_array = [class_name] if class_name else [ns.name for ns in self.namespace_stack]
+            for index, item in enumerate(enum.items):
+                item_name = '::'.join(enum.implementation_type.split('::')[:-1] + [item.name])
+                implementation_code.all_items.append('\tcase {index}:'.format(index=index))
+                implementation_code.all_items.append('\t\treturn static_cast<size_t>({name});'.format(name=item_name))
+            implementation_code.all_items.append('\tdefault:')
+            implementation_code.all_items.append('\t\tassert (false);')
+            enum_name = '::'.join(name_array + [enum.name])
+            implementation_code.all_items.append(
+                '\t\tthrow std::runtime_error("{name}: index out of range");'.format(name=enum_name))
+            implementation_code.all_items.append('}}')
+            implementation_code.all_items.append('return @ret@0;')
+            func.implementation_codes = [implementation_code]
+            self.namespace_stack[len(self.namespace_stack)-1].functions.append(func)
+
+    def process_namespace(self, namespace: TNamespace):
+        self.namespace_stack.append(namespace)
+        for nested_ns in namespace.namespaces:
+            self.process_namespace(nested_ns)
+        for class_ in namespace.classes:
+            for enum in class_.enumerations:
+                self.add_function(enum, class_)
+        for enum in namespace.enumerations:
+            self.add_function(enum)
+        self.namespace_stack.pop()
+
+    def process(self):
+        for cur_namespace in self.namespaces:
+            self.process_namespace(cur_namespace)
+
+
+def process_enum_impl_functions(api_description: TBeautifulCapiRoot):
+        processor = EnumProcessor(api_description)
+        processor.process()

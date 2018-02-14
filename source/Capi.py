@@ -40,6 +40,7 @@ from ParamsParser import TBeautifulCapiParams, TExceptionHandlingMode, load
 from ParseRoot import parse_root
 from UnitTestGenerator import TestGenerator
 from OverloadSuffixes import process as process_overload_suffixes
+from EnumGenerator import process_enum_impl_functions
 from Parser import TExternalNamespace, TExternalClass
 
 
@@ -200,9 +201,10 @@ class Capi(object):
         for namespace in self.api_description.namespaces:
             self.__load_external(namespace)
         process_check_binary_compatibility(self.api_description, self.params_description)
-        process_properties(self.api_description, self.unit_tests_generator)
         process_overload_suffixes(self.api_description)
         process_templates(self.api_description)
+        process_properties(self.api_description, self.unit_tests_generator)
+        process_enum_impl_functions(self.api_description)
         process_extension_semantic(self.api_description)
         first_namespace_generators = create_namespace_generators(
             self.api_description, self.params_description)

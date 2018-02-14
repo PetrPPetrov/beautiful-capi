@@ -49,6 +49,12 @@ def instantiate_method(method: TMethod, instantiation: TInstantiation):
     method.return_type = instantiate_type(method.return_type, instantiation)
 
 
+def instantiate_property(cur_property, instantiation: TInstantiation):
+    cur_property.type_name = instantiate_type(cur_property.type_name, instantiation)
+    cur_property.return_type = instantiate_type(cur_property.return_type, instantiation)
+    cur_property.set_argument_type = instantiate_type(cur_property.set_argument_type, instantiation)
+
+
 def generate_template_classes(namespace: TNamespace, template: TTemplate):
     if not template.classes:
         raise BeautifulCapiException('template have to contain a nested class')
@@ -69,6 +75,8 @@ def generate_template_classes(namespace: TNamespace, template: TTemplate):
             instantiate_constructor(constructor, instantiation)
         for method in new_class.methods:
             instantiate_method(method, instantiation)
+        for cur_property in new_class.properties:
+            instantiate_property(cur_property, instantiation)
         for lifecycle_extension in new_class.lifecycle_extensions:
             lifecycle_extension.name = instantiate_type(lifecycle_extension.name, instantiation)
             lifecycle_extension.wrap_name = instantiate_type(lifecycle_extension.wrap_name, instantiation)
