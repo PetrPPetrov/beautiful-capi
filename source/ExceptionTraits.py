@@ -50,20 +50,20 @@ class NoHandling(object):
         pass
 
     @staticmethod
-    def __get_c_function_call(c_function_name: str, arguments: [str]) -> str:
+    def get_c_function_call(c_function_name: str, arguments: [str]) -> str:
         return '{function_name}({arguments})'.format(function_name=c_function_name, arguments=', '.join(arguments))
 
     @staticmethod
     def generate_c_call(out: FileGenerator, return_type, c_function_name: str, arguments: [str]) -> str:
         casting_instructions, return_expression = return_type.c_2_wrap_var(
-            '', NoHandling.__get_c_function_call(c_function_name, arguments))
+            '', NoHandling.get_c_function_call(c_function_name, arguments))
         out.put_lines(casting_instructions)
         return return_expression
 
     @staticmethod
     def generate_c_call_from_impl(out: FileGenerator, return_type, c_function_name: str, arguments: [str]) -> str:
         casting_instructions, return_expression = return_type.c_2_implementation_var(
-            '', NoHandling.__get_c_function_call(c_function_name, arguments))
+            '', NoHandling.get_c_function_call(c_function_name, arguments))
         out.put_lines(casting_instructions)
         return return_expression
 

@@ -78,6 +78,12 @@ class ClassGenerator(object):
         return self.base_class_generator.the_most_basic if self.base_class_generator else self
 
     @property
+    def get_base_class_wrap_name(self):
+        if self.base_class_generator.parent_namespace.full_name_array == self.parent_namespace.full_name_array:
+            return self.base_class_generator.wrap_name
+        return self.base_class_generator.full_wrap_name
+
+    @property
     def name(self) -> str:
         return self.class_object.name
 
@@ -231,17 +237,15 @@ class ClassGenerator(object):
                 out.put_line('inline operator {target_type}() const;'.format(target_type=target_type))
             else:
                 out.put_line('inline {target_type} {cast_method}() const;'.format(
-                        target_type=target_type,
-                        cast_method=cast.cast_method.format(target_type=target_type.split('::')[-1])
-                    )
-                )
+                    target_type=target_type,
+                    cast_method=cast.cast_method.format(target_type=target_type.split('::')[-1])
+                ))
         for cast in self.class_object.lifecycle_extension.cast_froms:
             source_type = cast.source_generator.full_wrap_name
             out.put_line('inline {class_name}(const {source_type}& value);'.format(
-                    class_name=self.wrap_short_name,
-                    source_type=source_type
-                )
-            )
+                class_name=self.wrap_short_name,
+                source_type=source_type
+            ))
 
     def __generate_class_body(self, declaration_header):
         with Unindent(declaration_header):
@@ -402,7 +406,7 @@ class ClassGenerator(object):
                 definition_header.put_line('')
                 definition_header.put_line(the_most_parent_namespace.one_line_namespace_end)
 
-    def __generate_cast_name_definition(self, out):
+    def generate_cast_name_definition(self, out):
         for cast in self.class_object.lifecycle_extension.cast_tos:
             out.include_user_header(self.file_cache.class_header_decl(cast.target_generator.full_name_array))
             target_type = cast.target_generator.full_wrap_name
@@ -411,29 +415,25 @@ class ClassGenerator(object):
             )
             if cast.implicit:
                 out.put_line('inline {full_name}::operator {target_type}() const'.format(
-                        full_name=self.full_wrap_name,
-                        target_type=target_type
-                    )
-                )
+                    full_name=self.full_wrap_name,
+                    target_type=target_type
+                ))
             else:
                 out.put_line('inline {target_type} {full_name}::{cast_method}() const'.format(
-                        target_type=target_type,
-                        full_name=self.full_wrap_name,
-                        cast_method=cast.cast_method.format(target_type=target_type.split('::')[-1])
-                    )
-                )
+                    target_type=target_type,
+                    full_name=self.full_wrap_name,
+                    cast_method=cast.cast_method.format(target_type=target_type.split('::')[-1])
+                ))
             with IndentScope(out):
                 out.put_line(return_instruction)
             out.put_line('')
         for cast in self.class_object.lifecycle_extension.cast_froms:
             source_type = cast.source_generator.full_wrap_name
-            out.put_line('inline {full_name}::{class_name}(const {source_type}& value){base_init}'.format(
-                    full_name=self.full_wrap_name,
-                    class_name=self.wrap_short_name,
-                    source_type=source_type,
-                    base_init=get_base_init(self)
-                )
-            )
+            out.put_line('inline {full_name}::{class_name}(const {source_type}& value)'.format(
+                full_name=self.full_wrap_name,
+                class_name=self.wrap_short_name,
+                source_type=source_type
+            ))
             with IndentScope(out):
                 out.put_line('void* object_pointer = value.{get_raw_pointer}();'.format(
                     get_raw_pointer=self.params.get_raw_pointer_method_name))
@@ -458,7 +458,7 @@ class ClassGenerator(object):
                 self.lifecycle_traits.generate_std_methods_definitions(definition_header, self)
                 if hasattr(self, 'extension_base_class_generator'):
                     definition_header.put_line('')
-                    self.__generate_cast_name_definition(definition_header)
+                    self.generate_cast_name_definition(definition_header)
                 definition_header.put_line('')
                 self.inheritance_traits.generate_set_object_definition(definition_header, self)
                 self.__generate_down_cast_definitions(definition_header)
@@ -528,3 +528,5 @@ class ClassGenerator(object):
         self.__generate_c_functions()
         self.__generate_snippet()
         generate_callbacks_on_library_side(self, capi_generator)
+
+

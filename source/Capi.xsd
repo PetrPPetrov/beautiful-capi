@@ -1054,6 +1054,11 @@
         <xs:documentation>Specifies wrap type name</xs:documentation>
       </xs:annotation>
     </xs:attribute>
+    <xs:attribute name="sharp_wrap_type" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>Specifies C# wrap type name</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
     <xs:attribute name="argument_wrap_type" type="xs:string" use="optional">
       <xs:annotation>
         <xs:documentation>Specifies wrap type name which should be used as argument types</xs:documentation>

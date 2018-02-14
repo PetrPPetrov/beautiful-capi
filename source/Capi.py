@@ -42,6 +42,7 @@ from UnitTestGenerator import TestGenerator
 from OverloadSuffixes import process as process_overload_suffixes
 from EnumGenerator import process_enum_impl_functions
 from Parser import TExternalNamespace, TExternalClass
+from CSharp import generate as generate_sharp_code
 
 
 class Capi(object):
@@ -49,6 +50,7 @@ class Capi(object):
                  input_filename,
                  input_params_filename,
                  output_folder,
+                 sharp_output_folder,
                  output_wrap_file_name,
                  internal_snippets_folder,
                  api_keys_folder,
@@ -58,6 +60,7 @@ class Capi(object):
         self.input_xml = input_filename
         self.input_params = parse(input_params_filename)
         self.output_folder = output_folder
+        self.sharp_output_folder = sharp_output_folder
         self.output_wrap_file_name = output_wrap_file_name
         self.internal_snippets_folder = internal_snippets_folder
         self.api_keys_folder = api_keys_folder
@@ -165,7 +168,7 @@ class Capi(object):
             print('loading external library: {0}'.format(external_xml))
             external_params = full_relative_path_from_candidates(
                 external_lib.params_xml_file, input_xml_folder, self.params_description.additional_include_directories)
-            new_capi = Capi(external_xml, external_params, None, None, None, None, None, None)
+            new_capi = Capi(external_xml, external_params, None, None, None, None, None, None, None)
             new_capi.params_description = load(new_capi.input_params)
             new_params = new_capi.params_description
             new_capi.api_description = parse_root(new_capi.input_xml, new_params)
@@ -241,9 +244,16 @@ class Capi(object):
         if self.unit_tests_generator:
             self.unit_tests_generator.generate(namespace_generators)
 
+        if self.sharp_output_folder:
+            if self.params_description.shared_library_name_filled:
+                generate_sharp_code(file_cache, capi_generator, namespace_generators)
+            else:
+                print('Warning: To generate the C# code, you must specify shared_library_name in the params file')
+
     def generate(self):
         self.params_description = load(self.input_params)
         self.params_description.output_folder = self.output_folder
+        self.params_description.sharp_output_folder = self.sharp_output_folder
         self.params_description.internal_snippets_folder = self.internal_snippets_folder
         self.params_description.api_keys_folder = self.api_keys_folder
         self.params_description.output_wrap_file_name = self.output_wrap_file_name
@@ -277,6 +287,9 @@ def main():
         '-o', '--output-folder', nargs=None, default='./output', dest='output_folder',
         help='specifies output folder for generated files')
     parser.add_argument(
+        '-S', '--sharp-output-folder', nargs=None, default='', dest='sharp_output_folder',
+        help='specifies output folder for generated files for C#')
+    parser.add_argument(
         '-w', '--output-wrap-file-name', nargs=None, default='./capi_wrappers.cpp', dest='output_wrap',
         help='specifies output file name for wrapper C-functions')
     parser.add_argument(
@@ -306,6 +319,7 @@ def main():
         args.input,
         args.params,
         args.output_folder,
+        args.sharp_output_folder,
         args.output_wrap,
         args.output_snippets,
         args.api_keys_folder,

@@ -1523,6 +1523,8 @@ class TMappedType(object):
         self.name_filled = False
         self.wrap_type = ""
         self.wrap_type_filled = False
+        self.sharp_wrap_type = ""
+        self.sharp_wrap_type_filled = False
         self.argument_wrap_type = ""
         self.argument_wrap_type_filled = False
         self.c_type = ""
@@ -1558,6 +1560,10 @@ class TMappedType(object):
             cur_attr = dom_node.getAttribute("wrap_type")
             self.wrap_type = cur_attr
             self.wrap_type_filled = True
+        if dom_node.hasAttribute("sharp_wrap_type"):
+            cur_attr = dom_node.getAttribute("sharp_wrap_type")
+            self.sharp_wrap_type = cur_attr
+            self.sharp_wrap_type_filled = True
         if dom_node.hasAttribute("argument_wrap_type"):
             cur_attr = dom_node.getAttribute("argument_wrap_type")
             self.argument_wrap_type = cur_attr
