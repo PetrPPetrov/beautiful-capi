@@ -236,9 +236,6 @@ class TestGenerator(object):
 
     def __gen_test_for_copy_semantic(self, argument_generator: ClassGenerator,
                                      c_property: ClassToProperties.Properties):
-        # For Example:
-        # test_class.SetMethodName(field_name);
-        # BOOST_CHECK(equal(test_class.GetMethodName(), field_name));
         field_name = pascal_to_stl(c_property.property.name)
         self.__gen_for_object(argument_generator, c_property)
         self.file.current.put_line('test_class{sep}{method_name}({field_name});'.format(
@@ -251,9 +248,6 @@ class TestGenerator(object):
 
     def __gen_test_for_refcounted_semantic(self, argument_generator: ClassGenerator,
                                            c_property: ClassToProperties.Properties):
-        # For Example:
-        # test_class->SetMethodName(field_name);
-        # BOOST_CHECK_EQUAL(test_class->getMethodName().GetRawPointer(), field_name.GetRawPointer());
         field_name = pascal_to_stl(c_property.property.name)
         self.__gen_for_object(argument_generator, c_property)
         self.file.current.put_line('test_class{sep}{method_name}({field_name});'.format(
@@ -304,9 +298,9 @@ class TestGenerator(object):
         else:
             return class_generator
 
-    def __get_arguments(self, class_generator: ClassGenerator, construcor) -> list:
+    def __get_arguments(self, class_generator: ClassGenerator, constructor) -> list:
         result = list()
-        for argument in construcor.argument_generators:
+        for argument in constructor.argument_generators:
             type_generator = argument.type_generator
 
             if type(type_generator) in [BuiltinTypeGenerator, EnumTypeGenerator, MappedTypeGenerator]:
@@ -393,7 +387,7 @@ class TestGenerator(object):
 
     def generate_enum_tests(self, enums: [EnumGenerator]):
         for enum in enums:
-            self.file.current.put_line('// Enumeration {0} test'.format(enum.full_wrap_name))
+            self.file.current.put_line('// Enumeration {0}'.format(enum.full_wrap_name))
             with IndentScope(self.file.current, ending='}\n'):
                     self.__generate_enum_test(enum)
 
@@ -429,7 +423,7 @@ class TestGenerator(object):
     def generate_test(self, cur_class: Parser.TClass,
                       property_class_generator: ClassToProperties.CGeneratorToProperties):
         full_type = format_type(property_class_generator.class_generator.full_wrap_name)
-        test_declaration = '//Class {0} test'.format(full_type)
+        test_declaration = '// Class {0}'.format(full_type)
 
         is_copy_semantic = cur_class.lifecycle == Parser.TLifecycle.copy_semantic
         is_raw_pointer = cur_class.lifecycle == Parser.TLifecycle.raw_pointer_semantic
@@ -514,7 +508,7 @@ class TestGenerator(object):
                 if class_generator.class_object in self.class_to_properties.map:
                     if namespace_generator not in added_namespace:
                         added_namespace.append(namespace_generator)
-                        self.file.current.put_line('//Namespace {0}:\n'.format(
+                        self.file.current.put_line('// Namespace {0}\n'.format(
                            namespace_generator.full_wrap_name))
                     class_object = class_generator.class_object
                     c_generator_to_properties = self.class_to_properties.map[class_object]
@@ -522,10 +516,6 @@ class TestGenerator(object):
             self.__generate_test(namespace_generator.nested_namespaces)
 
     def generate_tests(self, namespace_generators: [NamespaceGenerator.NamespaceGenerator]):
-        # if os.path.splitext(self.test_generator.main_generator.filename)[1].lower() != '.h':
-        #     self.test_generator.main_generator.put_line('# define BOOST_TEST_MAIN')
-        # self.test_generator.main_generator.include_header('boost/test/unit_test.hpp', False)
-        self.file.current.include_header('StaticEqual.h', False)
         self.file.current.include_header('string', True)
         self.file.current.include_header('iostream', True)
         self.file.current.include_header('cstring', True)
@@ -543,14 +533,14 @@ class TestGenerator(object):
         self.file.current.put_line('void report_error(std::string source)')
         with IndentScope(self.file.current):
             self.file.current.put_line(
-                'std::cout<< "Error: " << source << " has an invalid value" << std::endl;')
+                'std::cout << "Error: " << source << " has an invalid value" << std::endl;')
         self.file.current.put_line('')
 
         self.file.current.put_line('void run_tests()')
         with IndentScope(self.file.current):
             self.__generate_test(namespace_generators)
             self.generate_enum_tests(self.enums)
-            self.file.current.put_line('std::cout<< "Testing completed" << std::endl;')
+            self.file.current.put_line('std::cout << "Testing completed" << std::endl;')
 
     def generate(self, namespace_generators: [NamespaceGenerator.NamespaceGenerator]):
         self.__processing_namespace(namespace_generators)
