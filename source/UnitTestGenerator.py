@@ -187,7 +187,7 @@ class TestGenerator(object):
             method_name=c_property.set_method.name, value=value, sep=c_property.set_method_generator.access_operator))
         error = c_property.set_method_generator.parent_class_generator.full_wrap_name + '::' + c_property.property.name
         if '"' in value:
-            check_str = 'if (strcmp(test_class{sep}{method_name}(), {value}) != 0) report_error("{error}");'.format(
+            check_str = 'if (test_class{sep}{method_name}() != {value}) report_error("{error}");'.format(
                 method_name=c_property.get_method.name, value=value,
                 sep=c_property.get_method_generator.access_operator, error=error)
         else:
