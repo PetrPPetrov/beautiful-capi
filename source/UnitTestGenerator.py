@@ -468,7 +468,6 @@ class TestGenerator(object):
             type_name=full_type, is_declaration=';'))
         self.equal_main_section.put_line(method_declaration.format(
             type_name=full_type, is_declaration=''))
-
         with IndentScope(self.equal_main_section, ending='}\n'):
             generator = self.equal_main_section
             for c_property in c_generator_to_properties.properties:
@@ -502,7 +501,9 @@ class TestGenerator(object):
                 generator.put_line(equal_code)
                 with IndentScope(generator):
                     generator.put_line('return false;')
-            generator.put_line('return true;')
+            base = c_generator_to_properties.class_generator.base_class_generator
+            result = 'equal(({0})first, ({0})second)'.format(base.full_wrap_name) if base else 'true'
+            generator.put_line('return {0};'.format(result))
 
     def __generate_test(self, namespace_generators: [NamespaceGenerator.NamespaceGenerator]):
         added_namespace = list()
