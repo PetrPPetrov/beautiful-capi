@@ -400,7 +400,7 @@ class TestGenerator(object):
         class_name = parent.implementation_name.split('::')[-1] if isinstance(parent, ClassGenerator) else ''
         namespace = parent.parent_namespace if isinstance(parent, ClassGenerator) else parent
         for index, item in enumerate(enum.enum_object.items):
-            wrap_item_name = enum.full_wrap_name + '::' + item.name
+            wrap_item_name = enum.parent_generator.full_wrap_name + '::' + item.name
             file.put_line('if ({get_impl_value_func}({index}) != {item_name})'.format(
                 get_impl_value_func=namespace.full_wrap_name + '::GetImplementationValueFor' + class_name + enum.name,
                 index=index,
