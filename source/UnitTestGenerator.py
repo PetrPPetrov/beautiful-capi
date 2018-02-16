@@ -186,14 +186,9 @@ class TestGenerator(object):
         self.file.current.put_line('test_class{sep}{method_name}({value});'.format(
             method_name=c_property.set_method.name, value=value, sep=c_property.set_method_generator.access_operator))
         error = c_property.set_method_generator.parent_class_generator.full_wrap_name + '::' + c_property.property.name
-        if '"' in value:
-            check_str = 'if (test_class{sep}{method_name}() != {value}) report_error("{error}");'.format(
-                method_name=c_property.get_method.name, value=value,
-                sep=c_property.get_method_generator.access_operator, error=error)
-        else:
-            check_str = 'if (test_class{sep}{method_name}() != {value}) report_error("{error}");'.format(
-                method_name=c_property.get_method.name, value=value,
-                sep=c_property.get_method_generator.access_operator, error=error)
+        check_str = 'if (builtin_equal(test_class{sep}{method_name}(), {value})) report_error("{error}");'.format(
+            method_name=c_property.get_method.name, value=value,
+            sep=c_property.get_method_generator.access_operator, error=error)
         self.file.current.put_line(check_str)
 
     @staticmethod
