@@ -21,13 +21,13 @@
 project(unit_test_example)
 
 cmake_minimum_required(VERSION 2.8)
+find_package(Boost REQUIRED)
 
 set(Boost_USE_STATIC_LIBS ON)
-find_package(Boost COMPONENTS unit_test_framework)
 
-if(Boost_FOUND AND Boost_UNIT_TEST_FRAMEWORK_LIBRARY)
+if(Boost_FOUND)
   add_subdirectory(library)
   add_subdirectory(client)
 else()
-  message(STATUS "Boost.Test is not found, it's required to build unit_test example.")
+  message(STATUS "Boost is not found, it's required to build unit_test example.")
 endif()

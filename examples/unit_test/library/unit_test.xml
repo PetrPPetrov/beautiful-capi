@@ -25,10 +25,17 @@
     </class>
     
     <class name="Person" lifecycle="raw_pointer_semantic" implementation_class_name="UnitTest::PersonImpl" implementation_class_header="PersonImpl.h">
-      <enumeration name="Sex" underlying_type="unsigned int">
+      <enumeration name="Sex" underlying_type="unsigned int" implementation_type="UnitTest::PersonImpl::Sex">
         <item name="Unknown" value="0"/>
         <item name="Male"/>
         <item name="Female"/>
+      </enumeration>
+
+      <enumeration name="MaritalStatus" underlying_type="unsigned int" implementation_type="UnitTest::PersonImpl::MaritalStatus">
+        <item name="Single" value="3"/>
+        <item name="Married" value="0"/>
+        <item name="Divorced" value="2"/>
+        <item name="Widowed" value="1"/>
       </enumeration>
       
       <constructor name="Default"/>
@@ -39,6 +46,8 @@
       <property name="Sex" type="UnitTest::Person::Sex"/>
       <property name="Mother" type="UnitTest::Person"/>
       <property name="Father" type="UnitTest::Person"/>
+      <property name="MaritalStatus" type="UnitTest::Person::MaritalStatus"/>
+
     </class>
   </namespace>
 </unit_test:api>

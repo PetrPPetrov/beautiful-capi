@@ -19,13 +19,17 @@
  *
  */
  
-#define BOOST_TEST_MODULE Beautiful Capi Unit Testing
 #include <stdint.h>
-#include <iostream>
+#include <stdlib.h>
+#include "StaticEqual.h"
 #include "AutoGenUnitTests.h"
 
 int main()
 {
-    run_tests();
-    return 0;
+    if (run_tests())
+    {
+        std::cout << "Testing Completed Successfully" << std::endl;
+        return EXIT_SUCCESS;
+    }
+    return EXIT_FAILURE;
 }

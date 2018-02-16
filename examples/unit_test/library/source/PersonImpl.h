@@ -34,7 +34,7 @@ namespace UnitTest
 #include "snippets/UnitTest/PersonImpl.h"
         // By default newly created objects implies to have value 1 of reference counter
         PersonImpl()
-            : mMother(0), mFather(0), mAge(0), mSex(Unknown), mName("", "", "")
+            : mMother(0), mFather(0), mAge(0), mSex(Unknown), mName("", "", ""), mMaritalStatus(Single)
         {
             std::cout << "Person ctor" << std::endl;
         }
@@ -85,6 +85,16 @@ namespace UnitTest
             mSex = sex;
         }
 
+        MaritalStatus GetMaritalStatus() const
+        {
+            return mMaritalStatus;
+        }
+
+        void SetMaritalStatus(MaritalStatus marital_status)
+        {
+            mMaritalStatus = marital_status;
+        }
+
         PersonImpl* GetMother() const
         {
             return mMother;
@@ -110,6 +120,7 @@ namespace UnitTest
         boost::intrusive_ptr<UnitTest::AddressImpl> mAddress;
         unsigned char mAge;
         Sex mSex;
+        MaritalStatus mMaritalStatus;
         PersonImpl* mMother;
         PersonImpl* mFather;
     };

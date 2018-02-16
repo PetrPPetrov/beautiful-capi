@@ -20,7 +20,12 @@ inline bool builtin_equal(T first, T second)
     return first == second;
 }
 
-template<>
+template <class T, class U>
+inline bool builtin_equal(T first, U second)
+{
+    return first == second;
+}
+
 inline bool builtin_equal(const char* first, const char* second)
 {
     return strcmp(first, second) == 0;
