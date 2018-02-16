@@ -185,11 +185,13 @@ class TestGenerator(object):
     def __gen_test_for_simple_value(self, c_property: ClassToProperties.Properties, value: str):
         self.file.current.put_line('test_class{sep}{method_name}({value});'.format(
             method_name=c_property.set_method.name, value=value, sep=c_property.set_method_generator.access_operator))
-        error = c_property.set_method_generator.parent_class_generator.full_wrap_name + '::' + c_property.property.name
-        check_str = 'if (builtin_equal(test_class{sep}{method_name}(), {value})) report_error("{error}");'.format(
-            method_name=c_property.get_method.name, value=value,
-            sep=c_property.get_method_generator.access_operator, error=error)
+        check_str = 'if (!builtin_equal(test_class{sep}{method_name}(), {value}))'.format(
+            method_name=c_property.get_method.name, value=value, sep=c_property.get_method_generator.access_operator)
         self.file.current.put_line(check_str)
+        with IndentScope(self.file.current):
+            class_name = c_property.set_method_generator.parent_class_generator.full_wrap_name
+            self.file.current.put_line('report_error("{0}");'.format(class_name + '::' + c_property.property.name))
+            self.file.current.put_line('result = false;')
 
     @staticmethod
     def __gen_init_enum_type(enum_type_generator: EnumTypeGenerator) -> str:
@@ -236,10 +238,14 @@ class TestGenerator(object):
         self.file.current.put_line('test_class{sep}{method_name}({field_name});'.format(
             method_name=c_property.set_method.name, sep=c_property.set_method_generator.access_operator,
             field_name=field_name))
-        check_str = 'if (!equal(test_class{sep}{method_name}(), {field_name})) report_error("{error}");'.format(
+        check_str = 'if (!equal(test_class{sep}{method_name}(), {field_name}))'.format(
             method_name=c_property.get_method.name, sep=c_property.get_method_generator.access_operator,
-            field_name=field_name, error=argument_generator.full_wrap_name + '::' + c_property.property.name)
+            field_name=field_name)
         self.file.current.put_line(check_str)
+        with IndentScope(self.file.current):
+            class_name = argument_generator.full_wrap_name + '::' + c_property.property.name
+            self.file.current.put_line('report_error("{0}");'.format(class_name + '::' + c_property.property.name))
+            self.file.current.put_line('result = false;')
 
     def __gen_test_for_refcounted_semantic(self, argument_generator: ClassGenerator,
                                            c_property: ClassToProperties.Properties):
@@ -248,12 +254,14 @@ class TestGenerator(object):
         self.file.current.put_line('test_class{sep}{method_name}({field_name});'.format(
             method_name=c_property.set_method.name, sep=c_property.set_method_generator.access_operator,
             field_name=field_name))
-        check_str = 'if (test_class{sep}{method_name}().{raw_name}() != {field_name}.{raw_name}()) ' \
-                    'report_error("{error}");'
+        check_str = 'if (test_class{sep}{method_name}().{raw_name}() != {field_name}.{raw_name}())'
         self.file.current.put_line(check_str.format(
             method_name=c_property.get_method.name, sep=c_property.get_method_generator.access_operator,
-            field_name=field_name, raw_name=argument_generator.params.get_raw_pointer_method_name,
-            error=argument_generator.full_wrap_name + '::' + c_property.property.name))
+            field_name=field_name, raw_name=argument_generator.params.get_raw_pointer_method_name))
+        with IndentScope(self.file.current):
+            class_name = argument_generator.full_wrap_name + '::' + c_property.property.name
+            self.file.current.put_line('report_error("{0}");'.format(class_name + '::' + c_property.property.name))
+            self.file.current.put_line('result = false;')
 
     def __gen_test_for_rawpointer_semantic(self, argument_generator: ClassGenerator,
                                            c_property: ClassToProperties.Properties):
@@ -393,12 +401,13 @@ class TestGenerator(object):
         namespace = parent.parent_namespace if isinstance(parent, ClassGenerator) else parent
         for index, item in enumerate(enum.enum_object.items):
             wrap_item_name = enum.full_wrap_name + '::' + item.name
-            file.put_line('if ({get_impl_value_func}({index}) != {item_name}) report_error("{error}");'.format(
+            file.put_line('if ({get_impl_value_func}({index}) != {item_name})'.format(
                 get_impl_value_func=namespace.full_wrap_name + '::GetImplementationValueFor' + class_name + enum.name,
                 index=index,
-                item_name=wrap_item_name,
-                error=wrap_item_name
-            ))
+                item_name=wrap_item_name))
+            with IndentScope(self.file.current):
+                self.file.current.put_line('report_error("{0}");'.format(wrap_item_name))
+                self.file.current.put_line('result = false;')
 
     @staticmethod
     def equals(first, second):
@@ -531,11 +540,12 @@ class TestGenerator(object):
                 'std::cout << "Error: " << source << " has an invalid value" << std::endl;')
         self.file.current.put_line('')
 
-        self.file.current.put_line('void run_tests()')
+        self.file.current.put_line('bool run_tests()')
         with IndentScope(self.file.current):
+            self.file.current.put_line('bool result = true;')
             self.__generate_test(namespace_generators)
             self.generate_enum_tests(self.enums)
-            self.file.current.put_line('std::cout << "Testing completed" << std::endl;')
+            self.file.current.put_line('return result;')
 
     def generate(self, namespace_generators: [NamespaceGenerator.NamespaceGenerator]):
         self.__processing_namespace(namespace_generators)
