@@ -97,9 +97,10 @@ class EnumProcessor(object):
             implementation_code.all_items.append('{{')
             name_array = [class_name] if class_name else [ns.name for ns in self.namespace_stack]
             for index, item in enumerate(enum.items):
-                item_name = '::'.join(enum.implementation_type.split('::')[:-1] + [item.name])
+                item_name = item.implementation_name if item.implementation_name else item.name
+                full_name = '::'.join(enum.implementation_type.split('::')[:-1] + [item_name])
                 implementation_code.all_items.append('\tcase {index}:'.format(index=index))
-                implementation_code.all_items.append('\t\treturn static_cast<size_t>({name});'.format(name=item_name))
+                implementation_code.all_items.append('\t\treturn static_cast<size_t>({name});'.format(name=full_name))
             implementation_code.all_items.append('\tdefault:')
             implementation_code.all_items.append('\t\tassert (false);')
             enum_name = '::'.join(name_array + [enum.name])

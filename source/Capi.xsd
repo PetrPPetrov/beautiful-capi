@@ -305,6 +305,11 @@
         <xs:documentation>Specifies value of the current enumeration item</xs:documentation>
       </xs:annotation>
     </xs:attribute>
+    <xs:attribute name="implementation_name" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>Specify enumeration entity implementation name</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
   </xs:complexType>
   <xs:complexType name="TEnumeration">
     <xs:annotation>

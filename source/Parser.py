@@ -518,6 +518,8 @@ class TEnumerationItem(object):
         self.name_filled = False
         self.value = ""
         self.value_filled = False
+        self.implementation_name = ""
+        self.implementation_name_filled = False
         self.documentations = []
 
     def load_element(self, element):
@@ -537,6 +539,10 @@ class TEnumerationItem(object):
             cur_attr = dom_node.getAttribute("value")
             self.value = cur_attr
             self.value_filled = True
+        if dom_node.hasAttribute("implementation_name"):
+            cur_attr = dom_node.getAttribute("implementation_name")
+            self.implementation_name = cur_attr
+            self.implementation_name_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:
