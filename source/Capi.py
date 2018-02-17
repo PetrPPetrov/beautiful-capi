@@ -53,7 +53,8 @@ class Capi(object):
                  internal_snippets_folder,
                  api_keys_folder,
                  clean,
-                 unit_tests_file
+                 unit_tests_file,
+                 verbosity
                  ):
         self.input_xml = input_filename
         self.input_params = parse(input_params_filename)
@@ -70,7 +71,7 @@ class Capi(object):
                 shutil.rmtree(self.output_folder)
             if os.path.exists(self.internal_snippets_folder):
                 shutil.rmtree(self.internal_snippets_folder)
-
+        self.verbosity = verbosity
         self.unit_tests_generator = None
 
     def __substitute_project_name(self, params: TBeautifulCapiParams):
@@ -162,7 +163,8 @@ class Capi(object):
         for external_lib in namespace.external_libraries:
             external_xml = full_relative_path_from_candidates(
                 external_lib.input_xml_file, input_xml_folder, self.params_description.additional_include_directories)
-            print('loading external library: {0}'.format(external_xml))
+            if self.params_description.verbosity:
+                print('loading external library: {0}'.format(external_xml))
             external_params = full_relative_path_from_candidates(
                 external_lib.params_xml_file, input_xml_folder, self.params_description.additional_include_directories)
             new_capi = Capi(external_xml, external_params, None, None, None, None, None, None)
@@ -174,7 +176,8 @@ class Capi(object):
                 for define in external_lib.defines:
                     self.external_libs_headers.append(('define', define.value))
                 self.external_libs_headers.append(('include', external_lib.main_header))
-            print('loaded external library: {0}'.format(external_xml))
+            if self.params_description.verbosity:
+                print('loaded external library: {0}'.format(external_xml))
 
             def process_external_namespaces(namespaces: [object], external_namespaces: [object]):
                 for cur_namespace in namespaces:
@@ -243,6 +246,7 @@ class Capi(object):
 
     def generate(self):
         self.params_description = load(self.input_params)
+        self.params_description.verbosity = self.verbosity
         self.params_description.output_folder = self.output_folder
         self.params_description.internal_snippets_folder = self.internal_snippets_folder
         self.params_description.api_keys_folder = self.api_keys_folder
@@ -293,11 +297,17 @@ def main():
     parser.set_defaults(version=False)
     parser.add_argument('-t', '--tests-file', nargs=None, default="", dest='unit_tests_file',
                         help='generates unit tests for properties into specified file')
+    parser.add_argument('--verbosity', dest='verbosity', action='store_true',
+                        help='increase output verbosity')
+    parser.set_defaults(version=False)
 
     args = parser.parse_args()
 
     if args.version:
         print('Beautiful Capi version 0.4.\n')
+
+    if args.verbosity:
+        print("verbosity turned on")
 
     if not args.input:
         return
@@ -310,7 +320,8 @@ def main():
         args.output_snippets,
         args.api_keys_folder,
         args.clean,
-        args.unit_tests_file
+        args.unit_tests_file,
+        args.verbosity
     )
     capi.generate()
 

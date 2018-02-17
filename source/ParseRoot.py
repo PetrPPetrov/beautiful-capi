@@ -42,7 +42,8 @@ def parse_root(root_api_xml_path: str, params):
         for include in namespace.includes:
             path = full_relative_path_from_candidates(include.path, cur_dir, params.additional_include_directories)
             if os.path.exists(path):
-                print('loading XML API description: {0}'.format(path))
+                if params.verbosity:
+                    print('loading XML API description: {0}'.format(path))
                 sub_api = parse_root(path, params)
 
                 def update_named_attr(source, destination, attr_name: str):
@@ -82,6 +83,7 @@ def parse_root(root_api_xml_path: str, params):
                         update_named_attr(sub_api_nested_ns, namespace, 'mapped_types')
                 else:
                     update_named_attr(sub_api, namespace, 'namespaces')
-                print('loaded XML API description: {0}'.format(path))
+                if params.verbosity:
+                    print('loaded XML API description: {0}'.format(path))
 
     return root_api
