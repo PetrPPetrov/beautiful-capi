@@ -139,6 +139,8 @@ class TNamespace(object):
         self.implementation_header_filled = False
         self.overload_suffix_mode = TOverloadSuffixMode.Notify
         self.overload_suffix_mode_filled = False
+        self.generate_tests = True
+        self.generate_tests_filled = False
         self.documentations = []
         self.external_namespaces = []
         self.external_libraries = []
@@ -240,6 +242,10 @@ class TNamespace(object):
             cur_attr = dom_node.getAttribute("overload_suffix_mode")
             self.overload_suffix_mode = TOverloadSuffixMode.load(cur_attr)
             self.overload_suffix_mode_filled = True
+        if dom_node.hasAttribute("generate_tests"):
+            cur_attr = dom_node.getAttribute("generate_tests")
+            self.generate_tests = string_to_bool(cur_attr)
+            self.generate_tests_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:
@@ -738,6 +744,8 @@ class TClass(object):
         self.custom_down_cast_filled = False
         self.down_cast = True
         self.down_cast_filled = False
+        self.generate_tests = True
+        self.generate_tests_filled = False
         self.documentations = []
         self.include_headers = []
         self.enumerations = []
@@ -889,6 +897,10 @@ class TClass(object):
             cur_attr = dom_node.getAttribute("down_cast")
             self.down_cast = string_to_bool(cur_attr)
             self.down_cast_filled = True
+        if dom_node.hasAttribute("generate_tests"):
+            cur_attr = dom_node.getAttribute("generate_tests")
+            self.generate_tests = string_to_bool(cur_attr)
+            self.generate_tests_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:
@@ -1385,6 +1397,8 @@ class TProperty(object):
         self.return_copy_or_add_ref_filled = False
         self.field_name = ""
         self.field_name_filled = False
+        self.generate_test = True
+        self.generate_test_filled = False
         self.documentations = []
 
     def load_element(self, element):
@@ -1452,6 +1466,10 @@ class TProperty(object):
             cur_attr = dom_node.getAttribute("field_name")
             self.field_name = cur_attr
             self.field_name_filled = True
+        if dom_node.hasAttribute("generate_test"):
+            cur_attr = dom_node.getAttribute("generate_test")
+            self.generate_test = string_to_bool(cur_attr)
+            self.generate_test_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:

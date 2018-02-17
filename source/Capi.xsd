@@ -130,6 +130,11 @@
         <xs:documentation>Specifies overload suffix mode</xs:documentation>
       </xs:annotation>
     </xs:attribute>
+    <xs:attribute default="true" name="generate_tests" type="xs:boolean" use="optional">
+      <xs:annotation>
+        <xs:documentation>Enable / disable generation enums and nested class properties and enums for this namespace(and nested namespaces) with auto-generated unit tests</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
   </xs:complexType>
   <xs:complexType name="TGenericDocumentation" mixed="true">
     <xs:annotation>
@@ -570,6 +575,11 @@
         <xs:documentation>Specifies flag to generate down_cast template functions</xs:documentation>
       </xs:annotation>
     </xs:attribute>
+    <xs:attribute default="true" name="generate_tests" type="xs:boolean" use="optional">
+      <xs:annotation>
+        <xs:documentation>Enable / disable test generation for properties and enumerations for this class with auto-generated unit tests</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
   </xs:complexType>
   <xs:complexType name="TCallback">
     <xs:annotation>
@@ -983,6 +993,11 @@
     <xs:attribute default="" name="field_name" type="xs:string" use="optional">
       <xs:annotation>
         <xs:documentation>Specifies a public field name to automatically generate getter and setter functions</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="true" name="generate_test" type="xs:boolean" use="optional">
+      <xs:annotation>
+        <xs:documentation>Enable / disable test generation for this property with auto-generated unit tests</xs:documentation>
       </xs:annotation>
     </xs:attribute>
   </xs:complexType>

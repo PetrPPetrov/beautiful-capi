@@ -65,7 +65,7 @@ class ClassToProperties(object):
 
     def add_property(self, cur_class: Parser.TClass, c_property: Parser.TProperty,
                      set_method: Parser.TMethod, get_method: Parser.TMethod):
-        if c_property.get_const:
+        if c_property.get_const and c_property.generate_test:
             cur_dict_object = self.__add_object(cur_class)
             cur_dict_object.add_property(c_property, set_method, get_method)
 
@@ -171,16 +171,18 @@ class TestGenerator(object):
 
     def __processing_namespace(self, namespace_generators: [NamespaceGenerator.NamespaceGenerator]):
         for namespace_generator in namespace_generators:
-            for class_generator in namespace_generator.classes:
-                self.__prepare_for_class(class_generator)
-                if not hasattr(class_generator.class_object, 'extension_base_class_name'):
-                    for enum in class_generator.enum_generators:
-                        if enum.enum_object.implementation_type_filled:
-                            self.enums.append(enum)
-            for enum in namespace_generator.enum_generators:
-                if enum.enum_object.implementation_type_filled:
-                    self.enums.append(enum)
-            self.__processing_namespace(namespace_generator.nested_namespaces)
+            if namespace_generator.namespace_object.generate_tests:
+                for class_generator in namespace_generator.classes:
+                    if class_generator.class_object.generate_tests:
+                        self.__prepare_for_class(class_generator)
+                        if not hasattr(class_generator.class_object, 'extension_base_class_name'):
+                            for enum in class_generator.enum_generators:
+                                if enum.enum_object.implementation_type_filled:
+                                    self.enums.append(enum)
+                for enum in namespace_generator.enum_generators:
+                    if enum.enum_object.implementation_type_filled:
+                        self.enums.append(enum)
+                self.__processing_namespace(namespace_generator.nested_namespaces)
 
     def __gen_test_for_simple_value(self, c_property: ClassToProperties.Properties, value: str):
         self.file.current.put_line('test_class{sep}{method_name}({value});'.format(
@@ -508,17 +510,18 @@ class TestGenerator(object):
     def __generate_test(self, namespace_generators: [NamespaceGenerator.NamespaceGenerator]):
         added_namespace = list()
         for namespace_generator in namespace_generators:
-            self.file.current.put_file(self.declaration_section)
-            for class_generator in namespace_generator.classes:
-                if class_generator.class_object in self.class_to_properties.map:
-                    if namespace_generator not in added_namespace:
-                        added_namespace.append(namespace_generator)
-                        self.file.current.put_line('// Namespace {0}\n'.format(
-                           namespace_generator.full_wrap_name))
+            if namespace_generator.namespace_object.generate_tests:
+                self.file.current.put_file(self.declaration_section)
+                for class_generator in namespace_generator.classes:
                     class_object = class_generator.class_object
-                    c_generator_to_properties = self.class_to_properties.map[class_object]
-                    self.generate_test(class_object, c_generator_to_properties)
-            self.__generate_test(namespace_generator.nested_namespaces)
+                    if class_object.generate_tests and class_generator.class_object in self.class_to_properties.map:
+                        if namespace_generator not in added_namespace:
+                            added_namespace.append(namespace_generator)
+                            self.file.current.put_line('// Namespace {0}\n'.format(
+                               namespace_generator.full_wrap_name))
+                        c_generator_to_properties = self.class_to_properties.map[class_object]
+                        self.generate_test(class_object, c_generator_to_properties)
+                self.__generate_test(namespace_generator.nested_namespaces)
 
     def generate_tests(self, namespace_generators: [NamespaceGenerator.NamespaceGenerator]):
         self.file.current.include_header('string', True)
