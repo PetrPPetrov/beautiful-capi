@@ -49,5 +49,9 @@
       <property name="MaritalStatus" type="UnitTest::Person::MaritalStatus"/>
 
     </class>
+    <class name="Exception" lifecycle="copy_semantic" exception="true" implementation_class_name="std::exception" implementation_class_header="exception">
+      <constructor name="Default"/>
+      <method name="What" return="const char*" const="true" noexcept="true" implementation_name="what"/>
+    </class>
   </namespace>
 </unit_test:api>

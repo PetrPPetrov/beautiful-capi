@@ -99,13 +99,13 @@ class EnumProcessor(object):
             for index, item in enumerate(enum.items):
                 item_name = item.implementation_name if item.implementation_name else item.name
                 full_name = '::'.join(enum.implementation_type.split('::')[:-1] + [item_name])
-                implementation_code.all_items.append('\tcase {index}:'.format(index=index))
-                implementation_code.all_items.append('\t\treturn static_cast<size_t>({name});'.format(name=full_name))
-            implementation_code.all_items.append('\tdefault:')
-            implementation_code.all_items.append('\t\tassert (false);')
+                implementation_code.all_items.append(' ' * 4 + 'case {index}:'.format(index=index))
+                implementation_code.all_items.append(' ' * 8 + 'return static_cast<size_t>({0});'.format(full_name))
+            implementation_code.all_items.append(' ' * 4 + 'default:')
+            implementation_code.all_items.append(' ' * 8 + 'assert (false);')
             enum_name = '::'.join(name_array + [enum.name])
             implementation_code.all_items.append(
-                '\t\tthrow std::runtime_error("{name}: index out of range");'.format(name=enum_name))
+                ' ' * 8 + 'throw std::runtime_error("{name}: index out of range");'.format(name=enum_name))
             implementation_code.all_items.append('}}')
             implementation_code.all_items.append('return @ret@0;')
             func.implementation_codes = [implementation_code]
