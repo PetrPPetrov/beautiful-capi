@@ -25,7 +25,7 @@
     </class>
     
     <class name="Person" lifecycle="raw_pointer_semantic" implementation_class_name="UnitTest::PersonImpl" implementation_class_header="PersonImpl.h">
-      <enumeration name="Sex" underlying_type="unsigned int">
+      <enumeration name="Sex" underlying_type="unsigned int" implementation_type="UnitTest::PersonImpl::Sex">
         <item name="Unknown" value="0"/>
         <item name="Male"/>
         <item name="Female"/>

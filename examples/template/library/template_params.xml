@@ -4,6 +4,7 @@
                root_header="Template.h" 
                reference_counted_implementation_2_c="{expression}.detach()"
                shared_library_name="template"
+               sharp_gen_library_project="true"
 >
   <copyright_header>/*
  * Beautiful Capi generates beautiful C API wrappers for your C++ classes

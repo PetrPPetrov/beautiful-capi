@@ -21,16 +21,13 @@
 project(template_sharp_client LANGUAGES CSharp)
 cmake_minimum_required(VERSION 3.8.2)
 
-file(GLOB_RECURSE SRCS ${template_sharp_client_SOURCE_DIR}/../library/sharp_output/*.cs) 
-
 add_executable(template_sharp_client 
   ${template_sharp_client_SOURCE_DIR}/Program.cs
   ${template_sharp_client_SOURCE_DIR}/Properties/AssemblyInfo.cs
-  ${SRCS}
 )
 
-target_compile_options(template_sharp_client PRIVATE "/unsafe")
 SET_TARGET_PROPERTIES(template_sharp_client PROPERTIES LINKER_LANGUAGE CSharp)
 if(TARGET template)
-  add_dependencies(template_sharp_client template)
+  add_dependencies(template_sharp_client template_sharp_library)
 endif()
+

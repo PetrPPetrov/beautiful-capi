@@ -20,6 +20,7 @@
 #
 
 import os
+from xml.dom.minidom import getDOMImplementation, Element, Text
 
 import NamespaceGenerator
 import CapiGenerator
@@ -29,7 +30,8 @@ from ArgumentGenerator import ArgumentGenerator, MappedTypeGenerator, ClassTypeG
 from BuiltinTypeGenerator import BuiltinTypeGenerator
 from MethodGenerator import MethodGenerator, ConstructorGenerator, FunctionGenerator
 from FileGenerator import FileGenerator, IndentScope, Indent
-from Helpers import if_required_then_add_empty_line, bool_to_str, replace_template_to_filename, BeautifulCapiException
+from Helpers import if_required_then_add_empty_line, bool_to_str, replace_template_to_filename, BeautifulCapiException, \
+    get_template_tail
 from Helpers import get_template_name, get_template_argument, replace_template_argument
 from Parser import TLifecycle
 from InheritanceTraits import RequiresCastToBase
@@ -292,7 +294,8 @@ class SharpClass(object):
             self.base_class = SharpGenerator.get_or_gen_class(base_class_name, base)
 
     def __generate_definition(self):
-        definition_header = self.file_cache.get_file_for_class(self.namespace.full_name_array + [self.wrap_name])
+        name_array = self.namespace.full_name_array + [self.wrap_short_name, self.wrap_name]
+        definition_header = self.file_cache.get_file_for_class(name_array if self.is_template else self.full_name_array)
         definition_header.put_begin_cpp_comments(self.class_generator.params)
         definition_header.put_line('using System.Runtime.InteropServices;\n')
         self.namespace.increase_indent_recursively(definition_header)
@@ -353,7 +356,8 @@ class SharpClass(object):
 
     def __generate_export_functions(self):
         from LifecycleTraits import RefCountedSemantic
-        header = self.file_cache.get_file_for_class(self.full_name_array)
+        name_array = self.namespace.full_name_array + [self.wrap_short_name, self.wrap_name]
+        header = self.file_cache.get_file_for_class(name_array if self.is_template else self.full_name_array)
         import_string = '[DllImport("{dll_name}.dll", CallingConvention = {calling_convention})]'.format(
             dll_name=self.class_generator.params.shared_library_name,
             calling_convention='CallingConvention.Cdecl'  # now used only cdecl convention
@@ -417,8 +421,8 @@ class SharpTemplate(object):
     def wrap_short_name(self):
         return self.template_generator.template_class_generator.wrap_short_name
 
-    @staticmethod
-    def parse_template_arguments(arguments: str, namespace: SharpNamespace):
+
+    def __parse_template_arguments(self):
         pass
 
     def __generate_constructor_definitions(self, out: FileGenerator):
@@ -426,18 +430,19 @@ class SharpTemplate(object):
         self.__generate__ctor_from_object(out)
         out.put_line('')
         for ctor in self.constructors:
+
+            # ToDo change args
+            arguments_names = ', '.join([arg[1] for arg in self.explicit_arguments])
+            certain = 'Activator.CreateInstance(GetCertainType({0}), new object[] {{{0}}})'.format(
+                arguments_names)
+
             arguments = [argument.wrap_argument_declaration() for argument in ctor.arguments]
             out.put_line('public {class_name}({arguments}){base_init}'.format(
                 class_name=class_.wrap_name,
                 arguments=', '.join([arg[0] + ' ' + arg[1] for arg in self.explicit_arguments] + arguments),
-                base_init=''  # get_base_init(self.class_generator) if self.class_generator.base_class else ''
+                base_init=' :this(ECreateFromObject.create_from_object, {obj})'.format(obj=certain)
             ))
-            # TODO add base class ctor call
-            # ToDo change args
-            with IndentScope(out):
-                arguments_names = ', '.join([arg[1] for arg in self.explicit_arguments])
-                out.put_line('Type certain_type = GetCertainType({0});'.format(arguments_names))
-                out.put_line('mObject = Activator.CreateInstance(certain_type, new object[] {%s});' % arguments_names)
+            out.put_line('{}')
             out.put_line('')
 
     def __generate_methods_definitions(self, out: FileGenerator):
@@ -576,10 +581,10 @@ class SharpTemplate(object):
             out.put_line('return (TemplateArgument)obj;')
 
     def __generate__ctor_from_object(self, out: FileGenerator):
-        # TODO call base ctor if class has base class
-        out.put_line('public {name}(ECreateFromObject e, object obj)'.format(name=self.wrap_short_name))
+        out.put_line('public {name}(ECreateFromObject e, object obj){base}'.format(
+            base=get_template_base_init(self), name=self.wrap_short_name))
         with IndentScope(out):
-            out.put_line('if (TypeMap.ContainsValue(obj.GetType()))')
+            out.put_line('if (TypeMap.Values.Any(value => value.IsAssignableFrom(obj.GetType())))')
             with IndentScope(out):
                 out.put_line('mObject = obj;')
             out.put_line('else')
@@ -638,7 +643,7 @@ class SharpTemplate(object):
         self.namespace.decrease_indent_recursively(out)
 
     def generate(self, file_cache):
-        class_name = self.template_generator.template_class_generator.name
+        class_name = self.template_generator.template_class_generator.wrap_name
         header = file_cache.get_file_for_class(self.namespace.full_name_array + [class_name])
         base_name = self.template_generator.template_class.base
         if base_name:
@@ -800,7 +805,7 @@ class SharpConstructor(object):
         out.put_line('unsafe public {class_name}({arguments}){base_init}'.format(
             class_name=self.class_generator.wrap_name,
             arguments=arguments,
-            base_init=''  # get_base_init(self.class_generator) if self.class_generator.base_class else ''
+            base_init=get_base_init(self.class_generator) if self.class_generator.base_class else ''
         ))
         with IndentScope(out):
             result_expression = SharpExceptionTraits.generate_c_call(
@@ -1108,6 +1113,10 @@ class SharpFileCache(object):
         output_file_name = self.__get_file_name_for_class(path_to_class, OsJoin(self.base_path))
         return self.file_cache.get_cached_generator(output_file_name)
 
+    def get_file_for_namespace(self, path_to_namespace: [str]) -> FileGenerator:
+        output_file_name = self.__get_file_name_base_for_namespace_common(path_to_namespace, OsJoin(self.base_path))
+        return self.file_cache.get_cached_generator(output_file_name)
+
     def __get_file_name_base_for_namespace(self, namespace_path: [str], join_traits: PosixJoin or OsJoin) -> str:
         if self.file_cache.params.namespace_header_at_parent_folder:
             return SharpFileCache.__get_file_name_base_for_namespace_common(namespace_path[:-1], join_traits)
@@ -1160,6 +1169,60 @@ class SharpGenerator(object):
         return result
 
 
+class SharpCmakeListGenerator(object):
+    def __init__(self, capi_generator, namespaces: []):
+        self.name = capi_generator.api_root.project_name
+        self.params = capi_generator.params
+        self.namespaces = [full_name_2_sharp_object[namespace.full_wrap_name] for namespace in namespaces]
+        self.out_folder = capi_generator.params.sharp_output_folder
+        self.file = FileGenerator(self.out_folder + '/CMakeLists.txt')
+        self.name_stack = []
+        self.project_path = ''
+
+    def generate_class(self, class_: SharpClass):
+        path_to_class = '/'.join(self.name_stack + [class_.wrap_name])
+        self.file.put_line(self.project_path + '/' + path_to_class + '.cs')
+        pass
+
+    def generate_template(self, template: SharpTemplate):
+        filename = template.template_generator.template_class_generator.wrap_name + '.cs'
+        self.file.put_line('/'.join([self.project_path] + self.name_stack + [filename]))
+        self.name_stack.append(template.wrap_short_name)
+        for class_ in template.classes:
+            self.generate_class(class_)
+        self.name_stack.pop()
+
+    def generate_namespace(self, namespace):
+        if not self.name_stack:
+            self.file.put_line(self.project_path + '/' + namespace.wrap_name + '/' + namespace.wrap_name + 'Init.cs')
+        self.file.put_line('/'.join([self.project_path] + self.name_stack + [namespace.wrap_name + 'Functions.cs']))
+        self.name_stack.append(namespace.wrap_name)
+        for nested_namespace in namespace.nested_namespaces.values():
+            self.generate_namespace(nested_namespace)
+        for class_ in namespace.classes.values():
+            self.generate_class(class_)
+        for template in namespace.templates.values():
+            self.generate_template(template)
+        self.name_stack.pop()
+
+    def generate(self):
+        library_name = self.name.lower() + '_sharp_library'
+        self.file.put_line('project({library_name} LANGUAGES CSharp)\n'.format(library_name=library_name))
+        self.file.put_line('cmake_minimum_required(VERSION 3.8.2)\n')
+        self.file.put_line('add_library({library_name} SHARED'.format(library_name=library_name))
+        self.project_path = '${{{library_name}_SOURCE_DIR}}'.format(library_name=library_name)
+        with Indent(self.file):
+            for namespace in self.namespaces:
+                self.generate_namespace(namespace)
+        self.file.put_line(')\n')
+        file_content = 'target_compile_options({library_name} PRIVATE "/unsafe")\n' \
+                       'SET_TARGET_PROPERTIES({library_name} PROPERTIES LINKER_LANGUAGE CSharp)\n' \
+                       'if(TARGET {project})\n' \
+                       '    add_dependencies({library_name} {project})\n' \
+                       'endif()\n'.format(library_name=library_name, project=self.name.lower())
+        self.file.put_line(file_content)
+
+
 def generate_requires_cast_to_base_set_object_definition(out: FileGenerator, sharp_class):
     new = 'new ' if sharp_class.base_class else ''
     out.put_line('{0}unsafe protected void SetObject(void* object_pointer)'.format(new))
@@ -1194,6 +1257,15 @@ def generate_set_object_definition(inheritance_traits, out: FileGenerator, sharp
         generate_simple_case_set_object_definition(out, sharp_class)
 
 
+def get_template_base_init(template: SharpTemplate):
+    base = template.base
+    if base:
+        base_template = template.template_generator.template_class.base.replace('::', '.')
+        base_class_name = full_name_2_sharp_object[get_template_name(base_template)].wrap_short_name + get_template_tail(base_template)
+
+        return ' : base({0}.{1}, obj)'.format(base_class_name, 'ECreateFromObject.create_from_object')
+    return ''
+
 def get_base_init(sharp_class):
     base = sharp_class.base_class
     if base:
@@ -1201,8 +1273,7 @@ def get_base_init(sharp_class):
             '.'.join(base.class_generator.parent_namespace.full_name_array + [base.wrap_name]),
             'ECreateFromRawPointer.force_creating_from_raw_pointer'
         )
-    else:
-        return ''
+    return ''
 
 
 sharp_lifecycles = {}
@@ -1228,4 +1299,7 @@ def generate(cpp_file_cache: FileCache, capi_generator: CapiGenerator, namespace
     for namespace_generator in namespace_generators:
         namespace = SharpGenerator.get_or_gen_namespace(namespace_generator.full_wrap_name, namespace_generator)
         namespace.generate(file_cache, capi_generator)
+    if capi_generator.params.generate_sharp_library:
+        project_gen = SharpCmakeListGenerator(capi_generator, namespace_generators)
+        project_gen.generate()
     full_name_2_sharp_object.clear()
