@@ -48,13 +48,13 @@ class Capi(object):
     def __init__(self,
                  input_filename,
                  input_params_filename,
-                 output_folder,
-                 output_wrap_file_name,
-                 internal_snippets_folder,
-                 api_keys_folder,
-                 clean,
-                 unit_tests_file,
-                 verbosity
+                 output_folder=None,
+                 output_wrap_file_name=None,
+                 internal_snippets_folder=None,
+                 api_keys_folder=None,
+                 clean=None,
+                 unit_tests_file=None,
+                 verbosity=None
                  ):
         self.input_xml = input_filename
         self.input_params = parse(input_params_filename)
@@ -167,9 +167,10 @@ class Capi(object):
                 print('loading external library: {0}'.format(external_xml))
             external_params = full_relative_path_from_candidates(
                 external_lib.params_xml_file, input_xml_folder, self.params_description.additional_include_directories)
-            new_capi = Capi(external_xml, external_params, None, None, None, None, None, None)
+            new_capi = Capi(external_xml, external_params)
             new_capi.params_description = load(new_capi.input_params)
             new_params = new_capi.params_description
+            new_params.verbosity = self.params_description.verbosity
             new_capi.api_description = parse_root(new_capi.input_xml, new_params)
             new_capi.__substitute_project_name(new_capi.params_description)
             if external_lib.main_header:
