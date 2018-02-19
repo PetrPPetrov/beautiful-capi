@@ -24,7 +24,7 @@ import os
 import NamespaceGenerator
 import CapiGenerator
 from ClassGenerator import ClassGenerator
-from LifecycleTraits import LifecycleTraits, RawPointerSemantic
+from LifecycleTraits import LifecycleTraits, RawPointerSemantic, CopySemantic
 from ArgumentGenerator import ArgumentGenerator, MappedTypeGenerator, ClassTypeGenerator
 from BuiltinTypeGenerator import BuiltinTypeGenerator
 from MethodGenerator import MethodGenerator, ConstructorGenerator, FunctionGenerator
@@ -569,8 +569,10 @@ class SharpTemplate(object):
             out.put_line('Type type = typeof(TemplateArgument);')
             out.put_line('if (type.GetMethod("GetCertainType") != null)')
             with IndentScope(out):
-                out.put_line('var enumeration = Enum.Parse(type.GetNestedType("ECreateFromObject"), "create_from_object");')
-                out.put_line('return (TemplateArgument)type.GetConstructors()[0].Invoke(new object[] { enumeration, obj });')
+                out.put_line('var enumeration = Enum.Parse(type.GetNestedType("ECreateFromObject"), '
+                             '"create_from_object");')
+                out.put_line('return (TemplateArgument)type.GetConstructors()[0].Invoke(new object[] '
+                             '{ enumeration, obj });')
             out.put_line('return (TemplateArgument)obj;')
 
     def __generate__ctor_from_object(self, out: FileGenerator):
@@ -614,10 +616,10 @@ class SharpTemplate(object):
             base_class=base_class
         ))
         with IndentScope(out):
-
+            new = 'new ' if self.base else ''
             self.__generate_type_map(out)
             out.put_line('')
-            out.put_line('public enum ECreateFromObject { create_from_object };')
+            out.put_line('{new}public enum ECreateFromObject {{create_from_object}};'.format(new=new))
             out.put_line('')
             self.__generate_constructor_definitions(out)
             self.__generate_methods_definitions(out)
@@ -631,7 +633,7 @@ class SharpTemplate(object):
             out.put_line('')
             self.__generate__certain_2_template(out)
             out.put_line('')
-            out.put_line('{new}private object mObject;'.format(new='new ' if self.base else ''))
+            out.put_line('{new}private object mObject;'.format(new=new))
 
         self.namespace.decrease_indent_recursively(out)
 
@@ -847,22 +849,24 @@ class SharpLifecycleTraits(object):
         self.lifecycle_traits = lifecycle_traits
         self.params = lifecycle_traits.params
 
-    def generate_std_methods_definitions(self, out: FileGenerator, sharp_class):
-        out.put_line('unsafe public {class_name} {null_method}()'.format(
+    def generate_std_methods_definitions(self, out: FileGenerator, sharp_class: SharpClass):
+        new = 'new ' if sharp_class.base_class else ''
+        out.put_line('{new}unsafe public {class_name} {null_method}()'.format(
             class_name=sharp_class.wrap_name,
-            null_method=self.params.null_method_name))
+            null_method=self.params.null_method_name,
+            new=new))
         with IndentScope(out):
             out.put_line('return new {class_name}({class_name}.{force_create}, null, false);'.format(
                 force_create='ECreateFromRawPointer.force_creating_from_raw_pointer',
                 class_name=sharp_class.wrap_name))
         out.put_line('')
-        out.put_line('unsafe public bool {is_null_method}()'.format(
-            is_null_method=self.params.is_null_method_name))
+        out.put_line('{new}unsafe public bool {is_null_method}()'.format(
+            is_null_method=self.params.is_null_method_name, new=new))
         with IndentScope(out):
             out.put_line('return {get_raw}() != null;'.format(get_raw=self.params.get_raw_pointer_method_name))
         out.put_line('')
-        out.put_line('unsafe public bool {is_not_null_method}()'.format(
-            is_not_null_method=self.params.is_not_null_method_name))
+        out.put_line('{new}unsafe public bool {is_not_null_method}()'.format(
+            is_not_null_method=self.params.is_not_null_method_name, new=new))
         with IndentScope(out):
             out.put_line('return {get_raw}() != null;'.format(get_raw=self.params.get_raw_pointer_method_name))
         out.put_line('')
@@ -871,21 +875,21 @@ class SharpLifecycleTraits(object):
         with IndentScope(out):
             out.put_line('return obj.{get_raw}() != null;'.format(get_raw=self.params.get_raw_pointer_method_name))
         out.put_line('')
-        out.put_line('unsafe public void* {detach_method}()'.format(
-            detach_method=self.params.detach_method_name))
+        out.put_line('{new}unsafe public void* {detach_method}()'.format(
+            detach_method=self.params.detach_method_name, new=new))
         with IndentScope(out):
             out.put_line('void* result = {get_raw}();'.format(get_raw=self.params.get_raw_pointer_method_name))
             out.put_line('SetObject(null);')
             out.put_line('return result;')
         out.put_line('')
-        out.put_line('unsafe public void* {get_raw_pointer_method}()'.format(
-            get_raw_pointer_method=self.params.get_raw_pointer_method_name))
+        out.put_line('{new}unsafe public void* {get_raw_pointer_method}()'.format(
+            get_raw_pointer_method=self.params.get_raw_pointer_method_name, new=new))
         with IndentScope(out):
             out.put_line('return mObject != null ? mObject: null;')
 
 
 class SharpCopySemantic(SharpLifecycleTraits):
-    def __init__(self, lifecycle_traits: LifecycleTraits):
+    def __init__(self, lifecycle_traits: CopySemantic):
         super().__init__(lifecycle_traits)
 
     def __generate_copy_constructor_definition(self, out: FileGenerator, sharp_class):
@@ -1157,11 +1161,11 @@ class SharpGenerator(object):
 
 
 def generate_requires_cast_to_base_set_object_definition(out: FileGenerator, sharp_class):
-    out.put_line('unsafe protected void SetObject(void* object_pointer)')
+    new = 'new ' if sharp_class.base_class else ''
+    out.put_line('{0}unsafe protected void SetObject(void* object_pointer)'.format(new))
     with IndentScope(out):
         out.put_line('mObject = object_pointer;')
         if sharp_class.base_class:
-            base_class = sharp_class.base_class.wrap_name
             out.put_line('if (mObject != null)')
             with IndentScope(out):
                 out.put_line('base.SetObject({cast_to_base}(mObject));'.format(
