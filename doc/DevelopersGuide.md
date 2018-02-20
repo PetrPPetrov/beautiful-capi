@@ -14,26 +14,30 @@ Beautiful-Capi Developer's Guide
     * [Reference counted semantic](#reference-counted-semantic)
     * [Raw pointer semantic](#raw-pointer-semantic)
     * [Common methods of the wrapper classes](#common-methods-of-the-wrapper-classes)
-3. [Command-line arguments](#command-line-arguments)
-4. [Integration with CMake](#integration-with-cmake)
-5. [XML API description schema reference](#xml-api-description-schema)
-6. [XML generation parameters schema](#xml-generation-parameters-schema)
-7. [Mixing semantics](#mixing-semantics)
+3. [Classification of types](#classification-of-types)
+4. [Mixing semantics](#mixing-semantics)
     * [Casting attributes](#casting-attributes)
     * [Lifecycle extensions](#lifecycle-extensions)
-8. [Exception handling](#exception-handling)
-9. [Callbacks](#callbacks)
-10. [Dynamic casts](#dynamic-casts)
-11. [Templates](#templates)
-12. [Snippets](#snippets)
-13. [Unit tests](#unit-tests)
-14. [Secured API](#secured-api)
-15. [Inheritance modes](#inheritance-modes)
+5. [Exception handling](#exception-handling)
+6. [Callbacks](#callbacks)
+7. [Dynamic casts](#dynamic-casts)
+8. [Templates](#templates)
+9. [Snippets](#snippets)
+10. [Inheritance modes](#inheritance-modes)
+11. [Properties](#properties)
+12. [Unit tests](#unit-tests)
+13. [Implementation code](#implementation-code)
+14. [Cascading libraries](#cascading-libraries)
+15. [Secured API](#secured-api)
 16. [Making compiler-independent libraries](#making-compiler-independent-libraries)
     * [Dynamic loader](#dynamic-loader)
     * [Windows](#windows)
     * [Linux](#linux)
     * [MacOSX](#macosx)
+17. [Command-line arguments](#command-line-arguments)
+18. [Integration with CMake](#integration-with-cmake)
+19. [XML API description schema reference](#xml-api-description-schema)
+20. [XML generation parameters schema](#xml-generation-parameters-schema)    
 
 Introduction
 ------------
@@ -496,119 +500,9 @@ For convenience, there is an overloaded *operator!* in the wrapper classes, so, 
     }
 ~~~
 
-Command-line arguments
-----------------------
-
-The main script to execute Beautiful Capi generation is *source/Capi.py*.
-If you run it with *--help* argument then you will have a similar output:
-```
-Beautiful Capi  Copyright (C) 2015  Petr Petrovich Petrov
-This program comes with ABSOLUTELY NO WARRANTY;
-This is free software, and you are welcome to redistribute it
-under certain conditions.
-
-usage: Beautiful Capi [-h] [-i INPUT] [-p PARAMS] [-o OUTPUT_FOLDER]
-                      [-w OUTPUT_WRAP] [-s OUTPUT_SNIPPETS]
-                      [-k API_KEYS_FOLDER] [-c] [-v] [-t UNIT_TESTS_FILE]
-
-This program generates C and C++ wrappers for your C++ classes.
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -i INPUT, --input INPUT
-                        specifies input API description file
-  -p PARAMS, --params PARAMS
-                        specifies generation parameters input file
-  -o OUTPUT_FOLDER, --output-folder OUTPUT_FOLDER
-                        specifies output folder for generated files
-  -w OUTPUT_WRAP, --output-wrap-file-name OUTPUT_WRAP
-                        specifies output file name for wrapper C-functions
-  -s OUTPUT_SNIPPETS, --internal-snippets-folder OUTPUT_SNIPPETS
-                        specifies output folder for generated library snippets
-  -k API_KEYS_FOLDER, --api-keys-folder API_KEYS_FOLDER
-                        specifies output folder for generated API keys
-  -c, --clean           cleans input and snippets directories
-  -v, --version         shows version number
-  -t UNIT_TESTS_FILE, --tests-file UNIT_TESTS_FILE
-                        generates unit tests for properties into specified
-                        file
-```
-
-The input API description file format (__--input__ option) is described [here](#xml-api-description-schema).
-The generation parameters input file (__--params__ option) has also XML format and its schema
-is described [here](#xml-generation-parameters-schema).
-The output folder (__--output-folder__ option) will contain the generated wrap classes
-and other files for using on the wrap side.
-The output file name for wrapper C-functions (__--output-wrap-file-name__ option) will contain
-the C glue layer function bodies, this file have to be a part of the C++ library.
-The output folder for generated library snippets (__--internal-snippets-folder__ option) will contain the generated
-snippets. For details about snippets please read [snippets](#snippets) section.
-The output folder for generated API keys (__--api-keys-folder__ option)
-will contain the generated keys for the C++ library secured API,
-more details please see in [secured API](#secured-api) section.
-The tests file (__--tests-file__ option) specifies output file for the generated unit tests,
-please see [unit tests](#unit-tests) section.
-
-Integration with CMake
-----------------------
-
-Basically integration with [CMake](https://cmake.org/) could be done by using *add_custom_command*.
-```
-    add_custom_command(
-        OUTPUT
-            ${CMAKE_CURRENT_SOURCE_DIR}/AutoGenWrap.cpp
-        COMMAND
-            ${PYTHON_EXECUTABLE}
-            ${beautiful_capi_SOURCE_DIR}/source/Capi.py
-            -i ${CMAKE_CURRENT_SOURCE_DIR}/SampleAPI.xml
-            -p ${CMAKE_CURRENT_SOURCE_DIR}/SampleAPI_params.xml
-            -o ${CMAKE_CURRENT_SOURCE_DIR}/include
-            -s ${CMAKE_CURRENT_SOURCE_DIR}/snippets
-            -w ${generated_source}
-        MAIN_DEPENDENCY
-            ${CMAKE_CURRENT_SOURCE_DIR}/SampleAPI.xml
-        DEPENDS
-            ${CMAKE_CURRENT_SOURCE_DIR}/SampleAPI_params.xml
-        WORKING_DIRECTORY
-            ${CMAKE_CURRENT_SOURCE_DIR}
-    )
-```
-
-But you should find Python3 interpreter before:
-```
-find_package(PythonInterp 3.4 REQUIRED)
-```
-
-Also you need to include *AutoGenWrap.cpp* to *SampleAPI* library:
-```
-add_library(SampleAPI SHARED
-  ${CMAKE_CURRENT_SOURCE_DIR}/AutoGenWrap.cpp
-  ...other files...
-)
-```
-
-Important: You must do not insert the output folder for generated wrap classes to the library's *include* path.
-But you can do this with *snippets* folder.
-
-XML API description schema
---------------------------
-
-The wrapped C++ library API is described in the portable XML format for the exposed API
-by using [this schema](https://github.com/PetrPPetrov/beautiful-capi/blob/master/source/Capi.xsd).
-This schema uses *http://gkmsoft.ru/beautifulcapi* XSD namespace.
-
-The detailed description of this schema is [here](DescriptionSchema.md).
-The root element is *api* which has [*TBeautifulCapiRoot*](DescriptionSchema.md#tbeautifulcapiroot) XSD type.
-
-XML generation parameters schema
---------------------------------
-
-The Beautiful Capi generator has parameters in XML format,
-which has [this](https://github.com/PetrPPetrov/beautiful-capi/blob/master/source/CapiParams.xsd) schema.
-This schema uses *http://gkmsoft.ru/beautifulcapi-params* XSD namespace.
-
-The detailed description of this schema is [here](DescriptionParams.md).
-The root element is *params* which has [*TBeautifulCapiParams*](DescriptionParams.md#tbeautifulcapiparams) XSD type.
+Classification of types
+-----------------------
+TODO:
 
 Mixing semantics
 ----------------
@@ -622,7 +516,17 @@ Beautiful Capi proposes two ways to solve this problem: the first way is [castin
 and the second way is [lifecycle extensions](#lifecycle-extensions).
 
 ### Casting attributes
-TODO:
+
+Casting attributes allow to perform some type castings. There are several types of casting attributes:
+* _wrap_2_c_ specifies a custom type conversion from the wrap side type to the C glue layer type 
+* _c_2_wrap_ specifies a custom type conversion from the C glue layer type to the wrap side type
+* _c_2_impl_ specifies a custom type conversion from the C glue layer type to the implementation side type
+* _c_2_impl_mode_ specifies mode of conversion from the C glue layer type to the implementation side type
+* _impl_2_c_ specifies a custom type conversion from the implementation side type to the C glue layer type
+
+#### Default behaviour
+
+Beautiful Capi uses some default casting between the wrap side, the C glue layer and the implementation side.
 
 ### Lifecycle extensions
 TODO:
@@ -823,8 +727,20 @@ Inheritance modes
 -----------------
 TODO:
 
+Properties
+----------
+TODO:
+
 Unit tests
 ----------
+TODO:
+
+Implementation code
+-------------------
+TODO:
+
+Cascading libraries
+-------------------
 TODO:
 
 Secured API
@@ -846,3 +762,117 @@ TODO:
 
 ### MacOSX
 TODO:
+
+Command-line arguments
+----------------------
+
+The main script to execute Beautiful Capi generation is *source/Capi.py*.
+If you run it with *--help* argument then you will have a similar output:
+```
+Beautiful Capi  Copyright (C) 2015  Petr Petrovich Petrov
+This program comes with ABSOLUTELY NO WARRANTY;
+This is free software, and you are welcome to redistribute it
+under certain conditions.
+
+usage: Beautiful Capi [-h] [-i INPUT] [-p PARAMS] [-o OUTPUT_FOLDER]
+                      [-w OUTPUT_WRAP] [-s OUTPUT_SNIPPETS]
+                      [-k API_KEYS_FOLDER] [-c] [-v] [-t UNIT_TESTS_FILE]
+
+This program generates C and C++ wrappers for your C++ classes.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -i INPUT, --input INPUT
+                        specifies input API description file
+  -p PARAMS, --params PARAMS
+                        specifies generation parameters input file
+  -o OUTPUT_FOLDER, --output-folder OUTPUT_FOLDER
+                        specifies output folder for generated files
+  -w OUTPUT_WRAP, --output-wrap-file-name OUTPUT_WRAP
+                        specifies output file name for wrapper C-functions
+  -s OUTPUT_SNIPPETS, --internal-snippets-folder OUTPUT_SNIPPETS
+                        specifies output folder for generated library snippets
+  -k API_KEYS_FOLDER, --api-keys-folder API_KEYS_FOLDER
+                        specifies output folder for generated API keys
+  -c, --clean           cleans input and snippets directories
+  -v, --version         shows version number
+  -t UNIT_TESTS_FILE, --tests-file UNIT_TESTS_FILE
+                        generates unit tests for properties into specified
+                        file
+```
+
+The input API description file format (__--input__ option) is described [here](#xml-api-description-schema).
+The generation parameters input file (__--params__ option) has also XML format and its schema
+is described [here](#xml-generation-parameters-schema).
+The output folder (__--output-folder__ option) will contain the generated wrap classes
+and other files for using on the wrap side.
+The output file name for wrapper C-functions (__--output-wrap-file-name__ option) will contain
+the C glue layer function bodies, this file have to be a part of the C++ library.
+The output folder for generated library snippets (__--internal-snippets-folder__ option) will contain the generated
+snippets. For details about snippets please read [snippets](#snippets) section.
+The output folder for generated API keys (__--api-keys-folder__ option)
+will contain the generated keys for the C++ library secured API,
+more details please see in [secured API](#secured-api) section.
+The tests file (__--tests-file__ option) specifies output file for the generated unit tests,
+please see [unit tests](#unit-tests) section.
+
+Integration with CMake
+----------------------
+
+Basically integration with [CMake](https://cmake.org/) could be done by using *add_custom_command*.
+```
+    add_custom_command(
+        OUTPUT
+            ${CMAKE_CURRENT_SOURCE_DIR}/AutoGenWrap.cpp
+        COMMAND
+            ${PYTHON_EXECUTABLE}
+            ${beautiful_capi_SOURCE_DIR}/source/Capi.py
+            -i ${CMAKE_CURRENT_SOURCE_DIR}/SampleAPI.xml
+            -p ${CMAKE_CURRENT_SOURCE_DIR}/SampleAPI_params.xml
+            -o ${CMAKE_CURRENT_SOURCE_DIR}/include
+            -s ${CMAKE_CURRENT_SOURCE_DIR}/snippets
+            -w ${generated_source}
+        MAIN_DEPENDENCY
+            ${CMAKE_CURRENT_SOURCE_DIR}/SampleAPI.xml
+        DEPENDS
+            ${CMAKE_CURRENT_SOURCE_DIR}/SampleAPI_params.xml
+        WORKING_DIRECTORY
+            ${CMAKE_CURRENT_SOURCE_DIR}
+    )
+```
+
+But you should find Python3 interpreter before:
+```
+find_package(PythonInterp 3.4 REQUIRED)
+```
+
+Also you need to include *AutoGenWrap.cpp* to *SampleAPI* library:
+```
+add_library(SampleAPI SHARED
+  ${CMAKE_CURRENT_SOURCE_DIR}/AutoGenWrap.cpp
+  ...other files...
+)
+```
+
+Important: You must do not insert the output folder for generated wrap classes to the library's *include* path.
+But you can do this with *snippets* folder.
+
+XML API description schema
+--------------------------
+
+The wrapped C++ library API is described in the portable XML format for the exposed API
+by using [this schema](https://github.com/PetrPPetrov/beautiful-capi/blob/master/source/Capi.xsd).
+This schema uses *http://gkmsoft.ru/beautifulcapi* XSD namespace.
+
+The detailed description of this schema is [here](DescriptionSchema.md).
+The root element is *api* which has [*TBeautifulCapiRoot*](DescriptionSchema.md#tbeautifulcapiroot) XSD type.
+
+XML generation parameters schema
+--------------------------------
+
+The Beautiful Capi generator has parameters in XML format,
+which has [this](https://github.com/PetrPPetrov/beautiful-capi/blob/master/source/CapiParams.xsd) schema.
+This schema uses *http://gkmsoft.ru/beautifulcapi-params* XSD namespace.
+
+The detailed description of this schema is [here](DescriptionParams.md).
+The root element is *params* which has [*TBeautifulCapiParams*](DescriptionParams.md#tbeautifulcapiparams) XSD type.
