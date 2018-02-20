@@ -36,12 +36,17 @@ def get_all_namespaces(root_namespaces: list):
 def parse_root(root_api_xml_path: str, params):
     root_api = load(dom_parse(root_api_xml_path))
     namespaces = get_all_namespaces(root_api.namespaces)
+    if not hasattr(params, "xml_paths"):
+        params.xml_paths = []
+
+    if root_api.include_once:
+        params.xml_paths.append(root_api_xml_path)
 
     cur_dir = os.path.dirname(root_api_xml_path)
     for namespace in namespaces:
         for include in namespace.includes:
             path = full_relative_path_from_candidates(include.path, cur_dir, params.additional_include_directories)
-            if os.path.exists(path):
+            if os.path.exists(path) and path not in params.xml_paths:
                 if params.verbosity:
                     print('loading XML API description: {0}'.format(path))
                 sub_api = parse_root(path, params)

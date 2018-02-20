@@ -36,6 +36,11 @@
         <xs:documentation>Specifies the project minor version</xs:documentation>
       </xs:annotation>
     </xs:attribute>
+    <xs:attribute default="false" name="include_once" type="xs:boolean" use="optional">
+      <xs:annotation>
+        <xs:documentation>Specifies the use of this file only once.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
   </xs:complexType>
   <xs:complexType name="TNamespace">
     <xs:annotation>

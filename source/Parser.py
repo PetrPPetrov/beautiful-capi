@@ -96,6 +96,8 @@ class TBeautifulCapiRoot(object):
         self.minor_version_filled = False
         self.patch_version = 0
         self.patch_version_filled = False
+        self.include_once = False
+        self.include_once_filled = False
         self.namespaces = []
 
     def load_element(self, element):
@@ -123,6 +125,10 @@ class TBeautifulCapiRoot(object):
             cur_attr = dom_node.getAttribute("patch_version")
             self.patch_version = string_to_int(cur_attr)
             self.patch_version_filled = True
+        if dom_node.hasAttribute("include_once"):
+            cur_attr = dom_node.getAttribute("include_once")
+            self.include_once = string_to_bool(cur_attr)
+            self.include_once_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:

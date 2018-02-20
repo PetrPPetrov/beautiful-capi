@@ -21,7 +21,7 @@
 project(unit_test_example)
 
 cmake_minimum_required(VERSION 2.8)
-
+find_package(Boost)
 set(Boost_USE_STATIC_LIBS ON)
 
 if(Boost_FOUND)
