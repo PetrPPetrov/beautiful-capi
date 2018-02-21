@@ -15,6 +15,11 @@ Beautiful-Capi Developer's Guide
     * [Raw pointer semantic](#raw-pointer-semantic)
     * [Common methods of the wrapper classes](#common-methods-of-the-wrapper-classes)
 3. [Classification of types](#classification-of-types)
+    * [Classes](#classes)
+    * [Mapped types](#mapped-types)
+    * [Enumeration types](#enumeration-types)
+    * [External classes](#external-classes)
+    * [Built-in types](#built-in-types)
 4. [Mixing semantics](#mixing-semantics)
     * [Casting attributes](#casting-attributes)
     * [Lifecycle extensions](#lifecycle-extensions)
@@ -502,7 +507,54 @@ For convenience, there is an overloaded *operator!* in the wrapper classes, so, 
 
 Classification of types
 -----------------------
-TODO:
+
+Conceptually Beautiful Capi distinguishes the following types:
+* [Classes](#classes)
+* [Mapped types](#mapped-types)
+* [Enumeration types](#enumeration-types)
+* [External classes](#external-classes)
+* [Built-in types](#built-in-types) (not recommended to use)
+
+### Classes
+
+Beautiful Capi supports wrapping classes. Classes could have different lifecycle semantics.
+It does not matter which lifecycle semantic has the object, it is always passed as *void**
+in the C glue layer. This explicitly means that all object instances must be created on memory heap.
+After passing the C glue layer the opaque *void** pointer should be casted to the implementation side type.
+By default behaviour, if the class has reference counted semantic or raw pointer semantic then *void** type is
+casted to pointer of the corresponding implementation type. If the class has copy semantic the default behaviour is
+the same, but dereference operator (*) is applied additionally.
+
+### Mapped types
+
+Mapped types are designed for simple types like integers or floating numbers, strings, etc.
+They are mostly the same as built-in types, but they contain additional information for wrapping.
+Mapped types have information about types to use in the C glue layer, types to use on the implementation side, 
+types to use on the wrap side, information how to make conversions between these types. We recommend to use
+only fixed-length types for the C glue layer, like *int8_t*, *uint32_t*, etc.
+
+### Enumeration types
+
+Enumeration types are similar to mapped types. However, conversions between the wrap side types and the C glue layer
+types as well as conversions between the C glue layer types and the implementation side types are predefined.
+Beautiful Capi assumes that enumeration types are integral types by its mature and uses *static_cast* simple casting
+between types. 
+
+### External classes
+
+External classes are classes from 3rd party library which is also wrapped by using Beautiful Capi tool.
+
+### Built-in types
+
+If type is not recognized as a class type, nor a mapped type, nor an enumeration type, nor an external class
+then this type will be treated as a built-in type. For built-in types Beautiful Capi assumes that no special
+type conversion is required, because the C glue layer type and the wrap side type and the implementation side type
+are exactly the same type. Beautiful Capi just uses the specified type name as is, without any modifications or
+any conversions of it.
+
+We do not recommend to use built-in types, because different C++ or C compilers
+could use different sizes of this types. We recommend to use mapped types instead. By default Beautiful Capi warns
+if a built-in type is used.   
 
 Mixing semantics
 ----------------
@@ -523,10 +575,6 @@ Casting attributes allow to perform some type castings. There are several types 
 * _c_2_impl_ specifies a custom type conversion from the C glue layer type to the implementation side type
 * _c_2_impl_mode_ specifies mode of conversion from the C glue layer type to the implementation side type
 * _impl_2_c_ specifies a custom type conversion from the implementation side type to the C glue layer type
-
-#### Default behaviour
-
-Beautiful Capi uses some default casting between the wrap side, the C glue layer and the implementation side.
 
 ### Lifecycle extensions
 TODO:
