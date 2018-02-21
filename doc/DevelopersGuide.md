@@ -531,14 +531,15 @@ Mapped types are designed for simple types like integers or floating numbers, st
 They are mostly the same as built-in types, but they contain additional information for wrapping.
 Mapped types have information about types to use in the C glue layer, types to use on the implementation side, 
 types to use on the wrap side, information how to make conversions between these types. We recommend to use
-only fixed-length types for the C glue layer, like *int8_t*, *uint32_t*, etc.
+only fixed-length types for the C glue layer, like *int8_t*, *uint32_t*, etc. Also we recommend you to always
+prefer mapped types rather than built-in types.
 
 ### Enumeration types
 
 Enumeration types are similar to mapped types. However, conversions between the wrap side types and the C glue layer
 types as well as conversions between the C glue layer types and the implementation side types are predefined.
 Beautiful Capi assumes that enumeration types are integral types by its mature and uses *static_cast* simple casting
-between types. 
+between types.
 
 ### External classes
 
