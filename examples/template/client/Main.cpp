@@ -27,70 +27,6 @@
 #include <stdint.h>
 #include "Template.h"
 
-template<typename SimpleType>
-void dump(SimpleType value)
-{
-    std::cout << value << " ";
-}
-
-template<typename T>
-void dump(const Example::Position<T>& position)
-{
-    std::cout << "X: ";
-    dump(position.GetX());
-    std::cout << "Y: ";
-    dump(position.GetY());
-    std::cout << "Z: ";
-    dump(position.GetZ());
-    std::cout << std::endl;
-}
-
-template<typename T>
-void dump(const Example::Position4D<T>& position)
-{
-    dump(static_cast<const Example::Position<T>&>(position));
-    std::cout << "W: ";
-    dump(position.GetW());
-    std::cout << std::endl;
-}
-
-template<typename T>
-void dump(const Example::VectorOf<T>& vector)
-{
-    std::cout << "Vector has " << vector.GetSize() << " elements" << std::endl;
-    for (int i = 0; i < vector.GetSize(); ++i)
-    {
-        dump(static_cast<T>(vector.GetItem(i)));
-    }
-    std::cout << std::endl;
-}
-
-template<typename T>
-void dump(Example::ModelPtr<T> model)
-{
-    std::cout << "Model" << std::endl;
-    std::cout << "name: " << model.GetName() << std::endl;
-    dump(static_cast<Example::Position<T> >(model.GetPosition()));
-}
-
-template<typename T>
-void dump(const Example::VectorOfObjectsPtr<T>& vector)
-{
-    std::cout << "Vector has " << vector.GetSize() << " elements" << std::endl;
-    for (int i = 0; i < vector.GetSize(); ++i)
-    {
-        dump(static_cast<T>(vector.GetItem(i)));
-    }
-    std::cout << std::endl;
-}
-
-template<typename T>
-void dump(const Example::VectorOfObjectsDerivedPtr<T>& vector)
-{
-    std::cout << "VectorOfObjectsDerivedPtr" << std::endl;
-    dump(static_cast<const Example::VectorOfObjectsPtr<T>&>(vector));
-}
-
 int main()
 {
 #if defined(_WIN32) && defined(_DEBUG)
@@ -101,30 +37,30 @@ int main()
     vector.PushBack(7);
     vector.PushBack(3);
     vector.PushBack(10);
-    dump(vector);
+    vector.dump();
 
     Example::VectorOf<double> vector2;
     vector2.PushBack(3.14);
     vector2.PushBack(2.71);
-    dump(vector2);
+    vector2.dump();
 
     Example::Position<float> position;
     position.SetY(15.5);
-    dump(position);
+    position.dump();
 
     Example::Position4D<double> position2;
     position2.SetW(0.5);
-    dump(position2);
+    position2.dump();
 
     Example::VectorOf<Example::Position4D<float> > vector3;
     vector3.PushBack(Example::Position4D<float>());
     vector3.PushBack(Example::Position4D<float>());
-    dump(vector3);
+    vector3.dump();
 
     Example::VectorOf<Example::VectorOf<Example::Position4D<float> > > vectorz;
     vectorz.PushBack(vector3);
     vectorz.PushBack(vector3);
-    dump(vectorz);
+    vectorz.dump();
 
     Example::VectorOfObjectsDerivedPtr<Example::ModelPtr<double> > model_vector;
     Example::ModelPtr<double> model1;
@@ -134,12 +70,12 @@ int main()
 
     model_vector->PushBack(model1);
     model_vector->PushBack(model2);
-    dump(model_vector);
+    model_vector.dump();
 
     std::cout << model_vector.GetA() << std::endl;
 
     Example::VectorOf<char> dummy;
-    dump(dummy);
+    dummy.dump();
 
     return EXIT_SUCCESS;
 }

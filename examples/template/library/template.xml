@@ -24,6 +24,7 @@
         <method name="SetZ">
           <argument type="WorkType" name="z"/>
         </method>
+        <method name="dump" const="true"/>
       </class>
     </template>
     <template>
@@ -40,6 +41,7 @@
         <method name="SetW">
           <argument type="WorkType" name="x"/>
         </method>
+        <method name="dump" const="true"/>
       </class>
     </template>
     <template>
@@ -60,6 +62,7 @@
         <method name="SetPosition">
           <argument type="Example::Position&lt;WorkType>" name="position"/>
         </method>
+        <method name="dump" const="true"/>
       </class>
     </template>
     <template>
@@ -98,6 +101,7 @@
         <method name="GetItem" return="T" const="true">
           <argument type="int" name="index"/>
         </method>
+        <method name="dump" const="true"/>
       </class>
     </template>
     <template>
@@ -118,6 +122,7 @@
         <method name="GetItem" return="T" const="true">
           <argument type="int" name="index"/>
         </method>
+        <method name="dump" const="true"/>
       </class>
     </template>
     <template>
@@ -133,17 +138,5 @@
         <method name="GetA" return="int" const="true"/>
       </class>
     </template>
-    <!--<template>-->
-      <!--<argument name="T" type="typename"/>-->
-      <!--<argument name="Count" type="int"/>-->
-      <!--<instantiation>-->
-        <!--<argument name="T" value="double"/>-->
-        <!--<argument name="Count" value="2"/>-->
-      <!--</instantiation>-->
-      <!--<class name="Test" lifecycle="copy_semantic" implementation_class_name="Example::Test&lt;T, Count>" implementation_class_header="TestImpl.h">-->
-        <!--<constructor name="Default"/>-->
-        <!--<method name="GetCount" return="int" const="true"/>-->
-      <!--</class>-->
-    <!--</template>-->
   </namespace>
 </template:api>

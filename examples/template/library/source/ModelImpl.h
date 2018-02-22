@@ -78,7 +78,20 @@ namespace Example
                 delete this;
             }
         }
+        template <typename WorkType> friend std::ostream& operator<<(std::ostream& os, const ModelImpl<WorkType>& position);
+        void dump() const
+        {
+            std::cout << *this;
+        }
     };
+
+    template <typename WorkType> std::ostream& operator<<(std::ostream& os, const ModelImpl<WorkType>& model)
+    {
+        os << "model name = " << model.GetName() << std::endl;
+        os << "model position:" << std::endl; 
+        os << model.GetPosition() << std::endl;
+        return os;
+    }
 
     template<typename WorkType>
     inline void intrusive_ptr_add_ref(ModelImpl<WorkType>* model)

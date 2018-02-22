@@ -68,7 +68,21 @@ namespace Example
         {
             mZ = z;
         }
+        template <typename WorkType> friend std::ostream& operator<<(std::ostream& os, const PositionImpl<WorkType>& dt);
+        void dump() const
+        {
+            std::cout << *this;
+        }
     };
+    
+    template <typename T> std::ostream& operator<<(std::ostream& os, const PositionImpl<T>& position)
+    {
+        os << "X: " << position.mX << std::endl;
+        os << "Y: " << position.mY << std::endl;
+        os << "Z: " << position.mZ << std::endl;
+        return os;
+    }
+
     template<typename WorkType>
     class Position4DImpl : public PositionImpl<WorkType>
     {
@@ -94,7 +108,19 @@ namespace Example
         {
             mW = w;
         }
+        template <typename WorkType> friend std::ostream& operator<<(std::ostream& os, const Position4DImpl<WorkType>& position);
+        void dump() const
+        {
+            std::cout << *this;
+        }
     };
+
+    template <typename T> std::ostream& operator<<(std::ostream& os, const Position4DImpl<T>& position)
+    {
+        os << (PositionImpl<T>)position;
+        os << "W: " << position.mW << std::endl;
+        return os;
+    }
 }
 
 #endif /* BEAUTIFUL_CAPI_TEMPLATE_POSITIONIMPL_H */

@@ -61,7 +61,20 @@ namespace Example
         {
             return mVector.at(static_cast<size_t>(index));
         }
+        template <typename WorkType> friend std::ostream& operator<<(std::ostream& os, const VectorImpl<WorkType>& position);
+        void dump() const
+        {
+            std::cout << *this;
+        }
     };
+    
+    template <typename WorkType> std::ostream& operator<<(std::ostream& os, const VectorImpl<WorkType>& vector)
+    {
+        os << "vector size = " << vector.GetSize() << std::endl;
+        for (int i = 0; i < vector.GetSize(); ++i)
+            os << vector.GetItem(i) << std::endl;
+        return os;
+    }
 
     class CharDummyVector
     {
@@ -92,7 +105,20 @@ namespace Example
         {
             return 'A';
         }
+        friend std::ostream& operator<<(std::ostream& os, const CharDummyVector& position);
+        void dump() const
+        {
+            std::cout << *this;
+        }
     };
+    
+    std::ostream& operator<<(std::ostream& os, const CharDummyVector& vector)
+    {
+        os << "vector size = " << vector.GetSize() << std::endl;
+        for (int i = 0; i < vector.GetSize(); ++i)
+            os << vector.GetItem(i) << std::endl;
+        return os;
+    }
 
     template<typename T>
     struct smart_ptr : public boost::intrusive_ptr<T>
@@ -150,7 +176,20 @@ namespace Example
                 delete this;
             }
         }
+        template <typename T> friend std::ostream& operator<<(std::ostream& os, const VectorOfObjectsImpl<T>& vector);
+        void dump() const
+        {
+            std::cout << *this;
+        }
     };
+    
+    template <typename T> std::ostream& operator<<(std::ostream& os, const VectorOfObjectsImpl<T>& vector)
+    {
+        os << "vector size = " << vector.GetSize() << std::endl;
+        for (int i = 0; i < vector.GetSize(); ++i)
+            os << *vector.GetItem(i) << std::endl;;
+        return os;
+    }
 
     template<typename T>
     class VectorOfObjectsDerivedImpl : public VectorOfObjectsImpl<T>
