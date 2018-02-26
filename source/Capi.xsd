@@ -204,6 +204,11 @@
             <xs:documentation>Specifies an nested external namespace</xs:documentation>
           </xs:annotation>
         </xs:element>
+        <xs:element maxOccurs="unbounded" minOccurs="0" name="enumeration" type="TExternalEnumeration">
+          <xs:annotation>
+            <xs:documentation>Specifies an external enumeration which is a part of 3rd party library which also uses Beautiful Capi</xs:documentation>
+          </xs:annotation>
+        </xs:element>
       </xs:choice>
     </xs:sequence>
     <xs:attribute name="include" type="xs:string" use="optional">
@@ -276,6 +281,21 @@
     <xs:attribute name="main_header" type="xs:string" use="optional">
       <xs:annotation>
         <xs:documentation>Specifies path to main header of an external library</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="TExternalEnumeration">
+    <xs:annotation>
+      <xs:documentation>Specifies external enumeration type. External enumeration is a part of 3rd party library which also uses Beautiful Capi. This enumeration could be used as argument in the current library API.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="name" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Specifies name of the current enumeration type</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="underlying_type" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Specifies *underlying_type* for the current enumeration type, for instance, *uint16_t* which will be used in C language layer</xs:documentation>
       </xs:annotation>
     </xs:attribute>
   </xs:complexType>

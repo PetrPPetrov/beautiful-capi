@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 #
 # Beautiful Capi generates beautiful C API wrappers for your C++ classes
 # Copyright (C) 2015 Petr Petrovich Petrov
@@ -20,30 +19,26 @@
 #
 
 
-from Parser import TExternalNamespace, TExternalEnumeration
+from Parser import TExternalEnumeration
 
 
-class ExternalNamespaceGenerator(object):
-    def __init__(self, namespace_object: TExternalNamespace, parent_namespace):
-        self.namespace_object = namespace_object
-        self.parent_namespace = parent_namespace
-        self.nested_namespaces = []
-        self.classes = []
-        self.enums = []
+class ExternalEnumGenerator(object):
+    def __init__(self, enum_object: TExternalEnumeration, parent_generator):
+        self.enum_object = enum_object
+        self.parent_generator = parent_generator
 
     @property
     def name(self) -> str:
-        return self.namespace_object.name
-
-    @property
-    def full_name_array(self) -> []:
-        return ([self.parent_namespace.full_name] + [self.name]) if self.parent_namespace else [self.name]
+        return self.enum_object.name
 
     @property
     def full_name(self) -> str:
-        return '::'.join([self.parent_namespace.full_name, self.name]) if self.parent_namespace else self.name
+        return '::'.join([self.parent_generator.full_wrap_name, self.name]) if self.parent_generator else self.name
 
     @property
     def full_wrap_name(self) -> str:
         return self.full_name
 
+    @property
+    def implementation_name(self) -> str:
+            return self.full_wrap_name

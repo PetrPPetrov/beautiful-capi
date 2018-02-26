@@ -20,8 +20,8 @@
 #
 
 
-from Parser import TClass, TEnumeration, TNamespace, TArgument, TBeautifulCapiRoot, TMappedType, TLifecycle
-from Parser import TGenericDocumentation, TDocumentation, TReference, TExternalClass, TExternalNamespace
+from Parser import TClass, TEnumeration, TNamespace, TArgument, TBeautifulCapiRoot, TMappedType, TLifecycle, TReference
+from Parser import TGenericDocumentation, TDocumentation, TExternalClass, TExternalNamespace, TExternalEnumeration
 from ParamsParser import TBeautifulCapiParams
 from TemplateGenerator import TemplateGenerator
 from ClassGenerator import ClassGenerator
@@ -31,6 +31,7 @@ from EnumGenerator import EnumGenerator
 from DocumentationGenerator import ReferenceGenerator
 from ExternalClassGenerator import ExternalClassGenerator
 from ExternalNamespaceGenerator import ExternalNamespaceGenerator
+from ExternalEnumGenerator import ExternalEnumGenerator
 from TemplateGenerator import TemplateConstantArgumentGenerator
 from Helpers import BeautifulCapiException
 from Helpers import get_template_arguments_count, get_template_argument, replace_template_argument
@@ -97,10 +98,17 @@ class GeneratorCreator(object):
             namespace_generator.classes.append(self.__create_external_class_generator(cur_class, namespace_generator))
         for cur_namespace in namespace.namespaces:
             namespace_generator.nested_namespaces.append(
-                self.__create_external_namespace_generator(cur_namespace, namespace_generator)
-            )
+                self.__create_external_namespace_generator(cur_namespace, namespace_generator))
+        for enum in namespace.enumerations:
+            namespace_generator.enums.append(self.__create_external_enum_generator(enum, namespace_generator))
+
         self.__register_class_or_namespace_generator(namespace_generator)
         return namespace_generator
+
+    def __create_external_enum_generator(self, enum: TExternalEnumeration, parent):
+        enum_generator = ExternalEnumGenerator(enum, parent)
+        self.__register_class_or_namespace_generator(enum_generator)
+        return enum_generator
 
     def create_namespace_generator(self, namespace: TNamespace) -> NamespaceGenerator:
         previous_namespace_generator = self.cur_namespace_generator
@@ -182,10 +190,12 @@ class GeneratorCreator(object):
             type_generator = self.full_name_2_type_generator[name]
             if type(type_generator) is ClassGenerator:
                 return ClassTypeGenerator(type_generator)
-            elif type(type_generator) is EnumGenerator:
-                return EnumTypeGenerator(type_generator)
             elif type(type_generator) is ExternalClassGenerator:
                 return ExternalClassTypeGenerator(type_generator)
+            elif type(type_generator) is EnumGenerator:
+                return EnumTypeGenerator(type_generator)
+            elif type(type_generator) is ExternalEnumGenerator:
+                return ExternalEnumTypeGenerator(type_generator)
             else:
                 raise BeautifulCapiException('namespace is used as type name')
         else:

@@ -27,14 +27,17 @@
 #include "Classes.h"
 #include "Classes/ClassC.h"
 
+enum EAlign { Left, Right, Center };
+
 namespace CompC
-{
+{    
     class ComponentC
     {
         Classes::ClassA mA;
         Classes::ClassBRawPtr mB;
         Classes::ClassCPtr mC;
-        int mRefCount;
+        EAlign mD;
+        int mRefCount;        
             
     public:
         // By default newly created objects implies to have value 1 of reference counter
@@ -57,6 +60,7 @@ namespace CompC
 
         void SetB(Classes::ClassBRawPtr b)
         {
+            mB->Delete();
             mB = b;
         }
 
@@ -70,6 +74,16 @@ namespace CompC
             mC = c;
         }
 
+        EAlign GetD() const
+        {
+            return mD;
+        }
+
+        void SetD(EAlign d)
+        {
+            mD = d;
+        }
+        
         void AddRef()
         {
             ++mRefCount;

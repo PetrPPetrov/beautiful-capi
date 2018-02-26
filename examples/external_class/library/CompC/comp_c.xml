@@ -7,6 +7,12 @@
       <property name="A" type="Classes::ClassA"/>
       <property name="B" type="Classes::ClassB"/>
       <property name="C" type="Classes::ClassC"/>
-    </class> 
+      <property name="D" type="CompC::Align"/>
+    </class>
+    <enumeration name="Align" underlying_type="int8_t" implementation_type="EAlign">
+      <item name="Left"/>
+      <item name="Right"/>
+      <item name="Center"/>
+    </enumeration>
   </namespace>
 </comp_c:api>

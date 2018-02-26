@@ -56,6 +56,8 @@ int main()
     comp_c->SetB(b);
     comp_c->SetC(c);
 
+    printer.SetAlign(CompC::Center);
+
     printer.Show(comp_a);
     printer.Show(comp_b);
     printer.Show(comp_c);
@@ -65,8 +67,13 @@ int main()
     b->SetValue("another string");
     c->SetValue(3.14);
 
+    printer.SetAlign(CompC::Right);
+
     printer.Show(comp_a);
-    printer.Show(comp_b);    
-    printer.Show(comp_c);    
+    printer.Show(comp_b);
+    printer.Show(comp_c);
+
+    b->Delete();
+    comp_b->Delete();
     return EXIT_SUCCESS;
 }

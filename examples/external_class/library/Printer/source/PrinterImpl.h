@@ -33,10 +33,32 @@ namespace PrinterNS
 {
     class PrinterImpl
     {
+    private:
+        CompC::Align mAlign; 
+        Components::EComponentType mType;
+        
+        
+        std::string Align(std::string text)
+        {
+            std::string result = "";
+            int indent = 0;
+            if (mAlign == CompC::Right)
+                indent = 80 - text.length();
+            else if (mAlign == CompC::Center)            
+                indent = (80 - text.length()) / 2;            
+            for (int i = 0; i < indent; ++i)
+                result += " ";
+            result += text; 
+            return result;
+        }
+        
+        
     public:
         void Show(const Components::ComponentA& a)
         {
-            std::cout << a.GetA().GetValue() << " " << a.GetB()->GetValue() << " " << a.GetC()->GetValue()<< std::endl;
+            std::ostringstream sstream;
+            sstream << a.GetA().GetValue() << " " << a.GetB()->GetValue() << " " << a.GetC()->GetValue() << std::endl;
+            std::cout << Align(sstream.str());
         }
 
         void Show(Components::ComponentBRawPtr b)
@@ -53,7 +75,29 @@ namespace PrinterNS
         {
             return CompC::ComponentCPtr();
         }
+        
+        CompC::Align GetAlign() const
+        {
+            return mAlign;
+        }
+        
+        void SetAlign(CompC::Align align)
+        {
+            mAlign = align;
+        }
+        
+        Components::EComponentType GetComponentType() const
+        {
+            return mType;
+        }
+        
+        void SetComponentType(Components::EComponentType type)
+        {
+            mType = type;
+        }        
     };
+
+    
 }
 
 #endif /* BEAUTIFUL_CAPI_PRINTER_N_S_PRINTER_H */

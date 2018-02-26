@@ -52,6 +52,7 @@ namespace Components
 
         void SetB(Classes::ClassBRawPtr b)
         {
+            mB->Delete();
             mB = b;
         }
 

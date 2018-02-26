@@ -4,6 +4,7 @@
     <external_library input_xml_file="../Components/components.xml" params_xml_file="../Components/components_params.xml"/>
     <external_namespace name="CompC" include="CompC.h" detach_method_name="DetachObject" get_raw_pointer_method_name="GetPtr">
       <class name="ComponentC" wrap_name="ComponentCPtr"/>
+      <enumeration name="Align" underlying_type="int8_t"/>
     </external_namespace>
     <class name="Printer" lifecycle="copy_semantic" implementation_class_name="PrinterNS::PrinterImpl" implementation_class_header="PrinterImpl.h">
       <constructor name="Default"/>
@@ -17,6 +18,8 @@
         <argument name="address" type="CompC::ComponentC"/>
       </method>
       <method name="GetCompC" return="CompC::ComponentC" const="true"/>
+      <property name="Align" type="CompC::Align"/>
+      <property name="ComponentType" type="Components::EComponentType"/>
     </class>
   </namespace>
 </printer:api>

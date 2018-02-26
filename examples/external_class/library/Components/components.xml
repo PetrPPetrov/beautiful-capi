@@ -13,6 +13,10 @@
       <property name="A" type="Classes::ClassA"/>
       <property name="B" type="Classes::ClassB"/>
       <property name="C" type="Classes::ClassC"/>
-    </class>      
+    </class>
+    <enumeration name="EComponentType" underlying_type="uint16_t">
+      <item name="A"/>
+      <item name="B"/>
+    </enumeration>
   </namespace>
 </components:api>

@@ -380,6 +380,7 @@ class TExternalNamespace(object):
         self.get_raw_pointer_method_name_filled = False
         self.classes = []
         self.namespaces = []
+        self.enumerations = []
 
     def load_element(self, element):
         if element.nodeName == "class":
@@ -391,6 +392,11 @@ class TExternalNamespace(object):
             new_element = TExternalNamespace()
             new_element.load(element)
             self.namespaces.append(new_element)
+            return True
+        if element.nodeName == "enumeration":
+            new_element = TExternalEnumeration()
+            new_element.load(element)
+            self.enumerations.append(new_element)
             return True
         return False
 
@@ -489,6 +495,33 @@ class TExternalLibrary(object):
             cur_attr = dom_node.getAttribute("main_header")
             self.main_header = cur_attr
             self.main_header_filled = True
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
+
+class TExternalEnumeration(object):
+    def __init__(self):
+        self.all_items = []
+        self.name = ""
+        self.name_filled = False
+        self.underlying_type = ""
+        self.underlying_type_filled = False
+
+    def load_element(self, element):
+        return False
+
+    def load_attributes(self, dom_node):
+        if dom_node.hasAttribute("name"):
+            cur_attr = dom_node.getAttribute("name")
+            self.name = cur_attr
+            self.name_filled = True
+        if dom_node.hasAttribute("underlying_type"):
+            cur_attr = dom_node.getAttribute("underlying_type")
+            self.underlying_type = cur_attr
+            self.underlying_type_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:

@@ -41,7 +41,7 @@ from ParseRoot import parse_root
 from UnitTestGenerator import TestGenerator
 from OverloadSuffixes import process as process_overload_suffixes
 from EnumGenerator import process_enum_impl_functions
-from Parser import TExternalNamespace, TExternalClass
+from Parser import TExternalNamespace, TExternalClass, TExternalEnumeration
 
 
 class Capi(object):
@@ -196,6 +196,14 @@ class Capi(object):
                         external_class.include_declaration = file_cache.class_header_decl(cur_class.full_name_array)
                         external_class.include_definition = file_cache.class_header(cur_class.full_name_array)
                         external_namespace.classes.append(external_class)
+                    for enum in cur_namespace.enum_generators:
+                        external_enum = TExternalEnumeration()
+                        external_enum.name = enum.name
+                        external_enum.underlying_type = enum.enum_object.underlying_type
+                        parent_name = enum.parent_generator.full_name_array
+                        external_enum.include_declaration = file_cache.enums_header(parent_name)
+                        external_enum.include_definition = file_cache.enums_header(parent_name)
+                        external_namespace.enumerations.append(external_enum)
                     external_namespaces.append(external_namespace)
             process_external_namespaces(new_capi.__process(), namespace.external_namespaces)
         for nested_namespace in namespace.namespaces:
