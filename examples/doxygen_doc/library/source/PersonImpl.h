@@ -32,6 +32,11 @@ namespace DoxygenDoc
     {
     public:
         PersonImpl(): mDay(0), mMonth(0), mYear(0), mName("", ""), mAddress(0) {}
+        
+        ~PersonImpl()
+        {
+            intrusive_ptr_release(mAddress);
+        }
 
         DoxygenDoc::NameImpl GetName() const
         {

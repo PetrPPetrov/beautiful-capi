@@ -52,5 +52,6 @@ int main()
     printer.ShowMiddleName(person.GetMiddleName());
     printer.ShowLastName(person.GetLastName());
 
+    last_name->Delete();
     return EXIT_SUCCESS;
 }

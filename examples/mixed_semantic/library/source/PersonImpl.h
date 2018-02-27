@@ -33,6 +33,13 @@ namespace MixedSemantic
     public:
         PersonImpl(): mDay(0), mMonth(0), mYear(0), mName("1", "2", "3"), mAddress(0) {}
 
+        PersonImpl(const PersonImpl& person) : mAddress(person.GetAddress()), mDay(person.mDay), mMonth(person.mMonth), mYear(person.mYear), mName(person.mName) {}
+        
+        ~PersonImpl()
+        {        
+            intrusive_ptr_release(mAddress);
+        }
+
         MixedSemantic::NameImpl GetName() const
         {
             return mName;

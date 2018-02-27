@@ -37,6 +37,13 @@ namespace ReturnValue
         
     public:
         PersonImpl(): mMiddleName(0), mLastName(0) {}
+        
+        PersonImpl(const PersonImpl& person): mMiddleName(person.GetMiddleName()), mLastName(person.mLastName) {}
+        
+        ~PersonImpl()
+        {
+            intrusive_ptr_release(mMiddleName);
+        }
 
         ReturnValue::FirstNameImpl GetFirstName() const
         {

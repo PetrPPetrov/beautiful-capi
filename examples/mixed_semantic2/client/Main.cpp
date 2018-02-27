@@ -107,5 +107,6 @@ int main()
     printer.ShowByPointer(person);
     printer.ShowByReference(person);
 
+    person->Delete();
     return EXIT_SUCCESS;
 }

@@ -31,7 +31,7 @@ namespace MixedSemantic
     {
         std::string mStreetName;
         std::string mCity;
-        unsigned int mState;        
+        unsigned int mState;
         int mRefCount;
 
     public:
