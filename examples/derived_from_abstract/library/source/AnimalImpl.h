@@ -32,6 +32,7 @@ namespace DerivedFromAbstract
     protected:
         std::string meal;
     public:
+        virtual ~AnimalImpl() {}
         virtual void Move() = 0;
         virtual void Sound() = 0;
     };
