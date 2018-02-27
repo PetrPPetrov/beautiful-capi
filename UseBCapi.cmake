@@ -21,56 +21,111 @@
 cmake_minimum_required(VERSION 2.8)
 
 function(add_bcapi_generation)
-    if (ARGN)
-        list(GET ARGN 0 generated_source)
+    set(options clean version verbose)
+    set(oneValueArgs workingdir capi input params output snippets wrap sharp tests keys)
+    set(multiValueArgs)
+    cmake_parse_arguments(arg "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+    
+    if (${arg_workingdir})
+        set(working_dir ${arg_workingdir})
     else()
-        set(generated_source ${CMAKE_CURRENT_SOURCE_DIR}/source/AutoGenWrap.cpp)
+        set(working_dir ${CMAKE_CURRENT_SOURCE_DIR})
+    endif()
+    
+    if (${arg_capi})
+        set(capi ${arg_capi})
+    else()
+        set(capi ${beautiful_capi_SOURCE_DIR}/source/Capi.py)
+    endif()
+    
+    if (${arg_input})
+        set(input ${arg_input})
+    else()
+        set(input ${working_dir}/${PROJECT_NAME}.xml)
+    endif()
+    
+    if (${arg_params})
+        set(params ${arg_params})
+    else()
+        set(params ${working_dir}/${PROJECT_NAME}_params.xml)
+    endif()        
+    
+    if (${arg_output})
+        set(output ${arg_output})
+    else()
+        set(output ${working_dir}/include)
+    endif()
+    
+    if (${CSHARP_ENABLED} AND DEFINED arg_sharp)
+        set(sharp_output "-S${working_dir}/${arg_sharp}")
+    else()
+        set(sharp_output "")
+    endif()
+        
+    if (${arg_snippets})
+        set(snippets ${arg_snippets})
+    else()
+        set(snippets ${working_dir}/source/snippets)
+    endif()
+    
+    if (${arg_wrap})
+        set(wrap ${arg_wrap})
+    else()
+        set(wrap ${working_dir}/source/AutoGenWrap.cpp)
+    endif()
+    
+    if (${arg_tests})
+        set(tests -t ${working_dir}/${arg_tests})
+    else()
+        set(tests "")
+    endif()
+    
+    if (${arg_keys})
+        set(keys -k ${working_dir}/${arg_keys})
+    else()
+        set(keys "")
+    endif()
+    
+    if (${arg_clean})
+        set(clean -c)
+    else()
+        set(clean "")
     endif()
 
+    if (${arg_version})
+        set(version -v)
+    else()
+        set(version "")
+    endif()
+
+    if (${arg_verbose})
+        set(verbose --verbosity)
+    else()
+        set(verbose "")
+    endif()
+    
     add_custom_command(
         OUTPUT
-            ${generated_source}
+            ${wrap}
         COMMAND
             ${PYTHON_EXECUTABLE}
-            ${beautiful_capi_SOURCE_DIR}/source/Capi.py
-            -i ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.xml
-            -p ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}_params.xml
-            -o ${CMAKE_CURRENT_SOURCE_DIR}/include
-            -s ${CMAKE_CURRENT_SOURCE_DIR}/source/snippets
-            -w ${generated_source}
+            ${capi}
+            -i ${input}
+            -p ${params}
+            -o ${output}
+            -s ${snippets}
+            -w ${wrap}
+            ${sharp_output}
+            ${tests}
+            ${keys}
+            ${clean}
+            ${version}
+            ${verbose}
         MAIN_DEPENDENCY
-            ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.xml
+            ${input}
         DEPENDS
-            ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}_params.xml
+            ${params}
         WORKING_DIRECTORY
-            ${CMAKE_CURRENT_SOURCE_DIR}
+            ${working_dir}
     )
 endfunction(add_bcapi_generation)
-
-function(add_bcapi_generation_with_test)
-    if (ARGN)
-        list(GET ARGN 0 generated_source)
-    else()
-        set(generated_source ${CMAKE_CURRENT_SOURCE_DIR}/source/AutoGenWrap.cpp)
-    endif()
-
-    add_custom_command(
-        OUTPUT
-            ${generated_source}
-        COMMAND
-            ${PYTHON_EXECUTABLE}
-            ${beautiful_capi_SOURCE_DIR}/source/Capi.py
-            -i ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.xml
-            -p ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}_params.xml
-            -o ${CMAKE_CURRENT_SOURCE_DIR}/include
-            -s ${CMAKE_CURRENT_SOURCE_DIR}/source/snippets
-            -w ${generated_source}
-            -t ${CMAKE_CURRENT_SOURCE_DIR}/include/AutoGenUnitTests.h
-        MAIN_DEPENDENCY
-            ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.xml
-        DEPENDS
-            ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}_params.xml
-        WORKING_DIRECTORY
-            ${CMAKE_CURRENT_SOURCE_DIR}
-    )
-endfunction(add_bcapi_generation_with_test)

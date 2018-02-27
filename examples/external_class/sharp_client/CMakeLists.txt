@@ -21,16 +21,23 @@
 project(external_class_sharp_client LANGUAGES CSharp)
 cmake_minimum_required(VERSION 3.8.2)
 
-file(GLOB_RECURSE SRCS ${external_class_sharp_client_SOURCE_DIR}/../library/*.cs) 
-
 add_executable(external_class_sharp_client
   ${external_class_sharp_client_SOURCE_DIR}/Program.cs
   ${external_class_sharp_client_SOURCE_DIR}/Properties/AssemblyInfo.cs
-  ${SRCS}
 )
 
-target_compile_options(external_class_sharp_client PRIVATE "/unsafe")
 SET_TARGET_PROPERTIES(external_class_sharp_client PROPERTIES LINKER_LANGUAGE CSharp)
-if(TARGET external_class)
-  add_dependencies(external_class_sharp_client external_class)
+if(TARGET classes_sharp_library)
+    add_dependencies(external_class_sharp_client classes_sharp_library)
 endif()
+if(TARGET components_sharp_library)
+    add_dependencies(external_class_sharp_client components_sharp_library)
+endif()
+if(TARGET component_sharp_library)
+    add_dependencies(external_class_sharp_client comp_c_sharp_library)
+endif()
+if(TARGET printer_sharp_library)
+    add_dependencies(external_class_sharp_client printer_sharp_library)
+endif()
+
+target_link_libraries(external_class_sharp_client printer_sharp_library comp_c_sharp_library components_sharp_library classes_sharp_library)

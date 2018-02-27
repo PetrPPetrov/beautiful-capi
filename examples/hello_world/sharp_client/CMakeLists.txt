@@ -21,17 +21,14 @@
 project(hello_world_sharp_client LANGUAGES CSharp)
 cmake_minimum_required(VERSION 3.8.2)
 
-file(GLOB_RECURSE SRCS ../library/sharp_output/*.cs) 
-
 add_executable(hello_world_sharp_client
   ${hello_world_sharp_client_SOURCE_DIR}/Program.cs
   ${hello_world_sharp_client_SOURCE_DIR}/Properties/AssemblyInfo.cs
-  ${SRCS}
 )
 
-target_compile_options(hello_world_sharp_client PRIVATE "/unsafe")
 SET_TARGET_PROPERTIES(hello_world_sharp_client PROPERTIES LINKER_LANGUAGE CSharp)
 
-if(TARGET hello_world)
-  add_dependencies(hello_world_sharp_client hello_world)
+if(TARGET hello_world_sharp_library)
+  add_dependencies(hello_world_sharp_client hello_world_sharp_library)
 endif()
+target_link_libraries(hello_world_sharp_client hello_world_sharp_library)

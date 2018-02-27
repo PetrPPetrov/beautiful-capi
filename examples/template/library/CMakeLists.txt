@@ -38,6 +38,8 @@ add_library(template SHARED
   ${template_SOURCE_DIR}/source/ModelImpl.h
 )
 
-add_bcapi_generation()
+add_bcapi_generation(sharp "sharp_output")
 
-add_subdirectory(sharp_output)
+if (${CSHARP_ENABLED} AND EXISTS ${template_SOURCE_DIR}/sharp_output)
+    add_subdirectory(sharp_output)
+endif()

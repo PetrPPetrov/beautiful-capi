@@ -27,7 +27,7 @@ add_executable(template_sharp_client
 )
 
 SET_TARGET_PROPERTIES(template_sharp_client PROPERTIES LINKER_LANGUAGE CSharp)
-if(TARGET template)
+if(TARGET template_sharp_library)
   add_dependencies(template_sharp_client template_sharp_library)
 endif()
-
+target_link_libraries(template_sharp_client template_sharp_library)

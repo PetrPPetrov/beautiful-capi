@@ -21,7 +21,7 @@
 
 import os
 
-import NamespaceGenerator
+from NamespaceGenerator import NamespaceGenerator
 import CapiGenerator
 from ClassGenerator import ClassGenerator
 from LifecycleTraits import LifecycleTraits, RawPointerSemantic, CopySemantic
@@ -29,7 +29,8 @@ from ArgumentGenerator import ArgumentGenerator, MappedTypeGenerator, ClassTypeG
 from BuiltinTypeGenerator import BuiltinTypeGenerator
 from MethodGenerator import MethodGenerator, ConstructorGenerator, FunctionGenerator
 from FileGenerator import FileGenerator, IndentScope, Indent
-from Helpers import if_required_then_add_empty_line, bool_to_str, replace_template_to_filename, BeautifulCapiException
+from Helpers import if_required_then_add_empty_line, bool_to_str, replace_template_to_filename, BeautifulCapiException, \
+    pascal_to_stl
 from Helpers import get_template_name
 from Parser import TLifecycle
 from InheritanceTraits import RequiresCastToBase
@@ -178,9 +179,9 @@ class SharpNamespace(object):
 
             self.decrease_indent_recursively(enums_header)
 
-        self.nested_namespaces = {ns.nams: SharpGenerator.get_or_gen_namespace(ns.full_wrap_name, ns)
+        self.nested_namespaces = {ns.name: SharpGenerator.get_or_gen_namespace(ns.full_wrap_name, ns)
                                   for ns in self.namespace_generator.nested_namespaces}
-        for nested_namespace in self.nested_namespaces:
+        for nested_namespace in self.nested_namespaces.values():
             nested_namespace.generate(file_cache, capi_generator)
         if not self.parent_namespace:
             self.__generate_initialisation_class()
@@ -271,6 +272,10 @@ class SharpClass(object):
             arguments = ', '.join(arg.wrap_argument_declaration(self.namespace.full_name_array)for arg in self.template_arguments)
             result = '{name}<{arguments}>'.format(name=self.class_generator.wrap_short_name, arguments=arguments)
         return result
+
+    @property
+    def full_template_name(self):
+        return '.'.join([self.namespace.full_wrap_name, self.template_name])
 
     @staticmethod
     def get_relative_name_array(base: [str], name: [str]) -> [str]:
@@ -1230,7 +1235,7 @@ class SharpCmakeListGenerator(object):
         self.name_stack.pop()
 
     def generate(self):
-        library_name = self.name.lower() + '_sharp_library'
+        library_name = pascal_to_stl(self.name) + '_sharp_library'
         self.file.put_line('project({library_name} LANGUAGES CSharp)\n'.format(library_name=library_name))
         self.file.put_line('cmake_minimum_required(VERSION 3.8.2)\n')
         self.file.put_line('add_library({library_name} SHARED'.format(library_name=library_name))
@@ -1244,7 +1249,7 @@ class SharpCmakeListGenerator(object):
                        'if(TARGET {project})\n' \
                        '    add_dependencies({library_name} {project})\n' \
                        '    target_link_libraries({library_name} {project})\n' \
-                       'endif()\n'.format(library_name=library_name, project=self.name.lower())
+                       'endif()\n'.format(library_name=library_name, project=pascal_to_stl(self.name))
         self.file.put_line(file_content)
 
 
