@@ -14,6 +14,7 @@
       <property name="B" type="Classes::ClassB"/>
       <property name="C" type="Classes::ClassC"/>
     </class>
+    <include_header file="stdint.h" system="true"/>
     <enumeration name="EComponentType" underlying_type="uint16_t">
       <item name="A"/>
       <item name="B"/>

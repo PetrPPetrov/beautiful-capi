@@ -9,6 +9,7 @@
       <property name="C" type="Classes::ClassC"/>
       <property name="D" type="CompC::Align"/>
     </class>
+    <include_header file="stdint.h" system="true"/>
     <enumeration name="Align" underlying_type="int8_t" implementation_type="EAlign">
       <item name="Left"/>
       <item name="Right"/>
