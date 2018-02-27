@@ -87,7 +87,7 @@ class EnumProcessor(object):
             func = TFunction()
             class_name = parent_class.implementation_class_name.split('::')[-1] if parent_class else ''
             func.name = 'GetImplementationValueFor' + class_name + enum.name
-            func.return_type = 'size_t'
+            func.return_type = enum.underlying_type
             argument = TArgument()
             argument.name = 'index'
             argument.type_name = 'size_t'
@@ -100,7 +100,8 @@ class EnumProcessor(object):
                 item_name = item.implementation_name if item.implementation_name else item.name
                 full_name = '::'.join(enum.implementation_type.split('::')[:-1] + [item_name])
                 implementation_code.all_items.append(' ' * 4 + 'case {index}:'.format(index=index))
-                implementation_code.all_items.append(' ' * 8 + 'return static_cast<size_t>({0});'.format(full_name))
+                implementation_code.all_items.append(' ' * 8 + 'return static_cast<{0}>({1});'.format(
+                    enum.underlying_type, full_name))
             implementation_code.all_items.append(' ' * 4 + 'default:')
             implementation_code.all_items.append(' ' * 8 + 'assert (false);')
             enum_name = '::'.join(name_array + [enum.name])
