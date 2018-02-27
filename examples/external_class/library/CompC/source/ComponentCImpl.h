@@ -22,6 +22,7 @@
 #ifndef BEAUTIFUL_CAPI_COMP_C_COMPONENT_C_H
 #define BEAUTIFUL_CAPI_COMP_C_COMPONENT_C_H
 
+#include <stdint.h>
 #include <string>
 #include <iostream>
 #include "Classes.h"
