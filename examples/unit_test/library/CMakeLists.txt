@@ -39,4 +39,4 @@ add_library(unit_test SHARED
   ${unit_test_SOURCE_DIR}/source/AddressImpl.h
 )
 
-add_bcapi_generation_with_test()
+add_bcapi_generation(tests "include/AutoGenUnitTests.h")
