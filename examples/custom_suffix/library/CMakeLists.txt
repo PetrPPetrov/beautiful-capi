@@ -38,4 +38,4 @@ add_library(custom_suffix SHARED
   ${custom_suffix_SOURCE_DIR}/source/plotter_impl.cpp
 )
 
-add_bcapi_generation(wrap ${custom_suffix_SOURCE_DIR}/source/auto_gen_wrap.cpp)
+add_bcapi_generation(wrap source/auto_gen_wrap.cpp)
