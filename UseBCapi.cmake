@@ -69,7 +69,7 @@ function(add_bcapi_generation)
     endif()
     
     if (${arg_wrap})
-        set(wrap ${arg_wrap})
+        set(wrap ${working_dir}/${arg_wrap})
     else()
         set(wrap ${working_dir}/source/AutoGenWrap.cpp)
     endif()
