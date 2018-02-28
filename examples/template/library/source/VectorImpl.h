@@ -24,10 +24,18 @@
 
 #include <vector>
 #include <iostream>
+#include <sstream>
+#include <fstream>
+#include <string>
 #include "boost/intrusive_ptr.hpp"
 
 namespace Example
 {
+    template<typename T>
+    class VectorImpl;
+    template<typename T>
+    std::ostream& operator<<(std::ostream& os, const VectorImpl<T>& vector);
+
     template<typename T>
     class VectorImpl
     {
@@ -61,14 +69,15 @@ namespace Example
         {
             return mVector.at(static_cast<size_t>(index));
         }
-        template <typename WorkType> friend std::ostream& operator<<(std::ostream& os, const VectorImpl<WorkType>& position);
+        friend std::ostream& operator<< <T>(std::ostream& os, const VectorImpl<T>&);
         void dump() const
         {
             std::cout << *this;
         }
     };
     
-    template <typename WorkType> std::ostream& operator<<(std::ostream& os, const VectorImpl<WorkType>& vector)
+    template<typename T> 
+    std::ostream& operator<<(std::ostream& os, const VectorImpl<T>& vector)
     {
         os << "vector size = " << vector.GetSize() << std::endl;
         for (int i = 0; i < vector.GetSize(); ++i)
@@ -105,13 +114,13 @@ namespace Example
         {
             return 'A';
         }
-        friend std::ostream& operator<<(std::ostream& os, const CharDummyVector& position);
+        friend std::ostream& operator<<(std::ostream& os, const CharDummyVector&);
         void dump() const
         {
             std::cout << *this;
         }
     };
-    
+
     std::ostream& operator<<(std::ostream& os, const CharDummyVector& vector)
     {
         os << "vector size = " << vector.GetSize() << std::endl;
@@ -127,6 +136,11 @@ namespace Example
         {
         }
     };
+
+    template<typename T>
+    class VectorOfObjectsImpl;
+    template<typename T>
+    std::ostream& operator<<(std::ostream& os, const VectorOfObjectsImpl<T>& vector);
 
     template<typename T>
     class VectorOfObjectsImpl
@@ -176,14 +190,15 @@ namespace Example
                 delete this;
             }
         }
-        template <typename T> friend std::ostream& operator<<(std::ostream& os, const VectorOfObjectsImpl<T>& vector);
+        friend std::ostream& operator<< <T>(std::ostream& os, const VectorOfObjectsImpl<T>&);
         void dump() const
         {
             std::cout << *this;
         }
     };
     
-    template <typename T> std::ostream& operator<<(std::ostream& os, const VectorOfObjectsImpl<T>& vector)
+    template<typename T> 
+    std::ostream& operator<<(std::ostream& os, const VectorOfObjectsImpl<T>& vector)
     {
         os << "vector size = " << vector.GetSize() << std::endl;
         for (int i = 0; i < vector.GetSize(); ++i)
