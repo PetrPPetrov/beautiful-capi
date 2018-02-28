@@ -36,6 +36,6 @@ add_library(hello_world SHARED
 
 add_bcapi_generation(sharp "sharp_output")
 
-if (${CSHARP_ENABLED} AND EXISTS ${hello_world_SOURCE_DIR}/sharp_output)
+if (${CSHARP_ENABLED})
     add_subdirectory(sharp_output)
 endif()

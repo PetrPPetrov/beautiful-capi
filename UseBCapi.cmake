@@ -104,28 +104,17 @@ function(add_bcapi_generation)
         set(verbose "")
     endif()
     
-    add_custom_command(
-        OUTPUT
-            ${wrap}
-        COMMAND
-            ${PYTHON_EXECUTABLE}
-            ${capi}
-            -i ${input}
-            -p ${params}
-            -o ${output}
-            -s ${snippets}
-            -w ${wrap}
-            ${sharp_output}
-            ${tests}
-            ${keys}
-            ${clean}
-            ${version}
-            ${verbose}
-        MAIN_DEPENDENCY
-            ${input}
-        DEPENDS
-            ${params}
-        WORKING_DIRECTORY
-            ${working_dir}
+    execute_process(COMMAND ${PYTHON_EXECUTABLE} ${capi} 
+        -i ${input}
+        -p ${params}
+        -o ${output}
+        -s ${snippets}
+        -w ${wrap}
+        ${sharp_output}
+        ${tests}
+        ${keys}
+        ${clean}
+        ${version}
+        ${verbose}        
     )
 endfunction(add_bcapi_generation)

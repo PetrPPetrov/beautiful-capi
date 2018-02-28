@@ -50,12 +50,5 @@ if(NOT WIN32)
   add_definitions(-fvisibility=hidden)
 endif()
 
-if (${CSHARP_ENABLED})
-    if (NOT DEFINED RUN_CMAKE_AGAIN)
-        execute_process(COMMAND cmake -DRUN_CMAKE_AGAIN=OFF ..)
-        execute_process(COMMAND cmake --build .)
-    endif()
-endif()
-
 add_subdirectory(examples)
 add_subdirectory(tests)
