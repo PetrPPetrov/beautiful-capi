@@ -38,6 +38,6 @@ add_library(api_include SHARED
 
 add_bcapi_generation(sharp "sharp_output")
 
-if (${CSHARP_ENABLED} AND EXISTS ${api_include_SOURCE_DIR}/sharp_output)
+if(${CSHARP_ENABLED})
     add_subdirectory(sharp_output)
 endif()
