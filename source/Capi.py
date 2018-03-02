@@ -252,6 +252,7 @@ class Capi(object):
                 generate_sharp_code(file_cache, capi_generator, namespace_generators)
             else:
                 print('Warning: To generate the C# code, you must specify shared_library_name in the params file')
+        file_cache.file2generator.clear()
 
     def generate(self):
         self.params_description = load(self.input_params)
