@@ -18,26 +18,16 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-project(circular_reference)
+project(circular_reference_sharp_client LANGUAGES CSharp)
+cmake_minimum_required(VERSION 3.8.2)
 
-cmake_minimum_required(VERSION 2.8)
-
-find_package(PythonInterp 3.4 REQUIRED)
-
-include(../../../UseBCapi.cmake)
-
-include_directories(${circular_reference_SOURCE_DIR}/source/)
-
-add_library(circular_reference SHARED
-  ${circular_reference_SOURCE_DIR}/source/AutoGenWrap.cpp
-  ${circular_reference_SOURCE_DIR}/source/ClassAImpl.h
-  ${circular_reference_SOURCE_DIR}/source/ClassAImpl.cpp
-  ${circular_reference_SOURCE_DIR}/source/ClassBImpl.h
-  ${circular_reference_SOURCE_DIR}/source/ClassBImpl.cpp  
+add_executable(circular_reference_sharp_client
+  ${circular_reference_sharp_client_SOURCE_DIR}/Program.cs
+  ${circular_reference_sharp_client_SOURCE_DIR}/Properties/AssemblyInfo.cs
 )
 
-add_bcapi_generation(sharp "sharp_output")
-
-if(${CSHARP_ENABLED})
- add_subdirectory(sharp_output)
+SET_TARGET_PROPERTIES(circular_reference_sharp_client PROPERTIES LINKER_LANGUAGE CSharp)
+if(TARGET circular_reference_sharp_library)    
+  add_dependencies(circular_reference_sharp_client circular_reference_sharp_library)
 endif()
+target_link_libraries(circular_reference_sharp_client circular_reference_sharp_library)
