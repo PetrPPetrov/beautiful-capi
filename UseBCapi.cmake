@@ -104,17 +104,20 @@ function(add_bcapi_generation)
         set(verbose "")
     endif()
     
-    execute_process(COMMAND ${PYTHON_EXECUTABLE} ${capi} 
-        -i ${input}
-        -p ${params}
-        -o ${output}
-        -s ${snippets}
-        -w ${wrap}
-        ${sharp_output}
-        ${tests}
-        ${keys}
-        ${clean}
-        ${version}
-        ${verbose}        
+    
+    
+    execute_process(
+        COMMAND ${PYTHON_EXECUTABLE} ${capi} 
+            -i ${input}
+            -p ${params}
+            -o ${output}
+            -s ${snippets}
+            -w ${wrap}
+            ${sharp_output}
+            ${tests}
+            ${keys}
+            ${clean}
+            ${version}
+            ${verbose}         
     )
 endfunction(add_bcapi_generation)

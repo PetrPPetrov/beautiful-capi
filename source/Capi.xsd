@@ -216,6 +216,11 @@
         <xs:documentation>Specifies the name of *GetRawPointer* method</xs:documentation>
       </xs:annotation>
     </xs:attribute>
+    <xs:attribute default="" name="project_name" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>Specifies the name of the BCapi library to export to CMakeLists as dependencies. Used in C# projects. You need to specify project_name only once for each library, which you used</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
   </xs:complexType>
   <xs:complexType name="TExternalClass">
     <xs:annotation>

@@ -39,4 +39,8 @@ add_library(components SHARED
 add_dependencies(components classes)
 target_link_libraries(components classes)
 
-add_bcapi_generation()
+add_bcapi_generation(sharp "sharp_output")
+
+if (${CSHARP_ENABLED})
+    add_subdirectory(sharp_output)
+endif()

@@ -29,6 +29,7 @@ class ExternalNamespaceGenerator(object):
         self.parent_namespace = parent_namespace
         self.nested_namespaces = []
         self.classes = []
+        self.enum_generators = []
 
     @property
     def name(self) -> str:
@@ -41,3 +42,8 @@ class ExternalNamespaceGenerator(object):
     @property
     def full_name_array(self) -> [str]:
         return self.parent_namespace.full_name_array + [self.name] if self.parent_namespace else [self.name]
+
+    @property
+    def wrap_name(self) -> str:
+        return self.name
+

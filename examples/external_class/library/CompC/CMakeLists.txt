@@ -38,4 +38,8 @@ add_library(comp_c SHARED
 add_dependencies(comp_c classes)
 target_link_libraries(comp_c classes)
 
-add_bcapi_generation()
+add_bcapi_generation(sharp "sharp_output")
+
+if (${CSHARP_ENABLED})
+    add_subdirectory(sharp_output)
+endif()

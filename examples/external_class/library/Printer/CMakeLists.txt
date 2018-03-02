@@ -42,4 +42,8 @@ add_dependencies(printer comp_c)
 target_link_libraries(printer components)
 target_link_libraries(printer comp_c)
 
-add_bcapi_generation()
+add_bcapi_generation(sharp "sharp_output")
+
+if (${CSHARP_ENABLED})
+    add_subdirectory(sharp_output)
+endif()

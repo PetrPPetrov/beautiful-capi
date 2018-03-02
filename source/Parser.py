@@ -366,6 +366,8 @@ class TExternalNamespace(object):
         self.detach_method_name_filled = False
         self.get_raw_pointer_method_name = "GetRawPointer"
         self.get_raw_pointer_method_name_filled = False
+        self.project_name = ""
+        self.project_name_filled = False
         self.classes = []
         self.namespaces = []
 
@@ -399,6 +401,10 @@ class TExternalNamespace(object):
             cur_attr = dom_node.getAttribute("get_raw_pointer_method_name")
             self.get_raw_pointer_method_name = cur_attr
             self.get_raw_pointer_method_name_filled = True
+        if dom_node.hasAttribute("project_name"):
+            cur_attr = dom_node.getAttribute("project_name")
+            self.project_name = cur_attr
+            self.project_name_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:

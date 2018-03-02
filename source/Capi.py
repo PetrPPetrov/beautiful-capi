@@ -196,6 +196,8 @@ class Capi(object):
                         external_namespace.classes.append(external_class)
                     external_namespaces.append(external_namespace)
             process_external_namespaces(new_capi.__process(), namespace.external_namespaces)
+            if namespace.external_namespaces:
+                namespace.external_namespaces[-1].project_name = new_capi.api_description.project_name
         for nested_namespace in namespace.namespaces:
             self.__load_external(nested_namespace)
 

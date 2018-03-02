@@ -21,17 +21,18 @@
 
 import os
 
+import ExternalClassGenerator
+import ExternalNamespaceGenerator
 from NamespaceGenerator import NamespaceGenerator
 import CapiGenerator
 from ClassGenerator import ClassGenerator
 from LifecycleTraits import LifecycleTraits, RawPointerSemantic, CopySemantic
-from ArgumentGenerator import ArgumentGenerator, MappedTypeGenerator, ClassTypeGenerator
+from ArgumentGenerator import ArgumentGenerator, MappedTypeGenerator, ClassTypeGenerator, ExternalClassTypeGenerator
 from BuiltinTypeGenerator import BuiltinTypeGenerator
 from MethodGenerator import MethodGenerator, ConstructorGenerator, FunctionGenerator
 from FileGenerator import FileGenerator, IndentScope, Indent
-from Helpers import if_required_then_add_empty_line, bool_to_str, replace_template_to_filename, BeautifulCapiException, \
-    pascal_to_stl
-from Helpers import get_template_name
+from Helpers import if_required_then_add_empty_line, bool_to_str, replace_template_to_filename, BeautifulCapiException
+from Helpers import get_template_name, pascal_to_stl
 from Parser import TLifecycle
 from InheritanceTraits import RequiresCastToBase
 from ExceptionTraits import NoHandling
@@ -55,6 +56,7 @@ class SharpNamespace(object):
         self.full_wrap_name = '.'.join(namespace_generator.full_name_array)
         self.mapped_types = {}
         self.templates = {}
+        self.external_namespaces = []
 
     def get_object(self, name: str):
         if name in self.classes:
@@ -176,9 +178,8 @@ class SharpNamespace(object):
             self.increase_indent_recursively(enums_header)
             for enum in self.enums:
                 enum.generate_enum_definition(enums_header)
-
             self.decrease_indent_recursively(enums_header)
-
+        self.external_namespaces = [SharpExternalNamespace(external) for external in self.namespace_generator.external_namespaces]
         self.nested_namespaces = {ns.name: SharpGenerator.get_or_gen_namespace(ns.full_wrap_name, ns)
                                   for ns in self.namespace_generator.nested_namespaces}
         for nested_namespace in self.nested_namespaces.values():
@@ -204,9 +205,6 @@ class SharpNamespace(object):
                 self.classes['.'.join(class_.full_template_name_array)] = sharp_class
         for class_generator in self.classes.values():
             class_generator.generate()
-        if self.namespace_generator.namespace_object.implementation_header_filled:
-            capi_generator.additional_includes.include_user_header(
-                self.namespace_generator.namespace_object.implementation_header)
         for template in self.templates.values():
             template.generate(file_cache)
 
@@ -708,11 +706,15 @@ class SharpArgument(object):
 
     def wrap_argument_declaration(self, base=None) -> str:
         generator = self.argument_generator.type_generator
-        if isinstance(generator, ClassTypeGenerator):
+        if isinstance(generator, ExternalClassTypeGenerator):
+            sharp_external_class = SharpGenerator.get_or_gen_external_class(
+                '.'.join(generator.class_argument_generator.full_name_array).replace('::', '.'),
+                generator.class_argument_generator)
+            argument_type = sharp_external_class.generator.full_wrap_name
+        elif isinstance(generator, ClassTypeGenerator):
             sharp_class = SharpGenerator.get_or_gen_class(
                 '.'.join(generator.class_argument_generator.full_template_name_array).replace('::', '.'),
-                generator.class_argument_generator
-            )
+                generator.class_argument_generator)
             argument_type = sharp_class.full_wrap_name
         elif isinstance(generator, MappedTypeGenerator):
             if generator.mapped_type_object.sharp_wrap_type:
@@ -751,9 +753,14 @@ class SharpArgument(object):
             )
         elif isinstance(generator, ClassTypeGenerator):
             parent_full_name = '.'.join(generator.class_argument_generator.parent_namespace.full_name_array)
-            sharp_class = SharpGenerator.get_or_gen_class(
-                parent_full_name + '.' + generator.class_argument_generator.template_name.replace('::', '.'),
-                generator.class_argument_generator)
+            if isinstance(generator, ExternalClassTypeGenerator):
+                sharp_class = SharpGenerator.get_or_gen_external_class(
+                    generator.class_argument_generator.full_wrap_name.replace('::', '.'),
+                    generator.class_argument_generator)
+            else:
+                sharp_class = SharpGenerator.get_or_gen_class(
+                    parent_full_name + '.' + generator.class_argument_generator.template_name.replace('::', '.'),
+                    generator.class_argument_generator)
             internal_expression = '{type_name}.{create_from_ptr_expression}, {expression}, {copy_or_add_ref}'.format(
                 create_from_ptr_expression='ECreateFromRawPointer.force_creating_from_raw_pointer',
                 type_name=parent_full_name + '.' + sharp_class.wrap_name,
@@ -1197,60 +1204,135 @@ class SharpGenerator(object):
             full_name_2_sharp_object[fullname] = result
         return result
 
+    @staticmethod
+    def get_or_gen_external_namespace(fullname: str, generator: ExternalNamespaceGenerator):
+        if fullname in full_name_2_sharp_object:
+            return full_name_2_sharp_object[fullname]
+        else:
+            if generator.parent_namespace:
+                parent = SharpGenerator.get_or_gen_external_namespace(generator.parent_namespace.full_wrap_name,
+                                                                      generator.parent_namespace)
+                result = SharpExternalNamespace(generator, parent)
+            else:
+                result = SharpExternalNamespace(generator, None)
+            full_name_2_sharp_object[fullname] = result
+            return result
+
+    @staticmethod
+    def get_or_gen_external_class(fullname: str, external_class_generator: ExternalClassGenerator):
+        if fullname in full_name_2_sharp_object:
+            return full_name_2_sharp_object[fullname]
+        else:
+            namespace = SharpGenerator.get_or_gen_external_namespace(
+                '.'.join(external_class_generator.parent_namespace.full_name_array),
+                external_class_generator.parent_namespace)
+            result = SharpExternalClass(external_class_generator, namespace)
+            full_name_2_sharp_object[fullname] = result
+            namespace.classes.append(result)
+            return result
+
 
 class SharpCmakeListGenerator(object):
     def __init__(self, capi_generator, namespaces: []):
         self.name = capi_generator.api_root.project_name
+        self.lib_suffix = '_sharp_library'
+        self.lib_name = pascal_to_stl(self.name + self.lib_suffix)
         self.params = capi_generator.params
         self.namespaces = [full_name_2_sharp_object[namespace.full_wrap_name] for namespace in namespaces]
         self.out_folder = capi_generator.params.sharp_output_folder
         self.file = FileGenerator(self.out_folder + '/CMakeLists.txt')
         self.name_stack = []
+        self.dependencies = []
         self.project_path = ''
 
-    def generate_class(self, class_: SharpClass):
+    def put_dependency_lib(self, project_name: str, out: FileGenerator):
+        out.put_line('if (TARGET {0})'.format(project_name))
+        with Indent(out):
+            out.put_line('add_dependencies({0} {1})'.format(self.lib_name, project_name))
+        out.put_line('endif()')
+
+    def put_link_lib(self, project_name: str, out: FileGenerator):
+        out.put_line('target_link_libraries({0} {1})'.format(self.lib_name, project_name))
+
+    def process_class(self, class_: SharpClass):
         path_to_class = '/'.join(self.name_stack + [class_.wrap_name])
         self.file.put_line(self.project_path + '/' + path_to_class + '.cs')
         pass
 
-    def generate_template(self, template: SharpTemplate):
+    def process_template(self, template: SharpTemplate):
         filename = template.template_generator.template_class_generator.wrap_name + '.cs'
         self.file.put_line('/'.join([self.project_path] + self.name_stack + [filename]))
         self.name_stack.append(template.wrap_short_name)
         for class_ in template.classes:
-            self.generate_class(class_)
+            self.process_class(class_)
         self.name_stack.pop()
 
-    def generate_namespace(self, namespace):
+    def process_external_namespace(self, external_namespace):
+        if external_namespace.project_name and external_namespace.project_name not in self.dependencies:
+            self.dependencies.append(external_namespace.project_name)
+        for nested_namespace in external_namespace.nested_namespaces:
+            self.process_external_namespace(nested_namespace)
+
+    def process_namespace(self, namespace):
         if not self.name_stack:
             self.file.put_line(self.project_path + '/' + namespace.wrap_name + '/' + namespace.wrap_name + 'Init.cs')
         self.file.put_line('/'.join([self.project_path] + self.name_stack + [namespace.wrap_name + 'Functions.cs']))
         self.name_stack.append(namespace.wrap_name)
         for nested_namespace in namespace.nested_namespaces.values():
-            self.generate_namespace(nested_namespace)
+            self.process_namespace(nested_namespace)
         for class_ in namespace.classes.values():
-            self.generate_class(class_)
+            self.process_class(class_)
         for template in namespace.templates.values():
-            self.generate_template(template)
+            self.process_template(template)
+        for external_namespace in namespace.external_namespaces:
+            self.process_external_namespace(external_namespace)
         self.name_stack.pop()
 
     def generate(self):
-        library_name = pascal_to_stl(self.name) + '_sharp_library'
-        self.file.put_line('project({library_name} LANGUAGES CSharp)\n'.format(library_name=library_name))
+        self.file.put_line('project({library_name} LANGUAGES CSharp)\n'.format(library_name=self.lib_name))
         self.file.put_line('cmake_minimum_required(VERSION 3.8.2)\n')
-        self.file.put_line('add_library({library_name} SHARED'.format(library_name=library_name))
-        self.project_path = '${{{library_name}_SOURCE_DIR}}'.format(library_name=library_name)
+        self.file.put_line('add_library({library_name} SHARED'.format(library_name=self.lib_name))
+        self.project_path = '${{{library_name}_SOURCE_DIR}}'.format(library_name=self.lib_name)
         with Indent(self.file):
             for namespace in self.namespaces:
-                self.generate_namespace(namespace)
+                self.process_namespace(namespace)
         self.file.put_line(')\n')
-        file_content = 'target_compile_options({library_name} PRIVATE "/unsafe")\n' \
-                       'SET_TARGET_PROPERTIES({library_name} PROPERTIES LINKER_LANGUAGE CSharp)\n' \
-                       'if(TARGET {project})\n' \
-                       '    add_dependencies({library_name} {project})\n' \
-                       '    target_link_libraries({library_name} {project})\n' \
-                       'endif()\n'.format(library_name=library_name, project=pascal_to_stl(self.name))
-        self.file.put_line(file_content)
+        self.file.put_line('target_compile_options({0} PRIVATE "/unsafe")'.format(self.lib_name))
+        self.file.put_line('SET_TARGET_PROPERTIES({0} PROPERTIES LINKER_LANGUAGE CSharp)'.format(self.lib_name))
+        self.put_dependency_lib(pascal_to_stl(self.name), self.file)
+        self.put_link_lib(pascal_to_stl(self.name), self.file)
+        for dependency in self.dependencies:
+            lib_name = pascal_to_stl(dependency + self.lib_suffix)
+            self.put_dependency_lib(lib_name, self.file)
+            self.put_link_lib(lib_name, self.file)
+            self.file.put_line('')
+
+
+class SharpExternalNamespace(object):
+    def __init__(self, generator: ExternalNamespaceGenerator, parent=None):
+        self.generator = generator
+        self.parent = parent
+        self.nested_namespaces = []
+        self.classes = []
+        self.enums = []
+        self.project_name = generator.namespace_object.project_name
+
+
+class SharpExternalClass(object):
+    def __init__(self, generator: ExternalClassGenerator, parent: ExternalNamespaceGenerator):
+        self.generator = generator
+        self.parent = parent
+        self.enums = []
+
+    @property
+    def wrap_name(self):
+        return self.generator.wrap_name
+
+
+class SharpExternalEnum(object):
+    def __init__(self, generator, parent: ExternalNamespaceGenerator or ExternalClassGenerator):
+        self.generator = generator
+        self.parent = parent
 
 
 def generate_requires_cast_to_base_set_object_definition(out: FileGenerator, sharp_class: SharpClass):
