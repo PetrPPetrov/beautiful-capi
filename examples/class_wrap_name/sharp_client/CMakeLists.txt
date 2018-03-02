@@ -18,13 +18,16 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-project(circular_reference_example)
+project(class_wrap_name_sharp_client LANGUAGES CSharp)
+cmake_minimum_required(VERSION 3.8.2)
 
-cmake_minimum_required(VERSION 2.8)
+add_executable(class_wrap_name_sharp_client
+  ${class_wrap_name_sharp_client_SOURCE_DIR}/Program.cs
+  ${class_wrap_name_sharp_client_SOURCE_DIR}/Properties/AssemblyInfo.cs
+)
 
-add_subdirectory(library)
-add_subdirectory(client)
-
-if(${CSHARP_ENABLED})
- #add_subdirectory(sharp_client)
+SET_TARGET_PROPERTIES(class_wrap_name_sharp_client PROPERTIES LINKER_LANGUAGE CSharp)
+if(TARGET circular_reference_sharp_library)    
+  add_dependencies(class_wrap_name_sharp_client class_wrap_name_sharp_library)
 endif()
+target_link_libraries(class_wrap_name_sharp_client class_wrap_name_sharp_library)
