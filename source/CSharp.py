@@ -231,7 +231,11 @@ class SharpClass(object):
                                                        class_generator.lifecycle_traits)
         self.enums = [SharpEnum(enum, self) for enum in class_generator.enum_generators]
         self.base = None
+        self.gen_base_class()
         self.template_arguments = []
+        if self.is_template:
+            template_arguments = self.class_generator.template_argument_generators
+            self.template_arguments = [SharpArgument(ArgumentGenerator(arg, "")) for arg in template_arguments]
 
     @property
     def is_template(self):
@@ -398,10 +402,6 @@ class SharpClass(object):
 
     def generate(self):
         self.file_cache = self.namespace.file_cache
-        self.gen_base_class()
-        if self.is_template:
-            template_arguments = self.class_generator.template_argument_generators
-            self.template_arguments = [SharpArgument(ArgumentGenerator(arg, "")) for arg in template_arguments]
         self.__generate_definition()
 
 
@@ -415,10 +415,20 @@ class SharpTemplate(object):
         self.constructors = []
         self.methods = []
         self.classes = []
-        self.base = None
         self.explicit_arguments = []
         self.arguments = []
         self.non_types = ('template', 'typename', 'class')
+        self.base = None
+        base_name = self.template_generator.template_class.base
+        if base_name:
+            base_name = get_template_name(base_name)
+            base_name_array = SharpClass.get_relative_name_array(self.namespace.full_name_array, base_name.split('::'))
+            self.base = self.namespace.find_object(base_name_array)
+        for argument in self.template_generator.template_object.arguments:
+            if argument.type_name not in ['template', 'class', 'typename']:
+                self.explicit_arguments.append((argument.type_name, argument.name))
+            type_name = full_name_2_sharp_object.get(argument.type_name.replace('::', '.'), None)
+            self.arguments.append((argument.name, type_name if type_name else argument.type_name,))
 
     @property
     def wrap_short_name(self):
@@ -652,16 +662,6 @@ class SharpTemplate(object):
 
     def generate(self, file_cache):
         header = file_cache.get_file_for_class(self.namespace.full_name_array + [self.wrap_short_name])
-        base_name = self.template_generator.template_class.base
-        if base_name:
-            base_name = get_template_name(base_name)
-            base_name_array = SharpClass.get_relative_name_array(self.namespace.full_name_array, base_name.split('::'))
-            self.base = self.namespace.find_object(base_name_array)
-        for argument in self.template_generator.template_object.arguments:
-            if argument.type_name not in ['template', 'class', 'typename']:
-                self.explicit_arguments.append((argument.type_name, argument.name))
-            type_name = full_name_2_sharp_object.get(argument.type_name.replace('::', '.'), None)
-            self.arguments.append((argument.name, type_name if type_name else argument.type_name, ))
         for constructor in self.template_generator.template_class_generator.constructor_generators:
             self.constructors.append(SharpConstructor(constructor, self))
         for method in self.template_generator.template_class_generator.method_generators:
