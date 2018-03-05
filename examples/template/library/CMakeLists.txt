@@ -40,6 +40,6 @@ add_library(template SHARED
 
 add_bcapi_generation(sharp "sharp_output")
 
-if (${CSHARP_ENABLED} AND EXISTS ${template_SOURCE_DIR}/sharp_output)
+if (${CSHARP_ENABLED})
     add_subdirectory(sharp_output)
 endif()
