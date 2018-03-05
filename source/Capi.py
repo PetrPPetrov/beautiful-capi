@@ -72,6 +72,8 @@ class Capi(object):
                 shutil.rmtree(self.output_folder)
             if os.path.exists(self.internal_snippets_folder):
                 shutil.rmtree(self.internal_snippets_folder)
+            if os.path.exists(self.sharp_output_folder):
+                shutil.rmtree(self.sharp_output_folder)
 
         self.unit_tests_generator = None
 
@@ -300,7 +302,7 @@ def main():
         '-k', '--api-keys-folder', nargs=None, default='./keys', dest='api_keys_folder',
         help='specifies output folder for generated API keys')
     parser.add_argument('-c', '--clean', dest='clean', action='store_true',
-                        help='cleans input and snippets directories')
+                        help='cleans input, sharp output and snippets directories')
     parser.set_defaults(clean=False)
     parser.add_argument('-v', '--version', dest='version', action='store_true',
                         help='shows version number')

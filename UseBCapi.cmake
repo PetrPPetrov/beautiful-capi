@@ -25,37 +25,37 @@ function(add_bcapi_generation)
     set(oneValueArgs workingdir capi input params output snippets wrap sharp tests keys)
     set(multiValueArgs)
     cmake_parse_arguments(arg "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
-    
+
     if (arg_workingdir)
         set(working_dir ${arg_workingdir})
     else()
         set(working_dir ${CMAKE_CURRENT_SOURCE_DIR})
     endif()
-    
+
     if (arg_capi)
         set(capi ${arg_capi})
     else()
         set(capi ${beautiful_capi_SOURCE_DIR}/source/Capi.py)
     endif()
-    
+
     if (arg_input)
         set(input ${arg_input})
     else()
         set(input ${working_dir}/${PROJECT_NAME}.xml)
     endif()
-    
+
     if (arg_params)
         set(params ${arg_params})
     else()
         set(params ${working_dir}/${PROJECT_NAME}_params.xml)
     endif()        
-    
+
     if (arg_output)
         set(output ${arg_output})
     else()
         set(output ${working_dir}/include)
     endif()
-    
+
     if (${CSHARP_ENABLED} AND arg_sharp)
         set(sharp_output "-S${working_dir}/${arg_sharp}")
     else()
@@ -67,13 +67,13 @@ function(add_bcapi_generation)
     else()
         set(snippets ${working_dir}/source/snippets)
     endif()
-    
+
     if (arg_wrap)
         set(wrap ${working_dir}/${arg_wrap})
     else()
         set(wrap ${working_dir}/source/AutoGenWrap.cpp)
     endif()
-    
+
     if (arg_tests)
         set(tests -t ${working_dir}/${arg_tests})
     else()
@@ -85,7 +85,7 @@ function(add_bcapi_generation)
     else()
         set(keys "")
     endif()
-    
+
     if (arg_clean)
         set(clean -c)
     else()
@@ -102,12 +102,11 @@ function(add_bcapi_generation)
         set(verbose --verbosity)
     else()
         set(verbose "")
-    endif()
-    
-    
-    
+    endif()  
+
+    # run at the configuration stage to generate a C# source
     execute_process(
-        COMMAND ${PYTHON_EXECUTABLE} ${capi} 
+        COMMAND ${PYTHON_EXECUTABLE} ${capi}
             -i ${input}
             -p ${params}
             -o ${output}
@@ -118,6 +117,35 @@ function(add_bcapi_generation)
             ${keys}
             ${clean}
             ${version}
-            ${verbose}         
+            ${verbose}
+        WORKING_DIRECTORY
+            ${working_dir}
     )
+
+    # run at the Build stage if MAIN_DEPENDENCY or DEPENDS are changed
+    add_custom_command(
+        OUTPUT
+            ${wrap}
+        COMMAND
+            ${PYTHON_EXECUTABLE}
+            ${capi}
+            -i ${input}
+            -p ${params}
+            -o ${output}
+            -s ${snippets}
+            -w ${wrap}
+            ${sharp_output}
+            ${tests}
+            ${keys}
+            ${clean}
+            ${version}
+            ${verbose}
+        MAIN_DEPENDENCY
+            ${input}
+        DEPENDS
+            ${params}
+        WORKING_DIRECTORY
+            ${working_dir}
+    )
+
 endfunction(add_bcapi_generation)
