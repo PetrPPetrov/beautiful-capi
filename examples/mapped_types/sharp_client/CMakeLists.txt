@@ -18,24 +18,17 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-project(mapped_types)
+project(mapped_types_sharp_client LANGUAGES CSharp)
+cmake_minimum_required(VERSION 3.8.2)
 
-cmake_minimum_required(VERSION 2.8)
-
-find_package(PythonInterp 3.4 REQUIRED)
-
-include(../../../UseBCapi.cmake)
-
-include_directories(${mapped_types_SOURCE_DIR}/source/)
-
-add_library(mapped_types SHARED
-  ${mapped_types_SOURCE_DIR}/source/AutoGenWrap.cpp
-  ${mapped_types_SOURCE_DIR}/source/MappedTypes.h
-  ${mapped_types_SOURCE_DIR}/source/MappedTypes.cpp
+add_executable(mapped_types_sharp_client
+  ${mapped_types_sharp_client_SOURCE_DIR}/Program.cs
+  ${mapped_types_sharp_client_SOURCE_DIR}/Properties/AssemblyInfo.cs
 )
 
-add_bcapi_generation(sharp "sharp_output")
+SET_TARGET_PROPERTIES(mapped_types_sharp_client PROPERTIES LINKER_LANGUAGE CSharp)
 
-if(${CSHARP_ENABLED})
-    add_subdirectory(sharp_output)
+if(TARGET mapped_types_sharp_library)
+  add_dependencies(mapped_types_sharp_client mapped_types_sharp_library)
 endif()
+target_link_libraries(mapped_types_sharp_client mapped_types_sharp_library)

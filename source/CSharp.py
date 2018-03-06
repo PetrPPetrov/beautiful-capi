@@ -741,13 +741,18 @@ class SharpMappedType(object):
     def wrap_2_c_var(self, result_var: str, expression: str):
         return self.format(self.wrap_2_c, expression, result_var, self.mapped_type_object.c_type)
 
+    def c_2_wrap_var(self, result_var: str, expression: str):
+        return self.format(self.c_2_wrap, expression, result_var, self.mapped_type_object.c_type)
+
 
 class SharpArgument(object):
     def __init__(self, argument_generator: ArgumentGenerator):
-        self.argument_generator = argument_generator
-
-    def wrap_decl(self, base=None) -> str:
-        return self.wrap_argument_declaration(base)
+        if isinstance(argument_generator.type_generator, MappedTypeGenerator):
+            mapped_type = SharpGenerator.get_or_gen_mapped_type(argument_generator.type_generator.name,
+                                                                argument_generator.type_generator.mapped_type_object)
+            self.argument_generator = ArgumentGenerator(mapped_type, argument_generator.name)
+        else:
+            self.argument_generator = argument_generator
 
     def wrap_argument_declaration(self, base=None) -> str:
         generator = self.argument_generator.type_generator
@@ -761,9 +766,8 @@ class SharpArgument(object):
                 '.'.join(generator.class_argument_generator.full_template_name_array).replace('::', '.'),
                 generator.class_argument_generator)
             argument_type = sharp_class.full_wrap_name
-        elif isinstance(generator, MappedTypeGenerator):
-            mapped_type = SharpGenerator.get_or_gen_mapped_type(generator.name, generator.mapped_type_object)
-            argument_type = mapped_type.wrap_argument_declaration()
+        elif isinstance(generator, SharpMappedType):
+            argument_type = generator.wrap_argument_declaration()
         elif isinstance(generator, TemplateConstantArgumentGenerator):
             argument_type = generator.value
         else:
@@ -854,7 +858,8 @@ class SharpMethod(object):
         result = []
         for argument in self.method_generator.c_arguments_list:
             if isinstance(argument.type_generator, MappedTypeGenerator):
-                mapped_type = SharpGenerator.get_or_gen_mapped_type(argument.name, argument.type_generator.mapped_type_object)
+                mapped_type = SharpGenerator.get_or_gen_mapped_type(argument.type_generator.name,
+                                                                    argument.type_generator.mapped_type_object)
                 result.append(ArgumentGenerator(mapped_type, argument.name))
             else:
                 result.append(argument)
@@ -891,7 +896,7 @@ class SharpConstructor(object):
         for argument in self.constructor_generator.argument_generators:
             generator = argument.type_generator
             if isinstance(generator, MappedTypeGenerator):
-                mapped_type = SharpGenerator.get_or_gen_mapped_type(argument.name, generator.mapped_type_object)
+                mapped_type = SharpGenerator.get_or_gen_mapped_type(generator.name, generator.mapped_type_object)
                 result.append(ArgumentGenerator(mapped_type, argument.name))
             else:
                 result.append(argument)
@@ -942,7 +947,7 @@ class SharpFunction(object):
         with IndentScope(out):
             return_expression = self.exception_traits.generate_c_call(
                 out,
-                self.function_generator.return_type_generator,
+                self.return_type.argument_generator.type_generator,
                 self.function_generator.full_c_name,
                 arguments_call
             )
