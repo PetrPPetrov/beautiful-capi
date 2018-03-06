@@ -1522,29 +1522,15 @@ class TPropertyGetConst(object):
         self.load_attributes(dom_node)
 
 
-class TMappedType(object):
+class TMappedTypeItem(object):
     def __init__(self):
         self.all_items = []
-        self.name = ""
-        self.name_filled = False
         self.wrap_type = ""
         self.wrap_type_filled = False
-        self.sharp_wrap_type = ""
-        self.sharp_wrap_type_filled = False
         self.argument_wrap_type = ""
         self.argument_wrap_type_filled = False
-        self.c_type = ""
-        self.c_type_filled = False
-        self.implementation_type = ""
-        self.implementation_type_filled = False
-        self.snippet_type = ""
-        self.snippet_type_filled = False
         self.wrap_2_c = "static_cast<{c_type}>({expression})"
         self.wrap_2_c_filled = False
-        self.c_2_impl = "static_cast<{implementation_type}>({expression})"
-        self.c_2_impl_filled = False
-        self.impl_2_c = "static_cast<{c_type}>({expression})"
-        self.impl_2_c_filled = False
         self.c_2_wrap = "static_cast<{wrap_type}>({expression})"
         self.c_2_wrap_filled = False
         self.include_headers = []
@@ -1558,22 +1544,79 @@ class TMappedType(object):
         return False
 
     def load_attributes(self, dom_node):
-        if dom_node.hasAttribute("name"):
-            cur_attr = dom_node.getAttribute("name")
-            self.name = cur_attr
-            self.name_filled = True
         if dom_node.hasAttribute("wrap_type"):
             cur_attr = dom_node.getAttribute("wrap_type")
             self.wrap_type = cur_attr
             self.wrap_type_filled = True
-        if dom_node.hasAttribute("sharp_wrap_type"):
-            cur_attr = dom_node.getAttribute("sharp_wrap_type")
-            self.sharp_wrap_type = cur_attr
-            self.sharp_wrap_type_filled = True
         if dom_node.hasAttribute("argument_wrap_type"):
             cur_attr = dom_node.getAttribute("argument_wrap_type")
             self.argument_wrap_type = cur_attr
             self.argument_wrap_type_filled = True
+        if dom_node.hasAttribute("wrap_2_c"):
+            cur_attr = dom_node.getAttribute("wrap_2_c")
+            self.wrap_2_c = cur_attr
+            self.wrap_2_c_filled = True
+        if dom_node.hasAttribute("c_2_wrap"):
+            cur_attr = dom_node.getAttribute("c_2_wrap")
+            self.c_2_wrap = cur_attr
+            self.c_2_wrap_filled = True
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
+
+class TMappedType(object):
+    def __init__(self):
+        self.all_items = []
+        self.name = ""
+        self.name_filled = False
+        self.c_type = ""
+        self.c_type_filled = False
+        self.implementation_type = ""
+        self.implementation_type_filled = False
+        self.wrap_type = ""
+        self.wrap_type_filled = False
+        self.argument_wrap_type = ""
+        self.argument_wrap_type_filled = False
+        self.snippet_type = ""
+        self.snippet_type_filled = False
+        self.wrap_2_c = "static_cast<{c_type}>({expression})"
+        self.wrap_2_c_filled = False
+        self.c_2_wrap = "static_cast<{wrap_type}>({expression})"
+        self.c_2_wrap_filled = False
+        self.c_2_impl = "static_cast<{implementation_type}>({expression})"
+        self.c_2_impl_filled = False
+        self.impl_2_c = "static_cast<{c_type}>({expression})"
+        self.impl_2_c_filled = False
+        self.include_headers = []
+        self.cpps = []
+        self.sharps = []
+
+    def load_element(self, element):
+        if element.nodeName == "include_header":
+            new_element = THeaderInclude()
+            new_element.load(element)
+            self.include_headers.append(new_element)
+            return True
+        if element.nodeName == "cpp":
+            new_element = TMappedTypeItem()
+            new_element.load(element)
+            self.cpps.append(new_element)
+            return True
+        if element.nodeName == "sharp":
+            new_element = TMappedTypeItem()
+            new_element.load(element)
+            self.sharps.append(new_element)
+            return True
+        return False
+
+    def load_attributes(self, dom_node):
+        if dom_node.hasAttribute("name"):
+            cur_attr = dom_node.getAttribute("name")
+            self.name = cur_attr
+            self.name_filled = True
         if dom_node.hasAttribute("c_type"):
             cur_attr = dom_node.getAttribute("c_type")
             self.c_type = cur_attr
@@ -1582,6 +1625,14 @@ class TMappedType(object):
             cur_attr = dom_node.getAttribute("implementation_type")
             self.implementation_type = cur_attr
             self.implementation_type_filled = True
+        if dom_node.hasAttribute("wrap_type"):
+            cur_attr = dom_node.getAttribute("wrap_type")
+            self.wrap_type = cur_attr
+            self.wrap_type_filled = True
+        if dom_node.hasAttribute("argument_wrap_type"):
+            cur_attr = dom_node.getAttribute("argument_wrap_type")
+            self.argument_wrap_type = cur_attr
+            self.argument_wrap_type_filled = True
         if dom_node.hasAttribute("snippet_type"):
             cur_attr = dom_node.getAttribute("snippet_type")
             self.snippet_type = cur_attr
@@ -1590,6 +1641,10 @@ class TMappedType(object):
             cur_attr = dom_node.getAttribute("wrap_2_c")
             self.wrap_2_c = cur_attr
             self.wrap_2_c_filled = True
+        if dom_node.hasAttribute("c_2_wrap"):
+            cur_attr = dom_node.getAttribute("c_2_wrap")
+            self.c_2_wrap = cur_attr
+            self.c_2_wrap_filled = True
         if dom_node.hasAttribute("c_2_impl"):
             cur_attr = dom_node.getAttribute("c_2_impl")
             self.c_2_impl = cur_attr
@@ -1598,10 +1653,6 @@ class TMappedType(object):
             cur_attr = dom_node.getAttribute("impl_2_c")
             self.impl_2_c = cur_attr
             self.impl_2_c_filled = True
-        if dom_node.hasAttribute("c_2_wrap"):
-            cur_attr = dom_node.getAttribute("c_2_wrap")
-            self.c_2_wrap = cur_attr
-            self.c_2_wrap_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:

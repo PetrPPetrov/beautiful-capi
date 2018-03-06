@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <classes:api xmlns:classes="http://gkmsoft.ru/beautifulcapi" project_name="Classes" >
   <namespace name="Classes">
-    <mapped_type name="const char*" sharp_wrap_type="string" wrap_2_c="{expression}" c_2_wrap="{expression}" wrap_type="const char*" c_type="const char*" implementation_type="const char*"/>
+    <mapped_type name="const char*"  c_type="const char*" implementation_type="const char*">
+      <cpp wrap_type="const char*"/>
+      <sharp wrap_type="string" wrap_2_c="{expression}" c_2_wrap="{expression}" />
+    </mapped_type>
     <class name="ClassA" lifecycle="copy_semantic" implementation_class_name="Classes::ClassA" implementation_class_header="ClassA.h" >
       <constructor name="Default"/>
       <property name="Value" type="int"/>

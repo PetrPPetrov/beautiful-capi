@@ -903,7 +903,7 @@
         <xs:documentation>Specifies preprocessor definition</xs:documentation>
       </xs:annotation>
     </xs:attribute>
-  </xs:complexType>TDefine
+  </xs:complexType>
   <xs:complexType name="TProperty">
     <xs:annotation>
       <xs:documentation>Specifies property for the current class. Each property will be translated into two methods: getter method and setter method.</xs:documentation>
@@ -1038,6 +1038,38 @@
       </xs:enumeration>
     </xs:restriction>
   </xs:simpleType>
+  <xs:complexType name="TMappedTypeItem">
+    <xs:annotation>
+      <xs:documentation>Specifies mapped type</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="include_header" type="THeaderInclude">
+        <xs:annotation>
+          <xs:documentation>Specifies header file name to include</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="wrap_type" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Specifies wrap type name</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="argument_wrap_type" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>Specifies wrap type name which should be used as argument types</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="static_cast&lt;{c_type}&gt;({expression})" name="wrap_2_c" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>Specifies casting expression from wrap type to C language layer type</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="static_cast&lt;{wrap_type}&gt;({expression})" name="c_2_wrap" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>Specifies casting expression from C language layer type to the C++ wrap side type.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
   <xs:complexType name="TMappedType">
     <xs:annotation>
       <xs:documentation>Specifies mapped type</xs:documentation>
@@ -1045,28 +1077,23 @@
     <xs:sequence>
       <xs:element maxOccurs="unbounded" minOccurs="0" name="include_header" type="THeaderInclude">
         <xs:annotation>
-          <xs:documentation>Specifies C or C++ header file name to include</xs:documentation>
+          <xs:documentation>Specifies header file name to include. Deprecated! Use cpp subtag instead</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="cpp" maxOccurs="1" minOccurs="0" type="TMappedTypeItem">
+        <xs:annotation>
+          <xs:documentation>Specifies C++ mapped type</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="sharp" maxOccurs="1" minOccurs="0" type="TMappedTypeItem">
+        <xs:annotation>
+          <xs:documentation>Specifies C# mapped type</xs:documentation>
         </xs:annotation>
       </xs:element>
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required">
       <xs:annotation>
         <xs:documentation>Specifies name</xs:documentation>
-      </xs:annotation>
-    </xs:attribute>
-    <xs:attribute name="wrap_type" type="xs:string" use="required">
-      <xs:annotation>
-        <xs:documentation>Specifies wrap type name</xs:documentation>
-      </xs:annotation>
-    </xs:attribute>
-    <xs:attribute name="sharp_wrap_type" type="xs:string" use="optional">
-      <xs:annotation>
-        <xs:documentation>Specifies C# wrap type name</xs:documentation>
-      </xs:annotation>
-    </xs:attribute>
-    <xs:attribute name="argument_wrap_type" type="xs:string" use="optional">
-      <xs:annotation>
-        <xs:documentation>Specifies wrap type name which should be used as argument types</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute name="c_type" type="xs:string" use="required">
@@ -1079,14 +1106,29 @@
         <xs:documentation>Specifies the implementation side type</xs:documentation>
       </xs:annotation>
     </xs:attribute>
-    <xs:attribute default="" name="snippet_type" type="xs:string" use="optional">
+    <xs:attribute name="wrap_type" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>Specifies c++ wrap type name. Deprecated! Use cpp subtag instead</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="argument_wrap_type" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>Specifies wrap type name which should be used as argument types. Deprecated! Use cpp subtag instead</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="snippet_type" default=""  type="xs:string" use="optional">
       <xs:annotation>
         <xs:documentation>Specifies snippet type name</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="static_cast&lt;{c_type}&gt;({expression})" name="wrap_2_c" type="xs:string" use="optional">
       <xs:annotation>
-        <xs:documentation>Specifies casting expression from wrap type to C language layer type</xs:documentation>
+        <xs:documentation>Specifies casting expression from C++ wrap type to C language layer type. Deprecated! Use cpp subtag instead</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="static_cast&lt;{wrap_type}&gt;({expression})" name="c_2_wrap" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>Specifies casting expression from C language layer type to the C++ wrap side type. Deprecated! Use cpp subtag instead</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute default="static_cast&lt;{implementation_type}&gt;({expression})" name="c_2_impl" type="xs:string" use="optional">
@@ -1097,11 +1139,6 @@
     <xs:attribute default="static_cast&lt;{c_type}&gt;({expression})" name="impl_2_c" type="xs:string" use="optional">
       <xs:annotation>
         <xs:documentation>Specifies casting expression from the implementation side type to C language layer type</xs:documentation>
-      </xs:annotation>
-    </xs:attribute>
-    <xs:attribute default="static_cast&lt;{wrap_type}&gt;({expression})" name="c_2_wrap" type="xs:string" use="optional">
-      <xs:annotation>
-        <xs:documentation>Specifies casting expression from C language layer type to the wrap side type</xs:documentation>
       </xs:annotation>
     </xs:attribute>
   </xs:complexType>

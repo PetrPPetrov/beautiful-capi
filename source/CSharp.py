@@ -33,7 +33,7 @@ from MethodGenerator import MethodGenerator, ConstructorGenerator, FunctionGener
 from FileGenerator import FileGenerator, IndentScope, Indent
 from Helpers import if_required_then_add_empty_line, bool_to_str, replace_template_to_filename, BeautifulCapiException
 from Helpers import get_template_name, pascal_to_stl
-from Parser import TLifecycle
+from Parser import TLifecycle, TMappedType
 from InheritanceTraits import RequiresCastToBase
 from ExceptionTraits import NoHandling
 from FileCache import FileCache, OsJoin, PosixJoin
@@ -179,6 +179,8 @@ class SharpNamespace(object):
             for enum in self.enums:
                 enum.generate_enum_definition(enums_header)
             self.decrease_indent_recursively(enums_header)
+        for mapped_type in self.namespace_generator.namespace_object.mapped_types:
+            self.mapped_types[mapped_type.name] = SharpGenerator.get_or_gen_mapped_type(mapped_type.name, mapped_type)
         self.external_namespaces = [SharpExternalNamespace(external) for external in self.namespace_generator.external_namespaces]
         self.nested_namespaces = {ns.name: SharpGenerator.get_or_gen_namespace(ns.full_wrap_name, ns)
                                   for ns in self.namespace_generator.nested_namespaces}
@@ -224,8 +226,8 @@ class SharpClass(object):
     def __init__(self, class_generator: ClassGenerator, namespace: SharpNamespace):
         self.class_generator = class_generator
         self.namespace = namespace
-        self.constructors = [SharpConstructor(ctor, self) for ctor in class_generator.constructor_generators]
-        self.methods = [SharpMethod(method, self) for method in class_generator.method_generators]
+        self.constructors = []
+        self.methods = []
         self.file_cache = None
         self.lifecycle_traits = create_sharp_lifecycle(class_generator.class_object.lifecycle,
                                                        class_generator.lifecycle_traits)
@@ -349,12 +351,12 @@ class SharpClass(object):
 
     @staticmethod
     def export_function_arguments(argument_generators: []):
-        from ArgumentGenerator import MappedTypeGenerator
         result = []
         for argument in argument_generators:
             generator = argument.argument_generator.type_generator
             if isinstance(generator, MappedTypeGenerator):
-                result.append(argument.wrap_argument_declaration())
+                mapped_type = SharpGenerator.get_or_gen_mapped_type(generator.name, generator.mapped_type_object)
+                result.append(mapped_type.wrap_argument_declaration() + ' ' + argument.argument_generator.name)
             else:
                 result.append(argument.c_argument_declaration())
         return result
@@ -402,6 +404,8 @@ class SharpClass(object):
 
     def generate(self):
         self.file_cache = self.namespace.file_cache
+        self.constructors = [SharpConstructor(ctor, self) for ctor in self.class_generator.constructor_generators]
+        self.methods = [SharpMethod(method, self) for method in self.class_generator.method_generators]
         self.__generate_definition()
 
 
@@ -697,6 +701,47 @@ class SharpEnum(object):
                     out.put_line(item_definition)
 
 
+class SharpMappedType(object):
+    def __init__(self, mapped_type_object):
+        self.mapped_type_object = mapped_type_object
+        self.name = self.mapped_type_object.name
+        self.wrap_type = mapped_type_object.wrap_type
+        self.argument_wrap_type = mapped_type_object.argument_wrap_type
+        self.wrap_2_c = mapped_type_object.wrap_2_c
+        self.c_2_wrap = mapped_type_object.c_2_wrap
+        self.include_headers = mapped_type_object.include_headers
+        if mapped_type_object.sharps:
+            sharp_type = mapped_type_object.sharps[0]
+            self.wrap_type = sharp_type.wrap_type
+            self.argument_wrap_type = sharp_type.argument_wrap_type
+            self.wrap_2_c = sharp_type.wrap_2_c
+            self.c_2_wrap = sharp_type.c_2_wrap
+            self.include_headers = sharp_type.include_headers
+
+    def format(self, casting_expression: str, expression_to_cast: str, result_var: str, type_name: str) -> ([str], str):
+        result_expression = casting_expression.format(
+            expression=expression_to_cast,
+            c_type=self.mapped_type_object.c_type,
+            implementation_type=self.mapped_type_object.implementation_type,
+            wrap_type=self.wrap_type,
+            argument_wrap_type=self.argument_wrap_type
+        )
+        if result_var:
+            return ['{type_name} {result_var}({expression});'.format(
+                type_name=type_name,
+                expression=result_expression,
+                result_var=result_var
+            )], result_var
+        else:
+            return [], result_expression
+
+    def wrap_argument_declaration(self):
+        return self.argument_wrap_type if self.mapped_type_object.argument_wrap_type_filled else self.wrap_type
+
+    def wrap_2_c_var(self, result_var: str, expression: str):
+        return self.format(self.wrap_2_c, expression, result_var, self.mapped_type_object.c_type)
+
+
 class SharpArgument(object):
     def __init__(self, argument_generator: ArgumentGenerator):
         self.argument_generator = argument_generator
@@ -717,10 +762,8 @@ class SharpArgument(object):
                 generator.class_argument_generator)
             argument_type = sharp_class.full_wrap_name
         elif isinstance(generator, MappedTypeGenerator):
-            if generator.mapped_type_object.sharp_wrap_type:
-                argument_type = generator.mapped_type_object.sharp_wrap_type
-            else:
-                argument_type = generator.wrap_argument_declaration()
+            mapped_type = SharpGenerator.get_or_gen_mapped_type(generator.name, generator.mapped_type_object)
+            argument_type = mapped_type.wrap_argument_declaration()
         elif isinstance(generator, TemplateConstantArgumentGenerator):
             argument_type = generator.value
         else:
@@ -734,10 +777,10 @@ class SharpArgument(object):
         if isinstance(self.argument_generator.type_generator, ClassTypeGenerator):
             argument_type = 'void*'
         elif isinstance(self.argument_generator.type_generator, MappedTypeGenerator):
-            if self.argument_generator.type_generator.mapped_type_object.sharp_wrap_type:
-                argument_type = self.argument_generator.type_generator.mapped_type_object.sharp_wrap_type
-            else:
-                argument_type = self.argument_generator.type_generator.wrap_argument_declaration()
+            mapped_type = SharpGenerator.get_or_gen_mapped_type(
+                self.argument_generator.type_generator.name,
+                self.argument_generator.type_generator.mapped_type_object)
+            argument_type = mapped_type.wrap_type
         else:
             argument_type = self.argument_generator.type_generator.wrap_argument_declaration()
         return argument_type + ((' ' + self.argument_generator.name) if self.argument_generator.name else '')
@@ -745,12 +788,12 @@ class SharpArgument(object):
     def c_2_wrap_var(self, result_var: str, expression: str) -> ([str], str):
         generator = self.argument_generator.type_generator
         if isinstance(generator, MappedTypeGenerator):
-            return generator.format(
-                generator.mapped_type_object.c_2_wrap,
+            mapped_obj = SharpGenerator.get_or_gen_mapped_type(generator.name, generator.mapped_type_object)
+            return mapped_obj.format(
+                mapped_obj.c_2_wrap,
                 expression,
                 result_var,
-                generator.mapped_type_object.wrap_type
-            )
+                mapped_obj.wrap_type)
         elif isinstance(generator, ClassTypeGenerator):
             parent_full_name = '.'.join(generator.class_argument_generator.parent_namespace.full_name_array)
             if isinstance(generator, ExternalClassTypeGenerator):
@@ -807,12 +850,22 @@ class SharpMethod(object):
                     return True
         return False
 
+    def c_arguments_list(self):
+        result = []
+        for argument in self.method_generator.c_arguments_list:
+            if isinstance(argument.type_generator, MappedTypeGenerator):
+                mapped_type = SharpGenerator.get_or_gen_mapped_type(argument.name, argument.type_generator.mapped_type_object)
+                result.append(ArgumentGenerator(mapped_type, argument.name))
+            else:
+                result.append(argument)
+        return result
+
     def generate_wrap_definition(self, out: FileGenerator):
         new = ''
         if self.is_overload:
             new = 'new '
         arguments = ', '.join(argument.wrap_argument_declaration() for argument in self.arguments)
-        arguments_call = [argument.wrap_2_c() for argument in self.method_generator.c_arguments_list]
+        arguments_call = [argument.wrap_2_c() for argument in self.c_arguments_list()]
         out.put_line('{new}unsafe public {return_type} {name}({arguments})'.format(
             return_type=self.return_type.wrap_argument_declaration(), new=new,
             name=self.method_generator.wrap_name, arguments=arguments
@@ -833,11 +886,22 @@ class SharpConstructor(object):
         self.generator = generator
         self.arguments = [SharpArgument(arg) for arg in constructor_generator.argument_generators]
 
+    def c_arguments_list(self):
+        result = []
+        for argument in self.constructor_generator.argument_generators:
+            generator = argument.type_generator
+            if isinstance(generator, MappedTypeGenerator):
+                mapped_type = SharpGenerator.get_or_gen_mapped_type(argument.name, generator.mapped_type_object)
+                result.append(ArgumentGenerator(mapped_type, argument.name))
+            else:
+                result.append(argument)
+        return result
+
     def generate_wrap_definition(self, out: FileGenerator, capi_generator: CapiGenerator):
         self.constructor_generator.exception_traits = capi_generator.get_exception_traits(
             self.constructor_generator.constructor_object.noexcept)
         arguments = ', '.join(argument.wrap_argument_declaration() for argument in self.arguments)
-        arguments_call = [argument.wrap_2_c() for argument in self.constructor_generator.argument_generators]
+        arguments_call = [argument.wrap_2_c() for argument in self.c_arguments_list()]
         out.put_line('unsafe public {class_name}({arguments}){base_init}'.format(
             class_name=self.generator.wrap_name,
             arguments=arguments,
@@ -1230,6 +1294,14 @@ class SharpGenerator(object):
             full_name_2_sharp_object[fullname] = result
             namespace.classes.append(result)
             return result
+
+    @staticmethod
+    def get_or_gen_mapped_type(name: str, mapped_type_object: TMappedType):
+        result = full_name_2_sharp_object.get(name, None)
+        if not result:
+            result = SharpMappedType(mapped_type_object)
+            full_name_2_sharp_object[name] = result
+        return result
 
 
 class SharpCmakeListGenerator(object):
