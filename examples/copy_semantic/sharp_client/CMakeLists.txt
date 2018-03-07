@@ -18,26 +18,17 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-project(copy_semantic)
+project(copy_semantic_sharp_client LANGUAGES CSharp)
+cmake_minimum_required(VERSION 3.8.2)
 
-cmake_minimum_required(VERSION 2.8)
-
-find_package(PythonInterp 3.4 REQUIRED)
-
-include(../../../UseBCapi.cmake)
-
-include_directories(${copy_semantic_SOURCE_DIR}/source/)
-
-add_library(copy_semantic SHARED
-  ${copy_semantic_SOURCE_DIR}/source/AutoGenWrap.cpp
-  ${copy_semantic_SOURCE_DIR}/source/PrinterImpl.h
-  ${copy_semantic_SOURCE_DIR}/source/PrinterImpl.cpp
-  ${copy_semantic_SOURCE_DIR}/source/DumperImpl.h
-  ${copy_semantic_SOURCE_DIR}/source/DumperImpl.cpp
+add_executable(copy_semantic_sharp_client
+  ${copy_semantic_sharp_client_SOURCE_DIR}/Program.cs
+  ${copy_semantic_sharp_client_SOURCE_DIR}/Properties/AssemblyInfo.cs
 )
 
-add_bcapi_generation(sharp "sharp_output")
+SET_TARGET_PROPERTIES(copy_semantic_sharp_client PROPERTIES LINKER_LANGUAGE CSharp)
 
-if(${CSHARP_ENABLED})
- add_subdirectory(sharp_output)
+if(TARGET copy_semantic_sharp_library)
+  add_dependencies(copy_semantic_sharp_client copy_semantic_sharp_library)
 endif()
+target_link_libraries(copy_semantic_sharp_client copy_semantic_sharp_library)

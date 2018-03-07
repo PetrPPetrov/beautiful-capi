@@ -2,15 +2,16 @@
 <params:params xmlns:params="http://gkmsoft.ru/beautifulcapi-params"
                warn_when_builtin_type_used="false"
                namespace_header_at_parent_folder="false"
-               capi_header_suffix="_capi" fwd_header_suffix="_fwd_ptr" decl_header_suffix="_decl" forward_typedef_suffix="_fwd_ptr" key_header_suffix="_keys" enums_header_suffix="_enums"
+               capi_header_suffix="_capi" fwd_header_suffix="_fwd_ptr" decl_header_suffix="_decl" key_header_suffix="_keys" enums_header_suffix="_enums"
                copy_semantic_wrapper_class_suffix=""
                reference_counted_wrapper_class_suffix="_ptr"
                raw_pointer_wrapper_class_suffix="_raw_ptr"
-               null_method_name="null"
+               null_method_name="get_null"
                is_null_method_name="is_null" is_not_null_method_name="is_not_null"
                detach_method_name="detach"
                get_raw_pointer_method_name="get_raw_pointer"
-               delete_method_name="deallocate">
+               delete_method_name="deallocate"
+               shared_library_name="custom_suffix">
   <copyright_header>/*
  * Beautiful Capi generates beautiful C API wrappers for your C++ classes
  * Copyright (C) 2015 Petr Petrovich Petrov
