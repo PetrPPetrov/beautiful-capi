@@ -940,14 +940,14 @@ class SharpFunction(object):
         arguments = ', '.join(argument.wrap_argument_declaration() for argument in self.arguments)
         arguments_call = [argument.wrap_2_c() for argument in self.function_generator.argument_generators]
         out.put_line('public unsafe static {return_type} {name}({arguments})'.format(
-            return_type=self.function_generator.return_type_generator.wrap_return_type(),
+            return_type=self.return_type.wrap_argument_declaration(),
             name=self.function_generator.wrap_name,
             arguments=arguments
         ))
         with IndentScope(out):
             return_expression = self.exception_traits.generate_c_call(
                 out,
-                self.return_type.argument_generator.type_generator,
+                self.return_type,
                 self.function_generator.full_c_name,
                 arguments_call
             )
@@ -973,7 +973,7 @@ class SharpLifecycleTraits(object):
         out.put_line('{new}unsafe public bool {is_null_method}()'.format(
             is_null_method=self.params.is_null_method_name, new=new))
         with IndentScope(out):
-            out.put_line('return {get_raw}() != null;'.format(get_raw=self.params.get_raw_pointer_method_name))
+            out.put_line('return {get_raw}() == null;'.format(get_raw=self.params.get_raw_pointer_method_name))
         out.put_line('')
         out.put_line('{new}unsafe public bool {is_not_null_method}()'.format(
             is_not_null_method=self.params.is_not_null_method_name, new=new))

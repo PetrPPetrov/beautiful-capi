@@ -39,4 +39,8 @@ add_library(virtual_interface SHARED
   ${virtual_interface_SOURCE_DIR}/source/CircleFactory.cpp
 )
 
-add_bcapi_generation()
+add_bcapi_generation(sharp "sharp_output")
+
+if(${CSHARP_ENABLED})
+    add_subdirectory(sharp_output)
+endif()
