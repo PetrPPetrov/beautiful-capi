@@ -37,4 +37,8 @@ add_library(derived_from_abstract SHARED
   ${derived_from_abstract_SOURCE_DIR}/source/WolfImpl.h
 )
 
-add_bcapi_generation()
+add_bcapi_generation(sharp "sharp_output")
+
+if(${CSHARP_ENABLED})
+ add_subdirectory(sharp_output)
+endif()
