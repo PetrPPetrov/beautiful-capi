@@ -405,7 +405,14 @@ class SharpClass(object):
     def generate(self):
         self.file_cache = self.namespace.file_cache
         self.constructors = [SharpConstructor(ctor, self) for ctor in self.class_generator.constructor_generators]
-        self.methods = [SharpMethod(method, self) for method in self.class_generator.method_generators]
+        for method in self.class_generator.method_generators:
+            sharp_method = SharpMethod(method, self)
+            if method.method_object.const:
+                for i in self.class_generator.method_generators:
+                    if i.name == method.name and not i.method_object.const:
+                        sharp_method.wrap_name += 'Const'
+                        break
+            self.methods.append(sharp_method)
         self.__generate_definition()
 
 
@@ -836,6 +843,7 @@ class SharpMethod(object):
         self.arguments = [SharpArgument(arg) for arg in method_generator.argument_generators]
         self.return_type = SharpArgument(ArgumentGenerator(method_generator.return_type_generator, ''))
         self.exception_traits = SharpExceptionTraits(method_generator.exception_traits)
+        self.wrap_name = method_generator.wrap_name
 
     def is_overload(self):
         if self.generator.base:
@@ -873,7 +881,7 @@ class SharpMethod(object):
         arguments_call = [argument.wrap_2_c() for argument in self.c_arguments_list()]
         out.put_line('{new}unsafe public {return_type} {name}({arguments})'.format(
             return_type=self.return_type.wrap_argument_declaration(), new=new,
-            name=self.method_generator.wrap_name, arguments=arguments
+            name=self.wrap_name, arguments=arguments
         ))
         with IndentScope(out):
             return_expression = self.exception_traits.generate_c_call(

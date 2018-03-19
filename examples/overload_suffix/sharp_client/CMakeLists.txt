@@ -18,24 +18,17 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-project(overload_suffix)
+project(overload_suffix_sharp_client LANGUAGES CSharp)
+cmake_minimum_required(VERSION 3.8.2)
 
-cmake_minimum_required(VERSION 2.8)
-
-find_package(PythonInterp 3.4 REQUIRED)
-
-include(../../../UseBCapi.cmake)
-
-include_directories(${overload_suffix_SOURCE_DIR}/source/)
-
-add_library(overload_suffix SHARED
-  ${overload_suffix_SOURCE_DIR}/source/AutoGenWrap.cpp
-  ${overload_suffix_SOURCE_DIR}/source/PrinterImpl.h
-  ${overload_suffix_SOURCE_DIR}/source/PrinterImpl.cpp
+add_executable(overload_suffix_sharp_client
+  ${overload_suffix_sharp_client_SOURCE_DIR}/Program.cs
+  ${overload_suffix_sharp_client_SOURCE_DIR}/Properties/AssemblyInfo.cs
 )
 
-add_bcapi_generation(sharp "sharp_output")
+SET_TARGET_PROPERTIES(overload_suffix_sharp_client PROPERTIES LINKER_LANGUAGE CSharp)
 
-if(${CSHARP_ENABLED})
- add_subdirectory(sharp_output)
+if(TARGET overload_suffix_sharp_library)
+  add_dependencies(overload_suffix_sharp_client overload_suffix_sharp_library)
 endif()
+target_link_libraries(overload_suffix_sharp_client overload_suffix_sharp_library)

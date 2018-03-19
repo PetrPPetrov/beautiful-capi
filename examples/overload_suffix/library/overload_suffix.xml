@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <overload_suffix:api xmlns:overload_suffix="http://gkmsoft.ru/beautifulcapi" project_name="OverloadSuffix">
   <namespace name="OverloadSuffix" overload_suffix_mode="Silent">
+    <mapped_type name="const char*" c_type="const char*" implementation_type="const char*">
+      <cpp wrap_type="const char*"/>
+      <sharp wrap_type="string" c_2_wrap="{expression}" wrap_2_c="{expression}"/>
+    </mapped_type>
+    <mapped_type name="unsigned int" c_type="uint32_t" implementation_type="unsigned int">
+      <cpp wrap_type="unsigned int"/>
+      <sharp wrap_type="uint" c_2_wrap="{expression}" wrap_2_c="{expression}"/>
+    </mapped_type>
     <class name="Printer" lifecycle="copy_semantic" implementation_class_name="OverloadSuffix::PrinterImpl" implementation_class_header="PrinterImpl.h">
       <constructor name="Default" explicit="true"/>
       <method name="Show"/>
