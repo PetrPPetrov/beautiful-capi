@@ -13,7 +13,7 @@
         <argument name="FirstName" type="const char*"/>
         <argument name="FatherName" type="const char*"/>
         <argument name="LastName" type="const char*"/>
-      </constructor>      
+      </constructor>
       <property name="FirstName" type="const char*"/>
       <property name="LastName" type="const char*"/>
       <lifecycle_extension name="NameRawPtr" wrap_name="NameRawPtr" lifecycle="raw_pointer_semantic">
@@ -23,7 +23,7 @@
     </class>
     
     <class name="Address" lifecycle="reference_counted" implementation_class_name="MixedSemantic2::AddressImpl" implementation_class_header="AddressImpl.h">
-      <constructor name="Default"/>      
+      <constructor name="Default"/>
       <property name="StreetName" type="const char*"/>
       <property name="City" type="const char*"/>
       <property name="State" type="unsigned int"/>
