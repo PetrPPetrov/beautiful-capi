@@ -36,4 +36,8 @@ add_library(raw_pointer_semantic SHARED
   ${raw_pointer_semantic_SOURCE_DIR}/source/DumperImpl.cpp
 )
 
-add_bcapi_generation()
+add_bcapi_generation(sharp "sharp_output")
+
+if(${CSHARP_ENABLED})
+ add_subdirectory(sharp_output)
+endif()
