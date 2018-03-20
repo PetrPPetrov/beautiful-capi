@@ -18,29 +18,17 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-project(return_value)
+project(return_value_sharp_client LANGUAGES CSharp)
+cmake_minimum_required(VERSION 3.8.2)
 
-cmake_minimum_required(VERSION 2.8)
-
-find_package(PythonInterp 3.4 REQUIRED)
-
-include(../../../UseBCapi.cmake)
-
-include_directories(
-  ${return_value_SOURCE_DIR}/source/
+add_executable(return_value_sharp_client
+  ${return_value_sharp_client_SOURCE_DIR}/Program.cs
+  ${return_value_sharp_client_SOURCE_DIR}/Properties/AssemblyInfo.cs
 )
 
-add_library(return_value SHARED
-  ${return_value_SOURCE_DIR}/source/AutoGenWrap.cpp
-  ${return_value_SOURCE_DIR}/source/FirstNameImpl.h
-  ${return_value_SOURCE_DIR}/source/MiddleNameImpl.h
-  ${return_value_SOURCE_DIR}/source/LastNameImpl.h
-  ${return_value_SOURCE_DIR}/source/PersonImpl.h
-  ${return_value_SOURCE_DIR}/source/PrinterImpl.h
-)
+SET_TARGET_PROPERTIES(return_value_sharp_client PROPERTIES LINKER_LANGUAGE CSharp)
 
-add_bcapi_generation(sharp "sharp_output")
-
-if(${CSHARP_ENABLED})
- add_subdirectory(sharp_output)
+if(TARGET return_value_sharp_library)
+  add_dependencies(return_value_sharp_client return_value_sharp_library)
 endif()
+target_link_libraries(return_value_sharp_client return_value_sharp_library)
