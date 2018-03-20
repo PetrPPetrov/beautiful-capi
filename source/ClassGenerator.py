@@ -450,6 +450,13 @@ class ClassGenerator(object):
             if self.base_class_generator:
                 definition_header.include_user_header(
                     self.file_cache.class_header(self.base_class_generator.full_name_array))
+            if hasattr(self, 'extension_base_class_generator'):
+                for cast in self.class_object.lifecycle_extension.cast_tos:
+                    definition_header.include_user_header(
+                        self.file_cache.class_header_decl(cast.target_generator.full_name_array))
+                for cast in self.class_object.lifecycle_extension.cast_froms:
+                    definition_header.include_user_header(
+                        self.file_cache.class_header_decl(cast.source_generator.full_name_array))
             with IfDefScope(definition_header, '__cplusplus'):
                 first_method = True
                 first_method = self.__generate_constructor_definitions(definition_header, first_method)
