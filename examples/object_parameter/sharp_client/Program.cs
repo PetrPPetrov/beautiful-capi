@@ -23,9 +23,6 @@ namespace object_parameter_sharp_clayshaker
                 existing_page.SetWidth(777);
                 main_doc.Show();
             }
-
-            Console.WriteLine("|Азино три топора {777}|");
-            Console.ReadKey();
         }
     }
 }
