@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <object_parameter:api xmlns:object_parameter="http://gkmsoft.ru/beautifulcapi" project_name="ObjectParameter">
   <namespace name="Example">
+        <mapped_type name="const char*" c_type="const char*" implementation_type="const char*">
+      <cpp wrap_type="const char*"/>
+      <sharp wrap_type="string" c_2_wrap="{expression}" wrap_2_c="{expression}"/>
+    </mapped_type>
+    <mapped_type name="unsigned int" c_type="uint32_t" implementation_type="unsigned int">
+      <cpp wrap_type="unsigned int"/>
+      <sharp wrap_type="uint" c_2_wrap="{expression}" wrap_2_c="{expression}"/>
+    </mapped_type>
+    <mapped_type name="size_t" c_type="uint32_t" implementation_type="unsigned int">
+      <cpp wrap_type="unsigned int"/>
+      <sharp wrap_type="uint" c_2_wrap="{expression}" wrap_2_c="{expression}"/>
+    </mapped_type>
     <class name="Page" lifecycle="reference_counted" implementation_class_name="Example::PageImpl" implementation_class_header="PageImpl.h">
       <constructor name="Default"/>
       <property name="Width" type="size_t"/>
