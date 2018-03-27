@@ -236,6 +236,13 @@
     <xs:annotation>
       <xs:documentation>Specifies an external class. External class is a part of 3rd party library which also uses Beautiful Capi. This class could be used as argument in the current library API.</xs:documentation>
     </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="enumeration" type="TExternalEnumeration">
+        <xs:annotation>
+          <xs:documentation>Specifies an external enumeration which is a part of 3rd party library which also uses Beautiful Capi.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required">
       <xs:annotation>
         <xs:documentation>Specifies the class name</xs:documentation>

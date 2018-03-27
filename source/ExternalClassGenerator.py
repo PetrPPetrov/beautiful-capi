@@ -27,6 +27,7 @@ class ExternalClassGenerator(object):
     def __init__(self, class_object: TExternalClass, parent_namespace):
         self.class_object = class_object
         self.parent_namespace = parent_namespace
+        self.enums = []
 
     @property
     def name(self) -> str:

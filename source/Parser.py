@@ -435,8 +435,14 @@ class TExternalClass(object):
         self.include_declaration_filled = False
         self.include_definition = ""
         self.include_definition_filled = False
+        self.enumerations = []
 
     def load_element(self, element):
+        if element.nodeName == "enumeration":
+            new_element = TExternalEnumeration()
+            new_element.load(element)
+            self.enumerations.append(new_element)
+            return True
         return False
 
     def load_attributes(self, dom_node):

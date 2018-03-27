@@ -90,6 +90,8 @@ class GeneratorCreator(object):
     def __create_external_class_generator(self, cur_class: TExternalClass, parent):
         new_class_generator = ExternalClassGenerator(cur_class, parent)
         self.__register_class_or_namespace_generator(new_class_generator)
+        for enum in cur_class.enumerations:
+            new_class_generator.enums.append(self.__create_external_enum_generator(enum, new_class_generator))
         return new_class_generator
 
     def __create_external_namespace_generator(self, namespace: TExternalNamespace, parent):
