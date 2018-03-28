@@ -21,25 +21,185 @@
 
 import os
 
+import ExceptionTraits
 import ExternalClassGenerator
 import ExternalNamespaceGenerator
 from NamespaceGenerator import NamespaceGenerator
 import CapiGenerator
 from ClassGenerator import ClassGenerator
-from LifecycleTraits import LifecycleTraits, RawPointerSemantic, CopySemantic
-from ArgumentGenerator import ArgumentGenerator, MappedTypeGenerator, ClassTypeGenerator, ExternalClassTypeGenerator
+from LifecycleTraits import LifecycleTraits, RawPointerSemantic, RefCountedSemantic
+from ArgumentGenerator import ArgumentGenerator, MappedTypeGenerator, ClassTypeGenerator, ExternalClassTypeGenerator, \
+    EnumTypeGenerator
 from BuiltinTypeGenerator import BuiltinTypeGenerator
 from MethodGenerator import MethodGenerator, ConstructorGenerator, FunctionGenerator
-from FileGenerator import FileGenerator, IndentScope, Indent
+from FileGenerator import FileGenerator, IndentScope, Indent, WatchdogScope
 from Helpers import if_required_then_add_empty_line, bool_to_str, replace_template_to_filename, BeautifulCapiException
 from Helpers import get_template_name, pascal_to_stl
 from Parser import TLifecycle, TMappedType
 from InheritanceTraits import RequiresCastToBase
 from ExceptionTraits import NoHandling
 from FileCache import FileCache, OsJoin, PosixJoin
-from TemplateGenerator import TemplateGenerator, TemplateConstantArgumentGenerator
+from TemplateGenerator import TemplateGenerator
+from ThisArgumentGenerator import ThisArgumentGenerator
 
-full_name_2_sharp_object = {}
+
+class SharpCapiGenerator(object):
+    def __init__(self, file_cache, capi_generator: CapiGenerator):
+        self.file_cache = file_cache
+        self.capi_generator = capi_generator
+        self.params = capi_generator.params
+        self.no_handling_exception_traits = SharpExceptionTraits(capi_generator.no_handling_exception_traits,
+                                                                 self.params)
+        self.main_exception_traits = SharpExceptionTraits(capi_generator.main_exception_traits, self.params)
+        self.root_namespaces = []
+        self.full_name_2_sharp_object = {}
+
+    def get_exception_traits(self, no_except: bool):
+        if no_except:
+            return self.no_handling_exception_traits
+        return self.main_exception_traits
+
+    def export_function_arguments(self, argument_generators: []):
+        result = []
+        for argument in argument_generators:
+            generator = argument.argument_generator.type_generator
+            if isinstance(generator, MappedTypeGenerator):
+                mapped_type = self.get_or_gen_mapped_type(generator.name, generator.mapped_type_object)
+                result.append(mapped_type.wrap_argument_declaration() + ' ' + argument.argument_generator.name)
+            else:
+                result.append(argument.c_argument_declaration())
+        return result
+
+    def get_or_gen_namespace(self, fullname: str, generator: NamespaceGenerator):
+        if fullname in self.full_name_2_sharp_object:
+            return self.full_name_2_sharp_object[fullname]
+        else:
+            if generator.parent_namespace:
+                parent = self.get_or_gen_namespace(generator.parent_namespace.full_wrap_name,
+                                                   generator.parent_namespace)
+                result = SharpNamespace(generator, parent)
+            else:
+                result = SharpNamespace(generator, None)
+            result.capi_generator = self
+            self.full_name_2_sharp_object[fullname] = result
+            return result
+
+    def get_or_gen_class(self, fullname: str, generator: ClassGenerator):
+        if fullname in self.full_name_2_sharp_object:
+            return self.full_name_2_sharp_object[fullname]
+        else:
+            namespace = self.get_or_gen_namespace('.'.join(generator.parent_namespace.full_name_array),
+                                                  generator.parent_namespace)
+            result = SharpClass(generator, namespace)
+            self.full_name_2_sharp_object[fullname] = result
+            result.capi_generator = self
+            return result
+
+    def get_or_gen_template(self, fullname: str, template_generator: TemplateGenerator):
+        result = self.full_name_2_sharp_object.get(fullname, None)
+        if not result:
+            namespace = self.get_or_gen_namespace('.'.join(template_generator.parent_namespace.full_name_array),
+                                                  template_generator.parent_namespace)
+            result = SharpTemplate(template_generator, namespace)
+            self.full_name_2_sharp_object[fullname] = result
+            result.capi_generator = self
+        return result
+
+    def get_or_gen_external_namespace(self, fullname: str, generator: ExternalNamespaceGenerator):
+        if fullname in self.full_name_2_sharp_object:
+            return self.full_name_2_sharp_object[fullname]
+        else:
+            if generator.parent_namespace:
+                parent = self.get_or_gen_external_namespace(generator.parent_namespace.full_wrap_name,
+                                                            generator.parent_namespace)
+                result = SharpExternalNamespace(generator, parent)
+            else:
+                result = SharpExternalNamespace(generator, None)
+            self.full_name_2_sharp_object[fullname] = result
+            return result
+
+    def get_or_gen_external_class(self, fullname: str, external_class_generator: ExternalClassGenerator):
+        if fullname in self.full_name_2_sharp_object:
+            return self.full_name_2_sharp_object[fullname]
+        else:
+            namespace = self.get_or_gen_external_namespace(
+                '.'.join(external_class_generator.parent_namespace.full_name_array),
+                external_class_generator.parent_namespace)
+            result = SharpExternalClass(external_class_generator, namespace)
+            self.full_name_2_sharp_object[fullname] = result
+            namespace.classes.append(result)
+            return result
+
+    def get_or_gen_mapped_type(self, name: str, mapped_type_object: TMappedType):
+        result = self.full_name_2_sharp_object.get(name, None)
+        if not result:
+            result = SharpMappedType(mapped_type_object)
+            self.full_name_2_sharp_object[name] = result
+        return result
+
+    def generate__check_and_throw_exception__function(self, out: FileGenerator):
+        exception_traits = self.main_exception_traits.exception_traits
+        if not isinstance(exception_traits, ExceptionTraits.ByFirstArgument):
+            return
+        out.put_line('')
+        out.put_line('public static unsafe void check_and_throw_exception(int exception_code, void* exception_object)')
+        with IndentScope(out):
+            out.put_line('switch (exception_code)')
+            with IndentScope(out):
+                out.put_line('case 0:')
+                with Indent(out):
+                    out.put_line('return;')
+                out.put_line('case 1:')
+                with Indent(out):
+                    out.put_line('throw new System.Exception("unknown exception");')
+                out.put_line('case 2:')
+                with Indent(out):
+                    out.put_line('throw new System.Exception("exception during copying exception object");')
+                code_to_exception = {class_.exception_code: class_ for class_ in exception_traits.exception_classes}
+                for code, exception_class in code_to_exception.items():
+                    sharp_class = self.get_or_gen_class('.'.join(exception_class.full_template_name_array),
+                                                        exception_class)
+                    out.put_line('case {0}:'.format(code))
+                    with Indent(out):
+                        out.put_line('throw new {0}({0}.{1}, exception_object, false);'.format(
+                            sharp_class.full_wrap_name,
+                            'ECreateFromRawPointer.force_creating_from_raw_pointer'))
+                out.put_line('default:')
+                with Indent(out):
+                    out.put_line('throw new System.Exception("unknown exception code");')
+
+    def generate_exception_traits(self):
+        params = self.params
+        if isinstance(self.main_exception_traits.exception_traits, NoHandling):
+            return
+
+        project_name = pascal_to_stl(self.capi_generator.api_root.project_name)
+        filename = params.sharp_output_folder + '/' + params.check_and_throw_exception_filename.format(
+            project_name=project_name).replace('.h', '.cs')
+        out = FileGenerator(filename)
+        self.main_exception_traits.generate_exception_info(project_name, out)
+        self.main_exception_traits.generate_exception_code(project_name, self, out)
+        out.put_line('namespace beautiful_capi_{}'.format(self.capi_generator.api_root.project_name))
+        with IndentScope(out):
+            out.put_line('public static class Functions')
+            with IndentScope(out):
+                self.generate__check_and_throw_exception__function(out)
+
+    def __generate(self, namespace_generators):
+        namespaces = []
+        for namespace in namespace_generators:
+            sharp_namespace = self.get_or_gen_namespace('.'.join(namespace.full_name_array), namespace)
+            sharp_namespace.generate()
+            namespaces.append(sharp_namespace)
+        self.root_namespaces = namespaces
+
+    def generate_definition(self):
+        for namespace in self.root_namespaces:
+            namespace.generate_definition()
+
+    def generate(self, root_namespaces: [NamespaceGenerator]):
+        self.__generate(root_namespaces)
+        self.generate_definition()
 
 
 class SharpNamespace(object):
@@ -48,10 +208,9 @@ class SharpNamespace(object):
         self.parent_namespace = parent_namespace
         self.nested_namespaces = {}
         self.classes = {}
-        self.enums = [SharpEnum(enum, self) for enum in namespace_generator.enum_generators]
-        self.functions = [SharpFunction(func, self) for func in namespace_generator.functions]
+        self.enums = []
+        self.functions = []
         self.capi_generator = None
-        self.file_cache = None
         self.wrap_name = namespace_generator.wrap_name
         self.full_wrap_name = '.'.join(namespace_generator.full_name_array)
         self.mapped_types = {}
@@ -116,7 +275,7 @@ class SharpNamespace(object):
         return result
 
     def __generate_initialisation_class(self):
-        file = self.file_cache.get_file_for_class(self.full_name_array + [self.wrap_name + 'Init'])
+        file = self.capi_generator.file_cache.get_file_for_class(self.full_name_array + [self.wrap_name + 'Init'])
         file.put_begin_cpp_comments(self.namespace_generator.params)
         file.put_line('using System.Runtime.InteropServices;')
         file.put_line('using System;')
@@ -124,9 +283,10 @@ class SharpNamespace(object):
         self.increase_indent_recursively(file)
         file.put_line('public class Initialisation')
         with IndentScope(file):
-            file.put_line('const int MAJOR_VERSION = {0};'.format(self.capi_generator.api_root.major_version))
-            file.put_line('const int MINOR_VERSION = {0};'.format(self.capi_generator.api_root.minor_version))
-            file.put_line('const int PATCH_VERSION = {0};'.format(self.capi_generator.api_root.patch_version))
+            api_root = self.capi_generator.capi_generator.api_root
+            file.put_line('const int MAJOR_VERSION = {0};'.format(api_root.major_version))
+            file.put_line('const int MINOR_VERSION = {0};'.format(api_root.minor_version))
+            file.put_line('const int PATCH_VERSION = {0};'.format(api_root.patch_version))
             file.put_line('')
             file.put_line('public Initialisation()')
             with IndentScope(file):
@@ -142,61 +302,63 @@ class SharpNamespace(object):
                         'MAJOR_VERSION', 'MINOR_VERSION', 'PATCH_VERSION'))
                     file.put_line('message += "Found version is " + {0} + "." + {1} + "." + {2} + ". ";'.format(
                         'major_version', 'minor_version', 'patch_version'))
-                    file.put_line('throw new Exception(message);')
+                    file.put_line('throw new System.Exception(message);')
             file.put_line('')
         self.decrease_indent_recursively(file)
 
     def __generate_functions_class(self):
-        file = self.file_cache.get_file_for_class(self.full_name_array[:-1] + [self.wrap_name + 'Functions'])
-        file.put_begin_cpp_comments(self.namespace_generator.params)
-        file.put_line('using System.Runtime.InteropServices;')
-        file.put_line('')
-        self.increase_indent_recursively(file)
-        file.put_line('public static class Functions')
-        with IndentScope(file):
+        file_name = self.full_name_array[:-1] + [self.wrap_name + 'Functions']
+        out = self.capi_generator.file_cache.get_file_for_class(file_name)
+        out.put_begin_cpp_comments(self.namespace_generator.params)
+        out.put_line('using System;\n')
+        out.put_line('using System.Reflection;\n')
+        out.put_line('using System.Runtime.InteropServices;')
+        out.put_line('')
+        self.increase_indent_recursively(out)
+        out.put_line('public static class Functions')
+        with IndentScope(out):
             import_string = '[DllImport("{dll_name}.dll", CallingConvention = {calling_convention})]'.format(
                 dll_name=self.namespace_generator.params.shared_library_name,
                 calling_convention='CallingConvention.Cdecl'  # now used only cdecl convention
             )
             for func in self.functions:
-                file.put_line(import_string)
-                file.put_line('unsafe static extern {return_type} {name}({arguments});'.format(
+                out.put_line(import_string)
+                arguments = self.capi_generator.export_function_arguments(func.arguments)
+                exception_traits = self.capi_generator.get_exception_traits(
+                    func.generator.function_object.noexcept)
+                exception_traits.exception_traits.modify_c_arguments(arguments)
+                out.put_line('unsafe static extern {return_type} {name}({arguments});'.format(
                     return_type=func.return_type.c_argument_declaration(),
-                    name=func.function_generator.full_c_name,
-                    arguments=', '.join(SharpClass.export_function_arguments(func.arguments))
+                    name=func.generator.full_c_name,
+                    arguments=', '.join(arguments)
                 ))
-            file.put_line('')
+            out.put_line('')
             for func in self.functions:
-                func.generate_wrap_definition(file, self.capi_generator)
-        self.decrease_indent_recursively(file)
+                func.generate_wrap_definition(out)
+            for class_ in self.classes.values():
+                if class_.class_generator.is_callback:
+                    class_.generate__create_callback__method(out)
+        self.decrease_indent_recursively(out)
 
-    def generate(self, file_cache, capi_generator: CapiGenerator):
-        self.capi_generator = capi_generator
-        self.file_cache = file_cache
-        if self.enums:
-            enums_header = self.enums[0].generate_enums_header(file_cache)
-            self.increase_indent_recursively(enums_header)
-            for enum in self.enums:
-                enum.generate_enum_definition(enums_header)
-            self.decrease_indent_recursively(enums_header)
+    def generate_enums_header(self):
+        file_cache = self.capi_generator.file_cache
+        enums_header = file_cache.get_file_for_enums(self.full_name_array)
+        enums_header.put_begin_cpp_comments(file_cache.file_cache.params)
+        return enums_header
+
+    def generate(self):
+        self.enums = [SharpEnum(enum, self) for enum in self.namespace_generator.enum_generators]
         for mapped_type in self.namespace_generator.namespace_object.mapped_types:
-            self.mapped_types[mapped_type.name] = SharpGenerator.get_or_gen_mapped_type(mapped_type.name, mapped_type)
-        self.external_namespaces = [SharpExternalNamespace(external) for external in self.namespace_generator.external_namespaces]
-        self.nested_namespaces = {ns.name: SharpGenerator.get_or_gen_namespace(ns.full_wrap_name, ns)
-                                  for ns in self.namespace_generator.nested_namespaces}
-        for nested_namespace in self.nested_namespaces.values():
-            nested_namespace.generate(file_cache, capi_generator)
-        if not self.parent_namespace:
-            self.__generate_initialisation_class()
-        if self.functions:
-            self.__generate_functions_class()
+            name = mapped_type.name
+            self.mapped_types[name] = self.capi_generator.get_or_gen_mapped_type(name, mapped_type)
+        self.external_namespaces = [SharpExternalNamespace(ns) for ns in self.namespace_generator.external_namespaces]
         for template_generator in self.namespace_generator.templates:
             generator = template_generator.template_class_generator
-            template = SharpGenerator.get_or_gen_template('.'.join(generator.full_name_array), template_generator)
+            template = self.capi_generator.get_or_gen_template('.'.join(generator.full_name_array), template_generator)
             self.templates[generator.name] = template
         for class_ in self.namespace_generator.classes:
             full_class_name = '.'.join(class_.full_template_name_array).replace('::', '.')
-            sharp_class = SharpGenerator.get_or_gen_class(full_class_name, class_)
+            sharp_class = self.capi_generator.get_or_gen_class(full_class_name, class_)
             if class_.is_template:
                 template_name = get_template_name(class_.name)
                 template = self.get_template(template_name)
@@ -205,10 +367,34 @@ class SharpNamespace(object):
                     self.templates[template_name] = template
             else:
                 self.classes['.'.join(class_.full_template_name_array)] = sharp_class
-        for class_generator in self.classes.values():
-            class_generator.generate()
+            sharp_class.generate()
         for template in self.templates.values():
-            template.generate(file_cache)
+            template.generate()
+        self.functions = [SharpFunction(func, self) for func in self.namespace_generator.functions]
+        for namespace in self.namespace_generator.nested_namespaces:
+            sharp_namespace = self.capi_generator.get_or_gen_namespace('.'.join(namespace.full_name_array), namespace)
+            self.nested_namespaces[namespace.name] = sharp_namespace
+            sharp_namespace.generate()
+
+    def generate_definition(self):
+        if self.enums:
+            enums_header = self.generate_enums_header()
+            self.increase_indent_recursively(enums_header)
+            for enum in self.enums:
+                enum.generate_enum_definition(enums_header)
+            self.decrease_indent_recursively(enums_header)
+        if not self.parent_namespace:
+            self.__generate_initialisation_class()
+        if self.functions:
+            for func in self.functions:
+                func.generate()
+        self.__generate_functions_class()
+        for class_generator in self.classes.values():
+            class_generator.generate_definition()
+        for template in self.templates.values():
+            template.generate_definition()
+        for nested_namespace in self.nested_namespaces.values():
+            nested_namespace.generate_definition()
 
     def increase_indent_recursively(self, out: FileGenerator):
         for namespace in self.namespace_generator.full_name_array:
@@ -228,16 +414,13 @@ class SharpClass(object):
         self.namespace = namespace
         self.constructors = []
         self.methods = []
-        self.file_cache = None
+        self.capi_generator = None
         self.lifecycle_traits = create_sharp_lifecycle(class_generator.class_object.lifecycle,
-                                                       class_generator.lifecycle_traits)
-        self.enums = [SharpEnum(enum, self) for enum in class_generator.enum_generators]
+                                                       class_generator.lifecycle_traits,
+                                                       namespace.capi_generator)
+        self.enums = []
         self.base = None
-        self.gen_base_class()
         self.template_arguments = []
-        if self.is_template:
-            template_arguments = self.class_generator.template_argument_generators
-            self.template_arguments = [SharpArgument(ArgumentGenerator(arg, "")) for arg in template_arguments]
 
     @property
     def is_template(self):
@@ -248,7 +431,7 @@ class SharpClass(object):
         result = name
         result = result.replace('<', '_')
         result = result.replace('>', '')
-        result = result.replace('::', '.')
+        result = result.replace('::', '_')
         result = result.replace(' ', '')
         result = result.replace(',', '_')
         return result
@@ -270,10 +453,15 @@ class SharpClass(object):
         return self.namespace.full_wrap_name + '.' + self.wrap_name
 
     @property
+    def c_name(self):
+        return self.class_generator.c_name
+
+    @property
     def template_name(self):
         result = self.class_generator.class_object.typedef_name
         if not result:
-            arguments = ', '.join(arg.wrap_argument_declaration(self.namespace.full_name_array)for arg in self.template_arguments)
+            base_path = self.namespace.full_name_array
+            arguments = ', '.join(arg.wrap_argument_declaration(base_path) for arg in self.template_arguments)
             result = '{name}<{arguments}>'.format(name=self.class_generator.wrap_short_name, arguments=arguments)
         return result
 
@@ -298,45 +486,87 @@ class SharpClass(object):
         base = self.class_generator.base_class_generator
         if base:
             base_class_name = '.'.join(base.full_template_name_array).replace('::', '.')
-            self.base = SharpGenerator.get_or_gen_class(base_class_name, base)
+            self.base = self.capi_generator.get_or_gen_class(base_class_name, base)
 
-    def __generate_definition(self):
-        name_array = self.namespace.full_name_array + [self.wrap_short_name, self.wrap_name]
-        definition_header = self.file_cache.get_file_for_class(name_array if self.is_template else self.full_name_array)
-        definition_header.put_begin_cpp_comments(self.class_generator.params)
-        definition_header.put_line('using System.Runtime.InteropServices;\n')
-        self.namespace.increase_indent_recursively(definition_header)
-        definition_header.put_line('public class {class_name}{base} '.format(
-            class_name=self.wrap_name,
-            base=': {0}'.format(self.base.wrap_name) if self.base else ''
-        ))
-        with IndentScope(definition_header):
-            self.__generate_export_functions()
-            definition_header.put_line('')
-            new = 'new ' if self.base else ''
-            definition_header.put_line('%spublic enum ECreateFromRawPointer{force_creating_from_raw_pointer};' % new)
-            definition_header.put_line('')
-            definition_header.put_line('{0}protected unsafe void* mObject;'.format(new))
-            definition_header.put_line('')
-            if self.enums:
-                for enum in self.enums:
-                    enum.generate_enum_definition(definition_header)
-                definition_header.put_line('')
-            first_method = True
-            first_method = self.__generate_constructor_definitions(definition_header, first_method)
-            self.__generate_method_definitions(definition_header, first_method)
-            definition_header.put_line('')
-            self.lifecycle_traits.generate_std_methods_definitions(definition_header, self)
-            definition_header.put_line('')
-            if hasattr(self, 'extension_base_class_generator'):
-                self.class_generator.generate_cast_name_definition(definition_header)
-                definition_header.put_line('')
-            generate_set_object_definition(
-                self.class_generator.inheritance_traits,
-                definition_header,
-                self
+    def wrap_argument_declaration(self) -> str:
+        return self.full_wrap_name
+
+    @staticmethod
+    def c_argument_declaration() -> str:
+        return 'void*'
+
+    def c_2_wrap_var(self, result_var: str, expression: str) -> ([str], str):
+        parent_full_name = '.'.join(self.namespace.full_name_array)
+        internal_expression = '{type_name}.{create_from_ptr_expression}, {expression}, {copy_or_add_ref}'.format(
+            create_from_ptr_expression='ECreateFromRawPointer.force_creating_from_raw_pointer',
+            type_name=parent_full_name + '.' + self.wrap_name,
+            expression=expression,
+            copy_or_add_ref=bool_to_str(False)  # self.class_generator.copy_or_add_ref_when_c_2_wrap)
+        )
+        if result_var:
+            return ['var {result_var} = new {type_name}({internal_expression});'.format(
+                type_name=parent_full_name + '.' + self.wrap_name,
+                result_var=result_var,
+                internal_expression=internal_expression
+            )], result_var
+        else:
+            return [], 'new {type_name}({internal_expression})'.format(
+                type_name=parent_full_name + '.' + self.wrap_name,
+                internal_expression=internal_expression
             )
-        self.namespace.decrease_indent_recursively(definition_header)
+
+    def wrap_2_c_var(self, result_var: str, expression: str) -> ([str], str):
+        internal_expression = '{expression}.{get_raw_pointer_method}()'.format(
+            expression=expression,
+            get_raw_pointer_method=self.class_generator.get_raw_pointer_method_name)
+        if result_var:
+            return ['void* {result_var} = {internal_expression};'.format(
+                result_var=result_var,
+                internal_expression=internal_expression
+            )], result_var
+        else:
+            return [], internal_expression
+
+    def __generate_callback_delegates(self, out: FileGenerator):
+        if self.class_generator.is_callback:
+            for method in self.base.methods:
+                name = method.generator.full_c_name + '_callback_type'
+                arguments = ['void* object_pointer'] + [arg.wrap_argument_declaration() for arg in method.arguments]
+                method.exception_traits.exception_traits.modify_c_arguments(arguments)
+                return_type = method.return_type.c_argument_declaration()
+                out.put_line('unsafe public delegate {0} {1}({2});'.format(return_type, name, ', '.join(arguments)))
+            out.put_line('')
+
+    def __generate_definition(self, out: FileGenerator):
+        out.put_begin_cpp_comments(self.class_generator.params)
+        out.put_line('using System.Runtime.InteropServices;\n')
+        self.namespace.increase_indent_recursively(out)
+        base = ': {0}'.format(self.base.wrap_name) if self.base else ''
+        if not base and self.class_generator.class_object.exception:
+            base = ': System.Exception'
+        out.put_line('public class {class_name}{base} '.format(class_name=self.wrap_name, base=base))
+        with IndentScope(out):
+            self.__generate_callback_delegates(out)
+            self.__generate_extern_functions(out)
+            out.put_line('')
+            new = 'new ' if self.base else ''
+            out.put_line('%spublic enum ECreateFromRawPointer{force_creating_from_raw_pointer};' % new)
+            out.put_line('')
+            out.put_line('{0}protected unsafe void* mObject;'.format(new))
+            out.put_line('')
+            for enum in self.enums:
+                enum.generate_enum_definition(out)
+            first_method = True
+            first_method = self.__generate_constructor_definitions(out, first_method)
+            self.__generate_method_definitions(out, first_method)
+            out.put_line('')
+            self.lifecycle_traits.generate_std_methods_definitions(out, self)
+            out.put_line('')
+            if hasattr(self, 'extension_base_class_generator'):
+                self.class_generator.generate_cast_name_definition(out)
+                out.put_line('')
+            generate_set_object_definition(self.class_generator.inheritance_traits, out, self)
+        self.namespace.decrease_indent_recursively(out)
 
     def __generate_constructor_definitions(self, definition_header, first_method):
         for constructor_generator in self.constructors:
@@ -349,80 +579,169 @@ class SharpClass(object):
             first_method = if_required_then_add_empty_line(first_method, definition_header)
             method.generate_wrap_definition(definition_header)
 
-    @staticmethod
-    def export_function_arguments(argument_generators: []):
-        result = []
-        for argument in argument_generators:
-            generator = argument.argument_generator.type_generator
-            if isinstance(generator, MappedTypeGenerator):
-                mapped_type = SharpGenerator.get_or_gen_mapped_type(generator.name, generator.mapped_type_object)
-                result.append(mapped_type.wrap_argument_declaration() + ' ' + argument.argument_generator.name)
-            else:
-                result.append(argument.c_argument_declaration())
-        return result
-
-    def __generate_export_functions(self):
-        from LifecycleTraits import RefCountedSemantic
-        name_array = self.namespace.full_name_array + [self.wrap_short_name, self.wrap_name]
-        header = self.file_cache.get_file_for_class(name_array if self.is_template else self.full_name_array)
+    def __generate_init_deinit_externs(self, out: FileGenerator):
         import_string = '[DllImport("{dll_name}.dll", CallingConvention = {calling_convention})]'.format(
             dll_name=self.class_generator.params.shared_library_name,
-            calling_convention='CallingConvention.Cdecl'  # now used only cdecl convention
-        )
-        for constructor in self.constructors:
-            header.put_line(import_string)
-            header.put_line('unsafe static extern void* {class_name}({arguments});'.format(
-                class_name=constructor.constructor_generator.full_c_name,
-                arguments=', '.join(self.export_function_arguments(constructor.arguments))
-            ))
-        for method in self.methods:
-            header.put_line(import_string)
-            this_argument = ['void* object_pointer']
-            header.put_line('unsafe static extern {return_type} {name}({arguments});'.format(
-                return_type=method.return_type.c_argument_declaration(),
-                name=method.method_generator.full_c_name,
-                arguments=', '.join(this_argument + self.export_function_arguments(method.arguments))
-            ))
+            calling_convention='CallingConvention.Cdecl')  # now used only cdecl convention
+        sharp_capi = self.namespace.capi_generator
+        init_traits = sharp_capi.get_exception_traits(self.class_generator.class_object.copy_or_add_ref_noexcept)
+        deinit_traits = sharp_capi.get_exception_traits(self.class_generator.class_object.delete_or_release_noexcept)
         if isinstance(self.class_generator.lifecycle_traits, RefCountedSemantic):
-            header.put_line(import_string)
-            header.put_line('unsafe static extern void {func_name}(void* object_pointer);'.format(
-                func_name=self.class_generator.add_ref_method))
-            header.put_line(import_string)
-            header.put_line('unsafe static extern void {func_name}(void* object_pointer);'.format(
-                func_name=self.class_generator.release_method))
+            out.put_line(import_string)
+            arguments = ['void* object_pointer']
+            init_traits.exception_traits.modify_c_arguments(arguments)
+            out.put_line('unsafe static extern void {func_name}({arguments});'.format(
+                func_name=self.class_generator.add_ref_method, arguments=', '.join(arguments)))
+            out.put_line(import_string)
+            arguments = ['void* object_pointer']
+            deinit_traits.exception_traits.modify_c_arguments(arguments)
+            out.put_line('unsafe static extern void {func_name}({arguments});'.format(
+                func_name=self.class_generator.release_method, arguments=', '.join(arguments)))
         else:
-            header.put_line(import_string)
-            header.put_line('unsafe static extern void* {func_name}(void* object_pointer);'.format(
-                func_name=self.class_generator.copy_method))
-            header.put_line(import_string)
-            header.put_line('unsafe static extern void {func_name}(void* object_pointer);'.format(
-                func_name=self.class_generator.delete_method))
+            out.put_line(import_string)
+            arguments = ['void* object_pointer']
+            init_traits.exception_traits.modify_c_arguments(arguments)
+            out.put_line('unsafe static extern void* {func_name}({arguments});'.format(
+                func_name=self.class_generator.copy_method, arguments=', '.join(arguments)))
+            out.put_line(import_string)
+            arguments = ['void* object_pointer']
+            deinit_traits.exception_traits.modify_c_arguments(arguments)
+            out.put_line('unsafe static extern void {func_name}({arguments});'.format(
+                func_name=self.class_generator.delete_method, arguments=', '.join(arguments)))
+
+    def __generate_extern_functions(self, out: FileGenerator):
+        import_string = '[DllImport("{dll_name}.dll", CallingConvention = {calling_convention})]'.format(
+            dll_name=self.class_generator.params.shared_library_name,
+            calling_convention='CallingConvention.Cdecl')  # now used only cdecl convention
+        for constructor in self.constructors:
+            out.put_line(import_string)
+            arguments = self.capi_generator.export_function_arguments(constructor.arguments)
+            constructor.exception_traits.exception_traits.modify_c_arguments(arguments)
+            out.put_line('unsafe static extern void* {class_name}({arguments});'.format(
+                class_name=constructor.generator.full_c_name,
+                arguments=', '.join(arguments)))
+        for method in self.methods:
+            out.put_line(import_string)
+            arguments = ['void* object_pointer'] + self.capi_generator.export_function_arguments(method.arguments)
+            method.exception_traits.exception_traits.modify_c_arguments(arguments)
+            out.put_line('unsafe static extern {return_type} {name}({arguments});'.format(
+                return_type=method.return_type.c_argument_declaration(),
+                name=method.generator.full_c_name,
+                arguments=', '.join(arguments)))
+        self.__generate_init_deinit_externs(out)
         if self.base:
-            header.put_line(import_string)
-            header.put_line('unsafe static extern void* {func_name}(void* object_pointer);'.format(
+            out.put_line(import_string)
+            out.put_line('unsafe static extern void* {func_name}(void* object_pointer);'.format(
                 func_name=self.class_generator.cast_to_base))
 
+    @staticmethod
+    def __sort_exceptions(exceptions: []):
+        result = []
+
+        def add_exception(element):
+            if element not in result:
+                if element.base:
+                    if element.base in exceptions:
+                        add_exception(element.base)
+                        result.insert(result.index(element.base), element)
+                else:
+                    result.append(element)
+
+        for exception in exceptions:
+            add_exception(exception)
+        return result
+
+    def __generate_method_callback(self, method, out: FileGenerator):
+        if not method.return_type:
+            method.generate()
+        class_name = self.base.class_generator.c_name
+        impl_class = 'ImplementationClass'
+        return_type = method.return_type.c_argument_declaration()
+        out.put_line('unsafe static {0} {1}<{2}>({3}* exception_info, {4})'.format(
+            return_type,
+            '{0}_{1}_callback'.format(class_name, method.generator.c_name),
+            impl_class,
+            method.exception_traits.exception_info_t(),
+            ', '.join(['void* object_pointer'] + [arg.wrap_argument_declaration() for arg in method.arguments])))
+        with IndentScope(out):
+            out.put_line('{} exception_info_default;'.format(method.exception_traits.exception_info_t()))
+            out.put_line('if (exception_info != null)')
+            with IndentScope(out):
+                out.put_line('exception_info = &exception_info_default;')
+            out.put_line('try')
+            with IndentScope(out):
+                out.put_line('exception_info->code = 0;')
+                out.put_line('exception_info->object_pointer = null;')
+                out.put_line('Type impl_type = typeof({});'.format(impl_class))
+                out.put_line('{0} self = ({0})Pointer.Box(object_pointer, impl_type);'.format(impl_class))
+                out.put_line('MethodInfo method = impl_type.GetMethod("{}");'.format(method.generator.wrap_name))
+                out.put_line('{}method.Invoke(self, new object[] {{ {} }});'.format(
+                    'return ({})'.format(return_type) if return_type != 'void' else '',
+                    ', '.join(arg.wrap_2_c() for arg in method.arguments)))
+            exception_classes = self.__sort_exceptions(method.exception_traits.classes)
+            for exception in exception_classes:
+                out.put_line('catch ({} exception_object)'.format(exception.full_wrap_name))
+                with IndentScope(out):
+                    out.put_line('exception_info->code = {};'.format(exception.class_generator.exception_code))
+                    out.put_line('exception_info->object_pointer = exception_object.{detach}();'.format(
+                        detach=exception.capi_generator.params.detach_method_name))
+            out.put_line('catch ')
+            with IndentScope(out):
+                out.put_line('exception_info->code = 1;')
+            if return_type != 'void':
+                out.put_line('return new {}();'.format(return_type))
+        out.put_line('')
+
+    def generate__create_callback__method(self, out: FileGenerator):
+        return_type = self.full_wrap_name
+        class_name = self.base.class_generator.c_name
+        impl_class = 'ImplementationClass'
+        out.put_line('unsafe public static {0} {1}<{2}>({2} implementation_class)'.format(
+            return_type, 'create_callback_for_' + class_name, impl_class))
+        with IndentScope(out):
+            out.put_line('var result = new {0}();'.format(return_type))
+            for method in self.base.methods:
+                out.put_line('result.SetCFunctionFor{0}({1}_callback<{2}>);'.format(
+                    method.generator.wrap_name,
+                    class_name + '_' + method.generator.c_name,
+                    impl_class))
+            out.put_line('result.SetObjectPointer(Pointer.Unbox(implementation_class));')
+            out.put_line('return result;')
+        for method in self.base.methods:
+            self.__generate_method_callback(method, out)
+
     def generate(self):
-        self.file_cache = self.namespace.file_cache
+        self.gen_base_class()
+        self.enums = [SharpEnum(enum, self) for enum in self.class_generator.enum_generators]
+        if self.is_template:
+            template_arguments = []
+            for arg in self.class_generator.template_argument_generators:
+                sharp_argument = SharpArgument(ArgumentGenerator(arg, ""), self.namespace.capi_generator)
+                sharp_argument.generate()
+                template_arguments.append(sharp_argument)
+            self.template_arguments = template_arguments
+        if self.class_generator.class_object.exception:
+            exception_traits = self.namespace.capi_generator.main_exception_traits
+            if self not in exception_traits.classes:
+                exception_traits.classes.append(self)
         self.constructors = [SharpConstructor(ctor, self) for ctor in self.class_generator.constructor_generators]
-        for method in self.class_generator.method_generators:
-            sharp_method = SharpMethod(method, self)
-            if method.method_object.const:
-                for i in self.class_generator.method_generators:
-                    if i.name == method.name and not i.method_object.const:
-                        sharp_method.wrap_name += 'Const'
-                        break
-            self.methods.append(sharp_method)
-        self.__generate_definition()
+        self.methods = [SharpMethod(method, self) for method in self.class_generator.method_generators]
+
+    def generate_definition(self):
+        for ctor in self.constructors:
+            ctor.generate()
+        for method in self.methods:
+            method.generate()
+        name_array = self.namespace.full_name_array + [self.wrap_short_name, self.wrap_name]
+        file_cache = self.capi_generator.file_cache
+        definition_header = file_cache.get_file_for_class(name_array if self.is_template else self.full_name_array)
+        self.__generate_definition(definition_header)
 
 
 class SharpTemplate(object):
-    def __init__(self, template_generator: TemplateGenerator):
+    def __init__(self, template_generator: TemplateGenerator, namespace: SharpNamespace):
         self.template_generator = template_generator
-        self.namespace = SharpGenerator.get_or_gen_namespace(
-            '.'.join(template_generator.parent_namespace.full_name_array),
-            template_generator.parent_namespace
-        )
+        self.namespace = namespace
         self.constructors = []
         self.methods = []
         self.classes = []
@@ -430,16 +749,7 @@ class SharpTemplate(object):
         self.arguments = []
         self.non_types = ('template', 'typename', 'class')
         self.base = None
-        base_name = self.template_generator.template_class.base
-        if base_name:
-            base_name = get_template_name(base_name)
-            base_name_array = SharpClass.get_relative_name_array(self.namespace.full_name_array, base_name.split('::'))
-            self.base = self.namespace.find_object(base_name_array)
-        for argument in self.template_generator.template_object.arguments:
-            if argument.type_name not in ['template', 'class', 'typename']:
-                self.explicit_arguments.append((argument.type_name, argument.name))
-            type_name = full_name_2_sharp_object.get(argument.type_name.replace('::', '.'), None)
-            self.arguments.append((argument.name, type_name if type_name else argument.type_name,))
+        self.capi_generator = None
 
     @property
     def wrap_short_name(self):
@@ -459,13 +769,11 @@ class SharpTemplate(object):
         for ctor in self.constructors:
             arguments_names = ', '.join([arg[1] for arg in self.explicit_arguments])
             certain = 'Activator.CreateInstance(GetCertainType({0}), new object[] {{{0}}})'.format(arguments_names)
-
             arguments = [argument.wrap_argument_declaration() for argument in ctor.arguments]
             out.put_line('public {class_name}({arguments}){base_init}'.format(
                 class_name=self.wrap_short_name,
                 arguments=', '.join([arg[0] + ' ' + arg[1] for arg in self.explicit_arguments] + arguments),
-                base_init=' :this(ECreateFromObject.create_from_object, {obj})'.format(obj=certain)
-            ))
+                base_init=' :this(ECreateFromObject.create_from_object, {obj})'.format(obj=certain)))
             out.put_line('{}')
             out.put_line('')
 
@@ -475,9 +783,8 @@ class SharpTemplate(object):
             return_type = method.return_type.wrap_argument_declaration(self.namespace.full_name_array)
             arguments = [arg.wrap_argument_declaration(self.namespace.full_name_array) for arg in method.arguments]
             out.put_line('{new}public {return_type} {method_name}({arguments})'.format(
-                method_name=method.method_generator.wrap_name, new=new,
-                arguments=', '.join(arguments), return_type=return_type
-            ))
+                method_name=method.generator.wrap_name, new=new,
+                arguments=', '.join(arguments), return_type=return_type))
             if return_type == 'void':
                 return_expression = ''
             else:
@@ -489,7 +796,7 @@ class SharpTemplate(object):
             with IndentScope(out):
                 out.put_line('{return_expr}ExecuteMethod("{name}", new object[] {{{arguments}}}){bracket};'.format(
                     return_expr=return_expression.format(return_type=return_type),
-                    name=method.method_generator.wrap_name,
+                    name=method.generator.wrap_name,
                     bracket=')' if return_expression else '',
                     arguments=', '.join(argument.argument_generator.name for argument in method.arguments)
                 ))
@@ -508,7 +815,7 @@ class SharpTemplate(object):
                     argument = arg.value
                     if '::' in arg.value:
                         argument = argument.replace('::', '.')
-                        argument = full_name_2_sharp_object[argument].wrap_name
+                        argument = self.capi_generator.full_name_2_sharp_object[argument].wrap_name
                         class_name_array.append(argument)
                     else:
                         class_name_array.append(arg.value)
@@ -521,6 +828,7 @@ class SharpTemplate(object):
 
             out.put_lines(['{{ {0}, typeof({1}) }}'.format(value[0], value[1]) for value in type_map[:-1]], ',\n')
             out.put_line('{{ {0}, typeof({1}) }}'.format(type_map[-1][0], type_map[-1][1]))
+        out.put_line('')
 
     def __generate__type_2_name(self, out: FileGenerator):
         new = 'new ' if self.base else ''
@@ -539,6 +847,7 @@ class SharpTemplate(object):
             with Indent(out):
                 out.put_line('return name.Substring(0, index);')
             out.put_line('return name;')
+        out.put_line('')
 
     def __generate__get_certain_type_(self, out: FileGenerator):
         def is_type(argument: str) -> bool:
@@ -558,6 +867,7 @@ class SharpTemplate(object):
             with IndentScope(out):
                 out.put_line('throw new ArgumentException("Incorrect generic argument. '
                              'Instantiation with these parameters was not found.");')
+        out.put_line('')
 
     def __generate__execute_method_(self, out: FileGenerator):
         new = 'new ' if self.base else ''
@@ -580,11 +890,13 @@ class SharpTemplate(object):
                 out.put_line('args_types[i] = type;')
             out.put_line('MethodInfo method = mObject.GetType().GetMethod(name, args_types);')
             out.put_line('return method.Invoke(mObject, calling_args);')
+        out.put_line('')
 
     def __generate__get_certain_class(self, out: FileGenerator):
         out.put_line('{new}public object GetCertainClass()'.format(new='new ' if self.base else ''))
         with IndentScope(out):
             out.put_line('return mObject;')
+        out.put_line('')
 
     def __generate__certain_2_template(self, out: FileGenerator):
         new = 'new ' if self.base else ''
@@ -598,6 +910,7 @@ class SharpTemplate(object):
                 out.put_line('return (TemplateArgument)type.GetConstructors()[0].Invoke(new object[] '
                              '{ enumeration, obj });')
             out.put_line('return (TemplateArgument)obj;')
+        out.put_line('')
 
     def __generate__ctor_from_object(self, out: FileGenerator):
         out.put_line('public {name}(ECreateFromObject e, object obj){base}'.format(
@@ -611,10 +924,10 @@ class SharpTemplate(object):
                 out.put_line('throw new ArgumentException("Incorrect generic argument. '
                              'Instantiation with these parameters was not found.");')
 
-    def __generate_std_method_definition(self, out: FileGenerator, name: str, return_type: str='void',
-                                         arguments=(), keywords=('unsafe', 'public', )):
+    def __generate_std_method_definition(self, out: FileGenerator, name: str, return_type: str = 'void',
+                                         arguments=(), keywords=('unsafe', 'public',)):
         if self.base:
-            keywords = (('new', ) + keywords)
+            keywords = (('new',) + keywords)
         out.put_line('{keywords} {return_type} {name}({arguments})'.format(
             keywords=' '.join(keywords),
             return_type=return_type,
@@ -633,7 +946,7 @@ class SharpTemplate(object):
         self.__generate_std_method_definition(out, 'IsNull', return_type='bool')
         self.__generate_std_method_definition(out, 'IsNotNull', return_type='bool')
 
-    def generate_definition(self, out: FileGenerator):
+    def __generate_definition(self, out: FileGenerator):
         base_class = ''
         if self.base:
             if isinstance(self.base, SharpTemplate):
@@ -652,27 +965,30 @@ class SharpTemplate(object):
         with IndentScope(out):
             new = 'new ' if self.base else ''
             self.__generate_type_map(out)
-            out.put_line('')
             out.put_line('{new}public enum ECreateFromObject {{create_from_object}};'.format(new=new))
             out.put_line('')
             self.__generate_constructor_definitions(out)
             self.__generate_std_methods_definitions(out)
             self.__generate_methods_definitions(out)
             self.__generate__type_2_name(out)
-            out.put_line('')
             self.__generate__get_certain_type_(out)
-            out.put_line('')
             self.__generate__execute_method_(out)
-            out.put_line('')
             self.__generate__get_certain_class(out)
-            out.put_line('')
             self.__generate__certain_2_template(out)
-            out.put_line('')
             out.put_line('{new}private object mObject;'.format(new=new))
         self.namespace.decrease_indent_recursively(out)
 
-    def generate(self, file_cache):
-        header = file_cache.get_file_for_class(self.namespace.full_name_array + [self.wrap_short_name])
+    def generate(self):
+        base_name = self.template_generator.template_class.base
+        if base_name:
+            base_name = get_template_name(base_name)
+            base_name_array = SharpClass.get_relative_name_array(self.namespace.full_name_array, base_name.split('::'))
+            self.base = self.namespace.find_object(base_name_array)
+        for argument in self.template_generator.template_object.arguments:
+            if argument.type_name not in ['template', 'class', 'typename']:
+                self.explicit_arguments.append((argument.type_name, argument.name))
+            type_name = self.capi_generator.full_name_2_sharp_object.get(argument.type_name.replace('::', '.'), None)
+            self.arguments.append((argument.name, type_name if type_name else argument.type_name,))
         for constructor in self.template_generator.template_class_generator.constructor_generators:
             self.constructors.append(SharpConstructor(constructor, self))
         for method in self.template_generator.template_class_generator.method_generators:
@@ -681,31 +997,73 @@ class SharpTemplate(object):
             class_.generate()
         if not self.classes:
             raise BeautifulCapiException('Template {name} has no classes'.format(name=self.wrap_short_name))
-        self.generate_definition(header)
+
+    def generate_definition(self):
+        for constructor in self.constructors:
+            constructor.generate()
+        for method in self.methods:
+            method.generate()
+        file_cache = self.capi_generator.file_cache
+        header = file_cache.get_file_for_class(self.namespace.full_name_array + [self.wrap_short_name])
+        self.__generate_definition(header)
+        for class_ in self.classes:
+            class_.generate_definition()
 
 
 class SharpEnum(object):
     def __init__(self, enum_generator, parent: SharpNamespace or SharpClass):
         self.parent = parent
         self.enum_generator = enum_generator
+        full_name = enum_generator.full_wrap_name.replace('::', '.')
+        parent.capi_generator.full_name_2_sharp_object[full_name] = self
+
+    def wrap_argument_declaration(self) -> str:
+        return self.enum_generator.full_wrap_name.replace('::', '.')
 
     @staticmethod
     def get_enum_definition(enum_object) -> [str]:
-        return [item.name + (' = ,' + item.value if item.value_filled else ',') for item in enum_object.items]
-
-    def generate_enums_header(self, file_cache):
-        if self.enum_generator:
-            enums_header = file_cache.get_file_for_enums(self.enum_generator.parent_generator.full_name_array)
-            enums_header.put_begin_cpp_comments(file_cache.file_cache.params)
-            return enums_header
+        return [item.name + (' = {},'.format(item.value) if item.value_filled else ',') for item in enum_object.items]
 
     def generate_enum_definition(self, out: FileGenerator):
-        out.put_line('enum {name}'.format(name=self.enum_generator.name))
+        out.put_line('public enum {name}'.format(name=self.enum_generator.name))
         with IndentScope(out, '};'):
             items_definitions = SharpEnum.get_enum_definition(self.enum_generator.enum_object)
             if items_definitions:
                 for item_definition in items_definitions:
                     out.put_line(item_definition)
+        out.put_line('')
+
+    def c_argument_declaration(self) -> str:
+        return self.enum_generator.enum_object.underlying_type
+
+    def implementation_2_c_var(self, result_var: str, expression: str) -> ([str], str):
+        casting_expression = '({c_type}){expression}'.format(
+            c_type=self.c_argument_declaration(), expression=expression
+        )
+        if result_var:
+            return ['{type_name} {result_var} = {expression};'.format(
+                type_name=self.c_argument_declaration(),
+                result_var=result_var,
+                expression=casting_expression)], result_var
+        else:
+            return [], casting_expression
+
+    def wrap_return_type(self) -> str:
+        return self.parent.full_wrap_name + '.' + self.enum_generator.wrap_name
+
+    def wrap_2_c_var(self, result_var: str, expression: str) -> ([str], str):
+        return self.implementation_2_c_var(result_var, expression)
+
+    def c_2_wrap_var(self, result_var: str, expression: str) -> ([str], str):
+        if result_var:
+            return ['{type_name} {result_var} = ({type_name}){expression};'.format(
+                type_name=self.wrap_return_type(),
+                result_var=result_var,
+                expression=expression
+            )], result_var
+        else:
+            return [], '({type_name}){expression}'.format(
+                type_name=self.wrap_return_type(), expression=expression)
 
 
 class SharpMappedType(object):
@@ -734,7 +1092,7 @@ class SharpMappedType(object):
             argument_wrap_type=self.argument_wrap_type
         )
         if result_var:
-            return ['{type_name} {result_var}({expression});'.format(
+            return ['{type_name} {result_var} = {expression};'.format(
                 type_name=type_name,
                 expression=result_expression,
                 result_var=result_var
@@ -745,117 +1103,137 @@ class SharpMappedType(object):
     def wrap_argument_declaration(self):
         return self.argument_wrap_type if self.mapped_type_object.argument_wrap_type_filled else self.wrap_type
 
+    def c_argument_declaration(self) -> str:
+        return self.wrap_argument_declaration()
+
     def wrap_2_c_var(self, result_var: str, expression: str):
         return self.format(self.wrap_2_c, expression, result_var, self.mapped_type_object.c_type)
 
     def c_2_wrap_var(self, result_var: str, expression: str):
-        return self.format(self.c_2_wrap, expression, result_var, self.mapped_type_object.c_type)
+        return self.format(self.c_2_wrap, expression, result_var, self.wrap_type)
+
+
+class SharpBuiltinType(object):
+    def __init__(self, builtin_generator: BuiltinTypeGenerator):
+        self.builtin_generator = builtin_generator
+
+    @property
+    def is_void(self):
+        return True if self.builtin_generator.type_name == 'void' or not self.builtin_generator.type_name else False
+
+    def wrap_argument_declaration(self) -> str:
+        return '{type_name}'.format(type_name='void' if self.is_void else self.builtin_generator.type_name)
+
+    def c_argument_declaration(self) -> str:
+        return self.builtin_generator.type_name if not self.is_void else 'void'
+
+    def wrap_return_type(self) -> str:
+        return self.wrap_argument_declaration()
+
+    def c_2_wrap_var(self, result_var: str, expression: str) -> ([str], str):
+        if not self.is_void:
+            if result_var:
+                return ['{type_name} {result_var} = {expression};'.format(
+                    type_name=self.wrap_return_type(),
+                    result_var=result_var,
+                    expression=expression)], result_var
+            else:
+                return [], expression
+        else:
+            return [expression + ';'], ''
+
+    def implementation_2_c_var(self, result_var: str, expression: str) -> ([str], str):
+        if not self.is_void:
+            if result_var:
+                return ['{type_name} {result_var} = {expression};'.format(
+                    type_name=self.builtin_generator.type_name,
+                    result_var=result_var,
+                    expression=expression)], result_var
+            else:
+                return [], expression
+        else:
+            return [expression + ';'], ''
+
+    def wrap_2_c_var(self, result_var: str, expression: str) -> ([str], str):
+        return self.implementation_2_c_var(result_var, expression)
 
 
 class SharpArgument(object):
-    def __init__(self, argument_generator: ArgumentGenerator):
-        if isinstance(argument_generator.type_generator, MappedTypeGenerator):
-            mapped_type = SharpGenerator.get_or_gen_mapped_type(argument_generator.type_generator.name,
-                                                                argument_generator.type_generator.mapped_type_object)
-            self.argument_generator = ArgumentGenerator(mapped_type, argument_generator.name)
-        else:
-            self.argument_generator = argument_generator
+    def __init__(self, argument_generator: ArgumentGenerator, capi_generator):
+        self.argument_generator = argument_generator
+        self.capi_generator = capi_generator
+        self.type_generator = None
 
-    def wrap_argument_declaration(self, base=None) -> str:
-        generator = self.argument_generator.type_generator
-        if isinstance(generator, ExternalClassTypeGenerator):
-            sharp_external_class = SharpGenerator.get_or_gen_external_class(
-                '.'.join(generator.class_argument_generator.full_name_array).replace('::', '.'),
-                generator.class_argument_generator)
-            argument_type = sharp_external_class.generator.full_wrap_name
-        elif isinstance(generator, ClassTypeGenerator):
-            sharp_class = SharpGenerator.get_or_gen_class(
-                '.'.join(generator.class_argument_generator.full_template_name_array).replace('::', '.'),
-                generator.class_argument_generator)
-            argument_type = sharp_class.full_wrap_name
-        elif isinstance(generator, SharpMappedType):
-            argument_type = generator.wrap_argument_declaration()
-        elif isinstance(generator, TemplateConstantArgumentGenerator):
-            argument_type = generator.value
-        else:
-            argument_type = generator.wrap_argument_declaration()
-        argument_type = argument_type.replace('::', '.')
-        if base:
-            argument_type = SharpClass.get_relative_name(base, argument_type.split('.'))
-        return argument_type + ((' ' + self.argument_generator.name) if self.argument_generator.name else '')
+    def wrap_argument_declaration(self, base=()) -> str:
+        declaration = self.type_generator.wrap_argument_declaration().replace('::', '.').split('.')
+        type_name = SharpClass.get_relative_name(base, declaration)
+        argument = ' ' + self.argument_generator.name if self.argument_generator.name else ''
+        return '{0}{1}'.format(type_name, argument)
 
     def c_argument_declaration(self) -> str:
-        if isinstance(self.argument_generator.type_generator, ClassTypeGenerator):
-            argument_type = 'void*'
-        elif isinstance(self.argument_generator.type_generator, MappedTypeGenerator):
-            mapped_type = SharpGenerator.get_or_gen_mapped_type(
-                self.argument_generator.type_generator.name,
-                self.argument_generator.type_generator.mapped_type_object)
-            argument_type = mapped_type.wrap_type
-        else:
-            argument_type = self.argument_generator.type_generator.wrap_argument_declaration()
-        return argument_type + ((' ' + self.argument_generator.name) if self.argument_generator.name else '')
+        return '{0}{1}'.format(self.type_generator.c_argument_declaration(),
+                               ' ' + self.argument_generator.name if self.argument_generator.name else '')
 
     def c_2_wrap_var(self, result_var: str, expression: str) -> ([str], str):
+        return self.type_generator.c_2_wrap_var(result_var, expression)
+
+    def wrap_2_c(self) -> str:
+        return self.type_generator.wrap_2_c_var('', self.argument_generator.name)[1]
+
+    def generate(self):
         generator = self.argument_generator.type_generator
-        if isinstance(generator, MappedTypeGenerator):
-            mapped_obj = SharpGenerator.get_or_gen_mapped_type(generator.name, generator.mapped_type_object)
-            return mapped_obj.format(
-                mapped_obj.c_2_wrap,
-                expression,
-                result_var,
-                mapped_obj.wrap_type)
+        if isinstance(generator, BuiltinTypeGenerator):
+            self.type_generator = SharpBuiltinType(generator)
+        elif isinstance(generator, MappedTypeGenerator):
+            self.type_generator = SharpMappedType(generator.mapped_type_object)
+        elif isinstance(generator, ExternalClassTypeGenerator):
+            sharp_external_class = self.capi_generator.get_or_gen_external_class(
+                '.'.join(generator.class_argument_generator.full_name_array).replace('::', '.'),
+                generator.class_argument_generator)
+            self.type_generator = sharp_external_class
         elif isinstance(generator, ClassTypeGenerator):
-            parent_full_name = '.'.join(generator.class_argument_generator.parent_namespace.full_name_array)
-            if isinstance(generator, ExternalClassTypeGenerator):
-                sharp_class = SharpGenerator.get_or_gen_external_class(
-                    generator.class_argument_generator.full_wrap_name.replace('::', '.'),
-                    generator.class_argument_generator)
-            else:
-                sharp_class = SharpGenerator.get_or_gen_class(
-                    parent_full_name + '.' + generator.class_argument_generator.template_name.replace('::', '.'),
-                    generator.class_argument_generator)
-            internal_expression = '{type_name}.{create_from_ptr_expression}, {expression}, {copy_or_add_ref}'.format(
-                create_from_ptr_expression='ECreateFromRawPointer.force_creating_from_raw_pointer',
-                type_name=parent_full_name + '.' + sharp_class.wrap_name,
-                expression=expression,
-                copy_or_add_ref=bool_to_str(generator.copy_or_add_ref_when_c_2_wrap)
-            )
-            if result_var:
-                return ['new {type_name} {result_var}({internal_expression});'.format(
-                    type_name=parent_full_name + '.' + sharp_class.wrap_name,
-                    result_var=result_var,
-                    internal_expression=internal_expression
-                )], result_var
-            else:
-                return [], 'new {type_name}({internal_expression})'.format(
-                    type_name=parent_full_name + '.' + sharp_class.wrap_name,
-                    internal_expression=internal_expression
-                )
+            class_name = '.'.join(generator.class_argument_generator.full_template_name_array).replace('::', '.')
+            self.type_generator = self.capi_generator.full_name_2_sharp_object[class_name]
+        elif isinstance(generator, EnumTypeGenerator):
+            self.type_generator = self.capi_generator.full_name_2_sharp_object[
+                generator.enum_argument_generator.full_wrap_name.replace('::', '.')]
         else:
-            return generator.c_2_wrap_var(result_var, expression)
+            self.type_generator = generator
 
 
-class SharpMethod(object):
-    def __init__(self, method_generator: MethodGenerator, generator: SharpClass or SharpTemplate):
-        self.method_generator = method_generator
+class SharpRoutine(object):
+    def __init__(self, generator, parent: SharpClass or SharpTemplate or SharpNamespace):
         self.generator = generator
-        self.arguments = [SharpArgument(arg) for arg in method_generator.argument_generators]
-        self.return_type = SharpArgument(ArgumentGenerator(method_generator.return_type_generator, ''))
-        self.exception_traits = SharpExceptionTraits(method_generator.exception_traits)
-        self.wrap_name = method_generator.wrap_name
+        self.parent = parent
+        self.arguments = []
+
+    def generate(self):
+        arguments = []
+        for arg in self.generator.argument_generators:
+            sharp_argument = SharpArgument(arg, self.parent.capi_generator)
+            sharp_argument.generate()
+            arguments.append(sharp_argument)
+        self.arguments = arguments
+
+
+class SharpMethod(SharpRoutine):
+    def __init__(self, method_generator: MethodGenerator, generator: SharpClass or SharpTemplate):
+        super().__init__(method_generator, generator)
+        self.return_type = None
+        self.exception_traits = generator.namespace.capi_generator.get_exception_traits(
+            method_generator.method_object.noexcept)
 
     def is_overload(self):
-        if self.generator.base:
-            for method in self.generator.base.methods:
-                if self.method_generator.name != method.method_generator.name:
+        if self.parent.base:
+            for method in self.parent.base.methods:
+                if self.generator.name != method.generator.name:
                     continue
-                return_type = self.method_generator.return_type_generator.type_name
-                if return_type != method.method_generator.return_type_generator.type_name:
+                return_type = self.generator.return_type_generator.type_name
+                if return_type != method.generator.return_type_generator.type_name:
                     continue
                 result = True
-                for arg in self.method_generator.argument_generators:
-                    if arg.type_generator != method.method_generator.argument_generators.type_generator:
+                for arg in self.generator.argument_generators:
+                    if arg.type_generator != method.generator.argument_generators.type_generator:
                         result = False
                         break
                 if result:
@@ -863,13 +1241,8 @@ class SharpMethod(object):
         return False
 
     def c_arguments_list(self):
-        result = []
-        for argument in self.method_generator.c_arguments_list:
-            if isinstance(argument.type_generator, MappedTypeGenerator):
-                mapped_type = SharpGenerator.get_or_gen_mapped_type(argument.type_generator.name,
-                                                                    argument.type_generator.mapped_type_object)
-                result.append(ArgumentGenerator(mapped_type, argument.name))
-            else:
+        result = [ThisArgumentGenerator(self.generator)]
+        for argument in self.arguments:
                 result.append(argument)
         return result
 
@@ -881,91 +1254,100 @@ class SharpMethod(object):
         arguments_call = [argument.wrap_2_c() for argument in self.c_arguments_list()]
         out.put_line('{new}unsafe public {return_type} {name}({arguments})'.format(
             return_type=self.return_type.wrap_argument_declaration(), new=new,
-            name=self.wrap_name, arguments=arguments
-        ))
+            name=self.generator.wrap_name, arguments=arguments))
         with IndentScope(out):
-            return_expression = self.exception_traits.generate_c_call(
-                out,
-                self.return_type,
-                self.method_generator.full_c_name,
-                arguments_call
-            )
+            return_expression = self.exception_traits.generate_c_call(out, self.return_type,
+                                                                      self.generator.full_c_name, arguments_call)
             out.put_return_cpp_statement(return_expression)
 
+    def generate(self):
+        super().generate()
+        argument_generator = ArgumentGenerator(self.generator.return_type_generator, '')
+        self.return_type = SharpArgument(argument_generator, self.parent.capi_generator)
+        self.return_type.generate()
 
-class SharpConstructor(object):
+
+class SharpConstructor(SharpRoutine):
     def __init__(self, constructor_generator: ConstructorGenerator, generator: SharpClass or SharpTemplate):
-        self.constructor_generator = constructor_generator
-        self.generator = generator
-        self.arguments = [SharpArgument(arg) for arg in constructor_generator.argument_generators]
+        super().__init__(constructor_generator, generator)
+        self.exception_traits = generator.namespace.capi_generator.get_exception_traits(
+            constructor_generator.constructor_object.noexcept)
 
     def c_arguments_list(self):
         result = []
-        for argument in self.constructor_generator.argument_generators:
+        for argument in self.generator.argument_generators:
             generator = argument.type_generator
             if isinstance(generator, MappedTypeGenerator):
-                mapped_type = SharpGenerator.get_or_gen_mapped_type(generator.name, generator.mapped_type_object)
+                capi_generator = self.parent.capi_generator
+                mapped_type = capi_generator.get_or_gen_mapped_type(generator.name, generator.mapped_type_object)
                 result.append(ArgumentGenerator(mapped_type, argument.name))
             else:
                 result.append(argument)
         return result
 
     def generate_wrap_definition(self, out: FileGenerator, capi_generator: CapiGenerator):
-        self.constructor_generator.exception_traits = capi_generator.get_exception_traits(
-            self.constructor_generator.constructor_object.noexcept)
+        self.generator.exception_traits = capi_generator.get_exception_traits(
+            self.generator.constructor_object.noexcept)
         arguments = ', '.join(argument.wrap_argument_declaration() for argument in self.arguments)
         arguments_call = [argument.wrap_2_c() for argument in self.c_arguments_list()]
         out.put_line('unsafe public {class_name}({arguments}){base_init}'.format(
-            class_name=self.generator.wrap_name,
+            class_name=self.parent.wrap_name,
             arguments=arguments,
-            base_init=get_base_init(self.generator) if self.generator.base else ''
-        ))
+            base_init=get_base_init(self.parent) if self.parent.base else ''))
+        result = SharpArgument(ArgumentGenerator(ClassTypeGenerator(
+            self.generator.parent_class_generator), ''),
+            self.parent.capi_generator)
+        result.generate()
         with IndentScope(out):
-            result_expression = SharpExceptionTraits.generate_c_call(
+            result_expression = self.exception_traits.generate_c_call(
                 out,
-                SharpArgument(ArgumentGenerator(ClassTypeGenerator(
-                    self.constructor_generator.parent_class_generator), '')),
-                self.constructor_generator.full_c_name,
+                result,
+                self.generator.full_c_name,
                 arguments_call
             )
             out.put_line('SetObject({result_expression}.{detach}());'.format(
                 result_expression=result_expression,
-                detach=self.constructor_generator.params.detach_method_name
-            ))
+                detach=self.generator.params.detach_method_name))
 
 
-class SharpFunction(object):
-    def __init__(self, function_generator: FunctionGenerator, parent: SharpClass or SharpNamespace):
-        self.function_generator = function_generator
-        self.parent = parent
-        self.arguments = [SharpArgument(arg) for arg in function_generator.argument_generators]
-        self.return_type = SharpArgument(ArgumentGenerator(function_generator.return_type_generator, ''))
-        self.exception_traits = SharpExceptionTraits(function_generator.exception_traits)
+class SharpFunction(SharpRoutine):
+    def __init__(self, function_generator: FunctionGenerator, parent: SharpNamespace):
+        super().__init__(function_generator, parent)
+        self.return_type = None
+        self.exception_traits = parent.capi_generator.get_exception_traits(function_generator.function_object.noexcept)
 
-    def generate_wrap_definition(self, out: FileGenerator, capi_generator: CapiGenerator):
-        self.function_generator.exception_traits = capi_generator.get_exception_traits(
-            self.function_generator.function_object.noexcept)
+    @property
+    def get_namespace(self):
+        if isinstance(self.parent, SharpNamespace):
+            return self.parent
+        return self.parent.parent_namespace
+
+    def generate_wrap_definition(self, out: FileGenerator):
         arguments = ', '.join(argument.wrap_argument_declaration() for argument in self.arguments)
-        arguments_call = [argument.wrap_2_c() for argument in self.function_generator.argument_generators]
+        arguments_call = [argument.wrap_2_c() for argument in self.arguments]
         out.put_line('public unsafe static {return_type} {name}({arguments})'.format(
             return_type=self.return_type.wrap_argument_declaration(),
-            name=self.function_generator.wrap_name,
-            arguments=arguments
-        ))
+            name=self.generator.wrap_name,
+            arguments=arguments))
         with IndentScope(out):
             return_expression = self.exception_traits.generate_c_call(
-                out,
-                self.return_type,
-                self.function_generator.full_c_name,
-                arguments_call
-            )
+                out, self.return_type, self.generator.full_c_name, arguments_call)
             out.put_return_cpp_statement(return_expression)
+
+    def generate(self):
+        super().generate()
+        argument_generator = ArgumentGenerator(self.generator.return_type_generator, '')
+        self.return_type = SharpArgument(argument_generator, self.parent.capi_generator)
+        self.return_type.generate()
 
 
 class SharpLifecycleTraits(object):
-    def __init__(self, lifecycle_traits: LifecycleTraits):
+    def __init__(self, lifecycle_traits: LifecycleTraits, capi_generator: SharpCapiGenerator):
         self.lifecycle_traits = lifecycle_traits
         self.params = lifecycle_traits.params
+        self.capi_generator = capi_generator
+        exception_traits = capi_generator.get_exception_traits(lifecycle_traits.default_value_for_init_noexcept)
+        self.init_method_exception_traits = exception_traits
 
     def generate_std_methods_definitions(self, out: FileGenerator, sharp_class: SharpClass):
         new = 'new ' if sharp_class.base else ''
@@ -1007,9 +1389,6 @@ class SharpLifecycleTraits(object):
 
 
 class SharpCopySemantic(SharpLifecycleTraits):
-    def __init__(self, lifecycle_traits: CopySemantic):
-        super().__init__(lifecycle_traits)
-
     def __generate_copy_constructor_definition(self, out: FileGenerator, sharp_class):
         out.put_line('unsafe public {class_name}({class_name} other){base_init}'.format(
             class_name=sharp_class.wrap_name,
@@ -1020,8 +1399,8 @@ class SharpCopySemantic(SharpLifecycleTraits):
                 class_name=sharp_class.wrap_name, ))
             out.put_line('if (other.{get_raw}() != null)'.format(get_raw=self.params.get_raw_pointer_method_name))
             with IndentScope(out):
-                copy_result = self.lifecycle_traits.init_method_exception_traits.generate_c_call(
-                    out, BuiltinTypeGenerator('void*'), sharp_class.class_generator.copy_method,
+                copy_result = self.init_method_exception_traits.generate_c_call(
+                    out, SharpBuiltinType(BuiltinTypeGenerator('void*')), sharp_class.class_generator.copy_method,
                     ['other.{get_raw}()'.format(get_raw=self.params.get_raw_pointer_method_name)])
                 out.put_line('SetObject({copy_result});'.format(copy_result=copy_result))
             out.put_line('else')
@@ -1031,8 +1410,9 @@ class SharpCopySemantic(SharpLifecycleTraits):
     def generate_raw_copy_constructor_body_definition(self, out: FileGenerator, sharp_class, copy_object):
         out.put_line('if (object_pointer != null && {copy_object})'.format(copy_object=copy_object))
         with IndentScope(out):
-            copy_result = self.lifecycle_traits.init_method_exception_traits.generate_c_call(
-                out, BuiltinTypeGenerator('void*'), sharp_class.class_generator.copy_method, ['object_pointer'])
+            copy_result = self.init_method_exception_traits.generate_c_call(
+                out, SharpBuiltinType(BuiltinTypeGenerator('void*')), sharp_class.class_generator.copy_method,
+                ['object_pointer'])
             out.put_line('SetObject({copy_result});'.format(copy_result=copy_result))
         out.put_line('else')
         with IndentScope(out):
@@ -1078,9 +1458,6 @@ class SharpCopySemantic(SharpLifecycleTraits):
 
 
 class SharpRawPointerSemantic(SharpLifecycleTraits):
-    def __init__(self, lifecycle_traits: LifecycleTraits):
-        super().__init__(lifecycle_traits)
-
     def __generate_copy_constructor_definition(self, out: FileGenerator, sharp_class):
         out.put_line('unsafe public {class_name}({class_name} other){base_init}'.format(
             class_name=sharp_class.wrap_name,
@@ -1127,9 +1504,6 @@ class SharpRawPointerSemantic(SharpLifecycleTraits):
 
 
 class SharpRefCountedSemantic(SharpLifecycleTraits):
-    def __init__(self, lifecycle_traits: LifecycleTraits):
-        super().__init__(lifecycle_traits)
-
     def __generate_copy_constructor_definition(self, out: FileGenerator, sharp_class):
         out.put_line('unsafe public {class_short_name}({class_name} other){base_init}'.format(
             class_short_name=sharp_class.wrap_name,
@@ -1140,16 +1514,19 @@ class SharpRefCountedSemantic(SharpLifecycleTraits):
             out.put_line('SetObject(other.{get_raw}());'.format(get_raw=self.params.get_raw_pointer_method_name))
             out.put_line('if (other.{get_raw}() != null)'.format(get_raw=self.params.get_raw_pointer_method_name))
             with IndentScope(out):
-                self.lifecycle_traits.init_method_exception_traits.generate_c_call(
-                    out, BuiltinTypeGenerator('void'), sharp_class.class_generator.add_ref_method,
+                copy_or_add_ref_noexcept = sharp_class.class_generator.class_object.copy_or_add_ref_noexcept
+                self.capi_generator.get_exception_traits(copy_or_add_ref_noexcept).generate_c_call(
+                    out, SharpBuiltinType(BuiltinTypeGenerator('void')), sharp_class.class_generator.add_ref_method,
                     ['other.{get_raw}()'.format(get_raw=self.params.get_raw_pointer_method_name)])
 
     def generate_raw_copy_constructor_body_definition(self, out: FileGenerator, sharp_class, add_ref_object):
         out.put_line('SetObject(object_pointer);')
         out.put_line('if ({add_ref_object} && object_pointer != null)'.format(add_ref_object=add_ref_object))
         with IndentScope(out):
-            self.lifecycle_traits.init_method_exception_traits.generate_c_call(
-                out, BuiltinTypeGenerator('void'), sharp_class.class_generator.add_ref_method, ['object_pointer'])
+            copy_or_add_ref_noexcept = sharp_class.class_generator.class_object.copy_or_add_ref_noexcept
+            self.capi_generator.get_exception_traits(copy_or_add_ref_noexcept).generate_c_call(
+                out, SharpBuiltinType(BuiltinTypeGenerator('void')),
+                sharp_class.class_generator.add_ref_method, ['object_pointer'])
 
     def __generate_raw_copy_constructor_definition(self, out: FileGenerator, sharp_class):
         constructor_arguments = 'ECreateFromRawPointer e, void *object_pointer, bool add_ref_object'
@@ -1187,16 +1564,93 @@ class SharpRefCountedSemantic(SharpLifecycleTraits):
         super().generate_std_methods_definitions(out, sharp_class)
 
 
+class SharpWatchdogScope(WatchdogScope):
+    def __enter__(self):
+        self.file_generator.put_line('#if !{}'.format(self.watchdog_string))
+        self.file_generator.put_line('#define {}'.format(self.watchdog_string))
+        self.file_generator.put_line('')
+
+
 class SharpExceptionTraits(object):
-    def __init__(self, exception_traits):
+    def __init__(self, exception_traits, params):
         self.exception_traits = exception_traits
+        self.params = params
+        self.classes = []
+        self.check_and_throw_exception_filename = self.get_exception_filename(params)
 
     @staticmethod
-    def generate_c_call(out: FileGenerator, return_type, c_function_name: str, arguments: [str]) -> str:
-        casting_instructions, return_expression = return_type.c_2_wrap_var(
-            '', NoHandling.get_c_function_call(c_function_name, arguments))
+    def get_exception_filename(params):
+        result = params.check_and_throw_exception_filename
+        reversed_name = result[::-1]
+        dot = reversed_name.find('.')
+        if -1 < dot < 6:
+            result = result[:-dot - 1]
+        return params.sharp_output_folder + '/' + result + '.cs'
+
+    def __get_c_function_call(self, c_function_name: str, arguments: [str]) -> str:
+        arguments.insert(0, '&{exception_info}'.format(exception_info=self.params.exception_info_argument_name))
+        return '{function_name}({arguments})'.format(function_name=c_function_name, arguments=', '.join(arguments))
+
+    def __generate_c_call(self, out: FileGenerator, instructions: ([str], str)) -> str:
+        out.put_line('{exception_info_type} {exception_info};'.format(
+            exception_info_type=self.exception_info_t(),
+            exception_info=self.params.exception_info_argument_name))
+        casting_instructions, return_expression = instructions
         out.put_lines(casting_instructions)
+        out.put_line('{0}.Functions.check_and_throw_exception({1}.code, {1}.object_pointer);'.format(
+            self.params.beautiful_capi_namespace,
+            self.params.exception_info_argument_name))
         return return_expression
+
+    def generate_c_call(self, out: FileGenerator, return_type, c_function_name: str, arguments: [str]) -> str:
+        if isinstance(self.exception_traits, NoHandling):
+            casting_instructions, return_expression = return_type.c_2_wrap_var(
+                '', NoHandling.get_c_function_call(c_function_name, arguments))
+            out.put_lines(casting_instructions)
+            return return_expression
+        casting_instructions, return_expression = return_type.c_2_wrap_var(
+            'result', self.__get_c_function_call(c_function_name, arguments))
+        return self.__generate_c_call(out, (casting_instructions, return_expression))
+
+    def exception_info_t(self):
+        return self.params.beautiful_capi_namespace.lower() + '_exception_info_t'
+
+    def __exception_code_t(self):
+        return self.params.beautiful_capi_namespace.lower() + '_exception_code_t'
+
+    @staticmethod
+    def __generate_throw_wrap(out, exception_class):
+        throw_str = 'throw new {0}({0}.ECreateFromRawPointer.force_creating_from_raw_pointer, exception_object, false);'
+        out.put_line(throw_str.format(exception_class.full_wrap_name))
+
+    @staticmethod
+    def generate_exception_info(project_name: str, out: FileGenerator):
+        out.put_line('unsafe public struct beautiful_capi_{}_exception_info_t'.format(project_name))
+        with IndentScope(out):
+            out.put_line('public int code; /* value from beautiful_capi_callback_exception_code_t enumeration */')
+            out.put_line('public void* object_pointer; /* exception object pointer */')
+        out.put_line('')
+
+    @staticmethod
+    def generate_exception_code(project_name: str, sharp_capi_generator, out: FileGenerator):
+        out.put_line('public enum beautiful_capi_{}_exception_code_t'.format(project_name))
+        with IndentScope(out, '};'):
+            out.put_line('beautiful_capi_{}_no_exception = 0,'.format(project_name))
+            out.put_line('beautiful_capi_{}_unknown_exception = 1,'.format(project_name))
+            code_to_exception = [[exception_class.class_generator.exception_code, exception_class] for exception_class
+                                 in sharp_capi_generator.main_exception_traits.classes]
+            if code_to_exception:
+                out.put_line('beautiful_capi_{}_copy_exception_error = 2,'.format(project_name))
+                code_to_exception.sort(key=lambda except_info: except_info[0])
+                for exception_info in code_to_exception[:-1]:
+                    out.put_line('beautiful_capi_{2}_{0} = {1},'.format(
+                        exception_info[1].c_name, exception_info[0], project_name))
+                exception_info = code_to_exception[-1]
+                out.put_line('beautiful_capi_{2}_{0} = {1}'.format(
+                    exception_info[1].c_name, exception_info[0], project_name))
+            else:
+                out.put_line('beautiful_capi_{}_copy_exception_error = 2'.format(project_name))
+        out.put_line('')
 
 
 class SharpFileCache(object):
@@ -1247,83 +1701,15 @@ class SharpFileCache(object):
         return self.file_cache.get_cached_generator(output_file_name)
 
 
-class SharpGenerator(object):
-    @staticmethod
-    def get_or_gen_namespace(fullname: str, generator: NamespaceGenerator):
-        if fullname in full_name_2_sharp_object:
-            return full_name_2_sharp_object[fullname]
-        else:
-            if generator.parent_namespace:
-                parent = SharpGenerator.get_or_gen_namespace(generator.parent_namespace.full_wrap_name,
-                                                             generator.parent_namespace)
-                result = SharpNamespace(generator, parent)
-            else:
-                result = SharpNamespace(generator, None)
-            full_name_2_sharp_object[fullname] = result
-            return result
-
-    @staticmethod
-    def get_or_gen_class(fullname: str, generator: ClassGenerator):
-        if fullname in full_name_2_sharp_object:
-            return full_name_2_sharp_object[fullname]
-        else:
-            namespace = SharpGenerator.get_or_gen_namespace('.'.join(generator.parent_namespace.full_name_array),
-                                                            generator.parent_namespace)
-            result = SharpClass(generator, namespace)
-            full_name_2_sharp_object[fullname] = result
-            return result
-
-    @staticmethod
-    def get_or_gen_template(fullname: str, template_generator: TemplateGenerator):
-        result = full_name_2_sharp_object.get(fullname, None)
-        if not result:
-            result = SharpTemplate(template_generator)
-            full_name_2_sharp_object[fullname] = result
-        return result
-
-    @staticmethod
-    def get_or_gen_external_namespace(fullname: str, generator: ExternalNamespaceGenerator):
-        if fullname in full_name_2_sharp_object:
-            return full_name_2_sharp_object[fullname]
-        else:
-            if generator.parent_namespace:
-                parent = SharpGenerator.get_or_gen_external_namespace(generator.parent_namespace.full_wrap_name,
-                                                                      generator.parent_namespace)
-                result = SharpExternalNamespace(generator, parent)
-            else:
-                result = SharpExternalNamespace(generator, None)
-            full_name_2_sharp_object[fullname] = result
-            return result
-
-    @staticmethod
-    def get_or_gen_external_class(fullname: str, external_class_generator: ExternalClassGenerator):
-        if fullname in full_name_2_sharp_object:
-            return full_name_2_sharp_object[fullname]
-        else:
-            namespace = SharpGenerator.get_or_gen_external_namespace(
-                '.'.join(external_class_generator.parent_namespace.full_name_array),
-                external_class_generator.parent_namespace)
-            result = SharpExternalClass(external_class_generator, namespace)
-            full_name_2_sharp_object[fullname] = result
-            namespace.classes.append(result)
-            return result
-
-    @staticmethod
-    def get_or_gen_mapped_type(name: str, mapped_type_object: TMappedType):
-        result = full_name_2_sharp_object.get(name, None)
-        if not result:
-            result = SharpMappedType(mapped_type_object)
-            full_name_2_sharp_object[name] = result
-        return result
-
-
 class SharpCmakeListGenerator(object):
     def __init__(self, capi_generator, namespaces: []):
-        self.name = capi_generator.api_root.project_name
+        self.capi_generator = capi_generator
+        self.name = capi_generator.capi_generator.api_root.project_name
         self.lib_suffix = '_sharp_library'
         self.lib_name = pascal_to_stl(self.name + self.lib_suffix)
         self.params = capi_generator.params
-        self.namespaces = [full_name_2_sharp_object[namespace.full_wrap_name] for namespace in namespaces]
+        self.namespaces = [capi_generator.full_name_2_sharp_object[namespace.full_wrap_name] for namespace in
+                           namespaces]
         self.out_folder = capi_generator.params.sharp_output_folder
         self.file = FileGenerator(self.out_folder + '/CMakeLists.txt')
         self.name_stack = []
@@ -1362,6 +1748,8 @@ class SharpCmakeListGenerator(object):
         if not self.name_stack:
             self.file.put_line(self.project_path + '/' + namespace.wrap_name + '/' + namespace.wrap_name + 'Init.cs')
         self.file.put_line('/'.join([self.project_path] + self.name_stack + [namespace.wrap_name + 'Functions.cs']))
+        if namespace.enums:
+            self.file.put_line('/'.join([self.project_path] + self.name_stack + [namespace.wrap_name + 'Enums.cs']))
         self.name_stack.append(namespace.wrap_name)
         for nested_namespace in namespace.nested_namespaces.values():
             self.process_namespace(nested_namespace)
@@ -1381,6 +1769,9 @@ class SharpCmakeListGenerator(object):
         with Indent(self.file):
             for namespace in self.namespaces:
                 self.process_namespace(namespace)
+                if not isinstance(self.capi_generator.main_exception_traits.exception_traits, NoHandling):
+                    file = self.capi_generator.params.check_and_throw_exception_filename.format(project_name=self.name)
+                    self.file.put_line(self.project_path + '/' + file.replace('.h', '.cs'))
         self.file.put_line(')\n')
         self.file.put_line('target_compile_options({0} PRIVATE "/unsafe")'.format(self.lib_name))
         self.file.put_line('SET_TARGET_PROPERTIES({0} PROPERTIES LINKER_LANGUAGE CSharp)'.format(self.lib_name))
@@ -1402,6 +1793,14 @@ class SharpExternalNamespace(object):
         self.enums = []
         self.project_name = generator.namespace_object.project_name
 
+    @property
+    def wrap_name(self):
+        return self.generator.wrap_name
+
+    @property
+    def full_wrap_name(self):
+        return self.parent.full_wrap_name + self.generator.wrap_name if self.parent else self.wrap_name
+
 
 class SharpExternalClass(object):
     def __init__(self, generator: ExternalClassGenerator, parent: ExternalNamespaceGenerator):
@@ -1412,6 +1811,48 @@ class SharpExternalClass(object):
     @property
     def wrap_name(self):
         return self.generator.wrap_name
+
+    @property
+    def full_wrap_name(self):
+        return '{}.{}'.format(self.parent.full_wrap_name, self.generator.wrap_name) if self.parent else self.wrap_name
+
+    def wrap_argument_declaration(self) -> str:
+        return self.full_wrap_name
+
+    @staticmethod
+    def c_argument_declaration() -> str:
+        return 'void*'
+
+    def c_2_wrap_var(self, result_var: str, expression: str) -> ([str], str):
+        parent_full_name = self.parent.full_wrap_name
+        internal_expression = '{type_name}.{create_from_ptr_expression}, {expression}, {copy_or_add_ref}'.format(
+            create_from_ptr_expression='ECreateFromRawPointer.force_creating_from_raw_pointer',
+            type_name=parent_full_name + '.' + self.wrap_name,
+            expression=expression,
+            copy_or_add_ref=bool_to_str(False))  # self.copy_or_add_ref_when_c_2_wrap))
+        if result_var:
+            return ['var {result_var} = new {type_name}({internal_expression});'.format(
+                type_name=parent_full_name + '.' + self.wrap_name,
+                result_var=result_var,
+                internal_expression=internal_expression
+            )], result_var
+        else:
+            return [], 'new {type_name}({internal_expression})'.format(
+                type_name=parent_full_name + '.' + self.wrap_name,
+                internal_expression=internal_expression
+            )
+
+    def wrap_2_c_var(self, result_var: str, expression: str) -> ([str], str):
+        internal_expression = '{expression}.{get_raw_pointer_method}()'.format(
+            expression=expression,
+            get_raw_pointer_method=self.generator.get_raw_pointer_method_name)
+        if result_var:
+            return ['void* {result_var} = {internal_expression};'.format(
+                result_var=result_var,
+                internal_expression=internal_expression
+            )], result_var
+        else:
+            return [], internal_expression
 
 
 class SharpExternalEnum(object):
@@ -1479,9 +1920,11 @@ str_to_sharp_lifecycle = {
 }
 
 
-def create_sharp_lifecycle(lifecycle: TLifecycle, lifecycle_traits: LifecycleTraits) -> SharpLifecycleTraits:
+def create_sharp_lifecycle(lifecycle: TLifecycle,
+                           lifecycle_traits: LifecycleTraits,
+                           capi_generator: CapiGenerator) -> SharpLifecycleTraits:
     if lifecycle not in sharp_lifecycles:
-        result = str_to_sharp_lifecycle[lifecycle](lifecycle_traits)
+        result = str_to_sharp_lifecycle[lifecycle](lifecycle_traits, capi_generator)
         sharp_lifecycles[lifecycle] = result
     else:
         result = sharp_lifecycles[lifecycle]
@@ -1489,11 +1932,9 @@ def create_sharp_lifecycle(lifecycle: TLifecycle, lifecycle_traits: LifecycleTra
 
 
 def generate(cpp_file_cache: FileCache, capi_generator: CapiGenerator, namespace_generators: []):
-    file_cache = SharpFileCache(cpp_file_cache)
-    for namespace_generator in namespace_generators:
-        namespace = SharpGenerator.get_or_gen_namespace(namespace_generator.full_wrap_name, namespace_generator)
-        namespace.generate(file_cache, capi_generator)
+    sharp_capi_generator = SharpCapiGenerator(SharpFileCache(cpp_file_cache), capi_generator)
+    sharp_capi_generator.generate(namespace_generators)
+    sharp_capi_generator.generate_exception_traits()
     if capi_generator.params.generate_sharp_library:
-        project_gen = SharpCmakeListGenerator(capi_generator, namespace_generators)
+        project_gen = SharpCmakeListGenerator(sharp_capi_generator, namespace_generators)
         project_gen.generate()
-    full_name_2_sharp_object.clear()
