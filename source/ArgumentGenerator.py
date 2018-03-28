@@ -24,8 +24,7 @@ from FileGenerator import FileGenerator
 from FileCache import FileCache
 from LifecycleTraits import CopySemantic, RefCountedSemantic
 from Parser import TC2ImplMode
-from NamespaceGenerator import NamespaceGenerator
-from BuiltinTypeGenerator import BuiltinTypeGenerator, BaseTypeGenerator
+from BuiltinTypeGenerator import BaseTypeGenerator
 from Helpers import bool_to_str, include_headers
 
 
@@ -337,12 +336,7 @@ class EnumTypeGenerator(BaseTypeGenerator):
         return '*' + expression
 
     def include_dependent_declaration_headers(self, file_generator: FileGenerator, file_cache: FileCache):
-        parent_generator = self.enum_argument_generator.parent_generator
-        if type(parent_generator) is NamespaceGenerator:
-            header_to_include = file_cache.enums_header(parent_generator.full_name_array)
-        else:
-            header_to_include = file_cache.class_header_decl(parent_generator.full_name_array)
-        file_generator.include_user_header(header_to_include)
+        file_generator.include_user_header(self.enum_argument_generator.declaration_header(file_cache))
 
     def include_dependent_definition_headers(self, file_generator: FileGenerator, file_cache: FileCache):
         self.include_dependent_declaration_headers(file_generator, file_cache)

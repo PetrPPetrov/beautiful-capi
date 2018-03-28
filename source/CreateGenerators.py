@@ -20,6 +20,8 @@
 #
 
 
+from BuiltinTypeGenerator import BuiltinTypeGenerator
+from NamespaceGenerator import NamespaceGenerator
 from Parser import TClass, TEnumeration, TNamespace, TArgument, TBeautifulCapiRoot, TMappedType, TLifecycle, TReference
 from Parser import TGenericDocumentation, TDocumentation, TExternalClass, TExternalNamespace, TExternalEnumeration
 from ParamsParser import TBeautifulCapiParams

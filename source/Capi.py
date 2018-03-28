@@ -185,9 +185,8 @@ class Capi(object):
                 external_enum = TExternalEnumeration()
                 external_enum.name = enum.name
                 external_enum.underlying_type = enum.enum_object.underlying_type
-                parent_name = enum.parent_generator.full_name_array
-                external_enum.include_declaration = file_cache.enums_header(parent_name)
-                external_enum.include_definition = file_cache.enums_header(parent_name)
+                external_enum.include_declaration = enum.declaration_header(file_cache)
+                external_enum.include_definition = enum.definition_header(file_cache)
                 parent.enumerations.append(external_enum)
 
             def process_external_namespaces(namespaces: [object], external_namespaces: [object]):

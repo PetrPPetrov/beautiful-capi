@@ -20,8 +20,11 @@
 #
 
 
-from Parser import TEnumeration, TEnumerationItem, TNamespace, TBeautifulCapiRoot, TFunction, TClass, TArgument, \
-    TImplementationCode
+from ExternalNamespaceGenerator import ExternalNamespaceGenerator
+from FileCache import FileCache
+from NamespaceGenerator import NamespaceGenerator
+from Parser import TEnumeration, TEnumerationItem, TNamespace, TBeautifulCapiRoot, TFunction, TClass, TArgument
+from Parser import TImplementationCode
 from FileGenerator import FileGenerator, IndentScope
 from DoxygenCpp import DoxygenCppGenerator
 
@@ -76,6 +79,16 @@ class EnumGenerator(object):
             for item_definition, item in zip(items_definitions_with_comma, self.enum_object.items):
                 out.put_line(item_definition + DoxygenCppGenerator().get_for_enum_item(item))
 
+    def declaration_header(self, file_cache: FileCache):
+        parent_generator = self.parent_generator
+        if isinstance(parent_generator, NamespaceGenerator) or isinstance(parent_generator, ExternalNamespaceGenerator):
+            header = file_cache.enums_header(parent_generator.full_name_array)
+        else:
+            header = file_cache.class_header_decl(parent_generator.full_name_array)
+        return header
+
+    def definition_header(self, file_cache: FileCache):
+        return self.declaration_header(file_cache)
 
 class EnumProcessor(object):
     def __init__(self, api_description: TBeautifulCapiRoot):
