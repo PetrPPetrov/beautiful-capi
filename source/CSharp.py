@@ -537,6 +537,21 @@ class SharpClass(object):
                 out.put_line('unsafe public delegate {0} {1}({2});'.format(return_type, name, ', '.join(arguments)))
             out.put_line('')
 
+    def __generate_down_cast(self, out: FileGenerator):
+        class_ = self
+        name_array = self.namespace.full_name_array
+        while class_.base:
+            out.put_line('')
+            base_name = self.get_relative_name(name_array, class_.base.full_name_array)
+            out.put_line('new unsafe static public {0} DownCast({1} source_object)'.format(self.wrap_name, base_name))
+            with IndentScope(out):
+                out.put_line('return new {0}({0}.{1}, {2}(source_object.{3}()), true);'.format(
+                    self.wrap_name,
+                    'ECreateFromRawPointer.force_creating_from_raw_pointer',
+                    '{0}_cast_to_{1}'.format(class_.base.class_generator.full_c_name, self.class_generator.full_c_name),
+                    class_.base.class_generator.get_raw_pointer_method_name))
+            class_ = class_.base
+
     def __generate_definition(self, out: FileGenerator):
         out.put_begin_cpp_comments(self.class_generator.params)
         out.put_line('using System.Runtime.InteropServices;\n')
@@ -566,6 +581,7 @@ class SharpClass(object):
                 self.class_generator.generate_cast_name_definition(out)
                 out.put_line('')
             generate_set_object_definition(self.class_generator.inheritance_traits, out, self)
+            self.__generate_down_cast(out)
         self.namespace.decrease_indent_recursively(out)
 
     def __generate_constructor_definitions(self, definition_header, first_method):
@@ -633,6 +649,12 @@ class SharpClass(object):
             out.put_line(import_string)
             out.put_line('unsafe static extern void* {func_name}(void* object_pointer);'.format(
                 func_name=self.class_generator.cast_to_base))
+        class_ = self
+        while class_.base:
+            out.put_line(import_string)
+            func = '{0}_cast_to_{1}'.format(class_.base.class_generator.full_c_name, self.class_generator.full_c_name,)
+            out.put_line('unsafe static extern void* {}(void* object_pointer);'.format(func))
+            class_ = class_.base
 
     @staticmethod
     def __sort_exceptions(exceptions: []):

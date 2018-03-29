@@ -18,13 +18,17 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-project(down_cast_example)
+project(down_cast_sharp_client LANGUAGES CSharp)
+cmake_minimum_required(VERSION 3.8.2)
 
-cmake_minimum_required(VERSION 2.8)
+add_executable(down_cast_sharp_client
+  ${down_cast_sharp_client_SOURCE_DIR}/Program.cs
+  ${down_cast_sharp_client_SOURCE_DIR}/Properties/AssemblyInfo.cs
+)
 
-add_subdirectory(library)
-add_subdirectory(client)
+SET_TARGET_PROPERTIES(down_cast_sharp_client PROPERTIES LINKER_LANGUAGE CSharp)
 
-if(${CSHARP_ENABLED})
-    add_subdirectory(sharp_client)
+if(TARGET down_cast_sharp_library)
+  add_dependencies(down_cast_sharp_client down_cast_sharp_library)
 endif()
+target_link_libraries(down_cast_sharp_client down_cast_sharp_library)
