@@ -674,7 +674,7 @@ class SharpClass(object):
                 out.put_line('exception_info->object_pointer = null;')
                 out.put_line('Type impl_type = typeof({});'.format(impl_class))
                 out.put_line('{0} self = ({0})Pointer.Box(object_pointer, impl_type);'.format(impl_class))
-                out.put_line('MethodInfo method = impl_type.GetMethod("{}");'.format(method.generator.wrap_name))
+                out.put_line('MethodInfo method = impl_type.GetMethod("{}");'.format(method.wrap_name))
                 out.put_line('{}method.Invoke(self, new object[] {{ {} }});'.format(
                     'return ({})'.format(return_type) if return_type != 'void' else '',
                     ', '.join(arg.wrap_2_c() for arg in method.arguments)))
@@ -702,7 +702,7 @@ class SharpClass(object):
             out.put_line('var result = new {0}();'.format(return_type))
             for method in self.base.methods:
                 out.put_line('result.SetCFunctionFor{0}({1}_callback<{2}>);'.format(
-                    method.generator.wrap_name,
+                    method.wrap_name,
                     class_name + '_' + method.generator.c_name,
                     impl_class))
             out.put_line('result.SetObjectPointer(Pointer.Unbox(implementation_class));')
@@ -783,7 +783,7 @@ class SharpTemplate(object):
             return_type = method.return_type.wrap_argument_declaration(self.namespace.full_name_array)
             arguments = [arg.wrap_argument_declaration(self.namespace.full_name_array) for arg in method.arguments]
             out.put_line('{new}public {return_type} {method_name}({arguments})'.format(
-                method_name=method.generator.wrap_name, new=new,
+                method_name=method.wrap_name, new=new,
                 arguments=', '.join(arguments), return_type=return_type))
             if return_type == 'void':
                 return_expression = ''
@@ -796,7 +796,7 @@ class SharpTemplate(object):
             with IndentScope(out):
                 out.put_line('{return_expr}ExecuteMethod("{name}", new object[] {{{arguments}}}){bracket};'.format(
                     return_expr=return_expression.format(return_type=return_type),
-                    name=method.generator.wrap_name,
+                    name=method.wrap_name,
                     bracket=')' if return_expression else '',
                     arguments=', '.join(argument.argument_generator.name for argument in method.arguments)
                 ))
@@ -1220,6 +1220,7 @@ class SharpMethod(SharpRoutine):
     def __init__(self, method_generator: MethodGenerator, generator: SharpClass or SharpTemplate):
         super().__init__(method_generator, generator)
         self.return_type = None
+        self.wrap_name = method_generator.wrap_name
         self.exception_traits = generator.namespace.capi_generator.get_exception_traits(
             method_generator.method_object.noexcept)
 
@@ -1254,7 +1255,7 @@ class SharpMethod(SharpRoutine):
         arguments_call = [argument.wrap_2_c() for argument in self.c_arguments_list()]
         out.put_line('{new}unsafe public {return_type} {name}({arguments})'.format(
             return_type=self.return_type.wrap_argument_declaration(), new=new,
-            name=self.generator.wrap_name, arguments=arguments))
+            name=self.wrap_name, arguments=arguments))
         with IndentScope(out):
             return_expression = self.exception_traits.generate_c_call(out, self.return_type,
                                                                       self.generator.full_c_name, arguments_call)
@@ -1265,6 +1266,11 @@ class SharpMethod(SharpRoutine):
         argument_generator = ArgumentGenerator(self.generator.return_type_generator, '')
         self.return_type = SharpArgument(argument_generator, self.parent.capi_generator)
         self.return_type.generate()
+        if self.generator.method_object.const:
+            for method in self.parent.methods:
+                if method.generator.name == self.generator.name and not method.generator.method_object.const:
+                    self.wrap_name += 'Const'
+                    break
 
 
 class SharpConstructor(SharpRoutine):
@@ -1799,7 +1805,7 @@ class SharpExternalNamespace(object):
 
     @property
     def full_wrap_name(self):
-        return self.parent.full_wrap_name + self.generator.wrap_name if self.parent else self.wrap_name
+        return self.parent.full_wrap_name + self.wrap_name if self.parent else self.wrap_name
 
 
 class SharpExternalClass(object):
@@ -1814,7 +1820,7 @@ class SharpExternalClass(object):
 
     @property
     def full_wrap_name(self):
-        return '{}.{}'.format(self.parent.full_wrap_name, self.generator.wrap_name) if self.parent else self.wrap_name
+        return '{}.{}'.format(self.parent.full_wrap_name, self.wrap_name) if self.parent else self.wrap_name
 
     def wrap_argument_declaration(self) -> str:
         return self.full_wrap_name

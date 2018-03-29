@@ -25,8 +25,6 @@ namespace OverloadSuffix
             OverloadSuffix.Functions.Show();
             OverloadSuffix.Functions.Show(5);
             OverloadSuffix.Functions.Show(1.3);
-
-            Console.ReadKey();
         }
     }
 }
