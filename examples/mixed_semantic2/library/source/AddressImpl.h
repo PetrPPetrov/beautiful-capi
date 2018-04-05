@@ -23,6 +23,7 @@
 #define BEAUTIFUL_CAPI_MIXED_SEMANTIC2_ADDRESS_H
 
 #include <string>
+#include <stdint.h>
 #include <iostream>
 
 namespace MixedSemantic2
