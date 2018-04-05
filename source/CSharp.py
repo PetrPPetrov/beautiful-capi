@@ -553,6 +553,29 @@ class SharpClass(object):
                     class_.base.class_generator.get_raw_pointer_method_name))
             class_ = class_.base
 
+    def __generate_cast_name_declaration(self, out: FileGenerator):
+        def generate_cast(from_operand, to_operand, implicit: bool):
+            out.put_line('')
+            out.put_line('unsafe public static {implicit} operator {target_type}({source_type} value)'.format(
+                target_type=to_operand,
+                source_type=from_operand,
+                implicit='implicit' if implicit else 'explicit'
+            ))
+            with IndentScope(out):
+                expr = 'return new {0}({0}.ECreateFromRawPointer.force_creating_from_raw_pointer, value.{1}(), true);'
+                out.put_line(expr.format(to_operand, self.capi_generator.params.get_raw_pointer_method_name))
+        base_name = self.namespace.full_name_array
+        for cast in self.class_generator.class_object.lifecycle_extension.cast_tos:
+            target_type = cast.target_generator.full_wrap_name.replace('::', '.')
+            sharp_class = self.capi_generator.get_or_gen_class(target_type, cast.target_generator)
+            generate_cast(self.wrap_name,
+                          SharpClass.get_relative_name(base_name, sharp_class.full_name_array),
+                          cast.implicit)
+        for cast in self.class_generator.class_object.lifecycle_extension.cast_froms:
+            source_type = cast.source_generator.full_wrap_name
+            sharp_class = self.capi_generator.get_or_gen_class(source_type, cast.source_generator)
+            generate_cast(SharpClass.get_relative_name(base_name, sharp_class.full_name_array), self.wrap_name, True)
+
     def __generate_definition(self, out: FileGenerator):
         out.put_begin_cpp_comments(self.class_generator.params)
         out.put_line('using System.Runtime.InteropServices;\n')
@@ -583,6 +606,8 @@ class SharpClass(object):
                 out.put_line('')
             generate_set_object_definition(self.class_generator.inheritance_traits, out, self)
             self.__generate_down_cast(out)
+            if hasattr(self.class_generator, 'extension_base_class_generator'):
+                self.__generate_cast_name_declaration(out)
         self.namespace.decrease_indent_recursively(out)
 
     def __generate_constructor_definitions(self, definition_header, first_method):

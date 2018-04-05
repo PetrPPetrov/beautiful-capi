@@ -18,16 +18,16 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-project(mixed_semantic_sharp_client LANGUAGES CSharp)
+project(mixed_semantic2_sharp_client LANGUAGES CSharp)
 cmake_minimum_required(VERSION 3.8.2)
 
-add_executable(mixed_semantic_sharp_client
-  ${mixed_semantic_sharp_client_SOURCE_DIR}/Program.cs
-  ${mixed_semantic_sharp_client_SOURCE_DIR}/Properties/AssemblyInfo.cs
+add_executable(mixed_semantic2_sharp_client
+  ${mixed_semantic2_sharp_client_SOURCE_DIR}/Program.cs
+  ${mixed_semantic2_sharp_client_SOURCE_DIR}/Properties/AssemblyInfo.cs
 )
 
-SET_TARGET_PROPERTIES(mixed_semantic_sharp_client PROPERTIES LINKER_LANGUAGE CSharp)
-if(TARGET mixed_semantic_sharp_library)
-  add_dependencies(mixed_semantic_sharp_client mixed_semantic_sharp_library)
+SET_TARGET_PROPERTIES(mixed_semantic2_sharp_client PROPERTIES LINKER_LANGUAGE CSharp)
+if(TARGET mixed_semantic2_sharp_library)
+  add_dependencies(mixed_semantic2_sharp_client mixed_semantic2_sharp_library)
 endif()
-target_link_libraries(mixed_semantic_sharp_client mixed_semantic_sharp_library)
+target_link_libraries(mixed_semantic2_sharp_client mixed_semantic2_sharp_library)
