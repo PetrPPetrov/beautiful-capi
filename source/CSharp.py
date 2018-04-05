@@ -142,7 +142,7 @@ class SharpCapiGenerator(object):
         if not isinstance(exception_traits, ExceptionTraits.ByFirstArgument):
             return
         out.put_line('')
-        out.put_line('public static unsafe void check_and_throw_exception(int exception_code, void* exception_object)')
+        out.put_line('public static unsafe void check_and_throw_exception(uint exception_code, void* exception_object)')
         with IndentScope(out):
             out.put_line('switch (exception_code)')
             with IndentScope(out):
@@ -326,7 +326,7 @@ class SharpNamespace(object):
                 arguments = self.capi_generator.export_function_arguments(func.arguments)
                 exception_traits = self.capi_generator.get_exception_traits(
                     func.generator.function_object.noexcept)
-                exception_traits.exception_traits.modify_c_arguments(arguments)
+                exception_traits.modify_c_arguments(arguments)
                 out.put_line('unsafe static extern {return_type} {name}({arguments});'.format(
                     return_type=func.return_type.c_argument_declaration(),
                     name=func.generator.full_c_name,
@@ -532,8 +532,9 @@ class SharpClass(object):
             for method in self.base.methods:
                 name = method.generator.full_c_name + '_callback_type'
                 arguments = ['void* object_pointer'] + [arg.wrap_argument_declaration() for arg in method.arguments]
-                method.exception_traits.exception_traits.modify_c_arguments(arguments)
+                method.exception_traits.modify_c_arguments(arguments)
                 return_type = method.return_type.c_argument_declaration()
+                out.put_line('[UnmanagedFunctionPointer(CallingConvention.Cdecl)]')
                 out.put_line('unsafe public delegate {0} {1}({2});'.format(return_type, name, ', '.join(arguments)))
             out.put_line('')
 
@@ -605,23 +606,23 @@ class SharpClass(object):
         if isinstance(self.class_generator.lifecycle_traits, RefCountedSemantic):
             out.put_line(import_string)
             arguments = ['void* object_pointer']
-            init_traits.exception_traits.modify_c_arguments(arguments)
+            init_traits.modify_c_arguments(arguments)
             out.put_line('unsafe static extern void {func_name}({arguments});'.format(
                 func_name=self.class_generator.add_ref_method, arguments=', '.join(arguments)))
             out.put_line(import_string)
             arguments = ['void* object_pointer']
-            deinit_traits.exception_traits.modify_c_arguments(arguments)
+            deinit_traits.modify_c_arguments(arguments)
             out.put_line('unsafe static extern void {func_name}({arguments});'.format(
                 func_name=self.class_generator.release_method, arguments=', '.join(arguments)))
         else:
             out.put_line(import_string)
             arguments = ['void* object_pointer']
-            init_traits.exception_traits.modify_c_arguments(arguments)
+            init_traits.modify_c_arguments(arguments)
             out.put_line('unsafe static extern void* {func_name}({arguments});'.format(
                 func_name=self.class_generator.copy_method, arguments=', '.join(arguments)))
             out.put_line(import_string)
             arguments = ['void* object_pointer']
-            deinit_traits.exception_traits.modify_c_arguments(arguments)
+            deinit_traits.modify_c_arguments(arguments)
             out.put_line('unsafe static extern void {func_name}({arguments});'.format(
                 func_name=self.class_generator.delete_method, arguments=', '.join(arguments)))
 
@@ -632,14 +633,14 @@ class SharpClass(object):
         for constructor in self.constructors:
             out.put_line(import_string)
             arguments = self.capi_generator.export_function_arguments(constructor.arguments)
-            constructor.exception_traits.exception_traits.modify_c_arguments(arguments)
+            constructor.exception_traits.modify_c_arguments(arguments)
             out.put_line('unsafe static extern void* {class_name}({arguments});'.format(
                 class_name=constructor.generator.full_c_name,
                 arguments=', '.join(arguments)))
         for method in self.methods:
             out.put_line(import_string)
             arguments = ['void* object_pointer'] + self.capi_generator.export_function_arguments(method.arguments)
-            method.exception_traits.exception_traits.modify_c_arguments(arguments)
+            method.exception_traits.modify_c_arguments(arguments)
             out.put_line('unsafe static extern {return_type} {name}({arguments});'.format(
                 return_type=method.return_type.c_argument_declaration(),
                 name=method.generator.full_c_name,
@@ -679,37 +680,41 @@ class SharpClass(object):
         class_name = self.base.class_generator.c_name
         impl_class = 'ImplementationClass'
         return_type = method.return_type.c_argument_declaration()
-        out.put_line('unsafe static {0} {1}<{2}>({3}* exception_info, {4})'.format(
+        out.put_line('unsafe static {0} {1}<{2}>(out {3} exception_info, {4})'.format(
             return_type,
             '{0}_{1}_callback'.format(class_name, method.generator.c_name),
             impl_class,
             method.exception_traits.exception_info_t(),
             ', '.join(['void* object_pointer'] + [arg.wrap_argument_declaration() for arg in method.arguments])))
         with IndentScope(out):
-            out.put_line('{} exception_info_default;'.format(method.exception_traits.exception_info_t()))
-            out.put_line('if (exception_info != null)')
-            with IndentScope(out):
-                out.put_line('exception_info = &exception_info_default;')
             out.put_line('try')
             with IndentScope(out):
-                out.put_line('exception_info->code = 0;')
-                out.put_line('exception_info->object_pointer = null;')
+                out.put_line('exception_info.code = 0;')
+                out.put_line('exception_info.object_pointer = null;')
                 out.put_line('Type impl_type = typeof({});'.format(impl_class))
-                out.put_line('{0} self = ({0})Pointer.Box(object_pointer, impl_type);'.format(impl_class))
+                out.put_line('GCHandle handle = (GCHandle)(IntPtr) object_pointer;')
+                out.put_line('{0} self = ({0})handle.Target;'.format(impl_class))
+
                 out.put_line('MethodInfo method = impl_type.GetMethod("{}");'.format(method.wrap_name))
-                out.put_line('{}method.Invoke(self, new object[] {{ {} }});'.format(
-                    'return ({})'.format(return_type) if return_type != 'void' else '',
-                    ', '.join(arg.wrap_2_c() for arg in method.arguments)))
+                out.put_line('try')
+                with IndentScope(out):
+                    out.put_line('{}method.Invoke(self, new object[] {{ {} }});'.format(
+                        'return ({})'.format(return_type) if return_type != 'void' else '',
+                        ', '.join(arg.wrap_2_c() for arg in method.arguments)))
+                out.put_line('catch(TargetInvocationException tiex) ')
+                with IndentScope(out):
+                    out.put_line('throw tiex.InnerException;')
             exception_classes = self.__sort_exceptions(method.exception_traits.classes)
             for exception in exception_classes:
                 out.put_line('catch ({} exception_object)'.format(exception.full_wrap_name))
                 with IndentScope(out):
-                    out.put_line('exception_info->code = {};'.format(exception.class_generator.exception_code))
-                    out.put_line('exception_info->object_pointer = exception_object.{detach}();'.format(
+                    out.put_line('exception_info.code = {};'.format(exception.class_generator.exception_code))
+                    out.put_line('exception_info.object_pointer = exception_object.{detach}();'.format(
                         detach=exception.capi_generator.params.detach_method_name))
-            out.put_line('catch ')
+            out.put_line('catch')
             with IndentScope(out):
-                out.put_line('exception_info->code = 1;')
+                out.put_line('exception_info.code = 1;')
+                out.put_line('exception_info.object_pointer = null;')
             if return_type != 'void':
                 out.put_line('return new {}();'.format(return_type))
         out.put_line('')
@@ -727,7 +732,10 @@ class SharpClass(object):
                     method.wrap_name,
                     class_name + '_' + method.generator.c_name,
                     impl_class))
-            out.put_line('result.SetObjectPointer(Pointer.Unbox(implementation_class));')
+            out.put_line('GCHandle handle = GCHandle.Alloc(implementation_class);')
+            out.put_line('IntPtr ptr = (IntPtr)handle;')
+            out.put_line('result.SetObjectPointer((void*)ptr);')
+            # out.put_line('result.SetObjectPointer(Pointer.Unbox(implementation_class));')
             out.put_line('return result;')
         for method in self.base.methods:
             self.__generate_method_callback(method, out)
@@ -1616,7 +1624,7 @@ class SharpExceptionTraits(object):
         return params.sharp_output_folder + '/' + result + '.cs'
 
     def __get_c_function_call(self, c_function_name: str, arguments: [str]) -> str:
-        arguments.insert(0, '&{exception_info}'.format(exception_info=self.params.exception_info_argument_name))
+        arguments.insert(0, 'out {exception_info}'.format(exception_info=self.params.exception_info_argument_name))
         return '{function_name}({arguments})'.format(function_name=c_function_name, arguments=', '.join(arguments))
 
     def __generate_c_call(self, out: FileGenerator, instructions: ([str], str)) -> str:
@@ -1655,8 +1663,8 @@ class SharpExceptionTraits(object):
     def generate_exception_info(project_name: str, out: FileGenerator):
         out.put_line('unsafe public struct beautiful_capi_{}_exception_info_t'.format(project_name))
         with IndentScope(out):
-            out.put_line('public int code; /* value from beautiful_capi_callback_exception_code_t enumeration */')
-            out.put_line('public void* object_pointer; /* exception object pointer */')
+            out.put_line('public System.UInt32 code;')
+            out.put_line('public void* object_pointer;')
         out.put_line('')
 
     @staticmethod
@@ -1679,6 +1687,13 @@ class SharpExceptionTraits(object):
             else:
                 out.put_line('beautiful_capi_{}_copy_exception_error = 2'.format(project_name))
         out.put_line('')
+
+    def modify_c_arguments(self, arguments: [str]):
+        if isinstance(self.exception_traits, ExceptionTraits.ByFirstArgument):
+            arguments.insert(0, 'out {exception_info_type} {exception_info}'.format(
+                exception_info_type=self.exception_info_t(),
+                exception_info=self.params.exception_info_argument_name
+            ))
 
 
 class SharpFileCache(object):

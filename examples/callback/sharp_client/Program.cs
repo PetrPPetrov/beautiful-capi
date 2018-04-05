@@ -68,11 +68,13 @@ namespace ConsoleApp1
 
             CustomPrinterImplementation my_printer_implementation = new CustomPrinterImplementation();
             printing_device = Example.Functions.create_callback_for_printer(my_printer_implementation);
-            famous_person.Dump(printing_device);
+            famous_person.Dump(printing_device);            
 
             // CustomPrinterImplementation.Print() will throw exception (Exception.NullArgument)
             // and this exception will be caught by the library code
             famous_person.Print(printing_device, "");
+            Console.WriteLine("Done");
+            Console.ReadKey();
         }
     }
 }
