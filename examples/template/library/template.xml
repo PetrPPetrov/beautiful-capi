@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <template:api xmlns:template="http://gkmsoft.ru/beautifulcapi" project_name="Template">
   <namespace name="Example">
+    <mapped_type name="const char*"  c_type="const char*" implementation_type="const char*">
+      <cpp wrap_type="const char*"/>
+      <sharp wrap_type="string" wrap_2_c="{expression}" c_2_wrap="{expression}"/>
+    </mapped_type>
     <template>
       <argument name="WorkType" type="typename"/>
       <instantiation>
@@ -23,6 +27,7 @@
         <method name="SetZ">
           <argument type="WorkType" name="z"/>
         </method>
+        <method name="dump" const="true"/>
       </class>
     </template>
     <template>
@@ -39,6 +44,7 @@
         <method name="SetW">
           <argument type="WorkType" name="x"/>
         </method>
+        <method name="dump" const="true"/>
       </class>
     </template>
     <template>
@@ -59,6 +65,7 @@
         <method name="SetPosition">
           <argument type="Example::Position&lt;WorkType>" name="position"/>
         </method>
+        <method name="dump" const="true"/>
       </class>
     </template>
     <template>
@@ -97,6 +104,7 @@
         <method name="GetItem" return="T" const="true">
           <argument type="int" name="index"/>
         </method>
+        <method name="dump" const="true"/>
       </class>
     </template>
     <template>
@@ -117,6 +125,7 @@
         <method name="GetItem" return="T" const="true">
           <argument type="int" name="index"/>
         </method>
+        <method name="dump" const="true"/>
       </class>
     </template>
     <template>

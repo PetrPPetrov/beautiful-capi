@@ -5,6 +5,7 @@ __pycache__/
 /build/
 /bin/
 /examples/*/library/**/include/
+/examples/*/library/**/sharp_output/
 /tests/file_options/library/include/
 AutoGen*
 auto_gen*

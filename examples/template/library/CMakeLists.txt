@@ -17,7 +17,6 @@
 # You should have received a copy of the GNU General Public License
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
-
 project(template)
 
 cmake_minimum_required(VERSION 2.8)
@@ -39,4 +38,8 @@ add_library(template SHARED
   ${template_SOURCE_DIR}/source/ModelImpl.h
 )
 
-add_bcapi_generation()
+add_bcapi_generation(sharp "sharp_output")
+
+if (${CSHARP_ENABLED})
+    add_subdirectory(sharp_output)
+endif()

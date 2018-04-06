@@ -129,6 +129,8 @@ class TBeautifulCapiParams(object):
         self.internal_snippets_folder_filled = False
         self.api_keys_folder = ""
         self.api_keys_folder_filled = False
+        self.generate_sharp_library = True
+        self.generate_sharp_library_filled = False
         self.copyright_headers = []
         self.automatic_generated_warnings = []
         self.additional_include_directories = []
@@ -307,6 +309,10 @@ class TBeautifulCapiParams(object):
             cur_attr = dom_node.getAttribute("api_keys_folder")
             self.api_keys_folder = cur_attr
             self.api_keys_folder_filled = True
+        if dom_node.hasAttribute("generate_sharp_library"):
+            cur_attr = dom_node.getAttribute("generate_sharp_library")
+            self.generate_sharp_library = string_to_bool(cur_attr)
+            self.generate_sharp_library_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:

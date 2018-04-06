@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <callback:api xmlns:callback="http://gkmsoft.ru/beautifulcapi" project_name="Callback">
   <namespace name="Example">
+    <mapped_type name="const char*" c_type="const char*" implementation_type="const char*">
+      <cpp wrap_type="const char*"/>
+      <sharp wrap_type="string" wrap_2_c="{expression}" c_2_wrap="{expression}"/>
+    </mapped_type>
+    <mapped_type name="unsigned int" c_type="uint32_t" implementation_type="unsigned int">
+      <cpp wrap_type="unsigned int"/>
+      <sharp wrap_type="uint" wrap_2_c="{expression}" c_2_wrap="{expression}"/>
+    </mapped_type>
     <enumeration name="EPrintingDevice" underlying_type="int">
       <item name="printer" value="1"/>
       <item name="plotter" value="2"/>
@@ -53,6 +61,10 @@
     </class>
   </namespace>
   <namespace name="Exception">
+    <mapped_type name="const char*" c_type="const char*" implementation_type="const char*">
+      <cpp wrap_type="const char*"/>
+      <sharp wrap_type="string" wrap_2_c="{expression}" c_2_wrap="{expression}"/>
+    </mapped_type>
     <class name="Generic" exception="true" lifecycle="copy_semantic" implementation_class_name="Exception::GenericImpl" implementation_class_header="Exception/GenericImpl.h">
       <constructor name="New"/>
       <method name="GetErrorText" return="const char*" noexcept="true" const="true"/>

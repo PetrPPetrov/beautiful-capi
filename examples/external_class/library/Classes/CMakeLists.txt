@@ -33,4 +33,10 @@ add_library(classes SHARED
   ${classes_SOURCE_DIR}/source/ClassC.h
 )
 
-add_bcapi_generation()
+add_bcapi_generation(sharp "sharp_output")
+
+if (${CSHARP_ENABLED})
+    add_subdirectory(sharp_output)
+endif()
+
+

@@ -23,7 +23,7 @@ project(unit_test)
 cmake_minimum_required(VERSION 2.8)
 
 find_package(PythonInterp 3.4 REQUIRED)
-find_package(Boost REQUIRED)
+find_package(Boost REQUIRED COMPONENTS unit_test_framework)
 
 include(../../../UseBCapi.cmake)
 
@@ -39,4 +39,4 @@ add_library(unit_test SHARED
   ${unit_test_SOURCE_DIR}/source/AddressImpl.h
 )
 
-add_bcapi_generation_with_test()
+add_bcapi_generation(tests "include/AutoGenUnitTests.h")

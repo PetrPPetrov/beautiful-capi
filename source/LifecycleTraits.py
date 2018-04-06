@@ -79,6 +79,9 @@ class LifecycleTraits(object):
     def __create_exception_traits(self, class_generator):
         self.create_exception_traits(class_generator.class_object, class_generator.capi_generator)
 
+    def generate_raw_copy_constructor_body_definition(self, out: FileGenerator, class_generator, copy_object):
+        pass
+
     @staticmethod
     def generate_copy_constructor_declaration(out: FileGenerator, class_generator):
         out.put_line('inline {class_short_name}(const {class_name}& other);'.format(

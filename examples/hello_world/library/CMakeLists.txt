@@ -34,4 +34,8 @@ add_library(hello_world SHARED
   ${hello_world_SOURCE_DIR}/source/PrinterImpl.cpp
 )
 
-add_bcapi_generation()
+add_bcapi_generation(sharp "sharp_output")
+
+if (${CSHARP_ENABLED})
+    add_subdirectory(sharp_output)
+endif()

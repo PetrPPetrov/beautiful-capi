@@ -36,8 +36,8 @@ class ExternalNamespaceGenerator(object):
         return self.namespace_object.name
 
     @property
-    def full_name_array(self) -> []:
-        return ([self.parent_namespace.full_name] + [self.name]) if self.parent_namespace else [self.name]
+    def full_name_array(self) -> [str]:
+        return self.parent_namespace.full_name_array + [self.name] if self.parent_namespace else [self.name]
 
     @property
     def full_name(self) -> str:
@@ -47,3 +47,6 @@ class ExternalNamespaceGenerator(object):
     def full_wrap_name(self) -> str:
         return self.full_name
 
+    @property
+    def wrap_name(self) -> str:
+        return self.name

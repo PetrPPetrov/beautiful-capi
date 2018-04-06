@@ -24,10 +24,18 @@
 
 #include <vector>
 #include <iostream>
+#include <sstream>
+#include <fstream>
+#include <string>
 #include "PositionImpl.h"
 
 namespace Example
 {
+    template<typename WorkType>
+    class ModelImpl;
+    template <typename WorkType>
+    std::ostream& operator<<(std::ostream& os, const ModelImpl<WorkType>& model);
+
     template<typename WorkType>
     class ModelImpl
     {
@@ -78,7 +86,21 @@ namespace Example
                 delete this;
             }
         }
+        friend std::ostream& operator<< <WorkType>(std::ostream& os, const ModelImpl<WorkType>&);
+        void dump() const
+        {
+            std::cout << *this;
+        }
     };
+
+    template <typename WorkType> 
+    std::ostream& operator<<(std::ostream& os, const ModelImpl<WorkType>& model)
+    {
+        os << "model name = " << model.GetName() << std::endl;
+        os << "model position:" << std::endl; 
+        os << model.GetPosition() << std::endl;
+        return os;
+    }
 
     template<typename WorkType>
     inline void intrusive_ptr_add_ref(ModelImpl<WorkType>* model)

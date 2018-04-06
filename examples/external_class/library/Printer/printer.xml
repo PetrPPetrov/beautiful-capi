@@ -2,7 +2,7 @@
 <printer:api xmlns:printer="http://gkmsoft.ru/beautifulcapi" project_name="Printer" >
   <namespace name="PrinterNS" overload_suffix_mode="Silent">
     <external_library input_xml_file="../Components/components.xml" params_xml_file="../Components/components_params.xml"/>
-    <external_namespace name="CompC" include="CompC.h" detach_method_name="DetachObject" get_raw_pointer_method_name="GetPtr">
+    <external_namespace name="CompC" include="CompC.h" detach_method_name="DetachObject" get_raw_pointer_method_name="GetPtr" project_name="comp_c">
       <class name="ComponentC" wrap_name="ComponentCPtr"/>
       <enumeration name="Align" underlying_type="int8_t"/>
     </external_namespace>

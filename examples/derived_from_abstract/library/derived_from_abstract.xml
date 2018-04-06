@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <derived_from_abstract:api xmlns:derived_from_abstract="http://gkmsoft.ru/beautifulcapi" project_name="DerivedFromAbstract">
   <namespace name="DerivedFromAbstract">
+    <mapped_type name="const char*" c_type="const char*" implementation_type="const char*">
+      <cpp wrap_type="const char*"/>
+      <sharp wrap_type="string" wrap_2_c="{expression}" c_2_wrap="{expression}"/>
+    </mapped_type>
     <class name="Animal" lifecycle="raw_pointer_semantic" abstract="true" implementation_class_name="DerivedFromAbstract::AnimalImpl" implementation_class_header="AnimalImpl.h">
       <method name="Move"/>
       <method name="Sound"/>

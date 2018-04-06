@@ -42,6 +42,7 @@ from UnitTestGenerator import TestGenerator
 from OverloadSuffixes import process as process_overload_suffixes
 from EnumGenerator import process_enum_impl_functions
 from Parser import TExternalNamespace, TExternalClass, TExternalEnumeration
+from CSharp import generate as generate_sharp_code
 
 
 class Capi(object):
@@ -49,6 +50,7 @@ class Capi(object):
                  input_filename,
                  input_params_filename,
                  output_folder=None,
+                 sharp_output_folder=None,
                  output_wrap_file_name=None,
                  internal_snippets_folder=None,
                  api_keys_folder=None,
@@ -59,6 +61,7 @@ class Capi(object):
         self.input_xml = input_filename
         self.input_params = parse(input_params_filename)
         self.output_folder = output_folder
+        self.sharp_output_folder = sharp_output_folder
         self.output_wrap_file_name = output_wrap_file_name
         self.internal_snippets_folder = internal_snippets_folder
         self.api_keys_folder = api_keys_folder
@@ -71,6 +74,8 @@ class Capi(object):
                 shutil.rmtree(self.output_folder)
             if os.path.exists(self.internal_snippets_folder):
                 shutil.rmtree(self.internal_snippets_folder)
+            if os.path.exists(self.sharp_output_folder):
+                shutil.rmtree(self.sharp_output_folder)
         self.verbosity = verbosity
         self.unit_tests_generator = None
 
@@ -167,7 +172,7 @@ class Capi(object):
                 print('loading external library: {0}'.format(external_xml))
             external_params = full_relative_path_from_candidates(
                 external_lib.params_xml_file, input_xml_folder, self.params_description.additional_include_directories)
-            new_capi = Capi(external_xml, external_params)
+            new_capi = Capi(external_xml, external_params, None, None, None, None, None, None, None)
             new_capi.params_description = load(new_capi.input_params)
             new_params = new_capi.params_description
             new_params.verbosity = self.params_description.verbosity
@@ -211,6 +216,8 @@ class Capi(object):
                         process_external_enum(enum, external_namespace)
                     external_namespaces.append(external_namespace)
             process_external_namespaces(new_capi.__process(), namespace.external_namespaces)
+            if namespace.external_namespaces:
+                namespace.external_namespaces[-1].project_name = new_capi.api_description.project_name
         for nested_namespace in namespace.namespaces:
             self.__load_external(nested_namespace)
 
@@ -259,10 +266,18 @@ class Capi(object):
         if self.unit_tests_generator:
             self.unit_tests_generator.generate(namespace_generators)
 
+        if self.sharp_output_folder:
+            if self.params_description.shared_library_name_filled:
+                generate_sharp_code(file_cache, capi_generator, namespace_generators)
+            else:
+                print('Warning: To generate the C# code, you must specify shared_library_name in the params file')
+        file_cache.file2generator.clear()
+
     def generate(self):
         self.params_description = load(self.input_params)
         self.params_description.verbosity = self.verbosity
         self.params_description.output_folder = self.output_folder
+        self.params_description.sharp_output_folder = self.sharp_output_folder
         self.params_description.internal_snippets_folder = self.internal_snippets_folder
         self.params_description.api_keys_folder = self.api_keys_folder
         self.params_description.output_wrap_file_name = self.output_wrap_file_name
@@ -296,6 +311,9 @@ def main():
         '-o', '--output-folder', nargs=None, default='./output', dest='output_folder',
         help='specifies output folder for generated files')
     parser.add_argument(
+        '-S', '--sharp-output-folder', nargs=None, default='', dest='sharp_output_folder',
+        help='specifies output folder for generated files for C#')
+    parser.add_argument(
         '-w', '--output-wrap-file-name', nargs=None, default='./capi_wrappers.cpp', dest='output_wrap',
         help='specifies output file name for wrapper C-functions')
     parser.add_argument(
@@ -305,7 +323,7 @@ def main():
         '-k', '--api-keys-folder', nargs=None, default='./keys', dest='api_keys_folder',
         help='specifies output folder for generated API keys')
     parser.add_argument('-c', '--clean', dest='clean', action='store_true',
-                        help='cleans input and snippets directories')
+                        help='cleans input, sharp output and snippets directories')
     parser.set_defaults(clean=False)
     parser.add_argument('-v', '--version', dest='version', action='store_true',
                         help='shows version number')
@@ -331,6 +349,7 @@ def main():
         args.input,
         args.params,
         args.output_folder,
+        args.sharp_output_folder,
         args.output_wrap,
         args.output_snippets,
         args.api_keys_folder,

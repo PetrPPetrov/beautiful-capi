@@ -47,4 +47,8 @@ add_library(down_cast SHARED
   ${down_cast_SOURCE_DIR}/source/CircleFactory.cpp
 )
 
-add_bcapi_generation()
+add_bcapi_generation(sharp "sharp_output")
+
+if(${CSHARP_ENABLED})
+    add_subdirectory(sharp_output)
+endif()

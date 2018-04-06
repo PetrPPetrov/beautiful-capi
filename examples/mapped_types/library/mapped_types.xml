@@ -1,14 +1,26 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <mapped_types:api xmlns:mapped_types="http://gkmsoft.ru/beautifulcapi" project_name="MappedTypes">
   <namespace name="MappedTypes" overload_suffix_mode="Silent">
-    <mapped_type name="int" wrap_type="int32_t" c_type="int32_t" implementation_type="int"/>
-    <mapped_type name="std::string" wrap_type="std::string" argument_wrap_type="const std::string&amp;" c_type="const char*" implementation_type="std::string" c_2_impl="std::string({expression})" c_2_wrap="std::string({expression})" impl_2_c="{expression}.c_str()" wrap_2_c="{expression}.c_str()">
-      <include_header file="string" system="true"/>
+    <mapped_type name="int" c_type="int32_t" implementation_type="int">
+      <cpp wrap_type="int"/>
+      <sharp wrap_type="int" c_2_wrap="{expression}" wrap_2_c="{expression}"/>
     </mapped_type>
-    <mapped_type name="c_string" wrap_type="std::string" argument_wrap_type="const std::string&amp;" c_type="const char*" implementation_type="const char*" c_2_impl="{expression}" c_2_wrap="std::string({expression})" impl_2_c="{expression}" wrap_2_c="{expression}.c_str()">
-      <include_header file="string" system="true"/>
+    <mapped_type name="std::string" c_type="const char*" implementation_type="std::string" c_2_impl="std::string({expression})" impl_2_c="{expression}.c_str()">
+      <cpp wrap_type="std::string" argument_wrap_type="const std::string&amp;" c_2_wrap="std::string({expression})" wrap_2_c="{expression}.c_str()">
+        <include_header file="string" system="true"/>
+      </cpp>
+      <sharp wrap_type="string" c_2_wrap="{expression}" wrap_2_c="{expression}"/>
     </mapped_type>
-    <mapped_type name="bool" wrap_type="bool" c_type="uint8_t" implementation_type="bool" c_2_impl="({expression} ? true : false)" c_2_wrap="({expression} ? true : false)"/>
+    <mapped_type name="c_string" c_type="const char*" implementation_type="const char*" c_2_impl="{expression}" impl_2_c="{expression}">
+      <cpp wrap_type="std::string" argument_wrap_type="const std::string&amp;" c_2_wrap="std::string({expression})" wrap_2_c="{expression}.c_str()">
+        <include_header file="string" system="true"/>
+      </cpp>
+      <sharp wrap_type="string" c_2_wrap="{expression}" wrap_2_c="{expression}"/>
+    </mapped_type>
+    <mapped_type name="bool" c_type="uint8_t" implementation_type="bool" c_2_impl="({expression} ? true : false)" >
+      <cpp wrap_type="bool" c_2_wrap="({expression} ? true : false)"/>
+      <sharp wrap_type="bool" c_2_wrap="{expression}" wrap_2_c="{expression}"/>
+    </mapped_type>
     <class name="Person" lifecycle="copy_semantic" implementation_class_name="MappedTypes::PersonImpl" implementation_class_header="MappedTypes.h">
       <constructor name="Default"/>
       <property name="Age" type="int"/>
@@ -20,7 +32,10 @@
       </method>
     </class>
     <class name="Device" lifecycle="copy_semantic" implementation_class_name="MappedTypes::DeviceImpl" implementation_class_header="MappedTypes.h">
-      <mapped_type name="bool" wrap_type="bool" c_type="uint32_t" implementation_type="bool" c_2_impl="({expression} ? true : false)" c_2_wrap="({expression} ? true : false)"/>
+      <mapped_type name="bool" c_type="uint32_t" implementation_type="bool" c_2_impl="({expression} ? true : false)" >
+        <cpp wrap_type="bool" c_2_wrap="({expression} ? true : false)"/>
+        <sharp wrap_type="bool" c_2_wrap="{expression}" wrap_2_c="{expression}"/>
+      </mapped_type>
       <constructor name="Default"/>
       <property name="Name" type="std::string" get_const="true"/>
       <property name="Busy" type="bool" get_const="true" get_prefix="Is"/>

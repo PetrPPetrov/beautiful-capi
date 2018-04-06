@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<params:params xmlns:params="http://gkmsoft.ru/beautifulcapi-params" warn_when_builtin_type_used="false">
+<params:params xmlns:params="http://gkmsoft.ru/beautifulcapi-params"
+               warn_when_builtin_type_used="false"
+               shared_library_name="printer"
+
+>
   <copyright_header>/*
  * Beautiful Capi generates beautiful C API wrappers for your C++ classes
  * Copyright (C) 2015 Petr Petrovich Petrov

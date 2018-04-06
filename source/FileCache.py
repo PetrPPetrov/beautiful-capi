@@ -126,7 +126,7 @@ class FileCache(object):
             namespace_path[0] + self.params.fwd_header_suffix + '.h'
         )
 
-    def __get_cached_generator(self, file_name: str) -> FileGenerator:
+    def get_cached_generator(self, file_name: str) -> FileGenerator:
         if file_name in self.file2generator:
             return self.file2generator[file_name]
         else:
@@ -135,34 +135,34 @@ class FileCache(object):
             return new_file_generator
 
     def get_file_for_root_header(self) -> FileGenerator:
-        return self.__get_cached_generator(os.path.join(self.base_path, self.params.root_header))
+        return self.get_cached_generator(os.path.join(self.base_path, self.params.root_header))
 
     def get_file_for_namespace(self, path_to_namespace: [str]) -> FileGenerator:
         output_file_name = self.__get_file_name_for_namespace(path_to_namespace, OsJoin(self.base_path))
-        return self.__get_cached_generator(output_file_name)
+        return self.get_cached_generator(output_file_name)
 
     def get_file_for_enums(self, path_to_namespace: [str]) -> FileGenerator:
         output_file_name = self.__get_file_name_for_enums(path_to_namespace, OsJoin(self.base_path))
-        return self.__get_cached_generator(output_file_name)
+        return self.get_cached_generator(output_file_name)
 
     def get_file_for_class_decl(self, path_to_class: [str]) -> FileGenerator:
         output_file_name = self.__get_file_name_for_class_decl(path_to_class, OsJoin(self.base_path))
-        return self.__get_cached_generator(output_file_name)
+        return self.get_cached_generator(output_file_name)
 
     def get_file_for_class(self, path_to_class: [str]) -> FileGenerator:
         output_file_name = self.__get_file_name_for_class(path_to_class, OsJoin(self.base_path))
-        return self.__get_cached_generator(output_file_name)
+        return self.get_cached_generator(output_file_name)
 
     def get_file_for_capi(self, path_to_namespace: [str]) -> FileGenerator:
         output_file_name = self.__get_file_name_for_capi(path_to_namespace, OsJoin(self.base_path))
-        return self.__get_cached_generator(output_file_name)
+        return self.get_cached_generator(output_file_name)
 
     def get_file_for_fwd(self, path_to_namespace: [str]) -> FileGenerator:
         output_file_name = self.__get_file_name_for_fwd(path_to_namespace, OsJoin(self.base_path))
-        return self.__get_cached_generator(output_file_name)
+        return self.get_cached_generator(output_file_name)
 
     def get_file_for_check_and_throw_exception(self) -> FileGenerator:
-        return self.__get_cached_generator(os.path.join(self.base_path, self.params.check_and_throw_exception_filename))
+        return self.get_cached_generator(os.path.join(self.base_path, self.params.check_and_throw_exception_filename))
 
     def namespace_header(self, path_to_namespace: [str]) -> str:
         return self.__get_file_name_for_namespace(path_to_namespace, PosixJoin())

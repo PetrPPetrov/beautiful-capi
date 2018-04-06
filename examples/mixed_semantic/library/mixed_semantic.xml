@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <mixed_semantic:api xmlns:mixed_semantic="http://gkmsoft.ru/beautifulcapi" project_name="MixedSemantic" >
   <namespace name="MixedSemantic" overload_suffix_mode="Silent">
+    <mapped_type name="const char*" c_type="const char*" implementation_type="const char*">
+      <cpp wrap_type="const char*"/>
+      <sharp wrap_type="string" c_2_wrap="{expression}" wrap_2_c="{expression}"/>
+    </mapped_type>
+    <mapped_type name="unsigned int" c_type="uint32_t" implementation_type="unsigned int">
+      <cpp wrap_type="unsigned int"/>
+      <sharp wrap_type="uint" c_2_wrap="{expression}" wrap_2_c="{expression}"/>
+    </mapped_type>
     <class name="Name" lifecycle="copy_semantic" implementation_class_name="MixedSemantic::NameImpl" implementation_class_header="NameImpl.h" >
       <constructor name="FullName">
         <argument name="FirstName" type="const char*"/>

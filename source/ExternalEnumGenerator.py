@@ -32,6 +32,10 @@ class ExternalEnumGenerator(object):
         return self.enum_object.name
 
     @property
+    def wrap_name(self) -> str:
+        return self.name
+
+    @property
     def full_name(self) -> str:
         return '::'.join([self.parent_generator.full_wrap_name, self.name]) if self.parent_generator else self.name
 
