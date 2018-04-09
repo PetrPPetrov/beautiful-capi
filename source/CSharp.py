@@ -1096,7 +1096,7 @@ class SharpEnum(object):
         out.put_line('')
 
     def c_argument_declaration(self) -> str:
-        return self.enum_generator.enum_object.underlying_type
+        return 'int'
 
     def implementation_2_c_var(self, result_var: str, expression: str) -> ([str], str):
         casting_expression = '({c_type}){expression}'.format(
@@ -1549,7 +1549,8 @@ class SharpRawPointerSemantic(SharpLifecycleTraits):
             RawPointerSemantic.generate_raw_copy_constructor_body_definition(out, sharp_class, '')
 
     def __generate_delete_method(self, out: FileGenerator, sharp_class):
-        out.put_line('unsafe public void {delete_method}()'.format(
+        out.put_line('{new} unsafe public void {delete_method}()'.format(
+            new='new ' if sharp_class.base else '',
             delete_method=self.params.delete_method_name
         ))
         with IndentScope(out):

@@ -23,7 +23,7 @@ project(unit_test)
 cmake_minimum_required(VERSION 2.8)
 
 find_package(PythonInterp 3.4 REQUIRED)
-find_package(Boost REQUIRED COMPONENTS unit_test_framework)
+find_package(Boost REQUIRED)
 
 include(../../../UseBCapi.cmake)
 
