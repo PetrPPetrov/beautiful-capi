@@ -38,19 +38,12 @@ namespace sharp_client
             b.SetValue("another string");
             c.SetValue(3.14);
 
-
-
             printer.Show(comp_a);
             printer.Show(comp_b);
             printer.Show(comp_c);
 
-
             b.SetValue("string");
             printer.Show(comp_b);
-
-            Console.Write("Press any key to close programm...");
-            Console.ReadKey();
-
         }
     }
 }
