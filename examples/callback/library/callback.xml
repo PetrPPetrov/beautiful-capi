@@ -9,6 +9,11 @@
       <cpp wrap_type="unsigned int"/>
       <sharp wrap_type="uint" wrap_2_c="{expression}" c_2_wrap="{expression}"/>
     </mapped_type>
+    <mapped_type name="void*" c_type="void*" implementation_type="void*">
+      <cpp wrap_type="void*"/>
+      <sharp wrap_type="IntPtr" wrap_2_c="{expression}" c_2_wrap="{expression}"/>
+    </mapped_type>
+
     <enumeration name="EPrintingDevice" underlying_type="int">
       <item name="printer" value="1"/>
       <item name="plotter" value="2"/>

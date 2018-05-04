@@ -54,6 +54,7 @@ class SharpCapiGenerator(object):
         self.main_exception_traits = SharpExceptionTraits(capi_generator.main_exception_traits, self.params)
         self.root_namespaces = []
         self.full_name_2_sharp_object = {}
+        self.generate_string_marshaler = False
 
     def get_exception_traits(self, no_except: bool):
         if no_except:
@@ -145,7 +146,7 @@ class SharpCapiGenerator(object):
         if not isinstance(exception_traits, ExceptionTraits.ByFirstArgument):
             return
         out.put_line('')
-        out.put_line('public static unsafe void check_and_throw_exception(uint exception_code, void* exception_object)')
+        out.put_line('public static unsafe void check_and_throw_exception(uint exception_code, IntPtr exception_object)')
         with IndentScope(out):
             out.put_line('switch (exception_code)')
             with IndentScope(out):
@@ -180,11 +181,13 @@ class SharpCapiGenerator(object):
         filename = params.sharp_output_folder + '/' + params.check_and_throw_exception_filename.format(
             project_name=project_name).replace('.h', '.cs')
         out = FileGenerator(filename)
-        self.main_exception_traits.generate_exception_info(project_name, out)
-        self.main_exception_traits.generate_exception_code(project_name, self, out)
-        out.put_line('namespace beautiful_capi_{}'.format(self.capi_generator.api_root.project_name))
+        out.put_line('using System;')
+        out.put_line('')
+        self.main_exception_traits.generate_exception_info(out)
+        self.main_exception_traits.generate_exception_code(self, out)
+        out.put_line('namespace {}'.format(self.params.beautiful_capi_namespace))
         with IndentScope(out):
-            out.put_line('public static class Functions')
+            out.put_line('public static partial class Functions')
             with IndentScope(out):
                 self.generate__check_and_throw_exception__function(out)
 
@@ -196,9 +199,47 @@ class SharpCapiGenerator(object):
             namespaces.append(sharp_namespace)
         self.root_namespaces = namespaces
 
+    def __generate_string_marshaler(self):
+        if self.generate_string_marshaler:
+            namespace = self.params.beautiful_capi_namespace
+            definition_header = self.file_cache.get_file_for_class([namespace, 'StringMarshaler'])
+            definition_header.put_begin_cpp_comments(self.params)
+            definition_header.put_line('using System;')
+            definition_header.put_line('using System.Runtime.InteropServices;\n')
+            definition_header.put_line('namespace {}'.format(namespace))
+            with IndentScope(definition_header):
+                definition_header.put_line('class StringMarshaler : ICustomMarshaler')
+                with IndentScope(definition_header):
+                    definition_header.put_line('public object MarshalNativeToManaged(IntPtr pNativeData)')
+                    with IndentScope(definition_header, ending='}\n'):
+                        definition_header.put_line('return Marshal.PtrToStringAnsi(pNativeData);')
+                    definition_header.put_line('public IntPtr MarshalManagedToNative(object ManagedObj)')
+                    with IndentScope(definition_header, ending='}\n'):
+                        definition_header.put_line('return IntPtr.Zero;')
+                    definition_header.put_line('public void CleanUpNativeData(IntPtr pNativeData)')
+                    with IndentScope(definition_header, ending='}\n'):
+                        pass
+                    definition_header.put_line(' public void CleanUpManagedData(object ManagedObj)')
+                    with IndentScope(definition_header, ending='}\n'):
+                        pass
+                    definition_header.put_line('public int GetNativeDataSize()')
+                    with IndentScope(definition_header, ending='}\n'):
+                        definition_header.put_line('return IntPtr.Size;')
+                    definition_header.put_line('static readonly StringMarshaler instance = new StringMarshaler();\n')
+                    definition_header.put_line('public static ICustomMarshaler GetInstance(string cookie)')
+                    with IndentScope(definition_header):
+                        definition_header.put_line('return instance;')
+
+    def generate_string_marshaling(self, out: FileGenerator, return_type: str,):
+        if return_type == 'string':
+            self.generate_string_marshaler = True
+            expr = '[return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof({}.StringMarshaler))]'
+            out.put_line(expr.format(self.params.beautiful_capi_namespace))
+
     def generate_definition(self):
         for namespace in self.root_namespaces:
             namespace.generate_definition()
+        self.__generate_string_marshaler()
 
     def generate(self, root_namespaces: [NamespaceGenerator]):
         self.__generate(root_namespaces)
@@ -318,7 +359,7 @@ class SharpNamespace(object):
         out.put_line('using System.Runtime.InteropServices;')
         out.put_line('')
         self.increase_indent_recursively(out)
-        out.put_line('public static class Functions')
+        out.put_line('public static partial class Functions')
         with IndentScope(out):
             import_string = '[DllImport("{dll_name}.dll", CallingConvention = {calling_convention})]'.format(
                 dll_name=self.namespace_generator.params.shared_library_name,
@@ -427,7 +468,7 @@ class SharpClass(object):
                                                        namespace.capi_generator)
         self.enums = []
         self.base = None
-        self.template_arguments = []
+        self.__template_arguments = []
 
     @property
     def is_template(self):
@@ -500,7 +541,7 @@ class SharpClass(object):
 
     @staticmethod
     def c_argument_declaration() -> str:
-        return 'void*'
+        return 'IntPtr'
 
     def c_2_wrap_var(self, result_var: str, expression: str) -> ([str], str):
         parent_full_name = '.'.join(self.namespace.full_name_array)
@@ -527,7 +568,7 @@ class SharpClass(object):
             expression=expression,
             get_raw_pointer_method=self.class_generator.get_raw_pointer_method_name)
         if result_var:
-            return ['void* {result_var} = {internal_expression};'.format(
+            return ['IntPtr {result_var} = {internal_expression};'.format(
                 result_var=result_var,
                 internal_expression=internal_expression
             )], result_var
@@ -538,11 +579,19 @@ class SharpClass(object):
         if self.class_generator.is_callback:
             for method in self.base.methods:
                 name = method.generator.full_c_name + '_callback_type'
-                arguments = ['void* object_pointer'] + [arg.wrap_argument_declaration() for arg in method.arguments]
+                arguments = ['IntPtr object_pointer'] + [arg.wrap_argument_declaration() for arg in method.arguments]
                 method.exception_traits.modify_c_arguments(arguments)
                 return_type = method.return_type.c_argument_declaration()
                 out.put_line('[UnmanagedFunctionPointer(CallingConvention.Cdecl)]')
                 out.put_line('unsafe public delegate {0} {1}({2});'.format(return_type, name, ', '.join(arguments)))
+            if isinstance(self.lifecycle_traits, SharpRefCountedSemantic):
+                add_ref_func_name = self.base.class_generator.full_c_name + '_add_ref_callback_type'
+                release_func_name = self.base.class_generator.full_c_name + '_release_callback_type'
+                out.put_line('[UnmanagedFunctionPointer(CallingConvention.Cdecl)]')
+                out.put_line('unsafe public delegate void {}(IntPtr object_pointer);'.format(add_ref_func_name))
+                out.put_line('[UnmanagedFunctionPointer(CallingConvention.Cdecl)]')
+                out.put_line('unsafe public delegate void {}(IntPtr object_pointer);'.format(release_func_name))
+
             out.put_line('')
 
     def __generate_down_cast(self, out: FileGenerator):
@@ -550,7 +599,7 @@ class SharpClass(object):
         name_array = self.namespace.full_name_array
         while class_.base:
             out.put_line('')
-            base_name = self.get_relative_name(name_array, class_.base.full_name_array)
+            base_name = class_.base.full_wrap_name
             out.put_line('new unsafe static public {0} DownCast({1} source_object)'.format(self.wrap_name, base_name))
             with IndentScope(out):
                 out.put_line('return new {0}({0}.{1}, {2}(source_object.{3}()), true);'.format(
@@ -585,9 +634,10 @@ class SharpClass(object):
 
     def __generate_definition(self, out: FileGenerator):
         out.put_begin_cpp_comments(self.class_generator.params)
+        out.put_line('using System;\n')
         out.put_line('using System.Runtime.InteropServices;\n')
         self.namespace.increase_indent_recursively(out)
-        base = ': {0}'.format(self.base.wrap_name) if self.base else ''
+        base = ': {}'.format(self.base.full_wrap_name) if self.base else ''
         if not base and self.class_generator.class_object.exception:
             base = ': System.Exception'
         out.put_line('public class {class_name}{base} '.format(class_name=self.wrap_name, base=base))
@@ -598,7 +648,7 @@ class SharpClass(object):
             new = 'new ' if self.base else ''
             out.put_line('%spublic enum ECreateFromRawPointer{force_creating_from_raw_pointer};' % new)
             out.put_line('')
-            out.put_line('{0}protected unsafe void* mObject;'.format(new))
+            out.put_line('{0}protected unsafe IntPtr mObject;'.format(new))
             out.put_line('')
             for enum in self.enums:
                 enum.generate_enum_definition(out)
@@ -637,23 +687,23 @@ class SharpClass(object):
         deinit_traits = sharp_capi.get_exception_traits(self.class_generator.class_object.delete_or_release_noexcept)
         if isinstance(self.class_generator.lifecycle_traits, RefCountedSemantic):
             out.put_line(import_string)
-            arguments = ['void* object_pointer']
+            arguments = ['IntPtr object_pointer']
             init_traits.modify_c_arguments(arguments)
             out.put_line('unsafe static extern void {func_name}({arguments});'.format(
                 func_name=self.class_generator.add_ref_method, arguments=', '.join(arguments)))
             out.put_line(import_string)
-            arguments = ['void* object_pointer']
+            arguments = ['IntPtr object_pointer']
             deinit_traits.modify_c_arguments(arguments)
             out.put_line('unsafe static extern void {func_name}({arguments});'.format(
                 func_name=self.class_generator.release_method, arguments=', '.join(arguments)))
         else:
             out.put_line(import_string)
-            arguments = ['void* object_pointer']
+            arguments = ['IntPtr object_pointer']
             init_traits.modify_c_arguments(arguments)
-            out.put_line('unsafe static extern void* {func_name}({arguments});'.format(
+            out.put_line('unsafe static extern IntPtr {func_name}({arguments});'.format(
                 func_name=self.class_generator.copy_method, arguments=', '.join(arguments)))
             out.put_line(import_string)
-            arguments = ['void* object_pointer']
+            arguments = ['IntPtr object_pointer']
             deinit_traits.modify_c_arguments(arguments)
             out.put_line('unsafe static extern void {func_name}({arguments});'.format(
                 func_name=self.class_generator.delete_method, arguments=', '.join(arguments)))
@@ -666,13 +716,15 @@ class SharpClass(object):
             out.put_line(import_string)
             arguments = self.capi_generator.export_function_arguments(constructor.arguments)
             constructor.exception_traits.modify_c_arguments(arguments)
-            out.put_line('unsafe static extern void* {class_name}({arguments});'.format(
+            out.put_line('unsafe static extern IntPtr {class_name}({arguments});'.format(
                 class_name=constructor.generator.full_c_name,
                 arguments=', '.join(arguments)))
         for method in self.methods:
             out.put_line(import_string)
-            arguments = ['void* object_pointer'] + self.capi_generator.export_function_arguments(method.arguments)
+            arguments = ['IntPtr object_pointer'] + self.capi_generator.export_function_arguments(method.arguments)
             method.exception_traits.modify_c_arguments(arguments)
+            self.capi_generator.generate_string_marshaling(out,
+                                                           return_type=method.return_type.wrap_argument_declaration())
             out.put_line('unsafe static extern {return_type} {name}({arguments});'.format(
                 return_type=method.return_type.c_argument_declaration(),
                 name=method.generator.full_c_name,
@@ -680,13 +732,13 @@ class SharpClass(object):
         self.__generate_init_deinit_externs(out)
         if self.base:
             out.put_line(import_string)
-            out.put_line('unsafe static extern void* {func_name}(void* object_pointer);'.format(
+            out.put_line('unsafe static extern IntPtr {func_name}(IntPtr object_pointer);'.format(
                 func_name=self.class_generator.cast_to_base))
         class_ = self
         while class_.base:
             out.put_line(import_string)
             func = '{0}_cast_to_{1}'.format(class_.base.class_generator.full_c_name, self.class_generator.full_c_name,)
-            out.put_line('unsafe static extern void* {}(void* object_pointer);'.format(func))
+            out.put_line('unsafe static extern IntPtr {}(IntPtr object_pointer);'.format(func))
             class_ = class_.base
 
     @staticmethod
@@ -717,12 +769,12 @@ class SharpClass(object):
             '{0}_{1}_callback'.format(class_name, method.generator.c_name),
             impl_class,
             method.exception_traits.exception_info_t(),
-            ', '.join(['void* object_pointer'] + [arg.wrap_argument_declaration() for arg in method.arguments])))
+            ', '.join(['IntPtr object_pointer'] + [arg.wrap_argument_declaration() for arg in method.arguments])))
         with IndentScope(out):
             out.put_line('try')
             with IndentScope(out):
                 out.put_line('exception_info.code = 0;')
-                out.put_line('exception_info.object_pointer = null;')
+                out.put_line('exception_info.object_pointer = IntPtr.Zero;')
                 out.put_line('Type impl_type = typeof({});'.format(impl_class))
                 out.put_line('GCHandle handle = (GCHandle)(IntPtr) object_pointer;')
                 out.put_line('{0} self = ({0})handle.Target;'.format(impl_class))
@@ -746,9 +798,9 @@ class SharpClass(object):
             out.put_line('catch')
             with IndentScope(out):
                 out.put_line('exception_info.code = 1;')
-                out.put_line('exception_info.object_pointer = null;')
+                out.put_line('exception_info.object_pointer = IntPtr.Zero;')
             if return_type != 'void':
-                out.put_line('return new {}();'.format(return_type))
+                out.put_line('return ({})new object();'.format(return_type))
         out.put_line('')
 
     def generate__create_callback__method(self, out: FileGenerator):
@@ -766,7 +818,7 @@ class SharpClass(object):
                     impl_class))
             out.put_line('GCHandle handle = GCHandle.Alloc(implementation_class);')
             out.put_line('IntPtr ptr = (IntPtr)handle;')
-            out.put_line('result.SetObjectPointer((void*)ptr);')
+            out.put_line('result.SetObjectPointer((IntPtr )ptr);')
             # out.put_line('result.SetObjectPointer(Pointer.Unbox(implementation_class));')
             out.put_line('return result;')
         for method in self.base.methods:
@@ -775,13 +827,6 @@ class SharpClass(object):
     def generate(self):
         self.gen_base_class()
         self.enums = [SharpEnum(enum, self) for enum in self.class_generator.enum_generators]
-        if self.is_template:
-            template_arguments = []
-            for arg in self.class_generator.template_argument_generators:
-                sharp_argument = SharpArgument(ArgumentGenerator(arg, ""), self.namespace.capi_generator)
-                sharp_argument.generate()
-                template_arguments.append(sharp_argument)
-            self.template_arguments = template_arguments
         if self.class_generator.class_object.exception:
             exception_traits = self.namespace.capi_generator.main_exception_traits
             if self not in exception_traits.classes:
@@ -789,7 +834,19 @@ class SharpClass(object):
         self.constructors = [SharpConstructor(ctor, self) for ctor in self.class_generator.constructor_generators]
         self.methods = [SharpMethod(method, self) for method in self.class_generator.method_generators]
 
+    @property
+    def template_arguments(self):
+        if not self.__template_arguments:
+            if self.is_template:
+                self.__template_arguments = []
+                for arg in self.class_generator.template_argument_generators:
+                    sharp_argument = SharpArgument(ArgumentGenerator(arg, ""), self.namespace.capi_generator)
+                    sharp_argument.generate()
+                    self.__template_arguments.append(sharp_argument)
+        return self.__template_arguments
+
     def generate_definition(self):
+        self.template_arguments
         for ctor in self.constructors:
             ctor.generate()
         for method in self.methods:
@@ -844,7 +901,7 @@ class SharpTemplate(object):
             new = 'new ' if method.is_overload() else ''
             return_type = method.return_type.wrap_argument_declaration(self.namespace.full_name_array)
             arguments = [arg.wrap_argument_declaration(self.namespace.full_name_array) for arg in method.arguments]
-            out.put_line('{new}public {return_type} {method_name}({arguments})'.format(
+            out.put_line('{new}public unsafe {return_type} {method_name}({arguments})'.format(
                 method_name=method.wrap_name, new=new,
                 arguments=', '.join(arguments), return_type=return_type))
             if return_type == 'void':
@@ -877,10 +934,11 @@ class SharpTemplate(object):
                     argument = arg.value
                     if '::' in arg.value:
                         argument = argument.replace('::', '.')
-                        argument = self.capi_generator.full_name_2_sharp_object[argument].wrap_name
-                        class_name_array.append(argument)
-                    else:
-                        class_name_array.append(arg.value)
+                    argument_generator = self.capi_generator.full_name_2_sharp_object.get(argument, None)
+                    if not argument_generator:
+                        argument_generator = SharpBuiltinType(BuiltinTypeGenerator(argument))
+                    argument = argument_generator.full_wrap_name
+                    class_name_array.append(argument_generator.wrap_name)
                     if template_arguments[arg.name] not in self.non_types:
                         inst_arguments.append(argument)
                     else:
@@ -1082,6 +1140,14 @@ class SharpEnum(object):
     def wrap_argument_declaration(self) -> str:
         return self.enum_generator.full_wrap_name.replace('::', '.')
 
+    @property
+    def wrap_name(self):
+        return self.enum_generator.wrap_name
+
+    @property
+    def full_wrap_name(self):
+        return self.parent.full_wrap_name + '.' + self.wrap_name
+
     @staticmethod
     def get_enum_definition(enum_object) -> [str]:
         return [item.name + (' = {},'.format(item.value) if item.value_filled else ',') for item in enum_object.items]
@@ -1174,6 +1240,14 @@ class SharpMappedType(object):
     def c_2_wrap_var(self, result_var: str, expression: str):
         return self.format(self.c_2_wrap, expression, result_var, self.wrap_type)
 
+    @property
+    def wrap_name(self):
+        return self.wrap_type
+
+    @property
+    def full_wrap_name(self):
+        return self.wrap_type
+
 
 class SharpBuiltinType(object):
     def __init__(self, builtin_generator: BuiltinTypeGenerator):
@@ -1182,6 +1256,14 @@ class SharpBuiltinType(object):
     @property
     def is_void(self):
         return True if self.builtin_generator.type_name == 'void' or not self.builtin_generator.type_name else False
+
+    @property
+    def wrap_name(self):
+        return self.builtin_generator.type_name
+
+    @property
+    def full_wrap_name(self):
+        return self.wrap_name
 
     def wrap_argument_declaration(self) -> str:
         return '{type_name}'.format(type_name='void' if self.is_void else self.builtin_generator.type_name)
@@ -1349,6 +1431,10 @@ class SharpConstructor(SharpRoutine):
                 capi_generator = self.parent.capi_generator
                 mapped_type = capi_generator.get_or_gen_mapped_type(generator.name, generator.mapped_type_object)
                 result.append(ArgumentGenerator(mapped_type, argument.name))
+            elif isinstance(generator, EnumTypeGenerator):
+                full_name = generator.enum_argument_generator.full_wrap_name.replace('::', '.')
+                sharp_enum = self.parent.capi_generator.full_name_2_sharp_object[full_name]
+                result.append(ArgumentGenerator(sharp_enum, argument.name))
             else:
                 result.append(argument)
         return result
@@ -1424,36 +1510,36 @@ class SharpLifecycleTraits(object):
             null_method=self.params.null_method_name,
             new=new))
         with IndentScope(out):
-            out.put_line('return new {class_name}({class_name}.{force_create}, null, false);'.format(
+            out.put_line('return new {class_name}({class_name}.{force_create}, IntPtr.Zero, false);'.format(
                 force_create='ECreateFromRawPointer.force_creating_from_raw_pointer',
                 class_name=sharp_class.wrap_name))
         out.put_line('')
         out.put_line('{new}unsafe public bool {is_null_method}()'.format(
             is_null_method=self.params.is_null_method_name, new=new))
         with IndentScope(out):
-            out.put_line('return {get_raw}() == null;'.format(get_raw=self.params.get_raw_pointer_method_name))
+            out.put_line('return {get_raw}() == IntPtr.Zero;'.format(get_raw=self.params.get_raw_pointer_method_name))
         out.put_line('')
         out.put_line('{new}unsafe public bool {is_not_null_method}()'.format(
             is_not_null_method=self.params.is_not_null_method_name, new=new))
         with IndentScope(out):
-            out.put_line('return {get_raw}() != null;'.format(get_raw=self.params.get_raw_pointer_method_name))
+            out.put_line('return {get_raw}() != IntPtr.Zero;'.format(get_raw=self.params.get_raw_pointer_method_name))
         out.put_line('')
         out.put_line('unsafe public static bool operator!({class_name} obj)'.format(
             class_name=sharp_class.wrap_name))
         with IndentScope(out):
-            out.put_line('return obj.{get_raw}() != null;'.format(get_raw=self.params.get_raw_pointer_method_name))
+            out.put_line('return obj.{get_raw}() != IntPtr.Zero;'.format(get_raw=self.params.get_raw_pointer_method_name))
         out.put_line('')
-        out.put_line('{new}unsafe public void* {detach_method}()'.format(
+        out.put_line('{new}unsafe public IntPtr {detach_method}()'.format(
             detach_method=self.params.detach_method_name, new=new))
         with IndentScope(out):
-            out.put_line('void* result = {get_raw}();'.format(get_raw=self.params.get_raw_pointer_method_name))
-            out.put_line('SetObject(null);')
+            out.put_line('IntPtr result = {get_raw}();'.format(get_raw=self.params.get_raw_pointer_method_name))
+            out.put_line('SetObject(IntPtr.Zero);')
             out.put_line('return result;')
         out.put_line('')
-        out.put_line('{new}unsafe public void* {get_raw_pointer_method}()'.format(
+        out.put_line('{new}unsafe public IntPtr {get_raw_pointer_method}()'.format(
             get_raw_pointer_method=self.params.get_raw_pointer_method_name, new=new))
         with IndentScope(out):
-            out.put_line('return mObject != null ? mObject: null;')
+            out.put_line('return mObject != IntPtr.Zero ? mObject: IntPtr.Zero;')
 
 
 class SharpCopySemantic(SharpLifecycleTraits):
@@ -1463,23 +1549,23 @@ class SharpCopySemantic(SharpLifecycleTraits):
             base_init=get_base_init(sharp_class))
         )
         with IndentScope(out):
-            out.put_line('new {class_name}(ECreateFromRawPointer.force_creating_from_raw_pointer, null, false);'.format(
+            out.put_line('new {class_name}(ECreateFromRawPointer.force_creating_from_raw_pointer, IntPtr.Zero, false);'.format(
                 class_name=sharp_class.wrap_name, ))
-            out.put_line('if (other.{get_raw}() != null)'.format(get_raw=self.params.get_raw_pointer_method_name))
+            out.put_line('if (other.{get_raw}() != IntPtr.Zero)'.format(get_raw=self.params.get_raw_pointer_method_name))
             with IndentScope(out):
                 copy_result = self.init_method_exception_traits.generate_c_call(
-                    out, SharpBuiltinType(BuiltinTypeGenerator('void*')), sharp_class.class_generator.copy_method,
+                    out, SharpBuiltinType(BuiltinTypeGenerator('IntPtr')), sharp_class.class_generator.copy_method,
                     ['other.{get_raw}()'.format(get_raw=self.params.get_raw_pointer_method_name)])
                 out.put_line('SetObject({copy_result});'.format(copy_result=copy_result))
             out.put_line('else')
             with IndentScope(out):
-                out.put_line('SetObject(null);')
+                out.put_line('SetObject(IntPtr.Zero);')
 
     def generate_raw_copy_constructor_body_definition(self, out: FileGenerator, sharp_class, copy_object):
-        out.put_line('if (object_pointer != null && {copy_object})'.format(copy_object=copy_object))
+        out.put_line('if (object_pointer != IntPtr.Zero && {copy_object})'.format(copy_object=copy_object))
         with IndentScope(out):
             copy_result = self.init_method_exception_traits.generate_c_call(
-                out, SharpBuiltinType(BuiltinTypeGenerator('void*')), sharp_class.class_generator.copy_method,
+                out, SharpBuiltinType(BuiltinTypeGenerator('IntPtr')), sharp_class.class_generator.copy_method,
                 ['object_pointer'])
             out.put_line('SetObject({copy_result});'.format(copy_result=copy_result))
         out.put_line('else')
@@ -1487,7 +1573,7 @@ class SharpCopySemantic(SharpLifecycleTraits):
             out.put_line('SetObject(object_pointer);')
 
     def __generate_raw_copy_constructor_definition(self, out: FileGenerator, sharp_class):
-        constructor_arguments = 'ECreateFromRawPointer e, void *object_pointer, bool copy_object'.format(
+        constructor_arguments = 'ECreateFromRawPointer e, IntPtr object_pointer, bool copy_object'.format(
             class_name=sharp_class.wrap_name
         )
         out.put_line('unsafe public {class_name}({arguments}){base_init}'.format(
@@ -1499,13 +1585,13 @@ class SharpCopySemantic(SharpLifecycleTraits):
             self.generate_raw_copy_constructor_body_definition(out, sharp_class, 'copy_object')
 
     def __generate_deallocate(self, out: FileGenerator, sharp_class):
-        out.put_line('if ({get_raw}() != null)'.format(
+        out.put_line('if ({get_raw}() != IntPtr.Zero)'.format(
             get_raw=self.params.get_raw_pointer_method_name))
         with IndentScope(out):
             self.lifecycle_traits.finish_method_exception_traits.generate_c_call(
                 out, BuiltinTypeGenerator('void'), sharp_class.class_generator.delete_method,
                 ['{get_raw}()'.format(get_raw=self.params.get_raw_pointer_method_name)])
-            out.put_line('SetObject(null);')
+            out.put_line('SetObject(IntPtr.Zero);')
 
     def __generate_destructor(self, out: FileGenerator, sharp_class):
         out.put_line('unsafe ~{class_name}()'.format(
@@ -1542,7 +1628,7 @@ class SharpRawPointerSemantic(SharpLifecycleTraits):
     def __generate_raw_copy_constructor_definition(out: FileGenerator, sharp_class):
         out.put_line('unsafe public {class_name}({arguments}){base_init}'.format(
             class_name=sharp_class.wrap_name,
-            arguments='ECreateFromRawPointer e, void *object_pointer, bool copy',
+            arguments='ECreateFromRawPointer e, IntPtr object_pointer, bool copy',
             base_init=get_base_init(sharp_class))
         )
         with IndentScope(out):
@@ -1554,13 +1640,13 @@ class SharpRawPointerSemantic(SharpLifecycleTraits):
             delete_method=self.params.delete_method_name
         ))
         with IndentScope(out):
-            out.put_line('if ({get_raw}() != null)'.format(
+            out.put_line('if ({get_raw}() != IntPtr.Zero)'.format(
                 get_raw=self.params.get_raw_pointer_method_name))
             with IndentScope(out):
                 self.lifecycle_traits.finish_method_exception_traits.generate_c_call(
                     out, BuiltinTypeGenerator('void'), sharp_class.class_generator.delete_method,
                     ['{get_raw}()'.format(get_raw=self.params.get_raw_pointer_method_name)])
-                out.put_line('SetObject(null);')
+                out.put_line('SetObject(IntPtr.Zero);')
 
     def generate_std_methods_definitions(self, out: FileGenerator, sharp_class):
         self.__generate_copy_constructor_definition(out, sharp_class)
@@ -1581,7 +1667,7 @@ class SharpRefCountedSemantic(SharpLifecycleTraits):
         )
         with IndentScope(out):
             out.put_line('SetObject(other.{get_raw}());'.format(get_raw=self.params.get_raw_pointer_method_name))
-            out.put_line('if (other.{get_raw}() != null)'.format(get_raw=self.params.get_raw_pointer_method_name))
+            out.put_line('if (other.{get_raw}() != IntPtr.Zero)'.format(get_raw=self.params.get_raw_pointer_method_name))
             with IndentScope(out):
                 copy_or_add_ref_noexcept = sharp_class.class_generator.class_object.copy_or_add_ref_noexcept
                 self.capi_generator.get_exception_traits(copy_or_add_ref_noexcept).generate_c_call(
@@ -1590,7 +1676,7 @@ class SharpRefCountedSemantic(SharpLifecycleTraits):
 
     def generate_raw_copy_constructor_body_definition(self, out: FileGenerator, sharp_class, add_ref_object):
         out.put_line('SetObject(object_pointer);')
-        out.put_line('if ({add_ref_object} && object_pointer != null)'.format(add_ref_object=add_ref_object))
+        out.put_line('if ({add_ref_object} && object_pointer != IntPtr.Zero)'.format(add_ref_object=add_ref_object))
         with IndentScope(out):
             copy_or_add_ref_noexcept = sharp_class.class_generator.class_object.copy_or_add_ref_noexcept
             self.capi_generator.get_exception_traits(copy_or_add_ref_noexcept).generate_c_call(
@@ -1598,7 +1684,7 @@ class SharpRefCountedSemantic(SharpLifecycleTraits):
                 sharp_class.class_generator.add_ref_method, ['object_pointer'])
 
     def __generate_raw_copy_constructor_definition(self, out: FileGenerator, sharp_class):
-        constructor_arguments = 'ECreateFromRawPointer e, void *object_pointer, bool add_ref_object'
+        constructor_arguments = 'ECreateFromRawPointer e, IntPtr object_pointer, bool add_ref_object'
         out.put_line('unsafe public {class_name}({arguments}){base_init}'.format(
             class_name=sharp_class.wrap_name,
             arguments=constructor_arguments,
@@ -1608,13 +1694,13 @@ class SharpRefCountedSemantic(SharpLifecycleTraits):
             self.generate_raw_copy_constructor_body_definition(out, sharp_class, 'add_ref_object')
 
     def __generate_deallocate(self, out: FileGenerator, sharp_class):
-        out.put_line('if ({get_raw}() != null)'.format(
+        out.put_line('if ({get_raw}() != IntPtr.Zero)'.format(
             get_raw=self.params.get_raw_pointer_method_name))
         with IndentScope(out):
             self.lifecycle_traits.finish_method_exception_traits.generate_c_call(
                 out, BuiltinTypeGenerator('void'), sharp_class.class_generator.release_method,
                 ['{get_raw}()'.format(get_raw=self.params.get_raw_pointer_method_name)])
-            out.put_line('SetObject(null);')
+            out.put_line('SetObject(IntPtr.Zero);')
 
     def __generate_destructor(self, out: FileGenerator, sharp_class):
         out.put_line('unsafe ~{class_name}()'.format(
@@ -1692,33 +1778,32 @@ class SharpExceptionTraits(object):
         throw_str = 'throw new {0}({0}.ECreateFromRawPointer.force_creating_from_raw_pointer, exception_object, false);'
         out.put_line(throw_str.format(exception_class.full_wrap_name))
 
-    @staticmethod
-    def generate_exception_info(project_name: str, out: FileGenerator):
-        out.put_line('unsafe public struct beautiful_capi_{}_exception_info_t'.format(project_name))
+    def generate_exception_info(self, out: FileGenerator):
+        out.put_line('unsafe public struct {}_exception_info_t'.format(self.params.beautiful_capi_namespace.lower()))
         with IndentScope(out):
             out.put_line('public System.UInt32 code;')
-            out.put_line('public void* object_pointer;')
+            out.put_line('public IntPtr object_pointer;')
         out.put_line('')
 
-    @staticmethod
-    def generate_exception_code(project_name: str, sharp_capi_generator, out: FileGenerator):
-        out.put_line('public enum beautiful_capi_{}_exception_code_t'.format(project_name))
+    def generate_exception_code(self, sharp_capi_generator, out: FileGenerator):
+        prefix = self.params.beautiful_capi_namespace.lower()
+        out.put_line('public enum {}_exception_code_t'.format(prefix))
         with IndentScope(out, '};'):
-            out.put_line('beautiful_capi_{}_no_exception = 0,'.format(project_name))
-            out.put_line('beautiful_capi_{}_unknown_exception = 1,'.format(project_name))
+            out.put_line('{}_no_exception = 0,'.format(prefix))
+            out.put_line('{}_unknown_exception = 1,'.format(prefix))
             code_to_exception = [[exception_class.class_generator.exception_code, exception_class] for exception_class
                                  in sharp_capi_generator.main_exception_traits.classes]
             if code_to_exception:
-                out.put_line('beautiful_capi_{}_copy_exception_error = 2,'.format(project_name))
+                out.put_line('{}_copy_exception_error = 2,'.format(prefix))
                 code_to_exception.sort(key=lambda except_info: except_info[0])
                 for exception_info in code_to_exception[:-1]:
-                    out.put_line('beautiful_capi_{2}_{0} = {1},'.format(
-                        exception_info[1].c_name, exception_info[0], project_name))
+                    out.put_line('{2}_{0} = {1},'.format(
+                        exception_info[1].c_name, exception_info[0], prefix))
                 exception_info = code_to_exception[-1]
-                out.put_line('beautiful_capi_{2}_{0} = {1}'.format(
-                    exception_info[1].c_name, exception_info[0], project_name))
+                out.put_line('{2}_{0} = {1}'.format(
+                    exception_info[1].c_name, exception_info[0], prefix))
             else:
-                out.put_line('beautiful_capi_{}_copy_exception_error = 2'.format(project_name))
+                out.put_line('{}_copy_exception_error = 2'.format(prefix))
         out.put_line('')
 
     def modify_c_arguments(self, arguments: [str]):
@@ -1780,10 +1865,12 @@ class SharpFileCache(object):
 class SharpCmakeListGenerator(object):
     def __init__(self, capi_generator, namespaces: []):
         self.capi_generator = capi_generator
+        self.params = capi_generator.params
         self.name = capi_generator.capi_generator.api_root.project_name
         self.lib_suffix = '_sharp_library'
         self.lib_name = pascal_to_stl(self.name + self.lib_suffix)
-        self.params = capi_generator.params
+        if self.params.sharp_library_name:
+            self.lib_name = self.params.sharp_library_name
         self.namespaces = [capi_generator.full_name_2_sharp_object[namespace.full_wrap_name] for namespace in
                            namespaces]
         self.out_folder = capi_generator.params.sharp_output_folder
@@ -1848,6 +1935,9 @@ class SharpCmakeListGenerator(object):
                 if not isinstance(self.capi_generator.main_exception_traits.exception_traits, NoHandling):
                     file = self.capi_generator.params.check_and_throw_exception_filename.format(project_name=self.name)
                     self.file.put_line(self.project_path + '/' + file.replace('.h', '.cs'))
+                if self.capi_generator.generate_string_marshaler:
+                    filename = self.project_path + '/' + self.params.beautiful_capi_namespace + '/StringMarshaler.cs'
+                    self.file.put_line(filename)
         self.file.put_line(')\n')
         self.file.put_line('target_compile_options({0} PRIVATE "/unsafe")'.format(self.lib_name))
         self.file.put_line('SET_TARGET_PROPERTIES({0} PROPERTIES LINKER_LANGUAGE CSharp)'.format(self.lib_name))
@@ -1914,7 +2004,7 @@ class SharpExternalClass(object):
 
     @staticmethod
     def c_argument_declaration() -> str:
-        return 'void*'
+        return 'IntPtr'
 
     def c_2_wrap_var(self, result_var: str, expression: str) -> ([str], str):
         parent_full_name = self.parent.full_wrap_name
@@ -1940,7 +2030,7 @@ class SharpExternalClass(object):
             expression=expression,
             get_raw_pointer_method=self.generator.get_raw_pointer_method_name)
         if result_var:
-            return ['void* {result_var} = {internal_expression};'.format(
+            return ['IntPtr {result_var} = {internal_expression};'.format(
                 result_var=result_var,
                 internal_expression=internal_expression
             )], result_var
@@ -1955,22 +2045,22 @@ class SharpExternalEnum(SharpEnum):
 
 def generate_requires_cast_to_base_set_object_definition(out: FileGenerator, sharp_class: SharpClass):
     new = 'new ' if sharp_class.base else ''
-    out.put_line('{0}unsafe protected void SetObject(void* object_pointer)'.format(new))
+    out.put_line('{0}unsafe protected void SetObject(IntPtr object_pointer)'.format(new))
     with IndentScope(out):
         out.put_line('mObject = object_pointer;')
         if sharp_class.base:
-            out.put_line('if (mObject != null)')
+            out.put_line('if (mObject != IntPtr.Zero)')
             with IndentScope(out):
                 out.put_line('base.SetObject({cast_to_base}(mObject));'.format(
                     cast_to_base=sharp_class.class_generator.cast_to_base
                 ))
             out.put_line('else')
             with IndentScope(out):
-                out.put_line('base.SetObject(null);')
+                out.put_line('base.SetObject(IntPtr.Zero);')
 
 
 def generate_simple_case_set_object_definition(out: FileGenerator, sharp_class):
-    out.put_line('unsafe protected void {class_name}.SetObject(void* object_pointer)'.format(
+    out.put_line('unsafe protected void {class_name}.SetObject(IntPtr object_pointer)'.format(
         class_name=sharp_class.class_generator.full_wrap_name))
     with IndentScope(out):
         if sharp_class.base_class:
@@ -1999,7 +2089,7 @@ def get_base_init(sharp_class: SharpClass):
     if base:
         base_class_name = '.'.join(base.class_generator.parent_namespace.full_name_array + [base.wrap_name])
         create_from_raw_ptr_expession = 'ECreateFromRawPointer.force_creating_from_raw_pointer'
-        return ' : base({base}.{expr}, null, false)'.format(base=base_class_name, expr=create_from_raw_ptr_expession)
+        return ' : base({base}.{expr}, IntPtr.Zero, false)'.format(base=base_class_name, expr=create_from_raw_ptr_expession)
     return ''
 
 

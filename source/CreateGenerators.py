@@ -144,7 +144,9 @@ class GeneratorCreator(object):
         self.cur_namespace_generator = previous_namespace_generator
         for template in new_namespace_generator.templates:
             for constructor in template.template_class.constructors:
-                new_constructor_generator = ConstructorGenerator(constructor, template.template_class_generator, self.params)
+                new_constructor_generator = ConstructorGenerator(constructor,
+                                                                 template.template_class_generator,
+                                                                 self.params)
                 template.template_class_generator.constructor_generators.append(new_constructor_generator)
             for method in template.template_class.methods:
                 new_method_generator = MethodGenerator(method, template.template_class_generator, self.params)
@@ -380,11 +382,15 @@ class GeneratorCreator(object):
             for item in enum_generator.enum_object.items:
                 self.__bind_documentation(item)
         self.__bind_documentation(namespace_generator.namespace_object)
-        for template in namespace_generator.templates:
-            for constructor in template.template_class_generator.constructor_generators:
-                self.__bind_constructor(constructor)
-            for method in template.template_class_generator.method_generators:
-                self.__bind_method(method)
+        if namespace_generator.templates:
+            warn_when_builtin_type_used = self.params.warn_when_builtin_type_used
+            self.params.warn_when_builtin_type_used = False
+            for template in namespace_generator.templates:
+                for constructor in template.template_class_generator.constructor_generators:
+                    self.__bind_constructor(constructor)
+                for method in template.template_class_generator.method_generators:
+                    self.__bind_method(method)
+            self.params.warn_when_builtin_type_used = warn_when_builtin_type_used
         self.scope_stack.pop()
 
     def bind_namespaces(self, namespace_generators: [NamespaceGenerator]):

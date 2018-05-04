@@ -238,5 +238,10 @@
         <xs:documentation>Generate .Net Portable Class Library(PCL)</xs:documentation>
       </xs:annotation>
     </xs:attribute>
+    <xs:attribute name="sharp_library_name" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>C# library name for CMake</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
   </xs:complexType>
 </xs:schema>

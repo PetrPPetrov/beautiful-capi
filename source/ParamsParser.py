@@ -131,6 +131,8 @@ class TBeautifulCapiParams(object):
         self.api_keys_folder_filled = False
         self.generate_sharp_library = True
         self.generate_sharp_library_filled = False
+        self.sharp_library_name = ""
+        self.sharp_library_name_filled = False
         self.copyright_headers = []
         self.automatic_generated_warnings = []
         self.additional_include_directories = []
@@ -313,6 +315,10 @@ class TBeautifulCapiParams(object):
             cur_attr = dom_node.getAttribute("generate_sharp_library")
             self.generate_sharp_library = string_to_bool(cur_attr)
             self.generate_sharp_library_filled = True
+        if dom_node.hasAttribute("sharp_library_name"):
+            cur_attr = dom_node.getAttribute("sharp_library_name")
+            self.sharp_library_name = cur_attr
+            self.sharp_library_name_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:
