@@ -434,17 +434,22 @@ class ClassGenerator(object):
                     target_type=target_type,
                     full_name=self.full_wrap_name,
                     cast_method=cast.cast_method.format(target_type=target_type.split('::')[-1])
-                )
-            )
+                ))
             with IndentScope(out):
                 out.put_line(return_instruction)
             out.put_line('')
         for cast in self.class_object.lifecycle_extension.cast_froms:
+            base_initialization = ''
+            if self.base_class_generator:
+                base_initialization = ' : {class_name}({class_name}::force_creating_from_raw_pointer,' \
+                                      ' static_cast<void*>(0), false)'.format(
+                                        class_name=self.base_class_generator.full_wrap_name)
             source_type = cast.source_generator.full_wrap_name
-            out.put_line('inline {full_name}::{class_name}(const {source_type}& value)'.format(
+            out.put_line('inline {full_name}::{class_name}(const {source_type}& value){base_init}'.format(
                 full_name=self.full_wrap_name,
                 class_name=self.wrap_short_name,
-                source_type=source_type
+                source_type=source_type,
+                base_init=base_initialization
             ))
             with IndentScope(out):
                 out.put_line('void* object_pointer = value.{get_raw_pointer}();'.format(

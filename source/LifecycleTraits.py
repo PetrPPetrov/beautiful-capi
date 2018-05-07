@@ -133,8 +133,9 @@ class LifecycleTraits(object):
             class_name=class_generator.full_wrap_name,
             null_method=self.params.null_method_name))
         with IndentScope(out):
-            out.put_line('return {class_name}({class_name}::force_creating_from_raw_pointer, static_cast<void*>(0), false);'.format(
-                class_name=class_generator.full_wrap_name))
+            out.put_line('return {class_name}({class_name}::force_creating_from_raw_pointer,'
+                         ' static_cast<void*>(0), false);'.format(
+                            class_name=class_generator.full_wrap_name))
         out.put_line('')
         out.put_line('inline bool {namespace}::{is_null_method}() const'.format(
             namespace=class_generator.full_wrap_name,
