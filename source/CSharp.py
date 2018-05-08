@@ -371,6 +371,8 @@ class SharpNamespace(object):
                 exception_traits = self.capi_generator.get_exception_traits(
                     func.generator.function_object.noexcept)
                 exception_traits.modify_c_arguments(arguments)
+                self.capi_generator.generate_string_marshaling(out,
+                                                               return_type=func.return_type.wrap_argument_declaration())
                 out.put_line('unsafe static extern {return_type} {name}({arguments});'.format(
                     return_type=func.return_type.c_argument_declaration(),
                     name=func.generator.full_c_name,
