@@ -19,12 +19,12 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+import copy
 import os
 
 import ExceptionTraits
 import ExternalClassGenerator
 import ExternalNamespaceGenerator
-from ExternalEnumGenerator import ExternalEnumGenerator
 from NamespaceGenerator import NamespaceGenerator
 import CapiGenerator
 from ClassGenerator import ClassGenerator
@@ -402,7 +402,28 @@ class SharpNamespace(object):
             external_namespace = self.capi_generator.get_or_gen_external_namespace('.'.join(ns.full_name_array), ns)
             self.external_namespaces.append(external_namespace)
             external_namespace.generate()
+        template_generators = []
         for template_generator in self.namespace_generator.templates:
+            template_generators.append(template_generator)
+            for extension in template_generator.template_object.classes[0].lifecycle_extensions:
+                new_class = copy.deepcopy(template_generator.template_object.classes[0])
+                new_class.name = extension.name[:extension.name.find('<')]
+                new_class.lifecycle = extension.lifecycle
+                new_class.lifecycle_filled = True
+                new_class.wrap_name = extension.wrap_name
+                new_class.wrap_name_filled = extension.wrap_name_filled
+                new_class.cast_tos = copy.deepcopy(extension.cast_tos)
+                new_class.lifecycle_extensions = []
+                new_class.lifecycle_extension = extension
+                new_class.extension_base_class_name = '::'.join(self.full_name_array)
+                new_class.down_cast = extension.down_cast
+                new_class.down_cast_filled = True
+                new_template_object = copy.deepcopy(template_generator.template_object)
+                new_template_object.classes[0] = new_class
+                new_template_generator = TemplateGenerator(new_template_object, template_generator.parent_namespace,
+                                                           template_generator.params)
+                template_generators.append(new_template_generator)
+        for template_generator in template_generators:
             generator = template_generator.template_class_generator
             template = self.capi_generator.get_or_gen_template('.'.join(generator.full_name_array), template_generator)
             self.templates[generator.name] = template
@@ -598,7 +619,6 @@ class SharpClass(object):
 
     def __generate_down_cast(self, out: FileGenerator):
         class_ = self
-        name_array = self.namespace.full_name_array
         while class_.base:
             out.put_line('')
             base_name = class_.base.full_wrap_name
@@ -945,7 +965,11 @@ class SharpTemplate(object):
                         inst_arguments.append(argument)
                     else:
                         inst_arguments.append('typeof({0}).Name'.format(argument))
-                certain_class = instantiation.typedef_name if instantiation.typedef_name else '_'.join(class_name_array)
+                if instantiation.typedef_name:
+                    suffix = self.template_generator.template_class_generator.lifecycle_traits.suffix
+                    certain_class = self.namespace.full_wrap_name + '.' + instantiation.typedef_name + suffix
+                else:
+                    certain_class = '_'.join(class_name_array)
                 type_map.append((' + "_" + '.join(inst_arguments), certain_class))
 
             out.put_lines(['{{ {0}, typeof({1}) }}'.format(value[0], value[1]) for value in type_map[:-1]], ',\n')
@@ -1575,9 +1599,7 @@ class SharpCopySemantic(SharpLifecycleTraits):
             out.put_line('SetObject(object_pointer);')
 
     def __generate_raw_copy_constructor_definition(self, out: FileGenerator, sharp_class):
-        constructor_arguments = 'ECreateFromRawPointer e, IntPtr object_pointer, bool copy_object'.format(
-            class_name=sharp_class.wrap_name
-        )
+        constructor_arguments = 'ECreateFromRawPointer e, IntPtr object_pointer, bool copy_object'
         out.put_line('unsafe public {class_name}({arguments}){base_init}'.format(
             class_name=sharp_class.wrap_name,
             arguments=constructor_arguments,
@@ -1892,12 +1914,12 @@ class SharpCmakeListGenerator(object):
 
     def process_class(self, class_: SharpClass):
         path_to_class = '/'.join(self.name_stack + [class_.wrap_name])
-        self.file.put_line(self.project_path + '/' + path_to_class + '.cs')
+        self.put_file(self.project_path + '/' + path_to_class + '.cs')
         pass
 
     def process_template(self, template: SharpTemplate):
-        filename = template.template_generator.template_class_generator.wrap_name + '.cs'
-        self.file.put_line('/'.join([self.project_path] + self.name_stack + [filename]))
+        filename = template.template_generator.template_class_generator.wrap_short_name + '.cs'
+        self.put_file('/'.join([self.project_path] + self.name_stack + [filename]))
         self.name_stack.append(template.wrap_short_name)
         for class_ in template.classes:
             self.process_class(class_)
@@ -1911,10 +1933,10 @@ class SharpCmakeListGenerator(object):
 
     def process_namespace(self, namespace):
         if not self.name_stack:
-            self.file.put_line(self.project_path + '/' + namespace.wrap_name + '/' + namespace.wrap_name + 'Init.cs')
-        self.file.put_line('/'.join([self.project_path] + self.name_stack + [namespace.wrap_name + 'Functions.cs']))
+            self.put_file(self.project_path + '/' + namespace.wrap_name + '/' + namespace.wrap_name + 'Init.cs')
+        self.put_file('/'.join([self.project_path] + self.name_stack + [namespace.wrap_name + 'Functions.cs']))
         if namespace.enums:
-            self.file.put_line('/'.join([self.project_path] + self.name_stack + [namespace.wrap_name + 'Enums.cs']))
+            self.put_file('/'.join([self.project_path] + self.name_stack + [namespace.wrap_name + 'Enums.cs']))
         self.name_stack.append(namespace.wrap_name)
         for nested_namespace in namespace.nested_namespaces.values():
             self.process_namespace(nested_namespace)
@@ -1926,6 +1948,9 @@ class SharpCmakeListGenerator(object):
             self.process_external_namespace(external_namespace)
         self.name_stack.pop()
 
+    def put_file(self, file_path: str):
+        self.file.put_line('"' + file_path + '"')
+
     def generate(self):
         self.file.put_line('project({library_name} LANGUAGES CSharp)\n'.format(library_name=self.lib_name))
         self.file.put_line('cmake_minimum_required(VERSION 3.8.2)\n')
@@ -1936,10 +1961,10 @@ class SharpCmakeListGenerator(object):
                 self.process_namespace(namespace)
                 if not isinstance(self.capi_generator.main_exception_traits.exception_traits, NoHandling):
                     file = self.capi_generator.params.check_and_throw_exception_filename.format(project_name=self.name)
-                    self.file.put_line(self.project_path + '/' + file.replace('.h', '.cs'))
+                    self.put_file(self.project_path + '/' + file.replace('.h', '.cs'))
                 if self.capi_generator.generate_string_marshaler:
                     filename = self.project_path + '/' + self.params.beautiful_capi_namespace + '/StringMarshaler.cs'
-                    self.file.put_line(filename)
+                    self.put_file(filename)
         self.file.put_line(')\n')
         self.file.put_line('target_compile_options({0} PRIVATE "/unsafe")'.format(self.lib_name))
         self.file.put_line('SET_TARGET_PROPERTIES({0} PROPERTIES LINKER_LANGUAGE CSharp)'.format(self.lib_name))
