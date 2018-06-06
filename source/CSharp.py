@@ -486,6 +486,7 @@ class SharpClass(object):
         self.constructors = []
         self.methods = []
         self.capi_generator = None
+        self.copy_or_add_ref_when_c_2_wrap = False
         self.lifecycle_traits = create_sharp_lifecycle(class_generator.class_object.lifecycle,
                                                        class_generator.lifecycle_traits,
                                                        namespace.capi_generator)
@@ -534,6 +535,8 @@ class SharpClass(object):
             base_path = self.namespace.full_name_array
             arguments = ', '.join(arg.wrap_argument_declaration(base_path) for arg in self.template_arguments)
             result = '{name}<{arguments}>'.format(name=self.class_generator.wrap_short_name, arguments=arguments)
+        else:
+            result += self.class_generator.lifecycle_traits.suffix
         return result
 
     @property
@@ -572,7 +575,7 @@ class SharpClass(object):
             create_from_ptr_expression='ECreateFromRawPointer.force_creating_from_raw_pointer',
             type_name=parent_full_name + '.' + self.wrap_name,
             expression=expression,
-            copy_or_add_ref=bool_to_str(False)  # self.class_generator.copy_or_add_ref_when_c_2_wrap)
+            copy_or_add_ref=bool_to_str(self.copy_or_add_ref_when_c_2_wrap)
         )
         if result_var:
             return ['var {result_var} = new {type_name}({internal_expression});'.format(
@@ -644,13 +647,15 @@ class SharpClass(object):
                 out.put_line(expr.format(to_operand, self.capi_generator.params.get_raw_pointer_method_name))
         base_name = self.namespace.full_name_array
         for cast in self.class_generator.class_object.lifecycle_extension.cast_tos:
-            target_type = cast.target_generator.full_wrap_name.replace('::', '.')
+            target = cast.target_generator
+            target_type = (target.parent_namespace.full_wrap_name + '.' + target.template_name).replace('::', '.')
             sharp_class = self.capi_generator.get_or_gen_class(target_type, cast.target_generator)
             generate_cast(self.wrap_name,
                           SharpClass.get_relative_name(base_name, sharp_class.full_name_array),
                           cast.implicit)
         for cast in self.class_generator.class_object.lifecycle_extension.cast_froms:
-            source_type = cast.source_generator.full_wrap_name
+            source = cast.source_generator
+            source_type = (source.parent_namespace.full_wrap_name + '.' + source.template_name).replace('::', '.')
             sharp_class = self.capi_generator.get_or_gen_class(source_type, cast.source_generator)
             generate_cast(SharpClass.get_relative_name(base_name, sharp_class.full_name_array), self.wrap_name, True)
 
@@ -705,8 +710,15 @@ class SharpClass(object):
             dll_name=self.class_generator.params.shared_library_name,
             calling_convention='CallingConvention.Cdecl')  # now used only cdecl convention
         sharp_capi = self.namespace.capi_generator
-        init_traits = sharp_capi.get_exception_traits(self.class_generator.class_object.copy_or_add_ref_noexcept)
-        deinit_traits = sharp_capi.get_exception_traits(self.class_generator.class_object.delete_or_release_noexcept)
+        class_object = self.class_generator.class_object
+        if class_object.copy_or_add_ref_noexcept_filled:
+            init_traits = sharp_capi.get_exception_traits(class_object.copy_or_add_ref_noexcept)
+            deinit_traits = sharp_capi.get_exception_traits(class_object.delete_or_release_noexcept)
+        else:
+            lifecycle_traits = self.class_generator.lifecycle_traits
+            init_traits = sharp_capi.get_exception_traits(lifecycle_traits.default_value_for_init_noexcept)
+            deinit_traits = sharp_capi.get_exception_traits(lifecycle_traits.default_value_for_finish_noexcept)
+
         if isinstance(self.class_generator.lifecycle_traits, RefCountedSemantic):
             out.put_line(import_string)
             arguments = ['IntPtr object_pointer']
@@ -855,6 +867,20 @@ class SharpClass(object):
                 exception_traits.classes.append(self)
         self.constructors = [SharpConstructor(ctor, self) for ctor in self.class_generator.constructor_generators]
         self.methods = [SharpMethod(method, self) for method in self.class_generator.method_generators]
+        self.lifecycle_traits.lifecycle_traits.create_exception_traits(self.class_generator.class_object,
+                                                                       self.capi_generator.capi_generator)
+
+    def copy_or_add_ref_noexcept(self):
+        if self.class_generator.class_object.copy_or_add_ref_noexcept_filled:
+            return self.class_generator.class_object.copy_or_add_ref_noexcept
+        else:
+            return self.lifecycle_traits.lifecycle_traits.default_value_for_init_noexcept
+
+    def delete_or_release_noexcept(self):
+        if self.class_generator.class_object.delete_or_release_noexcept_filled:
+            return self.class_generator.class_object.delete_or_release_noexcept
+        else:
+            return self.lifecycle_traits.lifecycle_traits.default_value_for_finish_noexcept
 
     @property
     def template_arguments(self):
@@ -888,6 +914,7 @@ class SharpTemplate(object):
         self.classes = []
         self.explicit_arguments = []
         self.arguments = []
+        self.copy_or_add_ref_when_c_2_wrap = False
         self.non_types = ('template', 'typename', 'class')
         self.base = None
         self.capi_generator = None
@@ -1426,10 +1453,19 @@ class SharpMethod(SharpRoutine):
         out.put_line('{new}unsafe public {return_type} {name}({arguments})'.format(
             return_type=self.return_type.wrap_argument_declaration(), new=new,
             name=self.wrap_name, arguments=arguments))
+
+        saved_copy_or_add_ref = False
+        return_type_generator = self.return_type.type_generator
+        if isinstance(return_type_generator, SharpClass) or isinstance(return_type_generator, SharpTemplate):
+            saved_copy_or_add_ref = return_type_generator.copy_or_add_ref_when_c_2_wrap
+            return_type_generator.copy_or_add_ref_when_c_2_wrap = self.generator.method_object.return_copy_or_add_ref
         with IndentScope(out):
             return_expression = self.exception_traits.generate_c_call(out, self.return_type,
                                                                       self.generator.full_c_name, arguments_call)
             out.put_return_cpp_statement(return_expression)
+
+        if isinstance(return_type_generator, SharpClass) or isinstance(return_type_generator, SharpTemplate):
+            return_type_generator.copy_or_add_ref_when_c_2_wrap = saved_copy_or_add_ref
 
     def generate(self):
         super().generate()
@@ -1466,8 +1502,11 @@ class SharpConstructor(SharpRoutine):
         return result
 
     def generate_wrap_definition(self, out: FileGenerator, capi_generator: CapiGenerator):
-        self.generator.exception_traits = capi_generator.get_exception_traits(
-            self.generator.constructor_object.noexcept)
+        if self.generator.constructor_object.noexcept_filled:
+            self.parent.exception_traits = capi_generator.get_exception_traits(
+                self.generator.constructor_object.noexcept)
+        else:
+                self.generator.exception_traits = self.parent.copy_or_add_ref_noexcept
         arguments = ', '.join(argument.wrap_argument_declaration() for argument in self.arguments)
         arguments_call = [argument.wrap_2_c() for argument in self.c_arguments_list()]
         out.put_line('unsafe public {class_name}({arguments}){base_init}'.format(
@@ -1478,6 +1517,9 @@ class SharpConstructor(SharpRoutine):
             self.generator.parent_class_generator), ''),
             self.parent.capi_generator)
         result.generate()
+
+        saved_copy_or_add_ref = self.parent.copy_or_add_ref_when_c_2_wrap
+        self.parent.copy_or_add_ref_when_c_2_wrap = self.generator.constructor_object.return_copy_or_add_ref
         with IndentScope(out):
             result_expression = self.exception_traits.generate_c_call(
                 out,
@@ -1488,6 +1530,7 @@ class SharpConstructor(SharpRoutine):
             out.put_line('SetObject({result_expression}.{detach}());'.format(
                 result_expression=result_expression,
                 detach=self.generator.params.detach_method_name))
+        self.parent.copy_or_add_ref_when_c_2_wrap = saved_copy_or_add_ref
 
 
 class SharpFunction(SharpRoutine):
@@ -1509,10 +1552,17 @@ class SharpFunction(SharpRoutine):
             return_type=self.return_type.wrap_argument_declaration(),
             name=self.generator.wrap_name,
             arguments=arguments))
+        saved_copy_or_add_ref = False
+        return_type_generator = self.return_type.type_generator
+        if isinstance(return_type_generator, SharpClass) or isinstance(return_type_generator, SharpTemplate):
+            saved_copy_or_add_ref = return_type_generator.copy_or_add_ref_when_c_2_wrap
+            return_type_generator.copy_or_add_ref_when_c_2_wrap = self.generator.function_object.return_copy_or_add_ref
         with IndentScope(out):
             return_expression = self.exception_traits.generate_c_call(
                 out, self.return_type, self.generator.full_c_name, arguments_call)
             out.put_return_cpp_statement(return_expression)
+        if isinstance(return_type_generator, SharpClass) or isinstance(return_type_generator, SharpTemplate):
+            return_type_generator.copy_or_add_ref_when_c_2_wrap = saved_copy_or_add_ref
 
     def generate(self):
         super().generate()
@@ -1526,8 +1576,6 @@ class SharpLifecycleTraits(object):
         self.lifecycle_traits = lifecycle_traits
         self.params = lifecycle_traits.params
         self.capi_generator = capi_generator
-        exception_traits = capi_generator.get_exception_traits(lifecycle_traits.default_value_for_init_noexcept)
-        self.init_method_exception_traits = exception_traits
 
     def generate_std_methods_definitions(self, out: FileGenerator, sharp_class: SharpClass):
         new = 'new ' if sharp_class.base else ''
@@ -1575,11 +1623,16 @@ class SharpCopySemantic(SharpLifecycleTraits):
             base_init=get_base_init(sharp_class))
         )
         with IndentScope(out):
-            out.put_line('new {class_name}(ECreateFromRawPointer.force_creating_from_raw_pointer, IntPtr.Zero, false);'.format(
+            expr = 'new {class_name}(ECreateFromRawPointer.force_creating_from_raw_pointer, IntPtr.Zero, false);'
+            out.put_line(expr.format(
                 class_name=sharp_class.wrap_name, ))
             out.put_line('if (other.{get_raw}() != IntPtr.Zero)'.format(get_raw=self.params.get_raw_pointer_method_name))
             with IndentScope(out):
-                copy_result = self.init_method_exception_traits.generate_c_call(
+                self.lifecycle_traits.create_exception_traits(sharp_class.class_generator.class_object,
+                                                              self.capi_generator.capi_generator)
+                exception_traits = SharpExceptionTraits(self.lifecycle_traits.init_method_exception_traits,
+                                                        self.capi_generator.params)
+                copy_result = exception_traits.generate_c_call(
                     out, SharpBuiltinType(BuiltinTypeGenerator('IntPtr')), sharp_class.class_generator.copy_method,
                     ['other.{get_raw}()'.format(get_raw=self.params.get_raw_pointer_method_name)])
                 out.put_line('SetObject({copy_result});'.format(copy_result=copy_result))
@@ -1590,7 +1643,11 @@ class SharpCopySemantic(SharpLifecycleTraits):
     def generate_raw_copy_constructor_body_definition(self, out: FileGenerator, sharp_class, copy_object):
         out.put_line('if (object_pointer != IntPtr.Zero && {copy_object})'.format(copy_object=copy_object))
         with IndentScope(out):
-            copy_result = self.init_method_exception_traits.generate_c_call(
+            self.lifecycle_traits.create_exception_traits(sharp_class.class_generator.class_object,
+                                                          self.capi_generator.capi_generator)
+            exception_traits = SharpExceptionTraits(self.lifecycle_traits.init_method_exception_traits,
+                                                    self.capi_generator.params)
+            copy_result = exception_traits.generate_c_call(
                 out, SharpBuiltinType(BuiltinTypeGenerator('IntPtr')), sharp_class.class_generator.copy_method,
                 ['object_pointer'])
             out.put_line('SetObject({copy_result});'.format(copy_result=copy_result))
@@ -1693,8 +1750,11 @@ class SharpRefCountedSemantic(SharpLifecycleTraits):
             out.put_line('SetObject(other.{get_raw}());'.format(get_raw=self.params.get_raw_pointer_method_name))
             out.put_line('if (other.{get_raw}() != IntPtr.Zero)'.format(get_raw=self.params.get_raw_pointer_method_name))
             with IndentScope(out):
-                copy_or_add_ref_noexcept = sharp_class.class_generator.class_object.copy_or_add_ref_noexcept
-                self.capi_generator.get_exception_traits(copy_or_add_ref_noexcept).generate_c_call(
+                self.lifecycle_traits.create_exception_traits(sharp_class.class_generator.class_object,
+                                                              self.capi_generator.capi_generator)
+                exception_traits = SharpExceptionTraits(self.lifecycle_traits.init_method_exception_traits,
+                                                        self.capi_generator.params)
+                exception_traits.generate_c_call(
                     out, SharpBuiltinType(BuiltinTypeGenerator('void')), sharp_class.class_generator.add_ref_method,
                     ['other.{get_raw}()'.format(get_raw=self.params.get_raw_pointer_method_name)])
 
@@ -1702,8 +1762,11 @@ class SharpRefCountedSemantic(SharpLifecycleTraits):
         out.put_line('SetObject(object_pointer);')
         out.put_line('if ({add_ref_object} && object_pointer != IntPtr.Zero)'.format(add_ref_object=add_ref_object))
         with IndentScope(out):
-            copy_or_add_ref_noexcept = sharp_class.class_generator.class_object.copy_or_add_ref_noexcept
-            self.capi_generator.get_exception_traits(copy_or_add_ref_noexcept).generate_c_call(
+            self.lifecycle_traits.create_exception_traits(sharp_class.class_generator.class_object,
+                                                          self.capi_generator.capi_generator)
+            exception_traits = SharpExceptionTraits(self.lifecycle_traits.init_method_exception_traits,
+                                                    self.capi_generator.params)
+            exception_traits.generate_c_call(
                 out, SharpBuiltinType(BuiltinTypeGenerator('void')),
                 sharp_class.class_generator.add_ref_method, ['object_pointer'])
 
