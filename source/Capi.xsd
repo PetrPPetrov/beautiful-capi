@@ -745,6 +745,11 @@
             <xs:documentation>Specifies field name to automatically generate getter function</xs:documentation>
           </xs:annotation>
         </xs:attribute>
+        <xs:attribute name="sharp_marshal_return_as" type="xs:string" use="optional">
+          <xs:annotation>
+            <xs:documentation>Specifies C# marshaling for the return</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -812,6 +817,11 @@
         <xs:documentation>Specifies casting mode from C language layer to implementation side</xs:documentation>
       </xs:annotation>
     </xs:attribute>
+    <xs:attribute name="sharp_marshal_as" type="xs:string" use="optional">
+          <xs:annotation>
+            <xs:documentation>Specifies C# marshaling for the argument</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
   </xs:complexType>
   <xs:simpleType name="TLifecycle">
     <xs:annotation>
@@ -1122,6 +1132,20 @@
       </xs:annotation>
     </xs:attribute>
   </xs:complexType>
+  <xs:complexType name="TSharpMappedTypeItem">
+    <xs:annotation>
+      <xs:documentation>Specifies C# mapped type</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="TMappedTypeItem">
+        <xs:attribute name="marshal_as" type="xs:string" use="optional">
+          <xs:annotation>
+            <xs:documentation>Specifies C# marshaling for the current type</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
   <xs:complexType name="TMappedType">
     <xs:annotation>
       <xs:documentation>Specifies mapped type</xs:documentation>
@@ -1137,7 +1161,7 @@
           <xs:documentation>Specifies C++ mapped type</xs:documentation>
         </xs:annotation>
       </xs:element>
-      <xs:element name="sharp" maxOccurs="1" minOccurs="0" type="TMappedTypeItem">
+      <xs:element name="sharp" maxOccurs="1" minOccurs="0" type="TSharpMappedTypeItem">
         <xs:annotation>
           <xs:documentation>Specifies C# mapped type</xs:documentation>
         </xs:annotation>

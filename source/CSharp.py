@@ -65,11 +65,13 @@ class SharpCapiGenerator(object):
         result = []
         for argument in argument_generators:
             generator = argument.argument_generator.type_generator
+            arg = argument.get_marshaling()
             if isinstance(generator, MappedTypeGenerator):
                 mapped_type = self.get_or_gen_mapped_type(generator.name, generator.mapped_type_object)
-                result.append(mapped_type.wrap_argument_declaration() + ' ' + argument.argument_generator.name)
+                arg += mapped_type.wrap_argument_declaration() + ' ' + argument.argument_generator.name
             else:
-                result.append(argument.c_argument_declaration())
+                arg += argument.c_argument_declaration()
+            result.append(arg)
         return result
 
     def get_or_gen_namespace(self, fullname: str, generator: NamespaceGenerator):
@@ -77,7 +79,7 @@ class SharpCapiGenerator(object):
             return self.full_name_2_sharp_object[fullname]
         else:
             if generator.parent_namespace:
-                parent = self.get_or_gen_namespace(generator.parent_namespace.full_wrap_name,
+                parent = self.get_or_gen_namespace('.'.join(generator.parent_namespace.full_name_array),
                                                    generator.parent_namespace)
                 result = SharpNamespace(generator, parent)
             else:
@@ -325,14 +327,14 @@ class SharpNamespace(object):
         file.put_line('using System;')
         file.put_line('')
         self.increase_indent_recursively(file)
-        file.put_line('public class Initialisation')
+        file.put_line('public class Initialization')
         with IndentScope(file):
             api_root = self.capi_generator.capi_generator.api_root
             file.put_line('const int MAJOR_VERSION = {0};'.format(api_root.major_version))
             file.put_line('const int MINOR_VERSION = {0};'.format(api_root.minor_version))
             file.put_line('const int PATCH_VERSION = {0};'.format(api_root.patch_version))
             file.put_line('')
-            file.put_line('public Initialisation()')
+            file.put_line('public Initialization()')
             with IndentScope(file):
                 file.put_line('int major_version = Functions.GetMajorVersion();')
                 file.put_line('int minor_version = Functions.GetMinorVersion();')
@@ -367,6 +369,9 @@ class SharpNamespace(object):
             )
             for func in self.functions:
                 out.put_line(import_string)
+                return_type_marshaling = func.get_return_marshaling()
+                if return_type_marshaling:
+                    out.put_line(return_type_marshaling)
                 arguments = self.capi_generator.export_function_arguments(func.arguments)
                 exception_traits = self.capi_generator.get_exception_traits(
                     func.generator.function_object.noexcept)
@@ -605,11 +610,15 @@ class SharpClass(object):
         if self.class_generator.is_callback:
             for method in self.base.methods:
                 name = method.generator.full_c_name + '_callback_type'
-                arguments = ['IntPtr object_pointer'] + [arg.wrap_argument_declaration() for arg in method.arguments]
+                arguments = ['IntPtr object_pointer'] + self.capi_generator.export_function_arguments(method.arguments)#[arg.c_argument_declaration() for arg in method.arguments]
                 method.exception_traits.modify_c_arguments(arguments)
                 return_type = method.return_type.c_argument_declaration()
                 out.put_line('[UnmanagedFunctionPointer(CallingConvention.Cdecl)]')
+                return_type_marshaling = method.get_return_marshaling()
+                if return_type_marshaling:
+                    out.put_line(return_type_marshaling)
                 out.put_line('unsafe public delegate {0} {1}({2});'.format(return_type, name, ', '.join(arguments)))
+                out.put_line('public {0} {1}_callback;'.format(name, method.generator.c_name))
             if isinstance(self.lifecycle_traits, SharpRefCountedSemantic):
                 add_ref_func_name = self.base.class_generator.full_c_name + '_add_ref_callback_type'
                 release_func_name = self.base.class_generator.full_c_name + '_release_callback_type'
@@ -770,6 +779,9 @@ class SharpClass(object):
                 arguments=', '.join(arguments)))
         for method in self.methods:
             out.put_line(import_string)
+            return_type_marshaling = method.get_return_marshaling()
+            if return_type_marshaling:
+                out.put_line(return_type_marshaling)
             arguments = ['IntPtr object_pointer'] + self.capi_generator.export_function_arguments(method.arguments)
             method.exception_traits.modify_c_arguments(arguments)
             self.capi_generator.generate_string_marshaling(out,
@@ -818,7 +830,7 @@ class SharpClass(object):
             '{0}_{1}_callback'.format(class_name, method.generator.c_name),
             impl_class,
             method.exception_traits.exception_info_t(),
-            ', '.join(['IntPtr object_pointer'] + [arg.wrap_argument_declaration() for arg in method.arguments])))
+            ', '.join(['IntPtr object_pointer'] + [arg.c_argument_declaration() for arg in method.arguments])))
         with IndentScope(out):
             out.put_line('try')
             with IndentScope(out):
@@ -833,7 +845,7 @@ class SharpClass(object):
                 with IndentScope(out):
                     out.put_line('{}method.Invoke(self, new object[] {{ {} }});'.format(
                         'return ({})'.format(return_type) if return_type != 'void' else '',
-                        ', '.join(arg.wrap_2_c() for arg in method.arguments)))
+                        ', '.join(arg.c_2_wrap_var('', arg.argument_generator.name)[1] for arg in method.arguments)))
                 out.put_line('catch(TargetInvocationException tiex) ')
                 with IndentScope(out):
                     out.put_line('throw tiex.InnerException;')
@@ -861,13 +873,17 @@ class SharpClass(object):
         with IndentScope(out):
             out.put_line('var result = new {0}();'.format(return_type))
             for method in self.base.methods:
-                out.put_line('result.SetCFunctionFor{0}({1}_callback<{2}>);'.format(
-                    method.wrap_name,
+                out.put_line('result.{0}_callback = {1}_callback<{2}>;'.format(
+                    method.generator.c_name,
                     class_name + '_' + method.generator.c_name,
-                    impl_class))
+                    impl_class
+                ))
+                out.put_line('result.SetCFunctionFor{0}(result.{1}_callback);'.format(
+                    method.wrap_name,
+                    method.generator.c_name))
             out.put_line('GCHandle handle = GCHandle.Alloc(implementation_class);')
             out.put_line('IntPtr ptr = (IntPtr)handle;')
-            out.put_line('result.SetObjectPointer((IntPtr )ptr);')
+            out.put_line('result.SetObjectPointer((IntPtr)ptr);')
             # out.put_line('result.SetObjectPointer(Pointer.Unbox(implementation_class));')
             out.put_line('return result;')
         for method in self.base.methods:
@@ -1278,6 +1294,10 @@ class SharpMappedType(object):
             self.wrap_2_c = sharp_type.wrap_2_c
             self.c_2_wrap = sharp_type.c_2_wrap
             self.include_headers = sharp_type.include_headers
+            self.marshal_as = sharp_type.marshal_as
+
+    def marshal_type(self) -> str:
+        return self.marshal_as if self.marshal_as else ''
 
     def format(self, casting_expression: str, expression_to_cast: str, result_var: str, type_name: str) -> ([str], str):
         result_expression = casting_expression.format(
@@ -1376,6 +1396,17 @@ class SharpArgument(object):
         self.capi_generator = capi_generator
         self.type_generator = None
 
+    def marshal_type(self) -> str:
+        if self.argument_generator.argument_object and self.argument_generator.argument_object.sharp_marshal_as_filled:
+            return self.argument_generator.argument_object.sharp_marshal_as
+        elif self.type_generator and isinstance(self.type_generator, SharpMappedType):
+            return self.type_generator.marshal_type()
+        return ''
+
+    def get_marshaling(self) -> str:
+        marshal_type = self.marshal_type()
+        return '[MarshalAs({})]'.format(marshal_type) if marshal_type else ''
+
     def wrap_argument_declaration(self, base=()) -> str:
         declaration = self.type_generator.wrap_argument_declaration().replace('::', '.').split('.')
         type_name = SharpClass.get_relative_name(base, declaration)
@@ -1435,6 +1466,12 @@ class SharpMethod(SharpRoutine):
         self.wrap_name = method_generator.wrap_name
         self.exception_traits = generator.namespace.capi_generator.get_exception_traits(
             method_generator.method_object.noexcept)
+
+    def get_return_marshaling(self) -> str:
+        if self.generator.method_object.sharp_marshal_return_as_filled:
+            return '[return:MarshalAs({})]'.format(self.generator.method_object.sharp_marshal_return_as)
+        marshal_type = self.return_type.marshal_type()
+        return '[return:MarshalAs({})]'.format(marshal_type) if marshal_type else ''
 
     def is_overload(self):
         if self.parent.base:
@@ -1554,6 +1591,12 @@ class SharpFunction(SharpRoutine):
         self.return_type = None
         self.exception_traits = parent.capi_generator.get_exception_traits(function_generator.function_object.noexcept)
 
+    def get_return_marshaling(self) -> str:
+        if self.generator.function_object.sharp_marshal_return_as_filled:
+            return '[return:MarshalAs({})]'.format(self.generator.function_object.sharp_marshal_return_as)
+        marshal_type = self.return_type.marshal_type()
+        return '[return:MarshalAs({})]'.format(marshal_type) if marshal_type else ''
+
     @property
     def get_namespace(self):
         if isinstance(self.parent, SharpNamespace):
@@ -1616,7 +1659,8 @@ class SharpLifecycleTraits(object):
         out.put_line('unsafe public static bool operator!({class_name} obj)'.format(
             class_name=sharp_class.wrap_name))
         with IndentScope(out):
-            out.put_line('return obj.{get_raw}() != IntPtr.Zero;'.format(get_raw=self.params.get_raw_pointer_method_name))
+            out.put_line('return obj.{get_raw}() != IntPtr.Zero;'.format(
+                get_raw=self.params.get_raw_pointer_method_name))
         out.put_line('')
         out.put_line('{new}unsafe public IntPtr {detach_method}()'.format(
             detach_method=self.params.detach_method_name, new=new))
@@ -1641,7 +1685,8 @@ class SharpCopySemantic(SharpLifecycleTraits):
             expr = 'new {class_name}(ECreateFromRawPointer.force_creating_from_raw_pointer, IntPtr.Zero, false);'
             out.put_line(expr.format(
                 class_name=sharp_class.wrap_name, ))
-            out.put_line('if (other.{get_raw}() != IntPtr.Zero)'.format(get_raw=self.params.get_raw_pointer_method_name))
+            out.put_line('if (other.{get_raw}() != IntPtr.Zero)'.format(
+                get_raw=self.params.get_raw_pointer_method_name))
             with IndentScope(out):
                 self.lifecycle_traits.create_exception_traits(sharp_class.class_generator.class_object,
                                                               self.capi_generator.capi_generator)
@@ -1763,7 +1808,8 @@ class SharpRefCountedSemantic(SharpLifecycleTraits):
         )
         with IndentScope(out):
             out.put_line('SetObject(other.{get_raw}());'.format(get_raw=self.params.get_raw_pointer_method_name))
-            out.put_line('if (other.{get_raw}() != IntPtr.Zero)'.format(get_raw=self.params.get_raw_pointer_method_name))
+            out.put_line('if (other.{get_raw}() != IntPtr.Zero)'.format(
+                get_raw=self.params.get_raw_pointer_method_name))
             with IndentScope(out):
                 self.lifecycle_traits.create_exception_traits(sharp_class.class_generator.class_object,
                                                               self.capi_generator.capi_generator)
@@ -2194,7 +2240,8 @@ def get_base_init(sharp_class: SharpClass):
     if base:
         base_class_name = '.'.join(base.class_generator.parent_namespace.full_name_array + [base.wrap_name])
         create_from_raw_ptr_expession = 'ECreateFromRawPointer.force_creating_from_raw_pointer'
-        return ' : base({base}.{expr}, IntPtr.Zero, false)'.format(base=base_class_name, expr=create_from_raw_ptr_expession)
+        return ' : base({base}.{expr}, IntPtr.Zero, false)'.format(base=base_class_name,
+                                                                   expr=create_from_raw_ptr_expession)
     return ''
 
 

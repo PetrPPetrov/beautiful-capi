@@ -1122,6 +1122,8 @@ class TMethodBase(TConstructorBase):
         self.setter_field_name_filled = False
         self.getter_field_name = ""
         self.getter_field_name_filled = False
+        self.sharp_marshal_return_as = ""
+        self.sharp_marshal_return_as_filled = False
 
     def load_element(self, element):
         if super().load_element(element):
@@ -1158,6 +1160,10 @@ class TMethodBase(TConstructorBase):
             cur_attr = dom_node.getAttribute("getter_field_name")
             self.getter_field_name = cur_attr
             self.getter_field_name_filled = True
+        if dom_node.hasAttribute("sharp_marshal_return_as"):
+            cur_attr = dom_node.getAttribute("sharp_marshal_return_as")
+            self.sharp_marshal_return_as = cur_attr
+            self.sharp_marshal_return_as_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:
@@ -1226,6 +1232,8 @@ class TArgument(object):
         self.c_2_impl_filled = False
         self.c_2_impl_mode = TC2ImplMode.default
         self.c_2_impl_mode_filled = False
+        self.sharp_marshal_as = ""
+        self.sharp_marshal_as_filled = False
         self.documentations = []
 
     def load_element(self, element):
@@ -1257,6 +1265,10 @@ class TArgument(object):
             cur_attr = dom_node.getAttribute("c_2_impl_mode")
             self.c_2_impl_mode = TC2ImplMode.load(cur_attr)
             self.c_2_impl_mode_filled = True
+        if dom_node.hasAttribute("sharp_marshal_as"):
+            cur_attr = dom_node.getAttribute("sharp_marshal_as")
+            self.sharp_marshal_as = cur_attr
+            self.sharp_marshal_as_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:
@@ -1636,6 +1648,30 @@ class TMappedTypeItem(object):
         self.load_attributes(dom_node)
 
 
+class TSharpMappedTypeItem(TMappedTypeItem):
+    def __init__(self):
+        super().__init__()
+        self.marshal_as = ""
+        self.marshal_as_filled = False
+
+    def load_element(self, element):
+        if super().load_element(element):
+            return True
+        return False
+
+    def load_attributes(self, dom_node):
+        super().load_attributes(dom_node)
+        if dom_node.hasAttribute("marshal_as"):
+            cur_attr = dom_node.getAttribute("marshal_as")
+            self.marshal_as = cur_attr
+            self.marshal_as_filled = True
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
+
 class TMappedType(object):
     def __init__(self):
         self.all_items = []
@@ -1675,7 +1711,7 @@ class TMappedType(object):
             self.cpps.append(new_element)
             return True
         if element.nodeName == "sharp":
-            new_element = TMappedTypeItem()
+            new_element = TSharpMappedTypeItem()
             new_element.load(element)
             self.sharps.append(new_element)
             return True
