@@ -692,6 +692,21 @@ class SharpClass(object):
             self.__generate_down_cast(out)
             if hasattr(self.class_generator, 'extension_base_class_generator'):
                 self.__generate_cast_name_declaration(out)
+            if self.is_template:
+                out.put_line('')
+                template_name = self.namespace.full_wrap_name + '.' + self.wrap_short_name
+                template_name += '<' + ', '.join(
+                    arg.wrap_argument_declaration() for arg in self.template_arguments) + '>'
+                out.put_line('unsafe public static implicit operator {0}({1} certain_class)'.format(
+                        template_name, self.full_wrap_name))
+                with IndentScope(out):
+                    out.put_line('return new {0}({0}.ECreateFromObject.create_from_object, certain_class);'.format(
+                        template_name))
+                out.put_line('')
+                out.put_line('unsafe public static implicit operator {0}({1} generic)'.format(
+                    self.full_wrap_name, template_name))
+                with IndentScope(out):
+                    out.put_line('return ({})generic.GetCertainClass();'.format(self.full_wrap_name))
         self.namespace.decrease_indent_recursively(out)
 
     def __generate_constructor_definitions(self, definition_header, first_method):
