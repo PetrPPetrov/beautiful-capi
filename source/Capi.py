@@ -31,6 +31,7 @@ from CreateGenerators import create_namespace_generators
 from FileCache import FileCache, full_relative_path_from_candidates
 from CapiGenerator import CapiGenerator
 from FileGenerator import FileGenerator, Indent, IndentScope, Unindent, WatchdogScope, IfDefScope
+from NatvisGenerator import NatvisGenerator
 from Templates import process as process_templates
 from Callbacks import process as process_callbacks
 from Properties import process as process_properties
@@ -59,6 +60,7 @@ class Capi(object):
                  verbosity=None
                  ):
         self.input_xml = input_filename
+        self.input_params_filename = input_params_filename
         self.input_params = parse(input_params_filename)
         self.output_folder = output_folder
         self.sharp_output_folder = sharp_output_folder
@@ -265,6 +267,16 @@ class Capi(object):
 
         if self.unit_tests_generator:
             self.unit_tests_generator.generate(namespace_generators)
+
+        if self.params_description.natvis_file_filled:
+            if self.params_description.shared_library_name_filled:
+                natvis_generator = NatvisGenerator(namespace_generators, self.params_description)
+                filename = self.params_description.natvis_file
+                if not os.path.isabs(filename):
+                    filename = os.path.join(os.path.dirname(self.input_params_filename), filename)
+                natvis_generator.generate(filename)
+            else:
+                print('Warning: To generate the natvis file, you must specify shared_library_name in the params file')
 
         if self.sharp_output_folder:
             if self.params_description.shared_library_name_filled:

@@ -205,7 +205,12 @@
     </xs:attribute>
     <xs:attribute name="shared_library_name" type="xs:string" use="optional" default="">
       <xs:annotation>
-        <xs:documentation>Specifies the wrap side root header namespace name</xs:documentation>
+        <xs:documentation>Specifies library(.dll on Windows or .so on Linux) name</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="natvis_file" type="xs:string" use="optional" default="">
+      <xs:annotation>
+        <xs:documentation>Enable generation and specifies path to .natvis file, which is necessary for displaying real class fields when debugging on Visual Studio(You need to manually add it for your project). Also your dll name should not contain '-' symbol!</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute name="doxygen_class_pattern" type="xs:string" use="optional">
