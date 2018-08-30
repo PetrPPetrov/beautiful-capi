@@ -1,3 +1,10 @@
+Version 0.5
+    Added ability to generate C# wrapper classes, generics, external classes and namespaces.
+    Reworked mapped types, now it allows to specify different types for C++ and C# code.
+    Added С# versions for most examples.
+    Added ability to specify C# marshaling for mapped types, arguments, and return value
+    Added ability to generate natvis files for visual studio for debug purpose.
+
 Version 0.4
     Added mapped types support, issue #6
     Added ability to generate Boost.Test unit tests for properties, issue #22
