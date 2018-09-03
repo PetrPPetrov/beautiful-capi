@@ -1,44 +1,23 @@
 #!/usr/bin/env python
 #
-# Software Package: Beautiful C-API
-# Copyright holder: Petr Petrovich Petrov
+# Beautiful Capi generates beautiful C API wrappers for your C++ classes
+# Copyright (C) 2015 Petr Petrovich Petrov
 #
-# Description: A source-code wrapping tool which automates
-# the creation of compiler-independent and binary compatible C++ libraries
-# across different C++ compilers, written in Python 3,
-# using XML format API descriptions as input.
+# This file is part of Beautiful Capi.
 #
-# Hosted on public source-code site github
-# https://github.com/PetrPPetrov/beautiful-capi/
-# Default Public license: GNU General Public License Version 3
+# Beautiful Capi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
 #
-# This license agreement is between the parties with Effective Date: 1st February 2018:
-# Licensor: Petr Petrovich Petrov, and
-# Licensee: Visual Technology Services Ltd.
+# Beautiful Capi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 #
-# This agreement creates a private,
-# confidential license between the licensee and licensor,
-# separate and distinct from the default public license.
+# You should have received a copy of the GNU General Public License
+# along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
-# The license grants full commercial use,
-# including the rights to modify, extend,
-# create derivative works, package, distribute,
-# and sub-license to 3rd parties.
-#
-# This license shall survive any changes
-# to the public software or license,
-# including if the public license is changed
-# or the software is deleted, lost or withdrawn.
-#
-# The license grants rights of the licensee
-# to pass this license on to a successor organization
-# in the event of source-code escrow release
-# or company change of ownership.
-#
-# The licensor remains owner and copyright holder
-# and shall be acknowledged in documentation copyright notices.
-# The license is permanent and remains in effect indefinitely,
-# unless modified by a further written agreement.
 
 
 from ClassGenerator import ClassGenerator
@@ -57,7 +36,7 @@ class NatvisGenerator(object):
         wrap_name = class_generator.full_wrap_name.replace('<', '&lt;').replace('>', '&gt;')
         out.put_line('<Type Name="{}">'.format(wrap_name))
         with Indent(out):
-            out.put_line('<DisplayString> mObject </DisplayString>')
+            out.put_line('<DisplayString>mObject</DisplayString>')
             out.put_line('<Expand>')
             with Indent(out):
                 out.put_line('<ExpandedItem>({0}.dll!{1}*)mObject</ExpandedItem>'.format(
