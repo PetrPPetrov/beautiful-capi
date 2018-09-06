@@ -85,6 +85,16 @@ class DynamicLoaderGenerator(object):
     def __generate_open_load(self, out: FileGenerator):
         out.put_line('load_function<{0}_function_type>({0}, "{0}");'.format(self.cur_c_function_name))
 
+    def __generate_load_functions(self, namespace_info, out: FileGenerator):
+        for c_function in namespace_info.c_functions:
+            self.cur_c_function_name = c_function.name
+            if_def_then_else(out, "{0}_load_function_call".format(c_function.name),
+                             self.__generate_secure_load,
+                             self.__generate_open_load)
+        if self.namespace_info.nested_namespaces:
+            for nested_ns in namespace_info.nested_namespaces:
+                self.__generate_load_functions(nested_ns, out)
+
     def __generate_load_module(self, out: FileGenerator):
         out.put_line('void load_module(const char* shared_library_name)')
         with IndentScope(out):
@@ -97,11 +107,7 @@ class DynamicLoaderGenerator(object):
                 out.put_line('std::stringstream error_message;')
                 out.put_line('error_message << "Can\'t load shared library " << shared_library_name;')
                 out.put_line('throw std::runtime_error(error_message.str());')
-            for c_function in self.namespace_info.c_functions:
-                self.cur_c_function_name = c_function.name
-                if_def_then_else(out, "{0}_load_function_call".format(c_function.name),
-                                 self.__generate_secure_load,
-                                 self.__generate_open_load)
+            self.__generate_load_functions(self.namespace_info, out)
             generate_check_version(out, self.namespace_info.namespace_name_array[0], 'shared_library_name')
         out.put_line('')
 
@@ -140,17 +146,23 @@ class DynamicLoaderGenerator(object):
     def __generate_open_zero(self, out: FileGenerator):
         out.put_line('{0} = 0;'.format(self.cur_c_function_name))
 
+    def __generate_zero_func_pointers(self, namespace_info, out: FileGenerator):
+        for c_function in namespace_info.c_functions:
+            self.cur_c_function_name = c_function.name
+            if_def_then_else(out, '{0}_zero_function_pointer'.format(c_function.name),
+                             self.__generate_secure_zero,
+                             self.__generate_open_zero)
+        if namespace_info.nested_namespaces:
+            for nested_ns in namespace_info.nested_namespaces:
+                self.__generate_zero_func_pointers(nested_ns, out)
+
     def __generate_destructor(self, out: FileGenerator):
         out.put_line('~Initialization()')
         with IndentScope(out):
             if_def_then_else(out, '_WIN32',
                              DynamicLoaderGenerator.__generate_destructor_windows,
                              DynamicLoaderGenerator.__generate_destructor_posix)
-            for c_function in self.namespace_info.c_functions:
-                self.cur_c_function_name = c_function.name
-                if_def_then_else(out, '{0}_zero_function_pointer'.format(c_function.name),
-                                 self.__generate_secure_zero,
-                                 self.__generate_open_zero)
+            self.__generate_zero_func_pointers(self.namespace_info, out)
 
     def __generate_body(self, out: FileGenerator):
         out.put_line('class Initialization')
@@ -163,7 +175,7 @@ class DynamicLoaderGenerator(object):
             out.put_line('Initialization(const Initialization&);')
             if self.params.enable_cpp11_features_in_wrap_code:
                 move_constructors_delete_condition = '{ns}_CPP_COMPILER_HAS_MOVE_CONSTRUCTOR_DELETE'.format(
-                    ns=self.namespace_name)
+                    ns=self.namespace_name.upper())
                 with IfDefScope(out, move_constructors_delete_condition, False):
                     with Indent(out):
                         out.put_line('Initialization(Initialization &&) = delete;')

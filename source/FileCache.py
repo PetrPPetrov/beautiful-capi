@@ -84,6 +84,13 @@ class FileCache(object):
         join_traits.create_if_required(result_folder)
         return result_folder
 
+    def get_file_for_capi_namespace(self, namespace_path: [str]) -> str:
+        join_traits = OsJoin(os.path.dirname(self.params.output_wrap_file_name))
+        result_folder = join_traits.join_to_base(namespace_path[:-1])
+        join_traits.create_if_required(result_folder)
+        filename = namespace_path[-1].replace('<', '_').replace('>', '').replace('::', '')
+        return join_traits.join(result_folder, filename)
+
     def __get_file_name_base_for_namespace(self, namespace_path: [str], join_traits: PosixJoin or OsJoin) -> str:
         if self.params.namespace_header_at_parent_folder:
             return FileCache.__get_file_name_base_for_namespace_common(namespace_path[:-1], join_traits)

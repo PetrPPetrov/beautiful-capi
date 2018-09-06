@@ -43,7 +43,7 @@ def generate_copy_callback_declaration(first_flag, out: FileGenerator, class_gen
         semicolon='' if definition else ';'))
     if definition:
         class_generator.capi_generator.add_c_function_pointer(
-            class_generator.full_name_array,
+            class_generator.full_name_array[:-1],
             'void*', class_generator.base_class_generator.copy_callback_type, arguments)
     return first_flag
 
@@ -75,7 +75,7 @@ def generate_delete_callback_declaration(first_flag, out: FileGenerator, class_g
         semicolon='' if definition else ';'))
     if definition:
         class_generator.capi_generator.add_c_function_pointer(
-            class_generator.full_name_array,
+            class_generator.full_name_array[:-1],
             'void', class_generator.base_class_generator.delete_callback_type, arguments)
     return first_flag
 
@@ -117,7 +117,7 @@ def generate_add_ref_callback_declaration(first_flag, out: FileGenerator, class_
         semicolon='' if definition else ';'))
     if definition:
         class_generator.capi_generator.add_c_function_pointer(
-            class_generator.full_name_array,
+            class_generator.full_name_array[:-1],
             'void', class_generator.base_class_generator.add_ref_callback_type, arguments)
     return first_flag
 
@@ -149,7 +149,7 @@ def generate_release_callback_declaration(first_flag, out: FileGenerator, class_
         semicolon='' if definition else ';'))
     if definition:
         class_generator.capi_generator.add_c_function_pointer(
-            class_generator.full_name_array,
+            class_generator.full_name_array[:-1],
             'void', class_generator.base_class_generator.release_callback_type, arguments)
     return first_flag
 
@@ -205,7 +205,7 @@ def add_method_callback_typedef(cur_method_generator):
     cur_method_generator.exception_traits.modify_c_arguments(c_argument_declaration_list)
 
     cur_method_generator.parent_class_generator.capi_generator.add_c_function_pointer(
-        cur_method_generator.parent_class_generator.full_name_array,
+        cur_method_generator.parent_class_generator.full_name_array[:-1],
         cur_method_generator.return_type_generator.c_argument_declaration(),
         cur_method_generator.callback_type,
         ', '.join(c_argument_declaration_list))

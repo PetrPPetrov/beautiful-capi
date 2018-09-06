@@ -328,7 +328,7 @@ class CopySemantic(LifecycleTraits):
             argument_list = ['void* object_pointer']
             self.init_method_exception_traits.modify_c_arguments(argument_list)
             class_generator.capi_generator.add_c_function(
-                class_generator.full_name_array,
+                class_generator.full_name_array[:-1],
                 'void*',
                 class_generator.copy_method,
                 ', '.join(argument_list),
@@ -344,7 +344,7 @@ class CopySemantic(LifecycleTraits):
         argument_list = ['void* object_pointer']
         self.finish_method_exception_traits.modify_c_arguments(argument_list)
         class_generator.capi_generator.add_c_function(
-            class_generator.full_name_array,
+            class_generator.full_name_array[:-1],
             'void',
             class_generator.delete_method,
             ', '.join(argument_list),
@@ -480,7 +480,7 @@ class RawPointerSemantic(LifecycleTraits):
         argument_list = ['void* object_pointer']
         self.finish_method_exception_traits.modify_c_arguments(argument_list)
         class_generator.capi_generator.add_c_function(
-            class_generator.full_name_array,
+            class_generator.full_name_array[:-1],
             'void',
             class_generator.delete_method,
             ', '.join(argument_list),
@@ -637,7 +637,7 @@ class RefCountedSemantic(LifecycleTraits):
         argument_list = ['void* object_pointer']
         self.init_method_exception_traits.modify_c_arguments(argument_list)
         class_generator.capi_generator.add_c_function(
-            class_generator.full_name_array,
+            class_generator.full_name_array[:-1],
             'void',
             class_generator.add_ref_method,
             ', '.join(argument_list),
@@ -653,7 +653,7 @@ class RefCountedSemantic(LifecycleTraits):
         argument_list = ['void* object_pointer']
         self.finish_method_exception_traits.modify_c_arguments(argument_list)
         class_generator.capi_generator.add_c_function(
-            class_generator.full_name_array,
+            class_generator.full_name_array[:-1],
             'void',
             class_generator.release_method,
             ', '.join(argument_list),

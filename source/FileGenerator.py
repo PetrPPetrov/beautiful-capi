@@ -32,6 +32,9 @@ class AtomicString(object):
     def get_lines(self) -> [str]:
         return [self.value]
 
+    def line_count(self):
+        return self.value.count('\n')
+
 
 class IncludeHeaders(object):
     def __init__(self, included_files, indent: str):
@@ -49,6 +52,16 @@ class IncludeHeaders(object):
                     result_lines.append('{0}#include "{1}"\n'.format(self.indent, header_file))
                 already_included_files.update({header_file: is_system})
         return result_lines
+
+    def line_count(self):
+        count = 0
+        already_included_files = {}
+        for header_file, is_system in self.included_files:
+            if header_file not in already_included_files:
+                already_included_files.update({header_file: is_system})
+            else:
+                count += 1
+        return count
 
 
 class FileGenerator(object):
@@ -89,6 +102,18 @@ class FileGenerator(object):
 
     def empty(self):
         return not self.lines
+
+    def line_count(self) -> int:
+        count = 0
+        if self.file_header:
+            count += self.file_header.count('\n') + 1
+        if self.copyright_header:
+            count += self.copyright_header.count('\n') + 2
+        if self.automatic_generation_warning:
+            count += self.automatic_generation_warning.count('\n') + 2
+        for line in self.lines:
+            count += line.line_count()
+        return count
 
     def get_lines(self):
         result = []

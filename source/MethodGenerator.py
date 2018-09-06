@@ -169,7 +169,7 @@ class ConstructorGenerator(object):
             self.exception_traits.generate_implementation_call(
                 c_function_body, self.parent_class_as_argument_type, calling_instructions)
         capi_generator.add_c_function(
-            self.parent_class_generator.full_name_array,
+            self.parent_class_generator.full_name_array[:-1],
             self.parent_class_as_argument_type.c_argument_declaration(),
             self.full_c_name,
             arguments_declaration,
@@ -310,7 +310,7 @@ class MethodGenerator(object):
             self.exception_traits.generate_implementation_call(
                 c_function_body, self.return_type_generator, calling_instructions)
         capi_generator.add_c_function(
-            self.parent_class_generator.full_name_array,
+            self.parent_class_generator.full_name_array[:-1],
             self.return_type_generator.c_argument_declaration(),
             self.full_c_name,
             arguments_declaration,

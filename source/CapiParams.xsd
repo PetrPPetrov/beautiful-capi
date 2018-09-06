@@ -75,7 +75,7 @@
     </xs:attribute>
     <xs:attribute name="open_api" type="xs:boolean" use="optional" default="true">
       <xs:annotation>
-        <xs:documentation>Specifies flag if the library API will be open, otherwise the library API will be secured</xs:documentation>
+        <xs:documentation>Specifies flag if the library API will be open, otherwise the library API will be secured. Warning: it is strongly recommended that if this flag is false, also disable the "split_wrap_by_namespaces" flag.</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute name="copy_semantic_wrapper_class_suffix" type="xs:string" use="optional" default="">
@@ -248,5 +248,18 @@
         <xs:documentation>C# library name for CMake</xs:documentation>
       </xs:annotation>
     </xs:attribute>
+    <xs:attribute name="split_wrap_by_namespaces" type="xs:boolean" use="optional" default="true">
+      <xs:annotation>
+        <xs:documentation>Split the output wrap file into multiple files by namespaces.
+          Warning: if you use BCapi for a closed source project and the open_api flag is disabled, we strongly recommend that you disable this flag, since the functions will only be mixed in their namespaces.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="wrap_file_line_limit" type="xs:integer" default="64000">
+      <xs:annotation>
+        <xs:documentation>Splits the output output file after exceeding the limit.
+          This is often useful for debugging in a Visual Studio, which not correctly displayed values, located more than 65536 lines </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+
   </xs:complexType>
 </xs:schema>

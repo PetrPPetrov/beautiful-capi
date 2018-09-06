@@ -67,7 +67,7 @@ class RequiresCastToBase(object):
                     this_type=class_generator.class_object.implementation_class_name
                 ))
             class_generator.capi_generator.add_c_function(
-                class_generator.full_name_array,
+                class_generator.full_name_array[:-1],
                 'void*',
                 class_generator.cast_to_base,
                 'void* object_pointer',

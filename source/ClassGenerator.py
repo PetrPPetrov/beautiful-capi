@@ -97,7 +97,10 @@ class ClassGenerator(object):
 
     @property
     def template_name(self):
-        return self.class_object.typedef_name if self.class_object.typedef_name else self.name
+        if self.class_object.typedef_name:
+            return self.class_object.typedef_name + self.lifecycle_traits.suffix
+        else:
+            return self.name
 
     @property
     def full_template_name_array(self) -> [str]:
@@ -507,7 +510,7 @@ class ClassGenerator(object):
                     with IndentScope(body):
                         body.put_line('return 0;')
                 self.capi_generator.add_c_function(
-                    self.full_name_array,
+                    self.full_name_array[:-1],
                     'void*',
                     self.cast_from_base(cur_base_class_generator),
                     base_class_argument_generator.c_argument_declaration(),
