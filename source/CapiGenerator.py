@@ -212,24 +212,28 @@ class CapiGenerator(object):
         self.__generate_function_pointers(self.cur_namespace_info, out, False)
         out.put_line('')
 
-    def __generate_namespace_c_function_pointers(self, namespace_info: NamespaceInfo):
+    def __generate_namespace_c_function_pointers(self, namespace_info: NamespaceInfo, out: FileGenerator):
         for c_function in namespace_info.c_functions:
-            self.cur_namespace_info.c_pointers.append(
-                Pointer2CFunction(
-                    c_function.path_to_namespace,
-                    c_function.return_type,
-                    c_function.name + '_function_type',
-                    c_function.arguments
-                )
+            func_ptr = Pointer2CFunction(
+                c_function.path_to_namespace,
+                c_function.return_type,
+                c_function.name + '_function_type',
+                c_function.arguments
             )
+            self.cur_namespace_info.c_pointers.append(func_ptr)
+            out.put_line('typedef {return_type} ({convention} *{name})({arguments});'.format(
+                return_type=func_ptr.return_type,
+                convention=self.cur_api_convention,
+                name=func_ptr.name,
+                arguments=func_ptr.arguments))
         if namespace_info.nested_namespaces:
             for nested_ns in namespace_info.nested_namespaces:
-                self.__generate_namespace_c_function_pointers(nested_ns)
+                self.__generate_namespace_c_function_pointers(nested_ns, out)
 
     def __generate_dynamic_capi(self, out: FileGenerator):
         out.put_line('')
-        self.__generate_namespace_c_function_pointers(self.cur_namespace_info)
-        self.__generate_callback_typedefs(self.cur_namespace_info, out)
+        self.__generate_namespace_c_function_pointers(self.cur_namespace_info, out)
+        #self.__generate_callback_typedefs(self.cur_namespace_info, out)
         out.put_line('')
         if_def_then_else(out, self.cur_namespace_name[0].upper() + '_CAPI_DEFINE_FUNCTION_POINTERS',
                          self.__generate_function_pointer_definitions,
@@ -249,9 +253,6 @@ class CapiGenerator(object):
                 self.__generate_c_functions_for_static_load(nested_ns, out)
 
     def __generate_static_capi(self, out: FileGenerator):
-        out.put_line('')
-        self.__generate_callback_typedefs(self.cur_namespace_info, out)
-        out.put_line('')
         self.__generate_c_functions_for_static_load(self.cur_namespace_info, out)
         StaticLoaderGenerator(self.cur_namespace_name[0], self.cur_namespace_info, self.params).generate(out)
         out.put_line('')
@@ -376,6 +377,10 @@ class CapiGenerator(object):
                     self.__generate_capi_defines(output_capi)
                     self.__generate_version_defines(output_capi, '_'.join(namespace_name).upper())
                     self.__generate_compiler_traits(output_capi)
+
+                    output_capi.put_line('')
+                    self.__generate_callback_typedefs(self.cur_namespace_info, output_capi)
+                    output_capi.put_line('')
 
                     if_not_def_then_else(output_capi, '_'.join(namespace_name).upper() + '_CAPI_USE_DYNAMIC_LOADER',
                                          self.__generate_static_capi,
