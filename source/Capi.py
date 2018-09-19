@@ -57,6 +57,7 @@ class Capi(object):
                  api_keys_folder=None,
                  clean=None,
                  unit_tests_file=None,
+                 natvis_file=None,
                  verbosity=None
                  ):
         self.input_xml = input_filename
@@ -70,6 +71,7 @@ class Capi(object):
         self.api_description = None
         self.params_description = None
         self.unit_tests_file = unit_tests_file
+        self.natvis_file = natvis_file
         self.external_libs_headers = []
         if clean:
             if os.path.exists(self.output_folder):
@@ -293,6 +295,9 @@ class Capi(object):
         self.params_description.internal_snippets_folder = self.internal_snippets_folder
         self.params_description.api_keys_folder = self.api_keys_folder
         self.params_description.output_wrap_file_name = self.output_wrap_file_name
+        if self.natvis_file:
+            self.params_description.natvis_file = self.natvis_file
+            self.params_description.natvis_file_filled = True
         self.api_description = parse_root(self.input_xml, self.params_description)
         self.__substitute_project_name(self.params_description)
 
@@ -342,6 +347,8 @@ def main():
     parser.set_defaults(version=False)
     parser.add_argument('-t', '--tests-file', nargs=None, default="", dest='unit_tests_file',
                         help='generates unit tests for properties into specified file')
+    parser.add_argument('-n', '--natvis-file', nargs=None, default="", dest='natvis_file',
+                        help='generates .natvis file, specifies file name for .natvis file')
     parser.add_argument('--verbosity', dest='verbosity', action='store_true',
                         help='increase output verbosity')
     parser.set_defaults(version=False)
@@ -367,6 +374,7 @@ def main():
         args.api_keys_folder,
         args.clean,
         args.unit_tests_file,
+        args.natvis_file,
         args.verbosity
     )
     capi.generate()
