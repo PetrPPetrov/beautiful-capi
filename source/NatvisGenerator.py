@@ -25,6 +25,8 @@ from NamespaceGenerator import NamespaceGenerator
 from FileGenerator import FileGenerator, Indent
 from ParamsParser import TBeautifulCapiParams
 
+def replace_xml_scopes(line: str) -> str:
+    return line.replace('<', '&lt;').replace('>', '&gt;').replace(' ', '').replace('&gt;&gt;', '&gt; &gt;')
 
 class NatvisGenerator(object):
     def __init__(self, namespace_generators: [NamespaceGenerator], params: TBeautifulCapiParams):
@@ -32,7 +34,7 @@ class NatvisGenerator(object):
         self.params = params
 
     def process_class(self, class_generator: ClassGenerator, out: FileGenerator):
-        impl_name = class_generator.implementation_name.replace('<', '&lt;').replace('>', '&gt;')
+        impl_name = replace_xml_scopes(class_generator.implementation_name)
         wrap_name = class_generator.full_wrap_name.replace('<', '&lt;').replace('>', '&gt;')
         out.put_line('<Type Name="{}">'.format(wrap_name))
         with Indent(out):
