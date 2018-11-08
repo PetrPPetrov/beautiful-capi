@@ -78,6 +78,7 @@ class CapiGenerator(object):
         self.main_exception_traits.include_wrap_cpp_headers(self.additional_includes)
         self.callback_implementations = []
         self.cur_api_define = None
+        self.cur_api_static = None
         self.cur_capi_prefix = None
         self.cur_api_convention = None
         self.sorted_by_ns = None
@@ -106,14 +107,20 @@ class CapiGenerator(object):
         out.put_line('#define {0}'.format(self.cur_api_convention))
 
     def __put_define_apple_or_linux(self, out: FileGenerator):
-        out.put_line('#if defined(__GNUC__) && __GNUC__ >= 4')
-        with Indent(out):
-            out.put_line('#define {0} {1} __attribute__ ((visibility ("default")))'.format(
-                self.cur_api_define, self.cur_capi_prefix))
-        out.put_line('#else')
+        out.put_line('#ifdef {0}'.format(self.cur_api_static))
         with Indent(out):
             out.put_line('#define {0} {1}'.format(self.cur_api_define, self.cur_capi_prefix))
-        out.put_line('#endif')
+        out.put_line('#else /* normal dynamic mode */')
+        with Indent(out):
+            out.put_line('#if defined(__GNUC__) && __GNUC__ >= 4')
+            with Indent(out):
+                out.put_line('#define {0} {1} __attribute__ ((visibility ("default")))'.format(
+                    self.cur_api_define, self.cur_capi_prefix))
+            out.put_line('#else')
+            with Indent(out):
+                out.put_line('#define {0} {1}'.format(self.cur_api_define, self.cur_capi_prefix))
+            out.put_line('#endif')
+        out.put_line('#endif /* normal dynamic mode */')
         if_def_then_else(out, '__i386__',
                          self.__generate_posix_i386_attribute,
                          self.__generate_posix_non_i386_attribute)
@@ -123,13 +130,25 @@ class CapiGenerator(object):
         with Indent(out):
             out.put_line('#ifdef __GNUC__')
             with Indent(out):
-                out.put_line('#define {0} {1} __attribute__ (({2}))'.format(
-                    self.cur_api_define, self.cur_capi_prefix, dll_import_or_export))
+                out.put_line('#ifdef {0}'.format(self.cur_api_static))
+                with Indent(out):
+                    out.put_line('#define {0} {1}'.format(self.cur_api_define, self.cur_capi_prefix))
+                out.put_line('#else /* normal dynamic mode */')
+                with Indent(out):
+                    out.put_line('#define {0} {1} __attribute__ (({2}))'.format(
+                        self.cur_api_define, self.cur_capi_prefix, dll_import_or_export))
+                out.put_line('#endif /* normal dynamic mode */')
                 out.put_line('#define {0} __attribute__ ((cdecl))'.format(self.cur_api_convention))
             out.put_line('#else')
             with Indent(out):
-                out.put_line('#define {0} {1} __declspec({2})'.format(
-                    self.cur_api_define, self.cur_capi_prefix, dll_import_or_export))
+                out.put_line('#ifdef {0}'.format(self.cur_api_static))
+                with Indent(out):
+                    out.put_line('#define {0} {1}'.format(self.cur_api_define, self.cur_capi_prefix))
+                out.put_line('#else /* normal dynamic mode */')
+                with Indent(out):
+                    out.put_line('#define {0} {1} __declspec({2})'.format(
+                        self.cur_api_define, self.cur_capi_prefix, dll_import_or_export))
+                out.put_line('#endif /* normal dynamic mode */')
                 out.put_line('#define {0} __cdecl'.format(self.cur_api_convention))
             out.put_line('#endif')
         out.put_line('#elif __APPLE__')
@@ -171,6 +190,7 @@ class CapiGenerator(object):
 
     def __generate_capi_defines(self, out: FileGenerator):
         self.cur_api_define = '{0}_API'.format(self.cur_namespace_name[0].upper())
+        self.cur_api_static = '{0}_STATIC'.format(self.cur_namespace_name[0].upper())
         self.cur_api_convention = '{0}_API_CONVENTION'.format(self.cur_namespace_name[0].upper())
         self.cur_capi_prefix = '{0}_CAPI_PREFIX'.format(self.cur_namespace_name[0].upper())
         if_def_then_else(out, '__cplusplus',
@@ -181,6 +201,7 @@ class CapiGenerator(object):
 
     def __generate_capi_impl_defines(self, out: FileGenerator):
         self.cur_api_define = '{0}_API'.format(self.cur_namespace_name[0].upper())
+        self.cur_api_static = '{0}_STATIC'.format(self.cur_namespace_name[0].upper())
         self.cur_api_convention = '{0}_API_CONVENTION'.format(self.cur_namespace_name[0].upper())
         self.cur_capi_prefix = 'extern "C"'
         self.__put_api_define(out, 'dllexport')
