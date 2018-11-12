@@ -22,7 +22,7 @@
 
 import copy
 
-from Parser import TMethod, TFunction, TConstructor, TImplementationCode
+from Parser import TMethod, TFunction, TConstructor, TImplementationCode, TProlog
 from ParamsParser import TBeautifulCapiParams
 from FileGenerator import FileGenerator, IndentScope
 from FileCache import FileCache
@@ -234,6 +234,12 @@ class MethodGenerator(object):
         result.insert(0, ThisArgumentGenerator(self.parent_class_generator))
         return result
 
+    @property
+    def prolog(self) -> TProlog:
+        if self.method_object.prologs:
+            return self.method_object.prologs[0]
+        return self.parent_class_generator.method_prolog
+
     def wrap_declaration(self, capi_generator: CapiGenerator) -> str:
         self.exception_traits = capi_generator.get_exception_traits(self.method_object.noexcept)
         arguments = ', '.join(
@@ -282,6 +288,9 @@ class MethodGenerator(object):
                     self.argument_generators,
                     self.return_type_generator)
             else:
+                function_prolog = self.prolog
+                if function_prolog:
+                    c_function_body.put_lines(function_prolog.all_items)
                 self_access = 'self->'
                 if self.parent_class_generator.class_object.pointer_access:
                     self_access = '(*self)->'
@@ -374,6 +383,12 @@ class FunctionGenerator(object):
     def full_wrap_name(self) -> str:
         return '::'.join([self.parent_namespace_generator.full_wrap_name, self.name])
 
+    @property
+    def prolog(self) -> TProlog:
+        if self.function_object.prologs:
+            return self.function_object.prologs[0]
+        return self.parent_namespace_generator.function_prolog
+
     def generate_wrap_definition(self, out: FileGenerator, capi_generator: CapiGenerator):
         self.exception_traits = capi_generator.get_exception_traits(self.function_object.noexcept)
         arguments = ', '.join(
@@ -414,6 +429,9 @@ class FunctionGenerator(object):
                     self.return_type_generator
                 )
             else:
+                function_prolog = self.prolog
+                if function_prolog:
+                    c_function_body.put_lines(function_prolog.all_items)
                 calling_instructions, return_expression = self.return_type_generator.implementation_2_c_var(
                     '', implementation_call
                 )

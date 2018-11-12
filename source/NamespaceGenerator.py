@@ -22,7 +22,7 @@
 
 import os
 
-from Parser import TNamespace
+from Parser import TNamespace, TProlog
 from Helpers import get_c_name, include_headers
 from FileGenerator import FileGenerator, WatchdogScope, IfDefScope, IndentScope
 from CapiGenerator import CapiGenerator
@@ -88,6 +88,22 @@ class NamespaceGenerator(object):
     def one_line_namespace_end(self) -> str:
         return '{parent_ns}}}'.format(
             parent_ns=self.parent_namespace.one_line_namespace_end if self.parent_namespace else '')
+
+    @property
+    def function_prolog(self) -> TProlog:
+        if self.namespace_object.functions_prologs:
+            return self.namespace_object.functions_prologs[0]
+        elif self.parent_namespace:
+            return self.parent_namespace.function_prolog
+        # return None
+
+    @property
+    def method_prolog(self) -> TProlog:
+        if self.namespace_object.methods_prologs:
+            return self.namespace_object.methods_prologs[0]
+        elif self.parent_namespace:
+            return self.parent_namespace.method_prolog
+        # return None
 
     def __generate_namespace_enumerators(self, namespace_header):
         if self.enum_generators:

@@ -68,6 +68,8 @@
             <xs:documentation>Includes another XML API description file</xs:documentation>
           </xs:annotation>
         </xs:element>
+        <xs:element name="functions_prolog" type="TProlog" minOccurs="0"/>
+        <xs:element name="methods_prolog" type="TProlog" minOccurs="0"/>
         <xs:element name="namespace" type="TNamespace">
           <xs:annotation>
             <xs:documentation>Specifies the nested namespace</xs:documentation>
@@ -460,6 +462,7 @@
             <xs:documentation>Specifies C or C++ header to include in wrapper class declaration header</xs:documentation>
           </xs:annotation>
         </xs:element>
+        <xs:element name="methods_prolog" type="TProlog" minOccurs="0"/>
         <xs:element maxOccurs="unbounded" minOccurs="0" name="enumeration" type="TEnumeration">
           <xs:annotation>
             <xs:documentation>Specifies enumeration type inside the class</xs:documentation>
@@ -704,12 +707,20 @@
       <xs:documentation>Specifies C++ code line to perform implementation calls.</xs:documentation>
     </xs:annotation>
   </xs:complexType>
+  <xs:complexType name="TProlog" mixed="true">
+    <xs:annotation>
+      <xs:documentation>Specifies C++ code line to perform implementation calls.</xs:documentation>
+    </xs:annotation>
+  </xs:complexType>
   <xs:complexType name="TMethodBase">
     <xs:annotation>
       <xs:documentation>Specifies base properties for methods or functions.</xs:documentation>
     </xs:annotation>
     <xs:complexContent>
       <xs:extension base="TConstructorBase">
+        <xs:sequence>
+          <xs:element name="prolog" type="TProlog" minOccurs="0"/>
+        </xs:sequence>
         <xs:attribute default="" name="return" type="xs:string" use="optional">
           <xs:annotation>
             <xs:documentation>Specifies return type for the current method or function</xs:documentation>

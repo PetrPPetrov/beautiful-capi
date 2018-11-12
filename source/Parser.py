@@ -151,6 +151,8 @@ class TNamespace(object):
         self.external_namespaces = []
         self.external_libraries = []
         self.includes = []
+        self.functions_prologs = []
+        self.methods_prologs = []
         self.namespaces = []
         self.include_headers = []
         self.enumerations = []
@@ -182,6 +184,16 @@ class TNamespace(object):
             new_element = TApiInclude()
             new_element.load(element)
             self.includes.append(new_element)
+            return True
+        if element.nodeName == "functions_prolog":
+            new_element = TProlog()
+            new_element.load(element)
+            self.functions_prologs.append(new_element)
+            return True
+        if element.nodeName == "methods_prolog":
+            new_element = TProlog()
+            new_element.load(element)
+            self.methods_prologs.append(new_element)
             return True
         if element.nodeName == "namespace":
             new_element = TNamespace()
@@ -799,6 +811,7 @@ class TClass(object):
         self.generate_tests_filled = False
         self.documentations = []
         self.include_headers = []
+        self.methods_prologs = []
         self.enumerations = []
         self.constructors = []
         self.properties = []
@@ -817,6 +830,11 @@ class TClass(object):
             new_element = THeaderInclude()
             new_element.load(element)
             self.include_headers.append(new_element)
+            return True
+        if element.nodeName == "methods_prolog":
+            new_element = TProlog()
+            new_element.load(element)
+            self.methods_prologs.append(new_element)
             return True
         if element.nodeName == "enumeration":
             new_element = TEnumeration()
@@ -1105,6 +1123,32 @@ class TImplementationCode(object):
         self.load_attributes(dom_node)
 
 
+class TProlog(object):
+    def __init__(self):
+        self.all_items = []
+
+    def load_element(self, element):
+        if element.nodeType == element.TEXT_NODE:
+            cur_texts = [text.strip() for text in element.data.split('\n')]
+            first = True
+            for text in cur_texts:
+                if first and self.all_items and type(self.all_items[-1]) is str:
+                    self.all_items[-1] += text
+                else:
+                    self.all_items.append(text)
+                first = False
+            return True
+        return False
+
+    def load_attributes(self, dom_node):
+        pass
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
+
 class TMethodBase(TConstructorBase):
     def __init__(self):
         super().__init__()
@@ -1124,9 +1168,15 @@ class TMethodBase(TConstructorBase):
         self.getter_field_name_filled = False
         self.sharp_marshal_return_as = ""
         self.sharp_marshal_return_as_filled = False
+        self.prologs = []
 
     def load_element(self, element):
         if super().load_element(element):
+            return True
+        if element.nodeName == "prolog":
+            new_element = TProlog()
+            new_element.load(element)
+            self.prologs.append(new_element)
             return True
         return False
 

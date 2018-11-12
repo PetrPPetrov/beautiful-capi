@@ -22,7 +22,7 @@
 
 import os
 
-from Parser import TClass, TLifecycle
+from Parser import TClass, TLifecycle, TProlog
 from ParamsParser import TBeautifulCapiParams
 from FileCache import FileCache
 from FileGenerator import FileGenerator, IfDefScope, WatchdogScope, IndentScope, Unindent
@@ -213,6 +213,12 @@ class ClassGenerator(object):
     @property
     def get_raw_pointer_method_name(self) -> str:
         return self.params.get_raw_pointer_method_name
+
+    @property
+    def method_prolog(self) -> TProlog:
+        if self.class_object.methods_prologs:
+            return self.class_object.methods_prologs[0]
+        return self.parent_namespace.method_prolog
 
     def __create_wrap_template_name(self, name_prefix: str):
         if not self.cached_wrap_template_name:
