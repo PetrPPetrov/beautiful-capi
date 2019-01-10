@@ -69,15 +69,15 @@ class TemplateGenerator(object):
                     base_class=self.template_class_generator.base_class_generator.full_wrap_name))
             else:
                 header.put_line('class {name}'.format(name=self.template_class_generator.wrap_name))
-            with IndentScope(header):
+            with IndentScope(header, ending='};'):
                 header.put_line('public:')
                 for method in self.template_class_generator.method_generators:
                     DoxygenCppGenerator().generate_for_template_method(header, self, method)
                     header.put_line('{};'.format(method.wrap_declaration(capi_generator)))
                     header.put_line('')
-                for namespace in self.parent_namespace.full_name_array:
-                    header.decrease_indent()
-                    header.put_line('}')
+            for namespace in self.parent_namespace.full_name_array:
+                header.decrease_indent()
+                header.put_line('}')
 
     def generate(self, file_cache: FileCache, capi_generator: CapiGenerator):
         if self.template_class.documentations:
