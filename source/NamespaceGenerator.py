@@ -153,6 +153,10 @@ class NamespaceGenerator(object):
             for class_generator in self.classes:
                 namespace_header.include_user_header(
                     file_cache.class_header(class_generator.full_name_array))
+            for template_generator in self.templates:
+                if template_generator.template_class.documentations:
+                    namespace_header.include_user_header(
+                        file_cache.class_header_decl(template_generator.full_wrap_name_array))
             self.__generate_namespace_functions(capi_generator, file_cache, namespace_header)
             include_headers(namespace_header, self.namespace_object.include_headers)
             DoxygenCppGenerator().generate_for_namespace(namespace_header, self.namespace_object, self.full_wrap_name)
@@ -195,6 +199,8 @@ class NamespaceGenerator(object):
             nested_namespace.__generate(file_cache, capi_generator)
         for class_generator in self.classes:
             class_generator.generate(file_cache, capi_generator)
+        for template in self.templates:
+            template.generate(file_cache, capi_generator)
         self.__generate_snippet()
         if self.namespace_object.implementation_header_filled:
             capi_generator.additional_includes.include_user_header(self.namespace_object.implementation_header)

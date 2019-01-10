@@ -19,7 +19,6 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-
 from FileGenerator import FileGenerator
 from DocumentationGenerator import ReferenceGenerator
 from Parser import TGenericDocumentation, TDocumentation, TEnumeration, TNamespace
@@ -84,7 +83,7 @@ class DoxygenCppGenerator(object):
 
     @staticmethod
     def generate_for_class(out: FileGenerator, class_generator):
-        if class_generator.class_object.documentations:
+        if class_generator.class_object.documentations and not class_generator.is_template:
             out.put_line('/**')
             docs = []
             if class_generator.params.doxygen_class_pattern:
@@ -99,6 +98,49 @@ class DoxygenCppGenerator(object):
                 )))
             out.put_line(' */')
 
+    @staticmethod
+    def generate_for_template(out: FileGenerator, template_generator):
+        class_ = template_generator.template_object.classes[0]
+        template_types = []
+        for template_argument in template_generator.template_object.arguments:
+            if template_argument.type_name in ['template', 'class', 'typename']:
+                template_types.append(template_argument.name)
+        if class_.documentations:
+            out.put_line('/**')
+            out.put_line(' * @ingroup {0}'.format('_'.join(template_generator.parent_namespace.full_name_array)))
+            out.put_line(' * @class {0}'.format(template_generator.template_class_generator.wrap_name))
+            for documentation in class_.documentations:
+                for doc_line in DoxygenCppGenerator.__get_lines_for_documentation(documentation, True):
+                    out.put_line(' * {0}'.format(doc_line))
+            for argument in template_generator.template_object.arguments:
+                for documentation in argument.documentations:
+                    doc_lines = DoxygenCppGenerator.__get_lines_for_documentation(documentation, True)
+                    if argument.type_name in template_types:
+                        out.put_line(' * @tparam {0} {1}'.format(argument.name, ''.join(doc_lines)))
+                    else:
+                        out.put_line(' * @param {0} {1}'.format(argument.name, ''.join(doc_lines)))
+            out.put_line(' */')
+
+    @staticmethod
+    def generate_for_template_method(out: FileGenerator, template_generator, method_generator):
+        template_types = []
+        for template_argument in template_generator.template_object.arguments:
+            if template_argument.type_name in ['template', 'class', 'typename']:
+                template_types.append(template_argument.name)
+        if method_generator.method_object.documentations:
+            out.put_line('/**')
+            for documentation in method_generator.method_object.documentations:
+                for doc_line in DoxygenCppGenerator.__get_lines_for_documentation(documentation, True):
+                    out.put_line(' * {0}'.format(doc_line))
+            for argument in method_generator.method_object.arguments:
+                for documentation in argument.documentations:
+                    doc_lines = DoxygenCppGenerator.__get_lines_for_documentation(documentation, True)
+                    if argument.type_name in template_types:
+                        out.put_line(' * @tparam {0} {1}'.format(argument.name, ''.join(doc_lines)))
+                    else:
+                        out.put_line(' * @param {0} {1}'.format(argument.name, ''.join(doc_lines)))
+            out.put_line(' */')
+        
     @staticmethod
     def generate_for_namespace(out: FileGenerator, namespace_object: TNamespace, full_wrap_name: str):
         if namespace_object.documentations:
