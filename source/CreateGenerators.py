@@ -226,7 +226,7 @@ class GeneratorCreator(object):
             return self.full_name_2_routine_generator[type_name_without_spaces]
         elif type_name_without_spaces in self.full_name_2_type_generator:
             return self.full_name_2_type_generator[type_name_without_spaces]
-        raise BeautifulCapiException('reference could not be bound')
+        raise BeautifulCapiException('reference "'+type_name_without_spaces+'" could not be bound')
 
     def __bind_documentation_references_impl(self, documentation: TGenericDocumentation):
         for i, doc_item in enumerate(documentation.all_items):
