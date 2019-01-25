@@ -66,17 +66,17 @@ class DoxygenCppGenerator(object):
     def __get_lines_for_documentation(some_doc, generate_doc_return: bool) -> [str]:
         result_lines = []
         if issubclass(type(some_doc), TDocumentation):
-            for brief in some_doc.briefs:
-                for brief_line in DoxygenCppGenerator.__get_lines_for_generic_documentation(brief):
-                    brief_text = brief_line.strip()
-                    if brief_text:
-                        result_lines.append('@brief {0}'.format(brief_text))
             if generate_doc_return:
                 for returns in some_doc.returns:
                     for return_line in DoxygenCppGenerator.__get_lines_for_generic_documentation(returns):
                         return_text = return_line.strip()
                         if return_text:
                             result_lines.append('@returns {0}'.format(return_text))
+            for brief in some_doc.briefs:
+                for brief_line in DoxygenCppGenerator.__get_lines_for_generic_documentation(brief):
+                    brief_text = brief_line.strip()
+                    if brief_text:
+                        result_lines.append('@brief {0}'.format(brief_text))
         for generic_line in DoxygenCppGenerator.__get_lines_for_generic_documentation(some_doc):
             result_lines.append(generic_line)
         return result_lines
@@ -129,9 +129,6 @@ class DoxygenCppGenerator(object):
                 template_types.append(template_argument.name)
         if method_generator.method_object.documentations:
             out.put_line('/**')
-            for documentation in method_generator.method_object.documentations:
-                for doc_line in DoxygenCppGenerator.__get_lines_for_documentation(documentation, True):
-                    out.put_line(' * {0}'.format(doc_line))
             for argument in method_generator.method_object.arguments:
                 for documentation in argument.documentations:
                     doc_lines = DoxygenCppGenerator.__get_lines_for_documentation(documentation, True)
@@ -139,6 +136,9 @@ class DoxygenCppGenerator(object):
                         out.put_line(' * @tparam {0} {1}'.format(argument.name, ''.join(doc_lines)))
                     else:
                         out.put_line(' * @param {0} {1}'.format(argument.name, ''.join(doc_lines)))
+            for documentation in method_generator.method_object.documentations:
+                for doc_line in DoxygenCppGenerator.__get_lines_for_documentation(documentation, True):
+                    out.put_line(' * {0}'.format(doc_line))
             out.put_line(' */')
         
     @staticmethod
@@ -172,11 +172,11 @@ class DoxygenCppGenerator(object):
     def generate_for_routine(out: FileGenerator, routine_object, generator):
         if routine_object.documentations:
             out.put_line('/**')
-            for documentation in routine_object.documentations:
-                for doc_line in DoxygenCppGenerator.__get_lines_for_documentation(documentation, True):
-                    out.put_line(' * {0}'.format(doc_line))
             for argument_generator in generator.argument_generators:
                 for documentation in argument_generator.argument_object.documentations:
                     doc_lines = DoxygenCppGenerator.__get_lines_for_documentation(documentation, True)
                     out.put_line(' * @param {0} {1}'.format(argument_generator.name, ''.join(doc_lines)))
+            for documentation in routine_object.documentations:
+                for doc_line in DoxygenCppGenerator.__get_lines_for_documentation(documentation, True):
+                    out.put_line(' * {0}'.format(doc_line))
             out.put_line(' */')
