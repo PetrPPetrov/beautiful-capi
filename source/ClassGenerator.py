@@ -360,6 +360,7 @@ class ClassGenerator(object):
         with IndentScope(declaration_header, '};'):
             self.__generate_class_body(declaration_header)
         if self.class_object.typedef_name:
+            declaration_header.put_line('/// @template')
             declaration_header.put_line('typedef {wrap_name} {typedef}{suffix};'.format(
                 wrap_name=self.wrap_name, typedef=self.class_object.typedef_name, suffix=self.lifecycle_traits.suffix
             ))
