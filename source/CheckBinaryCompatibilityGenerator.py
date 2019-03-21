@@ -20,7 +20,7 @@
 #
 
 
-from Parser import TFunction, TNamespace, TBeautifulCapiRoot
+from Parser import TFunction, TNamespace, TBeautifulCapiRoot, TProlog
 from ParamsParser import TBeautifulCapiParams
 from FileGenerator import FileGenerator, IndentScope
 from Helpers import get_c_name
@@ -36,6 +36,7 @@ def create_get_version_component_function(name: str, namespace: TNamespace, para
     get_version_component_function.noexcept = True
     get_version_component_function.return_type = 'int'
     get_version_component_function.implementation_name = get_implementation_name(name, namespace.name, params)
+    get_version_component_function.prologs.append(TProlog())
     return get_version_component_function
 
 
