@@ -361,12 +361,14 @@ def main():
                         help='generates .natvis file, specifies file name for .natvis file')
     parser.add_argument('--verbosity', dest='verbosity', action='store_true',
                         help='increase output verbosity')
-    parser.add_argument('--open-api', dest='open_api', type=bool,
-                        help='increase output verbosity')
-    parser.set_defaults(open_api=None)
-    parser.add_argument('--split-wrap-by-namespaces', dest='split_wrap_by_namespaces', type=bool,
-                        help='increase output verbosity')
-    parser.set_defaults(split_wrap_by_namespaces=None)
+    parser.add_argument('--open-api', dest='open_api', action='store_true', help='generate open C-API')
+    parser.add_argument('--close-api', dest='open_api', action='store_false', help='generate close C-API')
+    parser.set_defaults(open_api=True)
+    parser.add_argument('--split-wrap-by-namespaces', dest='split_wrap_by_namespaces', action='store_true',
+                        help='split wrapper functions by namespaces')
+    parser.add_argument('--no-split-wrap-by-namespaces', dest='split_wrap_by_namespaces', action='store_false',
+                        help='do not split wrapper functions by namespaces')
+    parser.set_defaults(split_wrap_by_namespaces=True)
 
     args = parser.parse_args()
 

@@ -254,7 +254,7 @@ class CapiGenerator(object):
     def __generate_dynamic_capi(self, out: FileGenerator):
         out.put_line('')
         self.__generate_namespace_c_function_pointers(self.cur_namespace_info, out)
-        #self.__generate_callback_typedefs(self.cur_namespace_info, out)
+        # self.__generate_callback_typedefs(self.cur_namespace_info, out)
         out.put_line('')
         if_def_then_else(out, self.cur_namespace_name[0].upper() + '_CAPI_DEFINE_FUNCTION_POINTERS',
                          self.__generate_function_pointer_definitions,
@@ -279,16 +279,16 @@ class CapiGenerator(object):
         out.put_line('')
 
     def __generate_msvc1900_traits(self, out: FileGenerator):
-        out.put_line('#define {ns}_NOEXCEPT noexcept'.format(ns=self.cur_namespace_name[0].upper()))
+        out.put_line('#define {0}_NOEXCEPT noexcept'.format(self.cur_namespace_name[0].upper()))
 
     def __generate_msvc_non1900_traits(self, out: FileGenerator):
-        out.put_line('#define {ns}_NOEXCEPT'.format(ns=self.cur_namespace_name[0].upper()))
+        out.put_line('#define {0}_NOEXCEPT'.format(self.cur_namespace_name[0].upper()))
 
     def __generate_msvc1600_traits(self, out: FileGenerator):
-        out.put_line('#define {ns}_CPP_COMPILER_HAS_RVALUE_REFERENCES'.format(ns=self.cur_namespace_name[0].upper()))
+        out.put_line('#define {0}_CPP_COMPILER_HAS_RVALUE_REFERENCES'.format(self.cur_namespace_name[0].upper()))
 
     def __generate_msvc1800_traits(self, out: FileGenerator):
-        out.put_line('#define {ns}_CPP_COMPILER_HAS_MOVE_CONSTRUCTOR_DELETE'.format(ns=self.cur_namespace_name[0].upper()))
+        out.put_line('#define {0}_CPP_COMPILER_HAS_MOVE_CONSTRUCTOR_DELETE'.format(self.cur_namespace_name[0].upper()))
 
     def __generate_msvc_traits(self, out: FileGenerator):
         if_then_else(out, '_MSC_VER >= 1900', self.__generate_msvc1900_traits, self.__generate_msvc_non1900_traits)
@@ -296,9 +296,9 @@ class CapiGenerator(object):
         if_then_else(out, '_MSC_VER >= 1800', self.__generate_msvc1800_traits, None)
 
     def __generate_cpp11_compiler_traits(self, out: FileGenerator):
-        out.put_line('#define {ns}_NOEXCEPT noexcept'.format(ns=self.cur_namespace_name[0].upper()))
-        out.put_line('#define {ns}_CPP_COMPILER_HAS_RVALUE_REFERENCES'.format(ns=self.cur_namespace_name[0].upper()))
-        out.put_line('#define {ns}_CPP_COMPILER_HAS_MOVE_CONSTRUCTOR_DELETE'.format(ns=self.cur_namespace_name[0].upper()))
+        out.put_line('#define {0}_NOEXCEPT noexcept'.format(self.cur_namespace_name[0].upper()))
+        out.put_line('#define {0}_CPP_COMPILER_HAS_RVALUE_REFERENCES'.format(self.cur_namespace_name[0].upper()))
+        out.put_line('#define {0}_CPP_COMPILER_HAS_MOVE_CONSTRUCTOR_DELETE'.format(self.cur_namespace_name[0].upper()))
 
     def __generate_non_cpp11_compiler_traits(self, out: FileGenerator):
         out.put_line('#define {ns}_NOEXCEPT'.format(ns=self.cur_namespace_name[0].upper()))
