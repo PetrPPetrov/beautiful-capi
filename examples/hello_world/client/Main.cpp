@@ -25,6 +25,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <stdint.h>
+#include "HelloWorldKeys.h"
 #include "HelloWorld.h"
 
 int main()

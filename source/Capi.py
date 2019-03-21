@@ -317,6 +317,15 @@ class Capi(object):
         self.__generate()
 
 
+def str2bool(value):
+    lowercased = value.lower()
+    if lowercased in ['true', '1']:
+        return True
+    elif lowercased in ['false', '0']:
+        return False
+    raise ValueError('Need bool; got %r' % value)
+
+
 def main():
     print(
         'Beautiful Capi  Copyright (C) 2015  Petr Petrovich Petrov\n'
@@ -361,14 +370,12 @@ def main():
                         help='generates .natvis file, specifies file name for .natvis file')
     parser.add_argument('--verbosity', dest='verbosity', action='store_true',
                         help='increase output verbosity')
-    parser.add_argument('--open-api', dest='open_api', action='store_true', help='generate open C-API')
-    parser.add_argument('--close-api', dest='open_api', action='store_false', help='generate close C-API')
-    parser.set_defaults(open_api=True)
-    parser.add_argument('--split-wrap-by-namespaces', dest='split_wrap_by_namespaces', action='store_true',
-                        help='split wrapper functions by namespaces')
-    parser.add_argument('--no-split-wrap-by-namespaces', dest='split_wrap_by_namespaces', action='store_false',
-                        help='do not split wrapper functions by namespaces')
-    parser.set_defaults(split_wrap_by_namespaces=True)
+    parser.add_argument('--open-api', dest='open_api', type=str2bool,
+                        help='increase output verbosity')
+    parser.set_defaults(open_api=None)
+    parser.add_argument('--split-wrap-by-namespaces', dest='split_wrap_by_namespaces', type=str2bool,
+                        help='increase output verbosity')
+    parser.set_defaults(split_wrap_by_namespaces=None)
 
     args = parser.parse_args()
 

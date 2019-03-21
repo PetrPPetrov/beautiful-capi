@@ -22,7 +22,10 @@ project(callback_client)
 
 cmake_minimum_required(VERSION 2.8)
 
-include_directories(${callback_client_SOURCE_DIR}/../library/include)
+include_directories(
+    ${callback_client_SOURCE_DIR}/../library/include
+    ${callback_client_SOURCE_DIR}/../library/keys
+)
 
 add_executable(callback_client
   ${callback_client_SOURCE_DIR}/Main.cpp

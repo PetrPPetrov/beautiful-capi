@@ -28,6 +28,8 @@
 #include <algorithm>
 #include <cstdlib>
 #include <stdint.h>
+#include "ExampleKeys.h"
+#include "ExceptionKeys.h"
 #include "Example.h"
 
 class CustomPrinterImplementation

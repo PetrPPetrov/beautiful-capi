@@ -22,7 +22,10 @@ project(hello_world_client)
 
 cmake_minimum_required(VERSION 2.8)
 
-include_directories(${hello_world_client_SOURCE_DIR}/../library/include)
+include_directories(
+    ${hello_world_client_SOURCE_DIR}/../library/include
+    ${hello_world_client_SOURCE_DIR}/../library/keys
+)
 
 add_executable(hello_world_client
   ${hello_world_client_SOURCE_DIR}/Main.cpp

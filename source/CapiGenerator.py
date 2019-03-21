@@ -326,6 +326,7 @@ class CapiGenerator(object):
         out.put_line('')
 
     def __generate_keys(self):
+        sorted_by_ns = OrderedDict(sorted(self.namespace_name_2_info.items()))
         if not self.params.open_api:
             namespace_2_keys = {}
             if self.params.root_header:
@@ -333,16 +334,16 @@ class CapiGenerator(object):
                     self.params.api_keys_folder,
                     os.path.splitext(self.params.root_header)[0] + self.params.key_header_suffix + '.h'))
                 root_keys.put_begin_cpp_comments(self.params)
-                for namespace_name, namespace_info in self.sorted_by_ns.items():
+                for namespace_name, namespace_info in sorted_by_ns.items():
                     namespace_2_keys.update({namespace_name: root_keys})
             else:
-                for namespace_name, namespace_info in self.sorted_by_ns.items():
+                for namespace_name, namespace_info in sorted_by_ns.items():
                     keys = FileGenerator(os.path.join(
                         self.params.api_keys_folder,
                         namespace_info.namespace_name_array[0] + self.params.key_header_suffix + '.h'))
                     keys.put_begin_cpp_comments(self.params)
                     namespace_2_keys.update({namespace_name: keys})
-            for namespace_name, namespace_info in self.sorted_by_ns.items():
+            for namespace_name, namespace_info in sorted_by_ns.items():
                 self.__generate_keys_for_namespace(namespace_2_keys[namespace_name], namespace_name)
 
     def __generate_keys_for_namespace(self, out: FileGenerator, namespace_name):
