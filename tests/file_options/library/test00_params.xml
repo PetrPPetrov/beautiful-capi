@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<params:params xmlns:params="http://gkmsoft.ru/beautifulcapi-params"
+<params:params xmlns:params="http://gkmsoft.ru/beautifulcapi-params" open_api="false"
                warn_when_builtin_type_used="false"
                namespace_header_at_parent_folder="true">
   <copyright_header>/*
