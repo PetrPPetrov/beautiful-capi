@@ -25,6 +25,7 @@ import copy
 import random
 import uuid
 from collections import OrderedDict
+from typing import List
 
 from Parser import TBeautifulCapiRoot
 from ParamsParser import TBeautifulCapiParams
@@ -55,8 +56,8 @@ class Pointer2CFunction(object):
 
 
 class NamespaceInfo(object):
-    def __init__(self):
-        self.namespace_name_array = []
+    def __init__(self, namespace_name_array: List[str] = None):
+        self.namespace_name_array = namespace_name_array or []
         self.c_functions = []
         self.c_pointers = []
         self.nested_namespaces = []
@@ -468,7 +469,8 @@ class CapiGenerator(object):
         parent = tuple(path_to_namespace[:-1])
         if len(parent) > 0:
             if not self.namespace_name_2_info.get(parent, None):
-                self.namespace_name_2_info[parent] = NamespaceInfo()
+                parent_ns_info = NamespaceInfo(list(parent))
+                self.namespace_name_2_info[parent] = parent_ns_info
             self.__create_parent_ns_info_if_not_exist(parent)
 
     def add_c_function(self, path_to_namespace: [str], return_type: str,
@@ -476,8 +478,7 @@ class CapiGenerator(object):
         new_c_function = CFunction(path_to_namespace, return_type, name, arguments, body)
         namespace_name = tuple(path_to_namespace)  # We always have at least one element
         if namespace_name not in self.namespace_name_2_info:
-            new_namespace_info = NamespaceInfo()
-            new_namespace_info.namespace_name_array = copy.deepcopy(path_to_namespace)
+            new_namespace_info = NamespaceInfo(list(namespace_name))
             new_namespace_info.c_functions.append(new_c_function)
             self.namespace_name_2_info.update({namespace_name: new_namespace_info})
         else:
@@ -488,8 +489,7 @@ class CapiGenerator(object):
         new_c_pointer = Pointer2CFunction(path_to_namespace, return_type, name, arguments)
         namespace_name = tuple(path_to_namespace)  # We always have at least one element
         if namespace_name not in self.namespace_name_2_info:
-            new_namespace_info = NamespaceInfo()
-            new_namespace_info.namespace_name_array = copy.deepcopy(path_to_namespace)
+            new_namespace_info = NamespaceInfo(list(namespace_name))
             new_namespace_info.c_pointers.append(new_c_pointer)
             self.namespace_name_2_info.update({namespace_name: new_namespace_info})
         else:
@@ -509,8 +509,7 @@ class CapiGenerator(object):
             parent_name = namespace_name[0:-1]
             if len(parent_name) > 0:
                 if not self.namespace_name_2_info.get(parent_name, None):
-                    new_namespace_info = NamespaceInfo()
-                    new_namespace_info.namespace_name_array = parent_name
+                    new_namespace_info = NamespaceInfo(list(parent_name))
                     self.namespace_name_2_info[parent_name] = new_namespace_info
                 self.namespace_name_2_info[parent_name].nested_namespaces.append(namespace_info)
         sorted_by_ns = OrderedDict(sorted(self.namespace_name_2_info.items()))
