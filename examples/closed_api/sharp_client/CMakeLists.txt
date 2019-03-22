@@ -18,19 +18,17 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-project(callback_client)
+project(closed_api_sharp_client LANGUAGES CSharp)
+cmake_minimum_required(VERSION 3.8.2)
 
-cmake_minimum_required(VERSION 2.8)
-
-include_directories(
-  ${callback_client_SOURCE_DIR}/../library/include
+add_executable(closed_api_sharp_client
+  ${closed_api_sharp_client_SOURCE_DIR}/Program.cs
+  ${closed_api_sharp_client_SOURCE_DIR}/Properties/AssemblyInfo.cs
 )
 
-add_executable(callback_client
-  ${callback_client_SOURCE_DIR}/Main.cpp
-)
+SET_TARGET_PROPERTIES(closed_api_sharp_client PROPERTIES LINKER_LANGUAGE CSharp)
 
-if(TARGET callback)
-  add_dependencies(callback_client callback)
+if(TARGET closed_api_sharp_library)
+  add_dependencies(closed_api_sharp_client closed_api_sharp_library)
 endif()
-target_link_libraries(callback_client callback)
+target_link_libraries(closed_api_sharp_client closed_api_sharp_library)

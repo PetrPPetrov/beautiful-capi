@@ -18,19 +18,13 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-project(callback_client)
+project(closed_api_example)
 
 cmake_minimum_required(VERSION 2.8)
 
-include_directories(
-  ${callback_client_SOURCE_DIR}/../library/include
-)
+add_subdirectory(library)
+add_subdirectory(client)
 
-add_executable(callback_client
-  ${callback_client_SOURCE_DIR}/Main.cpp
-)
-
-if(TARGET callback)
-  add_dependencies(callback_client callback)
+if (${CSHARP_ENABLED})
+    add_subdirectory(sharp_client)
 endif()
-target_link_libraries(callback_client callback)

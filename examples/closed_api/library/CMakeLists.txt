@@ -18,19 +18,24 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-project(callback_client)
+project(closed_api)
 
 cmake_minimum_required(VERSION 2.8)
 
-include_directories(
-  ${callback_client_SOURCE_DIR}/../library/include
+find_package(PythonInterp 3.4 REQUIRED)
+
+include(../../../UseBCapi.cmake)
+
+include_directories(${closed_api_SOURCE_DIR}/source/)
+
+add_library(closed_api SHARED
+  ${closed_api_SOURCE_DIR}/source/AutoGenWrap.cpp
+  ${closed_api_SOURCE_DIR}/source/PersonImpl.h
+  ${closed_api_SOURCE_DIR}/source/PersonImpl.cpp
 )
 
-add_executable(callback_client
-  ${callback_client_SOURCE_DIR}/Main.cpp
-)
+add_bcapi_generation(sharp "sharp_output")
 
-if(TARGET callback)
-  add_dependencies(callback_client callback)
+if (${CSHARP_ENABLED})
+    add_subdirectory(sharp_output)
 endif()
-target_link_libraries(callback_client callback)

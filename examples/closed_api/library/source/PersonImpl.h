@@ -19,21 +19,36 @@
  *
  */
 
-#if defined(_WIN32) && defined(_DEBUG)
-#include <crtdbg.h>
-#endif
+#ifndef BEAUTIFUL_CAPI_PERSON_H
+#define BEAUTIFUL_CAPI_PERSON_H
+
+#include <string>
 #include <iostream>
-#include <cstdlib>
-#include <stdint.h>
-#include "HelloWorld.h"
 
-int main()
+namespace Example
 {
-#if defined(_WIN32) && defined(_DEBUG)
-    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-#endif
-    HelloWorld::Printer printer;
-    printer.Show();
-
-    return EXIT_SUCCESS;
+    class PersonImpl
+    {
+    public:
+#include "snippets/Example/PersonImpl.h"
+    private:
+        std::string first_name;
+        std::string last_name;
+        unsigned int age;
+        Example::PersonImpl::ESex sex;
+    public:
+        PersonImpl();
+        PersonImpl(const PersonImpl& other);
+        ~PersonImpl();
+        void SetFirstName(const char* first_name);
+        const char* GetFirstName() const;
+        void SetLastName(const char* last_name);
+        const char* GetLastName() const;
+        void SetAge(unsigned int age);
+        unsigned int GetAge() const;
+        void SetSex(Example::PersonImpl::ESex sex);
+        Example::PersonImpl::ESex GetSex() const;
+    };
 }
+
+#endif /* BEAUTIFUL_CAPI_PERSON_H */

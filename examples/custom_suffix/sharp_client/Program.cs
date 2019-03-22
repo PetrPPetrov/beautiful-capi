@@ -15,7 +15,7 @@ namespace CustomSuffix
             printer.show();
 
             var scanner = new hello_world.scanner_raw_ptr();
-            if(scanner != scanner)
+            if(scanner.is_null())
             {
                 Console.WriteLine("Error, scanner is null!");
                 Console.ReadKey();

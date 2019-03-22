@@ -44,8 +44,8 @@ namespace PrinterNS
             int indent = 0;
             if (mAlign == CompC::Right)
                 indent = 80 - text.length();
-            else if (mAlign == CompC::Center)            
-                indent = (80 - text.length()) / 2;            
+            else if (mAlign == CompC::Center)
+                indent = (80 - text.length()) / 2;
             for (int i = 0; i < indent; ++i)
                 result += " ";
             result += text; 

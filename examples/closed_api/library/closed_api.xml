@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<api xmlns="http://gkmsoft.ru/beautifulcapi" project_name="ClosedApi">
+  <namespace name="Example">
+    <mapped_type name="const char*" c_type="const char*" implementation_type="const char*">
+      <cpp wrap_type="const char*"/>
+      <sharp wrap_type="string" wrap_2_c="{expression}" c_2_wrap="{expression}"/>
+    </mapped_type>
+    <mapped_type name="unsigned char" c_type="uint8_t" implementation_type="unsigned char">
+      <cpp wrap_type="unsigned char"/>
+      <sharp wrap_type="unsigned byte" wrap_2_c="{expression}" c_2_wrap="{expression}"/>
+    </mapped_type>
+    <mapped_type name="unsigned int" c_type="uint32_t" implementation_type="unsigned int">
+      <cpp wrap_type="unsigned int"/>
+      <sharp wrap_type="uint" wrap_2_c="{expression}" c_2_wrap="{expression}"/>
+    </mapped_type>
+
+    <class name="Person" lifecycle="copy_semantic" implementation_class_name="Example::PersonImpl" implementation_class_header="PersonImpl.h">
+      <enumeration name="ESex" underlying_type="uint8_t">
+        <item name="male"/>
+        <item name="female"/>
+      </enumeration>
+
+      <constructor name="Default"/>
+      <method name="SetFirstName">
+        <argument type="const char*" name="first_name"/>
+      </method>
+      <method name="GetFirstName" return="const char*" const="true"/>
+      <method name="SetLastName">
+        <argument type="const char*" name="last_name"/>
+      </method>
+      <method name="GetLastName" return="const char*" const="true"/>
+      <method name="SetAge">
+        <argument type="unsigned int" name="age"/>
+      </method>
+      <method name="GetAge" return="unsigned int" const="true"/>
+      <method name="SetSex">
+        <argument type="Example::Person::ESex" name="sex"/>
+      </method>
+      <method name="GetSex" return="Example::Person::ESex" const="true"/>
+    </class>
+
+    <namespace name="Education">
+      <namespace name="School">
+        <class name="Teacher" base="Example::Person" lifecycle="copy_semantic"
+               implementation_class_name="Example::PersonImpl" implementation_class_header="PersonImpl.h">
+          <constructor name="Default"/>
+          <method name="Teach">
+            <implementation_code>std::cout &lt;&lt; "I'm teaching..." &lt;&lt; std::endl;</implementation_code>
+          </method>
+        </class>
+      </namespace>
+      <namespace name="University">
+        <class name="Professor" base="Example::Person" lifecycle="copy_semantic"
+               implementation_class_name="Example::PersonImpl" implementation_class_header="PersonImpl.h">
+          <constructor name="Default"/>
+          <method name="Do">
+            <implementation_code>std::cout &lt;&lt; "I'm a professor..." &lt;&lt; std::endl;</implementation_code>
+          </method>
+        </class>
+      </namespace>
+    </namespace>
+  </namespace>
+</api>

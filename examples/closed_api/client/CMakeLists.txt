@@ -18,19 +18,20 @@
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-project(callback_client)
+project(closed_api_client)
 
 cmake_minimum_required(VERSION 2.8)
 
 include_directories(
-  ${callback_client_SOURCE_DIR}/../library/include
+    ${closed_api_client_SOURCE_DIR}/../library/include
+    ${closed_api_client_SOURCE_DIR}/../library/keys
 )
 
-add_executable(callback_client
-  ${callback_client_SOURCE_DIR}/Main.cpp
+add_executable(closed_api_client
+  ${closed_api_client_SOURCE_DIR}/Main.cpp
 )
 
-if(TARGET callback)
-  add_dependencies(callback_client callback)
+if(TARGET closed_api)
+  add_dependencies(closed_api_client closed_api)
 endif()
-target_link_libraries(callback_client callback)
+target_link_libraries(closed_api_client closed_api)

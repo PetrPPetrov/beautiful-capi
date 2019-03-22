@@ -22,18 +22,45 @@
 #if defined(_WIN32) && defined(_DEBUG)
 #include <crtdbg.h>
 #endif
+#include <cctype>
 #include <iostream>
+#include <string>
+#include <algorithm>
 #include <cstdlib>
 #include <stdint.h>
-#include "HelloWorld.h"
+#include "Example.h"
+
+void dump(const Example::Person& person)
+{
+    std::cout << "==========" << std::endl;
+    std::cout << "Name: " << person.GetFirstName() << " " << person.GetLastName() << std::endl;
+    std::cout << "Age: " << person.GetAge() << std::endl;
+    std::cout << "Sex: " << (person.GetSex() == Example::Person::male ? "Male" : "Female") << std::endl;
+}
 
 int main()
 {
 #if defined(_WIN32) && defined(_DEBUG)
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
-    HelloWorld::Printer printer;
-    printer.Show();
+    Example::Person famous_person;
+    famous_person.SetFirstName("Isaac");
+    famous_person.SetLastName("Newton");
+    famous_person.SetAge(26);
+    famous_person.SetSex(Example::Person::male);
+
+    dump(famous_person);
+
+    Example::Education::School::Teacher teacher;
+    teacher.SetFirstName("John");
+    teacher.SetAge(25);
+    teacher.SetSex(Example::Person::male);
+    teacher.Teach();
+
+    Example::Education::University::Professor professor;
+    professor.SetFirstName("Vanessa");
+    professor.SetSex(Example::Person::female);
+    professor.Do();
 
     return EXIT_SUCCESS;
 }
