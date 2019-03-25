@@ -338,14 +338,19 @@ class CapiGenerator(object):
                 for namespace_name, namespace_info in sorted_by_ns.items():
                     namespace_2_keys.update({namespace_name: root_keys})
             else:
+                root_keys = {}
                 for namespace_name, namespace_info in sorted_by_ns.items():
-                    keys = FileGenerator(os.path.join(
-                        self.params.api_keys_folder,
-                        namespace_info.namespace_name_array[0] + self.params.key_header_suffix + '.h'))
+                    keys = root_keys.get(namespace_info.namespace_name_array[0], None)
+                    if keys is None:
+                        keys = FileGenerator(os.path.join(
+                            self.params.api_keys_folder,
+                            namespace_info.namespace_name_array[0] + self.params.key_header_suffix + '.h'))
+                        root_keys[namespace_info.namespace_name_array[0]] = keys
                     keys.put_begin_cpp_comments(self.params)
                     namespace_2_keys.update({namespace_name: keys})
             for namespace_name, namespace_info in sorted_by_ns.items():
-                self.__generate_keys_for_namespace(namespace_2_keys[namespace_name], namespace_name)
+                if namespace_name in self.api_keys:
+                    self.__generate_keys_for_namespace(namespace_2_keys[namespace_name], namespace_name)
 
     def __generate_keys_for_namespace(self, out: FileGenerator, namespace_name):
         sorted_by_open_name = OrderedDict(sorted(self.api_keys[namespace_name].items()))
@@ -410,14 +415,15 @@ class CapiGenerator(object):
                                          self.__generate_dynamic_capi)
         self.__generate_keys()
 
-    def __generate_capi_impl_functions(self, functions_list, namespace_name, namespace_info, out: FileGenerator):
+    def __generate_capi_impl_functions(self, functions_list, out: FileGenerator):
         file_count = 0
         dot_index = out.filename.rfind('.')
         filename_format_str = '{0}{{count}}{1}'.format(out.filename[:dot_index], out.filename[dot_index:])
         cur_size = out.line_count()
         for c_function in functions_list:
+            namespace_name = tuple(c_function.path_to_namespace)
             self.cur_namespace_name = namespace_name
-            self.cur_namespace_info = namespace_info
+            self.cur_namespace_info = NamespaceInfo(c_function.path_to_namespace)
             generated_name = c_function.name
             if not self.params.open_api:
                 generated_name = get_c_name('fx' + str(uuid.uuid4()))
@@ -439,9 +445,9 @@ class CapiGenerator(object):
                 arguments=c_function.arguments))
             out.put_file(c_function.body)
             cur_size += c_function_size
-        for nested_ns in self.namespace_name_2_info.keys():
-            if self.__is_sub_namespace(namespace_name, nested_ns):
-                out.put_line('#include "{}"'.format('/'.join([namespace_name[-1], nested_ns[-1] + 'Wrap.h'])))
+        # for nested_ns in self.namespace_name_2_info.keys():
+        #     if self.__is_sub_namespace(namespace_name, nested_ns):
+        #         out.put_line('#include "{}"'.format('/'.join([namespace_name[-1], nested_ns[-1] + 'Wrap.h'])))
 
     def __generate_capi_with_file_separation(self, main_out: FileGenerator, file_cache: FileCache):
         for namespace_name, namespace_info in self.namespace_name_2_info.items():
@@ -451,7 +457,7 @@ class CapiGenerator(object):
             plain_functions_list = copy.copy(namespace_info.c_functions)
             if not self.params.open_api:
                 random.shuffle(plain_functions_list)
-            self.__generate_capi_impl_functions(plain_functions_list, namespace_name, namespace_info, out)
+            self.__generate_capi_impl_functions(plain_functions_list, out)
             if len(namespace_name) == 1:
                 main_out.put_line('#include "{}"'.format('/'.join(namespace_path)))
 
@@ -463,7 +469,7 @@ class CapiGenerator(object):
                 plain_functions_list.append(c_function)
         if not self.params.open_api:
             random.shuffle(plain_functions_list)
-        self.__generate_capi_impl_functions(plain_functions_list, self.cur_namespace_name, self.cur_namespace_info, out)
+        self.__generate_capi_impl_functions(plain_functions_list, out)
 
     def __create_parent_ns_info_if_not_exist(self, path_to_namespace: [str]):
         parent = tuple(path_to_namespace[:-1])

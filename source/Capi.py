@@ -371,12 +371,12 @@ def main():
     parser.add_argument('--verbosity', dest='verbosity', action='store_true',
                         help='increase output verbosity')
     parser.add_argument('--open-api', dest='open_api', type=str2bool,
-                        help='Specifies flag if the library API will be open, otherwise the library API will'
+                        help='specifies flag if the library API will be open, otherwise the library API will'
                              ' be secured. Warning: it is strongly recommended that if this flag is false,'
                              ' also disable the "split_wrap_by_namespaces" flag.')
     parser.set_defaults(open_api=None)
     parser.add_argument('--split-wrap-by-namespaces', dest='split_wrap_by_namespaces', type=str2bool,
-                        help='Split the output wrap file into multiple files by namespaces. Warning: '
+                        help='split the output wrap file into multiple files by namespaces. Warning: '
                              'if you use BCapi for a closed source project and the open_api flag is '
                              'disabled, we strongly recommend that you disable this flag, since the '
                              'functions will only be mixed in their namespaces.')
