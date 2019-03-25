@@ -25,7 +25,6 @@ import copy
 import random
 import uuid
 from collections import OrderedDict
-from typing import List
 
 from Parser import TBeautifulCapiRoot
 from ParamsParser import TBeautifulCapiParams
@@ -56,7 +55,7 @@ class Pointer2CFunction(object):
 
 
 class NamespaceInfo(object):
-    def __init__(self, namespace_name_array: List[str] = None):
+    def __init__(self, namespace_name_array: [str] = None):
         self.namespace_name_array = namespace_name_array or []
         self.c_functions = []
         self.c_pointers = []
