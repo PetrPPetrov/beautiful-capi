@@ -445,9 +445,11 @@ class CapiGenerator(object):
                 arguments=c_function.arguments))
             out.put_file(c_function.body)
             cur_size += c_function_size
-        # for nested_ns in self.namespace_name_2_info.keys():
-        #     if self.__is_sub_namespace(namespace_name, nested_ns):
-        #         out.put_line('#include "{}"'.format('/'.join([namespace_name[-1], nested_ns[-1] + 'Wrap.h'])))
+        if self.params.split_wrap_by_namespaces and functions_list:
+            namespace_name = functions_list[0].path_to_namespace
+            for nested_ns in self.namespace_name_2_info.keys():
+                if self.__is_sub_namespace(namespace_name, nested_ns):
+                    out.put_line('#include "{}"'.format('/'.join([namespace_name[-1], nested_ns[-1] + 'Wrap.h'])))
 
     def __generate_capi_with_file_separation(self, main_out: FileGenerator, file_cache: FileCache):
         for namespace_name, namespace_info in self.namespace_name_2_info.items():
