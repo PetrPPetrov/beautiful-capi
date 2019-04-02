@@ -31,7 +31,7 @@ namespace ConsoleApp1
             teacher.SetSex(Example.Person.ESex.male);
             teacher.Teach();
 
-            var professor = new Example.Education.University.Professor();
+            var professor = new Example.Education.A.University.Professor();
             professor.SetFirstName("Vanessa");
             professor.SetSex(Example.Person.ESex.female);
             professor.Do();
