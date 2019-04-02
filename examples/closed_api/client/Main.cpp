@@ -28,7 +28,7 @@
 #include <algorithm>
 #include <cstdlib>
 #include <stdint.h>
-#include "ExampleKeys.h"
+//#include "ExampleKeys.h"
 #include "Example.h"
 
 
@@ -59,7 +59,7 @@ int main()
     teacher.SetSex(Example::Person::male);
     teacher.Teach();
 
-    Example::Education::University::Professor professor;
+    Example::Education::A::University::Professor professor;
     professor.SetFirstName("Vanessa");
     professor.SetSex(Example::Person::female);
     professor.Do();

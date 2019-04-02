@@ -42,22 +42,14 @@
     <namespace name="Education">
       <namespace name="School">
         <class name="Teacher" base="Example::Person" lifecycle="copy_semantic"
-               implementation_class_name="Example::PersonImpl" implementation_class_header="PersonImpl.h">
+                implementation_class_name="Example::PersonImpl" implementation_class_header="PersonImpl.h">
           <constructor name="Default"/>
           <method name="Teach">
             <implementation_code>std::cout &lt;&lt; "I'm teaching..." &lt;&lt; std::endl;</implementation_code>
           </method>
         </class>
       </namespace>
-      <namespace name="University">
-        <class name="Professor" base="Example::Person" lifecycle="copy_semantic"
-               implementation_class_name="Example::PersonImpl" implementation_class_header="PersonImpl.h">
-          <constructor name="Default"/>
-          <method name="Do">
-            <implementation_code>std::cout &lt;&lt; "I'm a professor..." &lt;&lt; std::endl;</implementation_code>
-          </method>
-        </class>
-      </namespace>
+      <include path="a.xml"/>
     </namespace>
   </namespace>
 </api>

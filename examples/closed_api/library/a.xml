@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<api xmlns="http://gkmsoft.ru/beautifulcapi" project_name="ClosedApi">
+  <namespace name="A">
+    <include path="professor.xml"/>
+  </namespace>
+</api>
