@@ -429,6 +429,7 @@ class CapiGenerator(object):
                 if namespace_name not in self.api_keys:
                     self.api_keys.update({namespace_name: {}})
                 self.api_keys[namespace_name][c_function.name] = generated_name
+                print('function {} {}'.format(c_function.name, generated_name))
             c_function_size = c_function.body.line_count() + 1
             if cur_size + c_function_size > self.params.wrap_file_line_limit:
                 file_count += 1

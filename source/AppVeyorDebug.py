@@ -44,7 +44,7 @@ def print_files_tree_with_hashes(root, hasher=None):
 def print_file(filepath):
     file = open(filepath, 'r')
     for line in file:
-        print(line)
+        print(line[:-1])
 
 
 def print_file_by_mask_list(root, masks: [str]):
@@ -64,10 +64,7 @@ def debug(capi):
         print(path)
         print()
         files = [
-            '*.xml',
             'ExampleKeys.h',
-            'PersonImpl.*',
-            'CMakeLists.txt'
         ]
         print_file_by_mask_list(path, files)
         # print_files_tree_with_hashes(path)
