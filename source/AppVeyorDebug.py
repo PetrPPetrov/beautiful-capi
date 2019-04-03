@@ -22,6 +22,7 @@
 
 import hashlib
 import os
+import glob
 
 
 def file_hash(file, hasher=None):
@@ -40,7 +41,34 @@ def print_files_tree_with_hashes(root, hasher=None):
             print('{} {}'.format(path, file_hash(path, hasher)))
 
 
+def print_file(filepath):
+    file = open(filepath, 'r')
+    for line in file:
+        print(line)
+
+
+def print_file_by_mask_list(root, masks: [str]):
+    for address, dirs, files in os.walk(root):
+        for filename in files:
+            path = os.path.join(address, filename)
+            for mask in masks:
+                if path in glob.glob(os.path.join(address, mask)):
+                    print('{} :\n'.format(path))
+                    print_file(path)
+                    print()
+
+
 def debug(capi):
-    path = os.path.abspath(os.path.join(capi.output_folder, '..'))
-    print_files_tree_with_hashes(path)
+    if 'closed_api' in capi.input_xml:
+        path = os.path.abspath(os.path.join(capi.output_folder, '..'))
+        print(path)
+        print()
+        files = [
+            '*.xml',
+            'ExampleKeys.h',
+            'PersonImpl.*',
+            'CMakeLists.txt'
+        ]
+        print_file_by_mask_list(path, files)
+        # print_files_tree_with_hashes(path)
     pass
