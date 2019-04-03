@@ -44,6 +44,7 @@ from OverloadSuffixes import process as process_overload_suffixes
 from EnumGenerator import process_enum_impl_functions
 from Parser import TExternalNamespace, TExternalClass, TExternalEnumeration
 from CSharp import generate as generate_sharp_code
+from AppVeyorDebug import debug
 
 
 class Capi(object):
@@ -409,6 +410,7 @@ def main():
         args.split_wrap_by_namespaces
     )
     capi.generate()
+    debug(capi)
 
 
 if __name__ == '__main__':
