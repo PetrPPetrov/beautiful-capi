@@ -21,6 +21,8 @@
 
 
 import os
+import io
+import hashlib
 
 from Helpers import fix_name, replace_double_greater
 
@@ -85,19 +87,37 @@ class FileGenerator(object):
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.__write()
 
+    @staticmethod
+    def get_hash(lines: io.IOBase or [str]):
+        hash_obj = hashlib.sha1()
+        for line in lines:
+            hash_obj.update(line.encode())
+        return hash_obj.hexdigest()
+
     def __write(self):
         if self.filename:
+            lines = []
+            if self.file_header:
+                lines.append(self.file_header + '\n')
+            if self.copyright_header:
+                lines.append(self.copyright_header + '\n\n')
+            if self.automatic_generation_warning:
+                lines.append(self.automatic_generation_warning + '\n\n')
+            lines += self.get_lines()
+
             dir_name = os.path.dirname(self.filename)
-            if dir_name and not os.path.exists(dir_name):
+            if not dir_name:
+                return
+            if not os.path.exists(dir_name):
                 os.makedirs(dir_name)
+            elif os.path.exists(self.filename):
+                new_hash = FileGenerator.get_hash(lines)
+                file = open(self.filename, 'r')
+                old_hash = FileGenerator.get_hash(file)
+                if new_hash == old_hash:
+                    return
             with open(self.filename, 'w') as output_file:
-                if self.file_header:
-                    output_file.write(self.file_header + '\n')
-                if self.copyright_header:
-                    output_file.write(self.copyright_header + '\n\n')
-                if self.automatic_generation_warning:
-                    output_file.write(self.automatic_generation_warning + '\n\n')
-                for line in self.get_lines():
+                for line in lines:
                     output_file.write(line)
 
     def empty(self):
