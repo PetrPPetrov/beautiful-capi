@@ -59,8 +59,7 @@ class Capi(object):
                  unit_tests_file=None,
                  natvis_file=None,
                  verbosity=None,
-                 open_api=None,
-                 split_wrap_by_namespaces=None
+                 open_api=None
                  ):
         self.input_xml = input_filename
         self.input_params_filename = input_params_filename
@@ -76,7 +75,6 @@ class Capi(object):
         self.natvis_file = natvis_file
         self.external_libs_headers = []
         self.open_api = open_api
-        self.split_wrap_by_namespaces = split_wrap_by_namespaces
         if clean:
             if os.path.exists(self.output_folder):
                 shutil.rmtree(self.output_folder)
@@ -268,7 +266,7 @@ class Capi(object):
             elif command == 'define':
                 capi_generator.additional_defines.put_line('#define {0}'.format(value))
 
-        capi_generator.generate(file_cache)
+        capi_generator.generate(namespace_generators, file_cache)
         self.__generate_root_header(namespace_generators, file_cache)
 
         if self.unit_tests_generator:
@@ -302,9 +300,6 @@ class Capi(object):
         if self.open_api is not None:
             self.params_description.open_api = self.open_api
             self.params_description.open_api_filled = True
-        if self.split_wrap_by_namespaces is not None:
-            self.params_description.split_wrap_by_namespaces = self.split_wrap_by_namespaces
-            self.params_description.split_wrap_by_namespaces_filled = True
         if self.natvis_file:
             self.params_description.natvis_file = self.natvis_file
             self.params_description.natvis_file_filled = True
@@ -370,17 +365,9 @@ def main():
                         help='generates .natvis file, specifies file name for .natvis file')
     parser.add_argument('--verbosity', dest='verbosity', action='store_true',
                         help='increase output verbosity')
-    parser.add_argument('--open-api', dest='open_api', type=str2bool,
-                        help='specifies flag if the library API will be open, otherwise the library API will'
-                             ' be secured. Warning: it is strongly recommended that if this flag is false,'
-                             ' also disable the "split_wrap_by_namespaces" flag.')
+    parser.add_argument('--open-api', dest='open_api', type=str2bool, help='specifies flag if the library API will '
+                        'be open, otherwise the library API will be secured.')
     parser.set_defaults(open_api=None)
-    parser.add_argument('--split-wrap-by-namespaces', dest='split_wrap_by_namespaces', type=str2bool,
-                        help='split the output wrap file into multiple files by namespaces. Warning: '
-                             'if you use BCapi for a closed source project and the open_api flag is '
-                             'disabled, we strongly recommend that you disable this flag, since the '
-                             'functions will only be mixed in their namespaces.')
-    parser.set_defaults(split_wrap_by_namespaces=None)
 
     args = parser.parse_args()
 
@@ -405,8 +392,7 @@ def main():
         args.unit_tests_file,
         args.natvis_file,
         args.verbosity,
-        args.open_api,
-        args.split_wrap_by_namespaces
+        args.open_api
     )
     capi.generate()
 

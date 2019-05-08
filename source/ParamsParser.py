@@ -135,8 +135,6 @@ class TBeautifulCapiParams(object):
         self.generate_sharp_library_filled = False
         self.sharp_library_name = ""
         self.sharp_library_name_filled = False
-        self.split_wrap_by_namespaces = True
-        self.split_wrap_by_namespaces_filled = False
         self.wrap_file_line_limit = 64000
         self.wrap_file_line_limit_filled = False
         self.copyright_headers = []
@@ -329,10 +327,6 @@ class TBeautifulCapiParams(object):
             cur_attr = dom_node.getAttribute("sharp_library_name")
             self.sharp_library_name = cur_attr
             self.sharp_library_name_filled = True
-        if dom_node.hasAttribute("split_wrap_by_namespaces"):
-            cur_attr = dom_node.getAttribute("split_wrap_by_namespaces")
-            self.split_wrap_by_namespaces = string_to_bool(cur_attr)
-            self.split_wrap_by_namespaces_filled = True
         if dom_node.hasAttribute("wrap_file_line_limit"):
             cur_attr = dom_node.getAttribute("wrap_file_line_limit")
             self.wrap_file_line_limit = string_to_int(cur_attr)
