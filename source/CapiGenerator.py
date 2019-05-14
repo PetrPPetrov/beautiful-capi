@@ -580,6 +580,7 @@ class CapiGenerator(object):
             self.cur_namespace_info = namespace_info
             if len(namespace_name) == 1:
                 self.__generate_capi_impl_defines(output_capi_impl)
+            self.__generate_callback_typedefs(namespace_info, output_capi_impl)
         self.__generate_callback_implementations(output_capi_impl)
         if self.params.open_api:
             self.__generate_capi_with_file_separation(output_capi_impl, namespace_generators, file_cache)
@@ -589,7 +590,6 @@ class CapiGenerator(object):
                 self.cur_namespace_info = namespace_info
                 if len(namespace_name) == 1:
                     generate_get_version_functions(output_capi_impl, namespace_name[0], self.params, self.api_root)
-                self.__generate_callback_typedefs(namespace_info, output_capi_impl)
             self.__generate_capi_impl(output_capi_impl)
         self.__generated_cmake_source_list()
         self.__generate_capi(file_cache)
