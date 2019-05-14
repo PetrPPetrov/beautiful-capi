@@ -34,7 +34,7 @@ from DynamicLoaderGenerator import DynamicLoaderGenerator
 from StaticLoaderGenerator import StaticLoaderGenerator
 from CheckBinaryCompatibilityGenerator import generate_get_version_functions
 from FileCache import FileCache
-from Helpers import if_required_then_add_empty_line, get_c_name
+from Helpers import get_c_name, replace_template_to_filename
 
 
 class CFunction(object):
@@ -450,7 +450,8 @@ class CapiGenerator(object):
     def __generate_class_wrap_file(self, class_generator, functions_list, file_cache):
         class_functions = []
         namespace_name_array = class_generator.parent_namespace.full_name_array
-        class_file_path = ['AutoGenWrap'] + namespace_name_array + [class_generator.wrap_name + 'Wrap.cpp']
+        class_name = class_generator.wrap_name.replace('<', '_').replace('>', '_').replace(',', '.').replace(' ', '')
+        class_file_path = ['AutoGenWrap'] + namespace_name_array + [class_name + 'Wrap.cpp']
         filename = file_cache.get_file_for_capi_namespace(class_file_path)
         out = FileGenerator(filename)
         rel_path = os.path.relpath(self.platform_defines_file, os.path.dirname(filename))
@@ -462,15 +463,6 @@ class CapiGenerator(object):
                 functions_list.remove(function)
         self.__generate_capi_impl_functions(class_functions, out)
         self.generated_source_files.append(out.filename)
-
-    def __generate_namespace_wrap_file(self, namespace_generator, functions_list, out: FileGenerator):
-        namespace_functions = []
-        namespace_name = '_'.join(namespace_generator.full_name_array)
-        for function in functions_list:
-            if function.name.startswith(namespace_name):
-                namespace_functions.append(function)
-                functions_list.remove(function)
-        self.__generate_capi_impl_functions(namespace_functions, out)
 
     def __process_namespace(self, namespace_generator, file_cache: FileCache):
         namespace_info = self.namespace_name_2_info.get(tuple(namespace_generator.full_name_array), None)
@@ -492,9 +484,7 @@ class CapiGenerator(object):
             self.__process_namespace(nested_namespace, file_cache)
         for class_generator in namespace_generator.classes:
             self.__generate_class_wrap_file(class_generator, functions_list, file_cache)
-
         self.__generate_capi_impl_functions(functions_list, out)
-        self.__generate_namespace_wrap_file(namespace_generator, functions_list, out)
 
     def __generated_cmake_source_list(self):
         sources_dir = os.path.dirname(self.params.output_wrap_file_name)
@@ -505,7 +495,7 @@ class CapiGenerator(object):
         with Indent(out):
             for source_file in self.generated_source_files:
                 rel_path = os.path.relpath(source_file, os.path.dirname(filename))
-                out.put_line('${{CUR_DIR}}/{}'.format(rel_path.replace(os.sep, '/')))
+                out.put_line('"${{CUR_DIR}}/{}"'.format(rel_path.replace(os.sep, '/')))
         out.put_line(')')
 
     def __generate_capi_with_file_separation(self, main_out: FileGenerator, namespace_generators, file_cache: FileCache):
