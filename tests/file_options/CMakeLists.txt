@@ -25,17 +25,29 @@ if(CMAKE_MAJOR_VERSION GREATER 2)
   find_package(PythonInterp 3.4 REQUIRED)
 
   function(bcapi_add_test test_name)
+    
+    set(capi_command
+      ${PYTHON_EXECUTABLE}
+      ${tests_SOURCE_DIR}/../source/Capi.py
+      -i ${file_option_SOURCE_DIR}/library/file_options.xml
+      -p ${file_option_SOURCE_DIR}/library/${test_name}_params.xml
+      -o ${file_option_SOURCE_DIR}/library/include/${test_name}
+      -w ${file_option_SOURCE_DIR}/library/source/${test_name}/AutoGenWrap.cpp
+      -s ${file_option_SOURCE_DIR}/library/source/${test_name}/snippets
+    )
+    
+    execute_process(
+      COMMAND
+        ${capi_command}      
+      WORKING_DIRECTORY
+        ${file_option_SOURCE_DIR}
+    )
+    
     add_custom_command(
       OUTPUT
         ${file_option_SOURCE_DIR}/library/source/AutoGenWrap_${test_name}.cpp
-      COMMAND
-        ${PYTHON_EXECUTABLE}
-        ${tests_SOURCE_DIR}/../source/Capi.py
-        -i ${file_option_SOURCE_DIR}/library/file_options.xml
-        -p ${file_option_SOURCE_DIR}/library/${test_name}_params.xml
-        -o ${file_option_SOURCE_DIR}/library/include/${test_name}
-        -w ${file_option_SOURCE_DIR}/library/source/AutoGenWrap_${test_name}.cpp
-        -s ${file_option_SOURCE_DIR}/library/source/snippets_${test_name}
+      COMMAND        
+        ${capi_command}
       MAIN_DEPENDENCY
         ${file_option_SOURCE_DIR}/library/file_options.xml
       DEPENDS
@@ -43,8 +55,9 @@ if(CMAKE_MAJOR_VERSION GREATER 2)
       WORKING_DIRECTORY
         ${file_option_SOURCE_DIR}
     )
+    include(${file_option_SOURCE_DIR}/library/source/${test_name}/AutoGenSourcesList.cmake)
     add_library(file_options_${test_name} SHARED
-      ${file_option_SOURCE_DIR}/library/source/AutoGenWrap_${test_name}.cpp
+      ${TestAutoGenSources}
       ${file_option_SOURCE_DIR}/library/source/PrinterImpl.h
       ${file_option_SOURCE_DIR}/library/source/PrinterImpl.cpp
       ${file_option_SOURCE_DIR}/library/source/SphereImpl.h
@@ -56,6 +69,7 @@ if(CMAKE_MAJOR_VERSION GREATER 2)
       ${file_option_SOURCE_DIR}/library/source/DataImpl.h
       ${file_option_SOURCE_DIR}/library/source/DataImpl.cpp
     )
+    target_include_directories(file_options_${test_name} PRIVATE ${file_option_SOURCE_DIR}/library/source)
     add_executable(file_options_${test_name}_client
       ${file_option_SOURCE_DIR}/clients/Main.cpp
     )
