@@ -502,7 +502,6 @@ class CapiGenerator(object):
         self.generated_source_files.append(main_out.filename)
         for namespace_generator in namespace_generators:
             self.__process_namespace(namespace_generator, file_cache)
-        self.__generated_cmake_source_list()
 
     def __generate_capi_impl(self, out: FileGenerator):
         self.generated_source_files.append(out.filename)
@@ -592,4 +591,5 @@ class CapiGenerator(object):
                     generate_get_version_functions(output_capi_impl, namespace_name[0], self.params, self.api_root)
                 self.__generate_callback_typedefs(namespace_info, output_capi_impl)
             self.__generate_capi_impl(output_capi_impl)
+        self.__generated_cmake_source_list()
         self.__generate_capi(file_cache)
