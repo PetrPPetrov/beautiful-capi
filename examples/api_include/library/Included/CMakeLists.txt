@@ -25,14 +25,20 @@ cmake_minimum_required(VERSION 2.8)
 find_package(PythonInterp 3.4 REQUIRED)
 
 include(../../../UseBCapi.cmake)
+add_bcapi_generation()
+
+include(${included_SOURCE_DIR}/AutoGenSourcesList.cmake)
 
 include_directories(
   ${included_SOURCE_DIR}/source/
 )
 
-add_library(api_include SHARED
-  ${included_SOURCE_DIR}/source/AutoGenWrap.cpp
+set(IncludedSources  
   ${included_SOURCE_DIR}/source/IncludedImpl.h  
+  ${included_SOURCE_DIR}/source/IncludedImpl.cpp
 )
 
-add_bcapi_generation()
+add_library(included SHARED  
+  ${IncludedAutoGenSources}
+  ${IncludedSources}
+)

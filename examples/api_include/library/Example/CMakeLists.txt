@@ -25,6 +25,9 @@ cmake_minimum_required(VERSION 2.8)
 find_package(PythonInterp 3.4 REQUIRED)
 
 include(../../../../UseBCapi.cmake)
+add_bcapi_generation(sharp "sharp_output")
+
+include(${api_include_SOURCE_DIR}/source/AutoGenSourcesList.cmake)
 
 include_directories(
   ${api_include_SOURCE_DIR}/source/
@@ -32,11 +35,12 @@ include_directories(
 )
 
 add_library(api_include SHARED
-  ${api_include_SOURCE_DIR}/source/AutoGenWrap.cpp
+  ${ApiIncludeAutoGenSources}
   ${api_include_SOURCE_DIR}/source/ExistingImpl.h
+  ${api_include_SOURCE_DIR}/source/ExistingImpl.cpp
+  ${api_include_SOURCE_DIR}/../Included/source/IncludedImpl.h
+  ${api_include_SOURCE_DIR}/../Included/source/IncludedImpl.cpp
 )
-
-add_bcapi_generation(sharp "sharp_output")
 
 if(${CSHARP_ENABLED})
     add_subdirectory(sharp_output)

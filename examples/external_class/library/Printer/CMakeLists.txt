@@ -25,6 +25,9 @@ cmake_minimum_required(VERSION 2.8)
 find_package(PythonInterp 3.4 REQUIRED)
 
 include(../../../../UseBCapi.cmake)
+add_bcapi_generation(sharp "sharp_output")
+
+include(${printer_SOURCE_DIR}/source/AutoGenSourcesList.cmake)
 
 include_directories(
   ${components_SOURCE_DIR}/include/ 
@@ -33,7 +36,7 @@ include_directories(
 )
 
 add_library(printer SHARED
-  ${printer_SOURCE_DIR}/source/AutoGenWrap.cpp
+  ${PrinterAutoGenSources}
   ${printer_SOURCE_DIR}/source/PrinterImpl.h
 )
 
@@ -41,8 +44,6 @@ add_dependencies(printer components)
 add_dependencies(printer comp_c)
 target_link_libraries(printer components)
 target_link_libraries(printer comp_c)
-
-add_bcapi_generation(sharp "sharp_output")
 
 if (${CSHARP_ENABLED})
     add_subdirectory(sharp_output)

@@ -25,16 +25,20 @@ cmake_minimum_required(VERSION 2.8)
 find_package(PythonInterp 3.4 REQUIRED)
 
 include(../../../UseBCapi.cmake)
+add_bcapi_generation(sharp "sharp_output")
 
-include_directories(${closed_api_SOURCE_DIR}/source/)
+include(${closed_api_SOURCE_DIR}/source/AutoGenSourcesList.cmake)
+
+include_directories(
+  ${closed_api_SOURCE_DIR}/source/
+  ${closed_api_SOURCE_DIR}/include/
+)
 
 add_library(closed_api SHARED
-  ${closed_api_SOURCE_DIR}/source/AutoGenWrap.cpp
+  ${ClosedApiAutoGenSources}
   ${closed_api_SOURCE_DIR}/source/PersonImpl.h
   ${closed_api_SOURCE_DIR}/source/PersonImpl.cpp
 )
-
-add_bcapi_generation(sharp "sharp_output")
 
 if (${CSHARP_ENABLED})
     add_subdirectory(sharp_output)

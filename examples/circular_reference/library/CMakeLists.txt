@@ -25,18 +25,19 @@ cmake_minimum_required(VERSION 2.8)
 find_package(PythonInterp 3.4 REQUIRED)
 
 include(../../../UseBCapi.cmake)
+add_bcapi_generation(sharp "sharp_output")
+
+include(${circular_reference_SOURCE_DIR}/source/AutoGenSourcesList.cmake)
 
 include_directories(${circular_reference_SOURCE_DIR}/source/)
 
 add_library(circular_reference SHARED
-  ${circular_reference_SOURCE_DIR}/source/AutoGenWrap.cpp
+  ${CircularReferenceAutoGenSources}
   ${circular_reference_SOURCE_DIR}/source/ClassAImpl.h
   ${circular_reference_SOURCE_DIR}/source/ClassAImpl.cpp
   ${circular_reference_SOURCE_DIR}/source/ClassBImpl.h
   ${circular_reference_SOURCE_DIR}/source/ClassBImpl.cpp  
 )
-
-add_bcapi_generation(sharp "sharp_output")
 
 if(${CSHARP_ENABLED})
  add_subdirectory(sharp_output)

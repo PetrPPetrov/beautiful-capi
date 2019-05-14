@@ -25,12 +25,13 @@ cmake_minimum_required(VERSION 2.8)
 find_package(PythonInterp 3.4 REQUIRED)
 
 include(../../../UseBCapi.cmake)
+add_bcapi_generation()
+
+include(${implementation_code_SOURCE_DIR}/source/AutoGenSourcesList.cmake)
 
 include_directories(${implementation_code_SOURCE_DIR}/source/)
 
 add_library(implementation_code SHARED
-  ${implementation_code_SOURCE_DIR}/source/AutoGenWrap.cpp
+  ${ImplementationCodeAutoGenSources}
   ${implementation_code_SOURCE_DIR}/source/PersonImpl.h
 )
-
-add_bcapi_generation()

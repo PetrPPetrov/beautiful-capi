@@ -25,18 +25,19 @@ cmake_minimum_required(VERSION 2.8)
 find_package(PythonInterp 3.4 REQUIRED)
 
 include(../../../UseBCapi.cmake)
+add_bcapi_generation(sharp "sharp_output")
+
+include(${copy_semantic_SOURCE_DIR}/source/AutoGenSourcesList.cmake)
 
 include_directories(${copy_semantic_SOURCE_DIR}/source/)
 
 add_library(copy_semantic SHARED
-  ${copy_semantic_SOURCE_DIR}/source/AutoGenWrap.cpp
+  ${CopySemanticAutoGenSources}
   ${copy_semantic_SOURCE_DIR}/source/PrinterImpl.h
   ${copy_semantic_SOURCE_DIR}/source/PrinterImpl.cpp
   ${copy_semantic_SOURCE_DIR}/source/DumperImpl.h
   ${copy_semantic_SOURCE_DIR}/source/DumperImpl.cpp
 )
-
-add_bcapi_generation(sharp "sharp_output")
 
 if(${CSHARP_ENABLED})
  add_subdirectory(sharp_output)

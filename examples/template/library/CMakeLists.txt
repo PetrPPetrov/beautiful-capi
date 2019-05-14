@@ -25,20 +25,21 @@ find_package(PythonInterp 3.4 REQUIRED)
 find_package(Boost REQUIRED)
 
 include(../../../UseBCapi.cmake)
+add_bcapi_generation(sharp "sharp_output")
+
+include(${template_SOURCE_DIR}/source/AutoGenSourcesList.cmake)
 
 include_directories(
   ${Boost_INCLUDE_DIR}/
   ${template_SOURCE_DIR}/source/
 )
 
-add_library(template SHARED
-  ${template_SOURCE_DIR}/source/AutoGenWrap.cpp
+add_library(template SHARED  
+  ${TemplateAutoGenSources}
   ${template_SOURCE_DIR}/source/VectorImpl.h
   ${template_SOURCE_DIR}/source/PositionImpl.h
   ${template_SOURCE_DIR}/source/ModelImpl.h
 )
-
-add_bcapi_generation(sharp "sharp_output")
 
 if (${CSHARP_ENABLED})
     add_subdirectory(sharp_output)

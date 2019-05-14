@@ -19,42 +19,24 @@
  *
  */
 
-#ifndef BEAUTIFUL_CAPI_INCLUDED_IMPL_H
-#define BEAUTIFUL_CAPI_INCLUDED_IMPL_H
-
-#include <iostream>
-
-namespace Included
+#include "ExistingImpl.h"
+namespace ApiInclude
 {
-    namespace EmptyNS
-    {
-        #define MsgEmpty "The message from empty namespace"
-    }
-
-    class PrinterImpl
-    {
-    public:
-        PrinterImpl() {}
-
-        void SayHello();
-    };
-
-    void SayHello();
-
     namespace ExistingNS
     {
-        void SayHello();
+        void SayHello()
+        {
+            std::cout << "Printed from ApiInclude::ExistingNS::SayHello()" << std::endl;
+        }
     }
 
-    class ExistingClassImpl
+    void ExistingClassImpl::SayHello()
     {
-    public:
-        ExistingClassImpl() {}
+        std::cout << "Printed from ApiInclude::ExistingClass.SayHello()" << std::endl;
+    }
 
-        void SayHello();
-    };
-
-    void ExistingFunc();
+    void ExistingFunc()
+    {
+        std::cout << "Printed from ApiInclude::ExistingFunc()" << std::endl;
+    }
 }
-
-#endif /* BEAUTIFUL_CAPI_INCLUDED_IMPL_H */

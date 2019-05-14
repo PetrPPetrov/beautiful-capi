@@ -27,6 +27,9 @@ find_package(PythonInterp 3.4 REQUIRED)
 find_package(Boost REQUIRED)
 
 include(../../../UseBCapi.cmake)
+add_bcapi_generation()
+
+include(${point_set_SOURCE_DIR}/source/AutoGenSourcesList.cmake)
 
 include_directories(
   ${Boost_INCLUDE_DIR}/
@@ -34,10 +37,8 @@ include_directories(
 )
 
 add_library(point_set SHARED
-  ${point_set_SOURCE_DIR}/source/AutoGenWrap.cpp
+  ${PointSetAutoGenSources}
   ${point_set_SOURCE_DIR}/source/PointSetImpl.h
   ${point_set_SOURCE_DIR}/source/PointsImpl.h
   ${point_set_SOURCE_DIR}/source/PositionImpl.h
 )
-
-add_bcapi_generation()

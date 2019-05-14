@@ -26,20 +26,21 @@ find_package(PythonInterp 3.4 REQUIRED)
 
 include(../../../UseBCapi.cmake)
 
+add_bcapi_generation(sharp "sharp_output")
+
+include(${mixed_semantic_SOURCE_DIR}/source/AutoGenSourcesList.cmake)
+
 include_directories(
   ${mixed_semantic_SOURCE_DIR}/source/
 )
 
 add_library(mixed_semantic SHARED
-  ${mixed_semantic_SOURCE_DIR}/source/AutoGenWrap.cpp
+  ${MixedSemanticAutoGenSources}
   ${mixed_semantic_SOURCE_DIR}/source/NameImpl.h
   ${mixed_semantic_SOURCE_DIR}/source/PersonImpl.h
   ${mixed_semantic_SOURCE_DIR}/source/AddressImpl.h
   ${mixed_semantic_SOURCE_DIR}/source/PrinterImpl.h
-  
 )
-
-add_bcapi_generation(sharp "sharp_output")
 
 if(${CSHARP_ENABLED})
  add_subdirectory(sharp_output)

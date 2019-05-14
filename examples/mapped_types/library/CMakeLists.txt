@@ -25,16 +25,17 @@ cmake_minimum_required(VERSION 2.8)
 find_package(PythonInterp 3.4 REQUIRED)
 
 include(../../../UseBCapi.cmake)
+add_bcapi_generation(sharp "sharp_output")
+
+include(${mapped_types_SOURCE_DIR}/source/AutoGenSourcesList.cmake)
 
 include_directories(${mapped_types_SOURCE_DIR}/source/)
 
 add_library(mapped_types SHARED
-  ${mapped_types_SOURCE_DIR}/source/AutoGenWrap.cpp
+  ${MappedTypesAutoGenSources}
   ${mapped_types_SOURCE_DIR}/source/MappedTypes.h
   ${mapped_types_SOURCE_DIR}/source/MappedTypes.cpp
 )
-
-add_bcapi_generation(sharp "sharp_output")
 
 if(${CSHARP_ENABLED})
     add_subdirectory(sharp_output)

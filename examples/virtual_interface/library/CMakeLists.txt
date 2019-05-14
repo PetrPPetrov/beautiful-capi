@@ -25,11 +25,14 @@ cmake_minimum_required(VERSION 2.8)
 find_package(PythonInterp 3.4 REQUIRED)
 
 include(../../../UseBCapi.cmake)
+add_bcapi_generation(sharp "sharp_output")
+
+include(${virtual_interface_SOURCE_DIR}/source/AutoGenSourcesList.cmake)
 
 include_directories(${virtual_interface_SOURCE_DIR}/source/)
 
 add_library(virtual_interface SHARED
-  ${virtual_interface_SOURCE_DIR}/source/AutoGenWrap.cpp
+  ${VirtualInterfaceAutoGenSources}
   ${virtual_interface_SOURCE_DIR}/source/IShape.h
   ${virtual_interface_SOURCE_DIR}/source/TriangleFactory.h
   ${virtual_interface_SOURCE_DIR}/source/TriangleFactory.cpp

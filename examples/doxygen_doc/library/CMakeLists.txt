@@ -25,18 +25,18 @@ cmake_minimum_required(VERSION 2.8)
 find_package(PythonInterp 3.4 REQUIRED)
 
 include(../../../UseBCapi.cmake)
+add_bcapi_generation()
+
+include(${doxygen_doc_SOURCE_DIR}/source/AutoGenSourcesList.cmake)
 
 include_directories(
   ${doxygen_doc_SOURCE_DIR}/source/
 )
 
 add_library(doxygen_doc SHARED
-  ${doxygen_doc_SOURCE_DIR}/source/AutoGenWrap.cpp
+  ${DoxygenDocAutoGenSources}
   ${doxygen_doc_SOURCE_DIR}/source/NameImpl.h
   ${doxygen_doc_SOURCE_DIR}/source/PersonImpl.h
   ${doxygen_doc_SOURCE_DIR}/source/AddressImpl.h
   ${doxygen_doc_SOURCE_DIR}/source/PrinterImpl.h
-  
 )
-
-add_bcapi_generation()

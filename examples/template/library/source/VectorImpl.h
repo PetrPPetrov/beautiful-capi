@@ -121,7 +121,7 @@ namespace Example
         }
     };
 
-    std::ostream& operator<<(std::ostream& os, const CharDummyVector& vector)
+    inline std::ostream& operator<<(std::ostream& os, const CharDummyVector& vector)
     {
         os << "vector size = " << vector.GetSize() << std::endl;
         for (int i = 0; i < vector.GetSize(); ++i)

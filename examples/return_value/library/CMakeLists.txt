@@ -26,20 +26,22 @@ find_package(PythonInterp 3.4 REQUIRED)
 
 include(../../../UseBCapi.cmake)
 
+add_bcapi_generation(sharp "sharp_output")
+
+include(${return_value_SOURCE_DIR}/source/AutoGenSourcesList.cmake)
+
 include_directories(
   ${return_value_SOURCE_DIR}/source/
 )
 
 add_library(return_value SHARED
-  ${return_value_SOURCE_DIR}/source/AutoGenWrap.cpp
+  ${ReturnValueAutoGenSources}
   ${return_value_SOURCE_DIR}/source/FirstNameImpl.h
   ${return_value_SOURCE_DIR}/source/MiddleNameImpl.h
   ${return_value_SOURCE_DIR}/source/LastNameImpl.h
   ${return_value_SOURCE_DIR}/source/PersonImpl.h
   ${return_value_SOURCE_DIR}/source/PrinterImpl.h
 )
-
-add_bcapi_generation(sharp "sharp_output")
 
 if(${CSHARP_ENABLED})
  add_subdirectory(sharp_output)

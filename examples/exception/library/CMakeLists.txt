@@ -25,11 +25,14 @@ cmake_minimum_required(VERSION 2.8)
 find_package(PythonInterp 3.4 REQUIRED)
 
 include(../../../UseBCapi.cmake)
+add_bcapi_generation()
+
+include(${exception_SOURCE_DIR}/source/AutoGenSourcesList.cmake)
 
 include_directories(${exception_SOURCE_DIR}/source/)
 
 add_library(exception SHARED
-  ${exception_SOURCE_DIR}/source/AutoGenWrap.cpp
+  ${ExceptionAutoGenSources}
   ${exception_SOURCE_DIR}/source/PrinterImpl.h
   ${exception_SOURCE_DIR}/source/PrinterImpl.cpp
   ${exception_SOURCE_DIR}/source/ScannerImpl.h
@@ -43,5 +46,3 @@ add_library(exception SHARED
   ${exception_SOURCE_DIR}/source/Exception/DivisionByZeroImpl.h
   ${exception_SOURCE_DIR}/source/Exception/DivisionByZeroImpl.cpp
 )
-
-add_bcapi_generation()

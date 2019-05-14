@@ -25,11 +25,14 @@ cmake_minimum_required(VERSION 2.8)
 find_package(PythonInterp 3.4 REQUIRED)
 
 include(../../../UseBCapi.cmake)
+add_bcapi_generation(sharp "sharp_output")
+
+include(${callback_SOURCE_DIR}/source/AutoGenSourcesList.cmake)
 
 include_directories(${callback_SOURCE_DIR}/source/)
 
 add_library(callback SHARED
-  ${callback_SOURCE_DIR}/source/AutoGenWrap.cpp
+  ${CallbackAutoGenSources}
   ${callback_SOURCE_DIR}/source/IPrinter.h
   ${callback_SOURCE_DIR}/source/DefaultPrinterImpl.h
   ${callback_SOURCE_DIR}/source/DefaultPrinterImpl.cpp
@@ -44,8 +47,6 @@ add_library(callback SHARED
   ${callback_SOURCE_DIR}/source/Exception/DivisionByZeroImpl.h
   ${callback_SOURCE_DIR}/source/Exception/DivisionByZeroImpl.cpp
 )
-
-add_bcapi_generation(sharp "sharp_output")
 
 if (${CSHARP_ENABLED})
     add_subdirectory(sharp_output)

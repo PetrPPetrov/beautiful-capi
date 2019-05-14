@@ -26,6 +26,9 @@ find_package(PythonInterp 3.4 REQUIRED)
 find_package(Boost REQUIRED)
 
 include(../../../UseBCapi.cmake)
+add_bcapi_generation(tests "include/AutoGenUnitTests.h")
+
+include(${unit_test_SOURCE_DIR}/source/AutoGenSourcesList.cmake)
 
 include_directories(
   ${Boost_INCLUDE_DIR}/
@@ -33,10 +36,8 @@ include_directories(
 )
 
 add_library(unit_test SHARED
-  ${unit_test_SOURCE_DIR}/source/AutoGenWrap.cpp
+  ${UnitTestAutoGenSources}
   ${unit_test_SOURCE_DIR}/source/NameImpl.h
   ${unit_test_SOURCE_DIR}/source/PersonImpl.h
   ${unit_test_SOURCE_DIR}/source/AddressImpl.h
 )
-
-add_bcapi_generation(tests "include/AutoGenUnitTests.h")

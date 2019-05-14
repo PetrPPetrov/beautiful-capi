@@ -19,10 +19,7 @@
  *
  */
 
-#ifndef BEAUTIFUL_CAPI_INCLUDED_IMPL_H
-#define BEAUTIFUL_CAPI_INCLUDED_IMPL_H
-
-#include <iostream>
+#include "IncludedImpl.h"
 
 namespace Included
 {
@@ -31,30 +28,32 @@ namespace Included
         #define MsgEmpty "The message from empty namespace"
     }
 
-    class PrinterImpl
+    void PrinterImpl::SayHello()
     {
-    public:
-        PrinterImpl() {}
+       std::cout << "Printed from Included::Printer.SayHello()" << std::endl;
+    }
 
-        void SayHello();
-    };
 
-    void SayHello();
+    void SayHello()
+    {
+       std::cout << "Printed from Included::SayHello()" << std::endl;
+    }
 
     namespace ExistingNS
     {
-        void SayHello();
+        void SayHello()
+        {
+            std::cout << "Printed from Included::ExistingNS::SayHello()" << std::endl;
+        }
     }
 
-    class ExistingClassImpl
+    void ExistingClassImpl::SayHello()
     {
-    public:
-        ExistingClassImpl() {}
+       std::cout << "Printed from Included::ExistingClass.SayHello()" << std::endl;
+    }
 
-        void SayHello();
-    };
-
-    void ExistingFunc();
+    void ExistingFunc()
+    {
+       std::cout << "Printed from Included::ExistingFunc()" << std::endl;
+    }
 }
-
-#endif /* BEAUTIFUL_CAPI_INCLUDED_IMPL_H */

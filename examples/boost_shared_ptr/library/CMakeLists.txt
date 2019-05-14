@@ -26,6 +26,9 @@ find_package(PythonInterp 3.4 REQUIRED)
 find_package(Boost REQUIRED)
 
 include(../../../UseBCapi.cmake)
+add_bcapi_generation()
+
+include(${boost_shared_ptr_SOURCE_DIR}/source/AutoGenSourcesList.cmake)
 
 include_directories(
   ${Boost_INCLUDE_DIR}/
@@ -33,9 +36,7 @@ include_directories(
 )
 
 add_library(boost_shared_ptr SHARED
-  ${boost_shared_ptr_SOURCE_DIR}/source/AutoGenWrap.cpp
+  ${boost_shared_ptrAutoGenSources}
   ${boost_shared_ptr_SOURCE_DIR}/source/PrinterImpl.h
   ${boost_shared_ptr_SOURCE_DIR}/source/PrinterImpl.cpp
 )
-
-add_bcapi_generation()

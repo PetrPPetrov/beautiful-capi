@@ -27,27 +27,17 @@ namespace ApiInclude
 {
     namespace ExistingNS
     {
-        void SayHello()
-        {
-            std::cout << "Printed from ApiInclude::ExistingNS::SayHello()" << std::endl;
-        }
+        void SayHello();
     }
 
     class ExistingClassImpl
     {
     public:
         ExistingClassImpl() {}
-
-        void SayHello()
-        {
-            std::cout << "Printed from ApiInclude::ExistingClass.SayHello()" << std::endl;
-        }
+        void SayHello();
     };
 
-    void ExistingFunc()
-    {
-        std::cout << "Printed from ApiInclude::ExistingFunc()" << std::endl;
-    }
+    void ExistingFunc();
 }
 
 #endif /* BEAUTIFUL_CAPI_EXISTING_IMPL_H */

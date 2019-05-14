@@ -2,7 +2,7 @@
 <params xmlns="http://gkmsoft.ru/beautifulcapi-params"
                exception_handling_mode="by_first_argument"
                warn_when_builtin_type_used="false"
-               open_api="false" split_wrap_by_namespaces="false"
+               open_api="false"
                shared_library_name="closed_api">
   <copyright_header>/*
  * Beautiful Capi generates beautiful C API wrappers for your C++ classes

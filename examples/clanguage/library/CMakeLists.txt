@@ -25,15 +25,16 @@ cmake_minimum_required(VERSION 2.8)
 find_package(PythonInterp 3.4 REQUIRED)
 
 include(../../../UseBCapi.cmake)
+add_bcapi_generation()
+
+include(${clanguage_SOURCE_DIR}/source/AutoGenSourcesList.cmake)
 
 include_directories(${clanguage_SOURCE_DIR}/source/)
 
 add_library(clanguage SHARED
-  ${clanguage_SOURCE_DIR}/source/AutoGenWrap.cpp
+  ${CLanguageAutoGenSources}
   ${clanguage_SOURCE_DIR}/source/PrinterImpl.h
   ${clanguage_SOURCE_DIR}/source/PrinterImpl.cpp
   ${clanguage_SOURCE_DIR}/source/DumperImpl.h
   ${clanguage_SOURCE_DIR}/source/DumperImpl.cpp
 )
-
-add_bcapi_generation()

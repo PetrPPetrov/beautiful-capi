@@ -25,11 +25,14 @@ cmake_minimum_required(VERSION 2.8)
 find_package(PythonInterp 3.4 REQUIRED)
 
 include(../../../UseBCapi.cmake)
+add_bcapi_generation(wrap source/auto_gen_wrap.cpp sharp "sharp_output")
+
+include(${custom_suffix_SOURCE_DIR}/source/AutoGenSourcesList.cmake)
 
 include_directories(${custom_suffix_SOURCE_DIR}/source/)
 
 add_library(custom_suffix SHARED
-  ${custom_suffix_SOURCE_DIR}/source/auto_gen_wrap.cpp
+  ${custom_suffixAutoGenSources}
   ${custom_suffix_SOURCE_DIR}/source/printer_impl.h
   ${custom_suffix_SOURCE_DIR}/source/printer_impl.cpp
   ${custom_suffix_SOURCE_DIR}/source/scanner_impl.h
@@ -37,8 +40,6 @@ add_library(custom_suffix SHARED
   ${custom_suffix_SOURCE_DIR}/source/plotter_impl.h
   ${custom_suffix_SOURCE_DIR}/source/plotter_impl.cpp
 )
-
-add_bcapi_generation(wrap source/auto_gen_wrap.cpp sharp "sharp_output")
 
 if(${CSHARP_ENABLED})
  add_subdirectory(sharp_output)
