@@ -454,6 +454,7 @@ class CapiGenerator(object):
         class_file_path = ['AutoGenWrap'] + namespace_name_array + [class_name + 'Wrap.cpp']
         filename = file_cache.get_file_for_capi_namespace(class_file_path)
         out = FileGenerator(filename)
+        out.put_begin_cpp_comments(self.params)
         rel_path = os.path.relpath(self.platform_defines_file, os.path.dirname(filename))
         out.put_line('#include "{}"'.format(rel_path))
         c_name = class_generator.full_c_name
@@ -469,6 +470,7 @@ class CapiGenerator(object):
         namespace_path = ['AutoGenWrap'] + namespace_generator.full_name_array
         filename = file_cache.get_file_for_capi_namespace(namespace_path) + 'Wrap.cpp'
         out = FileGenerator(filename)
+        out.put_begin_cpp_comments(self.params)
         rel_path = os.path.relpath(self.platform_defines_file, os.path.dirname(filename))
         out.put_line('#include "{}"'.format(rel_path))
         self.generated_source_files.append(out.filename)
