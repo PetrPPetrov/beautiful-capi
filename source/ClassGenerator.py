@@ -562,5 +562,3 @@ class ClassGenerator(object):
         self.__generate_c_functions()
         self.__generate_snippet()
         generate_callbacks_on_library_side(self, capi_generator)
-
-

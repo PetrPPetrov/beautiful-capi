@@ -90,6 +90,7 @@ class EnumGenerator(object):
     def definition_header(self, file_cache: FileCache):
         return self.declaration_header(file_cache)
 
+
 class EnumProcessor(object):
     def __init__(self, api_description: TBeautifulCapiRoot):
         self.namespaces = api_description.namespaces
