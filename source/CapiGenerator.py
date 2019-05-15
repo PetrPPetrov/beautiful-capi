@@ -467,26 +467,27 @@ class CapiGenerator(object):
 
     def __process_namespace(self, namespace_generator, file_cache: FileCache):
         namespace_info = self.namespace_name_2_info.get(tuple(namespace_generator.full_name_array), None)
-        namespace_path = ['AutoGenWrap'] + namespace_generator.full_name_array
-        filename = file_cache.get_file_for_capi_namespace(namespace_path) + 'Wrap.cpp'
-        out = FileGenerator(filename)
-        out.put_begin_cpp_comments(self.params)
-        rel_path = os.path.relpath(self.platform_defines_file, os.path.dirname(filename))
-        out.put_line('#include "{}"'.format(rel_path))
-        self.generated_source_files.append(out.filename)
+        if namespace_info:
+            namespace_path = ['AutoGenWrap'] + namespace_generator.full_name_array
+            filename = file_cache.get_file_for_capi_namespace(namespace_path) + 'Wrap.cpp'
+            out = FileGenerator(filename)
+            out.put_begin_cpp_comments(self.params)
+            rel_path = os.path.relpath(self.platform_defines_file, os.path.dirname(filename))
+            out.put_line('#include "{}"'.format(rel_path))
+            self.generated_source_files.append(out.filename)
 
-        self.cur_namespace_name = namespace_generator.full_name_array
-        self.cur_namespace_info = namespace_info
-        if len(namespace_generator.full_name_array) == 1:
-            generate_get_version_functions(out, namespace_generator.full_name_array[0], self.params, self.api_root)
-        self.__generate_callback_typedefs(namespace_info, out)
+            self.cur_namespace_name = namespace_generator.full_name_array
+            self.cur_namespace_info = namespace_info
+            if len(namespace_generator.full_name_array) == 1:
+                generate_get_version_functions(out, namespace_generator.full_name_array[0], self.params, self.api_root)
+            self.__generate_callback_typedefs(namespace_info, out)
 
-        functions_list = copy.copy(namespace_info.c_functions)
-        for nested_namespace in namespace_generator.nested_namespaces:
-            self.__process_namespace(nested_namespace, file_cache)
-        for class_generator in namespace_generator.classes:
-            self.__generate_class_wrap_file(class_generator, functions_list, file_cache)
-        self.__generate_capi_impl_functions(functions_list, out)
+            functions_list = copy.copy(namespace_info.c_functions)
+            for nested_namespace in namespace_generator.nested_namespaces:
+                self.__process_namespace(nested_namespace, file_cache)
+            for class_generator in namespace_generator.classes:
+                self.__generate_class_wrap_file(class_generator, functions_list, file_cache)
+            self.__generate_capi_impl_functions(functions_list, out)
 
     def __generated_cmake_source_list(self):
         sources_dir = os.path.dirname(self.params.output_wrap_file_name)
