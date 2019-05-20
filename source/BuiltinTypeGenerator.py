@@ -56,6 +56,9 @@ class BaseTypeGenerator(object):
     def include_dependent_definition_headers(self, file_generator: FileGenerator, file_cache: FileCache):
         pass
 
+    def dependent_implementation_headers(self):
+        return []
+
 
 class BuiltinTypeGenerator(BaseTypeGenerator):
     def __init__(self, type_name: str):

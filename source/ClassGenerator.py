@@ -176,7 +176,7 @@ class ClassGenerator(object):
         return self.full_c_name + '_cast_to_base'
 
     def cast_from_base(self, base_class_generator) -> str:
-        return base_class_generator.full_c_name + '_cast_to_' + self.full_c_name
+        return self.full_c_name + '_cast_from_' + base_class_generator.full_c_name
 
     @property
     def copy_method(self) -> str:
@@ -553,6 +553,15 @@ class ClassGenerator(object):
     def generate_forward_declaration(self, out: FileGenerator):
         if not self.class_object.template_line:
             out.put_line('class {0};'.format(self.wrap_name))
+
+    def dependent_implementation_headers(self):
+        result = []
+        if self.class_object.implementation_class_header_filled:
+            result.append(self.class_object.implementation_class_header)
+        if self.is_template:
+            for argument in self.template_argument_generators:
+                result += argument.dependent_implementation_headers()
+        return result
 
     def generate(self, file_cache: FileCache, capi_generator: CapiGenerator):
         self.file_cache = file_cache

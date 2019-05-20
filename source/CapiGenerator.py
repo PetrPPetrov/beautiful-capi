@@ -28,7 +28,7 @@ from collections import OrderedDict
 
 from Parser import TBeautifulCapiRoot
 from ParamsParser import TBeautifulCapiParams
-from FileGenerator import FileGenerator, WatchdogScope, IfDefScope, Indent
+from FileGenerator import FileGenerator, WatchdogScope, IfDefScope, Indent, IndentScope
 from FileGenerator import if_then_else, if_def_then_else, if_not_def_then_else
 from DynamicLoaderGenerator import DynamicLoaderGenerator
 from StaticLoaderGenerator import StaticLoaderGenerator
@@ -76,7 +76,7 @@ class CapiGenerator(object):
         self.additional_includes.include_system_header('stdexcept')
         self.additional_includes.include_system_header('cassert')
         self.main_exception_traits.include_wrap_cpp_headers(self.additional_includes)
-        self.callback_implementations = []
+        self.callback_implementations = OrderedDict()
         self.cur_api_define = None
         self.cur_api_static = None
         self.cur_capi_prefix = None
@@ -165,13 +165,16 @@ class CapiGenerator(object):
         out.put_line('#endif')
         out.put_line('')
 
+    def __generate_callback_typedef(self, c_pointer, out: FileGenerator):
+        out.put_line('typedef {return_type} ({convention} *{name})({arguments});'.format(
+            return_type=c_pointer.return_type,
+            convention=self.cur_api_convention,
+            name=c_pointer.name,
+            arguments=c_pointer.arguments))
+
     def __generate_callback_typedefs(self, namespace_info: NamespaceInfo, out: FileGenerator):
         for c_pointer in namespace_info.c_pointers:
-            out.put_line('typedef {return_type} ({convention} *{name})({arguments});'.format(
-                return_type=c_pointer.return_type,
-                convention=self.cur_api_convention,
-                name=c_pointer.name,
-                arguments=c_pointer.arguments))
+            self.__generate_callback_typedef(c_pointer, out)
         if namespace_info.nested_namespaces:
             for nested_ns in namespace_info.nested_namespaces:
                 self.__generate_callback_typedefs(nested_ns, out)
@@ -180,7 +183,23 @@ class CapiGenerator(object):
         if self.callback_implementations:
             self.main_exception_traits.generate_check_and_throw_exception_for_impl(out)
             out.put_line('')
-        for callback_implementation in self.callback_implementations:
+        prev_namespace_path = tuple()
+        indents = []
+        for full_class_name, callback_implementation in self.callback_implementations.items():
+            cur_namespace_path = tuple(full_class_name[:-1])
+            prev_it = iter(prev_namespace_path)
+            cur_it = iter(cur_namespace_path)
+            for prev, cur in zip(prev_namespace_path, cur_namespace_path):
+                if prev != cur:
+                    break
+                next(prev_it)
+                next(cur_it)
+            for _ in prev_it:
+                indents.pop()
+            for _ in cur_it:
+                out.put_line('namespace {} {{'.format(full_class_name[-1]))
+                indents.append(IndentScope(out, '};'))
+            prev_namespace_path = cur_namespace_path
             out.put_file(callback_implementation)
             out.put_line('')
 
@@ -447,54 +466,85 @@ class CapiGenerator(object):
             out.put_file(c_function.body)
             cur_size += c_function_size
 
-    def __generate_class_wrap_file(self, class_generator, functions_list, file_cache):
+    def __generate_class_wrap_file(self, class_generator, functions_list, c_pointers_list, file_cache):
         class_functions = []
+        class_c_pointers = []
         namespace_name_array = class_generator.parent_namespace.full_name_array
         class_name = class_generator.wrap_name.replace('<', '_').replace('>', '_').replace(',', '.').replace(' ', '')
         class_file_path = ['AutoGenWrap'] + namespace_name_array + [class_name + 'Wrap.cpp']
         filename = file_cache.get_file_for_capi_namespace(class_file_path)
-        out = FileGenerator(filename)
+        out = FileGenerator(None)
         out.put_begin_cpp_comments(self.params)
         rel_path = os.path.relpath(self.platform_defines_file, os.path.dirname(filename))
-        out.put_line('#include "{}"'.format(rel_path))
+        out.put_include_files()
+        out.include_user_header(rel_path)
+        for header in class_generator.dependent_implementation_headers():
+            out.include_user_header(header)
         c_name = class_generator.full_c_name
         for function in functions_list[:]:
             if function.name.startswith(c_name):
                 class_functions.append(function)
                 functions_list.remove(function)
-        self.__generate_capi_impl_functions(class_functions, out)
-        self.generated_source_files.append(out.filename)
+        for c_pointer in c_pointers_list[:]:
+            if c_pointer.name.startswith(c_name):
+                class_c_pointers.append(c_pointer)
+                c_pointers_list.remove(c_pointer)
+        if class_functions or class_c_pointers:
+            for c_pointer in class_c_pointers:
+                self.__generate_callback_typedef(c_pointer, out)
+            name_tuple = tuple(class_generator.parent_namespace.full_name_array + [class_generator.wrap_name])
+            callback_implementation = self.callback_implementations.get(name_tuple, None)
+            if callback_implementation:
+                callback = class_generator.class_object.callbacks[0]
+                if callback and callback.implementation_class_header_filled:
+                    out.include_user_header(callback.implementation_class_header)
+                out.put_line(class_generator.parent_namespace.one_line_namespace_begin)
+                out.put_file(callback_implementation)
+                out.put_line(class_generator.parent_namespace.one_line_namespace_end)
 
-    def __process_namespace(self, namespace_generator, file_cache: FileCache):
+            out.filename = filename
+            self.__generate_capi_impl_functions(class_functions, out)
+            self.generated_source_files.append(out.filename)
+
+    def __process_namespace(self, main_out: FileGenerator, namespace_generator, file_cache: FileCache):
         namespace_info = self.namespace_name_2_info.get(tuple(namespace_generator.full_name_array), None)
         if namespace_info:
+            functions_list = copy.copy(namespace_info.c_functions)
+            c_pointers_list = copy.copy(namespace_info.c_pointers)
             namespace_path = ['AutoGenWrap'] + namespace_generator.full_name_array
             filename = file_cache.get_file_for_capi_namespace(namespace_path) + 'Wrap.cpp'
-            out = FileGenerator(filename)
+            out = FileGenerator(None)
             out.put_begin_cpp_comments(self.params)
             rel_path = os.path.relpath(self.platform_defines_file, os.path.dirname(filename))
-            out.put_line('#include "{}"'.format(rel_path))
-            self.generated_source_files.append(out.filename)
+            out.put_include_files()
+            out.include_user_header(rel_path)
+            for function in namespace_generator.functions:
+                if function.function_object.implementation_header_filled:
+                    out.include_user_header(function.function_object.implementation_header)
 
             self.cur_namespace_name = namespace_generator.full_name_array
             self.cur_namespace_info = namespace_info
             if len(namespace_generator.full_name_array) == 1:
                 generate_get_version_functions(out, namespace_generator.full_name_array[0], self.params, self.api_root)
-            self.__generate_callback_typedefs(namespace_info, out)
 
-            functions_list = copy.copy(namespace_info.c_functions)
             for nested_namespace in namespace_generator.nested_namespaces:
-                self.__process_namespace(nested_namespace, file_cache)
+                self.__process_namespace(main_out, nested_namespace, file_cache)
             for class_generator in namespace_generator.classes:
-                self.__generate_class_wrap_file(class_generator, functions_list, file_cache)
-            self.__generate_capi_impl_functions(functions_list, out)
+                self.__generate_class_wrap_file(class_generator, functions_list, c_pointers_list, file_cache)
+                class_object = class_generator.class_object
+                if class_object.exception and class_object.implementation_class_header_filled:
+                    self.additional_includes.include_system_header(class_object.implementation_class_header)
+            if functions_list:
+                out.filename = filename
+                self.generated_source_files.append(out.filename)
+                self.__generate_capi_impl_functions(functions_list, out)
 
     def __generated_cmake_source_list(self):
         sources_dir = os.path.dirname(self.params.output_wrap_file_name)
         filename = os.path.join(os.path.abspath(sources_dir), 'AutoGenSourcesList.cmake')
         out = FileGenerator(filename)
         out.put_line('SET (CUR_DIR ${CMAKE_CURRENT_LIST_DIR})')
-        out.put_line('SET ({}AutoGenSources '.format(self.api_root.project_name))
+        out.put_line('SET (AutoGenSources ')
         with Indent(out):
             for source_file in self.generated_source_files:
                 rel_path = os.path.relpath(source_file, os.path.dirname(filename))
@@ -503,8 +553,10 @@ class CapiGenerator(object):
 
     def __generate_capi_with_file_separation(self, main_out: FileGenerator, namespace_generators, file_cache: FileCache):
         self.generated_source_files.append(main_out.filename)
+        if self.callback_implementations:
+            self.main_exception_traits.generate_check_and_throw_exception_for_impl(main_out)
         for namespace_generator in namespace_generators:
-            self.__process_namespace(namespace_generator, file_cache)
+            self.__process_namespace(main_out, namespace_generator, file_cache)
 
     def __generate_capi_impl(self, out: FileGenerator):
         self.generated_source_files.append(out.filename)
@@ -560,15 +612,19 @@ class CapiGenerator(object):
         output_capi_impl = FileGenerator(self.params.output_wrap_file_name)
         output_capi_impl.put_begin_cpp_comments(self.params)
         output_capi_impl.put_file(self.additional_defines)
-        output_capi_impl.put_file(self.additional_includes)
-        self.main_exception_traits.generate_exception_info(output_capi_impl)
 
         if self.params.open_api:
             path, file = os.path.split(output_capi_impl.filename)
             filename, ext = os.path.splitext(file)
             output_capi_impl.filename = os.path.join(path, filename + '.h')
             self.platform_defines_file = output_capi_impl.filename
-
+            self.additional_includes = FileGenerator(None)
+            self.additional_includes.put_include_files()
+            self.additional_includes.include_system_header('stdexcept')
+            self.additional_includes.include_system_header('cassert')
+            self.main_exception_traits.include_wrap_cpp_headers(self.additional_includes)
+        output_capi_impl.put_file(self.additional_includes)
+        self.main_exception_traits.generate_exception_info(output_capi_impl)
         for namespace_name, namespace_info in self.namespace_name_2_info.items():
             parent_name = namespace_name[0:-1]
             if len(parent_name) > 0:
@@ -583,8 +639,6 @@ class CapiGenerator(object):
             self.cur_namespace_info = namespace_info
             if len(namespace_name) == 1:
                 self.__generate_capi_impl_defines(output_capi_impl)
-            self.__generate_callback_typedefs(namespace_info, output_capi_impl)
-        self.__generate_callback_implementations(output_capi_impl)
         if self.params.open_api:
             self.__generate_capi_with_file_separation(output_capi_impl, namespace_generators, file_cache)
         else:
@@ -593,6 +647,8 @@ class CapiGenerator(object):
                 self.cur_namespace_info = namespace_info
                 if len(namespace_name) == 1:
                     generate_get_version_functions(output_capi_impl, namespace_name[0], self.params, self.api_root)
+                    self.__generate_callback_typedefs(namespace_info, output_capi_impl)
+            self.__generate_callback_implementations(output_capi_impl)
             self.__generate_capi_impl(output_capi_impl)
         self.__generated_cmake_source_list()
         self.__generate_capi(file_cache)

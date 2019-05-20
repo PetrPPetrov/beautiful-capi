@@ -221,6 +221,9 @@ class ClassTypeGenerator(BaseTypeGenerator):
         file_generator.include_user_header(
             file_cache.class_header(self.class_argument_generator.full_name_array))
 
+    def dependent_implementation_headers(self):
+        return self.class_argument_generator.dependent_implementation_headers()
+
 
 class ExternalClassTypeGenerator(ClassTypeGenerator):
     def c_2_implementation(self, expression: str) -> str:
@@ -405,3 +408,6 @@ class ArgumentGenerator(object):
 
     def include_dependent_definition_headers(self, file_generator: FileGenerator, file_cache: FileCache):
         self.type_generator.include_dependent_definition_headers(file_generator, file_cache)
+
+    def dependent_implementation_headers(self):
+        return self.type_generator.dependent_implementation_headers()

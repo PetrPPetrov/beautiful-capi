@@ -229,10 +229,10 @@ def generate_callbacks_on_library_side(class_generator, capi_generator):
             capi_generator.additional_includes.include_user_header(callback.implementation_class_header)
 
         callback_impl = FileGenerator(None)
-        callback_impl.put_line(class_generator.parent_namespace.one_line_namespace_begin)
-        callback_impl.put_line('')
 
         impl_class_name = get_callback_impl_name(class_generator.base_class_generator)
+        name_tuple = tuple(class_generator.parent_namespace.full_name_array +
+                           [class_generator.base_class_generator.wrap_name])
 
         callback_impl.put_line('class {0} : public {1}'.format(
             impl_class_name, callback.implementation_class_name))
@@ -240,5 +240,4 @@ def generate_callbacks_on_library_side(class_generator, capi_generator):
             generate_callback_implementation_body(callback_impl, callback, class_generator, impl_class_name)
 
         callback_impl.put_line('')
-        callback_impl.put_line(class_generator.parent_namespace.one_line_namespace_end)
-        capi_generator.callback_implementations.append(callback_impl)
+        capi_generator.callback_implementations[name_tuple] = callback_impl
