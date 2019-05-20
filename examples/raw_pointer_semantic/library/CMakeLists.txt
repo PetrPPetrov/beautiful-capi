@@ -32,7 +32,7 @@ include(${raw_pointer_semantic_SOURCE_DIR}/source/AutoGenSourcesList.cmake)
 include_directories(${raw_pointer_semantic_SOURCE_DIR}/source/)
 
 add_library(raw_pointer_semantic SHARED
-  ${RawPointerSemanticAutoGenSources}
+  ${AutoGenSources}
   ${raw_pointer_semantic_SOURCE_DIR}/source/PrinterImpl.h
   ${raw_pointer_semantic_SOURCE_DIR}/source/PrinterImpl.cpp
   ${raw_pointer_semantic_SOURCE_DIR}/source/DumperImpl.h

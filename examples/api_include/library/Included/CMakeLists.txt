@@ -39,6 +39,6 @@ set(IncludedSources
 )
 
 add_library(included SHARED  
-  ${IncludedAutoGenSources}
+  ${AutoGenSources}
   ${IncludedSources}
 )

@@ -26,6 +26,8 @@
 #include <vector>
 #include <stddef.h>
 #include <stdint.h>
+#include "NameImpl.h"
+#include "AddressImpl.h"
 
 namespace MixedSemantic2
 {

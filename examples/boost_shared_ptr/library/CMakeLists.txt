@@ -36,7 +36,7 @@ include_directories(
 )
 
 add_library(boost_shared_ptr SHARED
-  ${boost_shared_ptrAutoGenSources}
+  ${AutoGenSources}
   ${boost_shared_ptr_SOURCE_DIR}/source/PrinterImpl.h
   ${boost_shared_ptr_SOURCE_DIR}/source/PrinterImpl.cpp
 )

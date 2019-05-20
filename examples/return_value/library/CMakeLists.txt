@@ -35,7 +35,7 @@ include_directories(
 )
 
 add_library(return_value SHARED
-  ${ReturnValueAutoGenSources}
+  ${AutoGenSources}
   ${return_value_SOURCE_DIR}/source/FirstNameImpl.h
   ${return_value_SOURCE_DIR}/source/MiddleNameImpl.h
   ${return_value_SOURCE_DIR}/source/LastNameImpl.h

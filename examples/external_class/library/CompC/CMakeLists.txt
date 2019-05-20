@@ -29,15 +29,15 @@ add_bcapi_generation(sharp "sharp_output")
 
 include(${comp_c_SOURCE_DIR}/source/AutoGenSourcesList.cmake)
 
-include_directories(
-  ${classes_SOURCE_DIR}/include/  
-)
-
 add_library(comp_c SHARED
-  ${CompCAutoGenSources}
+  ${AutoGenSources}
   ${comp_c_SOURCE_DIR}/source/ComponentCImpl.h
 )
 
+target_include_directories(comp_c
+  PRIVATE ${classes_SOURCE_DIR}/include/
+  PRIVATE ${comp_c_SOURCE_DIR}/source/
+)
 add_dependencies(comp_c classes)
 target_link_libraries(comp_c classes)
 

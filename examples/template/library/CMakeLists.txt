@@ -35,7 +35,7 @@ include_directories(
 )
 
 add_library(template SHARED  
-  ${TemplateAutoGenSources}
+  ${AutoGenSources}
   ${template_SOURCE_DIR}/source/VectorImpl.h
   ${template_SOURCE_DIR}/source/PositionImpl.h
   ${template_SOURCE_DIR}/source/ModelImpl.h

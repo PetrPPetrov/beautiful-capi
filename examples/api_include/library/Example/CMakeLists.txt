@@ -35,7 +35,7 @@ include_directories(
 )
 
 add_library(api_include SHARED
-  ${ApiIncludeAutoGenSources}
+  ${AutoGenSources}
   ${api_include_SOURCE_DIR}/source/ExistingImpl.h
   ${api_include_SOURCE_DIR}/source/ExistingImpl.cpp
   ${api_include_SOURCE_DIR}/../Included/source/IncludedImpl.h

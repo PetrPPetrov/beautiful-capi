@@ -35,7 +35,7 @@ include_directories(
 )
 
 add_library(closed_api SHARED
-  ${ClosedApiAutoGenSources}
+  ${AutoGenSources}
   ${closed_api_SOURCE_DIR}/source/PersonImpl.h
   ${closed_api_SOURCE_DIR}/source/PersonImpl.cpp
 )

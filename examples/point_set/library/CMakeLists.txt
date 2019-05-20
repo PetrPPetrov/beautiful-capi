@@ -37,7 +37,7 @@ include_directories(
 )
 
 add_library(point_set SHARED
-  ${PointSetAutoGenSources}
+  ${AutoGenSources}
   ${point_set_SOURCE_DIR}/source/PointSetImpl.h
   ${point_set_SOURCE_DIR}/source/PointsImpl.h
   ${point_set_SOURCE_DIR}/source/PositionImpl.h

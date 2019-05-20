@@ -32,7 +32,7 @@ include(${object_parameter_SOURCE_DIR}/source/AutoGenSourcesList.cmake)
 include_directories(${object_parameter_SOURCE_DIR}/source/)
 
 add_library(object_parameter SHARED
-  ${ObjectParameterAutoGenSources}
+  ${AutoGenSources}
   ${object_parameter_SOURCE_DIR}/source/PageImpl.h
   ${object_parameter_SOURCE_DIR}/source/PageImpl.cpp
   ${object_parameter_SOURCE_DIR}/source/DocumentImpl.h

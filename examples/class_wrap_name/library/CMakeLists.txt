@@ -32,7 +32,7 @@ include(${class_wrap_name_SOURCE_DIR}/source/AutoGenSourcesList.cmake)
 include_directories(${class_wrap_name_SOURCE_DIR}/source/)
 
 add_library(class_wrap_name SHARED
-  ${ClassWrapNameAutoGenSources}
+  ${AutoGenSources}
   ${class_wrap_name_SOURCE_DIR}/source/PrinterImpl.h
   ${class_wrap_name_SOURCE_DIR}/source/PrinterImpl.cpp
 )

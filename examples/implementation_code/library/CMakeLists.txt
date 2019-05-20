@@ -32,6 +32,6 @@ include(${implementation_code_SOURCE_DIR}/source/AutoGenSourcesList.cmake)
 include_directories(${implementation_code_SOURCE_DIR}/source/)
 
 add_library(implementation_code SHARED
-  ${ImplementationCodeAutoGenSources}
+  ${AutoGenSources}
   ${implementation_code_SOURCE_DIR}/source/PersonImpl.h
 )

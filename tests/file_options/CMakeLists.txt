@@ -34,18 +34,19 @@ if(CMAKE_MAJOR_VERSION GREATER 2)
       -o ${file_option_SOURCE_DIR}/library/include/${test_name}
       -w ${file_option_SOURCE_DIR}/library/source/${test_name}/AutoGenWrap.cpp
       -s ${file_option_SOURCE_DIR}/library/source/${test_name}/snippets
-    )
-    
+    )    
     execute_process(
       COMMAND
         ${capi_command}      
       WORKING_DIRECTORY
         ${file_option_SOURCE_DIR}
     )
+        
+    include(${file_option_SOURCE_DIR}/library/source/${test_name}/AutoGenSourcesList.cmake)
     
     add_custom_command(
       OUTPUT
-        ${file_option_SOURCE_DIR}/library/source/AutoGenWrap_${test_name}.cpp
+        ${AutoGenSources}
       COMMAND        
         ${capi_command}
       MAIN_DEPENDENCY
@@ -55,9 +56,8 @@ if(CMAKE_MAJOR_VERSION GREATER 2)
       WORKING_DIRECTORY
         ${file_option_SOURCE_DIR}
     )
-    include(${file_option_SOURCE_DIR}/library/source/${test_name}/AutoGenSourcesList.cmake)
     add_library(file_options_${test_name} SHARED
-      ${TestAutoGenSources}
+      ${AutoGenSources}
       ${file_option_SOURCE_DIR}/library/source/PrinterImpl.h
       ${file_option_SOURCE_DIR}/library/source/PrinterImpl.cpp
       ${file_option_SOURCE_DIR}/library/source/SphereImpl.h

@@ -36,7 +36,7 @@ include_directories(
 )
 
 add_library(unit_test SHARED
-  ${UnitTestAutoGenSources}
+  ${AutoGenSources}
   ${unit_test_SOURCE_DIR}/source/NameImpl.h
   ${unit_test_SOURCE_DIR}/source/PersonImpl.h
   ${unit_test_SOURCE_DIR}/source/AddressImpl.h

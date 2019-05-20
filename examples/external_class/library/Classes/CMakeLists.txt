@@ -30,11 +30,13 @@ add_bcapi_generation(sharp "sharp_output")
 include(${classes_SOURCE_DIR}/source/AutoGenSourcesList.cmake)
 
 add_library(classes SHARED
-  ${ClassesAutoGenSources}
+  ${AutoGenSources}
   ${classes_SOURCE_DIR}/source/ClassA.h
   ${classes_SOURCE_DIR}/source/ClassB.h
   ${classes_SOURCE_DIR}/source/ClassC.h
 )
+target_include_directories(classes 
+  PRIVATE ${classes_SOURCE_DIR}/source/)
 
 if (${CSHARP_ENABLED})
     add_subdirectory(sharp_output)

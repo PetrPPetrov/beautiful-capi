@@ -32,7 +32,7 @@ include(${overload_suffix_SOURCE_DIR}/source/AutoGenSourcesList.cmake)
 include_directories(${overload_suffix_SOURCE_DIR}/source/)
 
 add_library(overload_suffix SHARED
-  ${OverloadSuffixAutoGenSources}
+  ${AutoGenSources}
   ${overload_suffix_SOURCE_DIR}/source/PrinterImpl.h
   ${overload_suffix_SOURCE_DIR}/source/PrinterImpl.cpp
 )

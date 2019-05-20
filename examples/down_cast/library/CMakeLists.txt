@@ -32,7 +32,7 @@ include(${down_cast_SOURCE_DIR}/source/AutoGenSourcesList.cmake)
 include_directories(${down_cast_SOURCE_DIR}/source/)
 
 add_library(down_cast SHARED
-  ${DownCastAutoGenSources}
+  ${AutoGenSources}
   ${down_cast_SOURCE_DIR}/source/IShape.h
   ${down_cast_SOURCE_DIR}/source/IPolygon.h
   ${down_cast_SOURCE_DIR}/source/RefCountedImpl.h

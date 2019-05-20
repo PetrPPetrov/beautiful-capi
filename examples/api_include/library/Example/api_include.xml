@@ -3,7 +3,7 @@
   <namespace name="ApiInclude" overload_suffix_mode="Silent">
     <include path="../Included/included.xml" use_content_without_root_namespaces="true"/>
     <namespace name="ExistingNS">
-      <function name="SayHello" return="void" implementation_name="ApiInclude::ExistingNS::SayHello" implementation_header="IncludedImpl.h"/>
+      <function name="SayHello" return="void" implementation_name="ApiInclude::ExistingNS::SayHello" implementation_header="ExistingImpl.h"/>
     </namespace>
     <class name="ExistingClass" lifecycle="copy_semantic" implementation_class_name="ApiInclude::ExistingClassImpl" implementation_class_header="ExistingImpl.h">
       <constructor name="Default"/>

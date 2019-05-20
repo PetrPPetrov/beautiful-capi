@@ -32,7 +32,7 @@ include(${mapped_types_SOURCE_DIR}/source/AutoGenSourcesList.cmake)
 include_directories(${mapped_types_SOURCE_DIR}/source/)
 
 add_library(mapped_types SHARED
-  ${MappedTypesAutoGenSources}
+  ${AutoGenSources}
   ${mapped_types_SOURCE_DIR}/source/MappedTypes.h
   ${mapped_types_SOURCE_DIR}/source/MappedTypes.cpp
 )

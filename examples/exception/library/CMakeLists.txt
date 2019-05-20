@@ -32,7 +32,7 @@ include(${exception_SOURCE_DIR}/source/AutoGenSourcesList.cmake)
 include_directories(${exception_SOURCE_DIR}/source/)
 
 add_library(exception SHARED
-  ${ExceptionAutoGenSources}
+  ${AutoGenSources}
   ${exception_SOURCE_DIR}/source/PrinterImpl.h
   ${exception_SOURCE_DIR}/source/PrinterImpl.cpp
   ${exception_SOURCE_DIR}/source/ScannerImpl.h

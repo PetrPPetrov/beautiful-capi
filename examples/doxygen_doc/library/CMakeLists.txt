@@ -34,7 +34,7 @@ include_directories(
 )
 
 add_library(doxygen_doc SHARED
-  ${DoxygenDocAutoGenSources}
+  ${AutoGenSources}
   ${doxygen_doc_SOURCE_DIR}/source/NameImpl.h
   ${doxygen_doc_SOURCE_DIR}/source/PersonImpl.h
   ${doxygen_doc_SOURCE_DIR}/source/AddressImpl.h

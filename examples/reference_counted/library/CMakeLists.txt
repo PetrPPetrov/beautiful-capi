@@ -32,7 +32,7 @@ include(${reference_counted_SOURCE_DIR}/source/AutoGenSourcesList.cmake)
 include_directories(${reference_counted_SOURCE_DIR}/source/)
 
 add_library(reference_counted SHARED
-  ${ReferenceCountedAutoGenSources}
+  ${AutoGenSources}
   ${reference_counted_SOURCE_DIR}/source/PrinterImpl.h
   ${reference_counted_SOURCE_DIR}/source/PrinterImpl.cpp
   ${reference_counted_SOURCE_DIR}/source/DumperImpl.h

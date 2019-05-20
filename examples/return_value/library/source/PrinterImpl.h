@@ -26,6 +26,9 @@
 #include <string>
 #include <vector>
 #include <stddef.h>
+#include "FirstNameImpl.h"
+#include "MiddleNameImpl.h"
+#include "LastNameImpl.h"
 
 namespace ReturnValue
 {

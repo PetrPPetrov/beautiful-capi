@@ -32,7 +32,7 @@ include(${derived_from_abstract_SOURCE_DIR}/source/AutoGenSourcesList.cmake)
 include_directories(${derived_from_abstract_SOURCE_DIR}/source/)
 
 add_library(derived_from_abstract SHARED
-  ${DerivedFromAbstractAutoGenSources}
+  ${AutoGenSources}
   ${derived_from_abstract_SOURCE_DIR}/source/AnimalImpl.h
   ${derived_from_abstract_SOURCE_DIR}/source/BirdImpl.cpp
   ${derived_from_abstract_SOURCE_DIR}/source/BirdImpl.h

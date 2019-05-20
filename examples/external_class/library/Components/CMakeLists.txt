@@ -31,10 +31,11 @@ include(${components_SOURCE_DIR}/source/AutoGenSourcesList.cmake)
 
 include_directories(
   ${classes_SOURCE_DIR}/include/
+  ${components_SOURCE_DIR}/source/
 )
 
 add_library(components SHARED
-  ${ComponentsAutoGenSources}
+  ${AutoGenSources}
   ${components_SOURCE_DIR}/source/ComponentAImpl.h
   ${components_SOURCE_DIR}/source/ComponentBImpl.h
 )

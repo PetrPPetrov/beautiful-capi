@@ -121,11 +121,16 @@ function(add_bcapi_generation)
         WORKING_DIRECTORY
             ${working_dir}
     )
-
+    
+    set(output_directory "")
+    get_filename_component(output_directory ${wrap} DIRECTORY)
+    include(${output_directory}/AutoGenSourcesList.cmake)
+    
+    
     # run at the Build stage if MAIN_DEPENDENCY or DEPENDS are changed
     add_custom_command(
         OUTPUT
-            ${wrap}
+            ${AutoGenSources}
         COMMAND
             ${PYTHON_EXECUTABLE}
             ${capi}

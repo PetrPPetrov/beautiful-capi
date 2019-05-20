@@ -32,7 +32,7 @@ include(${clanguage_SOURCE_DIR}/source/AutoGenSourcesList.cmake)
 include_directories(${clanguage_SOURCE_DIR}/source/)
 
 add_library(clanguage SHARED
-  ${CLanguageAutoGenSources}
+  ${AutoGenSources}
   ${clanguage_SOURCE_DIR}/source/PrinterImpl.h
   ${clanguage_SOURCE_DIR}/source/PrinterImpl.cpp
   ${clanguage_SOURCE_DIR}/source/DumperImpl.h

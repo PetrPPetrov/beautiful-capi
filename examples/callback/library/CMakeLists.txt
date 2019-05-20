@@ -32,7 +32,7 @@ include(${callback_SOURCE_DIR}/source/AutoGenSourcesList.cmake)
 include_directories(${callback_SOURCE_DIR}/source/)
 
 add_library(callback SHARED
-  ${CallbackAutoGenSources}
+  ${AutoGenSources}
   ${callback_SOURCE_DIR}/source/IPrinter.h
   ${callback_SOURCE_DIR}/source/DefaultPrinterImpl.h
   ${callback_SOURCE_DIR}/source/DefaultPrinterImpl.cpp

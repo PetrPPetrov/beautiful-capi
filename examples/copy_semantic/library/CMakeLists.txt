@@ -32,7 +32,7 @@ include(${copy_semantic_SOURCE_DIR}/source/AutoGenSourcesList.cmake)
 include_directories(${copy_semantic_SOURCE_DIR}/source/)
 
 add_library(copy_semantic SHARED
-  ${CopySemanticAutoGenSources}
+  ${AutoGenSources}
   ${copy_semantic_SOURCE_DIR}/source/PrinterImpl.h
   ${copy_semantic_SOURCE_DIR}/source/PrinterImpl.cpp
   ${copy_semantic_SOURCE_DIR}/source/DumperImpl.h

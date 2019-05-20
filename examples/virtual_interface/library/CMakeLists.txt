@@ -32,7 +32,7 @@ include(${virtual_interface_SOURCE_DIR}/source/AutoGenSourcesList.cmake)
 include_directories(${virtual_interface_SOURCE_DIR}/source/)
 
 add_library(virtual_interface SHARED
-  ${VirtualInterfaceAutoGenSources}
+  ${AutoGenSources}
   ${virtual_interface_SOURCE_DIR}/source/IShape.h
   ${virtual_interface_SOURCE_DIR}/source/TriangleFactory.h
   ${virtual_interface_SOURCE_DIR}/source/TriangleFactory.cpp

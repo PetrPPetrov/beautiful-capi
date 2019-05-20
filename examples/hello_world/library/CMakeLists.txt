@@ -32,7 +32,7 @@ include(${hello_world_SOURCE_DIR}/source/AutoGenSourcesList.cmake)
 include_directories(${hello_world_SOURCE_DIR}/source/)
 
 add_library(hello_world SHARED
-  ${HelloWorldAutoGenSources}
+  ${AutoGenSources}
   ${hello_world_SOURCE_DIR}/source/PrinterImpl.h
   ${hello_world_SOURCE_DIR}/source/PrinterImpl.cpp
 )

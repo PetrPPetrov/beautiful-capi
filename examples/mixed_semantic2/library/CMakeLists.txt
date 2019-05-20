@@ -34,7 +34,7 @@ include_directories(
 )
 
 add_library(mixed_semantic2 SHARED
-  ${MixedSemantic2AutoGenSources}
+  ${AutoGenSources}
   ${mixed_semantic2_SOURCE_DIR}/source/NameImpl.h
   ${mixed_semantic2_SOURCE_DIR}/source/PersonImpl.h
   ${mixed_semantic2_SOURCE_DIR}/source/AddressImpl.h

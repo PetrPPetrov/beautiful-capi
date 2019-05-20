@@ -32,7 +32,7 @@ include(${circular_reference_SOURCE_DIR}/source/AutoGenSourcesList.cmake)
 include_directories(${circular_reference_SOURCE_DIR}/source/)
 
 add_library(circular_reference SHARED
-  ${CircularReferenceAutoGenSources}
+  ${AutoGenSources}
   ${circular_reference_SOURCE_DIR}/source/ClassAImpl.h
   ${circular_reference_SOURCE_DIR}/source/ClassAImpl.cpp
   ${circular_reference_SOURCE_DIR}/source/ClassBImpl.h

@@ -30,13 +30,14 @@ add_bcapi_generation(sharp "sharp_output")
 include(${printer_SOURCE_DIR}/source/AutoGenSourcesList.cmake)
 
 include_directories(
-  ${components_SOURCE_DIR}/include/ 
-  ${comp_c_SOURCE_DIR}/include/  
-  ${classes_SOURCE_DIR}/include/ 
+  ${components_SOURCE_DIR}/include/
+  ${comp_c_SOURCE_DIR}/include/
+  ${classes_SOURCE_DIR}/include/
+  ${printer_SOURCE_DIR}/source/
 )
 
 add_library(printer SHARED
-  ${PrinterAutoGenSources}
+  ${AutoGenSources}
   ${printer_SOURCE_DIR}/source/PrinterImpl.h
 )
 
