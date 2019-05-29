@@ -481,8 +481,9 @@ class CapiGenerator(object):
         for header in class_generator.dependent_implementation_headers():
             out.include_user_header(header)
         c_name = class_generator.full_c_name
+        get_impl_value_name = get_c_name(class_generator.implementation_name + '::GetImplementationValueFor')
         for function in functions_list[:]:
-            if function.name.startswith(c_name):
+            if function.name.startswith(c_name) or function.name.startswith(get_impl_value_name):
                 class_functions.append(function)
                 functions_list.remove(function)
         for c_pointer in c_pointers_list[:]:
@@ -529,7 +530,11 @@ class CapiGenerator(object):
 
             for nested_namespace in namespace_generator.nested_namespaces:
                 self.__process_namespace(main_out, nested_namespace, file_cache)
-            for class_generator in namespace_generator.classes:
+            # In rare cases, when in one namespace we have a class whose name contains the name of another class from
+            # this namespace, we need to process this class before a class with a shorter name, because we use
+            # class_generator.full_c_name to determine if a function belongs to a class
+            sorted_classes = sorted(namespace_generator.classes, key=lambda class_: class_.full_c_name, reverse=True)
+            for class_generator in sorted_classes:
                 self.__generate_class_wrap_file(class_generator, functions_list, c_pointers_list, file_cache)
                 class_object = class_generator.class_object
                 if class_object.exception and class_object.implementation_class_header_filled:

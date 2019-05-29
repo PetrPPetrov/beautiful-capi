@@ -100,7 +100,7 @@ class EnumProcessor(object):
         if enum.implementation_type_filled:
             func = TFunction()
             class_name = parent_class.implementation_class_name.split('::')[-1] if parent_class else ''
-            func.name = 'GetImplementationValueFor' + class_name + enum.name
+            func.name = class_name + 'GetImplementationValueFor' + enum.name
             func.return_type = enum.underlying_type
             argument = TArgument()
             argument.name = 'index'
