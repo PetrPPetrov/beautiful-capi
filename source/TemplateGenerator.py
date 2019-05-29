@@ -18,6 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Beautiful Capi.  If not, see <http://www.gnu.org/licenses/>.
 #
+
 import CapiGenerator
 from DoxygenCpp import DoxygenCppGenerator
 from Parser import TTemplate
@@ -93,3 +94,7 @@ class TemplateConstantArgumentGenerator(object):
 
     def include_dependent_declaration_headers(self, file_generator: FileGenerator, file_cache: FileCache):
         pass
+
+    @staticmethod
+    def dependent_implementation_headers():
+        return []

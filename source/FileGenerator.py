@@ -106,11 +106,9 @@ class FileGenerator(object):
             lines += self.get_lines()
 
             dir_name = os.path.dirname(self.filename)
-            if not dir_name:
-                return
-            if not os.path.exists(dir_name):
+            if dir_name and not os.path.exists(dir_name):
                 os.makedirs(dir_name)
-            elif os.path.exists(self.filename):
+            if os.path.exists(self.filename):
                 new_hash = FileGenerator.get_hash(lines)
                 file = open(self.filename, 'r')
                 old_hash = FileGenerator.get_hash(file)

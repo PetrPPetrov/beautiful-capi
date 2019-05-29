@@ -352,6 +352,9 @@ class EnumTypeGenerator(BaseTypeGenerator):
     def include_dependent_definition_headers(self, file_generator: FileGenerator, file_cache: FileCache):
         self.include_dependent_declaration_headers(file_generator, file_cache)
 
+    def dependent_implementation_headers(self):
+        return self.enum_argument_generator.dependent_implementation_headers()
+
 
 class ExternalEnumTypeGenerator(EnumTypeGenerator):
     def include_dependent_declaration_headers(self, file_generator: FileGenerator, file_cache: FileCache):
@@ -361,6 +364,10 @@ class ExternalEnumTypeGenerator(EnumTypeGenerator):
     def include_dependent_definition_headers(self, file_generator: FileGenerator, file_cache: FileCache):
         if hasattr(self.enum_argument_generator.enum_object, "include_declaration"):
             file_generator.include_user_header(self.enum_argument_generator.enum_object.include_definition)
+
+    @staticmethod
+    def dependent_implementation_headers():
+        return []
 
 
 class ArgumentGenerator(object):

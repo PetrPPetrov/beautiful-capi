@@ -456,3 +456,12 @@ class FunctionGenerator(object):
     def include_dependent_implementation_headers(self, capi_generator: CapiGenerator):
         if self.function_object.implementation_header_filled:
             capi_generator.additional_includes.include_user_header(self.function_object.implementation_header)
+
+    def dependent_implementation_headers(self):
+        result = []
+        if self.function_object.implementation_header_filled:
+            result += [self.function_object.implementation_header]
+        for argument_generator in self.argument_generators:
+            result += argument_generator.dependent_implementation_headers()
+        result += self.return_type_generator.dependent_implementation_headers()
+        return result

@@ -628,6 +628,8 @@ class TEnumeration(object):
         self.underlying_type_filled = False
         self.implementation_type = ""
         self.implementation_type_filled = False
+        self.implementation_header = ""
+        self.implementation_header_filled = False
         self.documentations = []
         self.items = []
 
@@ -657,6 +659,10 @@ class TEnumeration(object):
             cur_attr = dom_node.getAttribute("implementation_type")
             self.implementation_type = cur_attr
             self.implementation_type_filled = True
+        if dom_node.hasAttribute("implementation_header"):
+            cur_attr = dom_node.getAttribute("implementation_header")
+            self.implementation_header = cur_attr
+            self.implementation_header_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:
@@ -1333,7 +1339,7 @@ class TLifecycleExtension(object):
         self.name_filled = False
         self.wrap_name = ""
         self.wrap_name_filled = False
-        self.lifecycle = TLifecycle.copy_semantic
+        self.lifecycle = None
         self.lifecycle_filled = False
         self.down_cast = False
         self.down_cast_filled = False

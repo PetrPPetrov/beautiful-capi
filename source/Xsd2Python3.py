@@ -72,6 +72,7 @@ class SchemaGenerator(object):
         for complex_type in self.input_xsd.getElementsByTagName('xs:complexType'):
             self.__build_structure(complex_type)
         self.__build_load_root()
+        del self.output_file
 
     def __build_load_root(self):
         self.output_file.put_line('def load(dom_node):')

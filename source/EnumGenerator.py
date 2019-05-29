@@ -90,6 +90,16 @@ class EnumGenerator(object):
     def definition_header(self, file_cache: FileCache):
         return self.declaration_header(file_cache)
 
+    def dependent_implementation_headers(self):
+        result = []
+        if self.enum_object.implementation_header_filled:
+            result = [self.enum_object.implementation_header]
+        parent_generator = self.parent_generator
+        if not isinstance(parent_generator, NamespaceGenerator):
+            if not isinstance(parent_generator, ExternalNamespaceGenerator):
+                result += parent_generator.dependent_implementation_headers()
+        return result
+
 
 class EnumProcessor(object):
     def __init__(self, api_description: TBeautifulCapiRoot):

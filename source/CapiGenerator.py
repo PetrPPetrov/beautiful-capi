@@ -520,8 +520,8 @@ class CapiGenerator(object):
             out.put_include_files()
             out.include_user_header(rel_path)
             for function in namespace_generator.functions:
-                if function.function_object.implementation_header_filled:
-                    out.include_user_header(function.function_object.implementation_header)
+                for header in function.dependent_implementation_headers():
+                    out.include_user_header(header)
 
             self.cur_namespace_name = namespace_generator.full_name_array
             self.cur_namespace_info = namespace_info
