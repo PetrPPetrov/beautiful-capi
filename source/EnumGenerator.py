@@ -115,6 +115,9 @@ class EnumProcessor(object):
             argument = TArgument()
             argument.name = 'index'
             argument.type_name = 'size_t'
+            if enum.implementation_header_filled:
+                func.implementation_header_filled = True
+                func.implementation_header = enum.implementation_header
             func.arguments.append(argument)
             implementation_code = TImplementationCode()
             implementation_code.all_items.append('switch(index)')
