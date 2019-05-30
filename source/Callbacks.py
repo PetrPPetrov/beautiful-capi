@@ -42,6 +42,9 @@ def generate_callback_class(class_generator):
     new_callback_class.implementation_class_name = get_callback_full_impl_name(class_generator)
     new_callback_class.implementation_class_name_filled = True
     new_callback_class.callbacks = True
+    callback = class_generator.class_object.callbacks[0]
+    new_callback_class.implementation_class_header = callback.implementation_class_header
+    new_callback_class.implementation_class_header_filled = callback.implementation_class_header_filled
     return new_callback_class
 
 

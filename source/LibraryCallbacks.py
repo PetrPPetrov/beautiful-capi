@@ -232,7 +232,7 @@ def generate_callbacks_on_library_side(class_generator, capi_generator):
 
         impl_class_name = get_callback_impl_name(class_generator.base_class_generator)
         name_tuple = tuple(class_generator.parent_namespace.full_name_array +
-                           [class_generator.base_class_generator.wrap_name])
+                           [class_generator.wrap_name])
 
         callback_impl.put_line('class {0} : public {1}'.format(
             impl_class_name, callback.implementation_class_name))

@@ -486,17 +486,20 @@ class CapiGenerator(object):
             if function.name.startswith(c_name) or function.name.startswith(get_impl_value_name):
                 class_functions.append(function)
                 functions_list.remove(function)
-        for c_pointer in c_pointers_list[:]:
-            if c_pointer.name.startswith(c_name):
-                class_c_pointers.append(c_pointer)
-                c_pointers_list.remove(c_pointer)
+        name_tuple = tuple(class_generator.parent_namespace.full_name_array + [class_generator.wrap_name])
+        callback_implementation = self.callback_implementations.get(name_tuple, None)
+        if callback_implementation:
+            c_name = class_generator.base_class_generator.full_c_name
+            for c_pointer in c_pointers_list[:]:
+                if c_pointer.name.startswith(c_name):
+                    class_c_pointers.append(c_pointer)
+                    c_pointers_list.remove(c_pointer)
         if class_functions or class_c_pointers:
             for c_pointer in class_c_pointers:
                 self.__generate_callback_typedef(c_pointer, out)
-            name_tuple = tuple(class_generator.parent_namespace.full_name_array + [class_generator.wrap_name])
-            callback_implementation = self.callback_implementations.get(name_tuple, None)
+
             if callback_implementation:
-                callback = class_generator.class_object.callbacks[0]
+                callback = class_generator.class_object
                 if callback and callback.implementation_class_header_filled:
                     out.include_user_header(callback.implementation_class_header)
                 out.put_line(class_generator.parent_namespace.one_line_namespace_begin)
