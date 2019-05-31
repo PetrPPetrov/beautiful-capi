@@ -32,7 +32,7 @@ namespace MixedSemantic2
     class NameImpl : public BaseClassImpl
     {
         std::string mFirstName;
-        std::string mFatherName;        
+        std::string mFatherName;
         std::string mLastName;
 
         void init_from_char(const char* value, std::string &result_string)
