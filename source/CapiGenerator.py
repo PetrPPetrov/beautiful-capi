@@ -359,8 +359,6 @@ class CapiGenerator(object):
             for namespace_name, namespace_info in sorted_by_ns.items():
                 if namespace_name in self.api_keys:
                     self.__generate_keys_for_namespace(namespace_2_keys[namespace_name], namespace_name)
-            for _, keys_file in namespace_2_keys.items():
-                del keys_file
 
     def __generate_keys_for_namespace(self, out: FileGenerator, namespace_name):
         sorted_by_open_name = OrderedDict(sorted(self.api_keys[namespace_name].items()))
