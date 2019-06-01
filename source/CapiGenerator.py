@@ -183,24 +183,12 @@ class CapiGenerator(object):
         if self.callback_implementations:
             self.main_exception_traits.generate_check_and_throw_exception_for_impl(out)
             out.put_line('')
-        prev_namespace_path = tuple()
-        indents = []
         for full_class_name, callback_implementation in self.callback_implementations.items():
-            cur_namespace_path = tuple(full_class_name[:-1])
-            prev_it = iter(prev_namespace_path)
-            cur_it = iter(cur_namespace_path)
-            for prev, cur in zip(prev_namespace_path, cur_namespace_path):
-                if prev != cur:
-                    break
-                next(prev_it)
-                next(cur_it)
-            for _ in prev_it:
-                indents.pop()
-            for _ in cur_it:
-                out.put_line('namespace {} {{'.format(full_class_name[-1]))
-                indents.append(IndentScope(out, '};'))
-            prev_namespace_path = cur_namespace_path
-            out.put_file(callback_implementation)
+            cur_top_level_namespace = full_class_name[0]
+            out.put_line('namespace {0} '.format(cur_top_level_namespace), eol='')
+            with IndentScope(out):
+                out.put_line('')
+                out.put_file(callback_implementation)
             out.put_line('')
 
     def __generate_capi_c_prefix(self, out: FileGenerator):
@@ -371,6 +359,8 @@ class CapiGenerator(object):
             for namespace_name, namespace_info in sorted_by_ns.items():
                 if namespace_name in self.api_keys:
                     self.__generate_keys_for_namespace(namespace_2_keys[namespace_name], namespace_name)
+            for _, keys_file in namespace_2_keys.items():
+                del keys_file
 
     def __generate_keys_for_namespace(self, out: FileGenerator, namespace_name):
         sorted_by_open_name = OrderedDict(sorted(self.api_keys[namespace_name].items()))
@@ -656,6 +646,7 @@ class CapiGenerator(object):
                 if len(namespace_name) == 1:
                     generate_get_version_functions(output_capi_impl, namespace_name[0], self.params, self.api_root)
                     self.__generate_callback_typedefs(namespace_info, output_capi_impl)
+                    output_capi_impl.put_line('')
             self.__generate_callback_implementations(output_capi_impl)
             self.__generate_capi_impl(output_capi_impl)
         self.__generated_cmake_source_list()
