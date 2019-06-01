@@ -619,6 +619,7 @@ class CapiGenerator(object):
             self.additional_includes.put_include_files()
             self.additional_includes.include_system_header('stdexcept')
             self.additional_includes.include_system_header('cassert')
+            self.additional_includes.include_system_header('cstdint')
             self.main_exception_traits.include_wrap_cpp_headers(self.additional_includes)
         output_capi_impl.put_file(self.additional_includes)
         self.main_exception_traits.generate_exception_info(output_capi_impl)
