@@ -254,5 +254,10 @@
           This is often useful for debugging in a Visual Studio, which not correctly displayed values, located more than 65536 lines </xs:documentation>
       </xs:annotation>
     </xs:attribute>
+    <xs:attribute name="single_file_wrap" type="xs:boolean" use="optional" default="false">
+      <xs:annotation>
+        <xs:documentation>Specifies generate single AutoGenWrap.cpp file in open_api mode instead of splitting</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
   </xs:complexType>
 </xs:schema>

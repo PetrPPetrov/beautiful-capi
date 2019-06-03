@@ -137,6 +137,8 @@ class TBeautifulCapiParams(object):
         self.sharp_library_name_filled = False
         self.wrap_file_line_limit = 64000
         self.wrap_file_line_limit_filled = False
+        self.single_file_wrap = False
+        self.single_file_wrap_filled = False
         self.copyright_headers = []
         self.automatic_generated_warnings = []
         self.additional_include_directories = []
@@ -331,6 +333,10 @@ class TBeautifulCapiParams(object):
             cur_attr = dom_node.getAttribute("wrap_file_line_limit")
             self.wrap_file_line_limit = string_to_int(cur_attr)
             self.wrap_file_line_limit_filled = True
+        if dom_node.hasAttribute("single_file_wrap"):
+            cur_attr = dom_node.getAttribute("single_file_wrap")
+            self.single_file_wrap = string_to_bool(cur_attr)
+            self.single_file_wrap_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:

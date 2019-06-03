@@ -71,12 +71,7 @@ class CapiGenerator(object):
         self.main_exception_traits = main_exception_traits
         self.no_handling_exception_traits = no_handling_exception_traits
         self.additional_defines = FileGenerator(None)
-        self.additional_includes = FileGenerator(None)
-        self.additional_includes.put_include_files()
-        self.additional_includes.include_system_header('stdexcept')
-        self.additional_includes.include_system_header('cassert')
-        self.additional_includes.include_system_header('cstdint')
-        self.main_exception_traits.include_wrap_cpp_headers(self.additional_includes)
+        self.__create_additional_includes()
         self.callback_implementations = OrderedDict()
         self.cur_api_define = None
         self.cur_api_static = None
@@ -97,6 +92,14 @@ class CapiGenerator(object):
             if i != j:
                 return False
         return True
+
+    def __create_additional_includes(self):
+        self.additional_includes = FileGenerator(None)
+        self.additional_includes.put_include_files()
+        self.additional_includes.include_system_header('stdexcept')
+        self.additional_includes.include_system_header('cassert')
+        self.additional_includes.include_system_header('cstdint')
+        self.main_exception_traits.include_wrap_cpp_headers(self.additional_includes)
 
     def get_exception_traits(self, no_except: bool):
         if no_except:
@@ -610,19 +613,15 @@ class CapiGenerator(object):
         output_capi_impl.put_begin_cpp_comments(self.params)
         output_capi_impl.put_file(self.additional_defines)
 
-        if self.params.open_api:
+        if not self.params.single_file_wrap:
             path, file = os.path.split(output_capi_impl.filename)
             filename, ext = os.path.splitext(file)
             output_capi_impl.filename = os.path.join(path, filename + '.h')
             self.platform_defines_file = output_capi_impl.filename
-            self.additional_includes = FileGenerator(None)
-            self.additional_includes.put_include_files()
-            self.additional_includes.include_system_header('stdexcept')
-            self.additional_includes.include_system_header('cassert')
-            self.additional_includes.include_system_header('cstdint')
-            self.main_exception_traits.include_wrap_cpp_headers(self.additional_includes)
+            self.__create_additional_includes()
         output_capi_impl.put_file(self.additional_includes)
         self.main_exception_traits.generate_exception_info(output_capi_impl)
+        
         for namespace_name, namespace_info in self.namespace_name_2_info.items():
             parent_name = namespace_name[0:-1]
             if len(parent_name) > 0:
@@ -637,9 +636,7 @@ class CapiGenerator(object):
             self.cur_namespace_info = namespace_info
             if len(namespace_name) == 1:
                 self.__generate_capi_impl_defines(output_capi_impl)
-        if self.params.open_api:
-            self.__generate_capi_with_file_separation(output_capi_impl, namespace_generators, file_cache)
-        else:
+        if self.params.single_file_wrap:
             for namespace_name, namespace_info in sorted_by_ns.items():
                 self.cur_namespace_name = namespace_name
                 self.cur_namespace_info = namespace_info
@@ -649,5 +646,7 @@ class CapiGenerator(object):
                     output_capi_impl.put_line('')
             self.__generate_callback_implementations(output_capi_impl)
             self.__generate_capi_impl(output_capi_impl)
+        else:
+            self.__generate_capi_with_file_separation(output_capi_impl, namespace_generators, file_cache)
         self.__generated_cmake_source_list()
         self.__generate_capi(file_cache)

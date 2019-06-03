@@ -59,7 +59,8 @@ class Capi(object):
                  unit_tests_file=None,
                  natvis_file=None,
                  verbosity=None,
-                 open_api=None
+                 open_api=None,
+                 single_file_wrap=None
                  ):
         self.input_xml = input_filename
         self.input_params_filename = input_params_filename
@@ -75,6 +76,7 @@ class Capi(object):
         self.natvis_file = natvis_file
         self.external_libs_headers = []
         self.open_api = open_api
+        self.single_file_wrap = single_file_wrap
         if clean:
             if os.path.exists(self.output_folder):
                 shutil.rmtree(self.output_folder)
@@ -303,6 +305,12 @@ class Capi(object):
         if self.natvis_file:
             self.params_description.natvis_file = self.natvis_file
             self.params_description.natvis_file_filled = True
+        if self.single_file_wrap is not None:
+            self.params_description.single_file_wrap = self.single_file_wrap
+            self.params_description.single_file_wrap_filled = True
+        if not self.params_description.open_api:
+            self.params_description.single_file_wrap = True
+            self.params_description.single_file_wrap_filled = True
         self.api_description = parse_root(self.input_xml, self.params_description)
         self.__substitute_project_name(self.params_description)
 
@@ -368,6 +376,9 @@ def main():
     parser.add_argument('--open-api', dest='open_api', type=str2bool, help='specifies flag if the library API will '
                         'be open, otherwise the library API will be secured.')
     parser.set_defaults(open_api=None)
+    parser.add_argument('--single-file-wrap', dest='single_file_wrap', type=str2bool,
+                        help='specifies flag to generate only one wrap file, even in open api mode.')
+    parser.set_defaults(single_file_wrap=None)
 
     args = parser.parse_args()
 
@@ -392,7 +403,8 @@ def main():
         args.unit_tests_file,
         args.natvis_file,
         args.verbosity,
-        args.open_api
+        args.open_api,
+        args.single_file_wrap
     )
     capi.generate()
 
