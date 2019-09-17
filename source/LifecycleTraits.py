@@ -234,9 +234,7 @@ class CopySemantic(LifecycleTraits):
             out.put_line('SetObject(object_pointer);')
 
     def __generate_raw_copy_constructor_definition(self, out: FileGenerator, class_generator):
-        constructor_arguments = '{class_name}::ECreateFromRawPointer, void *object_pointer, bool copy_object'.format(
-            class_name=class_generator.full_wrap_name
-        )
+        constructor_arguments = 'ECreateFromRawPointer, void *object_pointer, bool copy_object'
         out.put_line('inline {namespace}::{class_name}({arguments}){base_init}'.format(
             namespace=class_generator.full_wrap_name,
             class_name=class_generator.wrap_short_name,
@@ -394,9 +392,7 @@ class RawPointerSemantic(LifecycleTraits):
 
     @staticmethod
     def __generate_raw_copy_constructor_definition(out: FileGenerator, class_generator):
-        constructor_arguments = '{class_name}::ECreateFromRawPointer, void *object_pointer, bool'.format(
-            class_name=class_generator.full_wrap_name
-        )
+        constructor_arguments = 'ECreateFromRawPointer, void *object_pointer, bool'
         out.put_line('inline {namespace}::{class_name}({arguments}){base_init}'.format(
             namespace=class_generator.full_wrap_name,
             class_name=class_generator.wrap_short_name,
@@ -537,9 +533,7 @@ class RefCountedSemantic(LifecycleTraits):
                 out, BuiltinTypeGenerator('void'), class_generator.add_ref_method, ['object_pointer'])
 
     def __generate_raw_copy_constructor_definition(self, out: FileGenerator, class_generator):
-        constructor_arguments = '{class_name}::ECreateFromRawPointer, void *object_pointer, bool add_ref_object'.format(
-            class_name=class_generator.full_wrap_name
-        )
+        constructor_arguments = 'ECreateFromRawPointer, void *object_pointer, bool add_ref_object'
         out.put_line('inline {namespace}::{class_name}({arguments}){base_init}'.format(
             namespace=class_generator.full_wrap_name,
             class_name=class_generator.wrap_short_name,
