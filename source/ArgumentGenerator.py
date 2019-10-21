@@ -37,9 +37,13 @@ class MappedTypeGenerator(BaseTypeGenerator):
         if mapped_type_object.cpps:
             cpp_type = mapped_type_object.cpps[0]
             mapped_type_object.wrap_type = cpp_type.wrap_type
+            mapped_type_object.wrap_type_filled = cpp_type.wrap_type_filled
             mapped_type_object.argument_wrap_type = cpp_type.argument_wrap_type
+            mapped_type_object.argument_wrap_type_filled = cpp_type.argument_wrap_type_filled
             mapped_type_object.wrap_2_c = cpp_type.wrap_2_c
+            mapped_type_object.wrap_2_c_filled = cpp_type.wrap_2_c_filled
             mapped_type_object.c_2_wrap = cpp_type.c_2_wrap
+            mapped_type_object.c_2_wrap_filled = cpp_type.c_2_wrap_filled
             mapped_type_object.include_headers = cpp_type.include_headers
         self.include_headers = mapped_type_object.include_headers
 
