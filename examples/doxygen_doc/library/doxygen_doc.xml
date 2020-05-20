@@ -2,210 +2,132 @@
 <doxygen_doc:api xmlns:doxygen_doc="http://gkmsoft.ru/beautifulcapi" project_name="DoxygenDoc" >
   <namespace name="DoxygenDoc" overload_suffix_mode="Silent">
     <documentation>
-      <brief>Main project namespace</brief>
+      @brief Main project namespace
     </documentation>
     <class name="Name" lifecycle="copy_semantic" implementation_class_name="DoxygenDoc::NameImpl" implementation_class_header="NameImpl.h" >
       <documentation>
-        <brief>Represents a name.</brief>
-        <see_also>For person address see also <reference>DoxygenDoc::Address</reference></see_also>
+        @brief Represents a name
+        @see For person address see also @ref DoxygenDoc::AddressPtr
       </documentation>
       <constructor name="FullName">
         <documentation>
-          <brief>Creates a name</brief>
+          @brief Creates a name
         </documentation>
         <argument name="FirstName" type="const char*">
-          <documentation>
-              specifies the first name.
-            </documentation>
+          <documentation>Specifies the first name</documentation>
         </argument>
         <argument name="LastName" type="const char*">
-          <documentation>
-              specifies the last name.
-            </documentation>
+          <documentation>Specifies the last name</documentation>
         </argument>
-      </constructor>      
+      </constructor>
       <property name="FirstName" type="const char*">
-        <documentation>
-          <brief>{Setget} the first name.</brief>
-        </documentation>
+        <documentation>@brief {Setget} the first name</documentation>
       </property>
       <property name="LastName" type="const char*">
-        <documentation>
-          <brief>{Setget} the last name.</brief>
-        </documentation>
+        <documentation>@brief {Setget} the last name</documentation>
       </property>
     </class>
-    
+
     <class name="Address" lifecycle="reference_counted" implementation_class_name="DoxygenDoc::AddressImpl" implementation_class_header="AddressImpl.h">
-      <documentation>
-        <brief>Represents an address.</brief>
-      </documentation>
+      <documentation>@brief Represents an address</documentation>
       <constructor name="Default">
-       <documentation>
-          <brief>Creates a default address.</brief>
-       </documentation>
+       <documentation>@brief Creates a default address</documentation>
       </constructor>
       <property name="StreetName" type="const char*">
-        <documentation>
-          <brief>{Setget} the street name.</brief>
-        </documentation>
+        <documentation>@brief {Setget} the street name</documentation>
       </property>
       <property name="City" type="const char*">
-        <documentation>
-          <brief>{Setget} the city.</brief>
-        </documentation>
+        <documentation>@brief {Setget} the city</documentation>
       </property>
       <property name="State" type="unsigned int">
-        <documentation>
-          <brief>{Setget} the state.</brief>
-        </documentation>
+        <documentation>@brief {Setget} the state</documentation>
       </property>
     </class>
-    
+
     <class name="Person" lifecycle="raw_pointer_semantic" implementation_class_name="DoxygenDoc::PersonImpl" implementation_class_header="PersonImpl.h">
-      <documentation>
-        <brief>Represents a person.</brief>
-      </documentation>
+      <documentation>@brief Represents a person</documentation>
       <constructor name="Default">
-         <documentation>
-          <brief>Creates a default person.</brief>
-        </documentation>
+        <documentation>@brief Creates a default person</documentation>
       </constructor>
       <property name="Name" type="DoxygenDoc::Name">
-        <documentation>
-          <brief>
-            {Setget} the <reference>DoxygenDoc::Name</reference>.
-          </brief>
-        </documentation>
+        <documentation>@brief {Setget} the @ref DoxygenDoc::Name</documentation>
       </property>
       <property name="Address" type="DoxygenDoc::Address">
-        <documentation>
-          <brief>
-            {Setget} the <reference>DoxygenDoc::Address</reference>.
-          </brief>
-        </documentation>
+        <documentation>@brief {Setget} the @ref DoxygenDoc::AddressPtr</documentation>
       </property>
       <property name="Day" type="unsigned int">
-        <documentation>
-          <brief>
-            {Setget} the day.
-          </brief>
-        </documentation>
+        <documentation>@brief {Setget} the day</documentation>
       </property>
       <property name="Month" type="unsigned int">
-        <documentation>
-          <brief>
-            {Setget} the month.
-          </brief>
-        </documentation>
+        <documentation>@brief {Setget} the month</documentation>
       </property>
       <property name="Year" type="unsigned int">
-        <documentation>
-          <brief>
-            {Setget} the year.
-          </brief>
-        </documentation>
+        <documentation>@brief {Setget} the year</documentation>
       </property>
     </class>
-      
+
     <class name="Printer" lifecycle="copy_semantic" implementation_class_name="DoxygenDoc::PrinterImpl" implementation_class_header="PrinterImpl.h">
       <constructor name="Default"/>
       <method name="Show">
-        <documentation>
-          <brief>Prints the <reference>DoxygenDoc::Name</reference> by value.</brief>
-        </documentation>
+        <documentation>@brief Prints the @ref DoxygenDoc::Name by value</documentation>
         <argument name="name" type="DoxygenDoc::Name">
-          <documentation>
-            <reference>DoxygenDoc::Name</reference>
-          </documentation>
+          <documentation>@ref DoxygenDoc::Name</documentation>
         </argument>
       </method>
 
       <method name="ShowByPointer">
-        <documentation>
-          <brief>Prints the <reference>DoxygenDoc::Name</reference> by pointer.</brief>
-        </documentation>
+        <documentation>@brief Prints the @ref DoxygenDoc::Name</documentation>
         <argument name="name" type="DoxygenDoc::Name" c_2_impl_mode="to_pointer">
-          <documentation>
-            The pointer on <reference>DoxygenDoc::Name</reference>.
-          </documentation>
+          <documentation>The pointer on @ref DoxygenDoc::Name</documentation>
         </argument>
       </method>
 
       <method name="ShowByReference">
-        <documentation>
-          <brief>Prints the <reference>DoxygenDoc::Name</reference> by reference.</brief>
-        </documentation>
+        <documentation>@brief Prints the @ref DoxygenDoc::Name by reference</documentation>
         <argument name="name" type="DoxygenDoc::Name" c_2_impl_mode="to_value">
-          <documentation>
-            The reference on <reference>DoxygenDoc::Name</reference>.
-          </documentation>
+          <documentation>The reference on @ref DoxygenDoc::Name</documentation>
         </argument>
       </method>
 
       <method name="Show">
-        <documentation>
-          <brief>Prints the <reference>DoxygenDoc::Person</reference> by value.</brief>
-        </documentation>
+        <documentation>@brief Prints the @ref DoxygenDoc::PersonRawPtr by value</documentation>
         <argument name="person" type="DoxygenDoc::Person" c_2_impl="*static_cast&lt;{implementation_type}*&gt;({expression})">
-          <documentation>
-            <reference>DoxygenDoc::Person</reference>
-          </documentation>
+          <documentation>@ref DoxygenDoc::PersonRawPtr</documentation>
         </argument>
       </method>
 
       <method name="ShowByPointer">
-        <documentation>
-          <brief>Prints the <reference>DoxygenDoc::Person</reference> by pointer.</brief>
-        </documentation>
+        <documentation>@brief Prints the @ref DoxygenDoc::PersonRawPtr by pointer</documentation>
         <argument name="person" type="DoxygenDoc::Person">
-          <documentation>
-            The pointer on <reference>DoxygenDoc::Person</reference>.
-          </documentation>
+          <documentation>The pointer on @ref DoxygenDoc::PersonRawPtr</documentation>
         </argument>
       </method>
 
       <method name="ShowByReference">
-        <documentation>
-          <brief>Prints the <reference>DoxygenDoc::Person</reference> by reference.</brief>
-        </documentation>
+        <documentation>@brief Prints the @ref DoxygenDoc::PersonRawPtr by reference</documentation>
         <argument name="person" type="DoxygenDoc::Person" c_2_impl="*static_cast&lt;{implementation_type}*&gt;({expression})">
-          <documentation>
-            The reference on <reference>DoxygenDoc::Person</reference>.
-          </documentation>
+          <documentation>The reference on @ref DoxygenDoc::PersonRawPtr</documentation>
         </argument>
       </method>
 
       <method name="Show">
-        <documentation>
-          <brief>Prints the <reference>DoxygenDoc::Address</reference> by value.</brief>
-        </documentation>
+        <documentation>@brief Prints the @ref DoxygenDoc::AddressPtr by value</documentation>
         <argument name="address" type="DoxygenDoc::Address" c_2_impl_mode="to_value">
-          <documentation>
-            <reference>DoxygenDoc::Address</reference>
-          </documentation>
+          <documentation>@ref DoxygenDoc::AddressPtr</documentation>
         </argument>
       </method>
 
       <method name="ShowByPointer">
-        <documentation>
-          <brief>Prints the <reference>DoxygenDoc::Address</reference> by pointer.</brief>
-        </documentation>
+        <documentation>@brief Prints the @ref DoxygenDoc::AddressPtr by pointer</documentation>
         <argument name="address" type="DoxygenDoc::Address">
-          <documentation>
-            The pointer on <reference>DoxygenDoc::Address</reference>.
-          </documentation>
+          <documentation>The pointer on @ref DoxygenDoc::AddressPtr</documentation>
         </argument>
       </method>
 
       <method name="ShowByReference">
-        <documentation>
-          <brief>Prints the <reference>DoxygenDoc::Address</reference> by reference.</brief>
-        </documentation>
+        <documentation>@brief Prints the @ref DoxygenDoc::AddressPtr by reference</documentation>
         <argument name="address" type="DoxygenDoc::Address" c_2_impl_mode="to_value">
-          <documentation>
-            The reference on <reference>DoxygenDoc::Address</reference>.
-          </documentation>
+          <documentation>The reference on @ref DoxygenDoc::AddressPtr</documentation>
         </argument>
       </method>
     </class>
