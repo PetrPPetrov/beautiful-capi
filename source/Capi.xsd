@@ -419,11 +419,18 @@
       <xs:documentation>Specifies template class instantiation.</xs:documentation>
     </xs:annotation>
     <xs:sequence>
-      <xs:element maxOccurs="unbounded" minOccurs="1" name="argument" type="TInstantiationArgument">
-        <xs:annotation>
-          <xs:documentation>Specifies a particular value for the specified template argument</xs:documentation>
-        </xs:annotation>
-      </xs:element>
+      <xs:choice maxOccurs="unbounded" minOccurs="0">
+        <xs:element maxOccurs="1" minOccurs="0" name="documentation" type="TDocumentation">
+          <xs:annotation>
+            <xs:documentation>Specifies documentation for the class</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element maxOccurs="unbounded" minOccurs="1" name="argument" type="TInstantiationArgument">
+          <xs:annotation>
+            <xs:documentation>Specifies a particular value for the specified template argument</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
     </xs:sequence>
     <xs:attribute default="" name="typedef_name" type="xs:string" use="optional">
       <xs:annotation>

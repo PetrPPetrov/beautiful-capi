@@ -12,6 +12,10 @@
       </instantiation>
       <instantiation typedef_name="Pos3D">
         <argument name="WorkType" value="double"/>
+          <documentation>
+            @brief Position3D template instantiation
+            Documentation for Position3D template instantiation
+          </documentation>
       </instantiation>
       <class name="Position" lifecycle="copy_semantic" implementation_class_name="Example::PositionImpl&lt;WorkType>" implementation_class_header="PositionImpl.h">
         <constructor name="Default"/>

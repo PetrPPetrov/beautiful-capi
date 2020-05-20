@@ -711,9 +711,15 @@ class TInstantiation(object):
         self.typedef_name_filled = False
         self.implementation_class_name = ""
         self.implementation_class_name_filled = False
+        self.documentations = []
         self.arguments = []
 
     def load_element(self, element):
+        if element.nodeName == "documentation":
+            new_element = TDocumentation()
+            new_element.load(element)
+            self.documentations.append(new_element)
+            return True
         if element.nodeName == "argument":
             new_element = TInstantiationArgument()
             new_element.load(element)

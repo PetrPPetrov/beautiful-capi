@@ -9,13 +9,13 @@
       <cpp wrap_type="std::string" argument_wrap_type="const std::string&amp;" c_2_wrap="std::string({expression})" wrap_2_c="{expression}.c_str()">
         <include_header file="string" system="true"/>
       </cpp>
-      <sharp wrap_type="string" c_2_wrap="{expression}" wrap_2_c="{expression}"/>
+      <sharp wrap_type="string" argument_wrap_type="string" c_2_wrap="{expression}" wrap_2_c="{expression}"/>
     </mapped_type>
     <mapped_type name="c_string" c_type="const char*" implementation_type="const char*" c_2_impl="{expression}" impl_2_c="{expression}">
       <cpp wrap_type="std::string" argument_wrap_type="const std::string&amp;" c_2_wrap="std::string({expression})" wrap_2_c="{expression}.c_str()">
         <include_header file="string" system="true"/>
       </cpp>
-      <sharp wrap_type="string" c_2_wrap="{expression}" wrap_2_c="{expression}"/>
+      <sharp wrap_type="string" argument_wrap_type="string" c_2_wrap="{expression}" wrap_2_c="{expression}"/>
     </mapped_type>
     <mapped_type name="bool" c_type="uint8_t" implementation_type="bool" c_2_impl="({expression} ? true : false)" >
       <cpp wrap_type="bool" c_2_wrap="({expression} ? true : false)"/>

@@ -102,6 +102,7 @@ def generate_template_classes(namespace: TNamespace, template: TTemplate):
         new_class.template_line = 'template<>'
         class_suffix = ', '.join([argument.value for argument in new_class.template_arguments])
         new_class.name += '<{0}>'.format(class_suffix)
+        new_class.instantiation = instantiation
         namespace.classes.append(new_class)
 
 

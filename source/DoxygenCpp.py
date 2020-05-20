@@ -122,6 +122,15 @@ class DoxygenCppGenerator(object):
             out.put_line(' */')
 
     @staticmethod
+    def generate_for_template_typedef(out: FileGenerator, class_generator):
+        if class_generator.class_object.instantiation.documentations:
+            out.put_line('/**')
+            for documentation in class_generator.class_object.instantiation.documentations:
+                for doc_line in DoxygenCppGenerator.__get_lines_for_documentation(documentation, False):
+                    out.put_line(' * {0}'.format(doc_line))
+            out.put_line(' */')
+
+    @staticmethod
     def generate_for_template_method(out: FileGenerator, template_generator, method_generator):
         template_types = []
         for template_argument in template_generator.template_object.arguments:
