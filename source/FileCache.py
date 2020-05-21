@@ -133,6 +133,13 @@ class FileCache(object):
             namespace_path[0] + self.params.fwd_header_suffix + '.h'
         )
 
+    def __get_file_name_for_template_snippet(self, namespace_path: [str], suffix: str, join_traits: PosixJoin or OsJoin) -> str:
+        return join_traits.join(
+            self.params.internal_snippets_folder,
+            join_traits.join(self.__get_file_name_base_for_namespace(namespace_path, join_traits),
+            namespace_path[-1] + suffix + '.h')
+        )
+
     def get_cached_generator(self, file_name: str) -> FileGenerator:
         if file_name in self.file2generator:
             return self.file2generator[file_name]
@@ -170,6 +177,22 @@ class FileCache(object):
 
     def get_file_for_check_and_throw_exception(self) -> FileGenerator:
         return self.get_cached_generator(os.path.join(self.base_path, self.params.check_and_throw_exception_filename))
+
+    def get_file_for_template_forwards_snippet(self, path_to_namespace: [str]) -> FileGenerator:
+        output_file_name = self.__get_file_name_for_template_snippet(path_to_namespace, self.params.template_forwards_snippet_suffix, PosixJoin())
+        return self.get_cached_generator(output_file_name)
+
+    def get_file_for_template_alias_snippet(self, path_to_namespace: [str]) -> FileGenerator:
+        output_file_name = self.__get_file_name_for_template_snippet(path_to_namespace, self.params.template_alias_snippet_suffix, PosixJoin())
+        return self.get_cached_generator(output_file_name)
+
+    def get_file_for_template_extern_snippet(self, path_to_namespace: [str]) -> FileGenerator:
+        output_file_name = self.__get_file_name_for_template_snippet(path_to_namespace, self.params.template_extern_snippet_suffix, PosixJoin())
+        return self.get_cached_generator(output_file_name)
+
+    def get_file_for_template_instance_snippet(self, path_to_namespace: [str]) -> FileGenerator:
+        output_file_name = self.__get_file_name_for_template_snippet(path_to_namespace, self.params.template_instance_snippet_suffix, PosixJoin())
+        return self.get_cached_generator(output_file_name)
 
     def namespace_header(self, path_to_namespace: [str]) -> str:
         return self.__get_file_name_for_namespace(path_to_namespace, PosixJoin())

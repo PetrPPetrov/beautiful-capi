@@ -100,6 +100,11 @@ class EnumGenerator(object):
                 result += parent_generator.dependent_implementation_headers()
         return result
 
+    @property
+    def is_in_namespace(self):
+        return self.parent_generator and (isinstance(self.parent_generator, NamespaceGenerator) or
+                                          isinstance(self.parent_generator, ExternalNamespaceGenerator))
+
 
 class EnumProcessor(object):
     def __init__(self, api_description: TBeautifulCapiRoot):

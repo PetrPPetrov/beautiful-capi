@@ -24,6 +24,7 @@ from DoxygenCpp import DoxygenCppGenerator
 from Parser import TTemplate
 from FileGenerator import FileGenerator, WatchdogScope, IndentScope
 from ClassGenerator import ClassGenerator
+from ArgumentGenerator import ClassTypeGenerator, EnumTypeGenerator
 from FileCache import FileCache
 from Helpers import get_template_name
 
@@ -98,3 +99,100 @@ class TemplateConstantArgumentGenerator(object):
     @staticmethod
     def dependent_implementation_headers():
         return []
+
+
+class TemplateSnippetGenerator(object):
+    def __init__(self, name_array: [str], instance_generators: [ClassGenerator]):
+        self.name_array = name_array
+        self.dependency_headers = []
+        self.dependencies = TemplateDependency('')
+        self.ignored_instances = []
+        self.instances = instance_generators
+
+    def __generate(self):
+        for instantiation in self.instances:
+            for argument in instantiation.template_argument_generators:
+                generator = None
+                is_class = isinstance(argument, ClassTypeGenerator)
+                is_enum = isinstance(argument, EnumTypeGenerator)
+                add_header = add_forwards = True
+                unusable = False
+                if is_class:
+                    generator = argument.class_argument_generator
+                    add_forwards = not generator.is_template
+                elif is_enum:
+                    generator = argument.enum_argument_generator
+                    add_header = add_forwards = generator.is_in_namespace
+                    unusable = not generator.is_in_namespace
+
+                if generator:
+                    if add_header:
+                        self.dependency_headers += [header for header in generator.dependent_implementation_headers()
+                                                    if header not in self.dependency_headers]
+                    if add_forwards:
+                        tokens = generator.implementation_name.split('::')
+                        ns = self.dependencies
+                        while len(tokens) > 1:
+                            ns = ns.emplace_namespace(tokens[0])
+                            tokens = tokens[1:]
+                        if is_class:
+                            ns.add_class(tokens[0])
+                        elif is_enum:
+                            ns.add_enum(tokens[0])
+
+                if unusable:
+                    self.ignored_instances.append(instantiation)
+
+    def generate(self, file_cache: FileCache):
+        self.__generate()
+
+        forwards_snippet_file = file_cache.get_file_for_template_forwards_snippet(self.name_array)
+        for dependency in self.dependencies.namespaces:
+            self.dependencies.namespaces[dependency].write_forwards(forwards_snippet_file)
+
+        instance_snippet_file = file_cache.get_file_for_template_instance_snippet(self.name_array)
+        for header in self.dependency_headers:
+            instance_snippet_file.put_line('#include "{}"'.format(header))
+
+        alias_snippet_file = file_cache.get_file_for_template_alias_snippet(self.name_array)
+        extern_snippet_file = file_cache.get_file_for_template_extern_snippet(self.name_array)
+        for instantiation in self.instances:
+            if instantiation in self.ignored_instances:
+                continue
+            alias_snippet_file.put_line('typedef {} {};'.format(instantiation.snippet_implementation_declaration, instantiation.template_name))
+            extern_snippet_file.put_line('extern template class {};'.format(instantiation.implementation_name))
+            instance_snippet_file.put_line('template class {};'.format(instantiation.implementation_name))
+
+
+class TemplateDependency(object):
+    def __init__(self, name: str, namespaces: {str: {}} = None, classes: [str] = None, enums: [str] = None):
+        self.name = name
+        self.namespaces = namespaces if namespaces is not None else {}
+        self.classes = classes if classes is not None else []
+        self.enums = enums if enums is not None else []
+
+    def write_forwards(self, file: FileGenerator):
+        file.put_line('namespace {}'.format(self.name), ' ')
+        with IndentScope(file):
+            for name in self.classes:
+                file.put_line('class {};'.format(name))
+            for name in self.enums:
+                file.put_line('enum {};'.format(name))
+            for namespace in self.namespaces:
+                self.namespaces[namespace].write_forwards(file)
+
+    def namespace(self, name: str):
+        return self.namespaces[name] if name in self.namespaces else None
+
+    def add_class(self, name: str):
+        if name not in self.classes:
+            self.classes.append(name)
+
+    def add_enum(self, name: str):
+        if name not in self.enums:
+            self.enums.append(name)
+
+    def emplace_namespace(self, name: str) -> {}:
+        if name not in self.namespaces.keys():
+            self.namespaces.update({name: TemplateDependency(name)})
+        return self.namespaces[name]

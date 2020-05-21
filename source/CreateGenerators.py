@@ -25,7 +25,7 @@ from NamespaceGenerator import NamespaceGenerator
 from Parser import TClass, TEnumeration, TNamespace, TArgument, TBeautifulCapiRoot, TMappedType, TLifecycle, TReference
 from Parser import TGenericDocumentation, TDocumentation, TExternalClass, TExternalNamespace, TExternalEnumeration
 from ParamsParser import TBeautifulCapiParams
-from TemplateGenerator import TemplateGenerator
+from TemplateGenerator import TemplateGenerator, TemplateSnippetGenerator
 from ClassGenerator import ClassGenerator
 from MethodGenerator import MethodGenerator, FunctionGenerator, ConstructorGenerator
 from ArgumentGenerator import *
@@ -151,6 +151,21 @@ class GeneratorCreator(object):
             for method in template.template_class.methods:
                 new_method_generator = MethodGenerator(method, template.template_class_generator, self.params)
                 template.template_class_generator.method_generators.append(new_method_generator)
+
+        template_classes = {}
+        for class_generator in new_namespace_generator.classes:
+            if class_generator.is_template:
+                template = class_generator.name.split('<')[0]
+                if template in template_classes.keys():
+                    template_classes[template].append(class_generator)
+                else:
+                    template_classes.update({template: [class_generator]})
+
+        new_namespace_generator.template_snippets = [
+            TemplateSnippetGenerator(new_namespace_generator.full_name_array + [template], template_classes[template])
+            for template in template_classes
+        ]
+
         return new_namespace_generator
 
     def __apply_semantic_operator(self, type_name: str, operator_name: str, semantic_type: TLifecycle) -> str:

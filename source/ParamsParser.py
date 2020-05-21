@@ -65,6 +65,14 @@ class TBeautifulCapiParams(object):
         self.key_header_suffix_filled = False
         self.enums_header_suffix = "Enums"
         self.enums_header_suffix_filled = False
+        self.template_alias_snippet_suffix = "_Alias"
+        self.template_alias_snippet_suffix_filled = False
+        self.template_extern_snippet_suffix = "_Extern"
+        self.template_extern_snippet_suffix_filled = False
+        self.template_forwards_snippet_suffix = "_fwd"
+        self.template_forwards_snippet_suffix_filled = False
+        self.template_instance_snippet_suffix = "_Instance"
+        self.template_instance_snippet_suffix_filled = False
         self.open_api = True
         self.open_api_filled = False
         self.copy_semantic_wrapper_class_suffix = ""
@@ -189,6 +197,22 @@ class TBeautifulCapiParams(object):
             cur_attr = dom_node.getAttribute("enums_header_suffix")
             self.enums_header_suffix = cur_attr
             self.enums_header_suffix_filled = True
+        if dom_node.hasAttribute("template_alias_snippet_suffix"):
+            cur_attr = dom_node.getAttribute("template_alias_snippet_suffix")
+            self.template_alias_snippet_suffix = cur_attr
+            self.template_alias_snippet_suffix_filled = True
+        if dom_node.hasAttribute("template_extern_snippet_suffix"):
+            cur_attr = dom_node.getAttribute("template_extern_snippet_suffix")
+            self.template_extern_snippet_suffix = cur_attr
+            self.template_extern_snippet_suffix_filled = True
+        if dom_node.hasAttribute("template_forwards_snippet_suffix"):
+            cur_attr = dom_node.getAttribute("template_forwards_snippet_suffix")
+            self.template_forwards_snippet_suffix = cur_attr
+            self.template_forwards_snippet_suffix_filled = True
+        if dom_node.hasAttribute("template_instance_snippet_suffix"):
+            cur_attr = dom_node.getAttribute("template_instance_snippet_suffix")
+            self.template_instance_snippet_suffix = cur_attr
+            self.template_instance_snippet_suffix_filled = True
         if dom_node.hasAttribute("open_api"):
             cur_attr = dom_node.getAttribute("open_api")
             self.open_api = string_to_bool(cur_attr)

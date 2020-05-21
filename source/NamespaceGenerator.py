@@ -26,6 +26,7 @@ from Parser import TNamespace, TProlog
 from Helpers import get_c_name, include_headers
 from FileGenerator import FileGenerator, WatchdogScope, IfDefScope, IndentScope
 from CapiGenerator import CapiGenerator
+from ArgumentGenerator import MappedTypeGenerator
 from FileCache import FileCache
 from DoxygenCpp import DoxygenCppGenerator
 
@@ -38,6 +39,7 @@ class NamespaceGenerator(object):
         self.nested_namespaces = []
         self.external_namespaces = []
         self.templates = []
+        self.template_snippets = []
         self.classes = []
         self.functions = []
         self.params = params
@@ -188,6 +190,11 @@ class NamespaceGenerator(object):
             for enum_generator in self.enum_generators:
                 enum_generator.generate_enum_definition(snippet_file)
 
+    def __generate_template_snippets(self, file_cache: FileCache):
+        if self.template_snippets:
+            for generator in self.template_snippets:
+                generator.generate(file_cache)
+
     def __generate(self, file_cache: FileCache, capi_generator: CapiGenerator):
         self.__generate_namespace_header(file_cache, capi_generator)
         self.__generate_enums_header(file_cache)
@@ -197,7 +204,9 @@ class NamespaceGenerator(object):
             class_generator.generate(file_cache, capi_generator)
         for template in self.templates:
             template.generate(file_cache, capi_generator)
+
         self.__generate_snippet()
+        self.__generate_template_snippets(file_cache)
         if self.namespace_object.implementation_header_filled:
             capi_generator.additional_includes.include_user_header(self.namespace_object.implementation_header)
 

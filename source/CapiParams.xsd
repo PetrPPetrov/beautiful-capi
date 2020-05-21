@@ -73,6 +73,26 @@
         <xs:documentation>Specifies suffix for header files which will contain enumeration definitions</xs:documentation>
       </xs:annotation>
     </xs:attribute>
+    <xs:attribute name="template_alias_snippet_suffix" type="xs:string" use="optional" default="_Alias">
+      <xs:annotation>
+        <xs:documentation>Specifies suffix for snippet files which will contain template instantiation aliases.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="template_extern_snippet_suffix" type="xs:string" use="optional" default="_Extern">
+      <xs:annotation>
+        <xs:documentation>Specifies suffix for snippet files which will contain template instantiation externs.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="template_forwards_snippet_suffix" type="xs:string" use="optional" default="_fwd">
+      <xs:annotation>
+        <xs:documentation>Specifies suffix for snippet files which will contain forward declarations for template instantiation argument types.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="template_instance_snippet_suffix" type="xs:string" use="optional" default="_Instance">
+      <xs:annotation>
+        <xs:documentation>Specifies suffix for snippet files which will contain template instantiations and argument types includes.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
     <xs:attribute name="open_api" type="xs:boolean" use="optional" default="true">
       <xs:annotation>
         <xs:documentation>Specifies flag if the library API will be open, otherwise the library API will be secured.</xs:documentation>
