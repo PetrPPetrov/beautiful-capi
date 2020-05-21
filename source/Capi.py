@@ -21,6 +21,7 @@
 
 
 import os
+import sys
 import shutil
 import argparse
 from xml.dom.minidom import parse
@@ -64,7 +65,13 @@ class Capi(object):
                  ):
         self.input_xml = input_filename
         self.input_params_filename = input_params_filename
-        self.input_params = parse(input_params_filename)
+        try:
+            self.input_params = parse(input_params_filename)
+        except Exception as error:
+            print("XML API parameters parsing error, {0}".format(input_params_filename))
+            for arg in error.args:
+                print("{0}".format(arg))
+            sys.exit(1)
         self.output_folder = output_folder
         self.sharp_output_folder = sharp_output_folder
         self.output_wrap_file_name = output_wrap_file_name

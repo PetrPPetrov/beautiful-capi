@@ -20,6 +20,7 @@
 #
 
 import os
+import sys
 from xml.dom.minidom import parse as dom_parse
 
 from Parser import load
@@ -34,7 +35,15 @@ def get_all_namespaces(root_namespaces: list):
 
 
 def parse_root(root_api_xml_path: str, params):
-    root_api = load(dom_parse(root_api_xml_path))
+    try:
+        dom_tree = dom_parse(root_api_xml_path)
+    except Exception as error:
+        print("XML API description parsing error, {0}".format(root_api_xml_path))
+        for arg in error.args:
+            print("{0}".format(arg))
+        sys.exit(1)
+
+    root_api = load(dom_tree)
     namespaces = get_all_namespaces(root_api.namespaces)
     if not hasattr(params, "xml_paths"):
         params.xml_paths = []
