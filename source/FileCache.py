@@ -179,19 +179,23 @@ class FileCache(object):
         return self.get_cached_generator(os.path.join(self.base_path, self.params.check_and_throw_exception_filename))
 
     def get_file_for_template_forwards_snippet(self, path_to_namespace: [str]) -> FileGenerator:
-        output_file_name = self.__get_file_name_for_template_snippet(path_to_namespace, self.params.template_forwards_snippet_suffix, PosixJoin())
+        output_file_name = self.__get_file_name_for_template_snippet(
+            path_to_namespace, self.params.template_forwards_snippet_suffix, PosixJoin())
         return self.get_cached_generator(output_file_name)
 
     def get_file_for_template_alias_snippet(self, path_to_namespace: [str]) -> FileGenerator:
-        output_file_name = self.__get_file_name_for_template_snippet(path_to_namespace, self.params.template_alias_snippet_suffix, PosixJoin())
+        output_file_name = self.__get_file_name_for_template_snippet(
+            path_to_namespace, self.params.template_alias_snippet_suffix, PosixJoin())
         return self.get_cached_generator(output_file_name)
 
     def get_file_for_template_extern_snippet(self, path_to_namespace: [str]) -> FileGenerator:
-        output_file_name = self.__get_file_name_for_template_snippet(path_to_namespace, self.params.template_extern_snippet_suffix, PosixJoin())
+        output_file_name = self.__get_file_name_for_template_snippet(
+            path_to_namespace, self.params.template_extern_snippet_suffix, PosixJoin())
         return self.get_cached_generator(output_file_name)
 
     def get_file_for_template_instance_snippet(self, path_to_namespace: [str]) -> FileGenerator:
-        output_file_name = self.__get_file_name_for_template_snippet(path_to_namespace, self.params.template_instance_snippet_suffix, PosixJoin())
+        output_file_name = self.__get_file_name_for_template_snippet(
+            path_to_namespace, self.params.template_instance_snippet_suffix, PosixJoin())
         return self.get_cached_generator(output_file_name)
 
     def namespace_header(self, path_to_namespace: [str]) -> str:
@@ -216,7 +220,7 @@ class FileCache(object):
         return self.params.check_and_throw_exception_filename
 
 
-def full_relative_path_from_candidates(path: str, start=os.curdir, additional_directories: [str]=[]) -> str:
+def full_relative_path_from_candidates(path: str, start=os.curdir, additional_directories: [str] = []) -> str:
     candidate_list = [os.path.normpath(os.path.join(start, path))]
     for additional_directory in additional_directories:
         candidate_path = ''

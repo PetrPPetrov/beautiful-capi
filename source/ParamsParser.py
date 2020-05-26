@@ -69,7 +69,7 @@ class TBeautifulCapiParams(object):
         self.template_alias_snippet_suffix_filled = False
         self.template_extern_snippet_suffix = "_Extern"
         self.template_extern_snippet_suffix_filled = False
-        self.template_forwards_snippet_suffix = "_fwd"
+        self.template_forwards_snippet_suffix = "_Fwd"
         self.template_forwards_snippet_suffix_filled = False
         self.template_instance_snippet_suffix = "_Instance"
         self.template_instance_snippet_suffix_filled = False

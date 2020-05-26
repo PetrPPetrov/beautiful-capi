@@ -59,7 +59,7 @@ class TemplateGenerator(object):
         header.put_begin_cpp_comments(self.params)
         with WatchdogScope(header, '::'.join(full_name_array).upper() + '_DECLARATION_INCLUDED'):
             for namespace in self.parent_namespace.full_name_array:
-                header.put_line('namespace {}'.format(namespace))
+                header.put_line('namespace {0}'.format(namespace))
                 header.put_line('{')
                 header.increase_indent()
             DoxygenCppGenerator().generate_for_template(header, self)
@@ -75,7 +75,7 @@ class TemplateGenerator(object):
                 header.put_line('public:')
                 for method in self.template_class_generator.method_generators:
                     DoxygenCppGenerator().generate_for_template_method(header, self, method)
-                    header.put_line('{};'.format(method.wrap_declaration(capi_generator)))
+                    header.put_line('{0};'.format(method.wrap_declaration(capi_generator)))
                     header.put_line('')
             for namespace in self.parent_namespace.full_name_array:
                 header.decrease_indent()
@@ -108,9 +108,11 @@ class TemplateSnippetGenerator(object):
         self.dependencies = TemplateDependency('')
         self.ignored_instances = []
         self.instances = instance_generators
+        self.params = None
 
     def __generate(self):
         for instantiation in self.instances:
+            self.params = instantiation.params
             for argument in instantiation.template_argument_generators:
                 generator = None
                 is_class = isinstance(argument, ClassTypeGenerator)
@@ -152,16 +154,23 @@ class TemplateSnippetGenerator(object):
 
         instance_snippet_file = file_cache.get_file_for_template_instance_snippet(self.name_array)
         for header in self.dependency_headers:
-            instance_snippet_file.put_line('#include "{}"'.format(header))
+            instance_snippet_file.put_line('#include "{0}"'.format(header))
 
         alias_snippet_file = file_cache.get_file_for_template_alias_snippet(self.name_array)
         extern_snippet_file = file_cache.get_file_for_template_extern_snippet(self.name_array)
+
+        if self.params:
+            forwards_snippet_file.put_begin_cpp_comments(self.params)
+            instance_snippet_file.put_begin_cpp_comments(self.params)
+            alias_snippet_file.put_begin_cpp_comments(self.params)
+            extern_snippet_file.put_begin_cpp_comments(self.params)
+
         for instantiation in self.instances:
             if instantiation in self.ignored_instances:
                 continue
-            alias_snippet_file.put_line('typedef {} {};'.format(instantiation.snippet_implementation_declaration, instantiation.template_name))
-            extern_snippet_file.put_line('extern template class {};'.format(instantiation.implementation_name))
-            instance_snippet_file.put_line('template class {};'.format(instantiation.implementation_name))
+            alias_snippet_file.put_line('typedef {0} {1};'.format(instantiation.snippet_implementation_declaration, instantiation.template_name))
+            extern_snippet_file.put_line('extern template class {0};'.format(instantiation.implementation_name))
+            instance_snippet_file.put_line('template class {0};'.format(instantiation.implementation_name))
 
 
 class TemplateDependency(object):
@@ -172,12 +181,12 @@ class TemplateDependency(object):
         self.enums = enums if enums is not None else []
 
     def write_forwards(self, file: FileGenerator):
-        file.put_line('namespace {}'.format(self.name), ' ')
+        file.put_line('namespace {0}'.format(self.name))
         with IndentScope(file):
             for name in self.classes:
-                file.put_line('class {};'.format(name))
+                file.put_line('class {0};'.format(name))
             for name in self.enums:
-                file.put_line('enum {};'.format(name))
+                file.put_line('enum {0};'.format(name))
             for namespace in self.namespaces:
                 self.namespaces[namespace].write_forwards(file)
 

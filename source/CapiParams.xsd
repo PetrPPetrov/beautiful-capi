@@ -83,7 +83,7 @@
         <xs:documentation>Specifies suffix for snippet files which will contain template instantiation externs.</xs:documentation>
       </xs:annotation>
     </xs:attribute>
-    <xs:attribute name="template_forwards_snippet_suffix" type="xs:string" use="optional" default="_fwd">
+    <xs:attribute name="template_forwards_snippet_suffix" type="xs:string" use="optional" default="_Fwd">
       <xs:annotation>
         <xs:documentation>Specifies suffix for snippet files which will contain forward declarations for template instantiation argument types.</xs:documentation>
       </xs:annotation>
