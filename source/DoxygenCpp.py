@@ -51,6 +51,11 @@ class DoxygenCppGenerator(object):
                 need_eol = False
                 reference_as_text = '@ref ' + ' '.join(doc_item.all_items)
                 DoxygenCppGenerator.__add_line(result_lines, reference_as_text, need_eol)
+            elif doc_item in doc.formulae:
+                need_eol = False
+                braces = ['@f$', '@f$'] if doc_item.inline else ['@f[', '@f]']
+                reference_as_text = braces[0] + ''.join(doc_item.all_items) + braces[1]
+                DoxygenCppGenerator.__add_line(result_lines, reference_as_text, need_eol)
             elif doc_item in doc.see_alsos:
                 need_eol = True
                 see_also = '@see '

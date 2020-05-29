@@ -154,6 +154,11 @@
             <xs:documentation>Specifies documentation reference for another documentation object</xs:documentation>
           </xs:annotation>
         </xs:element>
+        <xs:element name="formula" type="TFormula">
+          <xs:annotation>
+            <xs:documentation>Specifies a formula block</xs:documentation>
+          </xs:annotation>
+        </xs:element>
         <xs:element name="see_also" type="TGenericDocumentation">
           <xs:annotation>
             <xs:documentation>Specifies @see doxygen documentation</xs:documentation>
@@ -189,6 +194,16 @@
     <xs:annotation>
       <xs:documentation>In documentation specifies reference to another class, function, enumeration or namespace, it will be used as @ref doxygen documentation.</xs:documentation>
     </xs:annotation>
+  </xs:complexType>
+  <xs:complexType name="TFormula" mixed="true">
+    <xs:annotation>
+      <xs:documentation>In documentation specifies a formula block, it will be enclosed in @f$ and @f$ (for inline) or @f[ and @f] doxygen tags.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute default="true" name="inline" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>Specifies whether to inline the formula</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
   </xs:complexType>
   <xs:complexType name="TExternalNamespace">
     <xs:annotation>

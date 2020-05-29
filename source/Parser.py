@@ -275,6 +275,7 @@ class TGenericDocumentation(object):
     def __init__(self):
         self.all_items = []
         self.references = []
+        self.formulae = []
         self.see_alsos = []
 
     def load_element(self, element):
@@ -282,6 +283,12 @@ class TGenericDocumentation(object):
             new_element = TReference()
             new_element.load(element)
             self.references.append(new_element)
+            self.all_items.append(new_element)
+            return True
+        if element.nodeName == "formula":
+            new_element = TFormula()
+            new_element.load(element)
+            self.formulae.append(new_element)
             self.all_items.append(new_element)
             return True
         if element.nodeName == "see_also":
@@ -372,6 +379,37 @@ class TReference(object):
 
     def load_attributes(self, dom_node):
         pass
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
+
+class TFormula(object):
+    def __init__(self):
+        self.all_items = []
+        self.inline = True
+        self.inline_filled = True
+
+    def load_element(self, element):
+        if element.nodeType == element.TEXT_NODE:
+            cur_texts = [text.strip() for text in element.data.split('\n')]
+            first = True
+            for text in cur_texts:
+                if first and self.all_items and type(self.all_items[-1]) is str:
+                    self.all_items[-1] += text
+                else:
+                    self.all_items.append(text)
+                first = False
+            return True
+        return False
+
+    def load_attributes(self, dom_node):
+        if dom_node.hasAttribute("inline"):
+            cur_attr = dom_node.getAttribute("inline")
+            self.inline = string_to_bool(cur_attr)
+            self.inline_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:
