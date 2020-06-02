@@ -116,12 +116,13 @@ class TemplateSnippetGenerator(object):
             for argument in instantiation.template_argument_generators:
                 generator = None
                 is_class = isinstance(argument, ClassTypeGenerator)
+                is_template = False
                 is_enum = isinstance(argument, EnumTypeGenerator)
                 add_header = add_forwards = True
                 unusable = False
                 if is_class:
                     generator = argument.class_argument_generator
-                    add_forwards = not generator.is_template
+                    is_template = generator.is_template
                 elif is_enum:
                     generator = argument.enum_argument_generator
                     add_header = add_forwards = generator.is_in_namespace
@@ -137,7 +138,9 @@ class TemplateSnippetGenerator(object):
                         while len(tokens) > 1:
                             ns = ns.emplace_namespace(tokens[0])
                             tokens = tokens[1:]
-                        if is_class:
+                        if is_template:
+                            ns.add_template(tokens[0].split('<')[0], [a.template_argument_type for a in generator.class_object.template_arguments])
+                        elif is_class:
                             ns.add_class(tokens[0])
                         elif is_enum:
                             ns.add_enum(tokens[0])
@@ -174,15 +177,19 @@ class TemplateSnippetGenerator(object):
 
 
 class TemplateDependency(object):
-    def __init__(self, name: str, namespaces: {str: {}} = None, classes: [str] = None, enums: [str] = None):
+    def __init__(self, name: str, namespaces: {str: {}} = None, classes: [str] = None, templates: {str: [str]} = None, enums: [str] = None):
         self.name = name
         self.namespaces = namespaces if namespaces is not None else {}
         self.classes = classes if classes is not None else []
+        self.templates = templates if templates is not None else {}
         self.enums = enums if enums is not None else []
 
     def write_forwards(self, file: FileGenerator):
         file.put_line('namespace {0}'.format(self.name))
         with IndentScope(file):
+            for name in self.templates:
+                file.put_line('template<{0}>'.format(', '.join(self.templates[name])))
+                file.put_line('class {0};'.format(name))
             for name in self.classes:
                 file.put_line('class {0};'.format(name))
             for name in self.enums:
@@ -197,11 +204,15 @@ class TemplateDependency(object):
         if name not in self.classes:
             self.classes.append(name)
 
+    def add_template(self, name: str, parameter_types: [str]):
+        if name not in self.templates:
+            self.templates.update({name: parameter_types})
+
     def add_enum(self, name: str):
         if name not in self.enums:
             self.enums.append(name)
 
     def emplace_namespace(self, name: str) -> {}:
-        if name not in self.namespaces.keys():
+        if name not in self.namespaces:
             self.namespaces.update({name: TemplateDependency(name)})
         return self.namespaces[name]
