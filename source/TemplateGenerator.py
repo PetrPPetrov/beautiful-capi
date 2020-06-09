@@ -93,6 +93,9 @@ class TemplateConstantArgumentGenerator(object):
     def wrap_return_type(self) -> str:
         return self.value
 
+    def wrap_argument_declaration(self) -> str:
+        return self.value
+
     def include_dependent_declaration_headers(self, file_generator: FileGenerator, file_cache: FileCache):
         pass
 
