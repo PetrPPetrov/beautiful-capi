@@ -22,6 +22,7 @@
 
 import os
 import sys
+import copy
 import shutil
 import argparse
 from xml.dom.minidom import parse
@@ -227,6 +228,10 @@ class Capi(object):
                         external_namespace.classes.append(external_class)
                         for enum in cur_class.enum_generators:
                             process_external_enum(enum, external_class)
+                        if cur_class.class_object.typedef_name:
+                            external_class2 = copy.deepcopy(external_class)
+                            external_class2.name = cur_class.class_object.typedef_name
+                            external_namespace.classes.append(external_class2)
                     for enum in cur_namespace.enum_generators:
                         process_external_enum(enum, external_namespace)
                     external_namespaces.append(external_namespace)
