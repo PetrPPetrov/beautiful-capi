@@ -81,10 +81,9 @@ class SharpCapiGenerator(object):
             if generator.parent_namespace:
                 parent = self.get_or_gen_namespace('.'.join(generator.parent_namespace.full_name_array),
                                                    generator.parent_namespace)
-                result = SharpNamespace(generator, parent)
+                result = SharpNamespace(generator, parent, self)
             else:
-                result = SharpNamespace(generator, None)
-            result.capi_generator = self
+                result = SharpNamespace(generator, None, self)
             self.full_name_2_sharp_object[fullname] = result
             return result
 
@@ -94,9 +93,8 @@ class SharpCapiGenerator(object):
         else:
             namespace = self.get_or_gen_namespace('.'.join(generator.parent_namespace.full_name_array),
                                                   generator.parent_namespace)
-            result = SharpClass(generator, namespace)
+            result = SharpClass(generator, namespace, self)
             self.full_name_2_sharp_object[fullname] = result
-            result.capi_generator = self
             return result
 
     def get_or_gen_template(self, fullname: str, template_generator: TemplateGenerator):
@@ -104,9 +102,8 @@ class SharpCapiGenerator(object):
         if not result:
             namespace = self.get_or_gen_namespace('.'.join(template_generator.parent_namespace.full_name_array),
                                                   template_generator.parent_namespace)
-            result = SharpTemplate(template_generator, namespace)
+            result = SharpTemplate(template_generator, namespace, self)
             self.full_name_2_sharp_object[fullname] = result
-            result.capi_generator = self
         return result
 
     def get_or_gen_external_namespace(self, fullname: str, generator: ExternalNamespaceGenerator):
@@ -116,11 +113,10 @@ class SharpCapiGenerator(object):
             if generator.parent_namespace:
                 parent = self.get_or_gen_external_namespace(generator.parent_namespace.full_wrap_name,
                                                             generator.parent_namespace)
-                result = SharpExternalNamespace(generator, parent)
+                result = SharpExternalNamespace(generator, parent, self)
             else:
-                result = SharpExternalNamespace(generator, None)
+                result = SharpExternalNamespace(generator, None, self)
             self.full_name_2_sharp_object[fullname] = result
-            result.capi_generator = self
             return result
 
     def get_or_gen_external_class(self, fullname: str, external_class_generator: ExternalClassGenerator):
@@ -130,10 +126,9 @@ class SharpCapiGenerator(object):
             namespace = self.get_or_gen_external_namespace(
                 '.'.join(external_class_generator.parent_namespace.full_name_array),
                 external_class_generator.parent_namespace)
-            result = SharpExternalClass(external_class_generator, namespace)
+            result = SharpExternalClass(external_class_generator, namespace, self)
             self.full_name_2_sharp_object[fullname] = result
             namespace.classes.append(result)
-            result.capi_generator = self
             return result
 
     def get_or_gen_mapped_type(self, name: str, mapped_type_object: TMappedType):
@@ -249,14 +244,14 @@ class SharpCapiGenerator(object):
 
 
 class SharpNamespace(object):
-    def __init__(self, namespace_generator: NamespaceGenerator, parent_namespace=None):
+    def __init__(self, namespace_generator: NamespaceGenerator, parent_namespace, capi_generator: SharpCapiGenerator):
         self.namespace_generator = namespace_generator
         self.parent_namespace = parent_namespace
         self.nested_namespaces = {}
         self.classes = {}
         self.enums = []
         self.functions = []
-        self.capi_generator = None
+        self.capi_generator = capi_generator
         self.wrap_name = namespace_generator.wrap_name
         self.full_wrap_name = '.'.join(namespace_generator.full_name_array)
         self.mapped_types = {}
@@ -485,12 +480,12 @@ class SharpNamespace(object):
 
 
 class SharpClass(object):
-    def __init__(self, class_generator: ClassGenerator, namespace: SharpNamespace):
+    def __init__(self, class_generator: ClassGenerator, namespace: SharpNamespace, capi_generator: SharpCapiGenerator):
         self.class_generator = class_generator
         self.namespace = namespace
         self.constructors = []
         self.methods = []
-        self.capi_generator = None
+        self.capi_generator = capi_generator
         self.copy_or_add_ref_when_c_2_wrap = False
         self.lifecycle_traits = create_sharp_lifecycle(class_generator.class_object.lifecycle,
                                                        class_generator.lifecycle_traits,
@@ -610,7 +605,8 @@ class SharpClass(object):
         if self.class_generator.is_callback:
             for method in self.base.methods:
                 name = method.generator.full_c_name + '_callback_type'
-                arguments = ['IntPtr object_pointer'] + self.capi_generator.export_function_arguments(method.arguments)#[arg.c_argument_declaration() for arg in method.arguments]
+                # [arg.c_argument_declaration() for arg in method.arguments]
+                arguments = ['IntPtr object_pointer'] + self.capi_generator.export_function_arguments(method.arguments)
                 method.exception_traits.modify_c_arguments(arguments)
                 return_type = method.return_type.c_argument_declaration()
                 out.put_line('[UnmanagedFunctionPointer(CallingConvention.Cdecl)]')
@@ -937,7 +933,10 @@ class SharpClass(object):
 
 
 class SharpTemplate(object):
-    def __init__(self, template_generator: TemplateGenerator, namespace: SharpNamespace):
+    def __init__(self,
+                 template_generator: TemplateGenerator,
+                 namespace: SharpNamespace,
+                 capi_generator: SharpCapiGenerator):
         self.template_generator = template_generator
         self.namespace = namespace
         self.constructors = []
@@ -948,7 +947,7 @@ class SharpTemplate(object):
         self.copy_or_add_ref_when_c_2_wrap = False
         self.non_types = ('template', 'typename', 'class')
         self.base = None
-        self.capi_generator = None
+        self.capi_generator = capi_generator
 
     @property
     def wrap_short_name(self):
@@ -1391,7 +1390,7 @@ class SharpBuiltinType(object):
 
 
 class SharpArgument(object):
-    def __init__(self, argument_generator: ArgumentGenerator, capi_generator):
+    def __init__(self, argument_generator: ArgumentGenerator, capi_generator: SharpCapiGenerator):
         self.argument_generator = argument_generator
         self.capi_generator = capi_generator
         self.type_generator = None
@@ -2102,14 +2101,14 @@ class SharpCmakeListGenerator(object):
 
 
 class SharpExternalNamespace(object):
-    def __init__(self, generator: ExternalNamespaceGenerator, parent=None):
+    def __init__(self, generator: ExternalNamespaceGenerator, parent, capi_generator: SharpCapiGenerator):
         self.generator = generator
         self.parent = parent
         self.nested_namespaces = []
         self.classes = []
         self.enums = []
         self.project_name = generator.namespace_object.project_name
-        self.capi_generator = None
+        self.capi_generator = capi_generator
 
     @property
     def wrap_name(self):
@@ -2122,7 +2121,7 @@ class SharpExternalNamespace(object):
     def generate(self):
         self.nested_namespaces = []
         for ns in self.generator.nested_namespaces:
-            external_namespace = SharpExternalNamespace(ns)
+            external_namespace = SharpExternalNamespace(ns, self, self.capi_generator)
             self.nested_namespaces.append(external_namespace)
             external_namespace.generate()
         self.classes = []
@@ -2136,11 +2135,14 @@ class SharpExternalNamespace(object):
 
 
 class SharpExternalClass(object):
-    def __init__(self, generator: ExternalClassGenerator, parent: ExternalNamespaceGenerator):
+    def __init__(self,
+                 generator: ExternalClassGenerator,
+                 parent: ExternalNamespaceGenerator,
+                 capi_generator: SharpCapiGenerator):
         self.generator = generator
         self.parent = parent
+        self.capi_generator = capi_generator
         self.enums = [SharpExternalEnum(enum, self) for enum in generator.enums]
-        self.capi_generator = None
 
     @property
     def wrap_name(self):
