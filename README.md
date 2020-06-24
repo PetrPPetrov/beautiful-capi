@@ -1,6 +1,7 @@
 # Beautiful Capi
 
 [![Build Status](https://ci.appveyor.com/api/projects/status/abrldnyl1ftmh5n0?svg=true)](https://ci.appveyor.com/api/projects/status/abrldnyl1ftmh5n0?svg=true)
+[![Build Status](https://travis-ci.org/PetrPPetrov/beautiful-capi.svg?branch=master)](https://travis-ci.org/PetrPPetrov/beautiful-capi)
 
 Introduction
 ------------
