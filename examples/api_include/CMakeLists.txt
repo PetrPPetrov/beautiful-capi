@@ -22,8 +22,6 @@ project(api_include_example)
 
 cmake_minimum_required(VERSION 2.8)
 
-set(CMAKE_CXX_STANDARD 11)
-
 add_subdirectory(library)
 add_subdirectory(client)
 if(${CSHARP_ENABLED})
