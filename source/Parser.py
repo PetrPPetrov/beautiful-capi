@@ -275,7 +275,7 @@ class TGenericDocumentation(object):
     def __init__(self):
         self.all_items = []
         self.references = []
-        self.formulae = []
+        self.formulas = []
         self.see_alsos = []
 
     def load_element(self, element):
@@ -288,7 +288,7 @@ class TGenericDocumentation(object):
         if element.nodeName == "formula":
             new_element = TFormula()
             new_element.load(element)
-            self.formulae.append(new_element)
+            self.formulas.append(new_element)
             self.all_items.append(new_element)
             return True
         if element.nodeName == "see_also":
@@ -390,7 +390,7 @@ class TFormula(object):
     def __init__(self):
         self.all_items = []
         self.inline = True
-        self.inline_filled = True
+        self.inline_filled = False
 
     def load_element(self, element):
         if element.nodeType == element.TEXT_NODE:
@@ -825,7 +825,7 @@ class TClass(object):
         self.implementation_class_header_filled = False
         self.lifecycle = TLifecycle.reference_counted
         self.lifecycle_filled = False
-        self.requires_cast_to_base = True
+        self.requires_cast_to_base = False
         self.requires_cast_to_base_filled = False
         self.pointer_access = False
         self.pointer_access_filled = False

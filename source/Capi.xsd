@@ -199,7 +199,7 @@
     <xs:annotation>
       <xs:documentation>In documentation specifies a formula block, it will be enclosed in @f$ and @f$ (for inline) or @f[ and @f] doxygen tags.</xs:documentation>
     </xs:annotation>
-    <xs:attribute default="true" name="inline" type="xs:string" use="optional">
+    <xs:attribute default="true" name="inline" type="xs:boolean" use="optional">
       <xs:annotation>
         <xs:documentation>Specifies whether to inline the formula</xs:documentation>
       </xs:annotation>
@@ -562,7 +562,7 @@
         <xs:documentation>Specifies lifecycle semantic of the class</xs:documentation>
       </xs:annotation>
     </xs:attribute>
-    <xs:attribute default="true" name="requires_cast_to_base" type="xs:boolean" use="optional">
+    <xs:attribute default="false" name="requires_cast_to_base" type="xs:boolean" use="optional">
       <xs:annotation>
         <xs:documentation>Specifies requirement for casting to base class</xs:documentation>
       </xs:annotation>

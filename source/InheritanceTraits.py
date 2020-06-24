@@ -101,7 +101,10 @@ class SimpleCase(object):
             RequiresCastToBase().generate_object_assignment(out, class_generator, prefix, expression)
 
     def generate_c_functions(self, class_generator):
-        pass
+        # We still need to generate _cast_to_base function to use it in the unit tests
+        # to verify what casted to base implementation object is equal to the current object's
+        # implementation object
+        RequiresCastToBase.generate_c_functions(class_generator)
 
 
 def create_inheritance_traits(requires_cast_to_base: bool):

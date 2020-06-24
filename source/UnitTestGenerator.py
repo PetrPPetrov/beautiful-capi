@@ -464,6 +464,54 @@ class TestGenerator(object):
             self.file.delete()
         self.file.close()
 
+    def generate_bast_to_base_test(self, class_generator: ClassGenerator):
+        # Do not generate this test if the current class requires casting to base
+        if class_generator.class_object.requires_cast_to_base:
+            return
+
+        # Do not generate this test if the current class is not derived
+        if not class_generator.class_object.base:
+            return
+
+        test_declaration = '// Test cast to base for {0}'.format(class_generator.full_wrap_name)
+
+        is_copy_semantic = class_generator.class_object.lifecycle == Parser.TLifecycle.copy_semantic
+        is_raw_pointer = class_generator.class_object.lifecycle == Parser.TLifecycle.raw_pointer_semantic
+
+        self.file.add()
+        self.file.current.put_line(test_declaration)
+        with IndentScope(self.file.current, ending='}\n'):
+            self.__gen_code_for_missing_arguments(class_generator.class_object, class_generator, 'test_class')
+            self.file.current.put_line('void* current_object = test_class.{0}();'.format(
+                self.params.get_raw_pointer_method_name))
+            self.file.current.put_line('if (!current_object)')
+            with IndentScope(self.file.current):
+                self.file.current.put_line('report_error("Error: {0} has null implementation object");'.format(
+                    class_generator.full_wrap_name))
+                self.file.current.put_line('return false;')
+            self.file.current.put_line('void* base_object = {0}(current_object);'.format(
+                class_generator.cast_to_base))
+            self.file.current.put_line('if (!base_object)')
+            with IndentScope(self.file.current):
+                self.file.current.put_line(
+                    'report_error("Error: casted to base {0} has null implementation object");'.format(
+                        class_generator.full_wrap_name
+                    )
+                )
+                self.file.current.put_line('return false;')
+            self.file.current.put_line('if (base_object != current_object)')
+            with IndentScope(self.file.current):
+                self.file.current.put_line(
+                    'report_error("Error: implementation object of {0} is not equal of its casted to base value. '
+                    'It is a requirement for simple inheritance case");'.format(class_generator.full_wrap_name))
+                self.file.current.put_line('return false;')
+            if is_raw_pointer:
+                self.file.current.put_line('test_class.{del_method_name}();'.format(
+                    del_method_name=self.params.delete_method_name))
+        if self.file.generate_failed:
+            self.file.delete()
+        self.file.close()
+
     def __gen_code_equal_method(self, c_generator_to_properties: ClassToProperties.CGeneratorToProperties,
                                 full_type: str):
         method_declaration = 'inline bool equal(const {type_name}& first, const {type_name}& second){is_declaration}'
@@ -514,6 +562,7 @@ class TestGenerator(object):
             if namespace_generator.namespace_object.generate_tests:
                 self.file.current.put_file(self.declaration_section)
                 for class_generator in namespace_generator.classes:
+                    self.generate_bast_to_base_test(class_generator)
                     class_object = class_generator.class_object
                     if class_object.generate_tests and class_generator.class_object in self.class_to_properties.map:
                         if namespace_generator not in added_namespace:

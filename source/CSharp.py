@@ -2216,9 +2216,9 @@ def generate_simple_case_set_object_definition(out: FileGenerator, sharp_class):
     out.put_line('unsafe protected void {class_name}.SetObject(IntPtr object_pointer)'.format(
         class_name=sharp_class.class_generator.full_wrap_name))
     with IndentScope(out):
-        if sharp_class.base_class:
+        if sharp_class.base:
             out.put_line('{base_class}.SetObject(object_pointer);'.format(
-                base_class=sharp_class.base_class.wrap_name))
+                base_class=sharp_class.base.wrap_name))
         else:
             out.put_line('mObject = object_pointer;')
 
