@@ -1,3 +1,6 @@
+Version 0.6
+    Many different bug fixes
+
 Version 0.5
     Added ability to generate C# wrapper classes, generics, external classes and namespaces.
     Reworked mapped types, now it allows to specify different types for C++ and C# code.
