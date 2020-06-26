@@ -680,7 +680,7 @@ class SharpClass(object):
             new = 'new ' if self.base else ''
             out.put_line('%spublic enum ECreateFromRawPointer{force_creating_from_raw_pointer};' % new)
             out.put_line('')
-            out.put_line('{0}protected unsafe IntPtr mObject;'.format(new))
+            generate_object_field_definition(self.class_generator.inheritance_traits, out, self)
             out.put_line('')
             for enum in self.enums:
                 enum.generate_enum_definition(out)
@@ -2213,12 +2213,13 @@ def generate_requires_cast_to_base_set_object_definition(out: FileGenerator, sha
 
 
 def generate_simple_case_set_object_definition(out: FileGenerator, sharp_class):
-    out.put_line('unsafe protected void {class_name}.SetObject(IntPtr object_pointer)'.format(
-        class_name=sharp_class.class_generator.full_wrap_name))
+    if sharp_class.base:
+        out.put_line('unsafe protected override void SetObject(IntPtr object_pointer)')
+    else:
+        out.put_line('unsafe protected virtual void SetObject(IntPtr object_pointer)')
     with IndentScope(out):
         if sharp_class.base:
-            out.put_line('{base_class}.SetObject(object_pointer);'.format(
-                base_class=sharp_class.base.wrap_name))
+            out.put_line('base.SetObject(object_pointer);')
         else:
             out.put_line('mObject = object_pointer;')
 
@@ -2228,6 +2229,23 @@ def generate_set_object_definition(inheritance_traits, out: FileGenerator, sharp
         generate_requires_cast_to_base_set_object_definition(out, sharp_class)
     else:
         generate_simple_case_set_object_definition(out, sharp_class)
+
+
+def generate_requires_cast_to_base_object_field_definition(out: FileGenerator, sharp_class: SharpClass):
+    new = 'new ' if sharp_class.base else ''
+    out.put_line('{0}protected unsafe IntPtr mObject;'.format(new))
+
+
+def generate_simple_case_object_field_definition(out: FileGenerator, sharp_class):
+    if not sharp_class.base:
+        out.put_line('protected unsafe IntPtr mObject;')
+
+
+def generate_object_field_definition(inheritance_traits, out: FileGenerator, sharp_class):
+    if isinstance(inheritance_traits, RequiresCastToBase):
+        generate_requires_cast_to_base_object_field_definition(out, sharp_class)
+    else:
+        generate_simple_case_object_field_definition(out, sharp_class)
 
 
 def get_template_base_init(template: SharpTemplate):

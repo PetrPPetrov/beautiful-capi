@@ -103,7 +103,7 @@ void Example::PersonImpl::Dump(Example::IPrinter* printer) const
     };
 
     print_helper printer_io(printer);
-    printer_io << "First Name: " << this->first_name << " Second Name: " << this->second_name << " Age: " << this->age << " Sex: " << (this->male ? "M" : "F");
+    printer_io << "First Name: " << this->first_name << " Second Name: " << this->second_name << " Age: " << this->age << " Sex: " << (this->sex == Example::PersonImpl::male ? "M" : "F");
 }
 
 void Example::PersonImpl::Print(Example::IPrinter* printer, const char* text) const
