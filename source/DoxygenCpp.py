@@ -151,6 +151,25 @@ class DoxygenCppGenerator(object):
                 for doc_line in DoxygenCppGenerator.__get_lines_for_documentation(documentation, True):
                     if len(doc_line) > 0:
                         out.put_line('/// {0}'.format(doc_line))
+
+    @staticmethod
+    def generate_for_template_indexer(out: FileGenerator, template_generator, indexer_generator):
+        template_types = []
+        for template_argument in template_generator.template_object.arguments:
+            if template_argument.type_name in ['template', 'class', 'typename']:
+                template_types.append(template_argument.name)
+        if indexer_generator.indexer_object.documentations:
+            for argument in indexer_generator.indexer_object.arguments:
+                for documentation in argument.documentations:
+                    doc_lines = DoxygenCppGenerator.__get_lines_for_documentation(documentation, True)
+                    if argument.type_name in template_types:
+                        out.put_line('/// @tparam {0} {1}'.format(argument.name, ''.join(doc_lines)))
+                    else:
+                        out.put_line('/// @param {0} {1}'.format(argument.name, ''.join(doc_lines)))
+            for documentation in indexer_generator.indexer_object.documentations:
+                for doc_line in DoxygenCppGenerator.__get_lines_for_documentation(documentation, True):
+                    if len(doc_line) > 0:
+                        out.put_line('/// {0}'.format(doc_line))
         
     @staticmethod
     def generate_for_namespace(out: FileGenerator, namespace_object: TNamespace, full_wrap_name: str):

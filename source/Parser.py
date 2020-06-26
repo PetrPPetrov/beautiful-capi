@@ -949,6 +949,7 @@ class TClass(object):
         self.constructors = []
         self.properties = []
         self.methods = []
+        self.indexers = []
         self.callbacks = []
         self.mapped_types = []
         self.lifecycle_extensions = []
@@ -990,6 +991,11 @@ class TClass(object):
             new_element = TMethod()
             new_element.load(element)
             self.methods.append(new_element)
+            return True
+        if element.nodeName == "indexer":
+            new_element = TIndexer()
+            new_element.load(element)
+            self.indexers.append(new_element)
             return True
         if element.nodeName == "callback":
             new_element = TCallback()
@@ -1388,6 +1394,55 @@ class TMethod(TMethodBase):
         for element in dom_node.childNodes:
             self.load_element(element)
         self.load_attributes(dom_node)
+
+
+class TIndexer(TConstructorBase):
+    def __init__(self):
+        super().__init__()
+        self.impl_2_c = "new {implementation_type}({expression})"
+        self.impl_2_c_filled = False
+        self.sharp_marshal_return_as = ""
+        self.sharp_marshal_return_as_filled = False
+        self.prologs = []
+        self.indexed_set_type = ""
+        self.indexed_set_type_filled = False
+        self.indexed_get_type = ""
+        self.indexed_get_type_filled = False
+        self.indexed_is_builtin = False
+        self.indexed_is_builtin_filled = False
+
+    def load_element(self, element):
+        if super().load_element(element):
+            return True
+        if element.nodeName == "prolog":
+            new_element = TProlog()
+            new_element.load(element)
+            self.prologs.append(new_element)
+            return True
+        return False
+
+    def load_attributes(self, dom_node):
+        super().load_attributes(dom_node)
+        if dom_node.hasAttribute("impl_2_c"):
+            cur_attr = dom_node.getAttribute("impl_2_c")
+            self.impl_2_c = cur_attr
+            self.impl_2_c_filled = True
+        if dom_node.hasAttribute("sharp_marshal_return_as"):
+            cur_attr = dom_node.getAttribute("sharp_marshal_return_as")
+            self.sharp_marshal_return_as = cur_attr
+            self.sharp_marshal_return_as_filled = True
+        if dom_node.hasAttribute("indexed_set_type"):
+            cur_attr = dom_node.getAttribute("indexed_set_type")
+            self.indexed_set_type = cur_attr
+            self.indexed_set_type_filled = True
+        if dom_node.hasAttribute("indexed_get_type"):
+            cur_attr = dom_node.getAttribute("indexed_get_type")
+            self.indexed_get_type = cur_attr
+            self.indexed_get_type_filled = True
+        if dom_node.hasAttribute("indexed_is_builtin"):
+            cur_attr = dom_node.getAttribute("indexed_is_builtin")
+            self.indexed_is_builtin = cur_attr
+            self.indexed_is_builtin_filled = True
 
 
 class TFunction(TMethodBase):

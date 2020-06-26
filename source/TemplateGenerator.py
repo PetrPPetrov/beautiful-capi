@@ -77,6 +77,13 @@ class TemplateGenerator(object):
                     DoxygenCppGenerator().generate_for_template_method(header, self, method)
                     header.put_line('{0};'.format(method.wrap_declaration(capi_generator)))
                     header.put_line('')
+                for indexer in self.template_class_generator.indexer_generators:
+                    DoxygenCppGenerator().generate_for_template_indexer(header, self, indexer)
+                    header.put_line('{0};'.format(indexer.wrap_declaration(True, capi_generator)))
+                    header.put_line('')
+                    DoxygenCppGenerator().generate_for_template_indexer(header, self, indexer)
+                    header.put_line('{0};'.format(indexer.wrap_declaration(False, capi_generator)))
+                    header.put_line('')
             for namespace in self.parent_namespace.full_name_array:
                 header.decrease_indent()
                 header.put_line('}')

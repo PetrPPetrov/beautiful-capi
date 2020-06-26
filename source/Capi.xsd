@@ -569,6 +569,11 @@
             <xs:documentation>Specifies method of the class</xs:documentation>
           </xs:annotation>
         </xs:element>
+        <xs:element maxOccurs="unbounded" minOccurs="0" name="indexer" type="TIndexer">
+          <xs:annotation>
+            <xs:documentation>Specifies indexer of the class</xs:documentation>
+          </xs:annotation>
+        </xs:element>
         <xs:element maxOccurs="1" minOccurs="0" name="callback" type="TCallback">
           <xs:annotation>
             <xs:documentation>Enables callback mode for the class</xs:documentation>
@@ -871,6 +876,69 @@
             <xs:documentation>Specifies *const* property of the current method</xs:documentation>
           </xs:annotation>
         </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="TIndexerBase">
+    <xs:annotation>
+      <xs:documentation>Restricts TMethodBase properties for indexers.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:restriction base="TConstructorBase">
+        <xs:sequence>
+          <xs:element maxOccurs="1" minOccurs="0" name="documentation" type="TDocumentation">
+            <xs:annotation>
+              <xs:documentation>Specifies documentation for the current constructor or method</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element maxOccurs="unbounded" minOccurs="1" name="argument" type="TArgument">
+            <xs:annotation>
+              <xs:documentation>Specifies argument for the current constructor or method</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element type="TImplementationCode" name="implementation_code" minOccurs="0" maxOccurs="1">
+            <xs:annotation>
+              <xs:documentation>Specifies custom implementation code</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" use="required">
+          <xs:annotation>
+            <xs:documentation>Specifies name of the current constructor or method</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute default="false" name="return_copy_or_add_ref" type="xs:boolean" use="optional">
+          <xs:annotation>
+            <xs:documentation>Specifies to copy or increase reference counter for returned objects</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute default="false" name="noexcept" type="xs:boolean" use="optional">
+          <xs:annotation>
+            <xs:documentation>Specifies noexcept flag for the current constructor or method</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="TIndexer">
+    <xs:annotation>
+      <xs:documentation>Specifies properties for methods.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="TIndexerBase">
+        <xs:attribute default="new {implementation_type}({expression})" name="impl_2_c" type="xs:string" use="optional">
+          <xs:annotation>
+            <xs:documentation>Specifies casting expression from the implementation class to C language layer, for return objects</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="sharp_marshal_return_as" type="xs:string" use="optional">
+          <xs:annotation>
+            <xs:documentation>Specifies C# marshaling for the return</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute default="" name="indexed_set_type" type="xs:string" use="optional"/>
+        <xs:attribute default="" name="indexed_get_type" type="xs:string" use="optional"/>
+        <xs:attribute default="false" name="indexed_is_builtin" type="xs:boolean" use="optional"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>

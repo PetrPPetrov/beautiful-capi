@@ -22,7 +22,7 @@
 
 import copy
 
-from Parser import TInstantiation, TConstructor, TMethod, TNamespace, TTemplate, TBeautifulCapiRoot
+from Parser import TInstantiation, TConstructor, TMethod, TNamespace, TTemplate, TBeautifulCapiRoot, TIndexer
 from Helpers import BeautifulCapiException
 
 
@@ -47,6 +47,12 @@ def instantiate_constructor(constructor: TConstructor or TMethod, instantiation:
 def instantiate_method(method: TMethod, instantiation: TInstantiation):
     instantiate_constructor(method, instantiation)
     method.return_type = instantiate_type(method.return_type, instantiation)
+
+
+def instantiate_indexer(indexer: TIndexer, instantiation: TInstantiation):
+    instantiate_constructor(indexer, instantiation)
+    indexer.indexed_get_type = instantiate_type(indexer.indexed_get_type, instantiation)
+    indexer.indexed_set_type = instantiate_type(indexer.indexed_set_type, instantiation)
 
 
 def instantiate_property(cur_property, instantiation: TInstantiation):
@@ -75,6 +81,8 @@ def generate_template_classes(namespace: TNamespace, template: TTemplate):
             instantiate_constructor(constructor, instantiation)
         for method in new_class.methods:
             instantiate_method(method, instantiation)
+        for indexer in new_class.indexers:
+            instantiate_indexer(indexer, instantiation)
         for cur_property in new_class.properties:
             instantiate_property(cur_property, instantiation)
         for lifecycle_extension in new_class.lifecycle_extensions:

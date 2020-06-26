@@ -32,7 +32,7 @@ from LifecycleTraits import LifecycleTraits, RawPointerSemantic, RefCountedSeman
 from ArgumentGenerator import ArgumentGenerator, MappedTypeGenerator, ClassTypeGenerator, ExternalClassTypeGenerator, \
     EnumTypeGenerator
 from BuiltinTypeGenerator import BuiltinTypeGenerator
-from MethodGenerator import MethodGenerator, ConstructorGenerator, FunctionGenerator
+from MethodGenerator import MethodGenerator, ConstructorGenerator, FunctionGenerator, IndexerGenerator
 from FileGenerator import FileGenerator, IndentScope, Indent, WatchdogScope
 from Helpers import if_required_then_add_empty_line, bool_to_str, replace_template_to_filename, BeautifulCapiException
 from Helpers import get_template_name, pascal_to_stl
@@ -488,6 +488,7 @@ class SharpClass(object):
         self.namespace = namespace
         self.constructors = []
         self.methods = []
+        self.indexers = []
         self.capi_generator = capi_generator
         self.copy_or_add_ref_when_c_2_wrap = False
         self.lifecycle_traits = create_sharp_lifecycle(class_generator.class_object.lifecycle,
@@ -691,6 +692,8 @@ class SharpClass(object):
             first_method = self.__generate_constructor_definitions(out, first_method)
             self.__generate_method_definitions(out, first_method)
             out.put_line('')
+            self.__generate_indexer_definitions(out, first_method)
+            out.put_line('')
             self.lifecycle_traits.generate_std_methods_definitions(out, self)
             out.put_line('')
             if hasattr(self, 'extension_base_class_generator'):
@@ -727,6 +730,11 @@ class SharpClass(object):
         for method in self.methods:
             first_method = if_required_then_add_empty_line(first_method, definition_header)
             method.generate_wrap_definition(definition_header)
+
+    def __generate_indexer_definitions(self, definition_header, first_indexer):
+        for indexer in self.indexers:
+            first_indexer = if_required_then_add_empty_line(first_indexer, definition_header)
+            indexer.generate_wrap_definition(definition_header)
 
     def __generate_init_deinit_externs(self, out: FileGenerator):
         import_string = '[DllImport("{dll_name}.dll", CallingConvention = {calling_convention})]'.format(
@@ -788,6 +796,26 @@ class SharpClass(object):
             out.put_line('unsafe static extern {return_type} {name}({arguments});'.format(
                 return_type=method.return_type.c_argument_declaration(),
                 name=method.generator.full_c_name,
+                arguments=', '.join(arguments)))
+        for indexer in self.indexers:
+            return_type_marshaling = indexer.get_return_marshaling()
+            if return_type_marshaling:
+                out.put_line(return_type_marshaling)
+            arguments = ['IntPtr object_pointer'] + self.capi_generator.export_function_arguments(indexer.arguments)
+            indexer.exception_traits.modify_c_arguments(arguments)
+            self.capi_generator.generate_string_marshaling(out,
+                                                           return_type=indexer.set_type.wrap_argument_declaration())
+            out.put_line(import_string)
+            out.put_line('unsafe static extern {return_type} {name}({arguments});'.format(
+                return_type=indexer.set_type.c_argument_declaration(),
+                name=indexer.generator.full_c_name(True),
+                arguments=', '.join(arguments)))
+            self.capi_generator.generate_string_marshaling(out,
+                                                           return_type=indexer.get_type.wrap_argument_declaration())
+            out.put_line(import_string)
+            out.put_line('unsafe static extern {return_type} {name}({arguments});'.format(
+                return_type=indexer.get_type.c_argument_declaration(),
+                name=indexer.generator.full_c_name(False),
                 arguments=', '.join(arguments)))
         self.__generate_init_deinit_externs(out)
         if self.base:
@@ -897,6 +925,7 @@ class SharpClass(object):
                 exception_traits.classes.append(self)
         self.constructors = [SharpConstructor(ctor, self) for ctor in self.class_generator.constructor_generators]
         self.methods = [SharpMethod(method, self) for method in self.class_generator.method_generators]
+        self.indexers = [SharpIndexer(indexer, self) for indexer in self.class_generator.indexer_generators]
         self.lifecycle_traits.lifecycle_traits.create_exception_traits(self.class_generator.class_object,
                                                                        self.capi_generator.capi_generator)
 
@@ -928,6 +957,8 @@ class SharpClass(object):
             ctor.generate()
         for method in self.methods:
             method.generate()
+        for indexer in self.indexers:
+            indexer.generate()
         name_array = self.namespace.full_name_array + [self.wrap_short_name, self.wrap_name]
         file_cache = self.capi_generator.file_cache
         definition_header = file_cache.get_file_for_class(name_array if self.is_template else self.full_name_array)
@@ -943,6 +974,7 @@ class SharpTemplate(object):
         self.namespace = namespace
         self.constructors = []
         self.methods = []
+        self.indexers = []
         self.classes = []
         self.explicit_arguments = []
         self.arguments = []
@@ -1001,6 +1033,48 @@ class SharpTemplate(object):
                     arguments=', '.join(argument.argument_generator.name for argument in method.arguments)
                 ))
             out.put_line('')
+
+    def __generate_indexers_definitions(self, out: FileGenerator):
+        for indexer in self.indexers:
+            new = 'new ' if indexer.is_overload() else ''
+            get_type = indexer.get_type.wrap_argument_declaration(self.namespace.full_name_array)
+            set_type = indexer.set_type.wrap_argument_declaration(self.namespace.full_name_array)
+            arguments = [arg.wrap_argument_declaration(self.namespace.full_name_array) for arg in indexer.arguments]
+            out.put_line('{new}public unsafe {get_type} this[{arguments}]'.format(
+                new=new, arguments=', '.join(arguments), get_type=get_type))
+            if get_type == 'void':
+                get_expression = ''
+            else:
+                if get_type in [arg.name for arg in self.template_generator.template_object.arguments]:
+                    get_expression = 'return Certain2Template<{get_type}>('
+                else:
+                    get_expression = 'return ({get_type})('
+            if set_type == 'void':
+                set_expression = ''
+            else:
+                if set_type in [arg.name for arg in self.template_generator.template_object.arguments]:
+                    set_expression = 'Certain2Template<{set_type}>('
+                else:
+                    set_expression = '({set_type})('
+
+            with IndentScope(out):
+                out.put_line('get')
+                with IndentScope(out):
+                    out.put_line('{get_expr}ExecuteMethod("{name}", new object[] {{{arguments}}}){bracket};'.format(
+                        get_expr=get_expression.format(get_type=get_type),
+                        name='get_Item',
+                        bracket=')' if get_expression else '',
+                        arguments=', '.join(argument.argument_generator.name for argument in indexer.arguments)
+                    ))
+                out.put_line('set')
+                with IndentScope(out):
+                    out.put_line('{set_expr}ExecuteMethod("{name}", new object[] {{{arguments}}}){bracket} = value;'.format(
+                        set_expr=set_expression.format(set_type=set_type),
+                        name='set_Item',
+                        bracket=')' if set_expression else '',
+                        arguments=', '.join(argument.argument_generator.name for argument in indexer.arguments)
+                    ))
+                out.put_line('')
 
     def __generate_type_map(self, out: FileGenerator):
         new = 'new ' if self.base else ''
@@ -1175,6 +1249,7 @@ class SharpTemplate(object):
             self.__generate_constructor_definitions(out)
             self.__generate_std_methods_definitions(out)
             self.__generate_methods_definitions(out)
+            self.__generate_indexers_definitions(out)
             self.__generate__type_2_name(out)
             self.__generate__get_certain_type_(out)
             self.__generate__execute_method_(out)
@@ -1198,6 +1273,8 @@ class SharpTemplate(object):
             self.constructors.append(SharpConstructor(constructor, self))
         for method in self.template_generator.template_class_generator.method_generators:
             self.methods.append(SharpMethod(method, self))
+        for indexer in self.template_generator.template_class_generator.indexer_generators:
+            self.indexers.append(SharpIndexer(indexer, self))
         for class_ in self.classes:
             class_.generate()
         if not self.classes:
@@ -1208,6 +1285,8 @@ class SharpTemplate(object):
             constructor.generate()
         for method in self.methods:
             method.generate()
+        for indexer in self.indexers:
+            indexer.generate()
         file_cache = self.capi_generator.file_cache
         header = file_cache.get_file_for_class(self.namespace.full_name_array + [self.wrap_short_name])
         self.__generate_definition(header)
@@ -1533,6 +1612,94 @@ class SharpMethod(SharpRoutine):
                 if method.generator.name == self.generator.name and not method.generator.method_object.const:
                     self.wrap_name += 'Const'
                     break
+
+
+class SharpIndexer(object):
+    def __init__(self, generator: IndexerGenerator, parent: SharpClass or SharpTemplate):
+        self.generator = generator
+        self.parent = parent
+        self.arguments = []
+        self.set_type = None
+        self.get_type = None
+        self.wrap_name = self.generator.wrap_name
+        self.exception_traits = self.parent.namespace.capi_generator.get_exception_traits(
+            self.generator.indexer_object.noexcept)
+
+    def get_return_marshaling(self) -> str:
+        if self.generator.indexer_object.sharp_marshal_return_as_filled:
+            return '[return:MarshalAs({})]'.format(self.generator.indexer_object.sharp_marshal_return_as)
+        marshal_type = self.get_type.marshal_type()
+        return '[return:MarshalAs({})]'.format(marshal_type) if marshal_type else ''
+
+    def is_overload(self):
+        if self.parent.base:
+            for indexer in self.parent.base.indexers:
+                if self.generator.name != indexer.generator.name:
+                    continue
+                set_type = self.generator.set_type_generator.type_name
+                if set_type != indexer.generator.set_type_generator.type_name:
+                    continue
+                get_type = self.generator.get_type_generator.type_name
+                if get_type != indexer.generator.get_type_generator.type_name:
+                    continue
+                result = True
+                for arg in self.generator.argument_generators:
+                    if arg.type_generator != indexer.generator.argument_generators.type_generator:
+                        result = False
+                        break
+                if result:
+                    return True
+        return False
+
+    def c_arguments_list(self):
+        result = [ThisArgumentGenerator(self.generator)]
+        for argument in self.arguments:
+                result.append(argument)
+        return result
+
+    def generate_wrap_definition(self, out: FileGenerator):
+        new = ''
+        if self.is_overload:
+            new = 'new '
+        arguments = ', '.join(argument.wrap_argument_declaration() for argument in self.arguments)
+        arguments_call = [argument.wrap_2_c() for argument in self.c_arguments_list()]
+        out.put_line('{new}unsafe public {return_type} this[{arguments}]'.format(
+            return_type=self.get_type.wrap_argument_declaration(), new=new, arguments=arguments))
+
+        saved_copy_or_add_ref = False
+        return_type_generator = self.get_type.type_generator
+        if isinstance(return_type_generator, SharpClass) or isinstance(return_type_generator, SharpTemplate):
+            saved_copy_or_add_ref = return_type_generator.copy_or_add_ref_when_c_2_wrap
+            return_type_generator.copy_or_add_ref_when_c_2_wrap = self.generator.indexer_object.return_copy_or_add_ref
+        with IndentScope(out):
+            out.put_line('get')
+            with IndentScope(out):
+                return_expression = self.exception_traits.generate_c_call(out, self.get_type,
+                                                                          self.generator.full_c_name(False),
+                                                                          arguments_call)
+                out.put_return_cpp_statement(return_expression)
+            out.put_line('set')
+            with IndentScope(out):
+                return_expression = self.exception_traits.generate_c_call(out, self.set_type,
+                                                                          self.generator.full_c_name(True),
+                                                                          arguments_call)
+                out.put_line('{0} = value;'.format(return_expression))
+
+        if isinstance(return_type_generator, SharpClass) or isinstance(return_type_generator, SharpTemplate):
+            return_type_generator.copy_or_add_ref_when_c_2_wrap = saved_copy_or_add_ref
+
+    def generate(self):
+        self.arguments = []
+        for arg in self.generator.argument_generators:
+            sharp_argument = SharpArgument(arg, self.parent.capi_generator)
+            sharp_argument.generate()
+            self.arguments.append(sharp_argument)
+        set_argument_generator = ArgumentGenerator(self.generator.set_type_generator, '')
+        get_argument_generator = ArgumentGenerator(self.generator.get_type_generator, '')
+        self.set_type = SharpArgument(set_argument_generator, self.parent.capi_generator)
+        self.get_type = SharpArgument(get_argument_generator, self.parent.capi_generator)
+        self.set_type.generate()
+        self.get_type.generate()
 
 
 class SharpConstructor(SharpRoutine):

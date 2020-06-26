@@ -22,15 +22,15 @@
 
 import os
 
-from Parser import TClass, TLifecycle, TProlog
+from Parser import TClass, TProlog
 from ParamsParser import TBeautifulCapiParams
 from FileCache import FileCache
 from FileGenerator import FileGenerator, IfDefScope, WatchdogScope, IndentScope, Unindent
 from CapiGenerator import CapiGenerator
 from NamespaceGenerator import NamespaceGenerator
-from LifecycleTraits import create_lifecycle_traits, get_base_init
+from LifecycleTraits import create_lifecycle_traits
 from InheritanceTraits import create_inheritance_traits
-from ArgumentGenerator import ClassTypeGenerator, ArgumentGenerator, ConstantGenerator
+from ArgumentGenerator import ClassTypeGenerator, ArgumentGenerator
 from CustomerCallbacks import generate_callbacks_on_client_side_definitions
 from CustomerCallbacks import generate_callbacks_on_client_side_declarations
 from LibraryCallbacks import generate_callbacks_on_library_side
@@ -56,6 +56,7 @@ class ClassGenerator(object):
         self.constructor_generators = []
         self.constant_generators = []
         self.method_generators = []
+        self.indexer_generators = []
         self.params = params
         self.lifecycle_traits = create_lifecycle_traits(self.class_object.lifecycle, params)
         self.inheritance_traits = None
@@ -260,6 +261,20 @@ class ClassGenerator(object):
                 method_declaration=method_generator.wrap_declaration(self.capi_generator)))
             method_generator.include_dependent_declaration_headers(declaration_header, self.file_cache)
 
+    def __generate_indexer_declarations(self, declaration_header):
+        for indexer_generator in self.indexer_generators:
+            if indexer_generator.has_set:
+                DoxygenCppGenerator().generate_for_routine(
+                    declaration_header, indexer_generator.indexer_object, indexer_generator)
+                declaration_header.put_line('{indexer_declaration};'.format(
+                    indexer_declaration=indexer_generator.wrap_declaration(True, self.capi_generator)))
+            if indexer_generator.has_get:
+                DoxygenCppGenerator().generate_for_routine(
+                    declaration_header, indexer_generator.indexer_object, indexer_generator)
+                declaration_header.put_line('{indexer_declaration};'.format(
+                    indexer_declaration=indexer_generator.wrap_declaration(False, self.capi_generator)))
+            indexer_generator.include_dependent_declaration_headers(declaration_header, self.file_cache)
+
     def __generate_cast_name_declaration(self, out):
         for cast in self.class_object.lifecycle_extension.cast_tos:
             target_type = cast.target_generator.full_wrap_name
@@ -285,6 +300,7 @@ class ClassGenerator(object):
         self.__generate_enum_definitions(declaration_header)
         self.__generate_constructor_declarations(declaration_header)
         self.__generate_method_declarations(declaration_header)
+        self.__generate_indexer_declarations(declaration_header)
         self.inheritance_traits = create_inheritance_traits(self.class_object.requires_cast_to_base)
         declaration_header.put_line('')
         self.lifecycle_traits.generate_std_methods_declarations(declaration_header, self)
@@ -411,6 +427,15 @@ class ClassGenerator(object):
             method_generator.generate_wrap_definition(definition_header)
             method_generator.include_dependent_definition_headers(definition_header, self.file_cache)
 
+    def __generate_indexer_definitions(self, definition_header, first_indexer):
+        for indexer_generator in self.indexer_generators:
+            first_indexer = if_required_then_add_empty_line(first_indexer, definition_header)
+            if indexer_generator.has_set:
+                indexer_generator.generate_wrap_definition(True, definition_header)
+            if indexer_generator.has_get:
+                indexer_generator.generate_wrap_definition(False, definition_header)
+            indexer_generator.include_dependent_definition_headers(definition_header, self.file_cache)
+
     def __generate_down_cast_definitions(self, definition_header):
         if self.__should_generate_down_cast():
             for cur_base_class_generator in self.base_class_generator.__get_all_base_classes():
@@ -500,6 +525,7 @@ class ClassGenerator(object):
                 first_method = True
                 first_method = self.__generate_constructor_definitions(definition_header, first_method)
                 self.__generate_method_definitions(definition_header, first_method)
+                self.__generate_indexer_definitions(definition_header, first_method)
                 definition_header.put_line('')
                 self.lifecycle_traits.generate_std_methods_definitions(definition_header, self)
                 if hasattr(self, 'extension_base_class_generator'):
@@ -540,6 +566,11 @@ class ClassGenerator(object):
             constructor_generator.generate_c_function(self.capi_generator)
         for method_generator in self.method_generators:
             method_generator.generate_c_function(self.capi_generator)
+        for indexer_generator in self.indexer_generators:
+            if indexer_generator.has_set:
+                indexer_generator.generate_c_function(True, self.capi_generator)
+            if indexer_generator.has_get:
+                indexer_generator.generate_c_function(False, self.capi_generator)
         self.lifecycle_traits.generate_c_functions(self)
         self.inheritance_traits.generate_c_functions(self)
         self.__generate_down_cast_c_function()
@@ -561,6 +592,11 @@ class ClassGenerator(object):
                     impl_name=get_template_name(self.implementation_name).split('::')[-1]))
                 for method_generator in self.method_generators:
                     method_generator.generate_snippet(snippet_file)
+                for indexer_generator in self.indexer_generators:
+                    if indexer_generator.has_set:
+                        indexer_generator.generate_snippet(True, snippet_file)
+                    if indexer_generator.has_get:
+                        indexer_generator.generate_snippet(False, snippet_file)
 
     def generate_forward_declaration(self, out: FileGenerator):
         if not self.class_object.template_line:

@@ -28,7 +28,7 @@ from Parser import TGenericDocumentation, TDocumentation, TExternalClass, TExter
 from ParamsParser import TBeautifulCapiParams
 from TemplateGenerator import TemplateGenerator, TemplateSnippetGenerator
 from ClassGenerator import ClassGenerator
-from MethodGenerator import MethodGenerator, FunctionGenerator, ConstructorGenerator
+from MethodGenerator import MethodGenerator, IndexerGenerator, FunctionGenerator, ConstructorGenerator
 from ArgumentGenerator import *
 from EnumGenerator import EnumGenerator
 from DocumentationGenerator import ReferenceGenerator
@@ -83,6 +83,10 @@ class GeneratorCreator(object):
             new_method_generator = MethodGenerator(method, new_class_generator, self.params)
             new_class_generator.method_generators.append(new_method_generator)
             self.full_name_2_routine_generator.update({new_method_generator.full_name: new_method_generator})
+        for indexer in cur_class.indexers:
+            new_indexer_generator = IndexerGenerator(indexer, new_class_generator, self.params)
+            new_class_generator.indexer_generators.append(new_indexer_generator)
+            self.full_name_2_routine_generator.update({new_indexer_generator.full_name: new_indexer_generator})
         return new_class_generator
 
     def __create_mapped_type_generator(self, cur_mapped_type: TMappedType, parent_generator):
@@ -159,6 +163,9 @@ class GeneratorCreator(object):
             for method in template.template_class.methods:
                 new_method_generator = MethodGenerator(method, template.template_class_generator, self.params)
                 template.template_class_generator.method_generators.append(new_method_generator)
+            for indexer in template.template_class.indexers:
+                new_indexer_generator = IndexerGenerator(indexer, template.template_class_generator, self.params)
+                template.template_class_generator.indexer_generators.append(new_indexer_generator)
 
         template_classes = {}
         for class_generator in new_namespace_generator.classes:
@@ -303,6 +310,21 @@ class GeneratorCreator(object):
         method_generator.return_type_generator.impl_2_c_filled = method_generator.method_object.impl_2_c_filled
         self.__bind_documentation(method_generator.method_object)
 
+    def __bind_indexer(self, indexer_generator: IndexerGenerator):
+        for argument in indexer_generator.indexer_object.arguments:
+            indexer_generator.argument_generators.append(self.__create_argument_generator(argument))
+        indexer_generator.get_type_generator = self.__create_type_generator(
+            indexer_generator.indexer_object.indexed_get_type,
+            indexer_generator.indexer_object.indexed_is_builtin)
+        indexer_generator.set_type_generator = self.__create_type_generator(
+            indexer_generator.indexer_object.indexed_set_type,
+            indexer_generator.indexer_object.indexed_is_builtin)
+        indexer_generator.get_type_generator.impl_2_c = indexer_generator.indexer_object.impl_2_c
+        indexer_generator.get_type_generator.impl_2_c_filled = indexer_generator.indexer_object.impl_2_c_filled
+        indexer_generator.set_type_generator.impl_2_c = indexer_generator.indexer_object.impl_2_c
+        indexer_generator.set_type_generator.impl_2_c_filled = indexer_generator.indexer_object.impl_2_c_filled
+        self.__bind_documentation(indexer_generator.indexer_object)
+
     def __bind_function(self, function_generator: FunctionGenerator):
         for argument in function_generator.function_object.arguments:
             function_generator.argument_generators.append(self.__create_argument_generator(argument))
@@ -372,6 +394,8 @@ class GeneratorCreator(object):
             self.__bind_constructor(constructor_generator)
         for method_generator in class_generator.method_generators:
             self.__bind_method(method_generator)
+        for indexer_generator in class_generator.indexer_generators:
+            self.__bind_indexer(indexer_generator)
         for constant in class_generator.class_object.constants:
             class_generator.constant_generators.append(self.__create_constant_generator(constant))
 
@@ -427,6 +451,8 @@ class GeneratorCreator(object):
                     self.__bind_constructor(constructor)
                 for method in template.template_class_generator.method_generators:
                     self.__bind_method(method)
+                for indexer in template.template_class_generator.indexer_generators:
+                    self.__bind_indexer(indexer)
                 for constant in template.template_class_generator.class_object.constants:
                     template.template_class_generator.constant_generators.append(self.__create_constant_generator(constant))
             self.params.warn_when_builtin_type_used = warn_when_builtin_type_used

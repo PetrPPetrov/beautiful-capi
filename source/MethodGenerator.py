@@ -22,7 +22,7 @@
 
 import copy
 
-from Parser import TMethod, TFunction, TConstructor, TImplementationCode, TProlog
+from Parser import TMethod, TFunction, TConstructor, TImplementationCode, TProlog, TIndexer
 from ParamsParser import TBeautifulCapiParams
 from FileGenerator import FileGenerator, IndentScope
 from FileCache import FileCache
@@ -205,7 +205,7 @@ class MethodGenerator(object):
 
     @property
     def full_name(self) -> str:
-        return '::'.join([self.parent_class_generator.full_name, self.method_object.name])
+        return '::'.join([self.parent_class_generator.full_name, self.name])
 
     @property
     def c_name(self) -> str:
@@ -222,7 +222,7 @@ class MethodGenerator(object):
 
     @property
     def full_wrap_name(self) -> str:
-        return '::'.join([self.parent_class_generator.full_wrap_name, self.method_object.name])
+        return '::'.join([self.parent_class_generator.full_wrap_name, self.wrap_name])
 
     @property
     def callback_type(self) -> str:
@@ -246,7 +246,7 @@ class MethodGenerator(object):
             [argument_generator.wrap_argument_declaration() for argument_generator in self.argument_generators])
         return 'inline {return_type} {name}({arguments}){const}'.format(
             return_type=self.return_type_generator.wrap_return_type(),
-            name=self.method_object.name,
+            name=self.name,
             arguments=arguments,
             const=' const' if self.method_object.const else ''
         )
@@ -296,7 +296,7 @@ class MethodGenerator(object):
                     self_access = '(*self)->'
                 method_name = self.method_object.implementation_name
                 if not method_name:
-                    method_name = self.method_object.name
+                    method_name = self.name
                 if self.method_object.getter_field_name_filled:
                     implementation_call = '{self_access}{field_name}'.format(
                         self_access=self_access, field_name=self.method_object.getter_field_name)
@@ -341,9 +341,173 @@ class MethodGenerator(object):
         arguments = ', '.join([arg_gen.snippet_implementation_declaration() for arg_gen in self.argument_generators])
         declaration = 'virtual {return_type} {name}({arguments}){const} = 0;'.format(
             return_type=self.return_type_generator.snippet_implementation_declaration(),
-            name=self.method_object.name,
+            name=self.name,
             arguments=arguments,
             const=' const' if self.method_object.const else ''
+        )
+        out.put_line(declaration)
+
+
+class IndexerGenerator(object):
+    def __init__(self, indexer_object: TIndexer, parent_class_generator: ClassGenerator, params: TBeautifulCapiParams):
+        self.indexer_object = indexer_object
+        self.parent_class_generator = parent_class_generator
+        self.argument_generators = []
+        self.set_type_generator = None
+        self.get_type_generator = None
+        self.params = params
+        self.exception_traits = None
+
+    @property
+    def has_set(self) -> bool:
+        return self.set_type_generator is not None
+
+    @property
+    def has_get(self) -> str:
+        return self.get_type_generator is not None
+
+    @property
+    def access_operator(self) -> str:
+        return self.parent_class_generator.access_operator
+
+    @property
+    def name(self) -> str:
+        return 'operator[]' if len(self.indexer_object.arguments) == 1 else 'operator()'
+
+    @property
+    def full_name(self) -> str:
+        return '::'.join([self.parent_class_generator.full_name, self.name])
+
+    @property
+    def c_name(self) -> str:
+        compound_name = get_full_method_name(self.indexer_object)
+        return get_c_name('_'.join(compound_name))
+
+    def full_c_name(self, is_setter: bool) -> str:
+        return get_c_name(self.parent_class_generator.full_c_name + '_' + self.indexer_object.name +
+                          ('_set' if is_setter else '_get'))
+
+    @property
+    def wrap_name(self) -> str:
+        return 'operator[]' if len(self.indexer_object.arguments) == 1 else 'operator()'
+
+    @property
+    def full_wrap_name(self) -> str:
+        return '::'.join([self.parent_class_generator.full_wrap_name, self.wrap_name])
+
+    def callback_type(self, is_setter: bool) -> str:
+        return self.full_c_name(is_setter) + '_callback_type'
+
+    @property
+    def c_arguments_list(self) -> []:
+        result = copy.copy(self.argument_generators)
+        result.insert(0, ThisArgumentGenerator(self.parent_class_generator))
+        return result
+
+    @property
+    def prolog(self) -> TProlog:
+        if self.indexer_object.prologs:
+            return self.indexer_object.prologs[0]
+        return self.parent_class_generator.method_prolog
+
+    def indexed_generator(self, is_setter: bool):
+        return self.set_type_generator if is_setter else self.get_type_generator
+
+    def wrap_declaration(self, is_setter: bool, capi_generator: CapiGenerator) -> str:
+        self.exception_traits = capi_generator.get_exception_traits(self.indexer_object.noexcept)
+        arguments = ', '.join(
+            [argument_generator.wrap_argument_declaration() for argument_generator in self.argument_generators])
+        return 'inline {return_type} {name}({arguments}){const}'.format(
+            return_type=self.indexed_generator(is_setter).wrap_return_type(),
+            name=self.name,
+            arguments=arguments,
+            const='' if is_setter else ' const'
+        )
+
+    def generate_wrap_definition(self, is_setter: bool, out: FileGenerator):
+        arguments = ', '.join(
+            [argument_generator.wrap_argument_declaration() for argument_generator in self.argument_generators])
+        arguments_call = [argument_generator.wrap_2_c() for argument_generator in self.c_arguments_list]
+        out.put_line('inline {return_type} {full_name}({arguments}){const}'.format(
+            return_type=self.indexed_generator(is_setter).wrap_return_type(),
+            full_name=self.full_wrap_name,
+            arguments=arguments,
+            const='' if is_setter else ' const'
+        ))
+        with IndentScope(out):
+            self.indexed_generator(is_setter).copy_or_add_ref_when_c_2_wrap = self.indexer_object.return_copy_or_add_ref
+            return_expression = self.exception_traits.generate_c_call(
+                out, self.indexed_generator(is_setter), self.full_c_name(is_setter), arguments_call)
+            out.put_return_cpp_statement(return_expression)
+
+    def generate_c_function(self, is_setter: bool, capi_generator: CapiGenerator):
+        argument_declaration_list = [
+                argument_generator.c_argument_declaration() for argument_generator in self.c_arguments_list
+            ]
+        self.exception_traits.modify_c_arguments(argument_declaration_list)
+        arguments_declaration = ', '.join(argument_declaration_list)
+        implementation_arguments = ', '.join(
+            [argument_generator.c_2_implementation() for argument_generator in self.argument_generators])
+        c_function_body = FileGenerator(None)
+        with IndentScope(c_function_body):
+            c_function_body.put_line('{const}{self_impl_class}* self = {to_impl_cast};'.format(
+                const='' if is_setter else 'const ',
+                self_impl_class=self.parent_class_generator.class_object.implementation_class_name,
+                to_impl_cast=self.c_arguments_list[0].c_2_implementation()
+            ))
+            if self.indexer_object.implementation_codes:
+                calling_instructions = generate_custom_implementation_code(
+                    self.indexer_object.implementation_codes[0],
+                    self.argument_generators,
+                    self.indexed_generator(is_setter))
+            else:
+                function_prolog = self.prolog
+                if function_prolog:
+                    c_function_body.put_lines(function_prolog.all_items)
+                self_access = 'self->'
+                if self.parent_class_generator.class_object.pointer_access:
+                    self_access = '(*self)->'
+                method_name = self.name
+                implementation_call = '{self_access}{method_name}({arguments})'.format(
+                    self_access=self_access,
+                    method_name=method_name,
+                    arguments=implementation_arguments
+                )
+                calling_instructions, return_expression = self.indexed_generator(is_setter).implementation_2_c_var(
+                    '', implementation_call
+                )
+                if return_expression:
+                    calling_instructions.append('return {0};'.format(return_expression))
+            self.exception_traits.generate_implementation_call(
+                c_function_body, self.indexed_generator(is_setter), calling_instructions)
+        capi_generator.add_c_function(
+            self.parent_class_generator.full_name_array[:-1],
+            self.indexed_generator(is_setter).c_argument_declaration(),
+            self.full_c_name(is_setter),
+            arguments_declaration,
+            c_function_body
+        )
+
+    def include_dependent_declaration_headers(self, file_generator: FileGenerator, file_cache: FileCache):
+        for argument_generator in self.argument_generators:
+            argument_generator.include_dependent_declaration_headers(file_generator, file_cache)
+        self.set_type_generator.include_dependent_declaration_headers(file_generator, file_cache)
+        self.get_type_generator.include_dependent_declaration_headers(file_generator, file_cache)
+
+    def include_dependent_definition_headers(self, file_generator: FileGenerator, file_cache: FileCache):
+        self.exception_traits.include_dependent_definition_headers(file_generator, file_cache)
+        for argument_generator in self.argument_generators:
+            argument_generator.include_dependent_definition_headers(file_generator, file_cache)
+        self.set_type_generator.include_dependent_definition_headers(file_generator, file_cache)
+        self.get_type_generator.include_dependent_definition_headers(file_generator, file_cache)
+
+    def generate_snippet(self, is_setter: bool, out: FileGenerator):
+        arguments = ', '.join([arg_gen.snippet_implementation_declaration() for arg_gen in self.argument_generators])
+        declaration = 'virtual {return_type} {name}({arguments}){const} = 0;'.format(
+            return_type=self.indexed_generator(is_setter).snippet_implementation_declaration(),
+            name=self.name,
+            arguments=arguments,
+            const='' if is_setter else ' const'
         )
         out.put_line(declaration)
 

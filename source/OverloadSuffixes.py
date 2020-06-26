@@ -68,6 +68,7 @@ class OverloadSuffixesProcessor(object):
     def __process_class(self, cur_class: TClass):
         with OverloadSuffixesProcessor.ParamsScope(self, cur_class):
             self.__check_for_unique(cur_class.methods)
+            self.__check_for_unique(cur_class.indexers)
 
     def __process_namespace(self, namespace: TNamespace):
         with OverloadSuffixesProcessor.ParamsScope(self, namespace):
