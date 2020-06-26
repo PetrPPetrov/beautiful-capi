@@ -30,7 +30,7 @@ from CapiGenerator import CapiGenerator
 from NamespaceGenerator import NamespaceGenerator
 from LifecycleTraits import create_lifecycle_traits, get_base_init
 from InheritanceTraits import create_inheritance_traits
-from ArgumentGenerator import ClassTypeGenerator, ArgumentGenerator
+from ArgumentGenerator import ClassTypeGenerator, ArgumentGenerator, ConstantGenerator
 from CustomerCallbacks import generate_callbacks_on_client_side_definitions
 from CustomerCallbacks import generate_callbacks_on_client_side_declarations
 from LibraryCallbacks import generate_callbacks_on_library_side
@@ -54,6 +54,7 @@ class ClassGenerator(object):
         self.derived_class_generators = []
         self.enum_generators = []
         self.constructor_generators = []
+        self.constant_generators = []
         self.method_generators = []
         self.params = params
         self.lifecycle_traits = create_lifecycle_traits(self.class_object.lifecycle, params)
@@ -228,6 +229,15 @@ class ClassGenerator(object):
             )
             self.cached_wrap_template_name = format_type(raw_name)
 
+    def __generate_typedefs(self, declaration_header):
+        for typedef in self.class_object.typedefs:
+            declaration_header.put_line('typedef {t.type} {t.name};'.format(t=typedef))
+
+    def __generate_constants(self, declaration_header):
+        for constant in self.constant_generators:
+            DoxygenCppGenerator().generate_for_constant(declaration_header, constant.constant_object)
+            declaration_header.put_line(constant.wrap_declaration() + ';')
+
     def __generate_enum_definitions(self, declaration_header):
         for enum_generator in self.enum_generators:
             enum_generator.generate_enum_definition(declaration_header)
@@ -270,6 +280,8 @@ class ClassGenerator(object):
     def __generate_class_body(self, declaration_header):
         with Unindent(declaration_header):
             declaration_header.put_line('public:')
+        self.__generate_typedefs(declaration_header)
+        self.__generate_constants(declaration_header)
         self.__generate_enum_definitions(declaration_header)
         self.__generate_constructor_declarations(declaration_header)
         self.__generate_method_declarations(declaration_header)

@@ -22,7 +22,8 @@
 
 from BuiltinTypeGenerator import BuiltinTypeGenerator
 from NamespaceGenerator import NamespaceGenerator
-from Parser import TClass, TEnumeration, TNamespace, TArgument, TBeautifulCapiRoot, TMappedType, TLifecycle, TReference
+from Parser import TClass, TEnumeration, TNamespace, TArgument, TBeautifulCapiRoot, TMappedType, TLifecycle, TReference, \
+    TConstant
 from Parser import TGenericDocumentation, TDocumentation, TExternalClass, TExternalNamespace, TExternalEnumeration
 from ParamsParser import TBeautifulCapiParams
 from TemplateGenerator import TemplateGenerator, TemplateSnippetGenerator
@@ -279,6 +280,14 @@ class GeneratorCreator(object):
         self.__bind_documentation(new_argument_generator.argument_object)
         return new_argument_generator
 
+    def __create_constant_generator(self, constant: TConstant) -> ConstantGenerator:
+        new_constant_generator = ConstantGenerator(
+            self.__create_type_generator(constant.type, constant.is_builtin),  # TODO: add is_builtin to TConstant ?
+            constant.name, constant.value)
+        new_constant_generator.constant_object = constant
+        self.__bind_documentation(new_constant_generator.constant_object)
+        return new_constant_generator
+
     def __bind_constructor(self, constructor_generator: ConstructorGenerator):
         for argument in constructor_generator.constructor_object.arguments:
             constructor_generator.argument_generators.append(self.__create_argument_generator(argument))
@@ -363,6 +372,9 @@ class GeneratorCreator(object):
             self.__bind_constructor(constructor_generator)
         for method_generator in class_generator.method_generators:
             self.__bind_method(method_generator)
+        for constant in class_generator.class_object.constants:
+            class_generator.constant_generators.append(self.__create_constant_generator(constant))
+
         self.__bind_documentation(class_generator.class_object)
         for enum_generator in class_generator.enum_generators:
             self.__bind_documentation(enum_generator.enum_object)
@@ -415,6 +427,8 @@ class GeneratorCreator(object):
                     self.__bind_constructor(constructor)
                 for method in template.template_class_generator.method_generators:
                     self.__bind_method(method)
+                for constant in template.template_class_generator.class_object.constants:
+                    template.template_class_generator.constant_generators.append(self.__create_constant_generator(constant))
             self.params.warn_when_builtin_type_used = warn_when_builtin_type_used
         self.scope_stack.pop()
 

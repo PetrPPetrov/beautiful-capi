@@ -813,6 +813,84 @@ class TInstantiationArgument(object):
         self.load_attributes(dom_node)
 
 
+class TConstant(object):
+    def __init__(self):
+        self.all_items = []
+        self.name = ""
+        self.name_filled = False
+        self.is_builtin = False
+        self.is_builtin_filled = False
+        self.type = ""
+        self.type_filled = False
+        self.value = ""
+        self.value_filled = False
+        self.documentations = []
+
+    def load_element(self, element):
+        if element.nodeName == "documentation":
+            new_element = TDocumentation()
+            new_element.load(element)
+            self.documentations.append(new_element)
+            return True
+        return False
+
+    def load_attributes(self, dom_node):
+        if dom_node.hasAttribute("name"):
+            cur_attr = dom_node.getAttribute("name")
+            self.name = cur_attr
+            self.name_filled = True
+        if dom_node.hasAttribute("type"):
+            cur_attr = dom_node.getAttribute("type")
+            self.type = cur_attr
+            self.type_filled = True
+        if dom_node.hasAttribute("value"):
+            cur_attr = dom_node.getAttribute("value")
+            self.value = cur_attr
+            self.value_filled = True
+        if dom_node.hasAttribute("is_builtin"):
+            cur_attr = dom_node.getAttribute("is_builtin")
+            self.is_builtin = string_to_bool(cur_attr)
+            self.is_builtin_filled = True
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
+
+class TTypedef(object):
+    def __init__(self):
+        self.all_items = []
+        self.name = ""
+        self.name_filled = False
+        self.type = ""
+        self.type_filled = False
+        self.documentations = []
+
+    def load_element(self, element):
+        if element.nodeName == "documentation":
+            new_element = TDocumentation()
+            new_element.load(element)
+            self.documentations.append(new_element)
+            return True
+        return False
+
+    def load_attributes(self, dom_node):
+        if dom_node.hasAttribute("name"):
+            cur_attr = dom_node.getAttribute("name")
+            self.name = cur_attr
+            self.name_filled = True
+        if dom_node.hasAttribute("type"):
+            cur_attr = dom_node.getAttribute("type")
+            self.type = cur_attr
+            self.type_filled = True
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
+
 class TClass(object):
     def __init__(self):
         self.all_items = []
@@ -874,6 +952,8 @@ class TClass(object):
         self.callbacks = []
         self.mapped_types = []
         self.lifecycle_extensions = []
+        self.typedefs = []
+        self.constants = []
 
     def load_element(self, element):
         if element.nodeName == "documentation":
@@ -925,6 +1005,16 @@ class TClass(object):
             new_element = TLifecycleExtension()
             new_element.load(element)
             self.lifecycle_extensions.append(new_element)
+            return True
+        if element.nodeName == "typedef":
+            new_element = TTypedef()
+            new_element.load(element)
+            self.typedefs.append(new_element)
+            return True
+        if element.nodeName == "constant":
+            new_element = TConstant()
+            new_element.load(element)
+            self.constants.append(new_element)
             return True
         return False
 

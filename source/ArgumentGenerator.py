@@ -374,6 +374,35 @@ class ExternalEnumTypeGenerator(EnumTypeGenerator):
         return []
 
 
+class ConstantGenerator(object):
+    def __init__(self,
+                 type_generator: BaseTypeGenerator,
+                 name: str,
+                 value: str):
+        self.type_generator = type_generator
+        self.constant_object = None
+        self.name = name
+        self.value = value
+
+    def wrap_declaration(self) -> str:
+        return 'static const ' + self.type_generator.wrap_argument_declaration() + ' ' + self.name + ' = ' + self.value
+
+    def c_declaration(self) -> str:
+        return 'static const ' + self.type_generator.c_argument_declaration() + ' ' + self.name + ' = ' + self.value
+
+    def snippet_implementation_declaration(self) -> str:
+        return 'static const ' + self.type_generator.snippet_implementation_declaration() + ' ' + self.name + ' = ' + self.value
+
+    def include_dependent_declaration_headers(self, file_generator: FileGenerator, file_cache: FileCache):
+        self.type_generator.include_dependent_declaration_headers(file_generator, file_cache)
+
+    def include_dependent_definition_headers(self, file_generator: FileGenerator, file_cache: FileCache):
+        self.type_generator.include_dependent_definition_headers(file_generator, file_cache)
+
+    def dependent_implementation_headers(self):
+        return self.type_generator.dependent_implementation_headers()
+
+
 class ArgumentGenerator(object):
     def __init__(self,
                  type_generator: BaseTypeGenerator,

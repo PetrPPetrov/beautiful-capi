@@ -478,6 +478,60 @@
       </xs:annotation>
     </xs:attribute>
   </xs:complexType>
+  <xs:complexType name="TTypedef">
+    <xs:annotation>
+      <xs:documentation>Specifies properties for a type definition.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="0" name="documentation" type="TGenericDocumentation">
+        <xs:annotation>
+          <xs:documentation>Specifies documentation for the type definition</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Specifies name of the type definition</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="type" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Specifies type of the type definition</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="TConstant">
+    <xs:annotation>
+      <xs:documentation>Specifies properties for a constant.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="0" name="documentation" type="TGenericDocumentation">
+        <xs:annotation>
+          <xs:documentation>Specifies documentation for the constant</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Specifies name of the constant</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="type" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Specifies type of the constant (note that static const specifier will be added to it)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="false" name="is_builtin" type="xs:boolean" use="optional">
+      <xs:annotation>
+        <xs:documentation>Specifies flag if type of the constant is built-in</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="value" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Specifies the value of the constant</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
   <xs:complexType name="TClass">
     <xs:annotation>
       <xs:documentation>Specifies a class.</xs:documentation>
@@ -528,6 +582,16 @@
         <xs:element maxOccurs="unbounded" minOccurs="0" name="lifecycle_extension" type="TLifecycleExtension">
           <xs:annotation>
             <xs:documentation>Specifies lifecycle extension for the class</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element maxOccurs="unbounded" minOccurs="0" name="constant" type="TConstant">
+          <xs:annotation>
+            <xs:documentation>Specifies a static constant of the class class (only added for public headers).</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element maxOccurs="unbounded" minOccurs="0" name="typedef" type="TTypedef">
+          <xs:annotation>
+            <xs:documentation>Specifies a typdef of the class class</xs:documentation>
           </xs:annotation>
         </xs:element>
       </xs:choice>
