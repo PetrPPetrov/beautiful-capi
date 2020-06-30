@@ -263,16 +263,14 @@ class ClassGenerator(object):
 
     def __generate_indexer_declarations(self, declaration_header):
         for indexer_generator in self.indexer_generators:
-            if indexer_generator.has_set:
-                DoxygenCppGenerator().generate_for_routine(
-                    declaration_header, indexer_generator.indexer_object, indexer_generator)
-                declaration_header.put_line('{indexer_declaration};'.format(
-                    indexer_declaration=indexer_generator.wrap_declaration(True, self.capi_generator)))
-            if indexer_generator.has_get:
-                DoxygenCppGenerator().generate_for_routine(
-                    declaration_header, indexer_generator.indexer_object, indexer_generator)
-                declaration_header.put_line('{indexer_declaration};'.format(
-                    indexer_declaration=indexer_generator.wrap_declaration(False, self.capi_generator)))
+            DoxygenCppGenerator().generate_for_routine(
+                declaration_header, indexer_generator.indexer_object, indexer_generator)
+            declaration_header.put_line('{indexer_declaration};'.format(
+                indexer_declaration=indexer_generator.wrap_declaration(True, self.capi_generator)))
+            DoxygenCppGenerator().generate_for_routine(
+                declaration_header, indexer_generator.indexer_object, indexer_generator)
+            declaration_header.put_line('{indexer_declaration};'.format(
+                indexer_declaration=indexer_generator.wrap_declaration(False, self.capi_generator)))
             indexer_generator.include_dependent_declaration_headers(declaration_header, self.file_cache)
 
     def __generate_cast_name_declaration(self, out):
@@ -430,10 +428,8 @@ class ClassGenerator(object):
     def __generate_indexer_definitions(self, definition_header, first_indexer):
         for indexer_generator in self.indexer_generators:
             first_indexer = if_required_then_add_empty_line(first_indexer, definition_header)
-            if indexer_generator.has_set:
-                indexer_generator.generate_wrap_definition(True, definition_header)
-            if indexer_generator.has_get:
-                indexer_generator.generate_wrap_definition(False, definition_header)
+            indexer_generator.generate_wrap_definition(True, definition_header)
+            indexer_generator.generate_wrap_definition(False, definition_header)
             indexer_generator.include_dependent_definition_headers(definition_header, self.file_cache)
 
     def __generate_down_cast_definitions(self, definition_header):
@@ -567,10 +563,8 @@ class ClassGenerator(object):
         for method_generator in self.method_generators:
             method_generator.generate_c_function(self.capi_generator)
         for indexer_generator in self.indexer_generators:
-            if indexer_generator.has_set:
-                indexer_generator.generate_c_function(True, self.capi_generator)
-            if indexer_generator.has_get:
-                indexer_generator.generate_c_function(False, self.capi_generator)
+            indexer_generator.generate_c_function(True, self.capi_generator)
+            indexer_generator.generate_c_function(False, self.capi_generator)
         self.lifecycle_traits.generate_c_functions(self)
         self.inheritance_traits.generate_c_functions(self)
         self.__generate_down_cast_c_function()
@@ -593,10 +587,8 @@ class ClassGenerator(object):
                 for method_generator in self.method_generators:
                     method_generator.generate_snippet(snippet_file)
                 for indexer_generator in self.indexer_generators:
-                    if indexer_generator.has_set:
-                        indexer_generator.generate_snippet(True, snippet_file)
-                    if indexer_generator.has_get:
-                        indexer_generator.generate_snippet(False, snippet_file)
+                    indexer_generator.generate_snippet(True, snippet_file)
+                    indexer_generator.generate_snippet(False, snippet_file)
 
     def generate_forward_declaration(self, out: FileGenerator):
         if not self.class_object.template_line:

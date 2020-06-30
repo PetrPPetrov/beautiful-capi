@@ -566,12 +566,12 @@
         </xs:element>
         <xs:element maxOccurs="unbounded" minOccurs="0" name="method" type="TMethod">
           <xs:annotation>
-            <xs:documentation>Specifies method of the class</xs:documentation>
+            <xs:documentation>Specifies method of the class.</xs:documentation>
           </xs:annotation>
         </xs:element>
         <xs:element maxOccurs="unbounded" minOccurs="0" name="indexer" type="TIndexer">
           <xs:annotation>
-            <xs:documentation>Specifies indexer of the class</xs:documentation>
+            <xs:documentation>Specifies indexer of the class.</xs:documentation>
           </xs:annotation>
         </xs:element>
         <xs:element maxOccurs="1" minOccurs="0" name="callback" type="TCallback">
@@ -922,7 +922,7 @@
   </xs:complexType>
   <xs:complexType name="TIndexer">
     <xs:annotation>
-      <xs:documentation>Specifies properties for methods.</xs:documentation>
+      <xs:documentation>Used for array like access. Uses operator[] or operator() in C and indexers in C#.</xs:documentation>
     </xs:annotation>
     <xs:complexContent>
       <xs:extension base="TIndexerBase">
@@ -936,9 +936,26 @@
             <xs:documentation>Specifies C# marshaling for the return</xs:documentation>
           </xs:annotation>
         </xs:attribute>
-        <xs:attribute default="" name="indexed_set_type" type="xs:string" use="optional"/>
-        <xs:attribute default="" name="indexed_get_type" type="xs:string" use="optional"/>
-        <xs:attribute default="false" name="indexed_is_builtin" type="xs:boolean" use="optional"/>
+        <xs:attribute name="indexed_set_type" type="xs:string" use="required">
+          <xs:annotation>
+            <xs:documentation>Specifies indexed type for the  C# indexer's and C operator() or operator[]</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="indexed_get_type" type="xs:string" use="required">
+          <xs:annotation>
+            <xs:documentation>Specifies indexed type for the  C# indexer's and C operator() const or operator[] const</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute default="false" name="indexed_is_builtin" type="xs:boolean" use="optional">
+          <xs:annotation>
+            <xs:documentation>Specifies flag if the indexed type is built-in type</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute default="{expression} = value;" name="set_impl" type="xs:string" use="optional">
+          <xs:annotation>
+            <xs:documentation>Specifies assignment expression for C# idexer's setter implementation</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>

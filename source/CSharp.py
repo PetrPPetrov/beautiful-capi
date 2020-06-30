@@ -910,7 +910,7 @@ class SharpClass(object):
                     method.generator.c_name))
             out.put_line('GCHandle handle = GCHandle.Alloc(implementation_class);')
             out.put_line('IntPtr ptr = (IntPtr)handle;')
-            out.put_line('result.SetObjectPointer((IntPtr)ptr);')
+            out.put_line('result.SetObjectPointer(ptr);')
             # out.put_line('result.SetObjectPointer(Pointer.Unbox(implementation_class));')
             out.put_line('return result;')
         for method in self.base.methods:
@@ -1068,11 +1068,13 @@ class SharpTemplate(object):
                     ))
                 out.put_line('set')
                 with IndentScope(out):
-                    out.put_line('{set_expr}ExecuteMethod("{name}", new object[] {{{arguments}}}){bracket} = value;'.format(
-                        set_expr=set_expression.format(set_type=set_type),
-                        name='set_Item',
-                        bracket=')' if set_expression else '',
-                        arguments=', '.join(argument.argument_generator.name for argument in indexer.arguments)
+                    out.put_line(indexer.indexer_object.set_impl.format(
+                        expression='{set_expr}ExecuteMethod("{name}", new object[] {{{arguments}}}){bracket}'.format(
+                            set_expr=set_expression.format(set_type=set_type),
+                            name='set_Item',
+                            bracket=')' if set_expression else '',
+                            arguments=', '.join(argument.argument_generator.name for argument in indexer.arguments)
+                        )
                     ))
                 out.put_line('')
 
@@ -1662,7 +1664,6 @@ class SharpIndexer(object):
         if self.is_overload:
             new = 'new '
         arguments = ', '.join(argument.wrap_argument_declaration() for argument in self.arguments)
-        arguments_call = [argument.wrap_2_c() for argument in self.c_arguments_list()]
         out.put_line('{new}unsafe public {return_type} this[{arguments}]'.format(
             return_type=self.get_type.wrap_argument_declaration(), new=new, arguments=arguments))
 
@@ -1674,16 +1675,18 @@ class SharpIndexer(object):
         with IndentScope(out):
             out.put_line('get')
             with IndentScope(out):
+                arguments_call = [argument.wrap_2_c() for argument in self.c_arguments_list()]
                 return_expression = self.exception_traits.generate_c_call(out, self.get_type,
                                                                           self.generator.full_c_name(False),
                                                                           arguments_call)
                 out.put_return_cpp_statement(return_expression)
             out.put_line('set')
             with IndentScope(out):
+                arguments_call = [argument.wrap_2_c() for argument in self.c_arguments_list()]
                 return_expression = self.exception_traits.generate_c_call(out, self.set_type,
                                                                           self.generator.full_c_name(True),
                                                                           arguments_call)
-                out.put_line('{0} = value;'.format(return_expression))
+                out.put_line(self.generator.indexer_object.set_impl.format(expression=return_expression))
 
         if isinstance(return_type_generator, SharpClass) or isinstance(return_type_generator, SharpTemplate):
             return_type_generator.copy_or_add_ref_when_c_2_wrap = saved_copy_or_add_ref

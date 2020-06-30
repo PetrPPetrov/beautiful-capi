@@ -1410,6 +1410,8 @@ class TIndexer(TConstructorBase):
         self.indexed_get_type_filled = False
         self.indexed_is_builtin = False
         self.indexed_is_builtin_filled = False
+        self.set_impl = '{expression} = value;'
+        self.set_impl_filled = False
 
     def load_element(self, element):
         if super().load_element(element):
@@ -1443,6 +1445,10 @@ class TIndexer(TConstructorBase):
             cur_attr = dom_node.getAttribute("indexed_is_builtin")
             self.indexed_is_builtin = cur_attr
             self.indexed_is_builtin_filled = True
+        if dom_node.hasAttribute("set_impl"):
+            cur_attr = dom_node.getAttribute("set_impl")
+            self.set_impl = cur_attr
+            self.set_impl_filled = True
 
 
 class TFunction(TMethodBase):

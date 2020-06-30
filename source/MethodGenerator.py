@@ -359,14 +359,6 @@ class IndexerGenerator(object):
         self.exception_traits = None
 
     @property
-    def has_set(self) -> bool:
-        return self.set_type_generator is not None
-
-    @property
-    def has_get(self) -> str:
-        return self.get_type_generator is not None
-
-    @property
     def access_operator(self) -> str:
         return self.parent_class_generator.access_operator
 
