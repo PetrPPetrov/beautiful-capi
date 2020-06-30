@@ -424,20 +424,23 @@ class SharpNamespace(object):
                                                            template_generator.params)
                 template_generators.append(new_template_generator)
         for template_generator in template_generators:
-            generator = template_generator.template_class_generator
-            template = self.capi_generator.get_or_gen_template('.'.join(generator.full_name_array), template_generator)
-            self.templates[generator.name] = template
-        for class_ in self.namespace_generator.classes:
-            full_class_name = '.'.join(class_.full_template_name_array).replace('::', '.')
-            sharp_class = self.capi_generator.get_or_gen_class(full_class_name, class_)
-            if class_.is_template:
-                template_name = get_template_name(class_.name)
+            if template_generator.template_object.wrap_csharp_templates:
+                generator = template_generator.template_class_generator
+                template = self.capi_generator.get_or_gen_template('.'.join(generator.full_name_array), template_generator)
+                self.templates[generator.name] = template
+        for cur_class in self.namespace_generator.classes:
+            if hasattr(cur_class, 'wrap_csharp_class_generator'):
+                cur_class = cur_class.wrap_csharp_class_generator
+            full_class_name = '.'.join(cur_class.full_template_name_array).replace('::', '.')
+            sharp_class = self.capi_generator.get_or_gen_class(full_class_name, cur_class)
+            if cur_class.is_template:
+                template_name = get_template_name(cur_class.name)
                 template = self.get_template(template_name)
                 if template:
                     template.classes.append(sharp_class)
                     self.templates[template_name] = template
             else:
-                self.classes['.'.join(class_.full_template_name_array)] = sharp_class
+                self.classes['.'.join(cur_class.full_template_name_array)] = sharp_class
             sharp_class.generate()
         for template in self.templates.values():
             template.generate()
@@ -921,7 +924,6 @@ class SharpClass(object):
         return self.__template_arguments
 
     def generate_definition(self):
-        self.template_arguments
         for ctor in self.constructors:
             ctor.generate()
         for method in self.methods:
@@ -1108,7 +1110,7 @@ class SharpTemplate(object):
             out.put_line('Type type = typeof(TemplateArgument);')
             out.put_line('if (type.GetMethod("GetCertainType") != null)')
             with IndentScope(out):
-                out.put_line('var enumeration = Enum.Parse(type.GetNestedType("ECreateFromObject"), '
+                out.put_line('var enumeration = System.Enum.Parse(type.GetNestedType("ECreateFromObject"), '
                              '"create_from_object");')
                 out.put_line('return (TemplateArgument)type.GetConstructors()[0].Invoke(new object[] '
                              '{ enumeration, obj });')
@@ -1217,7 +1219,7 @@ class SharpEnum(object):
     def __init__(self, enum_generator, parent: SharpNamespace or SharpClass):
         self.parent = parent
         self.enum_generator = enum_generator
-        full_name = enum_generator.full_wrap_name.replace('::', '.')
+        full_name = enum_generator.full_name.replace('::', '.')
         parent.capi_generator.full_name_2_sharp_object[full_name] = self
 
     def wrap_argument_declaration(self) -> str:
@@ -1244,7 +1246,8 @@ class SharpEnum(object):
                     out.put_line(item_definition)
         out.put_line('')
 
-    def c_argument_declaration(self) -> str:
+    @staticmethod
+    def c_argument_declaration() -> str:
         return 'int'
 
     def implementation_2_c_var(self, result_var: str, expression: str) -> ([str], str):
@@ -1283,6 +1286,7 @@ class SharpMappedType(object):
         self.name = self.mapped_type_object.name
         self.wrap_type = mapped_type_object.wrap_type
         self.argument_wrap_type = mapped_type_object.argument_wrap_type
+        self.argument_wrap_type_filled = mapped_type_object.argument_wrap_type_filled
         self.wrap_2_c = mapped_type_object.wrap_2_c
         self.c_2_wrap = mapped_type_object.c_2_wrap
         self.include_headers = mapped_type_object.include_headers
@@ -1290,6 +1294,7 @@ class SharpMappedType(object):
             sharp_type = mapped_type_object.sharps[0]
             self.wrap_type = sharp_type.wrap_type
             self.argument_wrap_type = sharp_type.argument_wrap_type
+            self.argument_wrap_type_filled = sharp_type.argument_wrap_type_filled
             self.wrap_2_c = sharp_type.wrap_2_c
             self.c_2_wrap = sharp_type.c_2_wrap
             self.include_headers = sharp_type.include_headers
@@ -1316,7 +1321,7 @@ class SharpMappedType(object):
             return [], result_expression
 
     def wrap_argument_declaration(self):
-        return self.argument_wrap_type if self.mapped_type_object.argument_wrap_type_filled else self.wrap_type
+        return self.argument_wrap_type if self.argument_wrap_type_filled else self.wrap_type
 
     def c_argument_declaration(self) -> str:
         return self.wrap_argument_declaration()
@@ -1438,7 +1443,7 @@ class SharpArgument(object):
             self.type_generator = self.capi_generator.full_name_2_sharp_object[class_name]
         elif isinstance(generator, EnumTypeGenerator):
             self.type_generator = self.capi_generator.full_name_2_sharp_object[
-                generator.enum_argument_generator.full_wrap_name.replace('::', '.')]
+                generator.enum_argument_generator.full_name.replace('::', '.')]
         else:
             self.type_generator = generator
 
@@ -1545,7 +1550,7 @@ class SharpConstructor(SharpRoutine):
                 mapped_type = capi_generator.get_or_gen_mapped_type(generator.name, generator.mapped_type_object)
                 result.append(ArgumentGenerator(mapped_type, argument.name))
             elif isinstance(generator, EnumTypeGenerator):
-                full_name = generator.enum_argument_generator.full_wrap_name.replace('::', '.')
+                full_name = generator.enum_argument_generator.full_name.replace('::', '.')
                 sharp_enum = self.parent.capi_generator.full_name_2_sharp_object[full_name]
                 result.append(ArgumentGenerator(sharp_enum, argument.name))
             else:

@@ -711,6 +711,8 @@ class TEnumeration(object):
 class TTemplate(object):
     def __init__(self):
         self.all_items = []
+        self.wrap_csharp_templates = True
+        self.wrap_csharp_templates_filled = False
         self.arguments = []
         self.instantiations = []
         self.classes = []
@@ -734,7 +736,10 @@ class TTemplate(object):
         return False
 
     def load_attributes(self, dom_node):
-        pass
+        if dom_node.hasAttribute("wrap_csharp_templates"):
+            cur_attr = dom_node.getAttribute("wrap_csharp_templates")
+            self.wrap_csharp_templates = string_to_bool(cur_attr)
+            self.wrap_csharp_templates_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:

@@ -136,7 +136,13 @@ class GeneratorCreator(object):
             new_enum_generator = self.__create_enum_generator(cur_enum, new_namespace_generator)
             new_namespace_generator.enum_generators.append(new_enum_generator)
         for cur_class in namespace.classes:
-            new_namespace_generator.classes.append(self.__create_class_generator(cur_class))
+            new_class_generator = self.__create_class_generator(cur_class)
+            new_namespace_generator.classes.append(new_class_generator)
+            # Handle special cases for C# wrappers
+            if hasattr(cur_class, 'wrap_csharp_class'):
+                new_wrap_csharp_class_generator = self.__create_class_generator(cur_class.wrap_csharp_class)
+                new_class_generator.wrap_csharp_class_generator = new_wrap_csharp_class_generator
+
         for cur_function in namespace.functions:
             new_function_generator = FunctionGenerator(cur_function, new_namespace_generator, self.params)
             new_namespace_generator.functions.append(new_function_generator)
@@ -390,6 +396,9 @@ class GeneratorCreator(object):
             self.__bind_namespace(nested_namespace_generator)
         for class_generator in namespace_generator.classes:
             self.__bind_class(class_generator)
+            # Handle special cases for C# wrappers
+            if hasattr(class_generator, 'wrap_csharp_class_generator'):
+                self.__bind_class(class_generator.wrap_csharp_class_generator)
         for function_generator in namespace_generator.functions:
             self.__bind_function(function_generator)
         for enum_generator in namespace_generator.enum_generators:

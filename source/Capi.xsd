@@ -428,6 +428,11 @@
         </xs:annotation>
       </xs:element>
     </xs:sequence>
+    <xs:attribute default="true" name="wrap_csharp_templates" type="xs:boolean" use="optional">
+      <xs:annotation>
+        <xs:documentation>Specifies to generate wrap flag</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
   </xs:complexType>
   <xs:complexType name="TInstantiation">
     <xs:annotation>

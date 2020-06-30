@@ -105,6 +105,21 @@ def generate_template_classes(namespace: TNamespace, template: TTemplate):
         new_class.instantiation = instantiation
         namespace.classes.append(new_class)
 
+        if not template.wrap_csharp_templates:
+            # Create special class for C# wrappers
+            # This is the case when C# generics for C++ templates are not generated
+            # instead of that normal C# classes are generated, without any generics
+            new_csharp_wrap_class = copy.deepcopy(new_class)
+            new_csharp_wrap_class.template_arguments = []
+            new_csharp_wrap_class.template_line = ''
+            new_csharp_wrap_class.name = new_class.typedef_name
+            if not new_class.typedef_name:
+                raise BeautifulCapiException(
+                    'Template ({0}) instantiation does not specify typedef name'.format(template_class.name))
+            new_csharp_wrap_class.typedef_name = ''
+            new_csharp_wrap_class.instantiation = None
+            new_class.wrap_csharp_class = new_csharp_wrap_class
+
 
 def process_namespace(namespace: TNamespace):
     for nested_namespace in namespace.namespaces:
