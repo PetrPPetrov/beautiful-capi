@@ -251,8 +251,7 @@ class Capi(object):
         if self.unit_tests_generator:
             process_enum_impl_functions(self.api_description)
         process_extension_semantic(self.api_description)
-        first_namespace_generators = create_namespace_generators(
-            self.api_description, self.params_description)
+        first_namespace_generators = create_namespace_generators(self.api_description, self.params_description)
         process_callbacks(first_namespace_generators)
         return first_namespace_generators
 
@@ -260,8 +259,7 @@ class Capi(object):
         self.__process()
         for namespace in self.api_description.namespaces:
             Capi.__substitute_implementation_class_name(namespace)
-        namespace_generators = create_namespace_generators(
-            self.api_description, self.params_description)
+        namespace_generators = create_namespace_generators(self.api_description, self.params_description)
         by_first_argument_exception_traits = ExceptionTraits.ByFirstArgument(
             self.params_description, namespace_generators)
         no_handling_exception_traits = ExceptionTraits.NoHandling()
@@ -298,6 +296,7 @@ class Capi(object):
 
         if self.sharp_output_folder:
             if self.params_description.shared_library_name_filled:
+                namespace_generators = create_namespace_generators(self.api_description, self.params_description, True)
                 generate_sharp_code(file_cache, capi_generator, namespace_generators)
             else:
                 print('Warning: To generate the C# code, you must specify shared_library_name in the params file')

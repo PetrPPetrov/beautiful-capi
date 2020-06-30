@@ -177,7 +177,7 @@ class FileGenerator(object):
     def put_file(self, another_file):
         self.lines.append(another_file)
 
-    def put_include_files(self, add_empty_line: bool=True):
+    def put_include_files(self, add_empty_line: bool = True):
         if not self.included_files_were_included:
             self.lines.append(IncludeHeaders(self.included_files, self.get_indent_str()))
             self.included_files_were_included = True
