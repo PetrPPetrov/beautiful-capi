@@ -210,7 +210,8 @@ class Capi(object):
                 external_enum.include_definition = enum.definition_header(file_cache)
                 parent.enumerations.append(external_enum)
 
-            def process_external_namespaces(namespaces: [object], external_namespaces: [object]):
+            def process_external_namespaces(
+                    namespaces: [object], external_namespaces: [object]):
                 for cur_namespace in namespaces:
                     external_namespace = TExternalNamespace()
                     external_namespace.name = cur_namespace.name
@@ -231,11 +232,14 @@ class Capi(object):
                         if cur_class.class_object.typedef_name:
                             external_class2 = copy.deepcopy(external_class)
                             external_class2.name = cur_class.class_object.typedef_name
+                            external_class2.wrap_name = cur_class.class_object.typedef_name
                             external_namespace.classes.append(external_class2)
                     for enum in cur_namespace.enum_generators:
                         process_external_enum(enum, external_namespace)
                     external_namespaces.append(external_namespace)
-            process_external_namespaces(new_capi.__process(), namespace.external_namespaces)
+
+            process_external_namespaces(
+                new_capi.__process(), namespace.external_namespaces)
             if namespace.external_namespaces:
                 namespace.external_namespaces[-1].project_name = new_capi.api_description.project_name
         for nested_namespace in namespace.namespaces:
@@ -251,7 +255,8 @@ class Capi(object):
         if self.unit_tests_generator:
             process_enum_impl_functions(self.api_description)
         process_extension_semantic(self.api_description)
-        first_namespace_generators = create_namespace_generators(self.api_description, self.params_description)
+        first_namespace_generators = create_namespace_generators(
+            self.api_description, self.params_description)
         process_callbacks(first_namespace_generators)
         return first_namespace_generators
 

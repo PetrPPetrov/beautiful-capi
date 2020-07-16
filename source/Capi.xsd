@@ -1010,10 +1010,10 @@
       </xs:annotation>
     </xs:attribute>
     <xs:attribute name="sharp_marshal_as" type="xs:string" use="optional">
-          <xs:annotation>
-            <xs:documentation>Specifies C# marshaling for the argument</xs:documentation>
-          </xs:annotation>
-        </xs:attribute>
+      <xs:annotation>
+        <xs:documentation>Specifies C# marshaling for the argument</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
   </xs:complexType>
   <xs:simpleType name="TLifecycle">
     <xs:annotation>

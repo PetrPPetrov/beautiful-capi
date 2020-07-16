@@ -2291,7 +2291,7 @@ class SharpExternalNamespace(object):
 
     @property
     def full_wrap_name(self):
-        return self.parent.full_wrap_name + self.wrap_name if self.parent else self.wrap_name
+        return self.parent.full_wrap_name + '.' + self.wrap_name if self.parent else self.wrap_name
 
     def generate(self):
         self.nested_namespaces = []
@@ -2325,7 +2325,7 @@ class SharpExternalClass(object):
 
     @property
     def full_wrap_name(self):
-        return '{}.{}'.format(self.parent.full_wrap_name, self.wrap_name) if self.parent else self.wrap_name
+        return '{0}.{1}'.format(self.parent.full_wrap_name, self.wrap_name) if self.parent else self.wrap_name
 
     def wrap_argument_declaration(self) -> str:
         return self.full_wrap_name
