@@ -426,14 +426,13 @@ class SharpNamespace(object):
         for template_generator in template_generators:
             if template_generator.template_object.wrap_csharp_templates:
                 generator = template_generator.template_class_generator
-                template = self.capi_generator.get_or_gen_template('.'.join(generator.full_name_array), template_generator)
+                template = self.capi_generator.get_or_gen_template(
+                    '.'.join(generator.full_name_array), template_generator)
                 self.templates[generator.name] = template
         for cur_class in self.namespace_generator.classes:
-            if hasattr(cur_class, 'wrap_csharp_class_generator'):
-                cur_class = cur_class.wrap_csharp_class_generator
             full_class_name = '.'.join(cur_class.full_template_name_array).replace('::', '.')
             sharp_class = self.capi_generator.get_or_gen_class(full_class_name, cur_class)
-            if cur_class.is_template:
+            if sharp_class.is_template:
                 template_name = get_template_name(cur_class.name)
                 template = self.get_template(template_name)
                 if template:
@@ -496,10 +495,16 @@ class SharpClass(object):
                                                        namespace.capi_generator)
         self.enums = []
         self.base = None
+        self.force_typedef_as_name = False
+        if hasattr(self.class_generator.class_object, 'wrap_csharp_templates'):
+            if not self.class_generator.class_object.wrap_csharp_templates:
+                self.force_typedef_as_name = True
         self.__template_arguments = []
 
     @property
     def is_template(self):
+        if self.force_typedef_as_name:
+            return False
         return self.class_generator.is_template
 
     @staticmethod
@@ -514,11 +519,17 @@ class SharpClass(object):
 
     @property
     def wrap_name(self):
-        return self.template_2_wrap(self.template_name) if self.is_template else self.class_generator.wrap_name
+        previous_wrap_name = self.template_2_wrap(self.template_name) if self.is_template else self.class_generator.wrap_name
+        if self.force_typedef_as_name:
+            return self.class_generator.class_object.typedef_name
+        return previous_wrap_name
 
     @property
     def wrap_short_name(self):
-        return self.class_generator.wrap_short_name if self.is_template else self.class_generator.wrap_name
+        previous_wrap_name = self.class_generator.wrap_short_name if self.is_template else self.class_generator.wrap_name
+        if self.force_typedef_as_name:
+            return self.class_generator.class_object.typedef_name
+        return previous_wrap_name
 
     @property
     def full_name_array(self):
@@ -1099,7 +1110,7 @@ class SharpTemplate(object):
                     if template_arguments[arg.name] not in self.non_types:
                         inst_arguments.append(argument)
                     else:
-                        inst_arguments.append('typeof({0}).Name'.format(argument))
+                        inst_arguments.append('typeof({0}).FullName'.format(argument))
                 if instantiation.typedef_name:
                     suffix = self.template_generator.template_class_generator.lifecycle_traits.suffix
                     certain_class = self.namespace.full_wrap_name + '.' + instantiation.typedef_name + suffix

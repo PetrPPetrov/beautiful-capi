@@ -301,7 +301,6 @@ class Capi(object):
 
         if self.sharp_output_folder:
             if self.params_description.shared_library_name_filled:
-                namespace_generators = create_namespace_generators(self.api_description, self.params_description, True)
                 generate_sharp_code(file_cache, capi_generator, namespace_generators)
             else:
                 print('Warning: To generate the C# code, you must specify shared_library_name in the params file')

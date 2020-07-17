@@ -41,7 +41,7 @@ from Helpers import get_template_arguments_count, get_template_argument, replace
 
 
 class GeneratorCreator(object):
-    def __init__(self, params: TBeautifulCapiParams, create_csharp_wrappers: bool):
+    def __init__(self, params: TBeautifulCapiParams):
         self.full_name_2_type_generator = {}
         self.full_name_2_routine_generator = {}
         self.scope_2_mapped_types = {}  # NamespaceGenerator or ClassGenerator -> {str -> MappedTypeGenerator}
@@ -49,7 +49,6 @@ class GeneratorCreator(object):
         self.cur_namespace_generator = None
         self.params = params
         self.cur_exception_code = 100000
-        self.create_csharp_wrappers = create_csharp_wrappers
 
     def __register_class_or_namespace_generator(self, generator):
         """
@@ -144,10 +143,6 @@ class GeneratorCreator(object):
         for cur_class in namespace.classes:
             new_class_generator = self.__create_class_generator(cur_class)
             new_namespace_generator.classes.append(new_class_generator)
-            # Handle special cases for C# wrappers
-            if self.create_csharp_wrappers and hasattr(cur_class, 'wrap_csharp_class'):
-                new_wrap_csharp_class_generator = self.__create_class_generator(cur_class.wrap_csharp_class)
-                new_class_generator.wrap_csharp_class_generator = new_wrap_csharp_class_generator
 
         for cur_function in namespace.functions:
             new_function_generator = FunctionGenerator(cur_function, new_namespace_generator, self.params)
@@ -433,9 +428,6 @@ class GeneratorCreator(object):
             self.__bind_namespace(nested_namespace_generator)
         for class_generator in namespace_generator.classes:
             self.__bind_class(class_generator)
-            # Handle special cases for C# wrappers
-            if self.create_csharp_wrappers and hasattr(class_generator, 'wrap_csharp_class_generator'):
-                self.__bind_class(class_generator.wrap_csharp_class_generator)
         for function_generator in namespace_generator.functions:
             self.__bind_function(function_generator)
         for enum_generator in namespace_generator.enum_generators:
@@ -464,9 +456,8 @@ class GeneratorCreator(object):
 
 
 def create_namespace_generators(root_node: TBeautifulCapiRoot,
-                                params: TBeautifulCapiParams,
-                                create_csharp_wrappers: bool = False) -> [NamespaceGenerator]:
-    generator_creator = GeneratorCreator(params, create_csharp_wrappers)
+                                params: TBeautifulCapiParams) -> [NamespaceGenerator]:
+    generator_creator = GeneratorCreator(params)
     created_namespace_generators = []
     for cur_namespace in root_node.namespaces:
         created_namespace_generators.append(generator_creator.create_namespace_generator(cur_namespace))
