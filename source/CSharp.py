@@ -28,7 +28,7 @@ import ExternalNamespaceGenerator
 from NamespaceGenerator import NamespaceGenerator
 import CapiGenerator
 from ClassGenerator import ClassGenerator
-from LifecycleTraits import LifecycleTraits, RawPointerSemantic, RefCountedSemantic
+from LifecycleTraits import LifecycleTraits, RawPointerSemantic, RefCountedSemantic, CopySemantic
 from ArgumentGenerator import ArgumentGenerator, MappedTypeGenerator, ClassTypeGenerator, ExternalClassTypeGenerator, \
     EnumTypeGenerator
 from BuiltinTypeGenerator import BuiltinTypeGenerator
@@ -644,6 +644,10 @@ class SharpClass(object):
             out.put_line('')
 
     def __generate_down_cast(self, out: FileGenerator):
+        if isinstance(self.lifecycle_traits, SharpCopySemantic):
+            return
+        if hasattr(self.class_generator.class_object, 'extension_base_class_name'):
+            return
         class_ = self
         while class_.base:
             out.put_line('')
@@ -780,11 +784,12 @@ class SharpClass(object):
             out.put_line('unsafe static extern void {func_name}({arguments});'.format(
                 func_name=self.class_generator.release_method, arguments=', '.join(arguments)))
         else:
-            out.put_line(import_string.format(c_name=self.class_generator.copy_method.upper()))
-            arguments = ['IntPtr object_pointer']
-            init_traits.modify_c_arguments(arguments)
-            out.put_line('unsafe static extern IntPtr {func_name}({arguments});'.format(
-                func_name=self.class_generator.copy_method, arguments=', '.join(arguments)))
+            if isinstance(self.class_generator.lifecycle_traits, CopySemantic):
+                out.put_line(import_string.format(c_name=self.class_generator.copy_method.upper()))
+                arguments = ['IntPtr object_pointer']
+                init_traits.modify_c_arguments(arguments)
+                out.put_line('unsafe static extern IntPtr {func_name}({arguments});'.format(
+                    func_name=self.class_generator.copy_method, arguments=', '.join(arguments)))
             out.put_line(import_string.format(c_name=self.class_generator.delete_method.upper()))
             arguments = ['IntPtr object_pointer']
             deinit_traits.modify_c_arguments(arguments)
@@ -843,6 +848,10 @@ class SharpClass(object):
             out.put_line(import_string.format(c_name=self.class_generator.cast_to_base.upper()))
             out.put_line('unsafe static extern IntPtr {func_name}(IntPtr object_pointer);'.format(
                 func_name=self.class_generator.cast_to_base))
+        if isinstance(self.lifecycle_traits, SharpCopySemantic):
+            return
+        if hasattr(self.class_generator.class_object, 'extension_base_class_name'):
+            return
         class_ = self
         while class_.base:
             func = '{0}_cast_from_{1}'.format(
