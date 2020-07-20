@@ -358,12 +358,15 @@ class SharpNamespace(object):
         self.increase_indent_recursively(out)
         out.put_line('public static partial class Functions')
         with IndentScope(out):
-            import_string = '[DllImport("{dll_name}.dll", CallingConvention = {calling_convention})]'.format(
+            entry_point = 'EntryPoint = {0}.ApiKeys.{{c_name}}_ENTRY_POINT'.format(
+                self.namespace_generator.full_name_array[0])
+            import_string = '[DllImport("{dll_name}.dll", {entry_point}, {calling_convention})]'.format(
                 dll_name=self.namespace_generator.params.shared_library_name,
-                calling_convention='CallingConvention.Cdecl'  # now used only cdecl convention
+                entry_point=entry_point,
+                calling_convention='CallingConvention = CallingConvention.Cdecl'  # now used only cdecl convention
             )
             for func in self.functions:
-                out.put_line(import_string)
+                out.put_line(import_string.format(c_name=func.generator.full_c_name.upper()))
                 return_type_marshaling = func.get_return_marshaling()
                 if return_type_marshaling:
                     out.put_line(return_type_marshaling)
@@ -650,7 +653,8 @@ class SharpClass(object):
                 out.put_line('return new {0}({0}.{1}, {2}(source_object.{3}()), true);'.format(
                     self.wrap_name,
                     'ECreateFromRawPointer.force_creating_from_raw_pointer',
-                    '{0}_cast_to_{1}'.format(class_.base.class_generator.full_c_name, self.class_generator.full_c_name),
+                    '{0}_cast_from_{1}'.format(
+                        self.class_generator.full_c_name, class_.base.class_generator.full_c_name),
                     class_.base.class_generator.get_raw_pointer_method_name))
             class_ = class_.base
 
@@ -748,9 +752,12 @@ class SharpClass(object):
             indexer.generate_wrap_definition(definition_header)
 
     def __generate_init_deinit_externs(self, out: FileGenerator):
-        import_string = '[DllImport("{dll_name}.dll", CallingConvention = {calling_convention})]'.format(
+        entry_point = 'EntryPoint = {0}.ApiKeys.{{c_name}}_ENTRY_POINT'.format(
+            self.class_generator.full_name_array[0])
+        import_string = '[DllImport("{dll_name}.dll", {entry_point}, {calling_convention})]'.format(
             dll_name=self.class_generator.params.shared_library_name,
-            calling_convention='CallingConvention.Cdecl')  # now used only cdecl convention
+            entry_point=entry_point,
+            calling_convention='CallingConvention = CallingConvention.Cdecl')  # now used only cdecl convention
         sharp_capi = self.namespace.capi_generator
         class_object = self.class_generator.class_object
         if class_object.copy_or_add_ref_noexcept_filled:
@@ -762,41 +769,44 @@ class SharpClass(object):
             deinit_traits = sharp_capi.get_exception_traits(lifecycle_traits.default_value_for_finish_noexcept)
 
         if isinstance(self.class_generator.lifecycle_traits, RefCountedSemantic):
-            out.put_line(import_string)
+            out.put_line(import_string.format(c_name=self.class_generator.add_ref_method.upper()))
             arguments = ['IntPtr object_pointer']
             init_traits.modify_c_arguments(arguments)
             out.put_line('unsafe static extern void {func_name}({arguments});'.format(
                 func_name=self.class_generator.add_ref_method, arguments=', '.join(arguments)))
-            out.put_line(import_string)
+            out.put_line(import_string.format(c_name=self.class_generator.release_method.upper()))
             arguments = ['IntPtr object_pointer']
             deinit_traits.modify_c_arguments(arguments)
             out.put_line('unsafe static extern void {func_name}({arguments});'.format(
                 func_name=self.class_generator.release_method, arguments=', '.join(arguments)))
         else:
-            out.put_line(import_string)
+            out.put_line(import_string.format(c_name=self.class_generator.copy_method.upper()))
             arguments = ['IntPtr object_pointer']
             init_traits.modify_c_arguments(arguments)
             out.put_line('unsafe static extern IntPtr {func_name}({arguments});'.format(
                 func_name=self.class_generator.copy_method, arguments=', '.join(arguments)))
-            out.put_line(import_string)
+            out.put_line(import_string.format(c_name=self.class_generator.delete_method.upper()))
             arguments = ['IntPtr object_pointer']
             deinit_traits.modify_c_arguments(arguments)
             out.put_line('unsafe static extern void {func_name}({arguments});'.format(
                 func_name=self.class_generator.delete_method, arguments=', '.join(arguments)))
 
     def __generate_extern_functions(self, out: FileGenerator):
-        import_string = '[DllImport("{dll_name}.dll", CallingConvention = {calling_convention})]'.format(
+        entry_point = 'EntryPoint = {0}.ApiKeys.{{c_name}}_ENTRY_POINT'.format(
+            self.class_generator.full_name_array[0])
+        import_string = '[DllImport("{dll_name}.dll", {entry_point}, {calling_convention})]'.format(
             dll_name=self.class_generator.params.shared_library_name,
-            calling_convention='CallingConvention.Cdecl')  # now used only cdecl convention
+            entry_point=entry_point,
+            calling_convention='CallingConvention = CallingConvention.Cdecl')  # now used only cdecl convention
         for constructor in self.constructors:
-            out.put_line(import_string)
+            out.put_line(import_string.format(c_name=constructor.generator.full_c_name.upper()))
             arguments = self.capi_generator.export_function_arguments(constructor.arguments)
             constructor.exception_traits.modify_c_arguments(arguments)
             out.put_line('unsafe static extern IntPtr {class_name}({arguments});'.format(
                 class_name=constructor.generator.full_c_name,
                 arguments=', '.join(arguments)))
         for method in self.methods:
-            out.put_line(import_string)
+            out.put_line(import_string.format(c_name=method.generator.full_c_name.upper()))
             return_type_marshaling = method.get_return_marshaling()
             if return_type_marshaling:
                 out.put_line(return_type_marshaling)
@@ -816,27 +826,28 @@ class SharpClass(object):
             indexer.exception_traits.modify_c_arguments(arguments)
             self.capi_generator.generate_string_marshaling(out,
                                                            return_type=indexer.set_type.wrap_argument_declaration())
-            out.put_line(import_string)
+            out.put_line(import_string.format(c_name=indexer.generator.full_c_name(True).upper()))
             out.put_line('unsafe static extern {return_type} {name}({arguments});'.format(
                 return_type=indexer.set_type.c_argument_declaration(),
                 name=indexer.generator.full_c_name(True),
                 arguments=', '.join(arguments)))
             self.capi_generator.generate_string_marshaling(out,
                                                            return_type=indexer.get_type.wrap_argument_declaration())
-            out.put_line(import_string)
+            out.put_line(import_string.format(c_name=indexer.generator.full_c_name(False).upper()))
             out.put_line('unsafe static extern {return_type} {name}({arguments});'.format(
                 return_type=indexer.get_type.c_argument_declaration(),
                 name=indexer.generator.full_c_name(False),
                 arguments=', '.join(arguments)))
         self.__generate_init_deinit_externs(out)
         if self.base:
-            out.put_line(import_string)
+            out.put_line(import_string.format(c_name=self.class_generator.cast_to_base.upper()))
             out.put_line('unsafe static extern IntPtr {func_name}(IntPtr object_pointer);'.format(
                 func_name=self.class_generator.cast_to_base))
         class_ = self
         while class_.base:
-            out.put_line(import_string)
-            func = '{0}_cast_to_{1}'.format(class_.base.class_generator.full_c_name, self.class_generator.full_c_name,)
+            func = '{0}_cast_from_{1}'.format(
+                self.class_generator.full_c_name, class_.base.class_generator.full_c_name)
+            out.put_line(import_string.format(c_name=func.upper()))
             out.put_line('unsafe static extern IntPtr {}(IntPtr object_pointer);'.format(func))
             class_ = class_.base
 
@@ -2274,6 +2285,7 @@ class SharpCmakeListGenerator(object):
                 if self.capi_generator.generate_string_marshaler:
                     filename = self.project_path + '/' + self.params.beautiful_capi_namespace + '/StringMarshaler.cs'
                     self.put_file(filename)
+                self.put_file(self.project_path + '/' + namespace.wrap_name + self.params.key_header_suffix + '.cs')
         self.file.put_line(')\n')
         self.file.put_line('target_compile_options({0} PRIVATE "/unsafe")'.format(self.lib_name))
         self.file.put_line('SET_TARGET_PROPERTIES({0} PROPERTIES LINKER_LANGUAGE CSharp)'.format(self.lib_name))

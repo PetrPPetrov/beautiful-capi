@@ -364,6 +364,26 @@ class CapiGenerator(object):
                 if namespace_name in self.api_keys:
                     self.__generate_keys_for_namespace(namespace_2_keys[namespace_name], namespace_name)
 
+        if self.params.sharp_output_folder:
+            keys_copies = []
+            namespace_2_csharp_keys = {}
+            root_keys = {}
+            for namespace_name, namespace_info in sorted_by_ns.items():
+                keys = root_keys.get(namespace_info.namespace_name_array[0], None)
+                if keys is None:
+                    file_name = namespace_info.namespace_name_array[0] + self.params.key_header_suffix + '.cs'
+                    keys = FileGenerator(os.path.join(self.params.api_keys_folder, file_name))
+                    keys_copy = FileGenerator(os.path.join(self.params.sharp_output_folder, file_name))
+                    keys_copy.put_begin_cpp_comments(self.params)
+                    keys_copy.put_file(keys)
+                    keys_copies.append(keys_copy)
+                    root_keys[namespace_info.namespace_name_array[0]] = keys
+                keys.put_begin_cpp_comments(self.params)
+                namespace_2_csharp_keys.update({namespace_name: keys})
+            for namespace_name, namespace_info in sorted_by_ns.items():
+                if namespace_name in self.api_keys:
+                    self.__generate_csharp_keys_for_namespace(namespace_2_csharp_keys[namespace_name], namespace_name)
+
     def __generate_keys_for_namespace(self, out: FileGenerator, namespace_name):
         sorted_by_open_name = OrderedDict(sorted(self.api_keys[namespace_name].items()))
         key_order_list = [
@@ -402,6 +422,20 @@ class CapiGenerator(object):
         for opened_name, opened_name_to_substitute in zero_order:
             out.put_line('#define {0}_zero_function_pointer {1} = 0;'.format(opened_name, opened_name_to_substitute))
 
+    def __generate_csharp_keys_for_namespace(self, out: FileGenerator, namespace_name):
+        out.put_line('namespace {0}'.format(namespace_name[0]))
+        with IndentScope(out):
+            out.put_line('public static partial class ApiKeys')
+            with IndentScope(out):
+                sorted_by_open_name = OrderedDict(sorted(self.api_keys[namespace_name].items()))
+                key_order_list = [
+                    (opened_name, closed_name) for opened_name, closed_name in sorted_by_open_name.items()]
+                random.shuffle(key_order_list)
+                for opened_name, closed_name in key_order_list:
+                    out.put_line('public const string {opened_name}_ENTRY_POINT = "{closed_name}";'.format(
+                        opened_name=opened_name.upper(), closed_name=closed_name
+                    ))
+
     def __generate_capi(self, file_cache):
         sorted_by_ns = OrderedDict(sorted(self.namespace_name_2_info.items()))
         for namespace_name, namespace_info in sorted_by_ns.items():
@@ -439,9 +473,9 @@ class CapiGenerator(object):
             generated_name = c_function.name
             if not self.params.open_api:
                 generated_name = get_c_name('fx' + str(uuid.uuid4()))
-                if namespace_name not in self.api_keys:
-                    self.api_keys.update({namespace_name: {}})
-                self.api_keys[namespace_name][c_function.name] = generated_name
+            if namespace_name not in self.api_keys:
+                self.api_keys.update({namespace_name: {}})
+            self.api_keys[namespace_name][c_function.name] = generated_name
             c_function_size = c_function.body.line_count() + 1
             if cur_size + c_function_size > self.params.wrap_file_line_limit:
                 file_count += 1
