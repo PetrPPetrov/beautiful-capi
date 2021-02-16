@@ -258,6 +258,11 @@
         <xs:documentation>For internal use only, specifies output folder for secured API keys</xs:documentation>
       </xs:annotation>
     </xs:attribute>
+    <xs:attribute name="input_keys" type="xs:string" use="optional" default="">
+      <xs:annotation>
+        <xs:documentation>For internal use only, specifies input API keys .h file</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
     <xs:attribute name="generate_sharp_library" type="xs:boolean" use="optional" default="true">
       <xs:annotation>
         <xs:documentation>Generate .Net Portable Class Library(PCL)</xs:documentation>

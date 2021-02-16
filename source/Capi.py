@@ -57,6 +57,7 @@ class Capi(object):
                  output_wrap_file_name=None,
                  internal_snippets_folder=None,
                  api_keys_folder=None,
+                 input_keys=None,
                  clean=None,
                  unit_tests_file=None,
                  natvis_file=None,
@@ -78,6 +79,7 @@ class Capi(object):
         self.output_wrap_file_name = output_wrap_file_name
         self.internal_snippets_folder = internal_snippets_folder
         self.api_keys_folder = api_keys_folder
+        self.input_keys = input_keys
         self.api_description = None
         self.params_description = None
         self.unit_tests_file = unit_tests_file
@@ -313,6 +315,7 @@ class Capi(object):
         self.params_description.sharp_output_folder = self.sharp_output_folder
         self.params_description.internal_snippets_folder = self.internal_snippets_folder
         self.params_description.api_keys_folder = self.api_keys_folder
+        self.params_description.input_keys = self.input_keys
         self.params_description.output_wrap_file_name = self.output_wrap_file_name
         if self.open_api is not None:
             self.params_description.open_api = self.open_api
@@ -336,10 +339,10 @@ class Capi(object):
 
 
 def str2bool(value):
-    lowercased = value.lower()
-    if lowercased in ['true', '1']:
+    lower_cased = value.lower()
+    if lower_cased in ['true', '1']:
         return True
-    elif lowercased in ['false', '0']:
+    elif lower_cased in ['false', '0']:
         return False
     raise ValueError('Need bool; got %r' % value)
 
@@ -376,6 +379,9 @@ def main():
     parser.add_argument(
         '-k', '--api-keys-folder', nargs=None, default='./keys', dest='api_keys_folder',
         help='specifies output folder for generated API keys')
+    parser.add_argument(
+        '--input-keys', nargs=None, dest='input_keys',
+        help='specifies input API keys .h file')
     parser.add_argument('-c', '--clean', dest='clean', action='store_true',
                         help='cleans input, sharp output and snippets directories')
     parser.set_defaults(clean=False)
@@ -414,6 +420,7 @@ def main():
         args.output_wrap,
         args.output_snippets,
         args.api_keys_folder,
+        args.input_keys,
         args.clean,
         args.unit_tests_file,
         args.natvis_file,

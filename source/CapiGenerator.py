@@ -24,6 +24,7 @@ import os
 import copy
 import random
 import uuid
+import re
 from collections import OrderedDict
 
 from Parser import TBeautifulCapiRoot
@@ -81,6 +82,7 @@ class CapiGenerator(object):
         self.cur_namespace_name = None
         self.cur_namespace_info = None
         self.api_keys = {}
+        self.previous_api_keys = {}
         self.generated_source_files = []
         self.platform_defines_file = None
 
@@ -461,7 +463,21 @@ class CapiGenerator(object):
                                          self.__generate_dynamic_capi)
         self.__generate_keys()
 
+    def __load_previous_api_keys(self):
+        with open(self.params.input_keys, 'r') as input_file:
+            regexp_to_match = re.compile('^#define (\\w+)_closed_name "(fx[0-9A-Fa-f]+)"')
+            lines = input_file.readlines()
+            for line in lines:
+                matched = regexp_to_match.match(line)
+                if matched:
+                    open_name = matched.group(1)
+                    closed_name = matched.group(2)
+                    self.previous_api_keys.update({open_name: closed_name})
+
     def __generate_capi_impl_functions(self, functions_list, out: FileGenerator):
+        self.previous_api_keys.clear()
+        if self.params.input_keys:
+            self.__load_previous_api_keys()
         file_count = 0
         dot_index = out.filename.rfind('.')
         filename_format_str = '{0}{{count}}{1}'.format(out.filename[:dot_index], out.filename[dot_index:])
@@ -472,10 +488,14 @@ class CapiGenerator(object):
             self.cur_namespace_info = NamespaceInfo(c_function.path_to_namespace)
             generated_name = c_function.name
             if not self.params.open_api:
-                generated_name = get_c_name('fx' + str(uuid.uuid4()))
+                if c_function.name in self.previous_api_keys:
+                    generated_name = self.previous_api_keys[c_function.name]
+                else:
+                    generated_name = get_c_name('fx' + str(uuid.uuid4()))
             if namespace_name not in self.api_keys:
                 self.api_keys.update({namespace_name: {}})
             self.api_keys[namespace_name][c_function.name] = generated_name
+
             c_function_size = c_function.body.line_count() + 1
             if cur_size + c_function_size > self.params.wrap_file_line_limit:
                 file_count += 1
