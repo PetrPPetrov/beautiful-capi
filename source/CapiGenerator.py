@@ -464,7 +464,7 @@ class CapiGenerator(object):
         self.__generate_keys()
 
     def __load_previous_api_keys(self):
-        with open(self.params.input_keys, 'r') as input_file:
+        with open(os.path.normpath(self.params.input_keys), 'r') as input_file:
             regexp_to_match = re.compile('^#define (\\w+)_closed_name "(fx[0-9A-Fa-f]+)"')
             lines = input_file.readlines()
             for line in lines:
