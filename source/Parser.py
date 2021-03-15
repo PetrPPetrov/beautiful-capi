@@ -37,6 +37,19 @@ def string_to_int(string_value):
     return int(string_value)
 
 
+def stripped_lines(dom_element):
+    if not dom_element:
+        return []
+
+    lines = [text.strip() for text in dom_element.data.split('\n')]
+    while lines and lines[0] is '':
+        lines.pop(0)
+    while lines and lines[-1] is '':
+        lines.pop()
+
+    return lines
+
+
 class TLifecycle(Enum):
     copy_semantic = 0
     raw_pointer_semantic = 1
@@ -298,14 +311,7 @@ class TGenericDocumentation(object):
             self.all_items.append(new_element)
             return True
         if element.nodeType == element.TEXT_NODE:
-            cur_texts = [text.strip() for text in element.data.split('\n')]
-            first = True
-            for text in cur_texts:
-                if first and self.all_items and type(self.all_items[-1]) is str:
-                    self.all_items[-1] += text
-                else:
-                    self.all_items.append(text)
-                first = False
+            self.all_items.extend(stripped_lines(element))
             return True
         return False
 
@@ -340,14 +346,7 @@ class TDocumentation(TGenericDocumentation):
             self.all_items.append(new_element)
             return True
         if element.nodeType == element.TEXT_NODE:
-            cur_texts = [text.strip() for text in element.data.split('\n')]
-            first = True
-            for text in cur_texts:
-                if first and self.all_items and type(self.all_items[-1]) is str:
-                    self.all_items[-1] += text
-                else:
-                    self.all_items.append(text)
-                first = False
+            self.all_items.extend(stripped_lines(element))
             return True
         return False
 
@@ -366,14 +365,7 @@ class TReference(object):
 
     def load_element(self, element):
         if element.nodeType == element.TEXT_NODE:
-            cur_texts = [text.strip() for text in element.data.split('\n')]
-            first = True
-            for text in cur_texts:
-                if first and self.all_items and type(self.all_items[-1]) is str:
-                    self.all_items[-1] += text
-                else:
-                    self.all_items.append(text)
-                first = False
+            self.all_items.extend(stripped_lines(element))
             return True
         return False
 
@@ -394,14 +386,7 @@ class TFormula(object):
 
     def load_element(self, element):
         if element.nodeType == element.TEXT_NODE:
-            cur_texts = [text.strip() for text in element.data.split('\n')]
-            first = True
-            for text in cur_texts:
-                if first and self.all_items and type(self.all_items[-1]) is str:
-                    self.all_items[-1] += text
-                else:
-                    self.all_items.append(text)
-                first = False
+            self.all_items.extend(stripped_lines(element))
             return True
         return False
 
@@ -1254,14 +1239,7 @@ class TImplementationCode(object):
 
     def load_element(self, element):
         if element.nodeType == element.TEXT_NODE:
-            cur_texts = [text.strip() for text in element.data.split('\n')]
-            first = True
-            for text in cur_texts:
-                if first and self.all_items and type(self.all_items[-1]) is str:
-                    self.all_items[-1] += text
-                else:
-                    self.all_items.append(text)
-                first = False
+            self.all_items.extend(stripped_lines(element))
             return True
         return False
 
@@ -1280,14 +1258,7 @@ class TProlog(object):
 
     def load_element(self, element):
         if element.nodeType == element.TEXT_NODE:
-            cur_texts = [text.strip() for text in element.data.split('\n')]
-            first = True
-            for text in cur_texts:
-                if first and self.all_items and type(self.all_items[-1]) is str:
-                    self.all_items[-1] += text
-                else:
-                    self.all_items.append(text)
-                first = False
+            self.all_items.extend(stripped_lines(element))
             return True
         return False
 
