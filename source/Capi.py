@@ -340,9 +340,9 @@ class Capi(object):
 
 def str2bool(value):
     lower_cased = value.lower()
-    if lower_cased in ['true', '1']:
+    if lower_cased in ['true', 'on', '1']:
         return True
-    elif lower_cased in ['false', '0']:
+    elif lower_cased in ['false', 'off', '0']:
         return False
     raise ValueError('Need bool; got %r' % value)
 
