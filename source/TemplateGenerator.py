@@ -181,7 +181,10 @@ class TemplateSnippetGenerator(object):
         for instantiation in self.instances:
             if instantiation in self.ignored_instances:
                 continue
-            alias_snippet_file.put_line('typedef {0} {1};'.format(instantiation.snippet_implementation_declaration, instantiation.template_name))
+            alias_snippet_file.put_line('typedef {0} {1};'.format(instantiation.implementation_name,
+                                                                  instantiation.raw_template_name))
+            alias_snippet_file.put_line('typedef {0} {1};'.format(instantiation.snippet_implementation_declaration,
+                                                                  instantiation.template_name))
             extern_snippet_file.put_line('extern template class {0};'.format(instantiation.implementation_name))
             instance_snippet_file.put_line('template class {0};'.format(instantiation.implementation_name))
 

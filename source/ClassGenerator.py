@@ -105,6 +105,13 @@ class ClassGenerator(object):
             return self.name
 
     @property
+    def raw_template_name(self):
+        if self.class_object.typedef_name:
+            return self.class_object.typedef_name
+        else:
+            return self.name
+
+    @property
     def full_template_name_array(self) -> [str]:
         if self.parent_namespace:
             return self.parent_namespace.full_name_array + [self.template_name]
