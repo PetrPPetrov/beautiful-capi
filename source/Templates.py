@@ -93,9 +93,9 @@ def generate_template_classes(namespace: TNamespace, template: TTemplate):
             for cast_from in lifecycle_extension.cast_froms:
                 cast_from.source_type = instantiate_type(cast_from.source_type, instantiation)
         for typedef in new_class.typedefs:
-            typedef.type = instantiate_type(typedef.type, instantiation)
+            typedef.type_name = instantiate_type(typedef.type_name, instantiation)
         for constant in new_class.constants:
-            constant.type = instantiate_type(constant.type, instantiation)
+            constant.type_name = instantiate_type(constant.type_name, instantiation)
             constant.value = instantiate_type(constant.value, instantiation)
 
         name2value = {}

@@ -37,19 +37,6 @@ def string_to_int(string_value):
     return int(string_value)
 
 
-def stripped_lines(dom_element):
-    if not dom_element:
-        return []
-
-    lines = [text.strip() for text in dom_element.data.split('\n')]
-    while lines and lines[0] is '':
-        lines.pop(0)
-    while lines and lines[-1] is '':
-        lines.pop()
-
-    return lines
-
-
 class TLifecycle(Enum):
     copy_semantic = 0
     raw_pointer_semantic = 1
@@ -311,7 +298,14 @@ class TGenericDocumentation(object):
             self.all_items.append(new_element)
             return True
         if element.nodeType == element.TEXT_NODE:
-            self.all_items.extend(stripped_lines(element))
+            cur_texts = [text.strip() for text in element.data.split('\n')]
+            first = True
+            for text in cur_texts:
+                if first and self.all_items and type(self.all_items[-1]) is str:
+                    self.all_items[-1] += text
+                else:
+                    self.all_items.append(text)
+                first = False
             return True
         return False
 
@@ -346,7 +340,14 @@ class TDocumentation(TGenericDocumentation):
             self.all_items.append(new_element)
             return True
         if element.nodeType == element.TEXT_NODE:
-            self.all_items.extend(stripped_lines(element))
+            cur_texts = [text.strip() for text in element.data.split('\n')]
+            first = True
+            for text in cur_texts:
+                if first and self.all_items and type(self.all_items[-1]) is str:
+                    self.all_items[-1] += text
+                else:
+                    self.all_items.append(text)
+                first = False
             return True
         return False
 
@@ -365,7 +366,14 @@ class TReference(object):
 
     def load_element(self, element):
         if element.nodeType == element.TEXT_NODE:
-            self.all_items.extend(stripped_lines(element))
+            cur_texts = [text.strip() for text in element.data.split('\n')]
+            first = True
+            for text in cur_texts:
+                if first and self.all_items and type(self.all_items[-1]) is str:
+                    self.all_items[-1] += text
+                else:
+                    self.all_items.append(text)
+                first = False
             return True
         return False
 
@@ -386,7 +394,14 @@ class TFormula(object):
 
     def load_element(self, element):
         if element.nodeType == element.TEXT_NODE:
-            self.all_items.extend(stripped_lines(element))
+            cur_texts = [text.strip() for text in element.data.split('\n')]
+            first = True
+            for text in cur_texts:
+                if first and self.all_items and type(self.all_items[-1]) is str:
+                    self.all_items[-1] += text
+                else:
+                    self.all_items.append(text)
+                first = False
             return True
         return False
 
@@ -798,22 +813,18 @@ class TInstantiationArgument(object):
         self.load_attributes(dom_node)
 
 
-class TConstant(object):
+class TTypedef(object):
     def __init__(self):
         self.all_items = []
         self.name = ""
         self.name_filled = False
-        self.is_builtin = False
-        self.is_builtin_filled = False
-        self.type = ""
-        self.type_filled = False
-        self.value = ""
-        self.value_filled = False
+        self.type_name = ""
+        self.type_name_filled = False
         self.documentations = []
 
     def load_element(self, element):
         if element.nodeName == "documentation":
-            new_element = TDocumentation()
+            new_element = TGenericDocumentation()
             new_element.load(element)
             self.documentations.append(new_element)
             return True
@@ -826,16 +837,8 @@ class TConstant(object):
             self.name_filled = True
         if dom_node.hasAttribute("type"):
             cur_attr = dom_node.getAttribute("type")
-            self.type = cur_attr
-            self.type_filled = True
-        if dom_node.hasAttribute("value"):
-            cur_attr = dom_node.getAttribute("value")
-            self.value = cur_attr
-            self.value_filled = True
-        if dom_node.hasAttribute("is_builtin"):
-            cur_attr = dom_node.getAttribute("is_builtin")
-            self.is_builtin = string_to_bool(cur_attr)
-            self.is_builtin_filled = True
+            self.type_name = cur_attr
+            self.type_name_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:
@@ -843,18 +846,22 @@ class TConstant(object):
         self.load_attributes(dom_node)
 
 
-class TTypedef(object):
+class TConstant(object):
     def __init__(self):
         self.all_items = []
         self.name = ""
         self.name_filled = False
-        self.type = ""
-        self.type_filled = False
+        self.type_name = ""
+        self.type_name_filled = False
+        self.is_builtin = False
+        self.is_builtin_filled = False
+        self.value = ""
+        self.value_filled = False
         self.documentations = []
 
     def load_element(self, element):
         if element.nodeName == "documentation":
-            new_element = TDocumentation()
+            new_element = TGenericDocumentation()
             new_element.load(element)
             self.documentations.append(new_element)
             return True
@@ -867,8 +874,16 @@ class TTypedef(object):
             self.name_filled = True
         if dom_node.hasAttribute("type"):
             cur_attr = dom_node.getAttribute("type")
-            self.type = cur_attr
-            self.type_filled = True
+            self.type_name = cur_attr
+            self.type_name_filled = True
+        if dom_node.hasAttribute("is_builtin"):
+            cur_attr = dom_node.getAttribute("is_builtin")
+            self.is_builtin = string_to_bool(cur_attr)
+            self.is_builtin_filled = True
+        if dom_node.hasAttribute("value"):
+            cur_attr = dom_node.getAttribute("value")
+            self.value = cur_attr
+            self.value_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:
@@ -938,8 +953,8 @@ class TClass(object):
         self.callbacks = []
         self.mapped_types = []
         self.lifecycle_extensions = []
-        self.typedefs = []
         self.constants = []
+        self.typedefs = []
 
     def load_element(self, element):
         if element.nodeName == "documentation":
@@ -997,15 +1012,15 @@ class TClass(object):
             new_element.load(element)
             self.lifecycle_extensions.append(new_element)
             return True
-        if element.nodeName == "typedef":
-            new_element = TTypedef()
-            new_element.load(element)
-            self.typedefs.append(new_element)
-            return True
         if element.nodeName == "constant":
             new_element = TConstant()
             new_element.load(element)
             self.constants.append(new_element)
+            return True
+        if element.nodeName == "typedef":
+            new_element = TTypedef()
+            new_element.load(element)
+            self.typedefs.append(new_element)
             return True
         return False
 
@@ -1239,7 +1254,14 @@ class TImplementationCode(object):
 
     def load_element(self, element):
         if element.nodeType == element.TEXT_NODE:
-            self.all_items.extend(stripped_lines(element))
+            cur_texts = [text.strip() for text in element.data.split('\n')]
+            first = True
+            for text in cur_texts:
+                if first and self.all_items and type(self.all_items[-1]) is str:
+                    self.all_items[-1] += text
+                else:
+                    self.all_items.append(text)
+                first = False
             return True
         return False
 
@@ -1258,7 +1280,14 @@ class TProlog(object):
 
     def load_element(self, element):
         if element.nodeType == element.TEXT_NODE:
-            self.all_items.extend(stripped_lines(element))
+            cur_texts = [text.strip() for text in element.data.split('\n')]
+            first = True
+            for text in cur_texts:
+                if first and self.all_items and type(self.all_items[-1]) is str:
+                    self.all_items[-1] += text
+                else:
+                    self.all_items.append(text)
+                first = False
             return True
         return False
 
@@ -1367,30 +1396,75 @@ class TMethod(TMethodBase):
         self.load_attributes(dom_node)
 
 
-class TIndexer(TConstructorBase):
+class TIndexerBase(object):
+    def __init__(self):
+        self.all_items = []
+        self.name = ""
+        self.name_filled = False
+        self.return_copy_or_add_ref = False
+        self.return_copy_or_add_ref_filled = False
+        self.noexcept = False
+        self.noexcept_filled = False
+        self.documentations = []
+        self.arguments = []
+        self.implementation_codes = []
+
+    def load_element(self, element):
+        if element.nodeName == "documentation":
+            new_element = TDocumentation()
+            new_element.load(element)
+            self.documentations.append(new_element)
+            return True
+        if element.nodeName == "argument":
+            new_element = TArgument()
+            new_element.load(element)
+            self.arguments.append(new_element)
+            return True
+        if element.nodeName == "implementation_code":
+            new_element = TImplementationCode()
+            new_element.load(element)
+            self.implementation_codes.append(new_element)
+            return True
+        return False
+
+    def load_attributes(self, dom_node):
+        if dom_node.hasAttribute("name"):
+            cur_attr = dom_node.getAttribute("name")
+            self.name = cur_attr
+            self.name_filled = True
+        if dom_node.hasAttribute("return_copy_or_add_ref"):
+            cur_attr = dom_node.getAttribute("return_copy_or_add_ref")
+            self.return_copy_or_add_ref = string_to_bool(cur_attr)
+            self.return_copy_or_add_ref_filled = True
+        if dom_node.hasAttribute("noexcept"):
+            cur_attr = dom_node.getAttribute("noexcept")
+            self.noexcept = string_to_bool(cur_attr)
+            self.noexcept_filled = True
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
+
+
+class TIndexer(TIndexerBase):
     def __init__(self):
         super().__init__()
         self.impl_2_c = "new {implementation_type}({expression})"
         self.impl_2_c_filled = False
         self.sharp_marshal_return_as = ""
         self.sharp_marshal_return_as_filled = False
-        self.prologs = []
         self.indexed_set_type = ""
         self.indexed_set_type_filled = False
         self.indexed_get_type = ""
         self.indexed_get_type_filled = False
         self.indexed_is_builtin = False
         self.indexed_is_builtin_filled = False
-        self.set_impl = '{expression} = value;'
+        self.set_impl = "{expression} = value;"
         self.set_impl_filled = False
 
     def load_element(self, element):
         if super().load_element(element):
-            return True
-        if element.nodeName == "prolog":
-            new_element = TProlog()
-            new_element.load(element)
-            self.prologs.append(new_element)
             return True
         return False
 
@@ -1414,12 +1488,17 @@ class TIndexer(TConstructorBase):
             self.indexed_get_type_filled = True
         if dom_node.hasAttribute("indexed_is_builtin"):
             cur_attr = dom_node.getAttribute("indexed_is_builtin")
-            self.indexed_is_builtin = cur_attr
+            self.indexed_is_builtin = string_to_bool(cur_attr)
             self.indexed_is_builtin_filled = True
         if dom_node.hasAttribute("set_impl"):
             cur_attr = dom_node.getAttribute("set_impl")
             self.set_impl = cur_attr
             self.set_impl_filled = True
+
+    def load(self, dom_node):
+        for element in dom_node.childNodes:
+            self.load_element(element)
+        self.load_attributes(dom_node)
 
 
 class TFunction(TMethodBase):

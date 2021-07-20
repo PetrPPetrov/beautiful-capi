@@ -398,8 +398,6 @@ class IndexerGenerator(object):
 
     @property
     def prolog(self) -> TProlog:
-        if self.indexer_object.prologs:
-            return self.indexer_object.prologs[0]
         return self.parent_class_generator.method_prolog
 
     def indexed_generator(self, is_setter: bool):

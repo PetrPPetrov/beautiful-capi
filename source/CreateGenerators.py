@@ -284,7 +284,7 @@ class GeneratorCreator(object):
 
     def __create_constant_generator(self, constant: TConstant) -> ConstantGenerator:
         new_constant_generator = ConstantGenerator(
-            self.__create_type_generator(constant.type, constant.is_builtin),  # TODO: add is_builtin to TConstant ?
+            self.__create_type_generator(constant.type_name, constant.is_builtin),  # TODO: add is_builtin to TConstant
             constant.name, constant.value)
         new_constant_generator.constant_object = constant
         self.__bind_documentation(new_constant_generator.constant_object)

@@ -232,7 +232,7 @@ class ClassGenerator(object):
 
     def __generate_typedefs(self, declaration_header):
         for typedef in self.class_object.typedefs:
-            declaration_header.put_line('typedef {t.type} {t.name};'.format(t=typedef))
+            declaration_header.put_line('typedef {t.type_name} {t.name};'.format(t=typedef))
 
     def __generate_constants(self, declaration_header):
         for constant in self.constant_generators:
