@@ -876,6 +876,11 @@
             <xs:documentation>Specifies *const* property of the current method</xs:documentation>
           </xs:annotation>
         </xs:attribute>
+        <xs:attribute default="false" name="static" type="xs:boolean" use="optional">
+          <xs:annotation>
+            <xs:documentation>Specifies *static* property of the current method</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>

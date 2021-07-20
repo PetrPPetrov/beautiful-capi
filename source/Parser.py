@@ -1377,6 +1377,8 @@ class TMethod(TMethodBase):
         super().__init__()
         self.const = False
         self.const_filled = False
+        self.static = False
+        self.static_filled = False
 
     def load_element(self, element):
         if super().load_element(element):
@@ -1389,6 +1391,10 @@ class TMethod(TMethodBase):
             cur_attr = dom_node.getAttribute("const")
             self.const = string_to_bool(cur_attr)
             self.const_filled = True
+        if dom_node.hasAttribute("static"):
+            cur_attr = dom_node.getAttribute("static")
+            self.static = string_to_bool(cur_attr)
+            self.static_filled = True
 
     def load(self, dom_node):
         for element in dom_node.childNodes:

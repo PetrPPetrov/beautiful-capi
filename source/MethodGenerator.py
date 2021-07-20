@@ -348,6 +348,147 @@ class MethodGenerator(object):
         out.put_line(declaration)
 
 
+class StaticMethodGenerator(object):
+    def __init__(self, method_object: TMethod, parent_class_generator: ClassGenerator, params: TBeautifulCapiParams):
+        self.method_object = method_object
+        self.parent_class_generator = parent_class_generator
+        self.argument_generators = []
+        self.return_type_generator = None
+        self.params = params
+        self.exception_traits = None
+
+    @property
+    def access_operator(self) -> str:
+        return self.parent_class_generator.access_operator
+
+    @property
+    def name(self) -> str:
+        return self.method_object.name
+
+    @property
+    def full_name(self) -> str:
+        return '::'.join([self.parent_class_generator.full_name, self.name])
+
+    @property
+    def c_name(self) -> str:
+        compound_name = get_full_method_name(self.method_object)
+        return get_c_name('_'.join(compound_name))
+
+    @property
+    def full_c_name(self) -> str:
+        return get_c_name(self.parent_class_generator.full_c_name + '_' + self.c_name)
+
+    @property
+    def wrap_name(self) -> str:
+        return self.method_object.name
+
+    @property
+    def full_wrap_name(self) -> str:
+        return '::'.join([self.parent_class_generator.full_wrap_name, self.wrap_name])
+
+    @property
+    def callback_type(self) -> str:
+        return self.full_c_name + '_callback_type'
+
+    @property
+    def c_arguments_list(self) -> []:
+        result = copy.copy(self.argument_generators)
+        return result
+
+    @property
+    def prolog(self) -> TProlog:
+        return TProlog()
+
+    def wrap_declaration(self, capi_generator: CapiGenerator) -> str:
+        self.exception_traits = capi_generator.get_exception_traits(self.method_object.noexcept)
+        arguments = ', '.join(
+            [argument_generator.wrap_argument_declaration() for argument_generator in self.argument_generators])
+        return 'inline static {return_type} {name}({arguments})'.format(
+            return_type=self.return_type_generator.wrap_return_type(),
+            name=self.name,
+            arguments=arguments
+        )
+
+    def generate_wrap_definition(self, out: FileGenerator):
+        arguments = ', '.join(
+            [argument_generator.wrap_argument_declaration() for argument_generator in self.argument_generators])
+        arguments_call = [argument_generator.wrap_2_c() for argument_generator in self.c_arguments_list]
+        out.put_line('inline {return_type} {full_name}({arguments})'.format(
+            return_type=self.return_type_generator.wrap_return_type(),
+            full_name=self.full_wrap_name,
+            arguments=arguments
+        ))
+        with IndentScope(out):
+            self.return_type_generator.copy_or_add_ref_when_c_2_wrap = self.method_object.return_copy_or_add_ref
+            return_expression = self.exception_traits.generate_c_call(
+                out, self.return_type_generator, self.full_c_name, arguments_call)
+            out.put_return_cpp_statement(return_expression)
+
+    def generate_c_function(self, capi_generator: CapiGenerator):
+        argument_declaration_list = [
+            argument_generator.c_argument_declaration() for argument_generator in self.c_arguments_list
+        ]
+        self.exception_traits.modify_c_arguments(argument_declaration_list)
+        arguments_declaration = ', '.join(argument_declaration_list)
+        implementation_arguments = ', '.join(
+            [argument_generator.c_2_implementation() for argument_generator in self.argument_generators])
+        c_function_body = FileGenerator(None)
+        with IndentScope(c_function_body):
+            if self.method_object.implementation_codes:
+                calling_instructions = generate_custom_implementation_code(
+                    self.method_object.implementation_codes[0],
+                    self.argument_generators,
+                    self.return_type_generator)
+            else:
+                function_prolog = self.prolog
+                if function_prolog:
+                    c_function_body.put_lines(function_prolog.all_items)
+                self_access = self.parent_class_generator.implementation_name + '::'
+                method_name = self.method_object.implementation_name
+                if not method_name:
+                    method_name = self.name
+                implementation_call = '{self_access}{method_name}({arguments})'.format(
+                    self_access=self_access,
+                    method_name=method_name,
+                    arguments=implementation_arguments
+                )
+                calling_instructions, return_expression = self.return_type_generator.implementation_2_c_var(
+                    '', implementation_call
+                )
+                if return_expression:
+                    calling_instructions.append('return {0};'.format(return_expression))
+            self.exception_traits.generate_implementation_call(
+                c_function_body, self.return_type_generator, calling_instructions)
+        capi_generator.add_c_function(
+            self.parent_class_generator.full_name_array[:-1],
+            self.return_type_generator.c_argument_declaration(),
+            self.full_c_name,
+            arguments_declaration,
+            c_function_body
+        )
+
+    def include_dependent_declaration_headers(self, file_generator: FileGenerator, file_cache: FileCache):
+        for argument_generator in self.argument_generators:
+            argument_generator.include_dependent_declaration_headers(file_generator, file_cache)
+        self.return_type_generator.include_dependent_declaration_headers(file_generator, file_cache)
+
+    def include_dependent_definition_headers(self, file_generator: FileGenerator, file_cache: FileCache):
+        self.exception_traits.include_dependent_definition_headers(file_generator, file_cache)
+        for argument_generator in self.argument_generators:
+            argument_generator.include_dependent_definition_headers(file_generator, file_cache)
+        self.return_type_generator.include_dependent_definition_headers(file_generator, file_cache)
+
+    def generate_snippet(self, out: FileGenerator):
+        arguments = ', '.join([arg_gen.snippet_implementation_declaration() for arg_gen in self.argument_generators])
+        declaration = 'virtual {return_type} {name}({arguments}){const} = 0;'.format(
+            return_type=self.return_type_generator.snippet_implementation_declaration(),
+            name=self.name,
+            arguments=arguments,
+            const=' const' if self.method_object.const else ''
+        )
+        out.put_line(declaration)
+
+
 class IndexerGenerator(object):
     def __init__(self, indexer_object: TIndexer, parent_class_generator: ClassGenerator, params: TBeautifulCapiParams):
         self.indexer_object = indexer_object

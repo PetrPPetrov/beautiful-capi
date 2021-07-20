@@ -28,7 +28,8 @@ from Parser import TGenericDocumentation, TDocumentation, TExternalClass, TExter
 from ParamsParser import TBeautifulCapiParams
 from TemplateGenerator import TemplateGenerator, TemplateSnippetGenerator
 from ClassGenerator import ClassGenerator
-from MethodGenerator import MethodGenerator, IndexerGenerator, FunctionGenerator, ConstructorGenerator
+from MethodGenerator import MethodGenerator, StaticMethodGenerator, IndexerGenerator
+from MethodGenerator import FunctionGenerator, ConstructorGenerator
 from ArgumentGenerator import *
 from EnumGenerator import EnumGenerator
 from DocumentationGenerator import ReferenceGenerator
@@ -79,7 +80,10 @@ class GeneratorCreator(object):
             new_class_generator.constructor_generators.append(new_constructor_generator)
             self.full_name_2_routine_generator.update({new_constructor_generator.full_name: new_constructor_generator})
         for method in cur_class.methods:
-            new_method_generator = MethodGenerator(method, new_class_generator, self.params)
+            if method.static:
+                new_method_generator = StaticMethodGenerator(method, new_class_generator, self.params)
+            else:
+                new_method_generator = MethodGenerator(method, new_class_generator, self.params)
             new_class_generator.method_generators.append(new_method_generator)
             self.full_name_2_routine_generator.update({new_method_generator.full_name: new_method_generator})
         for indexer in cur_class.indexers:
