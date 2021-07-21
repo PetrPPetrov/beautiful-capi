@@ -90,6 +90,9 @@ class EnumGenerator(object):
     def definition_header(self, file_cache: FileCache):
         return self.declaration_header(file_cache)
 
+    def generate_forward_declaration(self, out: FileGenerator):
+        out.put_line('enum {name};'.format(name=self.name))
+
     def dependent_implementation_headers(self):
         result = []
         if self.enum_object.implementation_header_filled:

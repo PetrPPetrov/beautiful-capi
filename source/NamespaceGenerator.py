@@ -169,6 +169,8 @@ class NamespaceGenerator(object):
                 cur_template.generate_forward_declaration(out)
             for class_generator in self.classes:
                 class_generator.generate_forward_declaration(out)
+            for enum in self.enum_generators:
+                enum.generate_forward_declaration(out)
 
     def __generate_forward_declarations(self, file_cache: FileCache, capi_generator: CapiGenerator):
         forward_declarations = file_cache.get_file_for_fwd(self.full_name_array)
