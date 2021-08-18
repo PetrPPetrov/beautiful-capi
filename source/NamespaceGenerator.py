@@ -190,7 +190,7 @@ class NamespaceGenerator(object):
             snippet_file = FileGenerator(snippet_file_name)
             snippet_file.put_begin_cpp_comments(self.params)
             for enum_generator in self.enum_generators:
-                enum_generator.generate_enum_definition(snippet_file)
+                enum_generator.generate_enum_snippet_definition(snippet_file)
 
     def __generate_template_snippets(self, file_cache: FileCache):
         if self.template_snippets:

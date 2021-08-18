@@ -396,6 +396,11 @@
         <xs:documentation>Specifies *underlying_type* for the current enumeration type, for instance, *uint16_t* which will be used in C language layer</xs:documentation>
       </xs:annotation>
     </xs:attribute>
+    <xs:attribute name="use_strong_implementation_enum" type="xs:boolean" use="optional" default="false">
+      <xs:annotation>
+        <xs:documentation>Specifies to use C++ 11 strong enumeration type for implementation side</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
     <xs:attribute name="implementation_type" type="xs:string" use="optional" default="">
       <xs:annotation>
         <xs:documentation>Specifies *implementation_type* for the current enumeration type, for instance, some enumeration type on *the implementation side*</xs:documentation>

@@ -664,6 +664,8 @@ class TEnumeration(object):
         self.name_filled = False
         self.underlying_type = ""
         self.underlying_type_filled = False
+        self.use_strong_implementation_enum = False
+        self.use_strong_implementation_enum_filled = False
         self.implementation_type = ""
         self.implementation_type_filled = False
         self.implementation_header = ""
@@ -693,6 +695,10 @@ class TEnumeration(object):
             cur_attr = dom_node.getAttribute("underlying_type")
             self.underlying_type = cur_attr
             self.underlying_type_filled = True
+        if dom_node.hasAttribute("use_strong_implementation_enum"):
+            cur_attr = dom_node.getAttribute("use_strong_implementation_enum")
+            self.use_strong_implementation_enum = string_to_bool(cur_attr)
+            self.use_strong_implementation_enum_filled = True
         if dom_node.hasAttribute("implementation_type"):
             cur_attr = dom_node.getAttribute("implementation_type")
             self.implementation_type = cur_attr

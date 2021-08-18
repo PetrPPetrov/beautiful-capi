@@ -61,6 +61,12 @@ class EnumGenerator(object):
         else:
             return '::'.join([self.parent_generator.implementation_name, self.name])
 
+    def implementation_item_name(self, item_short_name) -> str:
+        if self.enum_object.use_strong_implementation_enum:
+            return '::'.join(self.implementation_name, item_short_name)
+        else:
+            return '::'.join([self.parent_generator.implementation_name, item_short_name])
+
     @staticmethod
     def __get_enum_item_definition(enum_item: TEnumerationItem) -> str:
         if enum_item.value_filled:
@@ -68,9 +74,23 @@ class EnumGenerator(object):
         else:
             return '{name}'.format(name=enum_item.name)
 
+    def generate_enum_snippet_definition(self, out: FileGenerator):
+        DoxygenCppGenerator().generate_for_enum(out, self.enum_object)
+        if self.enum_object.use_strong_implementation_enum:
+            out.put_line(f'enum class {self.name} : {self.enum_object.underlying_type}')
+        else:
+            out.put_line(f'enum {self.name}')
+        with IndentScope(out, '};'):
+            items_definitions = [self.__get_enum_item_definition(enum_item) for enum_item in self.enum_object.items]
+            items_definitions_with_comma = [item + ',' for item in items_definitions[:-1]]
+            if items_definitions:
+                items_definitions_with_comma.append(items_definitions[-1])
+            for item_definition, item in zip(items_definitions_with_comma, self.enum_object.items):
+                out.put_line(item_definition + DoxygenCppGenerator().get_for_enum_item(item))
+
     def generate_enum_definition(self, out: FileGenerator):
         DoxygenCppGenerator().generate_for_enum(out, self.enum_object)
-        out.put_line('enum {name}'.format(name=self.name))
+        out.put_line(f'enum {self.name}')
         with IndentScope(out, '};'):
             items_definitions = [self.__get_enum_item_definition(enum_item) for enum_item in self.enum_object.items]
             items_definitions_with_comma = [item + ',' for item in items_definitions[:-1]]
@@ -133,10 +153,14 @@ class EnumProcessor(object):
             name_array = [class_name] if class_name else [ns.name for ns in self.namespace_stack]
             for index, item in enumerate(enum.items):
                 item_name = item.implementation_name if item.implementation_name else item.name
-                full_name = '::'.join(enum.implementation_type.split('::')[:-1] + [item_name])
+                parent_name = enum.implementation_type.split('::')
+                if not enum.use_strong_implementation_enum:
+                    parent_name = parent_name[:-1]
+                full_name = '::'.join(parent_name + [item_name])
                 implementation_code.all_items.append(' ' * 4 + 'case {index}:'.format(index=index))
                 implementation_code.all_items.append(' ' * 8 + 'return static_cast<{0}>({1});'.format(
                     enum.underlying_type, full_name))
+
             implementation_code.all_items.append(' ' * 4 + 'default:')
             implementation_code.all_items.append(' ' * 8 + 'assert (false);')
             enum_name = '::'.join(name_array + [enum.name])
