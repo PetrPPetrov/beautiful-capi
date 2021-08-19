@@ -58,6 +58,8 @@ C++ compiler could be wrapped and called by Mingw Clang C++ compiler on Windows 
 
 This tool generates the required C++ and C code to wrap your C++ classes for use in a compiler-independent way.
 
+This tool requires Python 3.6 or higher.
+
 Another main concept is to generate a well-crafted beautiful C API,
 which is clear, readable and visibly suitable for human usage (not only for computers or compilers).
 
@@ -897,9 +899,9 @@ Basically integration with [CMake](https://cmake.org/) could be done by using *a
     )
 ```
 
-But you should find Python3 interpreter before:
+But you should find Python3.6 interpreter before:
 ```
-find_package(PythonInterp 3.4 REQUIRED)
+find_package(PythonInterp 3.6 REQUIRED)
 ```
 
 Also you need to include *AutoGenWrap.cpp* to *SampleAPI* library:

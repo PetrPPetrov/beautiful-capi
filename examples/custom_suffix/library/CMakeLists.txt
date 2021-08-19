@@ -22,7 +22,7 @@ project(custom_suffix)
 
 cmake_minimum_required(VERSION 2.8)
 
-find_package(PythonInterp 3.4 REQUIRED)
+find_package(PythonInterp 3.6 REQUIRED)
 
 include(../../../UseBCapi.cmake)
 add_bcapi_generation(wrap source/auto_gen_wrap.cpp sharp "sharp_output")
