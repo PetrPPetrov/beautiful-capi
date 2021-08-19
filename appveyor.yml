@@ -10,14 +10,13 @@ platform:
 
 configuration:
   - 14 2015
-  - 12 2013
 
 install:
 # Make compiler command line tools available
 - call c:\projects\beautiful-capi\scripts\appveyor\compiler_setup.bat
 
 build_script:
-- set PATH=C:\Python34-x64;%PATH%
+- set PATH=C:\Python37-x64;%PATH%
 - set BOOST_ROOT=C:\Libraries\boost_1_63_0
 - cd c:\projects\beautiful-capi
 - if "%platform%" equ "x64" (cmake CMakeLists.txt -G "Visual Studio %Configuration% Win64")
