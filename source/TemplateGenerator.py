@@ -153,7 +153,7 @@ class TemplateSnippetGenerator(object):
                         elif is_class:
                             ns.add_class(tokens[0])
                         elif is_enum:
-                            ns.add_enum(tokens[0])
+                            ns.add_enum(tokens[0], generator.enum_snippet_declaration)
 
                 if unusable:
                     self.ignored_instances.append(instantiation)
@@ -190,12 +190,12 @@ class TemplateSnippetGenerator(object):
 
 
 class TemplateDependency(object):
-    def __init__(self, name: str, namespaces: {str: {}} = None, classes: [str] = None, templates: {str: [str]} = None, enums: [str] = None):
+    def __init__(self, name: str):
         self.name = name
-        self.namespaces = namespaces if namespaces is not None else {}
-        self.classes = classes if classes is not None else []
-        self.templates = templates if templates is not None else {}
-        self.enums = enums if enums is not None else []
+        self.namespaces = {}
+        self.classes = []
+        self.templates = {}
+        self.enums = {}
 
     def write_forwards(self, file: FileGenerator):
         file.put_line('namespace {0}'.format(self.name))
@@ -206,7 +206,7 @@ class TemplateDependency(object):
             for name in self.classes:
                 file.put_line('class {0};'.format(name))
             for name in self.enums:
-                file.put_line('enum {0};'.format(name))
+                file.put_line(self.enums[name] + ';')
             for namespace in self.namespaces:
                 self.namespaces[namespace].write_forwards(file)
 
@@ -221,9 +221,9 @@ class TemplateDependency(object):
         if name not in self.templates:
             self.templates.update({name: parameter_types})
 
-    def add_enum(self, name: str):
+    def add_enum(self, name: str, declaration: str):
         if name not in self.enums:
-            self.enums.append(name)
+            self.enums.update({name: declaration})
 
     def emplace_namespace(self, name: str) -> {}:
         if name not in self.namespaces:

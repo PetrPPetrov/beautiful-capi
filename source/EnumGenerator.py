@@ -67,6 +67,13 @@ class EnumGenerator(object):
         else:
             return '::'.join([self.parent_generator.implementation_name, item_short_name])
 
+    @property
+    def enum_snippet_declaration(self) -> str:
+        if self.enum_object.use_strong_implementation_enum:
+            return f'enum class {self.name} : {self.enum_object.underlying_type}'
+        else:
+            return f'enum {self.name}'
+
     @staticmethod
     def __get_enum_item_definition(enum_item: TEnumerationItem) -> str:
         if enum_item.value_filled:
