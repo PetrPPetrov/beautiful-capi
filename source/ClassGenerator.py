@@ -246,12 +246,6 @@ class ClassGenerator(object):
             DoxygenCppGenerator().generate_for_constant(declaration_header, constant.constant_object)
             declaration_header.put_line(constant.wrap_declaration() + ';')
 
-    def __generate_enum_definitions(self, declaration_header):
-        for enum_generator in self.enum_generators:
-            enum_generator.generate_enum_definition(declaration_header)
-        if self.enum_generators:
-            declaration_header.put_line('')
-
     def __generate_constructor_declarations(self, declaration_header):
         for constructor_generator in self.constructor_generators:
             DoxygenCppGenerator().generate_for_routine(
@@ -302,7 +296,6 @@ class ClassGenerator(object):
             declaration_header.put_line('public:')
         self.__generate_typedefs(declaration_header)
         self.__generate_constants(declaration_header)
-        self.__generate_enum_definitions(declaration_header)
         self.__generate_constructor_declarations(declaration_header)
         self.__generate_method_declarations(declaration_header)
         self.__generate_indexer_declarations(declaration_header)

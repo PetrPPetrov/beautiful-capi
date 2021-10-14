@@ -68,7 +68,7 @@ class CapiGenerator(object):
                  params: TBeautifulCapiParams, api_root: TBeautifulCapiRoot):
         self.params = params
         self.api_root = api_root
-        self.namespace_name_2_info = {}    # type: dict[tuple[str, ...]: NamespaceInfo]
+        self.namespace_name_2_info = {}  # Type: dict[tuple[str, ...]: NamespaceInfo]
         self.main_exception_traits = main_exception_traits
         self.no_handling_exception_traits = no_handling_exception_traits
         self.additional_defines = FileGenerator(None)

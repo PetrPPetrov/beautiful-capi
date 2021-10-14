@@ -105,18 +105,6 @@ class NamespaceGenerator(object):
             return self.namespace_object.methods_prologs[0]
         elif self.parent_namespace:
             return self.parent_namespace.method_prolog
-        # return None
-
-    def __generate_namespace_enumerators(self, namespace_header):
-        if self.enum_generators:
-            with IfDefScope(namespace_header, '__cplusplus'):
-                namespace_header.put_line(self.one_line_namespace_begin)
-                namespace_header.put_line('')
-                for enum_generator in self.enum_generators:
-                    enum_generator.generate_enum_definition(namespace_header)
-                namespace_header.put_line('')
-                namespace_header.put_line(self.one_line_namespace_end)
-            namespace_header.put_line('')
 
     def __generate_namespace_functions(self, capi_generator, file_cache, namespace_header):
         if self.functions:
@@ -133,13 +121,6 @@ class NamespaceGenerator(object):
                 namespace_header.put_line('')
                 namespace_header.put_line(self.one_line_namespace_end)
 
-    def __generate_enums_header(self, file_cache: FileCache):
-        if self.enum_generators:
-            enums_header = file_cache.get_file_for_enums(self.full_name_array)
-            enums_header.put_begin_cpp_comments(self.params)
-            with WatchdogScope(enums_header, self.full_name.upper() + '_ENUMS_INCLUDED'):
-                self.__generate_namespace_enumerators(enums_header)
-
     def __generate_namespace_header(self, file_cache: FileCache, capi_generator: CapiGenerator):
         namespace_header = file_cache.get_file_for_namespace(self.full_name_array)
         namespace_header.put_begin_cpp_comments(self.params)
@@ -147,8 +128,6 @@ class NamespaceGenerator(object):
             namespace_header.put_include_files()
             namespace_header.include_user_header(file_cache.capi_header(self.full_name_array))
             namespace_header.include_user_header(file_cache.fwd_header(self.full_name_array))
-            if self.enum_generators:
-                namespace_header.include_user_header(file_cache.enums_header(self.full_name_array))
             for nested_namespace_generator in self.nested_namespaces:
                 namespace_header.include_user_header(
                     file_cache.namespace_header(nested_namespace_generator.full_name_array))
@@ -170,7 +149,8 @@ class NamespaceGenerator(object):
             for class_generator in self.classes:
                 class_generator.generate_forward_declaration(out)
             for enum in self.enum_generators:
-                enum.generate_forward_declaration(out)
+                # Generate enum definition instead of forward declaration
+                enum.generate_enum_definition(out)
 
     def __generate_forward_declarations(self, file_cache: FileCache, capi_generator: CapiGenerator):
         forward_declarations = file_cache.get_file_for_fwd(self.full_name_array)
@@ -199,7 +179,6 @@ class NamespaceGenerator(object):
 
     def __generate(self, file_cache: FileCache, capi_generator: CapiGenerator):
         self.__generate_namespace_header(file_cache, capi_generator)
-        self.__generate_enums_header(file_cache)
         for nested_namespace in self.nested_namespaces:
             nested_namespace.__generate(file_cache, capi_generator)
         for class_generator in self.classes:

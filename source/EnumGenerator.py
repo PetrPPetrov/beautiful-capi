@@ -23,6 +23,7 @@
 from ExternalNamespaceGenerator import ExternalNamespaceGenerator
 from FileCache import FileCache
 from NamespaceGenerator import NamespaceGenerator
+from ClassGenerator import ClassGenerator
 from Parser import TEnumeration, TEnumerationItem, TNamespace, TBeautifulCapiRoot, TFunction, TClass, TArgument
 from Parser import TImplementationCode
 from FileGenerator import FileGenerator, IndentScope
@@ -33,6 +34,10 @@ class EnumGenerator(object):
     def __init__(self, enum_object: TEnumeration, parent_generator):
         self.enum_object = enum_object
         self.parent_generator = parent_generator
+        if isinstance(parent_generator, ClassGenerator):
+            message = f'ERROR: Enum in classes are prohibited now: {self.full_name}'
+            print(message)
+            raise Exception(message)
 
     @property
     def name(self) -> str:
@@ -107,12 +112,7 @@ class EnumGenerator(object):
                 out.put_line(item_definition + DoxygenCppGenerator().get_for_enum_item(item))
 
     def declaration_header(self, file_cache: FileCache):
-        parent_generator = self.parent_generator
-        if isinstance(parent_generator, NamespaceGenerator) or isinstance(parent_generator, ExternalNamespaceGenerator):
-            header = file_cache.enums_header(parent_generator.full_name_array)
-        else:
-            header = file_cache.class_header_decl(parent_generator.full_name_array)
-        return header
+        return file_cache.fwd_header(self.parent_generator.full_name_array)
 
     def definition_header(self, file_cache: FileCache):
         return self.declaration_header(file_cache)
@@ -195,5 +195,5 @@ class EnumProcessor(object):
 
 
 def process_enum_impl_functions(api_description: TBeautifulCapiRoot):
-        processor = EnumProcessor(api_description)
-        processor.process()
+    processor = EnumProcessor(api_description)
+    processor.process()

@@ -351,7 +351,7 @@ class EnumTypeGenerator(BaseTypeGenerator):
         return '*' + expression
 
     def include_dependent_declaration_headers(self, file_generator: FileGenerator, file_cache: FileCache):
-        file_generator.include_user_header(self.enum_argument_generator.declaration_header(file_cache))
+        pass
 
     def include_dependent_definition_headers(self, file_generator: FileGenerator, file_cache: FileCache):
         self.include_dependent_declaration_headers(file_generator, file_cache)
