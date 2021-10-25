@@ -189,7 +189,7 @@ class ByFirstArgument(object):
                 out.include_system_header('cassert')
                 for exception_class in self.exception_classes:
                     out.include_user_header(
-                        file_cache.class_header(exception_class.full_name_array))
+                        file_cache.class_header_decl(exception_class.full_name_array))
                 out.put_line('namespace {0}'.format(self.params.beautiful_capi_namespace))
                 with IndentScope(out):
                     out.put_line(
