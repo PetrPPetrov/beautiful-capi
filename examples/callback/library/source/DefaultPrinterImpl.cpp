@@ -80,12 +80,12 @@ void Example::DefaultPrinterImpl::Print(const char* text) const
     }
 }
 
-void Example::DefaultPrinterImpl::SetPrintingQuality(Example::IPrinter::EQuality quality)
+void Example::DefaultPrinterImpl::SetPrintingQuality(Example::EQuality quality)
 {
     mQuality = quality;
 }
 
-Example::IPrinter::EQuality Example::DefaultPrinterImpl::GetPrintingQuality() const
+Example::EQuality Example::DefaultPrinterImpl::GetPrintingQuality() const
 {
     return mQuality;
 }

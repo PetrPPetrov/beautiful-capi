@@ -11,7 +11,7 @@ namespace ConsoleApp1
     class CustomPrinterImplementation
     {
         string mLastPrintedText;
-        Example.PrinterPtr.EQuality mQuality;
+        Example.EQuality mQuality;
 
         public CustomPrinterImplementation()
         {
@@ -36,12 +36,12 @@ namespace ConsoleApp1
             Console.WriteLine(mLastPrintedText);
         }
 
-        public void SetPrintingQuality(Example.PrinterPtr.EQuality printing_quality)
+        public void SetPrintingQuality(Example.EQuality printing_quality)
         {
             mQuality = printing_quality;
         }
 
-        public Example.PrinterPtr.EQuality GetPrintingQuality()
+        public Example.EQuality GetPrintingQuality()
         {
             return mQuality;
         }
@@ -60,7 +60,7 @@ namespace ConsoleApp1
             famous_person.SetAge(26);
             famous_person.SetFirstName("Isaac");
             famous_person.SetSecondName("Newton");
-            famous_person.SetSex(Example.Person.ESex.male);
+            famous_person.SetSex(Example.ESex.male);
 
             Example.PrinterPtr printing_device = Example.Functions.CreateDefaultPrinter(Example.EPrintingDevice.printer);
             famous_person.Dump(printing_device);
@@ -68,7 +68,7 @@ namespace ConsoleApp1
 
             CustomPrinterImplementation my_printer_implementation = new CustomPrinterImplementation();
             printing_device = Example.Functions.create_callback_for_printer(my_printer_implementation);
-            famous_person.Dump(printing_device);            
+            famous_person.Dump(printing_device);
 
             // CustomPrinterImplementation.Print() will throw exception (Exception.NullArgument)
             // and this exception will be caught by the library code

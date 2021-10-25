@@ -30,10 +30,11 @@
 
 namespace UnitTest
 {
+#include "snippets/UnitTest.h"
+
     class PersonImpl
     {
     public:
-#include "snippets/UnitTest/PersonImpl.h"
         // By default newly created objects implies to have value 1 of reference counter
         PersonImpl()
             : mMother(0), mFather(0), mAge(0), mSex(Unknown), mName("", "", ""), mMaritalStatus(Single)

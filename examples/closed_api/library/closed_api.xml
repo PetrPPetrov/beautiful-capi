@@ -14,12 +14,12 @@
       <sharp wrap_type="uint" wrap_2_c="{expression}" c_2_wrap="{expression}"/>
     </mapped_type>
 
-    <class name="Person" lifecycle="copy_semantic" implementation_class_name="Example::PersonImpl" implementation_class_header="PersonImpl.h">
-      <enumeration name="ESex" underlying_type="uint8_t">
-        <item name="male"/>
-        <item name="female"/>
-      </enumeration>
+    <enumeration name="ESex" underlying_type="uint8_t">
+      <item name="male"/>
+      <item name="female"/>
+    </enumeration>
 
+    <class name="Person" lifecycle="copy_semantic" implementation_class_name="Example::PersonImpl" implementation_class_header="PersonImpl.h">
       <constructor name="Default"/>
       <method name="SetFirstName">
         <argument type="const char*" name="first_name"/>
@@ -34,9 +34,9 @@
       </method>
       <method name="GetAge" return="unsigned int" const="true"/>
       <method name="SetSex">
-        <argument type="Example::Person::ESex" name="sex"/>
+        <argument type="Example::ESex" name="sex"/>
       </method>
-      <method name="GetSex" return="Example::Person::ESex" const="true"/>
+      <method name="GetSex" return="Example::ESex" const="true"/>
     </class>
 
     <namespace name="Education">

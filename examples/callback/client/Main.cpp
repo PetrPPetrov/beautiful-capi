@@ -29,11 +29,12 @@
 #include <cstdlib>
 #include <stdint.h>
 #include "Example.h"
+#include "Exception.h"
 
 class CustomPrinterImplementation
 {
     mutable std::string mLastPrintedText;
-    Example::PrinterPtr::EQuality mQuality;
+    Example::EQuality mQuality;
 public:
     CustomPrinterImplementation()
     {
@@ -55,11 +56,11 @@ public:
         std::transform(mLastPrintedText.begin(), mLastPrintedText.end(), mLastPrintedText.begin(), toupper);
         std::cout << mLastPrintedText << std::endl;
     }
-    void SetPrintingQuality(Example::PrinterPtr::EQuality printing_quality)
+    void SetPrintingQuality(Example::EQuality printing_quality)
     {
         mQuality = printing_quality;
     }
-    Example::PrinterPtr::EQuality GetPrintingQuality() const
+    Example::EQuality GetPrintingQuality() const
     {
         return mQuality;
     }
@@ -78,7 +79,7 @@ int main()
     famous_person.SetFirstName("Isaac");
     famous_person.SetSecondName("Newton");
     famous_person.SetAge(26);
-    famous_person.SetSex(Example::Person::male);
+    famous_person.SetSex(Example::male);
 
     Example::PrinterPtr printing_device = Example::CreateDefaultPrinter(Example::printer);
     famous_person.Dump(printing_device);

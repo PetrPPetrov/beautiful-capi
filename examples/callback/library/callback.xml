@@ -18,27 +18,27 @@
       <item name="printer" value="1"/>
       <item name="plotter" value="2"/>
     </enumeration>
+    <enumeration name="EQuality" underlying_type="int">
+      <item name="draft"/>
+      <item name="normal"/>
+      <item name="high"/>
+    </enumeration>
     <class name="Printer" lifecycle="reference_counted" abstract="true" implementation_class_name="Example::IPrinter" implementation_class_header="IPrinter.h">
-      <enumeration name="EQuality" underlying_type="int">
-        <item name="draft"/>
-        <item name="normal"/>
-        <item name="high"/>
-      </enumeration>
       <method name="Print" const="true">
         <argument type="const char*" name="text"/>
       </method>
-      <property name="PrintingQuality" type="Example::Printer::EQuality"/>
+      <property name="PrintingQuality" type="Example::EQuality"/>
       <method name="GetDeviceType" return="Example::EPrintingDevice" const="true"/>
       <callback lifecycle="raw_pointer_semantic" implementation_class_name="Example::PrinterBaseImpl" implementation_class_header="DefaultPrinterImpl.h"/>
     </class>
     <function name="CreateDefaultPrinter" return="Example::Printer" return_copy_or_add_ref="false" implementation_name="Example::CreateDefaultPrinterImpl" implementation_header="DefaultPrinterImpl.h">
       <argument type="Example::EPrintingDevice" name="printing_device"/>
     </function>
+    <enumeration name="ESex" underlying_type="char">
+      <item name="male"/>
+      <item name="female"/>
+    </enumeration>
     <class name="Person" lifecycle="copy_semantic" implementation_class_name="Example::PersonImpl" implementation_class_header="PersonImpl.h">
-      <enumeration name="ESex" underlying_type="char">
-        <item name="male"/>
-        <item name="female"/>
-      </enumeration>
       <constructor name="Default"/>
       <method name="SetFirstName">
         <argument type="const char*" name="first_name"/>
@@ -53,9 +53,9 @@
       </method>
       <method name="GetAge" return="unsigned int" const="true"/>
       <method name="SetSex">
-        <argument type="Example::Person::ESex" name="sex"/>
+        <argument type="Example::ESex" name="sex"/>
       </method>
-      <method name="GetSex" return="Example::Person::ESex" const="true"/>
+      <method name="GetSex" return="Example::ESex" const="true"/>
       <method name="Dump" const="true">
         <argument type="Example::Printer" name="printer"/>
       </method>

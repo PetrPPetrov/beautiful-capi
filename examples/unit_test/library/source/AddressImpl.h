@@ -24,7 +24,6 @@
 
 #include <string>
 #include <iostream>
-#include "snippets/UnitTest/PersonImpl.h"
 #include "boost/smart_ptr/intrusive_ptr.hpp"
 
 namespace UnitTest
@@ -35,7 +34,7 @@ namespace UnitTest
         std::string mCity;
         unsigned int mState;
         unsigned int mZipCode;
-        
+
         int mRefCount;
 
     public:

@@ -76,12 +76,12 @@ unsigned int Example::PersonImpl::GetAge() const
     return this->age;
 }
 
-void Example::PersonImpl::SetSex(Example::PersonImpl::ESex sex)
+void Example::PersonImpl::SetSex(Example::ESex sex)
 {
     this->sex = sex;
 }
 
-Example::PersonImpl::ESex Example::PersonImpl::GetSex() const
+Example::ESex Example::PersonImpl::GetSex() const
 {
     return sex;
 }
@@ -103,7 +103,7 @@ void Example::PersonImpl::Dump(Example::IPrinter* printer) const
     };
 
     print_helper printer_io(printer);
-    printer_io << "First Name: " << this->first_name << " Second Name: " << this->second_name << " Age: " << this->age << " Sex: " << (this->sex == Example::PersonImpl::male ? "M" : "F");
+    printer_io << "First Name: " << this->first_name << " Second Name: " << this->second_name << " Age: " << this->age << " Sex: " << (this->sex == Example::male ? "M" : "F");
 }
 
 void Example::PersonImpl::Print(Example::IPrinter* printer, const char* text) const

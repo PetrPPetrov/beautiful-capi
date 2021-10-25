@@ -26,6 +26,7 @@
 #include <cstdlib>
 #include <stdint.h>
 #include "Example.h"
+#include "Exception.h"
 
 int main()
 {

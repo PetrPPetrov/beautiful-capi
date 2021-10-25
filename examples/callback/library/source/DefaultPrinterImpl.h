@@ -40,14 +40,14 @@ namespace Example
 
     class DefaultPrinterImpl : public PrinterBaseImpl
     {
-        Example::IPrinter::EQuality mQuality;
+        Example::EQuality mQuality;
     public:
         DefaultPrinterImpl();
         DefaultPrinterImpl(const DefaultPrinterImpl& other);
         ~DefaultPrinterImpl();
         virtual void Print(const char* text) const;
-        virtual void SetPrintingQuality(Example::IPrinter::EQuality quality);
-        virtual Example::IPrinter::EQuality GetPrintingQuality() const;
+        virtual void SetPrintingQuality(Example::EQuality quality);
+        virtual Example::EQuality GetPrintingQuality() const;
         virtual Example::EPrintingDevice GetDeviceType() const;
     };
 

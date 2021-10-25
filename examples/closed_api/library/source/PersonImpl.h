@@ -27,15 +27,15 @@
 
 namespace Example
 {
+#include "snippets/Example.h"
+
     class PersonImpl
     {
-    public:
-#include "snippets/Example/PersonImpl.h"
     private:
         std::string first_name;
         std::string last_name;
         unsigned int age;
-        Example::PersonImpl::ESex sex;
+        Example::ESex sex;
     public:
         PersonImpl();
         PersonImpl(const PersonImpl& other);
@@ -46,8 +46,8 @@ namespace Example
         const char* GetLastName() const;
         void SetAge(unsigned int age);
         unsigned int GetAge() const;
-        void SetSex(Example::PersonImpl::ESex sex);
-        Example::PersonImpl::ESex GetSex() const;
+        void SetSex(Example::ESex sex);
+        Example::ESex GetSex() const;
     };
 }
 

@@ -37,7 +37,7 @@ void dump(const Example::Person& person)
     std::cout << "==========" << std::endl;
     std::cout << "Name: " << person.GetFirstName() << " " << person.GetLastName() << std::endl;
     std::cout << "Age: " << person.GetAge() << std::endl;
-    std::cout << "Sex: " << (person.GetSex() == Example::Person::male ? "Male" : "Female") << std::endl;
+    std::cout << "Sex: " << (person.GetSex() == Example::male ? "Male" : "Female") << std::endl;
 }
 
 int main()
@@ -49,19 +49,19 @@ int main()
     famous_person.SetFirstName("Isaac");
     famous_person.SetLastName("Newton");
     famous_person.SetAge(26);
-    famous_person.SetSex(Example::Person::male);
+    famous_person.SetSex(Example::male);
 
     dump(famous_person);
 
     Example::Education::School::Teacher teacher;
     teacher.SetFirstName("John");
     teacher.SetAge(25);
-    teacher.SetSex(Example::Person::male);
+    teacher.SetSex(Example::male);
     teacher.Teach();
 
     Example::Education::A::University::Professor professor;
     professor.SetFirstName("Vanessa");
-    professor.SetSex(Example::Person::female);
+    professor.SetSex(Example::female);
     professor.Do();
 
     return EXIT_SUCCESS;

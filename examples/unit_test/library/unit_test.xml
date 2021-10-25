@@ -23,30 +23,29 @@
       <property name="State" type="unsigned int"/>
       <property name="ZipCode" type="unsigned int"/>
     </class>
-    
-    <class name="Person" lifecycle="raw_pointer_semantic" implementation_class_name="UnitTest::PersonImpl" implementation_class_header="PersonImpl.h">
-      <enumeration name="Sex" underlying_type="unsigned int" implementation_type="UnitTest::PersonImpl::Sex">
-        <item name="Unknown" value="0"/>
-        <item name="Male"/>
-        <item name="Female"/>
-      </enumeration>
 
-      <enumeration name="MaritalStatus" underlying_type="unsigned int" implementation_type="UnitTest::PersonImpl::MaritalStatus">
-        <item name="Single" value="3"/>
-        <item name="Married" value="0"/>
-        <item name="Divorced" value="2"/>
-        <item name="Widowed" value="1"/>
-      </enumeration>
-      
+    <enumeration name="Sex" underlying_type="unsigned int" implementation_type="UnitTest::Sex" implementation_header="PersonImpl.h">
+      <item name="Unknown" value="0"/>
+      <item name="Male"/>
+      <item name="Female"/>
+    </enumeration>
+    <enumeration name="MaritalStatus" underlying_type="unsigned int" implementation_type="UnitTest::MaritalStatus" implementation_header="PersonImpl.h">
+      <item name="Single" value="3"/>
+      <item name="Married" value="0"/>
+      <item name="Divorced" value="2"/>
+      <item name="Widowed" value="1"/>
+    </enumeration>
+
+    <class name="Person" lifecycle="raw_pointer_semantic" implementation_class_name="UnitTest::PersonImpl" implementation_class_header="PersonImpl.h">
       <constructor name="Default"/>
-      
+
       <property name="Name" type="UnitTest::Name"/>
       <property name="Address" type="UnitTest::Address"/>
       <property name="Age" type="unsigned char"/>
-      <property name="Sex" type="UnitTest::Person::Sex"/>
+      <property name="Sex" type="UnitTest::Sex"/>
       <property name="Mother" type="UnitTest::Person"/>
       <property name="Father" type="UnitTest::Person"/>
-      <property name="MaritalStatus" type="UnitTest::Person::MaritalStatus"/>
+      <property name="MaritalStatus" type="UnitTest::MaritalStatus"/>
 
     </class>
     <class name="Exception" lifecycle="copy_semantic" exception="true" implementation_class_name="std::exception" implementation_class_header="exception">

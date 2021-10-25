@@ -71,12 +71,12 @@ unsigned int Example::PersonImpl::GetAge() const
     return this->age;
 }
 
-void Example::PersonImpl::SetSex(Example::PersonImpl::ESex sex)
+void Example::PersonImpl::SetSex(Example::ESex sex)
 {
     this->sex = sex;
 }
 
-Example::PersonImpl::ESex Example::PersonImpl::GetSex() const
+Example::ESex Example::PersonImpl::GetSex() const
 {
     return sex;
 }
