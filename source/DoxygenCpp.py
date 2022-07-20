@@ -188,7 +188,7 @@ class DoxygenCppGenerator(object):
         for documentation in enum_item.documentations:
             result += DoxygenCppGenerator.__get_lines_for_documentation(documentation, False)
         result_str = ''.join(result)
-        return ' /// {0}'.format(result_str) if result_str else ''
+        return ' ///< {0}'.format(result_str) if result_str else ''
 
     @staticmethod
     def generate_for_routine(out: FileGenerator, routine_object, generator):
