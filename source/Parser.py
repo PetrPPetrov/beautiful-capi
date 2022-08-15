@@ -922,6 +922,8 @@ class TClass(object):
         self.exception_filled = False
         self.exception_code = 1000
         self.exception_code_filled = False
+        self.exception_copy_by_value = "new {implementation_type}(exception_object)"
+        self.exception_copy_by_value_filled = False
         self.template_line = ""
         self.template_line_filled = False
         self.typedef_name = ""
@@ -1075,6 +1077,10 @@ class TClass(object):
             cur_attr = dom_node.getAttribute("exception_code")
             self.exception_code = string_to_int(cur_attr)
             self.exception_code_filled = True
+        if dom_node.hasAttribute("exception_copy_by_value"):
+            cur_attr = dom_node.getAttribute("exception_copy_by_value")
+            self.exception_copy_by_value = cur_attr
+            self.exception_copy_by_value_filled = True
         if dom_node.hasAttribute("template_line"):
             cur_attr = dom_node.getAttribute("template_line")
             self.template_line = cur_attr

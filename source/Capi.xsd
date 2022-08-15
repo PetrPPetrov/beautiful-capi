@@ -661,6 +661,11 @@
         <xs:documentation>Specifies code of the current exception (useful if the current class is an exception)</xs:documentation>
       </xs:annotation>
     </xs:attribute>
+    <xs:attribute name="exception_copy_by_value" type="xs:string" use="optional" default="new {implementation_type}(exception_object)">
+      <xs:annotation>
+        <xs:documentation>Specifies implementation class name</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
     <xs:attribute default="" name="template_line" type="xs:string" use="optional">
       <xs:annotation>
         <xs:documentation>Do not use, for internal usage only</xs:documentation>

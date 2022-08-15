@@ -267,9 +267,11 @@ class ByFirstArgument(object):
                 code=exception_class_generator.exception_code))
             out.put_line('try')
             with IndentScope(out):
-                out.put_line('{exception_info}->object_pointer = new {exception_type}(exception_object);'.format(
+                expression = exception_class_generator.class_object.exception_copy_by_value.format(
+                    implementation_type=exception_class_generator.class_object.implementation_class_name)
+                out.put_line('{exception_info}->object_pointer = {expression};'.format(
                     exception_info=self.params.exception_info_argument_name,
-                    exception_type=exception_class_generator.class_object.implementation_class_name
+                    expression=expression
                 ))
             out.put_line('catch (...)')
             with IndentScope(out):
